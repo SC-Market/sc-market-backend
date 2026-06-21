@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_Civilian_RaceAnnouncer",
+  "_RecordId_": "9d01c568-5b0e-44e1-ac80-af4202e8607d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.96cddb8e-26e8-42fe-894c-4e2421ea321d",
+          "_RecordId_": "96cddb8e-26e8-42fe-894c-4e2421ea321d"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/civilians/grimhex/npc_archetypes-male-human-civilians-grimhex-raceannouncer_nescalloway.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

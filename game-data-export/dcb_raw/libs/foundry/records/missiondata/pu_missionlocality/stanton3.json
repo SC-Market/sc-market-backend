@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "MissionLocality.Stanton3",
+  "_RecordId_": "e6fd3dce-03ce-4321-a104-ffa16fc206cc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocality",
+    "availableLocations": [
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/starmapobject.stanton3.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/lagrange/stanton3_l1.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/lagrange/stanton3_l2.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/lagrange/stanton3_l3.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/lagrange/stanton3_l4.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/lagrange/stanton3_l5.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3a/starmapobject.stanton3a.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3b/starmapobject.stanton3b.json"]}}

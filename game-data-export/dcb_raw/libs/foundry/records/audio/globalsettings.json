@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "GlobalAudioSettings.GlobalSettings",
+  "_RecordId_": "1cb2d587-630c-45cf-9a23-f6e31d648659",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GlobalAudioSettings",
+    "enablePropagationPathing": true,
+    "enablePropagationPathingActorOnly": true,
+    "gamePausedTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "gameUnpausedTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""}}}

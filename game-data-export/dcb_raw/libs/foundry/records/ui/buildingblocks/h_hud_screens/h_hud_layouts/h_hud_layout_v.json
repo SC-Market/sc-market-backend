@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "VisorLens_Layout.H_HUD_Layout_V",
+  "_RecordId_": "7397a841-0a1f-46e0-b9b2-950c0b16cbc7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VisorLens_Layout",
+    "regions": [
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_topleft.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_topcenter.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_topright.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_middleleft.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_middleright.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_bottomleft.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_v_bottomright.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_u_subtitle.json",
+      "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_regions/h_hud_region_u_center.json"]}}

@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.CargoCommoditiesDensityClass",
+  "_RecordId_": "79378cf0-df14-4596-92bf-f4282545754f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 100.0,
+    "clusterUpperObjectCountDGS": 100,
+    "clusterUpperObjectCountPersistence": 50,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

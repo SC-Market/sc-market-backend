@@ -1,0 +1,343 @@
+{
+  "_RecordName_": "WeaponProceduralClip.none_special_ballistic_01_PoseIdleADS_thirdperson",
+  "_RecordId_": "1eb3b6a7-a9de-4d19-bff5-d208f8363313",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipPose",
+      "blendTime": 1.0,
+      "poseType": "RightHand",
+      "zoomTransitionAngle": 0.0,
+      "position": {
+        "_Type_": "Vec3",
+        "x": -0.02,
+        "y": -0.02,
+        "z": 0.02},
+      "rotation": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "zoomTransitionTimeMultiplier": 0.3,
+      "interpolationCurves": {
+        "_Type_": "WeaponPoseInterpolationCurves",
+        "positonCurves": {
+          "_Type_": "WeaponPoseXYZCurvesMaxValues",
+          "xMaxValue": -0.0075,
+          "yMaxValue": 0.01,
+          "zMaxValue": -0.022,
+          "curves": {
+            "_Type_": "SXYZCurves",
+            "xCurve": {
+              "_Type_": "BezierCurve",
+              "points": [
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.4823127,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.4823127,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2153631,
+                  "y": 1.184733},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.4137219,
+                  "y": 0.9914522},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.6120807,
+                  "y": 0.7981716},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.9039189,
+                  "y": 0.04196105},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.096081,
+                  "y": -0.04196105}],
+              "useLUT": false},
+            "yCurve": {
+              "_Type_": "BezierCurve",
+              "points": [
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.2174263,
+                  "y": -0.6532387},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2174263,
+                  "y": 0.6532387},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.02392657,
+                  "y": 0.9741863},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.181171,
+                  "y": 0.9773302},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.5488303,
+                  "y": 0.9895247},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.3944386,
+                  "y": -0.02037518},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.605561,
+                  "y": 0.02037518}],
+              "useLUT": false},
+            "zCurve": {
+              "_Type_": "BezierCurve",
+              "points": [
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.3709309,
+                  "y": -0.6328197},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.3709309,
+                  "y": 0.6328197},
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.01674228,
+                  "y": 1.00401},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.5158986,
+                  "y": 1.00401},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.6097825,
+                  "y": 1.00401},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.8639399,
+                  "y": -0.0004828155},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.13606,
+                  "y": 0.0004828155}],
+              "useLUT": false}}},
+        "rotationCurves": {
+          "_Type_": "WeaponPoseXYZCurvesMaxValues",
+          "xMaxValue": -2.5,
+          "yMaxValue": 9.0,
+          "zMaxValue": 0.0,
+          "curves": {
+            "_Type_": "SXYZCurves",
+            "xCurve": {
+              "_Type_": "BezierCurve",
+              "points": [
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.2996642,
+                  "y": -0.9725987},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2996642,
+                  "y": 0.9725987},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2100555,
+                  "y": 0.7041061},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.3583734,
+                  "y": 0.9889702},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.8713061,
+                  "y": -0.1079203},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.6312114,
+                  "y": 0.001360223},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.368789,
+                  "y": -0.001360223}],
+              "useLUT": false},
+            "yCurve": {
+              "_Type_": "BezierCurve",
+              "points": [
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.1444288,
+                  "y": -0.7219747},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.1444288,
+                  "y": 0.7219747},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.1150167,
+                  "y": 1.001796},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2977918,
+                  "y": 0.9999866},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.4805669,
+                  "y": 0.9981771},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.6778836,
+                  "y": 0.05103561},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.8374203,
+                  "y": 0.04837333},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.8723035,
+                  "y": 0.0318031},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.886738,
+                  "y": -0.001337361},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.113262,
+                  "y": 0.001337361}],
+              "useLUT": false},
+            "zCurve": {
+              "_Type_": "BezierCurve",
+              "points": [
+                {
+                  "_Type_": "Vec2",
+                  "x": -0.2375335,
+                  "y": -0.00625},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2375335,
+                  "y": 0.00625},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.04671508,
+                  "y": 1.014598},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.2,
+                  "y": 1.002077},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.3532849,
+                  "y": 0.9895561},
+                {
+                  "_Type_": "Vec2",
+                  "x": 0.7683646,
+                  "y": 0.003125},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.0,
+                  "y": 0.0},
+                {
+                  "_Type_": "Vec2",
+                  "x": 1.231635,
+                  "y": -0.003125}],
+              "useLUT": false}}},
+        "cameraZoomCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.1668108,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1668108,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": -0.3255437,
+              "y": -0.002134127},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1697373,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4790562,
+              "y": 0.6155111},
+            {
+              "_Type_": "Vec2",
+              "x": 0.609129,
+              "y": 1.000338},
+            {
+              "_Type_": "Vec2",
+              "x": 0.85,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.005433,
+              "y": 1.000338},
+            {
+              "_Type_": "Vec2",
+              "x": 0.9676992,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.032301,
+              "y": 1.0}],
+          "useLUT": false}},
+      "useAimHelperOffset": false}}}

@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_ShatteredBlade_Forge",
+  "_RecordId_": "68946acb-e142-4631-bcd2-10852e194bbc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_ShatteredBlade_Forge",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.0}}

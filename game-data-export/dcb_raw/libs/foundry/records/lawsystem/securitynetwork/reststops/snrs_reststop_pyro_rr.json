@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_RestStop_Pyro_RR",
+  "_RecordId_": "5e0230d4-2b35-43b5-a170-c4693917114a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_unlawful_roughandready.json"},
+    "roomIdentifier": null,
+    "trespassWarningSeconds": 10.0,
+    "trespassRevokeWarningSeconds": 1200.0}}

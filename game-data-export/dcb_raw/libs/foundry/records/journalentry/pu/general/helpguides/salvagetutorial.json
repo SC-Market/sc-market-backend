@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.SalvageTutorial",
+  "_RecordId_": "4d4124e8-20cc-40a9-bb6d-bbc9f85d4a73",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Journal_General_Salvaging_Title",
+    "ShortTitle": "@Journal_General_Salvaging_Title",
+    "SubHeading": "@Journal_General_Salvaging_From",
+    "autoOpenMobiGlas": false,
+    "showNotification": false,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Journal_General_Salvaging_Content"},
+    "tutorialEntry": false}}

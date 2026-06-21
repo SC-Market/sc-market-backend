@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "JournalEntry.Elaine_Conclusion_Innocent_Transcript",
+  "_RecordId_": "6a32af51-2498-468e-a900-3a38eb6d9985",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CharlieStation_Elaine_Conclusion_Innocent_Transcript_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_Author_ElaineWard",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.audiolog.json",
+    "type": {
+      "_Type_": "JournalEntryAudioLog",
+      "AudioLogName": "",
+      "Description": "@mobiglas_CharlieStation_Elaine_Epilogue_Innocent_Transcript_text",
+      "Transcript": "@LOC_UNINITIALIZED"},
+    "tutorialEntry": false}}

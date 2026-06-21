@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Refueling_Undocking",
+  "_RecordId_": "df21cedc-b1f9-4eb3-881d-9ea9d8133ed7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Refueling_Undocking_Title",
+    "BodyText": "@Hints_Refueling_Undocking",
+    "BodyTextGamePad": "@Hints_Refueling_Undocking",
+    "BodyTextJoystick": "@Hints_Refueling_Undocking",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

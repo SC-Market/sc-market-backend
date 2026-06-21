@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Lootable_Container_Large_Armour",
+  "_RecordId_": "89574dfe-cafa-4f8e-852d-af0950e5a258",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 1.22,
+      "y": 1.4,
+      "z": 0.91},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 300000}}}}

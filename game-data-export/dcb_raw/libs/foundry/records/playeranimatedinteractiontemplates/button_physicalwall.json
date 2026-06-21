@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "PlayerAnimatedInteractionTemplate.Button_PhysicalWall",
+  "_RecordId_": "a6285eb8-9a7b-4ff6-be1d-b9d4833662a1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerAnimatedInteractionTemplate",
+    "playerAnimatedInteraction": {
+      "_Type_": "PlayerAnimatedInteraction",
+      "supportWalkToAlign": true,
+      "type": "Reactive",
+      "fragTags": [
+        "finger",
+        "thumb"],
+      "CDIKTargetName": "button",
+      "handModeParams": null}}}

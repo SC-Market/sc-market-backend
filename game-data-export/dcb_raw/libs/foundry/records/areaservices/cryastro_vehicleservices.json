@@ -1,0 +1,63 @@
+{
+  "_RecordName_": "AreaServices.CryAstro_VehicleServices",
+  "_RecordId_": "4ac4660b-21b2-4bbe-aea9-2ebc91f74647",
+  "_RecordTag_": "Ship",
+  "_RecordValue_": {
+    "_Type_": "AreaServices",
+    "name": "CryAstro_VehicleServices",
+    "lingeringTimeout": 15.0,
+    "service": [
+      {
+        "_Type_": "RepairShipServiceDef",
+        "text": "@mobiglas_CryAstro_Repair",
+        "description": "@LOC_EMPTY",
+        "productName": "@LOC_EMPTY",
+        "icon": "UI/Textures/Vector/General/CommonIcons/icon_services_general.svg",
+        "serviceDelayTime": 4.0,
+        "hudMessage": "@refueling_ui_HUD_RepairInProgress",
+        "commodityToHitPoints": 2250,
+        "commodityToDegradationLifetime": 2250,
+        "repairCommodity": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.RMC",
+          "_RecordId_": "a0e6c4cf-face-4f52-a020-dfa869607901"}},
+      {
+        "_Type_": "RestockShipServiceDef",
+        "text": "@mobiglas_CryAstro_Restock",
+        "description": "@LOC_EMPTY",
+        "productName": "@LOC_EMPTY",
+        "icon": "UI/Textures/Vector/General/CommonIcons/icon_services_rearm.svg",
+        "serviceDelayTime": 4.0,
+        "hudMessage": "@refueling_ui_HUD_RestockingInProgress",
+        "AmmoCommodity": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.ShipAmmunition",
+          "_RecordId_": "984c2ac5-70dc-43be-85a2-15b8db95dcd2"}},
+      {
+        "_Type_": "RefuelShipServiceDefQuantum",
+        "text": "@mobiglas_CryAstro_Refuel_Quantum",
+        "description": "@LOC_EMPTY",
+        "productName": "@items_commodities_type_quantumFuel",
+        "icon": "UI/Textures/Vector/General/CommonIcons/icon-fuel-quantum.svg",
+        "serviceDelayTime": 4.0,
+        "hudMessage": "@refueling_ui_HUD_RefuelingInProgress",
+        "instantRefuel": false,
+        "refuelUnitPerSecond": 80000000,
+        "fuelCommodity": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.QuantumFuel",
+          "_RecordId_": "f4846780-182f-49d1-a711-f08c0172735e"}},
+      {
+        "_Type_": "RefuelShipServiceDefHydrogen",
+        "text": "@mobiglas_CryAstro_Refuel_Hydrogen",
+        "description": "@LOC_EMPTY",
+        "productName": "@items_commodities_hydrogen",
+        "icon": "UI/Textures/Vector/General/CommonIcons/icon-fuel-hydrogen.svg",
+        "serviceDelayTime": 4.0,
+        "hudMessage": "@refueling_ui_HUD_RefuelingInProgress",
+        "instantRefuel": false,
+        "refuelUnitPerSecond": 80000000,
+        "fuelCommodity": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.PlasmaFuel",
+          "_RecordId_": "de9f4d03-6b60-429d-9b26-9f2308bae973"}}]}}

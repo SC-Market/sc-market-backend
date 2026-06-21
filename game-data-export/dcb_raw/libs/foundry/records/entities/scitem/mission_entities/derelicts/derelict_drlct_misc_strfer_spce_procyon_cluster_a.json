@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.Derelict_drlct_misc_strfer_spce_procyon_cluster_a",
+  "_RecordId_": "37870e82-4149-4989-b5c3-2092a662db90",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/derelict/MISC/Starfarer/space/set/drlct_misc_strfer_spce_procyon_cluster_a.socpak"}]}}

@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Rotation_Pitch",
+  "_RecordId_": "78c850f7-b306-4851-a12e-3e9d1229a09a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_Pitch"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_Pitch_Signed"}]}}

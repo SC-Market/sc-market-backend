@@ -1,0 +1,181 @@
+{
+  "_RecordName_": "TacticalQuery.ShipCombatTarget",
+  "_RecordId_": "0292dd45-fef5-403b-aae6-619e7a14b8ad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "ShipCombatTarget",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8cfd65e2-1ab6-476f-8765-59ec700b09f7",
+                  "_RecordId_": "8cfd65e2-1ab6-476f-8765-59ec700b09f7"}],
+              "negativeTags": []}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defendareashipcombatcontent.json",
+        "optionOverrides": [
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.88ed4ceb-6819-414e-b6f2-7c93f13c527f",
+                      "_RecordId_": "88ed4ceb-6819-414e-b6f2-7c93f13c527f"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/bomberdefendareashipcombatcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.b0f055b9-9586-4d10-82ee-1d822953c956",
+                      "_RecordId_": "b0f055b9-9586-4d10-82ee-1d822953c956"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/capitaldefendareashipcombatcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ef734509-be28-47c9-87df-2775db104d38",
+                      "_RecordId_": "ef734509-be28-47c9-87df-2775db104d38"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/fighterdefendareashipcombatcontent.json",
+            "optionOverrides": []}]},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.16012111-51f6-4022-a4a6-c2b216bc53bf",
+                  "_RecordId_": "16012111-51f6-4022-a4a6-c2b216bc53bf"}],
+              "negativeTags": []}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defendtargetshipcombatcontent.json",
+        "optionOverrides": [
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.88ed4ceb-6819-414e-b6f2-7c93f13c527f",
+                      "_RecordId_": "88ed4ceb-6819-414e-b6f2-7c93f13c527f"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/bomberdefendtargetshipcombatcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.b0f055b9-9586-4d10-82ee-1d822953c956",
+                      "_RecordId_": "b0f055b9-9586-4d10-82ee-1d822953c956"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/capitaldefendtargetshipcombatcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ef734509-be28-47c9-87df-2775db104d38",
+                      "_RecordId_": "ef734509-be28-47c9-87df-2775db104d38"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/fighterdefendtargetshipcombatcontent.json",
+            "optionOverrides": []}]},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defaultshipcombatcontent.json",
+        "optionOverrides": [
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.88ed4ceb-6819-414e-b6f2-7c93f13c527f",
+                      "_RecordId_": "88ed4ceb-6819-414e-b6f2-7c93f13c527f"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/bombershipcombatcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.b0f055b9-9586-4d10-82ee-1d822953c956",
+                      "_RecordId_": "b0f055b9-9586-4d10-82ee-1d822953c956"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/capitalshipcombatcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ef734509-be28-47c9-87df-2775db104d38",
+                      "_RecordId_": "ef734509-be28-47c9-87df-2775db104d38"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/fightershipcombatcontent.json",
+            "optionOverrides": []}]}]}}

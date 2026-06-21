@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ORIG_M50_Template",
+  "_RecordId_": "e4549b2f-114c-4400-a9dd-123d103fc0f0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.43}}}}

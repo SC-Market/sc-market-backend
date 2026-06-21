@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial02_Hint06_Helmet",
+  "_RecordId_": "6089b946-a1a2-4512-9e20-33ef272b6df2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut01_Hint07_EquipHelmet_Title",
+    "BodyText": "@Tut01_Hint07_EquipHelmet",
+    "BodyTextGamePad": "@Tut01_Hint07_EquipHelmet",
+    "BodyTextJoystick": "@Tut01_Hint07_EquipHelmet",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

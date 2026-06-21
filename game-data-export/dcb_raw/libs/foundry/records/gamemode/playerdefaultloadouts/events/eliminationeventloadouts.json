@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "SEAGlobalEventLoadouts.EliminationEventLoadouts",
+  "_RecordId_": "14906f3e-d454-4d99-913d-2b5db19c6114",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEAGlobalEventLoadouts",
+    "loadouts": [
+      null,
+      null,
+      null,
+      "file://./../../../../../../libs/foundry/records/gamemode/playerdefaultloadouts/events/aprilfools.json",
+      null,
+      null,
+      null,
+      null,
+      null,
+      "file://./../../../../../../libs/foundry/records/gamemode/playerdefaultloadouts/events/skeleton.json",
+      null,
+      null,
+      null,
+      null,
+      null]}}

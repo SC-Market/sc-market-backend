@@ -1,0 +1,89 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_SecurityOutpost_HeavyWeaponCache",
+  "_RecordId_": "399ce8cd-06b1-454e-9667-25c95233b1cb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Random Heavy Weapon",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b14fcbf7-efa4-4128-8151-5acb23974a20",
+            "_RecordId_": "b14fcbf7-efa4-4128-8151-5acb23974a20"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d1a1ca94-5b2b-452d-913d-791158036127",
+                "_RecordId_": "d1a1ca94-5b2b-452d-913d-791158036127"}],
+            "negativeTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.01e3aa70-377e-49df-911f-21bf56bf2ad4",
+                "_RecordId_": "01e3aa70-377e-49df-911f-21bf56bf2ad4"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.294f29fa-d2bb-406a-b9c1-413fbf323676",
+                "_RecordId_": "294f29fa-d2bb-406a-b9c1-413fbf323676"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]},
+          "weight": 1.0,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_SpawnWith",
+              "name": "Suitable Ammunition for that Weapon",
+              "tagsToMatch": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                    "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                "negativeTags": []},
+              "mode": "MostSimilar",
+              "min": 1,
+              "max": 3},
+            {
+              "_Type_": "EntryOptionalData_SpawnWith",
+              "name": "Spawn with possible attachment",
+              "tagsToMatch": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                    "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}],
+                "negativeTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                    "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}]},
+              "mode": "MostSimilar",
+              "min": 1,
+              "max": 1}]}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.9a46e2f3-6651-4283-8447-c01e6dd778e8",
+              "_RecordId_": "9a46e2f3-6651-4283-8447-c01e6dd778e8"},
+            "weight": 1.0}]}]}}

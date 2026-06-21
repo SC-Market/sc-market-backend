@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MeleeUppercut",
+  "_RecordId_": "ac35722d-cde4-49dc-8a6a-4419275f8794",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Melee_Combat_Title",
+    "BodyText": "@Hints_Melee_Uppercut",
+    "BodyTextGamePad": "@Hints_Melee_Uppercut",
+    "BodyTextJoystick": "@Hints_Melee_Uppercut",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

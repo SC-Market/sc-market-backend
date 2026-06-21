@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.GrimHex_LandingPads_Corridors",
+  "_RecordId_": "ffcbf684-68dd-4c9c-804f-86cde282633a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@LOC_EMPTY",
+    "restrictViewBounds": false}}

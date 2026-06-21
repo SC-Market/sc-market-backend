@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.ANVL_Lightning_F8",
+  "_RecordId_": "658e92fc-e80f-4d84-8b21-48b50431e0f9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "btn_base_enter_cockpit",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.1,
+          "z": 0.0},
+        "shipState": "Both"}]}}

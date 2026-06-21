@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Refueling_Docking",
+  "_RecordId_": "bd93e04b-7368-421b-8972-efe3b9b3934e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Refueling_DockingProcess_Title",
+    "BodyText": "@Hints_Refueling_DockingProcess",
+    "BodyTextGamePad": "@Hints_Refueling_DockingProcess",
+    "BodyTextJoystick": "@Hints_Refueling_DockingProcess",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MissionItem.LunesFruit_1SCU",
+  "_RecordId_": "145d79dc-1f20-44c5-aaaf-d0c02f58054d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+        "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.6893d5e5-771f-4812-ba2d-457b0713c808",
+        "_RecordId_": "6893d5e5-771f-4812-ba2d-457b0713c808"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.63049ea3-127c-4ad5-a099-f60e43260509",
+        "_RecordId_": "63049ea3-127c-4ad5-a099-f60e43260509"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_organic_spiralfruit.json"}}

@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "StatusWidgetDisplayPreset.BodyDamage",
+  "_RecordId_": "c15269d5-8d60-4038-bdcd-82724c583b4f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StatusWidgetDisplayPreset",
+    "ranges": [
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 3.0,
+        "maximumValue": 3.0,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 2.0,
+        "maximumValue": 2.0,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 1.0,
+        "maximumValue": 1.0,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.0,
+        "maximumValue": 0.0,
+        "displayDuration": 2.0,
+        "activeRange": "InteriorRange",
+        "enabled": true}],
+    "incrementDisplayDuration": 0.0,
+    "incrementStep": 0.0,
+    "maximumChangePerSecond": 0.0,
+    "historySeconds": 1,
+    "historySamplesPerSecond": 1,
+    "shownOnLens": true,
+    "shownOnVisor": true}}

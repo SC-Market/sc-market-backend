@@ -1,0 +1,112 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Container_Small_WeaponAttachments",
+  "_RecordId_": "d9ec90e2-a22c-4568-a2c7-b78d08157a80",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9651ca6b-8778-4fd4-90c0-fd5320a459f8",
+          "_RecordId_": "9651ca6b-8778-4fd4-90c0-fd5320a459f8"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b76e5e37-58b1-4fd9-b5ce-f3a8ed11bf62",
+          "_RecordId_": "b76e5e37-58b1-4fd9-b5ce-f3a8ed11bf62"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.cc8957cf-45da-4a55-84cc-af4a125eff2e",
+          "_RecordId_": "cc8957cf-45da-4a55-84cc-af4a125eff2e"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "S1 Optic attachments",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.84c6f3a1-35a5-4bdd-a5d3-7caa63f90067",
+            "_RecordId_": "84c6f3a1-35a5-4bdd-a5d3-7caa63f90067"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.684c3776-420b-4e54-abe8-ea520a551183",
+                "_RecordId_": "684c3776-420b-4e54-abe8-ea520a551183"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "S1 Barrel attachments",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8a060cf7-3053-4b0b-a518-4974e1826ab0",
+            "_RecordId_": "8a060cf7-3053-4b0b-a518-4974e1826ab0"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.684c3776-420b-4e54-abe8-ea520a551183",
+                "_RecordId_": "684c3776-420b-4e54-abe8-ea520a551183"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "S1 Underbarrel attachments",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.774ce8f9-0a9a-45a8-ae7c-be28f30999e1",
+            "_RecordId_": "774ce8f9-0a9a-45a8-ae7c-be28f30999e1"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.684c3776-420b-4e54-abe8-ea520a551183",
+                "_RecordId_": "684c3776-420b-4e54-abe8-ea520a551183"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.59ca5e36-b9a2-4459-ad0e-5745bcf5d899",
+              "_RecordId_": "59ca5e36-b9a2-4459-ad0e-5745bcf5d899"},
+            "weight": 100.0},
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.9a46e2f3-6651-4283-8447-c01e6dd778e8",
+              "_RecordId_": "9a46e2f3-6651-4283-8447-c01e6dd778e8"},
+            "weight": 10.0},
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.dfbc6af5-6211-4d71-8d10-b64c66ea95a9",
+              "_RecordId_": "dfbc6af5-6211-4d71-8d10-b64c66ea95a9"},
+            "weight": 1.0},
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.b285311b-1f68-4a69-b73f-1295e83a3909",
+              "_RecordId_": "b285311b-1f68-4a69-b73f-1295e83a3909"},
+            "weight": 0.1}]}]}}

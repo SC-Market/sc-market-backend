@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "CargoManifest.Civilian_Miner_01_Medium_001",
+  "_RecordId_": "eaf04b42-ceb0-488e-a1c7-1ffda7254c8b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5e0893f2-32c9-469d-ae1a-1b4351a4827e",
+          "_RecordId_": "5e0893f2-32c9-469d-ae1a-1b4351a4827e"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Even",
+      "resources": [
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Iron",
+            "_RecordId_": "f386a33c-ac9a-400a-a7b8-fe1fc7c8d270"},
+          "probability": 1.0}],
+      "minCapacityRange": 0.01,
+      "maxCapacityRange": 0.01},
+    "cargoSpawnRules": [],
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.8fe470c3-e2c0-4d25-8366-0e45fd1e63af",
+        "_RecordId_": "8fe470c3-e2c0-4d25-8366-0e45fd1e63af"}]}}

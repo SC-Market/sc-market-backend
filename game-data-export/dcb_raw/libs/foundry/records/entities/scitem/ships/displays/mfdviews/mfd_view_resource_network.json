@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "SMFDView.MFD_View_Resource_Network",
+  "_RecordId_": "3ce6946e-d9ee-4654-bd95-633e78a73427",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SMFDView",
+    "name": "@ui_MFD_View_ResourceNetwork",
+    "landscapeCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/power/mc_s_power_master.json",
+    "landscapeCanvasStyleOverride": [],
+    "castsUsePortrait": true,
+    "portraitCanvas": null,
+    "portraitCanvasStyleOverride": [],
+    "viewType": "eView_ResourceNetwork",
+    "urlpostfix": ""}}

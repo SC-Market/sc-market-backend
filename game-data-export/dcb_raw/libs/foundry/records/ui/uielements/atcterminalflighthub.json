@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.ATCTerminalFlightHub",
+  "_RecordId_": "82eb1b71-2a08-4bd1-8ac8-47643fd9d559",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/Ships/Idris/Fluff/SWF/16x9-Large-FlightHubInfo.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

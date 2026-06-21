@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.RSI_Meteor_Shimmer_VIP_Black_Black_Gold",
+  "_RecordId_": "c69515e0-0426-4589-a61b-776decf88c3e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameMeteor_Paint_VIP_Black_Black_Gold",
+    "description": "@item_DescMeteor_Paint_VIP_Black_Black_Gold",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_meteor_vip_black_black_gold.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

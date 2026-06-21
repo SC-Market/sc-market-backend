@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "CraftingGlobalParams.CraftingGlobalParams",
+  "_RecordId_": "f99cff9b-c0b5-4d03-83f7-c7209d92b51d",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingGlobalParams",
+    "refiningQualityUnitMultiplier": 2.0,
+    "defaultCompositionQuality": 500,
+    "dismantleBlacklistResources": [
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.Quantanium",
+        "_RecordId_": "bde5a2c8-2ef4-46ac-9403-2fcb79e4016c"},
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.Stileron",
+        "_RecordId_": "8cd317a3-df9b-4315-8ac3-0f1fca42dfd4"},
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.Savrilium",
+        "_RecordId_": "4a47cad8-0271-4048-b19b-d9b52521fc20"},
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.Lindinium",
+        "_RecordId_": "392b4dca-449a-4d4d-8fef-beab024d9ee7"},
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.Riccite",
+        "_RecordId_": "86d00bd8-08f7-4231-b375-a609803fc46d"},
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.Ouratite",
+        "_RecordId_": "989f9b73-f636-4f35-a81d-579dcbe3f0ab"}],
+    "dismantleBlacklistEntityClasses": [
+      "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/harvestable_mineral_1h_janalite.json",
+      "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/harvestable_ore_1h_saldyniumore.json"],
+    "defaultBlueprintSelection": {
+      "_Type_": "DefaultBlueprintSelection_Whitelist",
+      "blueprintRecords": [
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/dismantle/globalgenericdismantle.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/pistol/bp_craft_behr_pistol_ballistic_01.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/rifle/bp_craft_behr_rifle_ballistic_01.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/light/bp_craft_cds_armor_light_arms_01_01_01.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/light/bp_craft_cds_armor_light_core_01_01_01.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/light/bp_craft_cds_armor_light_legs_01_01_01.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/light/bp_craft_cds_armor_light_helmet_01_01_01.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_behr_rifle_ballistic_01_mag.json",
+        "file://./../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_behr_pistol_ballistic_01_mag.json"]}}}

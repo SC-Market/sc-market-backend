@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "ScanCustomDataDef.TestData",
+  "_RecordId_": "0088c1d2-51c6-4729-97ce-ce7d5af35d53",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanCustomDataDef",
+    "info": {
+      "_Type_": "ScanCustomDataInfo",
+      "scanProcedures": [
+        {
+          "_Type_": "CustomScanProcedureParams",
+          "requiredScanTag": null,
+          "emissionBaseline": 0.0,
+          "runtimeDuration": 0.1,
+          "allowedInAIAutoScan": true,
+          "allowedInFocalPointScan": true,
+          "allowedInPingBroadScan": true,
+          "allowedInPingFocusScan": true,
+          "allowedInPassiveScan": false,
+          "customDatas": [
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@room_briefing_room",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueFloat",
+                "value": 40.0}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@room_engine_room",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@room_mess_hall"}}]}]}}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSHarvesting04",
+  "_RecordId_": "fd3c1749-88cd-413c-b1bf-f9b5d3a66e15",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_FPSHarvesting_Collection_Title",
+    "BodyText": "@Hints_FPSHarvesting_OnHarvestableItemLootedIntoBackpack",
+    "BodyTextGamePad": "@Hints_FPSHarvesting_OnHarvestableItemLootedIntoBackpack",
+    "BodyTextJoystick": "@Hints_FPSHarvesting_OnHarvestableItemLootedIntoBackpack",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

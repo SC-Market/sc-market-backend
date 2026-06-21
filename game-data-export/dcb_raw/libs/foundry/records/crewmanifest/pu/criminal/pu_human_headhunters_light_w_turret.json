@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_HeadHunters_Light_w_Turret",
+  "_RecordId_": "193c34d4-40df-41fe-9790-e08c936ff583",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.536ade67-65b6-4203-b381-750f63e0b9ba",
+          "_RecordId_": "536ade67-65b6-4203-b381-750f63e0b9ba"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_human_enemy_groundcombat_npc_headhunters_pilot.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null},
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_human_enemy_groundcombat_npc_headhunters_soldier.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.61d439f9-0bef-43e0-8ecc-fe96c9793d66",
+            "_RecordId_": "61d439f9-0bef-43e0-8ecc-fe96c9793d66"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

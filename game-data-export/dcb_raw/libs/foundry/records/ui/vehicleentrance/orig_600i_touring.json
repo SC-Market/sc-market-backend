@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.ORIG_600i_Touring",
+  "_RecordId_": "b5d2ac45-4810-4d6b-9afb-eae9857c115b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "ORIG_600i",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -3.802,
+          "y": 34.291,
+          "z": -8.695},
+        "shipState": "Both"}]}}

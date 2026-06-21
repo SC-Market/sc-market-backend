@@ -227,6 +227,134 @@ export class ShopsV2Controller extends BaseController {
   }
 
   /**
+   * Get shops by owner. Used on user/org profile pages to show their shops.
+   *
+   * @summary Get shops by owner
+   */
+  @Get("by-owner")
+  public async getShopsByOwner(
+    @Query() username?: string,
+    @Query() spectrum_id?: string,
+  ): Promise<ShopPublicResponse[]> {
+    const db = getKnex()
+
+    let query = db("shops as s").where("s.status", "active")
+
+    if (spectrum_id) {
+      const contractor = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
+      if (!contractor) return []
+      query = query.where("s.owner_contractor_id", contractor.contractor_id)
+    } else if (username) {
+      const user = await db("accounts").where("username", username).first("user_id")
+      if (!user) return []
+      query = query.where("s.owner_user_id", user.user_id)
+    } else {
+      return []
+    }
+
+    const shops = await query.select("s.*").orderBy("s.created_at", "asc")
+
+    return Promise.all(
+      shops.map(async (shop: Shop) => {
+        const ratingResult = await db("shop_ratings")
+          .where("shop_id", shop.shop_id)
+          .select(
+            db.raw("COALESCE(AVG(rating)::numeric(3,2), 0) as rating"),
+            db.raw("COUNT(*)::integer as rating_count"),
+          )
+          .first()
+
+        return {
+          shop_id: shop.shop_id,
+          slug: shop.slug,
+          name: shop.name,
+          description: shop.description,
+          banner_url: await resolveImageUrl(db, shop.banner),
+          logo_url: await resolveImageUrl(db, shop.logo),
+          supported_languages: shop.supported_languages,
+          status: shop.status,
+          created_at: shop.created_at,
+          rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
+          rating_count: ratingResult?.rating_count || 0,
+        }
+      }),
+    )
+  }
+
+  /**
+   * Browse all active shops. Supports search, pagination, and sorting.
+   *
+   * @summary Browse shops
+   */
+  @Get("")
+  public async browseShops(
+    @Query() search?: string,
+    @Query() page?: number,
+    @Query() page_size?: number,
+    @Query() sort_by?: "name" | "rating" | "created_at",
+    @Query() sort_order?: "asc" | "desc",
+  ): Promise<{ shops: ShopPublicResponse[]; total: number; page: number; page_size: number }> {
+    const db = getKnex()
+    const validatedPage = Math.max(1, page || 1)
+    const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
+    const sortBy = sort_by || "created_at"
+    const sortOrder = sort_order || "desc"
+
+    let query = db("shops as s")
+      .where("s.status", "active")
+
+    if (search && search.trim()) {
+      query = query.where(function () {
+        this.where("s.name", "ilike", `%${search.trim()}%`)
+          .orWhere("s.slug", "ilike", `%${search.trim()}%`)
+      })
+    }
+
+    const countQuery = query.clone().count("* as count")
+    const [{ count }] = await countQuery
+    const total = parseInt(String(count), 10)
+
+    if (sortBy === "rating") {
+      query = query.orderByRaw(
+        `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id) ${sortOrder}`,
+      )
+    } else {
+      query = query.orderBy(`s.${sortBy}`, sortOrder)
+    }
+
+    const offset = (validatedPage - 1) * validatedPageSize
+    const shops = await query.select("s.*").limit(validatedPageSize).offset(offset)
+
+    const results: ShopPublicResponse[] = await Promise.all(
+      shops.map(async (shop: Shop) => {
+        const ratingResult = await db("shop_ratings")
+          .where("shop_id", shop.shop_id)
+          .select(
+            db.raw("COALESCE(AVG(rating)::numeric(3,2), 0) as rating"),
+            db.raw("COUNT(*)::integer as rating_count"),
+          )
+          .first()
+
+        return {
+          shop_id: shop.shop_id,
+          slug: shop.slug,
+          name: shop.name,
+          description: shop.description,
+          banner_url: await resolveImageUrl(db, shop.banner),
+          logo_url: await resolveImageUrl(db, shop.logo),
+          supported_languages: shop.supported_languages,
+          status: shop.status,
+          created_at: shop.created_at,
+          rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
+          rating_count: ratingResult?.rating_count || 0,
+        }
+      }),
+    )
+
+    return { shops: results, total, page: validatedPage, page_size: validatedPageSize }
+  }
+
+  /**
    * Get a shop's public profile by slug.
    *
    * @summary Get shop by slug

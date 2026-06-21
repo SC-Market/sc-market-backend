@@ -1,0 +1,411 @@
+{
+  "_RecordName_": "MissionBrokerEntry.PU_CertificationMission_PVE_Easy",
+  "_RecordId_": "0f2b772b-bbf7-48b5-98a5-c01bee8dd4dc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionBrokerEntry",
+    "notForRelease": false,
+    "owner": "file://./../../../../../../../libs/foundry/records/devowners/developers/mft/ameliabourke.json",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+    "playerFacingDebugName": "",
+    "title": "@BHG_Certification_Easy_Title",
+    "titleHUD": "@LOC_UNINITIALIZED",
+    "description": "@BHG_Certification_Easy_Desc",
+    "missionGiver": "@BHG_From",
+    "commsChannelName": "@LOC_UNINITIALIZED",
+    "type": "file://./../../../../../../../libs/foundry/records/missiontype/pu/bountyhunter.json",
+    "associatedMissions": [],
+    "missionDifficulty": -1,
+    "localityAvailable": null,
+    "locationMissionAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json",
+    "availableDateSchedule": [],
+    "onlyAvailableIfAllMissionsNotAvailable": [],
+    "missionReward": {
+      "_Type_": "MissionReward",
+      "reward": 5000,
+      "max": 0,
+      "plusBonuses": false,
+      "currencyType": "UEC",
+      "reputationBonus": null},
+    "partialRewardPayout": null,
+    "missionResultReputationRewards": [
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_bountyhuntersguild.json",
+            "reputationScope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty_bountyhuntersguild.json",
+            "reward": "file://./../../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_positive_xxxxs.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []}],
+    "journalEntriesToAddOnComplete": [
+      "file://./../../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/bountyhunterguild/bhg_certification_easy.json"],
+    "journalEntriesToRemoveOnComplete": [
+      "file://./../../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/bountyhunterguild/bhg_certification_veryeasy.json"],
+    "initiallyActive": true,
+    "notifyOnAvailable": false,
+    "preShowObjectives": false,
+    "showAsOffer": false,
+    "missionBuyInAmount": 1000,
+    "refundBuyInOnWithdraw": true,
+    "hasCompleteButton": false,
+    "onlyOwnerCanComplete": false,
+    "handlesAbandonRequest": false,
+    "missionModulePerPlayer": true,
+    "maxInstances": -1,
+    "maxPlayersPerInstance": 1,
+    "maxInstancesPerPlayer": 1,
+    "canBeShared": true,
+    "onceOnly": true,
+    "tutorial": false,
+    "missionDeadline": {
+      "_Type_": "MissionDeadline",
+      "missionCompletionTime": 1800.0,
+      "missionAutoEnd": false,
+      "missionResultAfterTimerEnd": "Failed",
+      "remainingTimeToShowTimer": 0.0,
+      "missionEndReason": "@KillShip_FailReason"},
+    "displayAlliedMarkers": true,
+    "availableInPrison": false,
+    "failIfSentToPrison": true,
+    "failIfBecameCriminal": true,
+    "failIfLeavePrison": false,
+    "completionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "applyCompletionTagsOnFailed": false,
+    "applyCompletionTagsOnAbandoned": false,
+    "requestOnly": false,
+    "respawnTime": 0.0,
+    "respawnTimeVariation": 0.0,
+    "instanceHasLifeTime": true,
+    "showLifeTimeInMobiGlas": false,
+    "instanceLifeTime": 15.0,
+    "instanceLifeTimeVariation": 0.0,
+    "canReacceptAfterAbandoning": false,
+    "abandonedCooldownTime": 60.0,
+    "abandonedCooldownTimeVariation": 0.0,
+    "canReacceptAfterFailing": false,
+    "hasPersonalCooldown": true,
+    "personalCooldownTime": 15.0,
+    "personalCooldownTimeVariation": 0.0,
+    "moduleHandlesOwnShutdown": false,
+    "linkedMission": null,
+    "missionCompletePerk": null,
+    "modifiers": [],
+    "lawfulMission": true,
+    "missionGiverRecord": "file://./../../../../../../../libs/foundry/records/missiongiver/bounty/bountyhunterguild.json",
+    "invitationMission": null,
+    "missionTags": [],
+    "missionGiverFragmentTags": "",
+    "reputationPrerequisites": {
+      "_Type_": "ReputationPrerequisites",
+      "wantedLevelJurisdictionOverride": null,
+      "wantedLevel": {
+        "_Type_": "ReputationPrerequisiteRange",
+        "minValue": 0.0,
+        "maxValue": 2.0}},
+    "reputationRequirements": {
+      "_Type_": "SReputationMissionRequirementsParams",
+      "expression": [
+        {
+          "_Type_": "SReputationMissionGiverRequirementParams",
+          "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_bountyhuntersguild.json",
+          "reputationScope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty_bountyhuntersguild.json",
+          "comparison": "GreaterThanOrEqualTo",
+          "standing": "file://./../../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior_bountyhuntersguild.json"}]},
+    "minRequiredMissions": [],
+    "requiredMissions": [
+      "file://./../../../../../../../libs/foundry/records/missionbroker/pu_missions/pu_mercenary/bountyguild/pu_certificationmission_pve_veryeasy.json"],
+    "requiredCompletedMissionTags": [],
+    "requiredJournalEntries": [],
+    "requiredAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "excludedAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.bc928e7d-1e52-416f-86f3-2f4d19025743",
+                      "_RecordId_": "bc928e7d-1e52-416f-86f3-2f4d19025743"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionComplete_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetsToExpect_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionTargets_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [
+            {
+              "_Type_": "SpawnDescription_ShipGroup",
+              "Name": "",
+              "embeddedName": {
+                "_Type_": "MissionPropertyValue_AIName",
+                "randomName": true,
+                "randomLastName": true,
+                "randomNickName": true,
+                "characterGivenName": "@LOC_UNINITIALIZED",
+                "characterGivenLastName": "@LOC_UNINITIALIZED",
+                "characterGivenNickName": "@LOC_UNINITIALIZED",
+                "characterNameData": "file://./../../../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                "chanceOfNickName": 0.05},
+              "ships": [
+                {
+                  "_Type_": "SpawnDescription_ShipOptions",
+                  "options": [
+                    {
+                      "_Type_": "SpawnDescription_Ship",
+                      "tags": {
+                        "_Type_": "TagList",
+                        "tags": [
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f",
+                            "_RecordId_": "ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f"},
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.3069fb30-e0e6-4fd1-a25b-13152bf970f3",
+                            "_RecordId_": "3069fb30-e0e6-4fd1-a25b-13152bf970f3"},
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.6a7d46fa-68cc-4c1e-9e4d-73af17c3f3ea",
+                            "_RecordId_": "6a7d46fa-68cc-4c1e-9e4d-73af17c3f3ea"}]},
+                      "negativeTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "markupTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "entityTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "concurrentAmount": 1,
+                      "includeLocationAISpawnTags": false,
+                      "nameProperty": null,
+                      "weight": 1.0,
+                      "initialDamageSettings": null}]},
+                {
+                  "_Type_": "SpawnDescription_ShipOptions",
+                  "options": [
+                    {
+                      "_Type_": "SpawnDescription_Ship",
+                      "tags": {
+                        "_Type_": "TagList",
+                        "tags": [
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f",
+                            "_RecordId_": "ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f"},
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.1c361447-b3d2-4f59-90dd-3f8b6f95c0aa",
+                            "_RecordId_": "1c361447-b3d2-4f59-90dd-3f8b6f95c0aa"},
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.9878bc41-7585-4bd2-bc49-8862580b1b3b",
+                            "_RecordId_": "9878bc41-7585-4bd2-bc49-8862580b1b3b"}]},
+                      "negativeTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "markupTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "entityTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "concurrentAmount": 2,
+                      "includeLocationAISpawnTags": false,
+                      "nameProperty": null,
+                      "weight": 1.0,
+                      "initialDamageSettings": null}]}]}],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MarkOnSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RewardPerKill_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Contractor",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Organization",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+              "organizations": [
+                "file://./../../../../../../../libs/foundry/records/missiondata/pu_organizations/bountyguild.json"]}],
+          "debugForceChosenOrganization": null}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "IsMissionLawful_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TimeBeforeTargetEscape_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TimePerTargetShip_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetEscapeTimerStartOnHostileAction_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetEscapeTimerStartOnEnteredAA_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "IsMissionWaves_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ClearWaveBeforeProceeding_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NextWaveUponTargetKilled_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "UseNextWaveDelay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NextWaveDelay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "WaveCapSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0,
+              "variation": 0}]}}],
+    "objectiveTokens": [],
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []}}}

@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_UEE_Light_wTurret_MM",
+  "_RecordId_": "905fdc92-39c6-47c3-abd3-2ff4a4678d9c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2b93df17-dab5-4dc4-8c75-7b92e48a3f7d",
+          "_RecordId_": "2b93df17-dab5-4dc4-8c75-7b92e48a3f7d"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_pilots/human/uee/pu_pilots-human-uee-gunner_light.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.61d439f9-0bef-43e0-8ecc-fe96c9793d66",
+            "_RecordId_": "61d439f9-0bef-43e0-8ecc-fe96c9793d66"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null},
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_pilots/human/uee/pu_pilots-human-uee-pilot_light_mm.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Courier",
+  "_RecordId_": "5df51115-64ba-4e19-a8a7-f19303a54f33",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Courier",
+    "displayName": "@RepScope_Courier_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 7500,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/courier/reputationstanding_courier_noteligible.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/courier/reputationstanding_courier_rank0.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/courier/reputationstanding_courier_rank1.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/courier/reputationstanding_courier_rank2.json"]}}}

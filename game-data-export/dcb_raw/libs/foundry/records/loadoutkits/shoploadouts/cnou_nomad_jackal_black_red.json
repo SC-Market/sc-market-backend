@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.CNOU_Nomad_Jackal_Black_Red",
+  "_RecordId_": "3298edda-fea0-441c-9c93-5460c1045f68",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameNomad_Paint_Jackal_black_red",
+    "description": "@item_DescNomad_Paint_Jackal_black_red",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_nomad_jackal_black_red.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

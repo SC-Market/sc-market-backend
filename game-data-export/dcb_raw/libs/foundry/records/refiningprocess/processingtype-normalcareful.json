@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "RefiningProcess.ProcessingType-NormalCareful",
+  "_RecordId_": "b237049a-3bbf-42be-8cdb-252b6d33be26",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RefiningProcess",
+    "refiningSpeed": "Normal",
+    "refiningQuality": "Careful",
+    "processName": "@refinery_ui_ProcessingType_NormalCareful"}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MedBeam_Medgun_AdvMode",
+  "_RecordId_": "d868788a-7822-4a52-871a-b4f65b095771",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_MedBeam_MedicalDeviceModes_Title",
+    "BodyText": "@Hints_MedBeam_Medgun_AdvMode",
+    "BodyTextGamePad": "@Hints_MedBeam_Medgun_AdvMode",
+    "BodyTextJoystick": "@Hints_MedBeam_Medgun_AdvMode",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

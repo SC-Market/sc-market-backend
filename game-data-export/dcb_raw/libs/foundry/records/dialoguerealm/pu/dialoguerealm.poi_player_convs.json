@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "DialogueRealm.POI_Player_Convs",
+  "_RecordId_": "4fbf7c6f-28c5-4fbd-a1ea-310b10da94ff",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueRealm",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""}}}

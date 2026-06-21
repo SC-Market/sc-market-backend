@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Color_GRIN_White",
+  "_RecordId_": "025e0b2e-737d-45dc-8032-1f4343b41652",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255}}}}

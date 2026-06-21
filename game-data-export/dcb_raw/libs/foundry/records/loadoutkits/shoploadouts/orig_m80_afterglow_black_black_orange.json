@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.ORIG_M80_Afterglow_Black_Black_Orange",
+  "_RecordId_": "22feaf38-f1df-4736-af87-b0cf562356d4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameM80_Paint_black_black_orange",
+    "description": "@item_DescM80_Paint_black_black_orange",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_m80_black_black_orange.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

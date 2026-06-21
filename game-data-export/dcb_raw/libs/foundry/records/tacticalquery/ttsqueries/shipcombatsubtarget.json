@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "TacticalQuery.ShipCombatSubTarget",
+  "_RecordId_": "0e11ffb6-1eac-44b1-9396-f81c4dea31d0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "ShipCombatSubTarget",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ef734509-be28-47c9-87df-2775db104d38",
+                  "_RecordId_": "ef734509-be28-47c9-87df-2775db104d38"}],
+              "negativeTags": []}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defaultshipsubtargetcontent.json",
+        "optionOverrides": [
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e44fa27e-cc37-485c-a551-d0ab42df2d8d",
+                      "_RecordId_": "e44fa27e-cc37-485c-a551-d0ab42df2d8d"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d93e525f-3081-46f5-afbd-eb459dafbdb3",
+                      "_RecordId_": "d93e525f-3081-46f5-afbd-eb459dafbdb3"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/capitalshipturretsubtargetcontent.json",
+            "optionOverrides": []}]}]}}

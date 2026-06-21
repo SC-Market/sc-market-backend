@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_DC_Interior_Hurston_Farnesway",
+  "_RecordId_": "d38f8c43-3d7b-4a89-b87f-1a4d0bb34b7f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json"]},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_lawfulsecurity_hurstonsecurity.json"},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.e039c470-0b59-4f3d-88fc-1f9846174b29",
+      "_RecordId_": "e039c470-0b59-4f3d-88fc-1f9846174b29"},
+    "trespassWarningSeconds": 10.0,
+    "trespassRevokeWarningSeconds": 1800.0}}

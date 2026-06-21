@@ -1,0 +1,112 @@
+{
+  "_RecordName_": "ConversationBank.Gen_NPC_Convs",
+  "_RecordId_": "417200db-6208-4497-b46a-f351f428a4f3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ConversationBank",
+    "region": "Gen_NPC_Convs",
+    "conversations": [
+      {
+        "_RecordId_": "872f2422-6841-4232-ad24-c4b9338a25ef",
+        "_RecordName_": "Conversation.Gen_NPC_Conv_0001",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:1"},
+          {
+            "_Pointer_": "ptr:1",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:2",
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_1.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0001_1",
+              "_RecordId_": "9e100994-a960-4e98-9542-406da1576951"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:2",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_2.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0001_2",
+              "_RecordId_": "926e7dc4-e993-49e6-91de-5d5495bca975"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1aae2be5-3022-4f43-88d6-292ad4dc2ad2",
+        "_RecordName_": "Conversation.Gen_NPC_Conv_0002",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:3"},
+          {
+            "_Pointer_": "ptr:3",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:4",
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_1.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0002_1",
+              "_RecordId_": "b6dd9aa0-303a-4d7c-9257-c1223571c948"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:4",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_2.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0002_2",
+              "_RecordId_": "1aab78e4-74dc-48c5-b08d-9dddca92130c"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "de0ee3ce-8825-44fd-8ce8-f409257e8f74",
+        "_RecordName_": "Conversation.Gen_NPC_Conv_0003",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:5"},
+          {
+            "_Pointer_": "ptr:5",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:6",
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_1.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0003_1",
+              "_RecordId_": "3e94e383-296c-428d-8b13-386a39cde5ab"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:6",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_2.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0003_2",
+              "_RecordId_": "1a9dc936-3458-4f1b-ae7f-b840ef68fa66"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f24675be-58d5-4ea9-b909-ee8cff61d056",
+        "_RecordName_": "Conversation.Gen_NPC_Conv_0004",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:7"},
+          {
+            "_Pointer_": "ptr:7",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:8",
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_1.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0004_1",
+              "_RecordId_": "5369f3b4-cf96-44b1-970c-05ea52badfa7"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:8",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/pu/gen_npc_convs/dialoguecontextbank.gen_npc_convs_citizen_2.json",
+              "_RecordName_": "DialogueContext.Gen_NPC_Conv_0004_2",
+              "_RecordId_": "ea8dce07-7df6-464d-b86b-b5722ae28170"},
+            "skipNodeInXSecs": -1.0}]}]}}

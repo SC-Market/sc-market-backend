@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "AIObservableFiltersProfile.DefaultObservableProfile_Creature",
+  "_RecordId_": "e27bd5c6-9df9-45d4-bcc4-d545a757584f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIObservableFiltersProfile",
+    "observableFilters": [
+      {
+        "_Type_": "AIObservableFilters",
+        "typesAndStatus": [
+          "file://./../../../../../../libs/foundry/records/aiprofile/perception/observablefilters/flags/creature/defaultobservablefilterflags_creature.json",
+          null]}]}}

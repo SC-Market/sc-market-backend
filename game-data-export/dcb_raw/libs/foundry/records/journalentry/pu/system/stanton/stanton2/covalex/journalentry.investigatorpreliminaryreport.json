@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.InvestigatorPreliminaryReport",
+  "_RecordId_": "5d583829-440c-4bce-a3ff-f16acb621de8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Journal_System_Stanton_Stanton2_Covalex_InvestigatorPreliminaryReport_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@Journal_System_Stanton_Stanton2_Covalex_InvestigatorPreliminaryReport_Author",
+    "autoOpenMobiGlas": true,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Journal_System_Stanton_Stanton2_Covalex_InvestigatorPreliminaryReport_Body"},
+    "tutorialEntry": false}}

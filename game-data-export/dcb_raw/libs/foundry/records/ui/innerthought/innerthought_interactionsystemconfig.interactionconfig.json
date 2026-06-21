@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "InnerThought_InteractionSystemConfig.InteractionConfig",
+  "_RecordId_": "b8749465-58b1-49b7-91f1-836d6533d759",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_InteractionSystemConfig",
+    "minDistance": 1.2,
+    "maxDistance": 1.4,
+    "rotationRate": 200.0,
+    "innerThought": "file://./../../../../../libs/foundry/records/ui/innerthought/params/cleanparams.json"}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.GRIN_ROC_DS_Template",
+  "_RecordId_": "941ec013-061b-4b49-8488-36e0ebe1765d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 2.15}}}}

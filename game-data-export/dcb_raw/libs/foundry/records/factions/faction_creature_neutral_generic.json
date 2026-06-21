@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "Faction.Faction_Creature_Neutral_Generic",
+  "_RecordId_": "473ee0b2-d2f5-4fdf-b4d3-3a402942eb0b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [],
+    "factionType": "Unlawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": true,
+    "factionReputationRef": null}}

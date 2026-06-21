@@ -1,0 +1,86 @@
+{
+  "_RecordName_": "ScenarioProgress.FFFinale_ScenarioProgress",
+  "_RecordId_": "e356d9f5-f4c1-417a-babb-f8a9b0103f45",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScenarioProgress",
+    "multiplierRewards": [],
+    "factionRewardTiers": [
+      {
+        "_Type_": "SScenarioProgressRewardsTiers",
+        "faction": "file://./../../../../libs/foundry/records/factions/faction_reputation_lawful_citizensforprosperity.json",
+        "convertTiersPointsToPercent": false,
+        "tierProgressions": [],
+        "rewardPeriodical": [
+          {
+            "_Type_": "SRewardPeriodical",
+            "timePeriodText": "@CFPvsHH_faction_player_Week1",
+            "minPoints": 1500,
+            "globalPointsMultiplier": 1.15,
+            "minMultiplierThreshold": 0.8,
+            "completionTags": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.dc7ac18c-e1f1-4232-8737-cc59ef2389e6",
+              "_RecordId_": "dc7ac18c-e1f1-4232-8737-cc59ef2389e6"},
+            "periodMissionScenario": "file://./../../../../libs/foundry/records/missionscenarios/fffinale_scenario_phase1.json"},
+          {
+            "_Type_": "SRewardPeriodical",
+            "timePeriodText": "@CFPvsHH_faction_player_Week2",
+            "minPoints": 1750,
+            "globalPointsMultiplier": 1.15,
+            "minMultiplierThreshold": 0.8,
+            "completionTags": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.c26f7f69-4215-4c01-b13c-97df2f7a775d",
+              "_RecordId_": "c26f7f69-4215-4c01-b13c-97df2f7a775d"},
+            "periodMissionScenario": "file://./../../../../libs/foundry/records/missionscenarios/fffinale_scenario_phase2.json"},
+          {
+            "_Type_": "SRewardPeriodical",
+            "timePeriodText": "@CFPvsHH_faction_player_Week3",
+            "minPoints": 2250,
+            "globalPointsMultiplier": 1.15,
+            "minMultiplierThreshold": 0.8,
+            "completionTags": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.e9deb30b-bd8f-4f00-9c34-3700f6c5e5a5",
+              "_RecordId_": "e9deb30b-bd8f-4f00-9c34-3700f6c5e5a5"},
+            "periodMissionScenario": "file://./../../../../libs/foundry/records/missionscenarios/fffinale_scenario_phase3.json"}]},
+      {
+        "_Type_": "SScenarioProgressRewardsTiers",
+        "faction": "file://./../../../../libs/foundry/records/factions/faction_reputation_unlawful_headhunters.json",
+        "convertTiersPointsToPercent": false,
+        "tierProgressions": [],
+        "rewardPeriodical": [
+          {
+            "_Type_": "SRewardPeriodical",
+            "timePeriodText": "@CFPvsHH_faction_player_Week1",
+            "minPoints": 1500,
+            "globalPointsMultiplier": 1.15,
+            "minMultiplierThreshold": 0.8,
+            "completionTags": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.32e17873-c31e-4311-94a7-6b4a32d11dae",
+              "_RecordId_": "32e17873-c31e-4311-94a7-6b4a32d11dae"},
+            "periodMissionScenario": "file://./../../../../libs/foundry/records/missionscenarios/fffinale_scenario_phase1.json"},
+          {
+            "_Type_": "SRewardPeriodical",
+            "timePeriodText": "@CFPvsHH_faction_player_Week2",
+            "minPoints": 1750,
+            "globalPointsMultiplier": 1.15,
+            "minMultiplierThreshold": 0.8,
+            "completionTags": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.40c9a0ac-f2cc-410c-9a7f-b3da0b762a92",
+              "_RecordId_": "40c9a0ac-f2cc-410c-9a7f-b3da0b762a92"},
+            "periodMissionScenario": "file://./../../../../libs/foundry/records/missionscenarios/fffinale_scenario_phase2.json"},
+          {
+            "_Type_": "SRewardPeriodical",
+            "timePeriodText": "@CFPvsHH_faction_player_Week3",
+            "minPoints": 2250,
+            "globalPointsMultiplier": 1.15,
+            "minMultiplierThreshold": 0.8,
+            "completionTags": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.2777cdf8-1c95-4621-84f6-90eadd63c819",
+              "_RecordId_": "2777cdf8-1c95-4621-84f6-90eadd63c819"},
+            "periodMissionScenario": "file://./../../../../libs/foundry/records/missionscenarios/fffinale_scenario_phase3.json"}]}]}}

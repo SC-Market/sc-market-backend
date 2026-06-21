@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Shopping03",
+  "_RecordId_": "bae1a590-769b-4530-95b2-83edf7279ad2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Shopping_Title",
+    "BodyText": "@Hints_Shopping3",
+    "BodyTextGamePad": "@Hints_Shopping3",
+    "BodyTextJoystick": "@Hints_Shopping3",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

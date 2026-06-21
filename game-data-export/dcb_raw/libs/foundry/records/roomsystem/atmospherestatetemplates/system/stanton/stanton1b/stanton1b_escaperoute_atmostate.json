@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AtmosphereStateTemplate.Stanton1b_EscapeRoute_AtmoState",
+  "_RecordId_": "b0e086bd-5af2-4b6b-81e5-7b76910a66c6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereStateTemplate",
+    "state": {
+      "_Type_": "AtmosphereStateTemplateInternal",
+      "pressureMod": "Override",
+      "pressure": 0.9,
+      "temperatureMod": "Override",
+      "temperature": 303.0,
+      "humidityMod": "Override",
+      "humidity": 0.39}}}

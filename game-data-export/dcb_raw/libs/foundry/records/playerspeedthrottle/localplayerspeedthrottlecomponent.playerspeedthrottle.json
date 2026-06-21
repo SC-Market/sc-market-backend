@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "LocalPlayerSpeedThrottleComponent.PlayerSpeedThrottle",
+  "_RecordId_": "f2cdffc4-efd2-456c-82f3-0e1a753dc1b5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LocalPlayerSpeedThrottleComponent",
+    "params": {
+      "_Type_": "SpeedThrottleConfiguration",
+      "activeMode": "Always",
+      "defaultSpeed": "FastRun",
+      "defaultSpeedWithWeapon": "FastRun",
+      "mouseWheelSpeedStep": 0.25,
+      "holdTime": 0.0,
+      "durationAccelerateToFastRun": 0.07,
+      "durationBoostToSprint": 0.0,
+      "durationUnboostFromSprint": 0.0,
+      "durationDecelerateToDefault": 0.0,
+      "withWeaponDurationModifier": 1.0,
+      "defaultTutorialSpeed": "SlowWalk"}}}

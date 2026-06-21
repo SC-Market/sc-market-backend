@@ -1,0 +1,63 @@
+{
+  "_RecordName_": "LootV3SecondaryChoicesSingleLayerRecord.V3SecondaryChoices_Rarity_Legendary",
+  "_RecordId_": "fbe1e894-85ff-41ae-b7ce-df112c31395c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootV3SecondaryChoicesSingleLayerRecord",
+    "choices": [
+      {
+        "_Type_": "LootV3SecondaryChoiceEntry",
+        "name": "Common",
+        "weight": 8.0,
+        "selector": {
+          "_Type_": "LootV3SecondaryChoiceEntrySelector_Tags",
+          "tags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.59ca5e36-b9a2-4459-ad0e-5745bcf5d899",
+                "_RecordId_": "59ca5e36-b9a2-4459-ad0e-5745bcf5d899"}],
+            "negativeTags": []}}},
+      {
+        "_Type_": "LootV3SecondaryChoiceEntry",
+        "name": "Uncommon",
+        "weight": 4.0,
+        "selector": {
+          "_Type_": "LootV3SecondaryChoiceEntrySelector_Tags",
+          "tags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a46e2f3-6651-4283-8447-c01e6dd778e8",
+                "_RecordId_": "9a46e2f3-6651-4283-8447-c01e6dd778e8"}],
+            "negativeTags": []}}},
+      {
+        "_Type_": "LootV3SecondaryChoiceEntry",
+        "name": "Rare",
+        "weight": 2.0,
+        "selector": {
+          "_Type_": "LootV3SecondaryChoiceEntrySelector_Tags",
+          "tags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.dfbc6af5-6211-4d71-8d10-b64c66ea95a9",
+                "_RecordId_": "dfbc6af5-6211-4d71-8d10-b64c66ea95a9"}],
+            "negativeTags": []}}},
+      {
+        "_Type_": "LootV3SecondaryChoiceEntry",
+        "name": "Epic",
+        "weight": 1.0,
+        "selector": {
+          "_Type_": "LootV3SecondaryChoiceEntrySelector_Tags",
+          "tags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.b285311b-1f68-4a69-b73f-1295e83a3909",
+                "_RecordId_": "b285311b-1f68-4a69-b73f-1295e83a3909"}],
+            "negativeTags": []}}}]}}

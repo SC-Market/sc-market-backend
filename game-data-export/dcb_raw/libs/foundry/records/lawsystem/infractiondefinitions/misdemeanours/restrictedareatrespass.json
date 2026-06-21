@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "InfractionDefinition.RestrictedAreaTrespass",
+  "_RecordId_": "18e8d5d8-2303-4d54-856c-d8b36a22483a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InfractionDefinition",
+    "name": "@Infractions_Name_008",
+    "description": "@Infractions_Desc_008",
+    "triggers": [
+      "RestrictedAreaTrespass"],
+    "defaultParameters": {
+      "_Type_": "InfractionParameters",
+      "isFelony": -1,
+      "graceAllowance": -1,
+      "graceAllowanceCooldown": -1.0,
+      "gracePeriod": -1.0,
+      "graceCooloffScale": -1.0,
+      "graceWarnings": [],
+      "displayGraceTime": -1,
+      "escalatedPaymentFineMultiplier": 32.0,
+      "earlyPaymentPeriod": 168.0,
+      "lifetime": 168.0,
+      "coolOffTime": -1.0,
+      "pressChargesNotificationTime": -1.0,
+      "removeTimeSeconds": -1.0,
+      "felonyMerits": -1,
+      "ignoreIfAgainstPartyMember": -1,
+      "hideCrimeNotification": -1,
+      "hideCrimeInJournal": -1}}}

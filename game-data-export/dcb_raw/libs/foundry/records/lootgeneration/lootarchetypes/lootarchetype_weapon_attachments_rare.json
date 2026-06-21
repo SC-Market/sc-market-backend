@@ -1,0 +1,99 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Weapon_Attachments_Rare",
+  "_RecordId_": "c855dcaf-7100-4aa6-93fd-c1ac4a00e5b8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a54f6149-8696-48bb-811e-3ddc79e4d412",
+          "_RecordId_": "a54f6149-8696-48bb-811e-3ddc79e4d412"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.294f29fa-d2bb-406a-b9c1-413fbf323676",
+          "_RecordId_": "294f29fa-d2bb-406a-b9c1-413fbf323676"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ff58e635-0f6c-4ce1-acdb-3f1ad98ff16d",
+          "_RecordId_": "ff58e635-0f6c-4ce1-acdb-3f1ad98ff16d"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6101f12b-1494-4561-93cd-0c6e6e69bc6a",
+          "_RecordId_": "6101f12b-1494-4561-93cd-0c6e6e69bc6a"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Any Attachments ",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+            "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.6101f12b-1494-4561-93cd-0c6e6e69bc6a",
+                "_RecordId_": "6101f12b-1494-4561-93cd-0c6e6e69bc6a"}]},
+          "weight": 1.0,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_SpawnWith",
+              "name": "come with weapon",
+              "tagsToMatch": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.cdef6808-2dff-487b-8183-47c83694772c",
+                    "_RecordId_": "cdef6808-2dff-487b-8183-47c83694772c"},
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.d1a1ca94-5b2b-452d-913d-791158036127",
+                    "_RecordId_": "d1a1ca94-5b2b-452d-913d-791158036127"},
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.0436bd92-db4f-4c46-9ba9-75801569d825",
+                    "_RecordId_": "0436bd92-db4f-4c46-9ba9-75801569d825"}],
+                "negativeTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                    "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"},
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.bb9b326f-8f20-45ae-af80-dff9c1b111d4",
+                    "_RecordId_": "bb9b326f-8f20-45ae-af80-dff9c1b111d4"},
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.294f29fa-d2bb-406a-b9c1-413fbf323676",
+                    "_RecordId_": "294f29fa-d2bb-406a-b9c1-413fbf323676"},
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.01e3aa70-377e-49df-911f-21bf56bf2ad4",
+                    "_RecordId_": "01e3aa70-377e-49df-911f-21bf56bf2ad4"}]},
+              "mode": "MostSimilar",
+              "min": 1,
+              "max": 1}]}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.dfbc6af5-6211-4d71-8d10-b64c66ea95a9",
+              "_RecordId_": "dfbc6af5-6211-4d71-8d10-b64c66ea95a9"},
+            "weight": 1.0}]}]}}

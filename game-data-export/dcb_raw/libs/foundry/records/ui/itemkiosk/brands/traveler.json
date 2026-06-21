@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Traveler",
+  "_RecordId_": "eb52a469-cade-4a27-8895-2e040bfe243f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "traveler",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/traveler.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 0,
+      "g": 113,
+      "b": 188,
+      "a": 255}}}

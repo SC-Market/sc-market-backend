@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_Foxwell",
+  "_RecordId_": "be0fd433-9a75-44c1-9944-31e37a7a336a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Human_First_Names_M",
+    "nickNameString": "Human_nickNames",
+    "lastNameString": "Human_Surnames",
+    "numFirstNames": 2110,
+    "numNickNames": 410,
+    "numLastNames": 5100,
+    "nicknameChance": 0.05}}

@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "MusicLogicEventList.Race",
+  "_RecordId_": "89f80b36-5b7b-4870-be8e-4b21b4c213c5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicEventList",
+    "events": [
+      {
+        "_RecordId_": "4cbb3438-c802-4c4a-a3b6-9cdac40fdbd0",
+        "_RecordName_": "MusicLogicEvent.MX_RACE_First_Place",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_RACE_First_Place",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "7ce6fb70-d620-4986-ae2d-f36e52a79aba",
+        "_RecordName_": "MusicLogicEvent.MX_RACE_Last_Place",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_RACE_Last_Place",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "45c273d8-13ad-49e9-b7d6-10e7108f8ed6",
+        "_RecordName_": "MusicLogicEvent.MX_RACE_Position_Down",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_RACE_Position_Down",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "9b4fa2bb-8315-43c1-82cd-1f396fe97f92",
+        "_RecordName_": "MusicLogicEvent.MX_RACE_Position_Up",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_RACE_Position_Up",
+        "retriggerDelay": 0.0}]}}

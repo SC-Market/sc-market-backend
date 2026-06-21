@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "Faction_LEGACY.Xian",
+  "_RecordId_": "85561f3b-9baa-47e6-914f-c9626f1f07e7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction_LEGACY",
+    "displayName": "@vehicle_FactionXian",
+    "description": "@LOC_EMPTY",
+    "factionIcon": "",
+    "gameToken": "Xian",
+    "defaultReaction": "Neutral",
+    "friendlyFireBehaviorOverrides": [],
+    "factionRelationships": [
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/hostile.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/neutral.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/ea_friendtoall.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/xenothreat.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/ninetails.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/pirates.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/slaves.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/outcasts.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/privatesecurity.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/slavers.json",
+        "reactionType": "Hostile"}],
+    "disguiseManufacturerTags": {
+      "_Type_": "TagsDNF",
+      "terms": []}}}

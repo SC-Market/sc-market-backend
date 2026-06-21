@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.AmeliaBourke",
+  "_RecordId_": "5d6f01bd-1fb9-4eb0-b686-80bb37568c23",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Amelia Bourke",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mdt.json"}}}

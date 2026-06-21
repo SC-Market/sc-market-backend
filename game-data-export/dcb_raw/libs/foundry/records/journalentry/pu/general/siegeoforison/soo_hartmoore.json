@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.SOO_Hartmoore",
+  "_RecordId_": "edf71e3b-a86a-40e2-b3a1-ec9403e36a3c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@FW22_NT_Journal_Title_03",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": true,
+    "removeOnMissionEnd": true,
+    "Style": null,
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@FW22_NT_Journal_Body_03"},
+    "tutorialEntry": false}}

@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "RadarSignatureCategoryDefinition.RadarSignatureCategories",
+  "_RecordId_": "f13a4bb2-dfe2-4eae-a5bf-c5170c9081dd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RadarSignatureCategoryDefinition",
+    "default": {
+      "_RecordId_": "100ef7e7-2ccd-4f42-9cff-2e90e3ca162d",
+      "_RecordName_": "RadarSignatureCategoryEntry.100ef7e7-2ccd-4f42-9cff-2e90e3ca162d",
+      "_Type_": "RadarSignatureCategoryEntry",
+      "name": "Other",
+      "displayName": "@ui_Other"},
+    "types": [
+      {
+        "_RecordId_": "100ef7e7-2ccd-4f42-9cff-2e90e3ca162d",
+        "_RecordName_": "RadarSignatureCategoryEntry.100ef7e7-2ccd-4f42-9cff-2e90e3ca162d",
+        "_Type_": "RadarSignatureCategoryEntry",
+        "name": "Other",
+        "displayName": "@ui_Other"}]}}

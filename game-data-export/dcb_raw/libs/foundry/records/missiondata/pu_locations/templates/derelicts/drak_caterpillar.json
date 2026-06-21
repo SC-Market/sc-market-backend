@@ -1,0 +1,250 @@
+{
+  "_RecordName_": "MissionLocationTemplate.DRAK_Caterpillar",
+  "_RecordId_": "4503745b-c818-4f14-884c-50801cd7e027",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f00b6f01-7245-437d-9c41-da6a00e2df43",
+            "_RecordId_": "f00b6f01-7245-437d-9c41-da6a00e2df43"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1e4b1a24-4f66-41ed-901f-31a4627d1f79",
+            "_RecordId_": "1e4b1a24-4f66-41ed-901f-31a4627d1f79"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.17beb8aa-68a1-48e4-8b18-38ca25718e94",
+            "_RecordId_": "17beb8aa-68a1-48e4-8b18-38ca25718e94"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": [
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+              "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+            "string": "@mission_ship_0006"}]},
+      "missionModules": [
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "libs/subsumption/missions/pu/pu_missionmodules/pu_scavenge_space_spawn.xml",
+          "missionInputs": [],
+          "properties": []},
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs\\Subsumption\\Missions\\PU\\PU_MissionModules\\LocationManager\\LocationDefence\\ShipLocationDefence.xml",
+          "missionInputs": [],
+          "properties": [
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "WaveSpawnDescriptions_BP",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+                "spawnDescriptions": [
+                  {
+                    "_Type_": "SpawnDescription_ShipGroup",
+                    "Name": "Location Defence",
+                    "embeddedName": null,
+                    "ships": [
+                      {
+                        "_Type_": "SpawnDescription_ShipOptions",
+                        "options": [
+                          {
+                            "_Type_": "SpawnDescription_Ship",
+                            "tags": {
+                              "_Type_": "TagList",
+                              "tags": [
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.dfe438a4-43d9-44c9-9780-b18b4e1d0521",
+                                  "_RecordId_": "dfe438a4-43d9-44c9-9780-b18b4e1d0521"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.12292169-1592-4550-ae34-750db47ad0d7",
+                                  "_RecordId_": "12292169-1592-4550-ae34-750db47ad0d7"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.f9e10d57-6c91-4228-8d40-a9d56b7483c6",
+                                  "_RecordId_": "f9e10d57-6c91-4228-8d40-a9d56b7483c6"}]},
+                            "negativeTags": {
+                              "_Type_": "TagList",
+                              "tags": [
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.9e44d5a3-ed27-4025-9699-3b4a27679458",
+                                  "_RecordId_": "9e44d5a3-ed27-4025-9699-3b4a27679458"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.6722405f-bacd-4830-bdbd-4a3ada93ade4",
+                                  "_RecordId_": "6722405f-bacd-4830-bdbd-4a3ada93ade4"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.e35b34f5-98ca-42a3-a007-ebfce380fdcc",
+                                  "_RecordId_": "e35b34f5-98ca-42a3-a007-ebfce380fdcc"}]},
+                            "markupTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "entityTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "concurrentAmount": 3,
+                            "includeLocationAISpawnTags": false,
+                            "nameProperty": null,
+                            "weight": 0.3,
+                            "initialDamageSettings": null},
+                          {
+                            "_Type_": "SpawnDescription_Ship",
+                            "tags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "negativeTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "markupTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "entityTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "concurrentAmount": 1,
+                            "includeLocationAISpawnTags": false,
+                            "nameProperty": null,
+                            "weight": 0.7,
+                            "initialDamageSettings": null}]},
+                      {
+                        "_Type_": "SpawnDescription_ShipOptions",
+                        "options": [
+                          {
+                            "_Type_": "SpawnDescription_Ship",
+                            "tags": {
+                              "_Type_": "TagList",
+                              "tags": [
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.33e0472e-e3ad-4701-951a-915bf5f8a691",
+                                  "_RecordId_": "33e0472e-e3ad-4701-951a-915bf5f8a691"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.12292169-1592-4550-ae34-750db47ad0d7",
+                                  "_RecordId_": "12292169-1592-4550-ae34-750db47ad0d7"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.f9e10d57-6c91-4228-8d40-a9d56b7483c6",
+                                  "_RecordId_": "f9e10d57-6c91-4228-8d40-a9d56b7483c6"}]},
+                            "negativeTags": {
+                              "_Type_": "TagList",
+                              "tags": [
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.9e44d5a3-ed27-4025-9699-3b4a27679458",
+                                  "_RecordId_": "9e44d5a3-ed27-4025-9699-3b4a27679458"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.6722405f-bacd-4830-bdbd-4a3ada93ade4",
+                                  "_RecordId_": "6722405f-bacd-4830-bdbd-4a3ada93ade4"},
+                                {
+                                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                  "_RecordName_": "Tag.e35b34f5-98ca-42a3-a007-ebfce380fdcc",
+                                  "_RecordId_": "e35b34f5-98ca-42a3-a007-ebfce380fdcc"}]},
+                            "markupTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "entityTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "concurrentAmount": 1,
+                            "includeLocationAISpawnTags": false,
+                            "nameProperty": null,
+                            "weight": 0.3,
+                            "initialDamageSettings": null},
+                          {
+                            "_Type_": "SpawnDescription_Ship",
+                            "tags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "negativeTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "markupTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "entityTags": {
+                              "_Type_": "TagList",
+                              "tags": []},
+                            "concurrentAmount": 1,
+                            "includeLocationAISpawnTags": false,
+                            "nameProperty": null,
+                            "weight": 0.7,
+                            "initialDamageSettings": null}]}]}],
+                "allowedForMissionRestrictedDeliveries": false}},
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "SpawnWaveOnStream_BP",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Boolean",
+                "value": true}},
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "ContinuousWaves_BP",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Boolean",
+                "value": false}},
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "TimeBetweenWave_BP",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Float",
+                "options": [
+                  {
+                    "_Type_": "MissionPropertyValueOption_Float",
+                    "textId": "@LOC_UNINITIALIZED",
+                    "weighting": 1.0,
+                    "DEBUG_forceChooseThisOption": false,
+                    "dependentProperties": [],
+                    "value": 240.0,
+                    "variation": 0.0}]}},
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "MaxShips_BP",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Integer",
+                "options": [
+                  {
+                    "_Type_": "MissionPropertyValueOption_Integer",
+                    "textId": "@LOC_UNINITIALIZED",
+                    "weighting": 1.0,
+                    "DEBUG_forceChooseThisOption": false,
+                    "dependentProperties": [],
+                    "value": 5,
+                    "variation": 0}]}}]}],
+      "missionLimits": [],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

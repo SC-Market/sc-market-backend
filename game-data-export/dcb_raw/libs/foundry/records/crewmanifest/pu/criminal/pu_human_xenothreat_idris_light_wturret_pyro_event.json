@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_Xenothreat_Idris_Light_wTurret_Pyro_Event",
+  "_RecordId_": "d64d9ba1-c922-4741-acc4-690c004fd25a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.79aacc7b-d9bd-4ea1-a738-b4eb2acb792a",
+          "_RecordId_": "79aacc7b-d9bd-4ea1-a738-b4eb2acb792a"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/xenothreat/pu_human-xenothreat-pilot-male-light_01.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

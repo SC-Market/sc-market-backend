@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "Faction.Faction_Reputation_Lawful_WildstarRacing",
+  "_RecordId_": "35b0d342-8d8a-4b0e-adda-fc85cae49afd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [
+      {
+        "_Type_": "FriendlyFireReactionOverride",
+        "reactionType": "Neutral",
+        "shouldAllowFriendlyFire": false}],
+    "factionType": "Lawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": "file://./../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_wildstarracing.json"}}

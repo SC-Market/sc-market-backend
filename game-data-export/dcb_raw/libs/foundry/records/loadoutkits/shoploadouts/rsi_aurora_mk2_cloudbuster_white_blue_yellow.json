@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.RSI_Aurora_Mk2_Cloudbuster_White_Blue_Yellow",
+  "_RecordId_": "ab45d43f-e936-424d-a8e6-163fd84aeb40",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameAurora_Mk2_Paint_White_Blue_Yellow",
+    "description": "@item_DescAurora_Mk2_Paint_White_Blue_Yellow",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_aurora_mk2_white_blue_yellow.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

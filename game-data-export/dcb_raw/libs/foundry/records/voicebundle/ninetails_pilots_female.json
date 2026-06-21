@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VoiceBundle.NineTails_Pilots_Female",
+  "_RecordId_": "3a933a6a-3d49-4032-bbd4-bdabf2774f40",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "NineTails_Pilots_Female",
+    "voices": [
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_female/ntpilot01.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_female/ntpilot02.json"]}}

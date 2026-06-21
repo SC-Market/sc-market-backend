@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "EntityClassDefinition.ObjectContainerInstance",
+  "_RecordId_": "a534c9dc-4832-408d-9850-267c4341aae4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SOCInstanceComponentParams",
+        "slots": [
+          {
+            "_Type_": "SOCInstanceSlot",
+            "objectContainerRef": ""}],
+        "rulesConfig": null},
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": ""}]}}

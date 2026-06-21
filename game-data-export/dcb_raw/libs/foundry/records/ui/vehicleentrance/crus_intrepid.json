@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.CRUS_Intrepid",
+  "_RecordId_": "867e293d-2836-437e-8b7b-f51332d90db2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_entrance_ramp",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.62,
+          "y": 1.47,
+          "z": -0.15},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_cargo",
+        "jointName": "hardpoint_cargodoor_left",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.45,
+          "y": -5.5,
+          "z": 0.0},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_cargo",
+        "jointName": "hardpoint_cargodoor_right",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.45,
+          "y": -5.5,
+          "z": 0.0},
+        "shipState": "Both"}]}}

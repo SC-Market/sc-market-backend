@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "SCItemSuitFuelParams.EVAThrusterFuel",
+  "_RecordId_": "0cea3971-e865-4847-bf65-dcc2ac5a80dd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SCItemSuitFuelParams",
+    "fuelResourcePrimary": {
+      "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.EVAFuel",
+      "_RecordId_": "12181a14-034b-4deb-92b7-2faf2cfd182b"},
+    "fuelResourceSecondary": {
+      "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Oxygen",
+      "_RecordId_": "15fe1d6a-8e3e-41ad-b4b0-8a5960d75f2d"},
+    "primaryFuelBurnRateMicroSCU": {
+      "_Type_": "SMicroCargoUnit",
+      "microSCU": 1},
+    "secondaryFuelBurnRateGrams": 0.1,
+    "fuelRefillRateFromTankMicroSCU": {
+      "_Type_": "SMicroCargoUnit",
+      "microSCU": 1},
+    "fuelRefillRateFromAtmosphereMicroSCU": {
+      "_Type_": "SMicroCargoUnit",
+      "microSCU": 1},
+    "fuelRefillRateFromInjectionMicroSCU": {
+      "_Type_": "SMicroCargoUnit",
+      "microSCU": 1},
+    "gasConversionRatios": [
+      {
+        "_Type_": "SCItemSuitAtmosphereFuelConversionParams",
+        "Gas": "file://./../../../../libs/foundry/records/roomsystem/gasparams/gasparams.oxygen.json",
+        "massConversionRatio": 1.0}],
+    "usingSecondaryFuelMessage": "@notification_actor_eva_fuel_empty"}}

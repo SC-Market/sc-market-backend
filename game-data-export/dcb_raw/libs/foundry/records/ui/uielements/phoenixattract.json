@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.PhoenixAttract",
+  "_RecordId_": "2de247e0-66cc-4a22-9070-26587a2165c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/Ships/Constellation/assets/SWF/PhoenixAnim1.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

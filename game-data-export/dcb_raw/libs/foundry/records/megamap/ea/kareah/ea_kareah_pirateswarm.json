@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "MegaMap.EA_Kareah_PirateSwarm",
+  "_RecordId_": "738346e9-8905-473d-90ae-795969d9368c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_pirateswarm.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/Kareah/kareah_global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "libs/subsumption/missions/ac/ac_swarm/ac_swarm.xml",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2a/starmapobject.stanton2a.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/Kareah/kareah_survivalsolo.socpak"]},
+      "planetOverrideParams": null},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_kareah.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

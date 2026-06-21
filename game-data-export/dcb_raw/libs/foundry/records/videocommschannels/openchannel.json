@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel",
+  "_RecordId_": "79acf6cb-2fa7-4e14-9561-3fbd8a649f8d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel",
+    "displayName": "@comm_channel_Global",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

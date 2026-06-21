@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Empire_Health_Services_Floor",
+  "_RecordId_": "135dccca-9a82-4590-85f7-2662c9ec82b2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@interiormap_common_floor_dynamic",
+    "restrictViewBounds": true}}

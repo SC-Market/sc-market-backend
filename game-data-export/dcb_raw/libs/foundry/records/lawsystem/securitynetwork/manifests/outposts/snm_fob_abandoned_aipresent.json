@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_FOB_Abandoned_AIPresent",
+  "_RecordId_": "f794a7ab-19a3-4e4e-96b6-a01082f824eb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": null},
+    "roomProtocols": [],
+    "variables": [],
+    "hostilityRules": [],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

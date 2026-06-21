@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_FuelPod_Ship",
+  "_RecordId_": "749ac3fd-bf65-4ece-8de7-b7e9f9f8fd03",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_misc_standard.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_misc_standard_hydrogenprefilled.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_misc_standard_quantumprefilled.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_stor_big.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_stor_big_hydrogenprefilled.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_stor_big_quantumprefilled.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_stor_secure.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_stor_secure_hydrogenprefilled.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/refueling/fuelpod/fuelpod_stor_secure_quantumprefilled.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Ship_Fuel_Pod_Name"}}

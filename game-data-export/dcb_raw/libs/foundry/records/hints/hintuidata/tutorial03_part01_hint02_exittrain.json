@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial03_Part01_Hint02_ExitTrain",
+  "_RecordId_": "13eebad4-77e8-4fa6-bd0d-d807755a0b32",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut03_Part01_Hint02_ExitTrain_Title",
+    "BodyText": "@Tut03_Part01_Hint02_ExitTrain",
+    "BodyTextGamePad": "@Tut03_Part01_Hint02_ExitTrain",
+    "BodyTextJoystick": "@Tut03_Part01_Hint02_ExitTrain",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

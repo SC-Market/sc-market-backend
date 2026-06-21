@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "DialogueRealm.Gen_NPC_Convs",
+  "_RecordId_": "b2a55552-2ff5-4f24-98b4-c4c424ce76f0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueRealm",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""}}}

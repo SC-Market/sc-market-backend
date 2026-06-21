@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "AtmosphericCompositionTemplate.Pyro5c",
+  "_RecordId_": "18e6868e-ed2f-4fe3-a7ba-e90568cf14f4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphericCompositionTemplate",
+    "composition": {
+      "_Type_": "SAtmosphericCompositionParams",
+      "gases": [
+        {
+          "_Type_": "SGasAtmosphereEntryParams",
+          "gasParams": "file://./../../../../../../../libs/foundry/records/roomsystem/gasparams/gasparams.carbondioxide.json",
+          "parts": 93.0},
+        {
+          "_Type_": "SGasAtmosphereEntryParams",
+          "gasParams": "file://./../../../../../../../libs/foundry/records/roomsystem/gasparams/gasparams.nitrogen.json",
+          "parts": 1.0},
+        {
+          "_Type_": "SGasAtmosphereEntryParams",
+          "gasParams": "file://./../../../../../../../libs/foundry/records/roomsystem/gasparams/gasparams.hydrogen.json",
+          "parts": 1.0}]}}}

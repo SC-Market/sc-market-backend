@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "ModuleDeclaration.DestroyItems_ServerRack",
+  "_RecordId_": "6d03bbb0-551f-41cc-b830-ec1da7d2275b",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "ModuleDeclaration",
+    "module": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+    "moduleType": {
+      "_Type_": "ModuleDeclarationType_Mission",
+      "requiredLocationModules": [],
+      "requiredResourceSlot": null,
+      "pausesLocationNPCAutospawns": false},
+    "locationEntities": [
+      {
+        "_Type_": "ModuleLocationEntities_Static",
+        "debugName": "TargetEntities",
+        "requiredForInit": false,
+        "optional": false,
+        "entityDeclarations": [
+          "file://./../../../../../../libs/foundry/records/missiondata/declarations/locationentitytypes/destroyable_serverrack.json"]}],
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ItemsToDestroy",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@destoryitems_item_03",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HealExisitingEntities_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ExistingEntitiesToFind_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e98fcc7f-632e-4ac0-8c61-7e63be3780c3",
+                "_RecordId_": "e98fcc7f-632e-4ac0-8c61-7e63be3780c3"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "spawnedEntities": [],
+    "declaredVariables": []}}

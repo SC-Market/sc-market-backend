@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.FPS_Control_Current_Winner_Score",
+  "_RecordId_": "9b25304e-c12e-44e2-8b49-012eb5a22670",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "FPS_Control_Current_Winner_Score",
+    "min": 0.0,
+    "max": 1.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "SC_Music_StarMarine_Control",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.AcePilot_MMH",
+  "_RecordId_": "81024152-ec0a-4902-a674-3edbaeab02b5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/RandomEncounter/AcePilot.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/killship_mmh.json"}]}}

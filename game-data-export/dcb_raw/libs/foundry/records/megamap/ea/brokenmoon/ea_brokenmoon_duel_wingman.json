@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "MegaMap.EA_BrokenMoon_Duel_Wingman",
+  "_RecordId_": "7116bc68-2348-4ed2-a35b-0773405d1882",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_duel_wingman.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/BrokenMoon/squadronbattle.socpak",
+          "ObjectContainers/EA/BrokenMoon/global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": null,
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_brokenmoon.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Never",
+    "bindCullingEnabled": false,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

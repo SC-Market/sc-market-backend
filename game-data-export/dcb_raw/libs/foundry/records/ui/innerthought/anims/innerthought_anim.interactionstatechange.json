@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "InnerThought_Anim.InteractionStateChange",
+  "_RecordId_": "001e516a-3185-4f9f-a2ce-3ce43755f8ab",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_Anim",
+    "type": {
+      "_Type_": "InnerThought_AnimBase",
+      "glyphStagger": 0.3,
+      "length": 0.5,
+      "randomStagger": true,
+      "interpolationMode": "EaseOutCubic"}}}

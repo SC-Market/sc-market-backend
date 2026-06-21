@@ -1,0 +1,1186 @@
+{
+  "_RecordName_": "ContractTemplate.HaulCargo_SingleToMulti_1to4_CombatEncounter",
+  "_RecordId_": "5d7d061b-734b-4309-9a5f-b4cf13a95111",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": true,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": true},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 300.0,
+          "missionAutoEnd": true,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 15.0,
+          "missionEndReason": "@HaulCargo_Fail_TimeOut"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/hauling.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": false,
+      "preShowObjectives": true},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_Organization",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+              "organizations": []}],
+          "debugForceChosenOrganization": null}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "CargoRouteToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "CargoGradeToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "SingleToMultiToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@HaulCargo_4_SingleToMultiToken",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "MissionMaxSCUSize",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ReputationRank",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "PickupLocation",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1",
+        "extendedTextToken": "Destination",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2",
+        "extendedTextToken": "Destination1",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HaulingOrderForDropoff1",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_HaulingOrders",
+          "haulingOrderContent": []}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HaulingOrderForDropoff2",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_HaulingOrders",
+          "haulingOrderContent": []}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HaulingOrderForDropoff3",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_HaulingOrders",
+          "haulingOrderContent": []}},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HaulingOrderForDropoff4",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_HaulingOrders",
+          "haulingOrderContent": []}},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3",
+        "extendedTextToken": "Destination2",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4",
+        "extendedTextToken": "Destination3",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:54",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionAccept_CN",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:55",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionAbandon_CN",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:56",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionComplete_CN",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_SpawningRange_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:23",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_SpawningSpread_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_ShipsToSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_MaxShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_OnMissionPlayerStreamInOnly_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_PercentageChanceOfEncounter_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation1_AttackMissionPlayersWhenAble_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_SpawningRange_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_SpawningSpread_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_ShipsToSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:35",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_MaxShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:32",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_OnMissionPlayerStreamInOnly_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:33",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_PercentageChanceOfEncounter_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 20,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:34",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation2_AttackMissionPlayersWhenAble_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:37",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_SpawningRange_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:38",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_SpawningSpread_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:39",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_ShipsToSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:43",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_MaxShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:40",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_OnMissionPlayerStreamInOnly_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:41",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_PercentageChanceOfEncounter_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 20,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:42",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation3_AttackMissionPlayersWhenAble_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:45",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_SpawningRange_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:46",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_SpawningSpread_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Close"}]}},
+      {
+        "_Pointer_": "ptr:47",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_ShipsToSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:51",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_MaxShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:48",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_OnMissionPlayerStreamInOnly_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:49",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_PercentageChanceOfEncounter_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 20,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:50",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation4_AttackMissionPlayersWhenAble_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}}],
+    "objectiveTokens": [
+      {
+        "_Pointer_": "ptr:53",
+        "_Type_": "ObjectiveToken",
+        "id": "8f72b40f-e979-4862-9ed6-5c2a83d8f682",
+        "debugName": "Hauling",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Type_": "ObjectiveProperty_Output",
+            "property": {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "CollectedCargo",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Object"}}},
+          {
+            "_Pointer_": "ptr:12",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Organization",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "MissionMaxSCUSize",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Pointer_": "ptr:15",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "HaulingOrderForDropoff1",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Pointer_": "ptr:17",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "HaulingOrderForDropoff2",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:4"},
+          {
+            "_Pointer_": "ptr:13",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PickupLocation",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:5"},
+          {
+            "_Pointer_": "ptr:14",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DropoffLocation1",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Pointer_": "ptr:16",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DropoffLocation2",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Pointer_": "ptr:19",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "HaulingOrderForDropoff3",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:8"},
+          {
+            "_Pointer_": "ptr:21",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "HaulingOrderForDropoff4",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:9"},
+          {
+            "_Pointer_": "ptr:18",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DropoffLocation3",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:10"},
+          {
+            "_Pointer_": "ptr:20",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DropoffLocation4",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:11"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Hauling",
+          "organization": "_PointsTo_:ptr:12",
+          "objectiveSettings": {
+            "_Type_": "Hauling_ObjectiveSettings",
+            "collectObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@hauling_collect_objective",
+              "objectiveMarkerLabel": "@HaulCargo_obj_short_01",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "resourceDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@HaulCargo_obj_itemspecifics_01",
+              "longDescription": "@hauling_deliver_resource_objective",
+              "objectiveMarkerLabel": "@HaulCargo_obj_short_02",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "collectAndDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@HaulCargo_obj_short_03",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "itemDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "orObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_Or",
+              "longDescription": "@Industrial_GenericCollect_Long_Or",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "andObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_And",
+              "longDescription": "@Industrial_GenericCollect_Long_And",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "listItemObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_ListItem",
+              "longDescription": "@Industrial_GenericCollect_Long_ListItem",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "itemExtendedTextToken": "item",
+            "pickupLocationExtendedTextToken": "location",
+            "amountExtendedTextToken": "amount",
+            "totalExtendedTextToken": "total",
+            "dropOffLocationExtendedTextToken": "destination",
+            "mobiglasDisplayLayout": null},
+          "hideMarkers": false,
+          "haulingOrders": [
+            {
+              "_Type_": "HaulingOrder_Property",
+              "pickUpLocation": "_PointsTo_:ptr:13",
+              "dropOffLocation": "_PointsTo_:ptr:14",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "haulingOrdersProperty": "_PointsTo_:ptr:15"},
+            {
+              "_Type_": "HaulingOrder_Property",
+              "pickUpLocation": "_PointsTo_:ptr:13",
+              "dropOffLocation": "_PointsTo_:ptr:16",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "haulingOrdersProperty": "_PointsTo_:ptr:17"},
+            {
+              "_Type_": "HaulingOrder_Property",
+              "pickUpLocation": "_PointsTo_:ptr:13",
+              "dropOffLocation": "_PointsTo_:ptr:18",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "haulingOrdersProperty": "_PointsTo_:ptr:19"},
+            {
+              "_Type_": "HaulingOrder_Property",
+              "pickUpLocation": "_PointsTo_:ptr:13",
+              "dropOffLocation": "_PointsTo_:ptr:20",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "haulingOrdersProperty": "_PointsTo_:ptr:21"}],
+          "haulingLimitProperty": null},
+        "rewardContribution": {
+          "_Type_": "ObjectiveRewardContribution_PercentOfMission",
+          "percentContribution": 100.0,
+          "doPartialRewardPayout": true},
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []},
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "5034bff4-80c7-4e10-b03b-380b076c7cb7",
+        "debugName": "SpawnShipCombatEncounter_DropoffLocation1",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:28",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Destination",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningRange_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:22"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningSpread_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:23"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ShipsToSpawn_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:24"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "OnMissionPlayerStreamInOnly_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:25"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PercentageChanceOfEncounter_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:26"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AttackMissionPlayersWhenAble_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:27"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MaxShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:25"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Modules/SpawnShipCombatEncounter/SpawnShipCombatEncounter_ShipLocationDefence.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/spawnshipcombatencounter_shiplocationdefence_mmh.json",
+          "disableTravelObjectives": true,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 50.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:28",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []},
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "4b8afa43-75cd-4085-8812-69b7b6d4b72e",
+        "debugName": "SpawnShipCombatEncounter_DropoffLocation2",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:36",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Destination2",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningRange_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:29"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningSpread_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:30"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ShipsToSpawn_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:31"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "OnMissionPlayerStreamInOnly_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:32"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PercentageChanceOfEncounter_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:33"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AttackMissionPlayersWhenAble_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:34"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MaxShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:35"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Modules/SpawnShipCombatEncounter/SpawnShipCombatEncounter_ShipLocationDefence.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/spawnshipcombatencounter_shiplocationdefence_mmh.json",
+          "disableTravelObjectives": true,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 50.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:36",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []},
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "22ad365f-3b6a-4d5a-8f58-a8fd89e22533",
+        "debugName": "SpawnShipCombatEncounter_DropoffLocation3",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:44",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Destination3",
+            "property": "_PointsTo_:ptr:10"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningRange_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:37"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningSpread_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:38"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ShipsToSpawn_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:39"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "OnMissionPlayerStreamInOnly_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:40"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PercentageChanceOfEncounter_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:41"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AttackMissionPlayersWhenAble_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:42"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MaxShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:43"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Modules/SpawnShipCombatEncounter/SpawnShipCombatEncounter_ShipLocationDefence.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/spawnshipcombatencounter_shiplocationdefence_mmh.json",
+          "disableTravelObjectives": true,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 50.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:44",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []},
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "e75c1348-9682-46bf-b563-a24087b070b4",
+        "debugName": "SpawnShipCombatEncounter_DropoffLocation4",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:52",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Destination4",
+            "property": "_PointsTo_:ptr:11"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningRange_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:45"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SpawningSpread_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:46"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ShipsToSpawn_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:47"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "OnMissionPlayerStreamInOnly_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:48"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PercentageChanceOfEncounter_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:49"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AttackMissionPlayersWhenAble_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:50"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MaxShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:51"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Modules/SpawnShipCombatEncounter/SpawnShipCombatEncounter_ShipLocationDefence.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/spawnshipcombatencounter_shiplocationdefence_mmh.json",
+          "disableTravelObjectives": true,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 50.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:52",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []}],
+    "partialRewardPayout": {
+      "_Type_": "PartialContractRewards",
+      "percentageThresholds": [
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 76,
+          "maxPercentage": 99,
+          "currencyRewardMultiplier": 0.76,
+          "reputationMultipliers": [
+            {
+              "_Type_": "PartialContractRewardRepAdjustment",
+              "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_hauling.json",
+              "reputationRewardMultiplier": 0.8}]},
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 51,
+          "maxPercentage": 75,
+          "currencyRewardMultiplier": 0.45,
+          "reputationMultipliers": [
+            {
+              "_Type_": "PartialContractRewardRepAdjustment",
+              "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_hauling.json",
+              "reputationRewardMultiplier": 0.25}]},
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 26,
+          "maxPercentage": 50,
+          "currencyRewardMultiplier": 0.15,
+          "reputationMultipliers": [
+            {
+              "_Type_": "PartialContractRewardRepAdjustment",
+              "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_hauling.json",
+              "reputationRewardMultiplier": 0.0}]},
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 0,
+          "maxPercentage": 25,
+          "currencyRewardMultiplier": 0.0,
+          "reputationMultipliers": [
+            {
+              "_Type_": "PartialContractRewardRepAdjustment",
+              "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_hauling.json",
+              "reputationRewardMultiplier": 0.0}]}]},
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": [
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When [Hauling] completed -&gt; Mission Completed",
+          "condition": {
+            "_Type_": "MissionFlowCondition_TokenState",
+            "objectiveToken": "_PointsTo_:ptr:53",
+            "tokenState": "Completed"},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Completed"}},
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When [Hauling] failed -&gt; Mission Failed",
+          "condition": {
+            "_Type_": "MissionFlowCondition_TokenState",
+            "objectiveToken": "_PointsTo_:ptr:53",
+            "tokenState": "Failed"},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Failed"}},
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When [Hauling] abandoned -&gt; Mission Abandoned",
+          "condition": {
+            "_Type_": "MissionFlowCondition_AND",
+            "conditions": []},
+          "action": {
+            "_Type_": "MissionFlowAction_TokenStateChange",
+            "objectiveToken": "_PointsTo_:ptr:53",
+            "toState": "Abandoned"}}]},
+    "contractStartCommsNotification": {
+      "_Type_": "ContractCommsNotification",
+      "communicationTags": "_PointsTo_:ptr:54",
+      "delay": 0.0},
+    "contractEndCommsNotifications": [
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Abandon",
+        "communicationTags": "_PointsTo_:ptr:55",
+        "delay": 0.0},
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Complete",
+        "communicationTags": "_PointsTo_:ptr:56",
+        "delay": 0.0}]}}

@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_PlayerShip",
+  "_RecordId_": "ba758b9d-b341-43a8-8d0d-04ea359f84d8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/playership.json"]},
+      "ownerFaction": null},
+    "roomProtocols": [],
+    "variables": [],
+    "hostilityRules": [],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

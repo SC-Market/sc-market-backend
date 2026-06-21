@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.AstroArmada",
+  "_RecordId_": "882668c6-c1c8-40b7-862e-ac9510955785",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "AstroArmada",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/astroarmada.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 151,
+      "g": 77,
+      "b": 62,
+      "a": 255}}}

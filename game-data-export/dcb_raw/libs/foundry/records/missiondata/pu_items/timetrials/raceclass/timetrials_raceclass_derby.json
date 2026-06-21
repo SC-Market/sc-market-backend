@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionItem.TimeTrials_RaceClass_Derby",
+  "_RecordId_": "f6a7c5ac-70f3-464e-95e5-29cd6075d067",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.df096314-1c3f-4ab1-b08d-b6b2697649e9",
+        "_RecordId_": "df096314-1c3f-4ab1-b08d-b6b2697649e9"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": null}}

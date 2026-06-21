@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_ShipBombs",
+  "_RecordId_": "53af88dc-5874-488f-b75f-15d06f5c7340",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/bomb_s03_fski_thunderball.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/bomb_s05_fski.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/bomb_s10_fski_colossus.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Ship_Bomb_Name"}}

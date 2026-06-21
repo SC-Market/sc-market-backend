@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "FoleyDefinition.PowerSuit_ARGO_ATLS",
+  "_RecordId_": "4c109061-8b24-4224-932a-5a73350c6a41",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FoleyDefinition",
+    "priority": 0,
+    "items": [
+      {
+        "_Type_": "FoleyItem",
+        "bone": "file://./../../../../../libs/foundry/records/foley/bones/l_arm_attach.json",
+        "trackedBoneOverride": null,
+        "referenceBone": "file://./../../../../../libs/foundry/records/foley/bones/spine_01.json",
+        "velocityRTPCName": "Arm_Speed_Powersuit",
+        "velocityRTPCMinimum": 0.0,
+        "velocityRTPCMaximum": 5.0,
+        "collisionImpactRTPCName": "Character_Collision_Impact_Speed",
+        "collisionScuffRTPCName": "Character_Collision_Scuff_Speed",
+        "equipmentMassRTPCName": "",
+        "oneShots": [],
+        "loops": [
+          {
+            "_Type_": "FoleyLoop",
+            "playTrigger": "Play_CMMV_PS_Atlas_Arms_ServoMovement_L",
+            "stopTrigger": "Stop_CMMV_PS_Atlas_Arms_ServoMovement_L",
+            "threshold": 0.0,
+            "applyToClient": true,
+            "applyToNLPC": true,
+            "userRTPCs": []}],
+        "collisions": []},
+      {
+        "_Type_": "FoleyItem",
+        "bone": "file://./../../../../../libs/foundry/records/foley/bones/r_arm_attach.json",
+        "trackedBoneOverride": null,
+        "referenceBone": "file://./../../../../../libs/foundry/records/foley/bones/spine_01.json",
+        "velocityRTPCName": "Arm_Speed_Powersuit",
+        "velocityRTPCMinimum": 0.0,
+        "velocityRTPCMaximum": 5.0,
+        "collisionImpactRTPCName": "Character_Collision_Impact_Speed",
+        "collisionScuffRTPCName": "Character_Collision_Scuff_Speed",
+        "equipmentMassRTPCName": "",
+        "oneShots": [],
+        "loops": [
+          {
+            "_Type_": "FoleyLoop",
+            "playTrigger": "Play_CMMV_PS_Atlas_Arms_ServoMovement_R",
+            "stopTrigger": "Stop_CMMV_PS_Atlas_Arms_ServoMovement_R",
+            "threshold": 0.0,
+            "applyToClient": true,
+            "applyToNLPC": true,
+            "userRTPCs": []}],
+        "collisions": []}],
+    "userRTPCs": []}}

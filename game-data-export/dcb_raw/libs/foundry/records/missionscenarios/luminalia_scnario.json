@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionScenario.Luminalia_Scnario",
+  "_RecordId_": "1ac1ae95-8c83-4e5f-a8c6-2807ce15eed6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "Luminalia Holiday Event",
+    "description": "Start this scenario to activate the Luminalia Holiday Event",
+    "variables": [],
+    "cycles": [],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": false,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": false}}

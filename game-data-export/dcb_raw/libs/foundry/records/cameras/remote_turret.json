@@ -1,0 +1,55 @@
+{
+  "_RecordName_": "Camera.Remote_Turret",
+  "_RecordId_": "d3229aff-2599-4ec0-9251-9b4147363972",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Camera",
+    "baseConfig": {
+      "_Type_": "CameraRemoteTurretConfig",
+      "baseSettings": {
+        "_Type_": "CameraBaseSettingsConfig",
+        "attachmentName": "hardpoint_remote_camera",
+        "defaultCamera": false,
+        "enterExitCamera": false,
+        "unregisterAfterEnter": false,
+        "backgroundUpdate": false},
+      "blendConfig": {
+        "_Type_": "CameraBlendConfig",
+        "allowBlendFrom": false,
+        "allowBlendTo": false,
+        "blendingToTime": 1.0},
+      "FOVConfig": {
+        "_Type_": "CameraFOVConfig",
+        "lensSizeTransitionTime": 0.01,
+        "defaultLensSizePreset": "LensSize_8mm",
+        "fStopTransitionTime": 1.0,
+        "defaultFStop": "FStop_Disabled",
+        "nearPlane": 0.02,
+        "farPlane": 1024.0,
+        "focalDistance": 0.0},
+      "targetOffsetConfig": {
+        "_Type_": "CameraTargetOffsetConfig",
+        "targetPositionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.4,
+          "z": 0.0},
+        "userTargetOffsetMin": {
+          "_Type_": "Vec3",
+          "x": -100.0,
+          "y": -100.0,
+          "z": -100.0},
+        "userTargetOffsetMax": {
+          "_Type_": "Vec3",
+          "x": 100.0,
+          "y": 100.0,
+          "z": 100.0},
+        "userTargetOffsetSpeed": 5.0,
+        "smoothTime": 0.5},
+      "postFlashUI": [],
+      "fovScale": 0.5,
+      "focusSpeed": 1.0,
+      "zoomStages": [
+        1.0,
+        2.0,
+        3.5]}}}

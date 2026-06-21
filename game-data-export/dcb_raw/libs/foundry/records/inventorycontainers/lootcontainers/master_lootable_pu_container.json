@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Master_Lootable_PU_Container",
+  "_RecordId_": "5f9b0719-86c0-4f59-9100-9723b37df0af",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 1000000}}}}

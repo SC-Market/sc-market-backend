@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.VNCL",
+  "_RecordId_": "31380951-38c4-4791-9c79-0604a38d3962",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_vncl.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

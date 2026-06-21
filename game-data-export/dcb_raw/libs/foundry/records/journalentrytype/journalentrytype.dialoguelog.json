@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "JournalEntryType.DialogueLog",
+  "_RecordId_": "71203d71-0a39-4c90-bd0a-64d6e219a718",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntryType",
+    "DisplayName": "@LOC_UNINITIALIZED",
+    "NotificationName": "@mobiGlas_ui_JournalEntry_Added",
+    "IconName": ""}}

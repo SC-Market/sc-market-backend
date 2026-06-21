@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "TacticalQuery.FindATC",
+  "_RecordId_": "5569bb50-a107-41b0-9efd-46b215b9e36b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindATC",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [
+            {
+              "_Type_": "TQSInputTagValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "tag",
+              "value": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.112703d7-24a9-4fac-9530-3f5f96112302",
+                        "_RecordId_": "112703d7-24a9-4fac-9530-3f5f96112302"}],
+                    "negativeTags": []}]},
+              "overrides": []}],
+          "generation": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "entities_around_host",
+              "value": 10000.0,
+              "overrides": []}],
+          "conditions": [],
+          "weights": []},
+        "optionOverrides": []}]}}

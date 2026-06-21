@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "StatusWidgetDisplayPreset.BodyTemperature",
+  "_RecordId_": "65441f3c-1abc-4abf-adce-3ea8a7d9fb90",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StatusWidgetDisplayPreset",
+    "ranges": [
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 34.0,
+        "maximumValue": 39.0,
+        "displayDuration": 0.0,
+        "activeRange": "ExteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 36.5,
+        "maximumValue": 37.5,
+        "displayDuration": 0.0,
+        "activeRange": "ExteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.0,
+        "maximumValue": 100.0,
+        "displayDuration": 2.0,
+        "activeRange": "InteriorRange",
+        "enabled": false},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 36.5,
+        "maximumValue": 37.5,
+        "displayDuration": 3.0,
+        "activeRange": "InteriorRange",
+        "enabled": true}],
+    "incrementDisplayDuration": 0.0,
+    "incrementStep": 0.0,
+    "maximumChangePerSecond": 0.0,
+    "historySeconds": 1,
+    "historySamplesPerSecond": 1,
+    "shownOnLens": true,
+    "shownOnVisor": true}}

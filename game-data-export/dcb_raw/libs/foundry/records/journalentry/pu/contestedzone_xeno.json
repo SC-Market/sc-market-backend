@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.ContestedZone_Xeno",
+  "_RecordId_": "b95eb0d8-1b2f-49be-9bba-a90da10fe1b1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@datapad_contestedzone_firerat_prayer_title",
+    "ShortTitle": "@datapad_contestedzone_firerat_prayer_title",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@datapad_contestedzone_firerat_prayer_body"},
+    "tutorialEntry": false}}

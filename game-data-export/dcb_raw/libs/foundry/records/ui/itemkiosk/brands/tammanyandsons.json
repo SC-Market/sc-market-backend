@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.TammanyAndSons",
+  "_RecordId_": "22050d1e-4976-48cc-9756-deee6420039b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "tammanyandsons",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/tammanyandsons.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 198,
+      "g": 158,
+      "b": 96,
+      "a": 255}}}

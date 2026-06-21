@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "MissionItem.BlueBilvaFruit",
+  "_RecordId_": "3a458960-03c6-447e-9403-431d38f2e49c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.dce2bf6a-62fb-4923-a954-f3e9a77f08fe",
+        "_RecordId_": "dce2bf6a-62fb-4923-a954-f3e9a77f08fe"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.bf562061-790e-4bde-ac61-22ede98d87f6",
+        "_RecordId_": "bf562061-790e-4bde-ac61-22ede98d87f6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.fb1a3a76-8f7c-47a7-9232-58be8b8336e9",
+        "_RecordId_": "fb1a3a76-8f7c-47a7-9232-58be8b8336e9"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.bbb8e796-d498-472d-ae2d-3295857f1858",
+        "_RecordId_": "bbb8e796-d498-472d-ae2d-3295857f1858"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.63049ea3-127c-4ad5-a099-f60e43260509",
+        "_RecordId_": "63049ea3-127c-4ad5-a099-f60e43260509"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_item_0098"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_commodity_food_perishable_a.json"}}

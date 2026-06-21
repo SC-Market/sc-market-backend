@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.BHG_Certification_CS3",
+  "_RecordId_": "27a02192-8a51-46c0-92b4-b75e89a0c87f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@BHG_ReputationJournal_CS3_Title",
+    "ShortTitle": "@BHG_ReputationJournal_CS3_ShortTitle",
+    "SubHeading": "@BHG_From",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@BHG_ReputationJournal_CS3_BodyText"},
+    "tutorialEntry": false}}

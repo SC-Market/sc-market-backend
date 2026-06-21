@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "EntityClassDefinition.RestrictedArea",
+  "_RecordId_": "35af4d50-e7dd-4599-bd92-fd5fe5d0e78e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Box.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AreaSphereComponentParams"},
+      {
+        "_Type_": "RestrictedAreaParams",
+        "redoutParams": {
+          "_Type_": "RestrictedAreaRedoutParams",
+          "redoutInGroundVehicle": false,
+          "redoutInShip": true,
+          "timeToMaxRedout": 5.0,
+          "maxRedout": 0.8},
+        "autopilotParams": {
+          "_Type_": "RestrictedAreaAutopilotParams",
+          "minimumSpeed": 20.0},
+        "killParams": {
+          "_Type_": "RestrictedAreaKillParams",
+          "killActorsOnFoot": true,
+          "killGroundVehicles": true,
+          "killShips": true,
+          "despawnObjects": true,
+          "despawnDelay": 1.0,
+          "allowTagsOnLoad": []},
+        "hudMessageParams": {
+          "_Type_": "RestrictedAreaHUDMessageParams",
+          "proximityWarningMinDistance": 150.0,
+          "proximityWarningMaxTime": 10.0,
+          "proximityWarningDetectionConeAngle": 60.0,
+          "proximityWarningMessages": [
+            "@dfm_ui_RestrictedAreaLeft",
+            "@dfm_ui_RestrictedAreaRight",
+            "@dfm_ui_RestrictedAreaAbove",
+            "@dfm_ui_RestrictedAreaBelow",
+            "@dfm_ui_RestrictedAreaAhead",
+            "@dfm_ui_RestrictedAreaBehind"],
+          "autopilotMessage": "@dfm_ui_RestrictedAreaAutopilot",
+          "proximityMessageTimer": 5.0,
+          "nearWarningMessage": "@dfm_ui_RestrictedAreaEnter",
+          "leaveWarningMessage": "@dfm_ui_RestrictedAreaLeave"}}]}}

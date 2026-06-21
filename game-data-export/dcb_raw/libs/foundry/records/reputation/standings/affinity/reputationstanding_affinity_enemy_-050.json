@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-050",
+  "_RecordId_": "4e5e4df1-ce14-4e9b-aaf1-d7e431b40f0c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Affinity_Bad_050_Disliked",
+    "description": "desc",
+    "displayName": "@RepStanding_MissionGiver_Default_Disliked_Name",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": -5000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

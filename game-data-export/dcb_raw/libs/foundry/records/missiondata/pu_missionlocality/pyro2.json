@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionLocality.Pyro2",
+  "_RecordId_": "7a2e709c-042a-4c46-b776-0c66a587af4f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocality",
+    "availableLocations": [
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/pyro/pyro2/pyro2.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/station/reststop/rr_p2_leo.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/rr_p2_leo_clinic.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/station/reststop/rr_p2_l4.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/rr_p2_l4_clinic.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/station/reststop/rr_p1_l3.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/rr_p1_l3_clinic.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/station/reststop/rr_p3_l3.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/rr_p3_l3_clinic.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/pyro/pyro2/lagrange/pyro2_l1.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/pyro/pyro2/lagrange/pyro2_l2.json"]}}

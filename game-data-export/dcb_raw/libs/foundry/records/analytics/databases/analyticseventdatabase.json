@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SAnalyticsEventDatabase.AnalyticsEventDatabase",
+  "_RecordId_": "42aa8b2f-1a8d-4ddc-9818-adbcbdd03a29",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SAnalyticsEventDatabase",
+    "analyticsEvents": [
+      {
+        "_RecordId_": "96431397-ab52-4a18-9ecc-a2917b02bcbb",
+        "_RecordName_": "SAnalyticsEvent.StormPylon",
+        "_Type_": "SAnalyticsEvent",
+        "eventName": "StormPylon",
+        "includePlayerData": true,
+        "includeLocationData": true,
+        "thisEntityNameField": "PylonName"},
+      {
+        "_RecordId_": "b90a8b9c-482c-4440-9e37-52b31496094b",
+        "_RecordName_": "SAnalyticsEvent.HatcheryActivated",
+        "_Type_": "SAnalyticsEvent",
+        "eventName": "HatcheryActivated",
+        "includePlayerData": true,
+        "includeLocationData": true,
+        "thisEntityNameField": "HatcheryName"},
+      {
+        "_RecordId_": "ed059b12-ae2f-40fd-9806-96bc5245e8b8",
+        "_RecordName_": "SAnalyticsEvent.ItemCollected",
+        "_Type_": "SAnalyticsEvent",
+        "eventName": "ItemCollected",
+        "includePlayerData": true,
+        "includeLocationData": true,
+        "thisEntityNameField": "KeyCard"},
+      {
+        "_RecordId_": "6e2f2f8c-577a-44c0-94fd-58f89dbc78fc",
+        "_RecordName_": "SAnalyticsEvent.PrinterActivated",
+        "_Type_": "SAnalyticsEvent",
+        "eventName": "PrinterActivated",
+        "includePlayerData": true,
+        "includeLocationData": true,
+        "thisEntityNameField": "PrinterName"},
+      {
+        "_RecordId_": "b301915a-2b67-4785-8e2e-af82adbe7116",
+        "_RecordName_": "SAnalyticsEvent.RCD_Door_OnUnlocked",
+        "_Type_": "SAnalyticsEvent",
+        "eventName": "RCD_Door_OnUnlocked",
+        "includePlayerData": true,
+        "includeLocationData": true,
+        "thisEntityNameField": "Door"}]}}

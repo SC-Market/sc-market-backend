@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "Faction.Faction_Special_KlescherSecurity",
+  "_RecordId_": "d67aa7d9-9948-4903-b162-e71869cae4e8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@Klescher_RepUI_Name",
+    "description": "@Klescher_RepUI_Description",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [],
+    "factionType": "LawEnforcement",
+    "ableToArrest": true,
+    "policesLawfulTrespass": true,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": null}}

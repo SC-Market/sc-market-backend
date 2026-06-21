@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Hauling_Local",
+  "_RecordId_": "b857132f-147f-4c2d-b317-68adeee61bbb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "Delivery_ico",
+    "LocalisedTypeName": "@mobiGlas_ui_MissionType_Hauling_Local",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_delivery.svg",
+    "DisplayTime": -1.0}}

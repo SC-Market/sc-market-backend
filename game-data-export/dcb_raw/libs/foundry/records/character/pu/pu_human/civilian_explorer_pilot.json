@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Civilian_Explorer_Pilot",
+  "_RecordId_": "b0fa7b1c-8e9c-4eed-b972-01fc75ea71dc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": "file://./../../../../../../libs/foundry/records/characternamedata/humanmale.json",
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

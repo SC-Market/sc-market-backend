@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.GRIN_MTC_Icefront_grey_grey_red_camo_a",
+  "_RecordId_": "07af8264-a162-45b9-af8f-72a8f8d3ab46",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameMTC_Paint_Grey_Grey_Red_Camo_a",
+    "description": "@item_DescMTC_Paint_Grey_Grey_Red_Camo_a",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_mtc_grey_grey_red_camo_a.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

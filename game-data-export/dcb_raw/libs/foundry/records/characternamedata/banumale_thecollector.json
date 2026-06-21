@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.BanuMale_TheCollector",
+  "_RecordId_": "9ec5ee37-11e3-4d94-8771-938117cfc5d1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_Collector_First_Name",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "Name_Collector_Last_Name",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.0}}

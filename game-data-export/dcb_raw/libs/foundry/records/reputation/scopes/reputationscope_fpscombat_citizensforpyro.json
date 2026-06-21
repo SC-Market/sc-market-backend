@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_FPSCombat_CitizensForPyro",
+  "_RecordId_": "6da2ddba-b1f9-4220-9074-5f85b646cb1b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "FPS_Combat_CitizensForPyro",
+    "displayName": "@mobiglas_ui_Mercenary",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 1001,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/fps_combat/reputationstanding_fpscombat_noteligible_citizensforpyro.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/fps_combat/reputationstanding_fpscombat_rank0_citizensforpyro.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/fps_combat/reputationstanding_fpscombat_rank1_citizensforpyro.json"]}}}

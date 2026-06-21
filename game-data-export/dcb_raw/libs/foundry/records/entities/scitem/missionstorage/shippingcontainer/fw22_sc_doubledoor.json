@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "EntityClassDefinition.FW22_SC_DoubleDoor",
+  "_RecordId_": "8080521f-81f2-4fc0-a9b5-cb3720cdd957",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.20e5edda-d1ae-4c2c-a1db-deec5d6cf3ce",
+        "_RecordId_": "20e5edda-d1ae-4c2c-a1db-deec5d6cf3ce"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8",
+        "_RecordId_": "3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/design/FleetWeek2022/ShippingContainer/shippingcontainer_doubbledoor.socpak"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"}]}}

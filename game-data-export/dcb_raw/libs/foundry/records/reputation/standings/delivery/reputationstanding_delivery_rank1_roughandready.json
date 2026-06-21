@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Delivery_Rank1_RoughAndReady",
+  "_RecordId_": "0763798d-2921-4d9f-92a4-5e35b112563f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Delivery_Rank1_RoughAndReady",
+    "description": "desc",
+    "displayName": "@RepStanding_TransportGuild_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_3.svg",
+    "minReputation": 50,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

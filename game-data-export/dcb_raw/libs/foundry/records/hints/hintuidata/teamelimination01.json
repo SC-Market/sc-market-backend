@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.TeamElimination01",
+  "_RecordId_": "1133551c-12e2-4b35-ba5b-d795a211312c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_TeamElimination_Title",
+    "BodyText": "@Hints_TeamElimination1",
+    "BodyTextGamePad": "@Hints_TeamElimination1",
+    "BodyTextJoystick": "@Hints_TeamElimination1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

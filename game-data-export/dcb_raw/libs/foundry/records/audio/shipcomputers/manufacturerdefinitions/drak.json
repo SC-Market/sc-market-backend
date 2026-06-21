@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.DRAK",
+  "_RecordId_": "5007b194-2958-47a3-b5cf-f7cf5e6bac74",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_drak.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

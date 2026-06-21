@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "JournalEntry.Scott_Transcript",
+  "_RecordId_": "622009c6-b538-4d00-aa0f-27a2ac2e7bbe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CharlieStation_Scott_Transcript_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_CharlieStation_Scott_Datapad_subtitle",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.dialoguelog.json",
+    "type": {
+      "_Type_": "JournalEntryDialogueLog",
+      "Dialogue": [
+        "file://./../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_group_covalex_clue3_datapadinbarracks_001c.json"],
+      "Description": "@mobiglas_CharlieStation_Scott_Transcript_text"},
+    "tutorialEntry": false}}

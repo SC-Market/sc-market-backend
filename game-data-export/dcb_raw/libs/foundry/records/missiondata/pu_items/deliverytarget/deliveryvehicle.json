@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionItem.DeliveryVehicle",
+  "_RecordId_": "2fcb8c5a-3922-44b6-a279-536fd46d760b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a10636c4-d232-40b5-b0fd-a70ac72a3b6b",
+        "_RecordId_": "a10636c4-d232-40b5-b0fd-a70ac72a3b6b"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": null}}

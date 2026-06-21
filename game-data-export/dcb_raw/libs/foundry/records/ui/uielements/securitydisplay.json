@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.SecurityDisplay",
+  "_RecordId_": "3bcaef7f-04ed-4300-b2e8-a1b29165a3bd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/DisplayPanels/Crusader/assets/SWF/SecurityDisplay.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

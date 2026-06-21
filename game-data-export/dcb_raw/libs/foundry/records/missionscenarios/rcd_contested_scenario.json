@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionScenario.RCD_Contested_Scenario",
+  "_RecordId_": "6801c1f2-1c9d-4d34-a4a5-a4135d7ae968",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "RCD_Contested_Scenario",
+    "description": "Start this scenario to activate the Rockcracker Dungeon contested mission",
+    "variables": [],
+    "cycles": [],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": true,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": false}}

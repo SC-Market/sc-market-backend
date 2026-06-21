@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "EntityClassDefinition.LocalMissionSession",
+  "_RecordId_": "9bb6b76a-d0dd-45ef-b0da-57f6480674ab",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EntityComponentLocalMissionSessionParams"},
+      {
+        "_Type_": "SActionAreaComponentParams",
+        "triggerOnce": false,
+        "requiredTags": [],
+        "excludedTags": [],
+        "applyTagsToContainedEntities": [],
+        "enterEvent": "ActionAreaEntered",
+        "exitEvent": "ActionAreaExited",
+        "sendEventsToEntity": true,
+        "eventTriggerMask": "OnlyPlayer",
+        "areaExtensions": [],
+        "audioFilter": null}]}}

@@ -1,0 +1,45 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Minerals_Derelict_Uncommon",
+  "_RecordId_": "ac4bd405-748e-4142-adb6-82880f5f0810",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Minerals Uncommon",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+            "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_StackSize",
+              "min": 10,
+              "max": 15}]}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.9a46e2f3-6651-4283-8447-c01e6dd778e8",
+              "_RecordId_": "9a46e2f3-6651-4283-8447-c01e6dd778e8"},
+            "weight": 1.0}]}]}}

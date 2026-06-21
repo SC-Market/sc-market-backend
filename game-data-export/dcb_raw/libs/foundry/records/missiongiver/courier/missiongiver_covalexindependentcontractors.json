@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MissionGiver.MissionGiver_CovalexIndependentContractors",
+  "_RecordId_": "68ed9226-f4a5-483c-ad36-77dd388253c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../../libs/foundry/records/factions/legacy/covalexshipping.json",
+    "reputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_covalexshipping.json",
+    "displayName": "@LOC_UNINITIALIZED",
+    "description": "@LOC_UNINITIALIZED",
+    "headquarters": "@LOC_UNINITIALIZED",
+    "invitationTimeout": 5.0,
+    "visitTimeout": 20.0,
+    "shortCooldown": 10.0,
+    "mediumCooldown": 20.0,
+    "longCooldown": 30.0,
+    "Allies": [],
+    "Enemies": [],
+    "propertiesBB": []}}

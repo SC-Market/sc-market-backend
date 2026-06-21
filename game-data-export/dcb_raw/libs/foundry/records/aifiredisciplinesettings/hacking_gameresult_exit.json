@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "AIFireDisciplineSettings.Hacking_GameResult_Exit",
+  "_RecordId_": "333d482c-b73c-4461-932b-2832bb2845dd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIFireDisciplineSettings",
+    "fireConeMinAngle": 0.5,
+    "fireConeMaxAngle": 15.0}}

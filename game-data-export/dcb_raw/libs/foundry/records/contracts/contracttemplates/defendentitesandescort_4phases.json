@@ -1,0 +1,2858 @@
+{
+  "_RecordName_": "ContractTemplate.DefendEntitesAndEscort_4Phases",
+  "_RecordId_": "b7f1702a-e29a-4dff-96e7-51c0c11bb7df",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllEncounters_AcePilot_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [
+            {
+              "_Type_": "SpawnDescription_ShipGroup",
+              "Name": "AcePilotShip",
+              "embeddedName": null,
+              "ships": [
+                {
+                  "_Type_": "SpawnDescription_ShipOptions",
+                  "options": [
+                    {
+                      "_Type_": "SpawnDescription_Ship",
+                      "tags": {
+                        "_Type_": "TagList",
+                        "tags": [
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.6a7d46fa-68cc-4c1e-9e4d-73af17c3f3ea",
+                            "_RecordId_": "6a7d46fa-68cc-4c1e-9e4d-73af17c3f3ea"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.997fe0d8-c947-46bb-9bca-a78157e8a799",
+                            "_RecordId_": "997fe0d8-c947-46bb-9bca-a78157e8a799"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.a45f6533-982c-45dc-97ea-0166a3560617",
+                            "_RecordId_": "a45f6533-982c-45dc-97ea-0166a3560617"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.858a3f75-54da-45a8-8a06-4f1129583f17",
+                            "_RecordId_": "858a3f75-54da-45a8-8a06-4f1129583f17"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.c1072309-6239-4b42-9293-c21cf7f830de",
+                            "_RecordId_": "c1072309-6239-4b42-9293-c21cf7f830de"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.663ecb92-85d2-47c7-9fe6-b4a76d84791a",
+                            "_RecordId_": "663ecb92-85d2-47c7-9fe6-b4a76d84791a"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.ea9a5d42-f879-433f-bef4-1775b16d097b",
+                            "_RecordId_": "ea9a5d42-f879-433f-bef4-1775b16d097b"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.e35b34f5-98ca-42a3-a007-ebfce380fdcc",
+                            "_RecordId_": "e35b34f5-98ca-42a3-a007-ebfce380fdcc"},
+                          {
+                            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2e1d1864-30e1-4eaf-b072-029abad13163",
+                            "_RecordId_": "2e1d1864-30e1-4eaf-b072-029abad13163"}]},
+                      "negativeTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "markupTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "entityTags": {
+                        "_Type_": "TagList",
+                        "tags": []},
+                      "concurrentAmount": 1,
+                      "includeLocationAISpawnTags": false,
+                      "nameProperty": null,
+                      "weight": 1.0,
+                      "initialDamageSettings": null}]}]}],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllEncounters_AcePilotChance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllEncounters_CN_AcePilotArrives_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+                "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e243f71d-7c5c-4521-9a48-6333e83d5264",
+                "_RecordId_": "e243f71d-7c5c-4521-9a48-6333e83d5264"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllEncounters_CN_AcePilotDestroyed_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9c132978-099a-46bc-9b19-9d77bcef8b9b",
+                "_RecordId_": "9c132978-099a-46bc-9b19-9d77bcef8b9b"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e243f71d-7c5c-4521-9a48-6333e83d5264",
+                "_RecordId_": "e243f71d-7c5c-4521-9a48-6333e83d5264"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllEncounters_CN_AcePilotReminder_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e243f71d-7c5c-4521-9a48-6333e83d5264",
+                "_RecordId_": "e243f71d-7c5c-4521-9a48-6333e83d5264"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllEncounters_CN_AcePilotEscapes_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ef110852-5894-433a-bce8-793fb28ee6e6",
+                "_RecordId_": "ef110852-5894-433a-bce8-793fb28ee6e6"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e243f71d-7c5c-4521-9a48-6333e83d5264",
+                "_RecordId_": "e243f71d-7c5c-4521-9a48-6333e83d5264"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_MissionLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_NumberOfChildMissions_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_TimeUntilChildMissionStarts_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 150.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_MissionStart",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+                "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.57b007fe-8cf0-4cda-b882-e45f12daf292",
+                "_RecordId_": "57b007fe-8cf0-4cda-b882-e45f12daf292"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+                "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+                "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_MissionComplete",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+                "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+                "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+                "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+                "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_MissionFail",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+                "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+                "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+                "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+                "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_MissionAbandon",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.f0c0c441-e205-4d44-8743-620228b7eee4",
+                "_RecordId_": "f0c0c441-e205-4d44-8743-620228b7eee4"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+                "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+                "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+                "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_RandomChildMissionStarts_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_RandomChildMissionCompletes_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RandomChildMissionManager_CN_RandomChildMissionFails_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_MissionLocation_BP",
+        "extendedTextToken": "DefendEntitiesLocation",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_ZonesToDefend_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_EntitiesToDefend_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:20",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_EntityMarkerObjectiveName_BP",
+        "extendedTextToken": "Objects",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:21",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_BomberShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_SupportShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:23",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_NextWaveDelay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_HealObjectsToDefend_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_PlayerArrives_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.f97d014a-083e-4e7a-8aad-aa9ca0e8ae10",
+                "_RecordId_": "f97d014a-083e-4e7a-8aad-aa9ca0e8ae10"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.0dff4c28-cd8a-4d6e-bf6e-f574f028a71a",
+                "_RecordId_": "0dff4c28-cd8a-4d6e-bf6e-f574f028a71a"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_HostileReinforcementsArrive_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.da0c50ca-8e44-4b75-a93c-e9501da73060",
+                "_RecordId_": "da0c50ca-8e44-4b75-a93c-e9501da73060"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_HalfDefendEntitiesRemain_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.bce19bc1-4b18-4f87-b7d9-9b51ee7c164f",
+                "_RecordId_": "bce19bc1-4b18-4f87-b7d9-9b51ee7c164f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:28",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_QuaterDefendEntitiesRemain_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.6bf6fdcd-a9eb-499d-8761-ac7f2c7ba16f",
+                "_RecordId_": "6bf6fdcd-a9eb-499d-8761-ac7f2c7ba16f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_HostileDestroyedEncouragement_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2f760511-24d1-4102-b4f6-c4af4d25d89f",
+                "_RecordId_": "2f760511-24d1-4102-b4f6-c4af4d25d89f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_BombersCallOut_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.da0c50ca-8e44-4b75-a93c-e9501da73060",
+                "_RecordId_": "da0c50ca-8e44-4b75-a93c-e9501da73060"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_DefendSuccess_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+                "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+                "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:32",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendEntities_CN_DefendFailed_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+                "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4d04f555-f7f8-4518-b004-27426a047e79",
+                "_RecordId_": "4d04f555-f7f8-4518-b004-27426a047e79"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:36",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_MissionLocation_BP",
+        "extendedTextToken": "EscortShipToLandingAreaLocation",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:37",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_UseHangarDoor_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:38",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_InitialEnemiesBool_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:39",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_InitialEnemies_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:40",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_UsePositionOverride_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:41",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_EscortShip_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:42",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_EscortReinforcementChance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:43",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_EscortReinforcementsWave01_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:44",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_ERWave01MinDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:45",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_ERWave01MaxDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:46",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_EscortReinforcementsWave02_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:47",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_ERWave02MinDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:48",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_ERWave02MaxDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:49",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_EscortReinforcementsWave03_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:50",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_ERWave03MinDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:51",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_ERWave03MaxDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:52",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_LocationUnderAttack_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.f97d014a-083e-4e7a-8aad-aa9ca0e8ae10",
+                "_RecordId_": "f97d014a-083e-4e7a-8aad-aa9ca0e8ae10"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.0dff4c28-cd8a-4d6e-bf6e-f574f028a71a",
+                "_RecordId_": "0dff4c28-cd8a-4d6e-bf6e-f574f028a71a"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:53",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_EscortShipArrives_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+                "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:54",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_HostileShipsSpawned_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.da0c50ca-8e44-4b75-a93c-e9501da73060",
+                "_RecordId_": "da0c50ca-8e44-4b75-a93c-e9501da73060"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:55",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_EscortShipStartFlyIn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+                "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:56",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_HostileKilled_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2f760511-24d1-4102-b4f6-c4af4d25d89f",
+                "_RecordId_": "2f760511-24d1-4102-b4f6-c4af4d25d89f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:57",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_EscortShipFlyInSuccess_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+                "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:58",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_HighDamage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.6bf6fdcd-a9eb-499d-8761-ac7f2c7ba16f",
+                "_RecordId_": "6bf6fdcd-a9eb-499d-8761-ac7f2c7ba16f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:59",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_MediumDamage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.bce19bc1-4b18-4f87-b7d9-9b51ee7c164f",
+                "_RecordId_": "bce19bc1-4b18-4f87-b7d9-9b51ee7c164f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:60",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_LowDamage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.f1207025-2ef5-406e-b820-a60be354c14e",
+                "_RecordId_": "f1207025-2ef5-406e-b820-a60be354c14e"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:61",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_ObjectiveReminder_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ccdeca91-4752-460f-97d8-a947e16f4d1c",
+                "_RecordId_": "ccdeca91-4752-460f-97d8-a947e16f4d1c"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:62",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipToLandingArea_CN_ObjectiveFail_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+                "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:65",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_MissionLocation_BP",
+        "extendedTextToken": "EscortShipFromLandingAreaLocation",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:66",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_UseHangarDoor_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:67",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_InitialEnemiesBool_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:68",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_InitialEnemies_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:69",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_UsePositionOverride_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:70",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_EscortShip_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:71",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_EscortReinforcementChance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:72",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_EscortReinforcementsWave01_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:73",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_ERWave01MinDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:74",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_ERWave01MaxDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:75",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_EscortReinforcementsWave02_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:76",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_ERWave02MinDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:77",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_ERWave02MaxDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:78",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_EscortReinforcementsWave03_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:79",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_ERWave03MinDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:80",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_ERWave03MaxDistance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:81",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_InterdictionChance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": []}},
+      {
+        "_Pointer_": "ptr:82",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_InterdictionShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:83",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_LocationUnderAttack_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.f97d014a-083e-4e7a-8aad-aa9ca0e8ae10",
+                "_RecordId_": "f97d014a-083e-4e7a-8aad-aa9ca0e8ae10"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.0dff4c28-cd8a-4d6e-bf6e-f574f028a71a",
+                "_RecordId_": "0dff4c28-cd8a-4d6e-bf6e-f574f028a71a"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:84",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_EscortShipArrives_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+                "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:85",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_HostileShipsSpawned_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.da0c50ca-8e44-4b75-a93c-e9501da73060",
+                "_RecordId_": "da0c50ca-8e44-4b75-a93c-e9501da73060"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:86",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_InterdictionShipsSpawned_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.da0c50ca-8e44-4b75-a93c-e9501da73060",
+                "_RecordId_": "da0c50ca-8e44-4b75-a93c-e9501da73060"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:87",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_EscortShipStartFlyOut_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+                "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:88",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_HostileKilled_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+                "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+                "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2f760511-24d1-4102-b4f6-c4af4d25d89f",
+                "_RecordId_": "2f760511-24d1-4102-b4f6-c4af4d25d89f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:89",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_HighDamage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.6bf6fdcd-a9eb-499d-8761-ac7f2c7ba16f",
+                "_RecordId_": "6bf6fdcd-a9eb-499d-8761-ac7f2c7ba16f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:90",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_MediumDamage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.bce19bc1-4b18-4f87-b7d9-9b51ee7c164f",
+                "_RecordId_": "bce19bc1-4b18-4f87-b7d9-9b51ee7c164f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:91",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_LowDamage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+                "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.f1207025-2ef5-406e-b820-a60be354c14e",
+                "_RecordId_": "f1207025-2ef5-406e-b820-a60be354c14e"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:92",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_ObjectiveReminder_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ccdeca91-4752-460f-97d8-a947e16f4d1c",
+                "_RecordId_": "ccdeca91-4752-460f-97d8-a947e16f4d1c"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:93",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_ObjectiveFail_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+                "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:94",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_MissionFailure_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+                "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:95",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "EscortShipFromLandingArea_CN_EscortShipFlyOutSuccess_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+                "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+                "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+                "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "objectiveTokens": [
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "c25dfe3d-b899-41c0-b2bf-d31e2b5b6a03",
+        "debugName": "DefendEntitiesAndEscort_4Phases",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:11",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "NumberOfChildMissions_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TimeUntilChildMissionStarts_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionStart",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:4"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionComplete",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:5"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionFail",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionAbandon",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Pointer_": "ptr:64",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_RandomChildMissionStarts_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:8"},
+          {
+            "_Pointer_": "ptr:35",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_RandomChildMissionCompletes_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:9"},
+          {
+            "_Pointer_": "ptr:34",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_RandomChildMissionFails_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:10"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/RandomChildMissionManager/RandomChildMissionManager.xml",
+          "moduleHierarchy": null,
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 22.0,
+          "allPlayersLeftGracePeriod": 0.2,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": {
+            "_Type_": "NavPointSpawnInformation",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_distress_beacon_minningasteroidbase.json",
+            "name": "@LOC_UNINITIALIZED",
+            "extendedTextTokens": []},
+          "location": "_PointsTo_:ptr:11",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": [
+          {
+            "_Pointer_": "ptr:99",
+            "_Type_": "ChildMissionPhase",
+            "id": "0cd95627-700f-49f9-9517-cd68a3511167",
+            "debugName": "DefendEntities",
+            "startsActive": false,
+            "properties": [
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilot_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:12"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilotChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:13"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:14"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotDestroyed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:15"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:16"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotEscapes_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:17"},
+              {
+                "_Pointer_": "ptr:33",
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "MissionLocation_BP",
+                "extendedTextToken": "DefendEntitiesLocation",
+                "property": "_PointsTo_:ptr:1"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ZonesToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:18"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EntitiesToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:19"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EntityMarkerObjectiveName_BP",
+                "extendedTextToken": "Objects",
+                "property": "_PointsTo_:ptr:20"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "BomberShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:21"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "SupportShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:22"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "NextWaveDelay_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:23"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "HealObjectsToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:24"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_PlayerArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:25"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileReinforcementsArrive_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:26"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HalfDefendEntitiesRemain_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:27"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_QuaterDefendEntitiesRemain_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:28"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileDestroyedEncouragement_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:29"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_BombersCallOut_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:30"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_DefendSuccess_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:31"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_DefendFailed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:32"}],
+            "objectiveHandler": {
+              "_Type_": "ObjectiveHandler_Local",
+              "moduleDeclaration": null,
+              "module": "Libs/Subsumption/Missions/PU/Missions/DefendLocation/DL_DefendDestructibleEntities.xml",
+              "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/defenddestructibleentities_mmh.json",
+              "disableTravelObjectives": true,
+              "disableReturnObjectives": true,
+              "travelRadiusKM": 22.0,
+              "allPlayersLeftGracePeriod": 0.2,
+              "travelObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@TravelObjective_Short",
+                "longDescription": "@TravelObjective_Long",
+                "objectiveMarkerLabel": "@TravelObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "returnObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@ReturnObjective_Short",
+                "longDescription": "@ReturnObjective_Long",
+                "objectiveMarkerLabel": "@ReturnObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "navPointSpawnInfo": {
+                "_Type_": "NavPointSpawnInformation",
+                "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+                "name": "@mission_items_QTDistressBeacon",
+                "extendedTextTokens": []},
+              "location": "_PointsTo_:ptr:33",
+              "securityManifestToOverride": null},
+            "rewardContribution": null,
+            "displayInfo": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "overrideMissionDetailsDisplayInfo": {
+              "_Type_": "OverrideMissionDetailsDisplayInfo",
+              "titleOverride": "@LOC_UNINITIALIZED",
+              "descriptionOverride": "@LOC_UNINITIALIZED"},
+            "commsNotifications": [
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Failed",
+                "communicationTags": "_PointsTo_:ptr:34",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Completed",
+                "communicationTags": "_PointsTo_:ptr:35",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0}],
+            "childMissionPhases": [],
+            "variableName": "ChildPhase_InitialMission",
+            "weight": 0.0},
+          {
+            "_Pointer_": "ptr:100",
+            "_Type_": "ChildMissionPhase",
+            "id": "4bbe35a0-0d7c-44ab-8676-bdacc6004cf1",
+            "debugName": "EscortShipToLandingPad",
+            "startsActive": false,
+            "properties": [
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilot_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:12"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilotChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:13"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:14"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotDestroyed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:15"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:16"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotEscapes_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:17"},
+              {
+                "_Pointer_": "ptr:63",
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "MissionLocation_BP",
+                "extendedTextToken": "EscortShipToLandingAreaLocation",
+                "property": "_PointsTo_:ptr:36"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "UseHangarDoor_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:37"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "InitialEnemiesBool_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:38"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "InitialEnemies_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:39"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "UsePositionOverride_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:40"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortShip_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:41"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:42"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementsWave01_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:43"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave01MinDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:44"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave01MaxDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:45"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementsWave02_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:46"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave02MinDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:47"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave02MaxDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:48"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementsWave03_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:49"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave03MinDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:50"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave03MaxDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:51"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_LocationUnderAttack_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:52"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_EscortShipArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:53"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileShipsSpawned_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:54"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_EscortShipStartFlyIn_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:55"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileKilled_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:56"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_EscortShipFlyInSuccess_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:57"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HighDamage_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:58"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_MediumDamage_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:59"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_LowDamage_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:60"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_ObjectiveReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:61"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_ObjectiveFail_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:62"}],
+            "objectiveHandler": {
+              "_Type_": "ObjectiveHandler_Local",
+              "moduleDeclaration": null,
+              "module": "Libs/Subsumption/Missions/PU/Missions/DefendLocation/DL_EscortShipToLandingArea.xml",
+              "moduleHierarchy": null,
+              "disableTravelObjectives": true,
+              "disableReturnObjectives": true,
+              "travelRadiusKM": 22.0,
+              "allPlayersLeftGracePeriod": 0.2,
+              "travelObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@TravelObjective_Short",
+                "longDescription": "@TravelObjective_Long",
+                "objectiveMarkerLabel": "@TravelObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "returnObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@ReturnObjective_Short",
+                "longDescription": "@ReturnObjective_Long",
+                "objectiveMarkerLabel": "@ReturnObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "navPointSpawnInfo": {
+                "_Type_": "NavPointSpawnInformation",
+                "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+                "name": "@mission_items_QTDistressBeacon",
+                "extendedTextTokens": []},
+              "location": "_PointsTo_:ptr:63",
+              "securityManifestToOverride": null},
+            "rewardContribution": null,
+            "displayInfo": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "overrideMissionDetailsDisplayInfo": {
+              "_Type_": "OverrideMissionDetailsDisplayInfo",
+              "titleOverride": "@LOC_UNINITIALIZED",
+              "descriptionOverride": "@LOC_UNINITIALIZED"},
+            "commsNotifications": [
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Active",
+                "communicationTags": "_PointsTo_:ptr:64",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Failed",
+                "communicationTags": "_PointsTo_:ptr:34",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Completed",
+                "communicationTags": "_PointsTo_:ptr:35",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0}],
+            "childMissionPhases": [],
+            "variableName": "RandomChildPhase_EscortShipToLandingPad",
+            "weight": 0.25},
+          {
+            "_Pointer_": "ptr:101",
+            "_Type_": "ChildMissionPhase",
+            "id": "fb857493-0974-4183-866d-90c644ee9398",
+            "debugName": "EscortShipFromLandingArea",
+            "startsActive": false,
+            "properties": [
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilot_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:12"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilotChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:13"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:14"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotDestroyed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:15"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:16"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotEscapes_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:17"},
+              {
+                "_Pointer_": "ptr:96",
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "MissionLocation_BP",
+                "extendedTextToken": "EscortShipFromLandingAreaLocation",
+                "property": "_PointsTo_:ptr:65"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "UseHangarDoor_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:66"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "InitialEnemiesBool_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:67"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "InitialEnemies_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:68"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "UsePositionOverride_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:69"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortShip_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:70"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:71"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementsWave01_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:72"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave01MinDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:73"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave01MaxDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:74"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementsWave02_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:75"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave02MinDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:76"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave02MaxDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:77"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EscortReinforcementsWave03_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:78"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave03MinDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:79"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ERWave03MaxDistance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:80"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "InterdictionChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:81"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "InterdictionShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:82"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "LocationUnderAttack_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:83"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_EscortShipArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:84"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileShipsSpawned_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:85"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_InterdictionShipsSpawned_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:86"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_EscortShipStartFlyOut_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:87"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileKilled_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:88"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HighDamage_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:89"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_MediumDamage_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:90"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_LowDamage_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:91"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_ObjectiveReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:92"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_ObjectiveFail_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:93"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_MissionFailure_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:94"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_EscortShipFlyOutSuccess_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:95"}],
+            "objectiveHandler": {
+              "_Type_": "ObjectiveHandler_Local",
+              "moduleDeclaration": null,
+              "module": "Libs/Subsumption/Missions/PU/Missions/DefendLocation/DL_EscortShipFromLandingArea.xml",
+              "moduleHierarchy": null,
+              "disableTravelObjectives": true,
+              "disableReturnObjectives": true,
+              "travelRadiusKM": 22.0,
+              "allPlayersLeftGracePeriod": 0.2,
+              "travelObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@TravelObjective_Short",
+                "longDescription": "@TravelObjective_Long",
+                "objectiveMarkerLabel": "@TravelObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "returnObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@ReturnObjective_Short",
+                "longDescription": "@ReturnObjective_Long",
+                "objectiveMarkerLabel": "@ReturnObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "navPointSpawnInfo": {
+                "_Type_": "NavPointSpawnInformation",
+                "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+                "name": "@mission_items_QTDistressBeacon",
+                "extendedTextTokens": []},
+              "location": "_PointsTo_:ptr:96",
+              "securityManifestToOverride": null},
+            "rewardContribution": null,
+            "displayInfo": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "overrideMissionDetailsDisplayInfo": {
+              "_Type_": "OverrideMissionDetailsDisplayInfo",
+              "titleOverride": "@LOC_UNINITIALIZED",
+              "descriptionOverride": "@LOC_UNINITIALIZED"},
+            "commsNotifications": [
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Active",
+                "communicationTags": "_PointsTo_:ptr:64",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Failed",
+                "communicationTags": "_PointsTo_:ptr:34",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Completed",
+                "communicationTags": "_PointsTo_:ptr:35",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0}],
+            "childMissionPhases": [],
+            "variableName": "RandomChildPhase_EscortShipFromLandingPad",
+            "weight": 0.25},
+          {
+            "_Pointer_": "ptr:102",
+            "_Type_": "ChildMissionPhase",
+            "id": "91f04fb1-ae49-46c2-a35b-f7d090d06faa",
+            "debugName": "DefendEntities01",
+            "startsActive": false,
+            "properties": [
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilot_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:12"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilotChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:13"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:14"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotDestroyed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:15"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:16"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotEscapes_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:17"},
+              {
+                "_Pointer_": "ptr:97",
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "MissionLocation_BP",
+                "extendedTextToken": "DefendEntitiesLocation",
+                "property": "_PointsTo_:ptr:1"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ZonesToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:18"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EntitiesToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:19"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EntityMarkerObjectiveName_BP",
+                "extendedTextToken": "Objects",
+                "property": "_PointsTo_:ptr:20"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "BomberShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:21"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "SupportShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:22"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "NextWaveDelay_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:23"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "HealObjectsToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:24"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileReinforcementsArrive_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:26"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HalfDefendEntitiesRemain_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:27"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_QuaterDefendEntitiesRemain_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:28"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileDestroyedEncouragement_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:29"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_BombersCallOut_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:30"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_DefendSuccess_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:31"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_DefendFailed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:32"}],
+            "objectiveHandler": {
+              "_Type_": "ObjectiveHandler_Local",
+              "moduleDeclaration": null,
+              "module": "Libs/Subsumption/Missions/PU/Missions/DefendLocation/DL_DefendDestructibleEntities.xml",
+              "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/defenddestructibleentities_mmh.json",
+              "disableTravelObjectives": true,
+              "disableReturnObjectives": true,
+              "travelRadiusKM": 22.0,
+              "allPlayersLeftGracePeriod": 0.2,
+              "travelObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@TravelObjective_Short",
+                "longDescription": "@TravelObjective_Long",
+                "objectiveMarkerLabel": "@TravelObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "returnObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@ReturnObjective_Short",
+                "longDescription": "@ReturnObjective_Long",
+                "objectiveMarkerLabel": "@ReturnObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "navPointSpawnInfo": {
+                "_Type_": "NavPointSpawnInformation",
+                "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+                "name": "@mission_items_QTDistressBeacon",
+                "extendedTextTokens": []},
+              "location": "_PointsTo_:ptr:97",
+              "securityManifestToOverride": null},
+            "rewardContribution": null,
+            "displayInfo": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "overrideMissionDetailsDisplayInfo": {
+              "_Type_": "OverrideMissionDetailsDisplayInfo",
+              "titleOverride": "@LOC_UNINITIALIZED",
+              "descriptionOverride": "@LOC_UNINITIALIZED"},
+            "commsNotifications": [
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Active",
+                "communicationTags": "_PointsTo_:ptr:64",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Failed",
+                "communicationTags": "_PointsTo_:ptr:34",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Completed",
+                "communicationTags": "_PointsTo_:ptr:35",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0}],
+            "childMissionPhases": [],
+            "variableName": "RandomChildPhase_DefendDestructibleEntities01",
+            "weight": 0.25},
+          {
+            "_Pointer_": "ptr:103",
+            "_Type_": "ChildMissionPhase",
+            "id": "184bf77c-8a2c-4fe1-80b5-f0a621afe381",
+            "debugName": "DefendEntities02",
+            "startsActive": false,
+            "properties": [
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilot_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:12"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "AcePilotChance_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:13"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotArrives_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:14"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotDestroyed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:15"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotReminder_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:16"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_AcePilotEscapes_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:17"},
+              {
+                "_Pointer_": "ptr:98",
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "MissionLocation_BP",
+                "extendedTextToken": "DefendEntitiesLocation",
+                "property": "_PointsTo_:ptr:1"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "ZonesToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:18"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EntitiesToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:19"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "EntityMarkerObjectiveName_BP",
+                "extendedTextToken": "Objects",
+                "property": "_PointsTo_:ptr:20"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "BomberShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:21"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "SupportShips_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:22"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "NextWaveDelay_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:23"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "HealObjectsToDefend_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:24"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileReinforcementsArrive_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:26"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HalfDefendEntitiesRemain_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:27"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_QuaterDefendEntitiesRemain_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:28"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_HostileDestroyedEncouragement_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:29"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_BombersCallOut_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:30"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_DefendSuccess_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:31"},
+              {
+                "_Type_": "ObjectiveProperty_Referenced",
+                "missionVariableName": "CN_DefendFailed_BP",
+                "extendedTextToken": "",
+                "property": "_PointsTo_:ptr:32"}],
+            "objectiveHandler": {
+              "_Type_": "ObjectiveHandler_Local",
+              "moduleDeclaration": null,
+              "module": "Libs/Subsumption/Missions/PU/Missions/DefendLocation/DL_DefendDestructibleEntities.xml",
+              "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/defenddestructibleentities_mmh.json",
+              "disableTravelObjectives": true,
+              "disableReturnObjectives": true,
+              "travelRadiusKM": 22.0,
+              "allPlayersLeftGracePeriod": 0.2,
+              "travelObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@TravelObjective_Short",
+                "longDescription": "@TravelObjective_Long",
+                "objectiveMarkerLabel": "@TravelObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "returnObjectiveInfo": {
+                "_Type_": "ObjectiveDisplayInfo",
+                "shortDescription": "@ReturnObjective_Short",
+                "longDescription": "@ReturnObjective_Long",
+                "objectiveMarkerLabel": "@ReturnObjective_Short",
+                "category": "Primary",
+                "hideOnHUD": false},
+              "navPointSpawnInfo": {
+                "_Type_": "NavPointSpawnInformation",
+                "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+                "name": "@mission_items_QTDistressBeacon",
+                "extendedTextTokens": []},
+              "location": "_PointsTo_:ptr:98",
+              "securityManifestToOverride": null},
+            "rewardContribution": null,
+            "displayInfo": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "overrideMissionDetailsDisplayInfo": {
+              "_Type_": "OverrideMissionDetailsDisplayInfo",
+              "titleOverride": "@LOC_UNINITIALIZED",
+              "descriptionOverride": "@LOC_UNINITIALIZED"},
+            "commsNotifications": [
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Active",
+                "communicationTags": "_PointsTo_:ptr:64",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Failed",
+                "communicationTags": "_PointsTo_:ptr:34",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0},
+              {
+                "_Type_": "CommsNotificationSelector",
+                "trigger": "Completed",
+                "communicationTags": "_PointsTo_:ptr:35",
+                "commsTiming": "Simultaneous",
+                "delay": 0.0}],
+            "childMissionPhases": [],
+            "variableName": "RandomChildPhase_DefendDestructibleEntities02",
+            "weight": 0.25}]}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": [
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "IF all complete then complete mission",
+          "condition": {
+            "_Type_": "MissionFlowCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:99",
+                "tokenState": "Completed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:100",
+                "tokenState": "Completed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:101",
+                "tokenState": "Completed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:102",
+                "tokenState": "Completed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:103",
+                "tokenState": "Completed"}]},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Completed"}},
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "If any fail then fail all",
+          "condition": {
+            "_Type_": "MissionFlowCondition_OR",
+            "conditions": [
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:99",
+                "tokenState": "Failed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:100",
+                "tokenState": "Failed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:101",
+                "tokenState": "Failed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:102",
+                "tokenState": "Failed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:103",
+                "tokenState": "Failed"}]},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Failed"}}]},
+    "contractStartCommsNotification": {
+      "_Type_": "ContractCommsNotification",
+      "communicationTags": "_PointsTo_:ptr:4",
+      "delay": 0.0},
+    "contractEndCommsNotifications": [
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Complete",
+        "communicationTags": "_PointsTo_:ptr:5",
+        "delay": 0.0},
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Fail",
+        "communicationTags": "_PointsTo_:ptr:6",
+        "delay": 0.0},
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Abandon",
+        "communicationTags": "_PointsTo_:ptr:7",
+        "delay": 0.0}]}}

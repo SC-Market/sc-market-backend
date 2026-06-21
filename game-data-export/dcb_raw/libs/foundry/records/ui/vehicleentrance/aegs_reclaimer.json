@@ -1,0 +1,67 @@
+{
+  "_RecordName_": "SEntrancesDef.AEGS_Reclaimer",
+  "_RecordId_": "956872bd-241a-4d70-92aa-066cfcc017d3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "AEGS_Reclaimer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 7.012,
+          "y": 34.0,
+          "z": -21.633},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "AEGS_Reclaimer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -43.0,
+          "z": -21.633},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_airlock",
+        "jointName": "AEGS_Reclaimer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 12.894,
+          "y": -33.756,
+          "z": 7.803},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_airlock",
+        "jointName": "AEGS_Reclaimer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -12.894,
+          "y": -33.756,
+          "z": 7.803},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "AEGS_Reclaimer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -6.954,
+          "z": 12.724},
+        "shipState": "Flying"}]}}

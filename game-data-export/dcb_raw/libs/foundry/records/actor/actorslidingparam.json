@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "ActorSlidingParams.ActorSlidingParam",
+  "_RecordId_": "df6cff47-1357-4d95-89b7-650c97346154",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorSlidingParams",
+    "maxSlideTime": 0.75,
+    "minSlideStartSpeed": 5.8,
+    "minDistanceToObstacleForSlide": 2.0,
+    "slideDeceleration": 1.0,
+    "minSlideStopSpeed": 1.0,
+    "yawBreakAngle": 90.0,
+    "slideInertia": 100.0,
+    "slideDropDuration": 0.5,
+    "useCurveForSlideSpeed": true,
+    "slideSpeedCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": 0.006611245,
+          "y": 4.752644},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 6.7},
+        {
+          "_Type_": "Vec2",
+          "x": 0.06069845,
+          "y": 5.579464},
+        {
+          "_Type_": "Vec2",
+          "x": -0.007146057,
+          "y": 10.78381},
+        {
+          "_Type_": "Vec2",
+          "x": 0.05,
+          "y": 15.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5071461,
+          "y": 9.216192},
+        {
+          "_Type_": "Vec2",
+          "x": 0.247432,
+          "y": 6.253856},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5956807,
+          "y": 5.276997},
+        {
+          "_Type_": "Vec2",
+          "x": 0.9167477,
+          "y": 3.739661}],
+      "useLUT": false},
+    "speedCameraEffectsRecord": "file://./../../../../libs/foundry/records/actor/actorspeedcameraeffect_slide.json"}}

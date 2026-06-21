@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Atmospheric_Wind_RTPCs",
+  "_RecordId_": "233f4a02-4587-4bc6-a05d-662e71978332",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Atmospheric_Rotational_Wind_Speed_Non_Normalised"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Atmospheric_Translational_Wind_Speed_Non_Normalised"}]}}

@@ -1,0 +1,147 @@
+{
+  "_RecordName_": "Marker_Configuration.MK_Config_Vehicle_Ship_Capital",
+  "_RecordId_": "8f184da1-3c17-46ed-8a75-a6d6de1b8da4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Marker_Configuration",
+    "defaultMaterial": "",
+    "defaultModel": "Objects/UI/3D_Icons/ui_hud_marker_contact.cgf",
+    "offScreenModel": "Objects/UI/3D_Icons/ui_hud_marker_contact.cgf",
+    "objectiveStyleModel": "",
+    "alwaysShowOffScreenModel": true,
+    "ARcullingCategory": "Vehicle",
+    "useSmallIcon": true,
+    "useStandardIcon": true,
+    "useARIcon": false,
+    "useModel": true,
+    "smallIconIndex": 4,
+    "standardIconIndex": 5,
+    "smallIcon": "",
+    "standardIcon": "UI/Textures/General/Markers/marker_icon_vehicle_capital.svg",
+    "mapLabelDisplayType": "Always",
+    "stackPositionAlignment": "Bottom",
+    "layoutCanvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_common_components/h_hud_markers/h_hud_mk_components/hc_hud_mk_roots/h_hud_mk_root_s42_vehicle.json",
+    "abilities": [
+      {
+        "_Type_": "Marker_AbilityVehicleData"},
+      {
+        "_Type_": "Marker_AbilityHostility"},
+      {
+        "_Type_": "Marker_AbilityClosure",
+        "onlyWhenLocked": true},
+      {
+        "_Type_": "Marker_AbilityVisibility",
+        "icon": {
+          "_Type_": "VisibleElement",
+          "conditions": [
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "Locked",
+                "invert": false},
+              "show": false},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "Pinned",
+                "invert": false},
+              "show": false},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "DetectedByActiveRadar",
+                "invert": false},
+              "show": false}],
+          "visibleByDefault": true},
+        "distanceText": {
+          "_Type_": "VisibleElement",
+          "conditions": [
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "Locked",
+                "invert": false},
+              "show": true},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "Pinned",
+                "invert": false},
+              "show": true},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "DetectedByActiveRadar",
+                "invert": false},
+              "show": true},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "IsObjective",
+                "invert": false},
+              "show": true}],
+          "visibleByDefault": false},
+        "nameText": {
+          "_Type_": "VisibleElement",
+          "conditions": [
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "IsObjective",
+                "invert": false},
+              "show": false},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "Locked",
+                "invert": false},
+              "show": true},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "Pinned",
+                "invert": false},
+              "show": true},
+            {
+              "_Type_": "VisibilityCondition",
+              "condition": {
+                "_Type_": "VisibilityConditionDef_EntryFlag",
+                "flag": "DetectedByActiveRadar",
+                "invert": false},
+              "show": true}],
+          "visibleByDefault": false},
+        "objectiveText": {
+          "_Type_": "VisibleElement",
+          "conditions": [],
+          "visibleByDefault": true},
+        "offscreenIcon": {
+          "_Type_": "VisibleElement",
+          "conditions": [],
+          "visibleByDefault": true},
+        "boxoutOnly": {
+          "_Type_": "VisibleElement",
+          "conditions": [],
+          "visibleByDefault": true},
+        "allowBoxoutOnly": false},
+      {
+        "_Type_": "Marker_AbilityDistanceVisibility"},
+      {
+        "_Type_": "Marker_AbilityComms"}],
+    "showRules": [],
+    "mapShowRules": [],
+    "mapBoxoutSectionTypes": [],
+    "markerOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0}}}

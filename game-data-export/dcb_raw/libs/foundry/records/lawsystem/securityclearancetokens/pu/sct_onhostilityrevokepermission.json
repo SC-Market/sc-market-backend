@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "SecurityClearanceToken.SCT_OnHostilityRevokePermission",
+  "_RecordId_": "736dfb3d-3551-4287-b445-78d814217da5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": {
+      "_Type_": "SecurityClearanceTokenData_NeutralZone",
+      "conditionFailedTag": null},
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "MissionItem.rclmr_spce_hjck_ext_set_a",
+  "_RecordId_": "9f3d183b-5763-49ac-8fe6-e710b9c15d0d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.8af684ad-944f-4142-8f9e-034210f29d06",
+        "_RecordId_": "8af684ad-944f-4142-8f9e-034210f29d06"},
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.43c0da35-770b-4969-a35c-7a804afd9122",
+        "_RecordId_": "43c0da35-770b-4969-a35c-7a804afd9122"},
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.eb29b689-a894-4e1a-af9d-9bd3e134f327",
+        "_RecordId_": "eb29b689-a894-4e1a-af9d-9bd3e134f327"},
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.046aa794-43df-4e7e-b18b-6acceece1993",
+        "_RecordId_": "046aa794-43df-4e7e-b18b-6acceece1993"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_ship_0006"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/mission_entities/shiphijacked/rclmr_spce_hjck_ext_set_a.json"}}

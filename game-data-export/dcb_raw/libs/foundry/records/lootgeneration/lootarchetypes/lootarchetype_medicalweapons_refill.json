@@ -1,0 +1,67 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_MedicalWeapons_Refill",
+  "_RecordId_": "b183c3f5-7505-4103-8e77-b215648876bc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Medical Weapon",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a435f0a8-f79e-4451-b7c0-f0da5a448ee8",
+            "_RecordId_": "a435f0a8-f79e-4451-b7c0-f0da5a448ee8"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.06ba352e-b3fb-4054-b777-3f71d6e0a17b",
+                "_RecordId_": "06ba352e-b3fb-4054-b777-3f71d6e0a17b"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.84dcbd71-6d30-4fef-a091-c8a74cd81faa",
+                "_RecordId_": "84dcbd71-6d30-4fef-a091-c8a74cd81faa"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_SpawnWith",
+              "name": "Medical Weapon Drug Refill",
+              "tagsToMatch": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                    "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"},
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.06ba352e-b3fb-4054-b777-3f71d6e0a17b",
+                    "_RecordId_": "06ba352e-b3fb-4054-b777-3f71d6e0a17b"}],
+                "negativeTags": []},
+              "mode": "MostSimilar",
+              "min": 1,
+              "max": 4}]}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.59ca5e36-b9a2-4459-ad0e-5745bcf5d899",
+              "_RecordId_": "59ca5e36-b9a2-4459-ad0e-5745bcf5d899"},
+            "weight": 1.0}]}]}}

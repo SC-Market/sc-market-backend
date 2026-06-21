@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "VoiceBundle.PU_RefuelProvider_Male",
+  "_RecordId_": "168ae8c5-705f-40a2-bb57-77b4737b184d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_RefuelProvider_Male",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/pilot/refueling/provider/refuelprovider01.json"]}}

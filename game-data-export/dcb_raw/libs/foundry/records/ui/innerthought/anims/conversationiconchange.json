@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "InnerThought_Anim.ConversationIconChange",
+  "_RecordId_": "0c496256-b538-40e9-b94d-049bbf86deca",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_Anim",
+    "type": {
+      "_Type_": "InnerThought_AnimBase",
+      "glyphStagger": 1.0,
+      "length": 0.4,
+      "randomStagger": false,
+      "interpolationMode": "EaseInOutCubic"}}}

@@ -1,0 +1,97 @@
+{
+  "_RecordName_": "TransitStationAnnouncements.LorvilleTrainAnnouncements",
+  "_RecordId_": "0b212ef4-c5bb-492b-bf78-f239e4513f37",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TransitStationAnnouncements",
+    "announcements": [
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_Leavsden_Station",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_LeavsdenStation_IG_001_NowArrivingLeavsden"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_LeavsdenStation_IG_001_NextStopLeavsden"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_Metro_Center",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_MetroCenter_IG_001_NowArrivingMetro"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_MetroCenter_IG_001_NextStopMetro"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_Central_Business_District",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CentralStation_IG_001_NowArrivingCentral"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CentralStation_IG_001_NextStopCentral"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_Teasa_Spaceport",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_TeasaSpaceport_IG_001_NowArrivingTeasa"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_TeasaSpaceport_IG_001_NextStopTeasa"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_City_Gates_01",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CityGates_IG_001_NowArrivingLorville"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CityGates_IG_001_NextStopLorville"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_City_Gates_02",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CityGates_IG_001_NowArrivingLorville"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CityGates_IG_001_NextStopLorville"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_City_Gates_03",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CityGates_IG_001_NowArrivingLorville"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CityGates_IG_001_NextStopLorville"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_City_Gates_04",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CityGates_IG_001_NowArrivingLorville"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CityGates_IG_001_NextStopLorville"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_City_Gates_05",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CityGates_IG_001_NowArrivingLorville"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CityGates_IG_001_NextStopLorville"}},
+      {
+        "_Type_": "TransitStationAnnouncement",
+        "stationName": "@Lorville_Destination_City_Gates_06",
+        "preArrival": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NowArriving_CityGates_IG_001_NowArrivingLorville"},
+        "postDeparture": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_LORVILLEANN1_F_SY_Train_NextStop_CityGates_IG_001_NextStopLorville"}}]}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.GarrityDefense",
+  "_RecordId_": "626f96a2-c3f4-4c26-bc48-166b89699c65",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "garritydefense",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/garritydefense.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 229,
+      "g": 205,
+      "b": 65,
+      "a": 255}}}

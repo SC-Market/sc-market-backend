@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.Destroyable_GasStorage",
+  "_RecordId_": "6b57ffcc-f959-47f1-acb2-e773daa35aa3",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8aab2897-38f0-4097-adf6-4767a018611a",
+          "_RecordId_": "8aab2897-38f0-4097-adf6-4767a018611a"}]},
+    "type": {
+      "_Type_": "LocationEntityType_StaticEntity"},
+    "resourceSlot": "file://./../../../../../../libs/foundry/records/missiondata/declarations/locationresourceslots/bombingrun.json"}}

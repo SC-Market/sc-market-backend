@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_ShipCombat_Rank6",
+  "_RecordId_": "ceffe25b-71b6-4111-b27b-a54a856797ec",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "ShipCombat_Rank6",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank6",
+    "perkDescription": "@RepStanding_Perk_Bonus_20",
+    "icon": "",
+    "minReputation": 1600000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "WeaponProceduralClip.RifleLeanLeft",
+  "_RecordId_": "5df803ff-0f65-4726-891b-b77ab2eb3929",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipLean",
+      "blendTime": 0.2,
+      "weaponLean": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": -20.0,
+        "z": 0.0},
+      "weaponLeanAxisOffset": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "weaponShift": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}}}}

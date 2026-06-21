@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.DeliveryTarget_ItemPort_2H_Legal",
+  "_RecordId_": "43e1335b-00b3-4625-98b0-c7daee46677f",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+          "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c187c41d-8675-4868-a4e1-ab5599075ab0",
+          "_RecordId_": "c187c41d-8675-4868-a4e1-ab5599075ab0"}]},
+    "type": {
+      "_Type_": "LocationEntityType_DeliveryTarget",
+      "type": "ItemPort_Entity",
+      "targetDescription": "@location_delivery_target_item_port"},
+    "resourceSlot": null}}

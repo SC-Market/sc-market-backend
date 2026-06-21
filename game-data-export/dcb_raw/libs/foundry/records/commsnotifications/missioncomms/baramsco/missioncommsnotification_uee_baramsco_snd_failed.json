@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MissionCommsNotification_UEE_Baramsco_SnD_Failed",
+  "_RecordId_": "e3f45464-f9f6-441c-bc54-627c880819ac",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+          "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e6a13cf1-526b-4949-ae2d-d21c2315b5c4",
+          "_RecordId_": "e6a13cf1-526b-4949-ae2d-d21c2315b5c4"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+          "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/searchanddestroy/missionfail_snd.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-baramsco-invictus.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_uee_baramsco.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

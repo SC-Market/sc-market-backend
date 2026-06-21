@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_Civilian_ARGO_Pilot_Lorville",
+  "_RecordId_": "7e9032c8-18ae-4881-8db8-4db008a876c8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.87a0a69b-38c1-499a-9f5f-7e801d02af1c",
+          "_RecordId_": "87a0a69b-38c1-499a-9f5f-7e801d02af1c"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_pilots/human/civilian/pu_pilots-human-civilian-argo-pilot-lorville.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

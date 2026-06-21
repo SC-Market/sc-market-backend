@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_FoodCourt",
+  "_RecordId_": "c5faab50-fc06-458e-bacb-70100a8eb4b6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_foodcourt",
+    "restrictViewBounds": false}}

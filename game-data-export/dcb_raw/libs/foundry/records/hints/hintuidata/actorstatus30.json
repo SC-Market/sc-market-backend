@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus30",
+  "_RecordId_": "e9ff49bc-ba06-420a-99a8-ecd1aaead33d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatus_PITMenuDrugs_Title",
+    "BodyText": "@Hints_ActorStatus_PITMenuDrugs",
+    "BodyTextGamePad": "@Hints_ActorStatus_PITMenuDrugs",
+    "BodyTextJoystick": "@Hints_ActorStatus_PITMenuDrugs",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

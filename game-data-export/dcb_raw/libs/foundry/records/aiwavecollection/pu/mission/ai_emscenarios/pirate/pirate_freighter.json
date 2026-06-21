@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Pirate_Freighter",
+  "_RecordId_": "ce20bc27-468e-4b16-b005-ee8373ad4d0f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 0,
+        "textId": "",
+        "staggerTime": 0.1,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_caterpillar_pu_ai_nt.json",
+            "name": "@Factions_NineTail_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_01_low_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

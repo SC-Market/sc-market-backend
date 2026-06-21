@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Refueling",
+  "_RecordId_": "bd2c0bb5-0334-4f78-a78d-98f2a446c0ad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "Rescue_ico",
+    "LocalisedTypeName": "@refueling_ui_Login_Refuel",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/Starmap/icon_fuel.svg",
+    "DisplayTime": -1.0}}

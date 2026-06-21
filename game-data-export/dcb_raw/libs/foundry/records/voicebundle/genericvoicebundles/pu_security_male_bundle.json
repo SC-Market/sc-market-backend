@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "VoiceBundle.PU_Security_Male_Bundle",
+  "_RecordId_": "146e3dae-662c-4a63-8dbc-384c2d151a60",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_Security_Male_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/security/pu_gensecurity_male01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/security/pu_gensecurity_male02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/security/pu_gensecurity_male03.json"]}}

@@ -1,0 +1,77 @@
+{
+  "_RecordName_": "InteractionConditionPreset.BodyInteractionsOnArmorClothing_TurnOver",
+  "_RecordId_": "689aaab4-6b99-48f1-a865-91175eaa6720",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionLootableNotBeingViewedByAnyOtherInventory",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_InUseByAnother"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}},
+      {
+        "_Type_": "InteractionConditionAND",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_InProne"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "firstCondition": {
+          "_Type_": "InteractionConditionActorAbility",
+          "conditionDisplay": null,
+          "abilityType": "TurnOverApply"},
+        "secondCondition": {
+          "_Type_": "InteractionConditionCheckActorState",
+          "conditionDisplay": null,
+          "conditionResult": "Fail",
+          "targetActor": "Interactor",
+          "actorState": {
+            "_Type_": "ActorStateFilter",
+            "filterName": "New Filter",
+            "filterByState": "Any",
+            "filterByMotionSpeed": "Any",
+            "filterByPoseState": "Any",
+            "filterByStanceState": "Prone",
+            "filterByAimStanceState": "Any",
+            "filterByLeanState": "Any",
+            "filterByHeldItemType": "Any",
+            "filterBySkeleton": "Any",
+            "filterByCharacterType": "Any",
+            "filterByRestrainedState": "Any",
+            "filterByPlayerCamera": "Any",
+            "filterByAimingRestriction": "Any"}}}],
+    "conditionToHideParams": [
+      {
+        "_Type_": "InteractionConditionEntityIsHeldByInteractor",
+        "conditionDisplay": null},
+      {
+        "_Type_": "InteractionConditionEntityIsAttachedToInteractor",
+        "conditionDisplay": null,
+        "ignoreItemPorts": []}]}}

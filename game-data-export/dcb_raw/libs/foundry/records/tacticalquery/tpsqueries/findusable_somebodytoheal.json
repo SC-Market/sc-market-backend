@@ -1,0 +1,101 @@
+{
+  "_RecordName_": "TacticalQuery.FindUsable_SomebodyToHeal",
+  "_RecordId_": "110bbb01-9c59-4fb5-a5dc-78f038d07c44",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindUsable_SomebodyToHeal",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [
+            {
+              "_Type_": "TQSInputDynamicVariableValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "tag",
+              "value": "TagValueVariable",
+              "overrides": []},
+            {
+              "_Type_": "TQSInputDynamicVariableValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "minimumDistance",
+              "value": "MinimumDistanceValueVariable",
+              "overrides": []},
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "thresholdForBoolTest",
+              "value": 8.0,
+              "overrides": []}],
+          "generation": [
+            {
+              "_Type_": "TQSInputDynamicVariableValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "usables_around_referencePoint",
+              "value": "MaximumDistanceValueVariable",
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "availableSO",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputDynamicVariableValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "hasUseChannel",
+              "value": "TagValueVariable",
+              "overrides": []},
+            {
+              "_Type_": "TQSInputDynamicVariableValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "matchingRequiredUseSlotTags",
+              "value": "RequiredUseSlotTagsValueVariable",
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "canReachBefore_the_attentionTarget",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "isFriendly",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "max_knownHostilesWithinRange",
+              "value": 0,
+              "overrides": []}],
+          "weights": []},
+        "optionOverrides": []}]}}

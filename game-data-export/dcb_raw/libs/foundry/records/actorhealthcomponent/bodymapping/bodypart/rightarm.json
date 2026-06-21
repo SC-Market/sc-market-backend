@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "BodyPart.rightArm",
+  "_RecordId_": "b6d0be4f-bbdd-4a47-a168-8c9c9293c63a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BodyPart",
+    "partHealthStat": "HealthRightArm",
+    "partWearStat": "WearRightArm",
+    "jointName": "RightArm"}}

@@ -1,0 +1,142 @@
+{
+  "_RecordName_": "GeomFont_Config.Orbitron",
+  "_RecordId_": "e2ea871c-a179-4eea-a3e1-ca4a94004bbf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GeomFont_Config",
+    "geometryFile": "objects/ui/innerthought/orbitron.cga",
+    "metricsFile": "ui/glyphmetrics/orbitron-light.dat",
+    "rootNode": "Orbitron",
+    "letterNodes": [
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "exclamation mark",
+        "code": 33},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "full stop",
+        "code": 46},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "question mark",
+        "code": 63},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "sharp s",
+        "code": 223},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "comma",
+        "code": 44},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "apostrophe",
+        "code": 39},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "at",
+        "code": 64},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "colon",
+        "code": 58},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "quotation mark",
+        "code": 34},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "pound",
+        "code": 163},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "dollar",
+        "code": 36},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "percent",
+        "code": 37},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "and",
+        "code": 38},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "asterisk",
+        "code": 42},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "open bracket",
+        "code": 40},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "closed bracket",
+        "code": 41},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "open curly bracket",
+        "code": 123},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "closed curly bracket",
+        "code": 125},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "open square bracket",
+        "code": 91},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "closed square bracket",
+        "code": 93},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "tilde",
+        "code": 126},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "forward slash",
+        "code": 47},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "back slash",
+        "code": 92},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "less than",
+        "code": 60},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "greater than",
+        "code": 62},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "vertical bar",
+        "code": 124},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "plus",
+        "code": 43},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "hyphen",
+        "code": 45},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "equal",
+        "code": 61},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "grave accent",
+        "code": 96},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "semicolon",
+        "code": 59},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "conversation bubble",
+        "code": 952},
+      {
+        "_Type_": "GeomFont_LetterNode",
+        "name": "space",
+        "code": 32}]}}

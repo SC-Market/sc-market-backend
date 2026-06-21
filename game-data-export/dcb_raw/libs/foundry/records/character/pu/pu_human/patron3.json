@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.PATRON3",
+  "_RecordId_": "50ea8c16-c0e6-4e79-8d50-b1c392c6ee2b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": "file://./../../../../../../libs/foundry/records/characternamedata/humanfemale.json",
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "patron3",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "PATRON3"}}

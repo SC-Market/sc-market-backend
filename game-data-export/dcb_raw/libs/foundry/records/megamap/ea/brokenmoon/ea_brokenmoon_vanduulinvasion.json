@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "MegaMap.EA_BrokenMoon_VanduulInvasion",
+  "_RecordId_": "c4463864-51be-4d1e-9ffc-d57efbc77e6b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": null,
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/BrokenMoon/survivalsolo.socpak",
+          "ObjectContainers/EA/BrokenMoon/global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "libs/subsumption/missions/ac/ac_swarm/ac_swarm.xml",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": null,
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_brokenmoon.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Never",
+    "bindCullingEnabled": false,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

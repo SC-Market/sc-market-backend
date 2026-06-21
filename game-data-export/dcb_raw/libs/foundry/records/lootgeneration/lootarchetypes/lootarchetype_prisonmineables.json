@@ -1,0 +1,84 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_PrisonMineables",
+  "_RecordId_": "87b6f96c-9875-4091-a8db-bdd579931076",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.33343636-46c2-4b37-8a19-3fdb1e396efc",
+          "_RecordId_": "33343636-46c2-4b37-8a19-3fdb1e396efc"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Aphorite",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f0cc9291-34b5-4897-81cf-36801b67916c",
+            "_RecordId_": "f0cc9291-34b5-4897-81cf-36801b67916c"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+                "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"}],
+            "negativeTags": []},
+          "weight": 0.8,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_StackSize",
+              "min": 3,
+              "max": 5}]},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Dolivine",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.78ad91a7-99b0-4ff8-9904-e15f2dcb51be",
+            "_RecordId_": "78ad91a7-99b0-4ff8-9904-e15f2dcb51be"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+                "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"}],
+            "negativeTags": []},
+          "weight": 0.5,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_StackSize",
+              "min": 2,
+              "max": 4}]},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Hadanite",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f2f390d5-614f-4674-811e-db532712534b",
+            "_RecordId_": "f2f390d5-614f-4674-811e-db532712534b"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+                "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"}],
+            "negativeTags": []},
+          "weight": 0.1,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_StackSize",
+              "min": 1,
+              "max": 3}]}]},
+    "secondaryOrGroups": []}}

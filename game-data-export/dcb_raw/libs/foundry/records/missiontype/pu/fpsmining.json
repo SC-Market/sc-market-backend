@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.FPSMining",
+  "_RecordId_": "22cf7d08-4bdc-49b8-b765-5af174a0a68e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "",
+    "LocalisedTypeName": "@mobiglas_ui_FPSMining",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/icon_mobiglas_mining_hand.svg",
+    "DisplayTime": -1.0}}

@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.Player_Tension",
+  "_RecordId_": "8cc3120d-c85f-4408-83a5-679692b286b6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "Player_Tension",
+    "min": -1.0,
+    "max": 1.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "SC_Music_Player_Tension",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

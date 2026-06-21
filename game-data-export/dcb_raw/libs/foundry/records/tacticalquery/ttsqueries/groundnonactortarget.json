@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "TacticalQuery.GroundNonActorTarget",
+  "_RecordId_": "ac335a78-a44a-4603-a8d7-3273b16ec745",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "GroundNonActorTarget",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/nonactorgroundcombat.json",
+        "optionOverrides": []}]}}

@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_FPS_Stocked",
+  "_RecordId_": "25351347-c40a-4d55-8888-d1a0419a79e1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Weapon type Stocked",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0436bd92-db4f-4c46-9ba9-75801569d825",
+            "_RecordId_": "0436bd92-db4f-4c46-9ba9-75801569d825"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.dfbc6af5-6211-4d71-8d10-b64c66ea95a9",
+                "_RecordId_": "dfbc6af5-6211-4d71-8d10-b64c66ea95a9"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_SpawnWith",
+              "name": "come with ammunition",
+              "tagsToMatch": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.08ad4140-7b35-438e-9947-76ff81311972",
+                    "_RecordId_": "08ad4140-7b35-438e-9947-76ff81311972"}],
+                "negativeTags": []},
+              "mode": "MostSimilar",
+              "min": 1,
+              "max": 3}]}]},
+    "secondaryOrGroups": []}}

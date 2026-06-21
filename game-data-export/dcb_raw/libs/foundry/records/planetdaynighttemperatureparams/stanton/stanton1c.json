@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "PlanetDayNightTemperatureTemplate.Stanton1c",
+  "_RecordId_": "52375f71-e79f-43d6-a813-2c1fcecea762",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlanetDayNightTemperatureTemplate",
+    "dayNightTemperatureParams": {
+      "_Type_": "PlanetDayNightTemperatureParams",
+      "DayNightCoolingBaseRate": -16.0,
+      "DayNightCoolingHumidityModifier": 0.07454276,
+      "DayNightCoolingHumidityMultiplier": 1.035}}}

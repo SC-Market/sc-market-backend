@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "JournalEntryType.AudioLog",
+  "_RecordId_": "e77855cd-7ab3-4e85-ba6d-5f306b77bf07",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntryType",
+    "DisplayName": "@mobiGlas_ui_JournalEntryType_AudioLog",
+    "NotificationName": "@mobiGlas_ui_JournalAudioTextEntry_Added",
+    "IconName": "Audio_ico"}}

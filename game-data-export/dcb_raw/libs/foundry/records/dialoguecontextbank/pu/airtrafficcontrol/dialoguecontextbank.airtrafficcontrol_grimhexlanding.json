@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "DialogueContextBank.AirTrafficControl_GrimhexLanding",
+  "_RecordId_": "c66bce63-6f25-4a8f-ba93-84b30cb61fac",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContextBank",
+    "realm": "file://./../../../../../../libs/foundry/records/dialoguerealm/pu/dialoguerealm.airtrafficcontrol.json",
+    "character": "file://./../../../../../../libs/foundry/records/character/pu/character.grimhexlanding.json",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "contexts": [
+      {
+        "_RecordId_": "205c5117-3cd7-4415-ae09-441887aaff46",
+        "_RecordName_": "DialogueContext.GrimhexLanding_Approaching",
+        "_Type_": "DialogueContext",
+        "speaker": "file://./../../../../../../libs/foundry/records/character/pu/character.grimhexlanding.json",
+        "localizedSubtitleText": "@GrimhexLanding_Approaching",
+        "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+        "subtitleShowDelay": 0.0,
+        "subtitleDisplayDurationOverride": 0.0,
+        "tempText": "",
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "femaleAudioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "forceSubtitles": false,
+        "contents": [],
+        "tags": []}]}}

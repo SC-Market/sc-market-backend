@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.KillShip_MMH",
+  "_RecordId_": "c02b3399-1faa-4163-979a-fa357fff02c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/FindObjectByRadar/FindObjectByRadar.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/BackendModules/DefendTargetShip.xml",
+        "subModuleHierarchy": null}]}}

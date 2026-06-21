@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_HiredMuscle",
+  "_RecordId_": "8929d7e9-49a3-4c76-89de-0fd1ee66da7f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_hiredmuscle.json",
+        "propertiesBB": []},
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+        "propertiesBB": []}]}}

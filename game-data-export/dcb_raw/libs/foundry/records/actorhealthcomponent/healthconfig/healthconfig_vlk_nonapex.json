@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "BodyHealthConfig.HealthConfig_Vlk_NonApex",
+  "_RecordId_": "75991434-53e1-4a9c-80de-e35c9e2d3ef0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BodyHealthConfig",
+    "bleedingRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "bleedRateRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "isInvulnerable": false,
+    "isVulnerableOnlyToPlayer": false,
+    "setDamageEffectRatioOnChildren": false,
+    "canBeRepaired": false,
+    "ignoreZeroDamageHitEventsForTypes": [],
+    "bodyPartConfigs": [
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/torso.json"],
+        "damageMultiplier": 1.0,
+        "nakedDamageMultiplier": 1.0,
+        "stunMultiplier": 1.0,
+        "impactForceMultiplier": 1.0,
+        "isHeadShot": false,
+        "isFallDamageTarget": false,
+        "isFPViewOccluder": false,
+        "damageCap": -1.0},
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/head.json"],
+        "damageMultiplier": 2.0,
+        "nakedDamageMultiplier": 2.0,
+        "stunMultiplier": 1.0,
+        "impactForceMultiplier": 1.0,
+        "isHeadShot": true,
+        "isFallDamageTarget": false,
+        "isFPViewOccluder": false,
+        "damageCap": -1.0},
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/rightarm.json",
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/leftarm.json",
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/rightleg.json",
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/leftleg.json"],
+        "damageMultiplier": 1.0,
+        "nakedDamageMultiplier": 1.0,
+        "stunMultiplier": 1.0,
+        "impactForceMultiplier": 1.0,
+        "isHeadShot": false,
+        "isFallDamageTarget": false,
+        "isFPViewOccluder": false,
+        "damageCap": -1.0}]}}

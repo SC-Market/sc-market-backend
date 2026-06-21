@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_NPC_Reliability_Neutral",
+  "_RecordId_": "358ebbd6-e0a4-467a-9747-210aa370e6f8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Reliability_Neutral",
+    "description": "desc",
+    "displayName": "@RepStanding_MissionGiver_Default_Neutral_Name",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

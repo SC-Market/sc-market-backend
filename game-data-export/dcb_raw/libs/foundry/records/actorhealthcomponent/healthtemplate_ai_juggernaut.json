@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "HealthTemplate.HealthTemplate_AI_Juggernaut",
+  "_RecordId_": "b8831d99-bcf9-44da-8797-fc6b1a837972",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HealthTemplate",
+    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/male_v7.json",
+    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_ai_juggernaut.json"}}

@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.DeliveryTarget_ItemPort_1H_Dropoff_Illegal",
+  "_RecordId_": "6f9cf209-6941-4744-a054-e866be684532",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+          "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9687e23a-dab4-4965-870e-8bf630766fef",
+          "_RecordId_": "9687e23a-dab4-4965-870e-8bf630766fef"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+          "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"}]},
+    "type": {
+      "_Type_": "LocationEntityType_DeliveryTarget",
+      "type": "ItemPort_Entity",
+      "targetDescription": "@location_delivery_target_item_port"},
+    "resourceSlot": null}}

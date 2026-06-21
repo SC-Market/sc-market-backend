@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_REWARDS_Xenothreat2_100_01",
+  "_RecordId_": "f638ceff-38a2-442f-9233-389619957104",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/$templates/ballistic/bp_craft_mxox_neutronrepeater_s1.json"}]}}

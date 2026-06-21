@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.ArcadeWheeled_RTPCList",
+  "_RecordId_": "6f54e2ba-35c6-4e7e-beb6-f81dc0ccfde9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_AirTime"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Altitude"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_BumpCompression"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_GroundContact"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_RpmAccel"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_RpmLoad"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Slip"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_SlipForwards"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_SlipLateral"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Speed"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Steer"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_SteerStrain"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_SurfaceRoughness"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Suspension"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_SuspensionCompression"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Throttle"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_ThrottleLoad"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_ThrottleOffAtLoad"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_ThrottleOnAtLoad"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "ArcadeWheeled_Wheel_Compression"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Engine_Power"}]}}

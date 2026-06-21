@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.Destroyable_PowerGenerator",
+  "_RecordId_": "2c3b5208-14d0-4a5b-8578-c6dff9b2559e",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1e3260ab-2016-4788-8a4c-c289b5cef3c4",
+          "_RecordId_": "1e3260ab-2016-4788-8a4c-c289b5cef3c4"}]},
+    "type": {
+      "_Type_": "LocationEntityType_StaticEntity"},
+    "resourceSlot": "file://./../../../../../../libs/foundry/records/missiondata/declarations/locationresourceslots/bombingrun.json"}}

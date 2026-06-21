@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "Jurisdiction.HeadHunters",
+  "_RecordId_": "b004dce7-7956-4661-b37c-db5250560897",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Jurisdiction",
+    "subsumptionJurisdiction": "",
+    "name": "@HeadHunters_RepUI_Name",
+    "logoPath": "",
+    "parentJurisdiction": null,
+    "respectsParentJurisdictionLaws": false,
+    "infractions": [],
+    "infractionSets": [],
+    "journalEntry": null,
+    "maxStolenGoodsPossessionSCU": 1.0,
+    "prohibitedGoods": [],
+    "prohibitedResources": [],
+    "controlledSubstanceClasses": [
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125},
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125},
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125}],
+    "baseFine": 0,
+    "earlyPaymentPeriod": -1.0,
+    "isPrison": false,
+    "impoundingDefinitions": []}}

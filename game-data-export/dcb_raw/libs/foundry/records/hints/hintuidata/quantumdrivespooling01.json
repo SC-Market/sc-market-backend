@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.QuantumDriveSpooling01",
+  "_RecordId_": "79bec856-727b-4bbf-95df-b3f7b9b95285",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Quantum_Drive_Spooling_Title",
+    "BodyText": "@Hints_Quantum_Drive_Spooling1",
+    "BodyTextGamePad": "@Hints_Quantum_Drive_Spooling1",
+    "BodyTextJoystick": "@Hints_Quantum_Drive_Spooling1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

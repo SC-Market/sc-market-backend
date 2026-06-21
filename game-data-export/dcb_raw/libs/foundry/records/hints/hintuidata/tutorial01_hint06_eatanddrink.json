@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial01_Hint06_EatAndDrink",
+  "_RecordId_": "106c197e-97b5-422d-9d3a-218a3882f45b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut01_Hint06_EatAndDrink_Title",
+    "BodyText": "@Tut01_Hint06_EatAndDrink",
+    "BodyTextGamePad": "@Tut01_Hint06_EatAndDrink",
+    "BodyTextJoystick": "@Tut01_Hint06_EatAndDrink",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

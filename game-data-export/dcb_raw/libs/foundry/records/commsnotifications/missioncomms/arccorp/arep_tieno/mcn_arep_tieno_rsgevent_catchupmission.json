@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_AREP_Tieno_RSGEvent_CatchUpMission",
+  "_RecordId_": "9d71b888-32b3-4e4b-a575-0f1e0813386f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.93bcac80-38f8-4dd2-82df-765e629f5e41",
+          "_RecordId_": "93bcac80-38f8-4dd2-82df-765e629f5e41"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.aca551d1-67b7-4c13-b38d-c336e4d0f2d9",
+          "_RecordId_": "aca551d1-67b7-4c13-b38d-c336e4d0f2d9"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/missionaccept_defendship.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_arccorp_arep_tieno.json",
+    "stage": null}}

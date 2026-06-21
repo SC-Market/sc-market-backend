@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.QuantumSnareEvent_MarkerEntityDensityClass",
+  "_RecordId_": "0a315520-c7d7-46d5-af3c-8fd0782d5da8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 20000.0,
+    "clusterUpperObjectCountDGS": 3,
+    "clusterUpperObjectCountPersistence": 3,
+    "clusterPersistenceTimeout": 1.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

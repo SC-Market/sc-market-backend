@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MissionCommsNotification_GenPilots_DefendShip_MissionComplete",
+  "_RecordId_": "d9c0683f-3353-46ac-bc36-6df5fd459c94",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+          "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+          "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.62386169-1aa2-4aa0-b3cb-c4d2183882fc",
+          "_RecordId_": "62386169-1aa2-4aa0-b3cb-c4d2183882fc"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/missioncomplete_defendship.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_servicebeacon_civilian.json",
+    "stage": null}}

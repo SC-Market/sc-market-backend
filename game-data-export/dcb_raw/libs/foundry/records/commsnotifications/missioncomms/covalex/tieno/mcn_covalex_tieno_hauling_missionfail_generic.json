@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Covalex_Tieno_Hauling_MissionFail_Generic",
+  "_RecordId_": "e036b6b6-3c50-4b54-b46b-ab2eb2fbde0f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9ac73429-980d-44d8-8598-cb71bd60d8a7",
+          "_RecordId_": "9ac73429-980d-44d8-8598-cb71bd60d8a7"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b18bcd2a-ce0e-4ee9-9f31-f6922caa1e2c",
+          "_RecordId_": "b18bcd2a-ce0e-4ee9-9f31-f6922caa1e2c"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+          "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+          "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/haulingmission/missionfail_hauling.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-female-human-missiongivers-ellaeltieno.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

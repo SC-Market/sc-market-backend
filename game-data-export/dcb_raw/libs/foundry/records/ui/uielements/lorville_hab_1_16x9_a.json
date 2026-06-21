@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.lorville_hab_1_16x9_a",
+  "_RecordId_": "b12dbde3-fcb0-4b07-817b-f42bcab340fa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI\\EnvironmentalScreens\\Props\\Hurston\\assets\\SWF\\lorville_hab_1_16x9_a.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

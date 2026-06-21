@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ANVL_F7CM_Template",
+  "_RecordId_": "e70d213d-5abd-41fc-be4c-e4acd4d13dad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 1.29}}}}

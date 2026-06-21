@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "AIObservableFilterFlags.DefaultObservableFilterFlags_PU_Human",
+  "_RecordId_": "6ea24a05-f77a-42c7-b2cd-cc417500f91d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIObservableFilterFlags",
+    "typeFlags": [
+      "Explosive",
+      "Agent",
+      "Player",
+      "SabotageEquipment",
+      "FiringRangeTarget",
+      "Vehicle",
+      "Spaceship",
+      "ExplosiveDestructible"],
+    "statusFlags": []}}

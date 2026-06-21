@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.Cave_PrisonEscape",
+  "_RecordId_": "fda26ab5-c65f-4f99-95aa-be2f43e1e306",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 0.6,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/stash_01_escape.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 0.5,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/stash_02_escape.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 0.5,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/stash_03_escape.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 0.5,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.BodyDrag_DropBody",
+  "_RecordId_": "794cb3d8-72a4-4fcd-bbb5-d113a89f60b5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_BodyDrag_Title",
+    "BodyText": "@Hints_BodyDrag_DropBody",
+    "BodyTextGamePad": "@Hints_BodyDrag_DropBody",
+    "BodyTextJoystick": "@Hints_BodyDrag_DropBody",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

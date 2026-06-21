@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.MISC_Starlite",
+  "_RecordId_": "47948645-2f7b-4b25-816a-bbb330367134",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.8,
+      "y": 1.8,
+      "z": 1.8},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "misc_starlite",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -1.45,
+          "y": 9.66,
+          "z": -3.08},
+        "shipState": "Both"}]}}

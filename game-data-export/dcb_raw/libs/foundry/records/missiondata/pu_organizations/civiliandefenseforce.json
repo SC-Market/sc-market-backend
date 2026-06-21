@@ -1,0 +1,63 @@
+{
+  "_RecordName_": "MissionOrganization.CivilianDefenseForce",
+  "_RecordId_": "2ab6875a-f0dc-40e3-af53-b1e1fd5e7c10",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5281d311-d8a3-4644-8a06-e103ed3bcd89",
+            "_RecordId_": "5281d311-d8a3-4644-8a06-e103ed3bcd89"},
+          "string": "@cdf_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a61cf179-133a-4f99-9eb1-656ea82e32e8",
+            "_RecordId_": "a61cf179-133a-4f99-9eb1-656ea82e32e8"},
+          "string": "@cdf_openbounty_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.33204ae2-348a-4c2a-80b0-68b265fa9abd",
+            "_RecordId_": "33204ae2-348a-4c2a-80b0-68b265fa9abd"},
+          "string": "@cdf_openbounty_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7c7b8400-42bf-4611-9ef1-d0f3e506a933",
+            "_RecordId_": "7c7b8400-42bf-4611-9ef1-d0f3e506a933"},
+          "string": "@cdf_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.be1cd0b1-44e7-4926-acfd-10d2a2dcbb44",
+            "_RecordId_": "be1cd0b1-44e7-4926-acfd-10d2a2dcbb44"},
+          "string": "@cdf_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9259eee4-592b-40c6-9302-7a1562b0a0b0",
+            "_RecordId_": "9259eee4-592b-40c6-9302-7a1562b0a0b0"},
+          "string": "@cdf_from"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_cdf.json"}}

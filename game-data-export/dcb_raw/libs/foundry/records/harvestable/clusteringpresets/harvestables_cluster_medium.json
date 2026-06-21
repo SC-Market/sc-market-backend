@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.Harvestables_Cluster_Medium",
+  "_RecordId_": "c4d0e865-86f1-427f-a8d8-ff701557c269",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 100.0,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 1.0,
+        "minSize": 3,
+        "maxSize": 5,
+        "minProximity": 3.0,
+        "maxProximity": 7.0}]}}

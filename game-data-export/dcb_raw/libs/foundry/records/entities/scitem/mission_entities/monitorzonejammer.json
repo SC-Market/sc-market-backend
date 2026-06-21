@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "EntityClassDefinition.MonitorZoneJammer",
+  "_RecordId_": "1ad45428-d4c6-468c-8223-8a15cc87fcd1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "MonitoredZoneParams",
+        "enabledByDefault": true,
+        "radiusKm": 40.0,
+        "strength": -10.0}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "AIObservableFiltersProfile.DefaultObservableProfile_ApexVLK",
+  "_RecordId_": "fb92df82-005d-4608-9e5a-442b71cd8c21",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIObservableFiltersProfile",
+    "observableFilters": [
+      {
+        "_Type_": "AIObservableFilters",
+        "typesAndStatus": [
+          "file://./../../../../../../libs/foundry/records/aiprofile/perception/observablefilters/flags/creature/defaultobservablefilterflags_apexvlk.json",
+          "file://./../../../../../../libs/foundry/records/aiprofile/perception/observablefilters/flags/creature/defaultobservablefilterflags_apexvlk.json"]}]}}

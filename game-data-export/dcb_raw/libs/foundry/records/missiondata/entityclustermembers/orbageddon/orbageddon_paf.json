@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "EntityClusterMember.Orbageddon_PAF",
+  "_RecordId_": "510f0955-ad90-409d-9be4-5118e6c29e13",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClusterMember",
+    "variables": [
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "DishAligned",
+        "description": "Boolean for if this PAF has finished it&apos;s alignment",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "ResetPAF",
+        "description": "Boolean for if to reset PAF",
+        "value": false}]}}

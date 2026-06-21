@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Mel_Datapad",
+  "_RecordId_": "d716186a-a615-4e3c-b03c-9c755e732d1d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CharlieStation_Mel_Datapad_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_CharlieStation_Mel_Datapad_subtitle",
+    "autoOpenMobiGlas": true,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@mobiglas_CharlieStation_Mel_Datapad_text"},
+    "tutorialEntry": false}}

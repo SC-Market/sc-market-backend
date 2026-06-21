@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_Creature",
+  "_RecordId_": "17f835a0-c78e-4e77-8604-735a24ea12c0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 10.0,
+    "sixthSenseRange": 0.0,
+    "clampDistanceForHorizontalFOV": 15.0,
+    "clampDistanceForVerticalFOV": 10.0,
+    "FOVHorizontal": 210.0,
+    "FOVVertical": 150.0,
+    "PrimaryFOVHorizontal": 90.0,
+    "PrimaryFOVVertical": 89.0}}

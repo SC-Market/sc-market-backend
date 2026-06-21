@@ -1,0 +1,376 @@
+{
+  "_RecordName_": "JumpDriveFlightParams.JumpDriveFlightTuning_S04",
+  "_RecordId_": "d5f60b2a-7aee-4fc5-a5e4-f1d3137dda61",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JumpDriveFlightParams",
+    "rotation": {
+      "_Type_": "SJumpDriveFlightRotationParams",
+      "pitchYawLimiterType": "Ellipsoid",
+      "maxAngularVelocity": {
+        "_Type_": "Vec3",
+        "x": 35.0,
+        "y": 40.0,
+        "z": 35.0},
+      "maxAngularAccelerationPositive": {
+        "_Type_": "Vec3",
+        "x": 15.0,
+        "y": 35.0,
+        "z": 15.0},
+      "maxAngularAccelerationNegative": {
+        "_Type_": "Vec3",
+        "x": 15.0,
+        "y": 35.0,
+        "z": 15.0},
+      "angularAccelerationDecay": 6.0,
+      "useAngularInputs": true,
+      "allowUsingBoost": false},
+    "linear": {
+      "_Type_": "SJumpDriveFlightLinearParams",
+      "linearLimiterType": "NormalizedUniform",
+      "linearAccelerationPositive": {
+        "_Type_": "Vec3",
+        "x": 200.0,
+        "y": 200.0,
+        "z": 200.0},
+      "linearAccelerationNegative": {
+        "_Type_": "Vec3",
+        "x": 200.0,
+        "y": 200.0,
+        "z": 200.0},
+      "allowUsingBoost": true,
+      "maxSpeed": 1300.0,
+      "maxStrafeInputs": 0.2,
+      "linearAccelDecay": 8.0,
+      "useLinearInputs": true},
+    "steering": {
+      "_Type_": "SJumpDriveFlightSteeringParams",
+      "maxAcceleration": 350.0,
+      "modifierCurve": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.2117269,
+            "y": -0.597617},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.2117269,
+            "y": 0.597617},
+          {
+            "_Type_": "Vec2",
+            "x": 0.06610442,
+            "y": 0.9062127},
+          {
+            "_Type_": "Vec2",
+            "x": 0.2652209,
+            "y": 1.019575},
+          {
+            "_Type_": "Vec2",
+            "x": 0.4643373,
+            "y": 1.132936},
+          {
+            "_Type_": "Vec2",
+            "x": 0.7314056,
+            "y": 1.001362},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.268594,
+            "y": 0.9986383}],
+        "useLUT": false},
+      "maxAccelerationBoost": 850.0,
+      "modifierCurveBoost": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.2117269,
+            "y": -0.597617},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.2117269,
+            "y": 0.597617},
+          {
+            "_Type_": "Vec2",
+            "x": 0.06610442,
+            "y": 0.9062127},
+          {
+            "_Type_": "Vec2",
+            "x": 0.2652209,
+            "y": 1.019575},
+          {
+            "_Type_": "Vec2",
+            "x": 0.4643373,
+            "y": 1.132936},
+          {
+            "_Type_": "Vec2",
+            "x": 0.7314056,
+            "y": 1.001362},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.268594,
+            "y": 0.9986383}],
+        "useLUT": false},
+      "allowUsingBoost": true,
+      "useSteeringParams": false},
+    "afterburner": {
+      "_Type_": "SVehicleAfterburnerParams",
+      "preDelayTime": 0.0,
+      "rampUpTime": 1.0,
+      "rampDownTime": 0.2,
+      "thresholdRatio": 0.25,
+      "capacity": 20.0,
+      "costPerSec": 1.0,
+      "assignmentCostModifier": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.3270777,
+            "y": 0.9820455},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.3270777,
+            "y": 1.017955},
+          {
+            "_Type_": "Vec2",
+            "x": 0.5968364,
+            "y": 1.003295},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.403164,
+            "y": 0.9967045}],
+        "useLUT": false},
+      "regenPerSec": 0.5,
+      "assignmentRegenModifier": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.3270777,
+            "y": 0.9820455},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.3270777,
+            "y": 1.017955},
+          {
+            "_Type_": "Vec2",
+            "x": 0.5968364,
+            "y": 1.003295},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.403164,
+            "y": 0.9967045}],
+        "useLUT": false},
+      "regenDelayAfterUse": 1.5,
+      "linearAccelMultiplierPositive": {
+        "_Type_": "Vec3",
+        "x": 1.15,
+        "y": 1.15,
+        "z": 1.15},
+      "linearAccelMultiplierNegative": {
+        "_Type_": "Vec3",
+        "x": 1.15,
+        "y": 1.15,
+        "z": 1.15},
+      "assignmentModifierLin": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.3270777,
+            "y": 0.9820455},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.3270777,
+            "y": 1.017955},
+          {
+            "_Type_": "Vec2",
+            "x": 0.5968364,
+            "y": 1.003295},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.403164,
+            "y": 0.9967045}],
+        "useLUT": false},
+      "angularAccelMultiplier": {
+        "_Type_": "Vec3",
+        "x": 1.3,
+        "y": 1.3,
+        "z": 1.3},
+      "assignmentModifierAng": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.3270777,
+            "y": 0.9820455},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.3270777,
+            "y": 1.017955},
+          {
+            "_Type_": "Vec2",
+            "x": 0.5968364,
+            "y": 1.003295},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.403164,
+            "y": 0.9967045}],
+        "useLUT": false},
+      "allowTriggerDuringRampdown": true,
+      "enableAntiSpam": false,
+      "startAtFullCapacity": true},
+    "turbulence": {
+      "_Type_": "SJumpDriveFlightTurbulenceParams",
+      "noiseTurbulence": {
+        "_Type_": "SJumpDriveFlightTurbulenceNoiseParams",
+        "frequencies": {
+          "_Type_": "Vec3",
+          "x": 0.6,
+          "y": 0.6,
+          "z": 0.6},
+        "multiplier": 1.0,
+        "hurstIndex": 0.4,
+        "threshold": 0.1},
+      "noiseGust": {
+        "_Type_": "SJumpDriveFlightTurbulenceNoiseParams",
+        "frequencies": {
+          "_Type_": "Vec3",
+          "x": 0.5,
+          "y": 0.5,
+          "z": 0.5},
+        "multiplier": 1.5,
+        "hurstIndex": 0.6,
+        "threshold": 0.2},
+      "turbulenceByDistanceToSpline": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.2769808,
+            "y": 0.03954859},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.05},
+          {
+            "_Type_": "Vec2",
+            "x": 0.2769808,
+            "y": 0.06045141},
+          {
+            "_Type_": "Vec2",
+            "x": 0.7318377,
+            "y": 0.0272105},
+          {
+            "_Type_": "Vec2",
+            "x": 0.8,
+            "y": 0.2},
+          {
+            "_Type_": "Vec2",
+            "x": 0.8681623,
+            "y": 0.3727895},
+          {
+            "_Type_": "Vec2",
+            "x": 0.7851658,
+            "y": 0.9911971},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.214834,
+            "y": 1.008803}],
+        "useLUT": false},
+      "gustByDistanceToSpline": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -1.004752,
+            "y": 1.600491},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.004752,
+            "y": 0.3995088},
+          {
+            "_Type_": "Vec2",
+            "x": 0.05112079,
+            "y": -0.1755591},
+          {
+            "_Type_": "Vec2",
+            "x": 1.001615,
+            "y": 0.2},
+          {
+            "_Type_": "Vec2",
+            "x": 1.952109,
+            "y": 0.5755591}],
+        "useLUT": false},
+      "pitchYawLimiterType": "Ellipsoid",
+      "maxAngularVelocity": {
+        "_Type_": "Vec3",
+        "x": 22.0,
+        "y": 15.0,
+        "z": 22.0},
+      "maxAngularAcceleration": {
+        "_Type_": "Vec3",
+        "x": 80.0,
+        "y": 30.0,
+        "z": 80.0},
+      "useTurbulenceParams": true,
+      "useGustParams": false},
+    "respoolTime": 3.0,
+    "exitRecoverySpeed": 200.0}}

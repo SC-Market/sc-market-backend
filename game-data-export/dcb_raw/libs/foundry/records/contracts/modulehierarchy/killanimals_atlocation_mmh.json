@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.KillAnimals_AtLocation_MMH",
+  "_RecordId_": "ff15967d-3ada-4a5a-9a72-738158c42f1a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/JobBoardMissions/AnimalMissions/KillAllAnimals/KillAllAnimalsAtLocation.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/InfiltrateAndDefend/PU_EliminateAll.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/eliminateall_mmh.json"}]}}

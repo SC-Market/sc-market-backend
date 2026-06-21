@@ -1,0 +1,64 @@
+{
+  "_RecordName_": "SIFCSModifiersLegacy.FlightBlade_HND",
+  "_RecordId_": "259a3037-6cb0-4e5d-ad62-56a2c2046b1b",
+  "_RecordTag_": "CGP4",
+  "_RecordValue_": {
+    "_Type_": "SIFCSModifiersLegacy",
+    "numbers": [
+      {
+        "_Type_": "SIFCSModifierNumber",
+        "value": -8.0,
+        "type": "Additive"},
+      {
+        "_Type_": "SIFCSModifierNumber",
+        "value": -10.0,
+        "type": "Additive"},
+      {
+        "_Type_": "SIFCSModifierNumber",
+        "value": -10.0,
+        "type": "Additive"},
+      {
+        "_Type_": "SIFCSModifierNumber",
+        "value": -25.0,
+        "type": "Additive"}],
+    "vectors": [
+      {
+        "_Type_": "SIFCSModifierVector",
+        "value": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 2.0,
+          "z": 1.0},
+        "type": "Additive"},
+      {
+        "_Type_": "SIFCSModifierVector",
+        "value": {
+          "_Type_": "Vec3",
+          "x": 1.01,
+          "y": 0.99,
+          "z": 1.01},
+        "type": "Scalar"},
+      {
+        "_Type_": "SIFCSModifierVector",
+        "value": {
+          "_Type_": "Vec3",
+          "x": 1.01,
+          "y": 0.99,
+          "z": 1.01},
+        "type": "Scalar"},
+      {
+        "_Type_": "SIFCSModifierVector",
+        "value": {
+          "_Type_": "Vec3",
+          "x": 1.01,
+          "y": 1.01,
+          "z": 1.01},
+        "type": "Scalar"},
+      {
+        "_Type_": "SIFCSModifierVector",
+        "value": {
+          "_Type_": "Vec3",
+          "x": 1.01,
+          "y": 1.01,
+          "z": 1.01},
+        "type": "Scalar"}]}}

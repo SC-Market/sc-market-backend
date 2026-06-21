@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "CraftingQualityDistributionRecord.FPSMineable_QualityDistribution_Carinite",
+  "_RecordId_": "82a3ee12-b15d-44df-a52f-f2122cec7ff1",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityDistributionRecord",
+    "qualityDistribution": {
+      "_Type_": "CraftingQualityDistributionNormal",
+      "min": 501,
+      "max": 1000,
+      "mean": 203.0,
+      "stddev": 270.0}}}

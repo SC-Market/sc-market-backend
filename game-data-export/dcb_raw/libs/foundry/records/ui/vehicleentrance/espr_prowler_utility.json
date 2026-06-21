@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "SEntrancesDef.ESPR_Prowler_Utility",
+  "_RecordId_": "bfede95d-8201-4289-92e3-8d5bcff7a504",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.4,
+      "y": 1.4,
+      "z": 1.4},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_door_rear_ramp",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": -5.75,
+          "z": -2.0},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "hardpoint_ladder",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.45,
+          "y": 0.0,
+          "z": 0.32},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_cargo",
+        "jointName": "hardpoint_cargo_door_left",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.96,
+          "y": -3.425,
+          "z": -1.845},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_cargo",
+        "jointName": "hardpoint_cargo_door_right",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.96,
+          "y": -3.425,
+          "z": -1.845},
+        "shipState": "Both"}]}}

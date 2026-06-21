@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "AIWaveCollection.Criminal_Single_Medium",
+  "_RecordId_": "5a8e6816-bb2c-40ed-a5ff-d75ab013f2e6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "a",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/aegs_avenger_stalker_pu_ai_crim.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../../libs/foundry/records/crewmanifest/pu/criminal/pu_human_criminal_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/drak_buccaneer_pu_ai_crim.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../../libs/foundry/records/crewmanifest/pu/criminal/pu_human_criminal_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

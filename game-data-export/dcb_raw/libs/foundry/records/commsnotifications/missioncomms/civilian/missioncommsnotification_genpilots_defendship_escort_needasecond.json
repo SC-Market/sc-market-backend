@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MissionCommsNotification_GenPilots_DefendShip_Escort_NeedASecond",
+  "_RecordId_": "bec46df8-8dd3-4bfb-9973-706c379a32ee",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ccdeca91-4752-460f-97d8-a947e16f4d1c",
+          "_RecordId_": "ccdeca91-4752-460f-97d8-a947e16f4d1c"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c1186969-0d8e-4235-aa55-ca79ee890d2b",
+          "_RecordId_": "c1186969-0d8e-4235-aa55-ca79ee890d2b"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.27f5a1d6-6712-4638-8df2-405af5f7acce",
+          "_RecordId_": "27f5a1d6-6712-4638-8df2-405af5f7acce"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/ambushmission/ambush_wait.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_servicebeacon_civilian.json",
+    "stage": null}}

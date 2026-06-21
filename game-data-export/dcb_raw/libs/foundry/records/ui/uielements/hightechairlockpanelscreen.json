@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.HightechAirlockPanelScreen",
+  "_RecordId_": "d4db9c9d-0d33-4a4b-a1a1-edab88e6ef6a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "ui/environmentalscreens/displaypanels/doors/airlocks/hightech/assets/swf/airlocksexterior.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

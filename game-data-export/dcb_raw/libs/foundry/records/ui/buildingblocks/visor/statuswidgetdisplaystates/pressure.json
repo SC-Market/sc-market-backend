@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "StatusWidgetDisplayPreset.Pressure",
+  "_RecordId_": "5fe4f098-2d9b-4f88-8326-ab328dc2d262",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StatusWidgetDisplayPreset",
+    "ranges": [
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 800.0,
+        "maximumValue": 1513.25,
+        "displayDuration": 0.0,
+        "activeRange": "ExteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 759.9375,
+        "maximumValue": 1266.562,
+        "displayDuration": 3.0,
+        "activeRange": "ExteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.0,
+        "maximumValue": 100.0,
+        "displayDuration": 2.0,
+        "activeRange": "InteriorRange",
+        "enabled": false},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 759.9375,
+        "maximumValue": 1266.562,
+        "displayDuration": 3.0,
+        "activeRange": "InteriorRange",
+        "enabled": true}],
+    "incrementDisplayDuration": 2.0,
+    "incrementStep": 100.0,
+    "maximumChangePerSecond": 4000.0,
+    "historySeconds": 1,
+    "historySamplesPerSecond": 1,
+    "shownOnLens": true,
+    "shownOnVisor": true}}

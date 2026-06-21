@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "SMFDView.MFD_View_WeaponConfig",
+  "_RecordId_": "1eb2a829-b4ba-4ad8-a040-7e6a971aa13e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SMFDView",
+    "name": "@ui_MFD_View_WeaponConfig",
+    "landscapeCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/weapons/mc_s_weaponconfig_master.json",
+    "landscapeCanvasStyleOverride": [],
+    "castsUsePortrait": true,
+    "portraitCanvas": null,
+    "portraitCanvasStyleOverride": [],
+    "viewType": "eView_Weapons",
+    "urlpostfix": ""}}

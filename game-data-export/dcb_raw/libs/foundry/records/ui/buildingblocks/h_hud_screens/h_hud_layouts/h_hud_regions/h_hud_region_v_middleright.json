@@ -1,0 +1,108 @@
+{
+  "_RecordName_": "VisorLens_Region.H_HUD_Region_V_MiddleRight",
+  "_RecordId_": "9a7f9dd5-285a-4d10-aa21-6b492877b08c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VisorLens_Region",
+    "name": "MR",
+    "orientation": {
+      "_Type_": "Deg3",
+      "x": 0.0,
+      "y": 42.0,
+      "z": 0.0},
+    "size": {
+      "_Type_": "Vec3",
+      "x": 450.0,
+      "y": 600.0,
+      "z": 0.0},
+    "anchor": {
+      "_Type_": "Vec3",
+      "x": 1.0,
+      "y": 0.5,
+      "z": 0.0},
+    "pivot": {
+      "_Type_": "Vec3",
+      "x": 1.0,
+      "y": 0.5,
+      "z": 0.0},
+    "flexDirection": "Column",
+    "flexAxisJustification": "Center",
+    "flexCrossAxisJustification": "End",
+    "flexItemAlignment": "End",
+    "widgets": [
+      {
+        "_Type_": "VisorLens_Widget",
+        "name": "Low Priority Notifications",
+        "namespace": "",
+        "canvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_widgets/h_hud_widget_v_lowlevelnotifiations.json",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Ang3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "slot": 0,
+        "showTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.174290ec-f2ae-4722-8e77-4c9d039732e5",
+            "_RecordId_": "174290ec-f2ae-4722-8e77-4c9d039732e5"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.56538de4-6a54-446d-98da-53d133b4a2dc",
+            "_RecordId_": "56538de4-6a54-446d-98da-53d133b4a2dc"}],
+        "hideTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0a55571a-032d-4254-acb7-332c4f31919b",
+            "_RecordId_": "0a55571a-032d-4254-acb7-332c4f31919b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9a732d51-e6b9-4ad6-b578-8f9ce13fbd30",
+            "_RecordId_": "9a732d51-e6b9-4ad6-b578-8f9ce13fbd30"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ea228fb6-d592-40aa-af6f-831e284fa3ac",
+            "_RecordId_": "ea228fb6-d592-40aa-af6f-831e284fa3ac"}]},
+      {
+        "_Type_": "VisorLens_Widget",
+        "name": "Tutorial Hints",
+        "namespace": "",
+        "canvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_widgets/h_hud_widget_v_tutorialhints.json",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Ang3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "slot": 0,
+        "showTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.174290ec-f2ae-4722-8e77-4c9d039732e5",
+            "_RecordId_": "174290ec-f2ae-4722-8e77-4c9d039732e5"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.56538de4-6a54-446d-98da-53d133b4a2dc",
+            "_RecordId_": "56538de4-6a54-446d-98da-53d133b4a2dc"}],
+        "hideTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0a55571a-032d-4254-acb7-332c4f31919b",
+            "_RecordId_": "0a55571a-032d-4254-acb7-332c4f31919b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9a732d51-e6b9-4ad6-b578-8f9ce13fbd30",
+            "_RecordId_": "9a732d51-e6b9-4ad6-b578-8f9ce13fbd30"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ea228fb6-d592-40aa-af6f-831e284fa3ac",
+            "_RecordId_": "ea228fb6-d592-40aa-af6f-831e284fa3ac"}]}]}}

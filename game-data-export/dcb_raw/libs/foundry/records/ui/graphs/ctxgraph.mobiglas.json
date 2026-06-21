@@ -1,0 +1,396 @@
+{
+  "_RecordName_": "CtxGraph.MobiGlas",
+  "_RecordId_": "17165895-c30b-4950-9a28-c2ba00ad9850",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CtxGraph",
+    "groups": [
+      "_PointsTo_:ptr:1",
+      "_PointsTo_:ptr:2"],
+    "nodes": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "UIGraph_DockingGroup",
+        "contexts": [
+          "_PointsTo_:ptr:3",
+          "_PointsTo_:ptr:4",
+          "_PointsTo_:ptr:5",
+          "_PointsTo_:ptr:6",
+          "_PointsTo_:ptr:7",
+          "_PointsTo_:ptr:8",
+          "_PointsTo_:ptr:9",
+          "_PointsTo_:ptr:10",
+          "_PointsTo_:ptr:11",
+          "_PointsTo_:ptr:12",
+          "_PointsTo_:ptr:13",
+          "_PointsTo_:ptr:14"],
+        "name": "MainGroup",
+        "indexContexts": false,
+        "childGroups": []},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "UIGraph_Context",
+        "name": "Launcher_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:15",
+          "_PointsTo_:ptr:16"],
+        "BackBehavior": "LastDoNothing",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": "HomeScreen"}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "UIGraph_Context",
+        "name": "Journal",
+        "dependencies": [
+          {
+            "_Type_": "CtxGraph_Dependency",
+            "reason": "Enter",
+            "first": "_PointsTo_:ptr:17",
+            "second": "_PointsTo_:ptr:18"}],
+        "components": [
+          "_PointsTo_:ptr:19",
+          "_PointsTo_:ptr:17",
+          "_PointsTo_:ptr:18"],
+        "BackBehavior": "LastDoNothing",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": "Journal"}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "UIGraph_Context",
+        "name": "Shop",
+        "dependencies": [
+          {
+            "_Type_": "CtxGraph_Dependency",
+            "reason": "Enter",
+            "first": "_PointsTo_:ptr:20",
+            "second": "_PointsTo_:ptr:21"},
+          {
+            "_Type_": "CtxGraph_Dependency",
+            "reason": "Enter",
+            "first": "_PointsTo_:ptr:22",
+            "second": "_PointsTo_:ptr:21"},
+          {
+            "_Type_": "CtxGraph_Dependency",
+            "reason": "Enter",
+            "first": "_PointsTo_:ptr:21",
+            "second": "_PointsTo_:ptr:23"}],
+        "components": [
+          "_PointsTo_:ptr:22",
+          "_PointsTo_:ptr:21",
+          "_PointsTo_:ptr:23"],
+        "BackBehavior": "LastDoNothing",
+        "renderTarget": "All",
+        "UIController": {
+          "_Pointer_": "ptr:20",
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": "Shop"}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "JournalDockingStation"},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "ShopDockingStation"},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "UIGraph_JournalEntryDockComponent"},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "UIGraph_MouseControlComponent",
+        "autoHandleInput": true},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "UIGraph_JournalComponent"},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "UIGraph_Context",
+        "name": "LandingAreaServices_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:24"],
+        "BackBehavior": "LastDoNothing",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "UIGraph_Context",
+        "name": "SkyLine",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:25",
+          "_PointsTo_:ptr:26",
+          "_PointsTo_:ptr:27",
+          "_PointsTo_:ptr:28",
+          "_PointsTo_:ptr:29",
+          "_PointsTo_:ptr:30"],
+        "BackBehavior": "LastDoNothing",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": "SkyLine"}},
+      {
+        "_Pointer_": "ptr:21",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "ShopDock"},
+      {
+        "_Pointer_": "ptr:23",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "ShopApp"},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "UIGraph_DockingGroup",
+        "contexts": [
+          "_PointsTo_:ptr:31"],
+        "name": "BackgroundGroup",
+        "indexContexts": false,
+        "childGroups": []},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "UIGraph_Context",
+        "name": "HomeScreen",
+        "dependencies": [
+          {
+            "_Type_": "CtxGraph_Dependency",
+            "reason": "Enter",
+            "first": "_PointsTo_:ptr:32",
+            "second": "_PointsTo_:ptr:33"}],
+        "components": [
+          "_PointsTo_:ptr:33",
+          "_PointsTo_:ptr:32"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": "Home"}},
+      {
+        "_Pointer_": "ptr:33",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "mobiGlasHomeDock"},
+      {
+        "_Pointer_": "ptr:32",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "HomeDockingStation"},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "SkyLineDockingStation"},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "UIGraph_MouseControlComponent",
+        "autoHandleInput": true},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "UIGraph_SkyLineComponent"},
+      {
+        "_Pointer_": "ptr:28",
+        "_Type_": "UIGraph_SkyLineWDComponent"},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "UIGraph_Context",
+        "name": "VehicleManager",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:34",
+          "_PointsTo_:ptr:35",
+          "_PointsTo_:ptr:36",
+          "_PointsTo_:ptr:37",
+          "_PointsTo_:ptr:38",
+          "_PointsTo_:ptr:39",
+          "_PointsTo_:ptr:40",
+          "_PointsTo_:ptr:41"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": "VehicleManager"}},
+      {
+        "_Pointer_": "ptr:34",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "VehicleManagerDockingStation"},
+      {
+        "_Pointer_": "ptr:36",
+        "_Type_": "UIGraph_LoadoutEditorComponent",
+        "loadoutEditorComponentParams": "file://./../../../../../libs/foundry/records/ui/mobiglas/vmaeditorparams.json",
+        "geometryRecord": null,
+        "entityClipName": "",
+        "entityClipDimensions": {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "UIGraph_Context",
+        "name": "ContactsScreen",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:42",
+          "_PointsTo_:ptr:43",
+          "_PointsTo_:ptr:44",
+          "_PointsTo_:ptr:45",
+          "_PointsTo_:ptr:46"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:42",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "ContactsCommsApp"},
+      {
+        "_Pointer_": "ptr:38",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "ShipList"},
+      {
+        "_Pointer_": "ptr:35",
+        "_Type_": "UIGraph_LoadoutItemPortDockContextComponent",
+        "loadoutEditorComponentParams": "file://./../../../../../libs/foundry/records/ui/mobiglas/vmaeditorparams.json"},
+      {
+        "_Pointer_": "ptr:39",
+        "_Type_": "UIGraph_ItemPreviewContextComponentDef",
+        "loadoutEditorComponentParams": "file://./../../../../../libs/foundry/records/ui/mobiglas/vmaeditorparams.json",
+        "maxPreviewsLoaded": 20},
+      {
+        "_Pointer_": "ptr:37",
+        "_Type_": "UIGraph_VehicleLoadoutEditorContextComponent"},
+      {
+        "_Pointer_": "ptr:40",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "VehicleQuery"},
+      {
+        "_Pointer_": "ptr:43",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "ChatDockingStation"},
+      {
+        "_Pointer_": "ptr:44",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "ChatWidget"},
+      {
+        "_Pointer_": "ptr:45",
+        "_Type_": "UIGraph_ChatComponent"},
+      {
+        "_Pointer_": "ptr:46",
+        "_Type_": "UIGraph_MovieClipTransformationInterpolatorComponent",
+        "movieClipTransformationInterpolator": "file://./../../../../../libs/foundry/records/ui/transformationinterpolatorrecords/moviecliptransformationinterpolator.chatscreen.json"},
+      {
+        "_Pointer_": "ptr:41",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "PortCategories"},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "mobiGlasRouteInfo"},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "AreaMapContextComponent"},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/mobiglas/mobiglas_home.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "UIGraph_Context",
+        "name": "PlayerTrade_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:47"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:47",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_wallet/m_sc_wallet_main.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "UIGraph_Context",
+        "name": "Reputation_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:48"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:48",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/mobiglas/mobiglas_reputation.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "UIGraph_Context",
+        "name": "AssetManager_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:49"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:49",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/mobiglas/mobiglas_assetmanager.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/mobiglas/mobiglas_landingareaservices.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "UIGraph_Context",
+        "name": "MapScreen_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:50"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:50",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/r_radarmapscreens/r_radarmapscreen_screenmaster.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "UIGraph_Context",
+        "name": "ContractsManager_BB",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:51"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:51",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_home/m_sc_home_contracts.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"}]}}

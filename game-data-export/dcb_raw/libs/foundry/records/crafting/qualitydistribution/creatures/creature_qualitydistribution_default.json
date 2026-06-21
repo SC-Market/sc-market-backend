@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "CraftingQualityDistributionRecord.Creature_QualityDistribution_Default",
+  "_RecordId_": "1dcde125-1275-474f-b0d7-d6682e9e521f",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityDistributionRecord",
+    "qualityDistribution": {
+      "_Type_": "CraftingQualityDistributionNormal",
+      "min": 1,
+      "max": 1000,
+      "mean": 269.0,
+      "stddev": 254.0}}}

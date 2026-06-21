@@ -1,0 +1,436 @@
+{
+  "_RecordName_": "MissionOrganization.Ruto",
+  "_RecordId_": "5efa8ee3-534c-4d66-be05-b4e30351b266",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.35ec3646-0330-410b-bad3-c4355d99b758",
+            "_RecordId_": "35ec3646-0330-410b-bad3-c4355d99b758"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_ruto_assassin_title_0007"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_ruto_assassin_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_ruto_assassin_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_ruto_assassin_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_ruto_assassin_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_ruto_assassin_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_ruto_assassin_desc_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_ruto_assassin_danger_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_ruto_assassin_danger_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_ruto_assassin_danger_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_ruto_assassin_danger_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1b57feb0-69e3-4a8e-8079-6b0f2509a249",
+            "_RecordId_": "1b57feb0-69e3-4a8e-8079-6b0f2509a249"},
+          "string": "@mg_ruto_spacesteal_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1b57feb0-69e3-4a8e-8079-6b0f2509a249",
+            "_RecordId_": "1b57feb0-69e3-4a8e-8079-6b0f2509a249"},
+          "string": "@mg_ruto_spacesteal_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1b57feb0-69e3-4a8e-8079-6b0f2509a249",
+            "_RecordId_": "1b57feb0-69e3-4a8e-8079-6b0f2509a249"},
+          "string": "@mg_ruto_spacesteal_title_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1b57feb0-69e3-4a8e-8079-6b0f2509a249",
+            "_RecordId_": "1b57feb0-69e3-4a8e-8079-6b0f2509a249"},
+          "string": "@mg_ruto_spacesteal_title_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.efcd9d68-531d-46ce-bab1-382e0e1dbc61",
+            "_RecordId_": "efcd9d68-531d-46ce-bab1-382e0e1dbc61"},
+          "string": "@mg_ruto_spacesteal_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.efcd9d68-531d-46ce-bab1-382e0e1dbc61",
+            "_RecordId_": "efcd9d68-531d-46ce-bab1-382e0e1dbc61"},
+          "string": "@mg_ruto_spacesteal_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.efcd9d68-531d-46ce-bab1-382e0e1dbc61",
+            "_RecordId_": "efcd9d68-531d-46ce-bab1-382e0e1dbc61"},
+          "string": "@mg_ruto_spacesteal_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.efcd9d68-531d-46ce-bab1-382e0e1dbc61",
+            "_RecordId_": "efcd9d68-531d-46ce-bab1-382e0e1dbc61"},
+          "string": "@mg_ruto_spacesteal_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.efcd9d68-531d-46ce-bab1-382e0e1dbc61",
+            "_RecordId_": "efcd9d68-531d-46ce-bab1-382e0e1dbc61"},
+          "string": "@mg_ruto_spacesteal_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.efcd9d68-531d-46ce-bab1-382e0e1dbc61",
+            "_RecordId_": "efcd9d68-531d-46ce-bab1-382e0e1dbc61"},
+          "string": "@mg_ruto_spacesteal_desc_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.08842c09-72fe-481f-af67-0458cbde9a52",
+            "_RecordId_": "08842c09-72fe-481f-af67-0458cbde9a52"},
+          "string": "@mg_ruto_spacesteal_danger_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.08842c09-72fe-481f-af67-0458cbde9a52",
+            "_RecordId_": "08842c09-72fe-481f-af67-0458cbde9a52"},
+          "string": "@mg_ruto_spacesteal_danger_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.08842c09-72fe-481f-af67-0458cbde9a52",
+            "_RecordId_": "08842c09-72fe-481f-af67-0458cbde9a52"},
+          "string": "@mg_ruto_spacesteal_danger_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.08842c09-72fe-481f-af67-0458cbde9a52",
+            "_RecordId_": "08842c09-72fe-481f-af67-0458cbde9a52"},
+          "string": "@mg_ruto_spacesteal_danger_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ca507338-7fba-466d-b0c5-4c8c06103646",
+            "_RecordId_": "ca507338-7fba-466d-b0c5-4c8c06103646"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ca507338-7fba-466d-b0c5-4c8c06103646",
+            "_RecordId_": "ca507338-7fba-466d-b0c5-4c8c06103646"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ca507338-7fba-466d-b0c5-4c8c06103646",
+            "_RecordId_": "ca507338-7fba-466d-b0c5-4c8c06103646"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ca507338-7fba-466d-b0c5-4c8c06103646",
+            "_RecordId_": "ca507338-7fba-466d-b0c5-4c8c06103646"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f4202077-f5b9-4fee-a10a-dc26fecf97c4",
+            "_RecordId_": "f4202077-f5b9-4fee-a10a-dc26fecf97c4"},
+          "string": "@mission_item_0052"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f4202077-f5b9-4fee-a10a-dc26fecf97c4",
+            "_RecordId_": "f4202077-f5b9-4fee-a10a-dc26fecf97c4"},
+          "string": "@mission_item_0053"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f4202077-f5b9-4fee-a10a-dc26fecf97c4",
+            "_RecordId_": "f4202077-f5b9-4fee-a10a-dc26fecf97c4"},
+          "string": "@mission_item_0054"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f4202077-f5b9-4fee-a10a-dc26fecf97c4",
+            "_RecordId_": "f4202077-f5b9-4fee-a10a-dc26fecf97c4"},
+          "string": "@mission_item_0055"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e7933ff9-6457-4e77-a281-0b5d621befd0",
+            "_RecordId_": "e7933ff9-6457-4e77-a281-0b5d621befd0"},
+          "string": "@mg_ruto_spacesteal_nickname_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e7933ff9-6457-4e77-a281-0b5d621befd0",
+            "_RecordId_": "e7933ff9-6457-4e77-a281-0b5d621befd0"},
+          "string": "@mg_ruto_spacesteal_nickname_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e7933ff9-6457-4e77-a281-0b5d621befd0",
+            "_RecordId_": "e7933ff9-6457-4e77-a281-0b5d621befd0"},
+          "string": "@mg_ruto_spacesteal_nickname_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e7933ff9-6457-4e77-a281-0b5d621befd0",
+            "_RecordId_": "e7933ff9-6457-4e77-a281-0b5d621befd0"},
+          "string": "@mg_ruto_spacesteal_nickname_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e7933ff9-6457-4e77-a281-0b5d621befd0",
+            "_RecordId_": "e7933ff9-6457-4e77-a281-0b5d621befd0"},
+          "string": "@mg_ruto_spacesteal_nickname_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.96dfea4f-f132-47ea-a8c1-1aee6425282e",
+            "_RecordId_": "96dfea4f-f132-47ea-a8c1-1aee6425282e"},
+          "string": "@MissionGivers_Ruto"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@MissionGivers_Ruto"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@mg_ruto_UGF_eliminateall_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.44d22c9d-872b-4114-84a7-6401240e0d1b",
+            "_RecordId_": "44d22c9d-872b-4114-84a7-6401240e0d1b"},
+          "string": "@mg_ruto_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@mg_ruto_UGF_eliminateall_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_title_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_title_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_title_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": null,
+          "string": "@mg_ruto_confirmkill_desc_0005"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

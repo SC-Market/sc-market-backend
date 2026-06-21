@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "GasParams.FineParticulateMatter",
+  "_RecordId_": "4f9aa7b9-9cbd-4523-aac7-13e8dd577f9d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GasParams",
+    "debugColor": {
+      "_Type_": "RGB",
+      "r": 0.05448028,
+      "g": 1.0,
+      "b": 0.001517635},
+    "chemicalSymbol": "@ui_chemsymbol_FineParticulateMatter",
+    "fogDensity": 50.0,
+    "fogColor": {
+      "_Type_": "RGB",
+      "r": 0.04231141,
+      "g": 0.0409152,
+      "b": 0.03071344}}}

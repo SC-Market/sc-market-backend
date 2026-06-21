@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "CraftingQualityLocationOverrideRecord.ShipMineable_QualityDistribution_Pyro_TEMPLATE",
+  "_RecordId_": "97c1c819-b37f-4bf8-828b-14fd751c8895",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityLocationOverrideRecord",
+    "locationOverride": {
+      "_Type_": "CraftingQualityLocationOverride",
+      "locationOverrideList": [
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/pyrosolarsystem.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 501,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 214.0}}]}}}

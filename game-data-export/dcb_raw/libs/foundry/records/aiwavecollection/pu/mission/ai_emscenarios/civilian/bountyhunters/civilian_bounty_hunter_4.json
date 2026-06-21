@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Civilian_Bounty_Hunter_4",
+  "_RecordId_": "33f4c7d1-1613-411a-a7a7-d7af513cd1a8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/anvl_hawk_pu_ai_bh.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../../libs/foundry/records/cargomanifest/civilian/civilian_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

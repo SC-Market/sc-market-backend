@@ -1,0 +1,338 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_Weapons_Medium",
+  "_RecordId_": "58f23b81-e72f-4cdf-94e9-8f7b0025855a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Melee",
+          "weight": 0.25,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.01e3aa70-377e-49df-911f-21bf56bf2ad4",
+                  "_RecordId_": "01e3aa70-377e-49df-911f-21bf56bf2ad4"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Grenades",
+          "weight": 0.5,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.294f29fa-d2bb-406a-b9c1-413fbf323676",
+                  "_RecordId_": "294f29fa-d2bb-406a-b9c1-413fbf323676"}],
+              "negativeTags": []}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_StackSize",
+              "stackSize": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 1,
+                "max": 4}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Pistols",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cdef6808-2dff-487b-8183-47c83694772c",
+                  "_RecordId_": "cdef6808-2dff-487b-8183-47c83694772c"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4b98a74f-aeca-48b7-aba8-92ced1edc981",
+                  "_RecordId_": "4b98a74f-aeca-48b7-aba8-92ced1edc981"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.9c2de36a-e03c-4606-b9c3-e6a63ffda4aa",
+                  "_RecordId_": "9c2de36a-e03c-4606-b9c3-e6a63ffda4aa"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 4},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "SMG",
+          "weight": 2.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cccb463b-b528-4d9c-b28d-d56824b02f5d",
+                  "_RecordId_": "cccb463b-b528-4d9c-b28d-d56824b02f5d"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 4},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Shotguns",
+          "weight": 4.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b5a641d3-1246-4b86-b3a0-cd2d336591ad",
+                  "_RecordId_": "b5a641d3-1246-4b86-b3a0-cd2d336591ad"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 4},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Rifles",
+          "weight": 4.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.d4c86c2f-b66a-421e-8469-506b99be9e47",
+                  "_RecordId_": "d4c86c2f-b66a-421e-8469-506b99be9e47"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 4},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "LMG",
+          "weight": 3.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.3e707baf-5d39-48b3-ad71-a39592098389",
+                  "_RecordId_": "3e707baf-5d39-48b3-ad71-a39592098389"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 4},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Sniper Rifles",
+          "weight": 2.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.e00c2c31-1a12-40ef-9bc8-7304bfa63e49",
+                  "_RecordId_": "e00c2c31-1a12-40ef-9bc8-7304bfa63e49"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 3},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Grenade Launchers",
+          "weight": 0.25,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.95221cf2-6e14-4c60-b958-5b7f449bb733",
+                  "_RecordId_": "95221cf2-6e14-4c60-b958-5b7f449bb733"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_SpawnWith",
+              "name": "Suitable ammo",
+              "chanceToSpawnWith": 1.0,
+              "amountToSpawn": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 1,
+                "max": 2},
+              "mode": "MostSimilar",
+              "selector": {
+                "_Type_": "SpawnWithV3Selector_Tags",
+                "tags": {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6c6028af-fcc2-4205-b18c-8e344c629c10",
+                      "_RecordId_": "6c6028af-fcc2-4205-b18c-8e344c629c10"}],
+                  "negativeTags": []}}}]},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Crossbow",
+          "weight": 0.125,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.d3adf933-9150-4540-ac33-e2ff00d4cf26",
+                  "_RecordId_": "d3adf933-9150-4540-ac33-e2ff00d4cf26"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                  "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}},
+          "optionalData": []}]}}}

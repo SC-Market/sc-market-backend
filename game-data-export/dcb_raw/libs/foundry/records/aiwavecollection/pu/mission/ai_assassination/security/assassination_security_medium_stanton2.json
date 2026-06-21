@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Assassination_Security_Medium_Stanton2",
+  "_RecordId_": "111349c2-fd94-4bf0-a599-937fe4b4c4b1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Assassination_Security_Medium_Stanton2_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/aegs_avenger_stalker_pu_ai_sec_crusader.json",
+            "name": "@Factions_CrusaderSecurity_DisplayName",
+            "vehicleName": "",
+            "amount": 2,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/security/security_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

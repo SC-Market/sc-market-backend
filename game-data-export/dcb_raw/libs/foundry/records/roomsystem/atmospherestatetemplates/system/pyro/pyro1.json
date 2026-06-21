@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AtmosphereStateTemplate.Pyro1",
+  "_RecordId_": "73cd2b65-84db-4a0f-91c4-b6b36d2483d5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereStateTemplate",
+    "state": {
+      "_Type_": "AtmosphereStateTemplateInternal",
+      "pressureMod": "Override",
+      "pressure": 2.62,
+      "temperatureMod": "Override",
+      "temperature": 499.0,
+      "humidityMod": "Override",
+      "humidity": 0.0}}}

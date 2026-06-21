@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "SSolarSystem.Stanton",
+  "_RecordId_": "f3132aed-f110-489b-a739-9f10208a033b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SSolarSystem",
+    "Name": "Stanton",
+    "landingZoneInventory": "file://./../../../../libs/foundry/records/inventorycontainers/landingzoneinventory.json",
+    "DefaultLocation": "file://./../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2/landingzone/stanton2_orison.json",
+    "SolarSystemRecord": "file://./../../../../libs/foundry/records/starmap/pu/stantonsolarsystem.json",
+    "galacticPosition": {
+      "_Type_": "Vec3",
+      "x": 49.53472,
+      "y": -2.63396,
+      "z": 16.47529},
+    "organicFallbackBedrockTint": {
+      "_Type_": "RGB",
+      "r": 0.5,
+      "g": 0.5,
+      "b": 0.5},
+    "organicFallbackSoilTint": {
+      "_Type_": "RGB",
+      "r": 0.5,
+      "g": 0.5,
+      "b": 0.5}}}

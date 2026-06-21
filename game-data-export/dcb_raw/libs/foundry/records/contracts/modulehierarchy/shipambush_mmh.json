@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.ShipAmbush_MMH",
+  "_RecordId_": "7aaabb22-340e-44e1-8556-2442ddca2f46",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/ShipAmbush/ShipAmbush.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/RandomEncounter/AcePilot.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/acepilot_mmh.json"}]}}

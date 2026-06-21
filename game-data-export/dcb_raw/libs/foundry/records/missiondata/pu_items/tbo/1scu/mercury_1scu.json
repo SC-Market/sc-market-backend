@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "MissionItem.Mercury_1SCU",
+  "_RecordId_": "23987ad0-4100-4b4f-886c-aa1f8caa493b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+        "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.69169477-cb7a-4b2a-ae83-40de35124691",
+        "_RecordId_": "69169477-cb7a-4b2a-ae83-40de35124691"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.fcc9b59f-a86f-4119-843a-428dae81a70f",
+        "_RecordId_": "fcc9b59f-a86f-4119-843a-428dae81a70f"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@Mission_Item_0164"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_metal_mercury.json"}}

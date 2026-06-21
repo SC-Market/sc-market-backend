@@ -1,0 +1,7 @@
+{
+  "_RecordName_": "VisorHUD_Config.VisorHUD_Config",
+  "_RecordId_": "804dd2f6-fba6-4a22-8b9b-4f48e5d28971",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VisorHUD_Config",
+    "controlHintsDef": "file://./../../../../../libs/foundry/records/ui/visor/visor_controlhintsconfig.json"}}

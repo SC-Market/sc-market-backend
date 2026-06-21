@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial02_Hint04a_Kiosks",
+  "_RecordId_": "9190bf5a-d028-4bbc-a99d-9c70f54be57a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut02_Hint04a_Kiosks_Title",
+    "BodyText": "@Tut02_Hint04a_Kiosks",
+    "BodyTextGamePad": "@Tut02_Hint04a_Kiosks",
+    "BodyTextJoystick": "@Tut02_Hint04a_Kiosks",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

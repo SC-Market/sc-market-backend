@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Fdcrt_Gen_Sml_Jce",
+  "_RecordId_": "fad405a6-aecf-4bc4-981f-4baa2eccc46e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_fdcrt_gen_sml_jce",
+    "restrictViewBounds": false}}

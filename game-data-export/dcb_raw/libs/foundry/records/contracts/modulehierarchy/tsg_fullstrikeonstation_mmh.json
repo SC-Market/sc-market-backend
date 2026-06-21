@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.TSG_FullStrikeOnStation_MMH",
+  "_RecordId_": "5aa9bf30-6d95-4f0b-b844-7ba1696dc3f9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/TacticalStrikeGroup/TSG_FullStrikeOnStation.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/SupportAttackedShip/SupportAttackedShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/supportattackedship_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/destroyitems_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/TacticalStrikeGroup/TSG_WeakenDefences.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/tsg_weakendefences_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/DefendLocation/DL_EscortShipFromLandingArea.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/dl_escortshipfromlandingarea_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/SpawnShipWaves.xml",
+        "subModuleHierarchy": null}]}}

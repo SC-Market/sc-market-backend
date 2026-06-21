@@ -1,0 +1,58 @@
+{
+  "_RecordName_": "VisorLens_Region.H_HUD_Region_L_BottomLeft",
+  "_RecordId_": "74b91af6-f7c8-4a05-923e-0970947c6409",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VisorLens_Region",
+    "name": "BottomLeft",
+    "orientation": {
+      "_Type_": "Deg3",
+      "x": 10.0,
+      "y": -20.0,
+      "z": 0.0},
+    "size": {
+      "_Type_": "Vec3",
+      "x": 560.0,
+      "y": 450.0,
+      "z": 0.0},
+    "anchor": {
+      "_Type_": "Vec3",
+      "x": 0.007,
+      "y": 0.99,
+      "z": 0.0},
+    "pivot": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 1.0,
+      "z": 0.0},
+    "flexDirection": "ColumnReverse",
+    "flexAxisJustification": "End",
+    "flexCrossAxisJustification": "Start",
+    "flexItemAlignment": "Start",
+    "widgets": [
+      {
+        "_Type_": "VisorLens_Widget",
+        "name": "Primary Player Status",
+        "namespace": "",
+        "canvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_layouts/h_hud_widgets/h_hud_widget_l_playerstatus.json",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Ang3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "slot": 0,
+        "showTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.174290ec-f2ae-4722-8e77-4c9d039732e5",
+            "_RecordId_": "174290ec-f2ae-4722-8e77-4c9d039732e5"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.56538de4-6a54-446d-98da-53d133b4a2dc",
+            "_RecordId_": "56538de4-6a54-446d-98da-53d133b4a2dc"}],
+        "hideTags": []}]}}

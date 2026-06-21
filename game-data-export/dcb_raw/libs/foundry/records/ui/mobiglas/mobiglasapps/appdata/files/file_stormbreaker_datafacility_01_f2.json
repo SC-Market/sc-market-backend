@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "MobiGlasAppData.File_StormBreaker_DataFacility_01_F2",
+  "_RecordId_": "5981178e-b09a-408c-b542-58e7143f259f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MobiGlasAppData",
+    "appData": {
+      "_Type_": "GenericDataDisplayAppData",
+      "dateTime": {
+        "_Type_": "DateTime",
+        "date": {
+          "_Type_": "Date",
+          "day": 30,
+          "month": "April",
+          "year": 2955},
+        "time": {
+          "_Type_": "Time",
+          "hour": 5,
+          "minute": 11,
+          "second": 59}},
+      "content": [
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@storm_datafac_terminal1_f2_name",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}}],
+      "securityToken": null,
+      "dynamicInteger": 0}}}

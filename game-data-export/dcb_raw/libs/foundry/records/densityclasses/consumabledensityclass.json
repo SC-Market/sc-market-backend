@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.ConsumableDensityClass",
+  "_RecordId_": "601afccf-2462-4778-a150-a9a9742324d6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 30.0,
+    "clusterUpperObjectCountDGS": 25,
+    "clusterUpperObjectCountPersistence": 10,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Docking",
+  "_RecordId_": "35606194-698e-4a92-a941-4d1b6ff4d213",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_docking_arm",
+    "restrictViewBounds": false}}

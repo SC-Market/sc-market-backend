@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Refueling_DeployBoom",
+  "_RecordId_": "8addacac-8d12-4299-a3ab-84cc44012a76",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Refueling_DeployBoom_Title",
+    "BodyText": "@Hints_Refueling_DeployBoom",
+    "BodyTextGamePad": "@Hints_Refueling_DeployBoom",
+    "BodyTextJoystick": "@Hints_Refueling_DeployBoom",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

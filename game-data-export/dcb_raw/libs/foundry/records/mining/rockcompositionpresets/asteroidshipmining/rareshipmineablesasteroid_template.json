@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableComposition.RareShipMineablesAsteroid_TEMPLATE",
+  "_RecordId_": "21300c0b-2851-4db5-a1bb-50d2855d7c8b",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@LOC_EMPTY",
+    "minimumDistinctElements": 1,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/testelement_balance.json",
+        "minPercentage": 50.0,
+        "maxPercentage": 100.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0}]}}

@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.MissionXenothreatWrecksDensityClass",
+  "_RecordId_": "589046a0-d72b-411e-95e1-51d4cb83f0db",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 100000.0,
+    "clusterUpperObjectCountDGS": 84,
+    "clusterUpperObjectCountPersistence": 2,
+    "clusterPersistenceTimeout": 0.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.DRAK_Mule",
+  "_RecordId_": "b61b3191-8fbe-419f-b609-30c088469619",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.5,
+      "y": 1.5,
+      "z": 1.5},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_hatch",
+        "jointName": "DRAK_Mule",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.49,
+          "y": 1.7,
+          "z": -0.075},
+        "shipState": "Both"}]}}

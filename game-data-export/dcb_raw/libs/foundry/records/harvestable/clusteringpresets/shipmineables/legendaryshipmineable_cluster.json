@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.LegendaryShipMineable_Cluster",
+  "_RecordId_": "3638ea41-8218-4f04-948c-40beaa3e9ee9",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 25.0,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.1,
+        "minSize": 2,
+        "maxSize": 2,
+        "minProximity": 1.0,
+        "maxProximity": 12.0}]}}

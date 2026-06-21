@@ -1,0 +1,813 @@
+{
+  "_RecordName_": "EntityClassDefinition.lt_light_lantern_1_a",
+  "_RecordId_": "8f501b34-7672-4513-84d3-144a1ae2d6b1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Light",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SGeometryResourceParams",
+        "ModelTag": null,
+        "cacheResources": false,
+        "meshsetup": {
+          "_Type_": "SGeometryMeshsetupParams",
+          "visibilityTags": {
+            "_Type_": "TagList",
+            "tags": []}},
+        "Geometry": {
+          "_Type_": "SGeometryNodeParams",
+          "Tags": "",
+          "Geometry": {
+            "_Type_": "SGeometryDataParams",
+            "Geometry": {
+              "_Type_": "GlobalResourceGeometry",
+              "path": "objects/buildingsets/human/lowtech/prop/light/lamp/lamp_lantern_1_a.cgf"},
+            "Material": {
+              "_Type_": "GlobalResourceMaterial",
+              "path": ""},
+            "SimulationGeometry": null,
+            "Palette": {
+              "_Type_": "TintPaletteRef",
+              "RootRecord": null,
+              "ChildPath": "",
+              "SwizzleOverride": null},
+            "Slot": "Main",
+            "MaterialAttachments": "",
+            "ProxyCDFPath": "",
+            "ModifiersPath": "",
+            "AttachFlags": 0,
+            "DeformerType": "Standard",
+            "ProtosBShapeExclude": 0,
+            "VisTP": true,
+            "VisFP": true,
+            "VisShadow": true,
+            "VisSecondaryViews": true,
+            "WrinkleMap": false,
+            "EnableDecalProjection": false,
+            "BBoxJoint": "",
+            "BBoxRadius": 0.0,
+            "Wear": 0.0,
+            "Dirt": 0.0,
+            "Interference": 0.0,
+            "Damage": 0.0,
+            "RenderLayer": "Default",
+            "VisAreaMode": "AABB_Center",
+            "SunShadowMode": "Upto_400m",
+            "viewDistRatio": null,
+            "LodRatio": 100},
+          "ScaleMultiplier": 1.0,
+          "SubGeometry": [
+            {
+              "_Type_": "SGeometryNodeParams",
+              "Tags": "Destroyed",
+              "Geometry": {
+                "_Type_": "SGeometryDataParams",
+                "Geometry": {
+                  "_Type_": "GlobalResourceGeometry",
+                  "path": "objects/buildingsets/human/lowtech/prop/light/lamp/lamp_lantern_1_a_100.cgf"},
+                "Material": {
+                  "_Type_": "GlobalResourceMaterial",
+                  "path": ""},
+                "SimulationGeometry": null,
+                "Palette": {
+                  "_Type_": "TintPaletteRef",
+                  "RootRecord": null,
+                  "ChildPath": "",
+                  "SwizzleOverride": null},
+                "Slot": "Main",
+                "MaterialAttachments": "",
+                "ProxyCDFPath": "",
+                "ModifiersPath": "",
+                "AttachFlags": 0,
+                "DeformerType": "Standard",
+                "ProtosBShapeExclude": 0,
+                "VisTP": true,
+                "VisFP": true,
+                "VisShadow": true,
+                "VisSecondaryViews": true,
+                "WrinkleMap": false,
+                "EnableDecalProjection": false,
+                "BBoxJoint": "",
+                "BBoxRadius": 0.0,
+                "Wear": 0.0,
+                "Dirt": 0.0,
+                "Interference": 0.0,
+                "Damage": 0.0,
+                "RenderLayer": "Default",
+                "VisAreaMode": "AABB_Center",
+                "SunShadowMode": "Upto_400m",
+                "viewDistRatio": null,
+                "LodRatio": 100},
+              "ScaleMultiplier": 1.0,
+              "SubGeometry": []}]},
+        "Material": {
+          "_Type_": "SMaterialNodeParams",
+          "Tags": "",
+          "Material": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": ""},
+          "Palette": {
+            "_Type_": "TintPaletteRef",
+            "RootRecord": null,
+            "ChildPath": "",
+            "SwizzleOverride": null},
+          "materialVariants": []},
+        "rootOverridePaint": false,
+        "inheritModelTagFromHost": true,
+        "inheritMaterialFromSpawnHost": false},
+      {
+        "_Type_": "SEntityPhysicsControllerParams",
+        "PhysType": {
+          "_Type_": "SEntityRigidPhysicsControllerParams",
+          "Mass": 2.5,
+          "compoundingAllowed": true,
+          "breakableParams": null,
+          "gameCollisionClass": null,
+          "spawnBoxScale": 0.5,
+          "PhysFlagsOverride": [],
+          "PhysFlagsColliderOverride": [],
+          "maxLoggedCollisions": 1,
+          "Damping": 0.01,
+          "DampingZeroG": 0.01,
+          "DampingFreefall": 0.05,
+          "PushableByPlayers": true,
+          "NeverAffectTriggers": false,
+          "UseManualGridTransition": false,
+          "grid": null,
+          "shieldSDFParams": null,
+          "aiNavigationType": "Included",
+          "Kinematic": false,
+          "EnableCrossGridChecks": false,
+          "Resting": false,
+          "physicalizeAllSlots": true,
+          "enableExteriorShadow": false,
+          "buoyancyParams": null,
+          "temperature": {
+            "_Type_": "EntityTemperature",
+            "enable": false,
+            "initialTemperature": -1.0,
+            "coolingEqualizationParams": {
+              "_Type_": "CoolingEqualizationMultiplier",
+              "coolingEqualizationMultiplier": 1.0},
+            "signatureParams": {
+              "_Type_": "EntityTemperatureSignature",
+              "enable": false,
+              "minimumTemperatureForIR": 250.0,
+              "temperatureToIR": 6.0},
+            "itemResourceParams": {
+              "_Type_": "EntityTemperatureItemResource",
+              "poweredAmbientCoolingMultiplier": 1.0,
+              "minOperatingTemperature": 0.0,
+              "minCoolingTemperature": 300.0,
+              "enableOverheat": false,
+              "overheatTemperature": 450.0,
+              "overheatWarningTemperature": 370.0,
+              "overheatRecoveryTemperature": 350.0,
+              "stateHeatGenerationValues": [],
+              "degradationTemperatureMultipliers": []},
+            "misfireTemperatureRange": {
+              "_Type_": "Range",
+              "minimum": 370.0,
+              "maximum": 600.0},
+            "internalTemperatureGeneration": 0.0,
+            "fireHazard": {
+              "_Type_": "EntityFireHazard",
+              "enable": true,
+              "dissolveOnBurn": false,
+              "dissolvePercentageRange": {
+                "_Type_": "Range",
+                "minimum": 0.0,
+                "maximum": 1.0}}}}},
+      {
+        "_Type_": "SHealthComponentParams",
+        "Health": 5.0,
+        "DamageCap": 0.0,
+        "DamageResistances": {
+          "_Type_": "DamageResistance",
+          "IgnoreMeleeDamage": false,
+          "PhysicalResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "EnergyResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "DistortionResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "ThermalResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "BiochemicalResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "StunResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0}},
+        "hitManipulationParams": null,
+        "InitialDamage": null,
+        "SerializedDamageMapPath": "",
+        "ClientOnly": false,
+        "UnlockInteractionsOnDeath": false,
+        "PushDamageUpPartsHeirarchyWhenDead": true,
+        "DetachFromItemPortOnDeath": false,
+        "DetachFromEntityOnDeath": false,
+        "DestroySelfOnDeath": false,
+        "DestroyChildrenOnDeath": false,
+        "PropagateExplosionDamageToChildren": false,
+        "UseDirtShaderForDamage": true,
+        "UpdateObservableStatus": false,
+        "HealthLevelStates": [],
+        "DestroyedGeometryTag": "Destroyed",
+        "ExplodedGeometryTag": "Destroyed",
+        "DebrisGeometryTag": "",
+        "ExplosionDelayTime": 0.0,
+        "ExplosionRandomDelayRange": 0.0,
+        "ExplosionBone": "",
+        "DeathExplosionParams": null,
+        "DeathGasComposition": [],
+        "InteractionLocks": [],
+        "IsSalvagable": true,
+        "IsRepairable": true,
+        "SalvageDamageModifier": 1.0,
+        "MirrorSalvageHit": false,
+        "DisableMaterialDamage": false,
+        "sequencerTasks": [],
+        "maelstromEvents": [],
+        "alwaysPropagateHitToParent": false,
+        "duplicateHitToParent": false,
+        "sendOnDestructionEventToMasterRootContainer": false,
+        "applyExplosionFalloffFromOrigin": true},
+      {
+        "_Type_": "SEntityComponentEffects",
+        "entityEffects": {
+          "_Type_": "SEntitityEffectSystem_System",
+          "particleEffects": {
+            "_Type_": "SEntityEffectSystem_ParticleCategory",
+            "enabled": true,
+            "allowMultipleTags": true,
+            "tagEffects": [],
+            "triggerEffects": [
+              {
+                "_Type_": "SEntityEffectSystem_ParticleTriggerEffect",
+                "name": "",
+                "enabled": true,
+                "primed": false,
+                "holographic": false,
+                "updateEntityBounds": false,
+                "clipToVisArea": "Local",
+                "gpuVisAreaCullingMode": "Default",
+                "particleEffect": {
+                  "_Type_": "GlobalResourceParticle",
+                  "path": "19eac720-33d6-1a93-c91a-cfdd354231a3|Damage/LT_Damage/LT_Explode_FX.LT_Explode.lt_explode_50cm_once_fixed"},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": -0.2}},
+                  "offsetParameter": null},
+                "propertyLinks": [
+                  {
+                    "_Type_": "SEntityEffectSystem_ParticlePropertyLink",
+                    "modifiers": [
+                      {
+                        "_Type_": "SEntityEffectSystem_OverrideValueModifier",
+                        "overrideValue": 0.4}],
+                    "parameterName": null,
+                    "particleProperty": "size"}],
+                "trigger": {
+                  "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.c7d52ac4-2a9e-4951-b660-e3c34387ebb0",
+                  "_RecordId_": "c7d52ac4-2a9e-4951-b660-e3c34387ebb0"}}]},
+          "materialEffects": null,
+          "soundEffects": null,
+          "audioEnvironmentEffects": null,
+          "lightEffects": {
+            "_Type_": "EntityEffectSystem_LightCategory",
+            "enabled": true,
+            "allowMultipleTags": true,
+            "tagEffects": [
+              {
+                "_Type_": "EntityEffectSystem_LightTagEffect",
+                "name": "",
+                "enabled": true,
+                "color": {
+                  "_Type_": "RGB",
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0},
+                "useTemperature": true,
+                "colorTemperature": 3000.0,
+                "diffuseMultiplier": 1.0,
+                "viewDistanceRatio": 20,
+                "castShadow": true,
+                "shadowQualityCap": "Full",
+                "maxShadowCastDistance": 0.0,
+                "ambient": false,
+                "softBulb": false,
+                "fakeLight": false,
+                "affectsFog": true,
+                "affectsGI": true,
+                "affectThisAreaOnly": false,
+                "holographic": false,
+                "visibleThirdPerson": true,
+                "visibleFirstPerson": true,
+                "distantImposter": true,
+                "visibleShadows": true,
+                "lightImportance": "Key",
+                "lightType": {
+                  "_Type_": "EntityEffectSystem_LightType_PointLight",
+                  "radius": 4.0,
+                  "attenuationBulbSize": 0.0,
+                  "attenuationTweak": 1.0},
+                "lightLink": {
+                  "_Type_": "EntityEffectSystem_LightLink",
+                  "subMeshName": "",
+                  "linkIgnoresColor": false},
+                "flare": {
+                  "_Type_": "LightFlareParams",
+                  "flareEnabled": false,
+                  "flare": "",
+                  "flareFOV": 360.0,
+                  "flareScale": 1.0,
+                  "attachToSun": false},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 90.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": -0.2}},
+                  "offsetParameter": null},
+                "propertyLinks": [
+                  {
+                    "_Type_": "EntityEffectSystem_LightPropertyLink",
+                    "modifiers": [
+                      {
+                        "_Type_": "SEntityEffectSystem_PatternModifier",
+                        "startDelay": 0.0,
+                        "maximumValue": 1.0,
+                        "duration": 1.5,
+                        "patternCurve": {
+                          "_Type_": "BezierCurve",
+                          "points": [
+                            {
+                              "_Type_": "Vec2",
+                              "x": -0.1049742,
+                              "y": 0.9969878},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1049742,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.04559707,
+                              "y": 0.9491422},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1191882,
+                              "y": 0.9491422},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1927792,
+                              "y": 0.9491422},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1520987,
+                              "y": 0.893931},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2234019,
+                              "y": 0.893931},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2947052,
+                              "y": 0.893931},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2640291,
+                              "y": 0.7724666},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3067729,
+                              "y": 0.7724666},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3495167,
+                              "y": 0.7724666},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3238621,
+                              "y": 0.8635017},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3814594,
+                              "y": 0.8681659},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4390568,
+                              "y": 0.87283},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3987688,
+                              "y": 0.9330936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4700412,
+                              "y": 0.9288981},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5413135,
+                              "y": 0.9247027},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4874101,
+                              "y": 0.8019125},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5464646,
+                              "y": 0.7982318},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6055191,
+                              "y": 0.794551},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5777638,
+                              "y": 0.9662672},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6454676,
+                              "y": 0.9693862},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7131715,
+                              "y": 0.9725053},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.676707,
+                              "y": 0.881794},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7420402,
+                              "y": 0.8796962},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8073732,
+                              "y": 0.8775986},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7801405,
+                              "y": 0.9435474},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8566753,
+                              "y": 0.9404284},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.93321,
+                              "y": 0.9373094},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8058839,
+                              "y": 1.006893},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.194116,
+                              "y": 0.9931071}],
+                          "useLUT": false}}],
+                    "parameterName": null,
+                    "lightProperty": "Intensity"}],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dede0c7f-cac6-4a36-b1b7-2e2744fccfa4",
+                  "_RecordId_": "dede0c7f-cac6-4a36-b1b7-2e2744fccfa4"}},
+              {
+                "_Type_": "EntityEffectSystem_LightTagEffect",
+                "name": "",
+                "enabled": true,
+                "color": {
+                  "_Type_": "RGB",
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0},
+                "useTemperature": true,
+                "colorTemperature": 3000.0,
+                "diffuseMultiplier": 0.15,
+                "viewDistanceRatio": 200,
+                "castShadow": true,
+                "shadowQualityCap": "Full",
+                "maxShadowCastDistance": 0.0,
+                "ambient": false,
+                "softBulb": false,
+                "fakeLight": false,
+                "affectsFog": true,
+                "affectsGI": true,
+                "affectThisAreaOnly": false,
+                "holographic": false,
+                "visibleThirdPerson": true,
+                "visibleFirstPerson": true,
+                "distantImposter": true,
+                "visibleShadows": true,
+                "lightImportance": "Standard",
+                "lightType": {
+                  "_Type_": "EntityEffectSystem_LightType_PointLight",
+                  "radius": 4.0,
+                  "attenuationBulbSize": 0.0,
+                  "attenuationTweak": 1.0},
+                "lightLink": {
+                  "_Type_": "EntityEffectSystem_LightLink",
+                  "subMeshName": "",
+                  "linkIgnoresColor": false},
+                "flare": {
+                  "_Type_": "LightFlareParams",
+                  "flareEnabled": false,
+                  "flare": "",
+                  "flareFOV": 360.0,
+                  "flareScale": 1.0,
+                  "attachToSun": false},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": -0.2}},
+                  "offsetParameter": null},
+                "propertyLinks": [
+                  {
+                    "_Type_": "EntityEffectSystem_LightPropertyLink",
+                    "modifiers": [
+                      {
+                        "_Type_": "SEntityEffectSystem_PatternModifier",
+                        "startDelay": 0.0,
+                        "maximumValue": 1.0,
+                        "duration": 5.0,
+                        "patternCurve": {
+                          "_Type_": "BezierCurve",
+                          "points": [
+                            {
+                              "_Type_": "Vec2",
+                              "x": -0.1049742,
+                              "y": 0.9969878},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1049742,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0608558,
+                              "y": 0.457453},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1344469,
+                              "y": 0.457453},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2080379,
+                              "y": 0.457453},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1520987,
+                              "y": 0.893931},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2234019,
+                              "y": 0.893931},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2947052,
+                              "y": 0.893931},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2774716,
+                              "y": 0.02592899},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3202154,
+                              "y": 0.02592899},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3629592,
+                              "y": 0.02592899},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.330495,
+                              "y": 0.6117713},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3880923,
+                              "y": 0.6164355},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4456897,
+                              "y": 0.6210996},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4061317,
+                              "y": 0.9007431},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4774041,
+                              "y": 0.8965476},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5486764,
+                              "y": 0.8923522},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4862265,
+                              "y": 0.324863},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.545281,
+                              "y": 0.3211823},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6043355,
+                              "y": 0.3175015},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5883238,
+                              "y": 0.7760844},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6560276,
+                              "y": 0.7792034},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7237315,
+                              "y": 0.7823224},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.701441,
+                              "y": 0.09616214},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7667742,
+                              "y": 0.09406435},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8321072,
+                              "y": 0.09196675},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7724062,
+                              "y": 0.5703457},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.848941,
+                              "y": 0.5672266},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9254757,
+                              "y": 0.5641077},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8058839,
+                              "y": 1.006893},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.194116,
+                              "y": 0.9931071}],
+                          "useLUT": false}}],
+                    "parameterName": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.803c7a01-f44a-4856-868c-76375303919c",
+                      "_RecordId_": "803c7a01-f44a-4856-868c-76375303919c"},
+                    "lightProperty": "Intensity"}],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4b2a7fcd-3acc-48d6-b482-9f9521b8266e",
+                  "_RecordId_": "4b2a7fcd-3acc-48d6-b482-9f9521b8266e"}}],
+            "triggerEffects": [
+              {
+                "_Type_": "EntityEffectSystem_LightTriggerEffect",
+                "name": "",
+                "enabled": true,
+                "color": {
+                  "_Type_": "RGB",
+                  "r": 1.0,
+                  "g": 1.0,
+                  "b": 1.0},
+                "useTemperature": true,
+                "colorTemperature": 3000.0,
+                "diffuseMultiplier": 10.0,
+                "viewDistanceRatio": 100,
+                "castShadow": false,
+                "shadowQualityCap": "Full",
+                "maxShadowCastDistance": 0.0,
+                "ambient": false,
+                "softBulb": false,
+                "fakeLight": false,
+                "affectsFog": true,
+                "affectsGI": true,
+                "affectThisAreaOnly": false,
+                "holographic": false,
+                "visibleThirdPerson": true,
+                "visibleFirstPerson": true,
+                "distantImposter": true,
+                "visibleShadows": true,
+                "lightImportance": "Standard",
+                "lightType": {
+                  "_Type_": "EntityEffectSystem_LightType_PointLight",
+                  "radius": 6.0,
+                  "attenuationBulbSize": 0.0,
+                  "attenuationTweak": 1.0},
+                "lightLink": null,
+                "flare": {
+                  "_Type_": "LightFlareParams",
+                  "flareEnabled": false,
+                  "flare": "",
+                  "flareFOV": 360.0,
+                  "flareScale": 1.0,
+                  "attachToSun": false},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": -0.2}},
+                  "offsetParameter": null},
+                "propertyLinks": [],
+                "duration": 0.1,
+                "trigger": {
+                  "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.c7d52ac4-2a9e-4951-b660-e3c34387ebb0",
+                  "_RecordId_": "c7d52ac4-2a9e-4951-b660-e3c34387ebb0"}}]},
+          "uiOwnerEffects": null,
+          "sequencerTags": []},
+        "staticValues": [],
+        "staticColors": [],
+        "tagsToEnableOnLoad": [],
+        "triggersToEnableOnLoad": []}]}}

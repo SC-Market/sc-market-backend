@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "SEntityDensityClassOverridesRecord.Nyx_AOS_AsteroidBaseCloud",
+  "_RecordId_": "3148e5ba-da83-4873-8a73-c1a328356329",
+  "_RecordTag_": "TechDesign",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClassOverridesRecord",
+    "overrides": {
+      "_Type_": "SEntityDensityClassOverridesManual",
+      "defaults": null,
+      "densityClassLifetimeOverrides": [
+        {
+          "_Type_": "SDensityClassLifetimeOverrideEntry",
+          "densityClass": "file://./../../../../../libs/foundry/records/densityclasses/spaceshipdensityclass.json",
+          "lifetimeOverride": {
+            "_Type_": "TimeValue_Partitioned",
+            "days": 0,
+            "hours": 0,
+            "minutes": 40,
+            "seconds": 0.0}},
+        {
+          "_Type_": "SDensityClassLifetimeOverrideEntry",
+          "densityClass": "file://./../../../../../libs/foundry/records/densityclasses/groundvehiclesdensityclass.json",
+          "lifetimeOverride": {
+            "_Type_": "TimeValue_Partitioned",
+            "days": 0,
+            "hours": 0,
+            "minutes": 20,
+            "seconds": 0.0}},
+        {
+          "_Type_": "SDensityClassLifetimeOverrideEntry",
+          "densityClass": "file://./../../../../../libs/foundry/records/densityclasses/cargocommoditiesdensityclass.json",
+          "lifetimeOverride": {
+            "_Type_": "TimeValue_Partitioned",
+            "days": 0,
+            "hours": 0,
+            "minutes": 40,
+            "seconds": 0.0}},
+        {
+          "_Type_": "SDensityClassLifetimeOverrideEntry",
+          "densityClass": "file://./../../../../../libs/foundry/records/densityclasses/debrisdensityclass.json",
+          "lifetimeOverride": {
+            "_Type_": "TimeValue_Partitioned",
+            "days": 0,
+            "hours": 0,
+            "minutes": 20,
+            "seconds": 0.0}}]}}}

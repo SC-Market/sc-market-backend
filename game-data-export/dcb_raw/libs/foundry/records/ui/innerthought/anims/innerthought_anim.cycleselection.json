@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "InnerThought_Anim.CycleSelection",
+  "_RecordId_": "3140252b-621c-4007-846c-9888698dd1ad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_Anim",
+    "type": {
+      "_Type_": "InnerThought_AnimBase",
+      "glyphStagger": 0.2,
+      "length": 0.6,
+      "randomStagger": false,
+      "interpolationMode": "EaseInOutCubic"}}}

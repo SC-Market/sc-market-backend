@@ -1,0 +1,145 @@
+{
+  "_RecordName_": "SubHarvestableMultiConfigRecord.Loot_Caves_Unoccupied_Sand_Stanton",
+  "_RecordId_": "98b0071b-9909-4fa9-bdf9-dd27607404f2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableMultiConfigRecord",
+    "multiConfig": {
+      "_Type_": "SubHarvestableMultiConfig",
+      "defaultConfig": null,
+      "ignoreAttachableTagsForTaggedConfigs": true,
+      "taggedConfigs": [
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "Fossils",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9b496be7-81e9-4a38-9a63-f53809a26328",
+                "_RecordId_": "9b496be7-81e9-4a38-9a63-f53809a26328"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 0.7,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../../libs/foundry/records/harvestable/harvestablepresets/creature_stonebug.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 0.8,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": null}]}}},
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "FPS mineables",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4ae42675-8387-4f36-b697-eb888fa1a7e5",
+                "_RecordId_": "4ae42675-8387-4f36-b697-eb888fa1a7e5"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 0.5,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_aphorite.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 57.3,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [
+                    {
+                      "_Type_": "HarvestableGeometry",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6874072c-c021-43bc-b8d9-d06b810102c5",
+                        "_RecordId_": "6874072c-c021-43bc-b8d9-d06b810102c5"}}],
+                  "lootConfig": null},
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_dolivine.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 34.7,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [
+                    {
+                      "_Type_": "HarvestableGeometry",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6874072c-c021-43bc-b8d9-d06b810102c5",
+                        "_RecordId_": "6874072c-c021-43bc-b8d9-d06b810102c5"}}],
+                  "lootConfig": null},
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_hadanite.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 6.0,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [
+                    {
+                      "_Type_": "HarvestableGeometry",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6874072c-c021-43bc-b8d9-d06b810102c5",
+                        "_RecordId_": "6874072c-c021-43bc-b8d9-d06b810102c5"}}],
+                  "lootConfig": null},
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_janalite.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 2.0,
+                  "relativeProbabilityDeepest": {
+                    "_Type_": "OptionalProbability",
+                    "probability": 0.15},
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": null}]}}},
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "Remains",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.606bee05-4d6f-454f-be63-92615b9ade59",
+                "_RecordId_": "606bee05-4d6f-454f-be63-92615b9ade59"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 0.7,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../../libs/foundry/records/harvestable/harvestablepresets/remains_rantadungpile.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 0.5,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": null}]}}}]}}}

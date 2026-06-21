@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "PlanetDayNightTemperatureTemplate.Greenhouse",
+  "_RecordId_": "b5878d17-544e-4c3e-9756-8290ed1eca87",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlanetDayNightTemperatureTemplate",
+    "dayNightTemperatureParams": {
+      "_Type_": "PlanetDayNightTemperatureParams",
+      "DayNightCoolingBaseRate": -16.0,
+      "DayNightCoolingHumidityModifier": 0.07454276,
+      "DayNightCoolingHumidityMultiplier": 1.035}}}

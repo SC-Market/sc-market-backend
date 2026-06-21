@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Corundum_Raw",
+  "_RecordId_": "b471b96c-efbb-4342-90de-cfa087604d8e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Raw_Corundum",
+      "_RecordId_": "4ceb21c5-48f8-418a-8188-0b0196c33505"},
+    "elementInstability": 50.0,
+    "elementResistance": 0.1,
+    "elementOptimalWindowMidpoint": 0.5,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 0.5,
+    "elementExplosionMultiplier": -36.0,
+    "elementClusterFactor": 0.7}}

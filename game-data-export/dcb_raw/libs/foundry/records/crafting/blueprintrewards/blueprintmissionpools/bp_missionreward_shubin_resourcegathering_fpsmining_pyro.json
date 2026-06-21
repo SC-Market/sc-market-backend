@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_MISSIONREWARD_Shubin_ResourceGathering_FPSMining_Pyro",
+  "_RecordId_": "5e79204c-6d26-4ddb-95c8-6940028e4d89",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/pistol/bp_craft_klwe_pistol_energy_01_engraved01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/pistol/bp_craft_klwe_pistol_energy_01_tan01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_utility_heavy_suit_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_utility_heavy_helmet_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_armor_heavy_suit_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_armor_heavy_helmet_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_pistol_energy_01_mag.json"}]}}

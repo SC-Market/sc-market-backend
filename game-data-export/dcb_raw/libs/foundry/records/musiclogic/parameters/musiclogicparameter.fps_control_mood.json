@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.FPS_Control_Mood",
+  "_RecordId_": "e7209638-bf1c-45f7-919c-ad93eabb4262",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "FPS_Control_Mood",
+    "min": -1.0,
+    "max": 1.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "Control_Mood",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

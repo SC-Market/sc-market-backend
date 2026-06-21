@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.MiningCluster_Sml_Med",
+  "_RecordId_": "4ffceda3-639a-4c1f-9e24-cf4df9af1253",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 100.0,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.2,
+        "minSize": 10,
+        "maxSize": 18,
+        "minProximity": 2.0,
+        "maxProximity": 4.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.3,
+        "minSize": 12,
+        "maxSize": 20,
+        "minProximity": 1.5,
+        "maxProximity": 3.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.5,
+        "minSize": 13,
+        "maxSize": 21,
+        "minProximity": 1.0,
+        "maxProximity": 2.0}]}}

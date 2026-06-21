@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Pickups01",
+  "_RecordId_": "d5e632ce-d60d-432f-b1fc-6d5113c2b5e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Pickups_Title",
+    "BodyText": "@Hints_Pickups1",
+    "BodyTextGamePad": "@Hints_Pickups1",
+    "BodyTextJoystick": "@Hints_Pickups1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

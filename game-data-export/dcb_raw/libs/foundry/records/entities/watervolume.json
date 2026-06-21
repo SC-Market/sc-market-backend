@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityClassDefinition.WaterVolume",
+  "_RecordId_": "acb81671-a848-4320-8182-a36f7e2b5a35",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "WaterShapeComponentParams"},
+      {
+        "_Type_": "EntityComponentWaterVolumeParams"},
+      {
+        "_Type_": "SRenderProxyParams"}]}}

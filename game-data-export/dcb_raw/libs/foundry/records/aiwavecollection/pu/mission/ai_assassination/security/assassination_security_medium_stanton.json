@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Assassination_Security_Medium_Stanton",
+  "_RecordId_": "3dea8d2c-4674-4ae0-998a-9e6309524447",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Assassination_Security_Medium_Stanton_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/anvl_valkyrie_pu_ai_advocacy.json",
+            "name": "Factions_Advocacy_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot50.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/security/security_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

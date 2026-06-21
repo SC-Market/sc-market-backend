@@ -1,0 +1,222 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.H_HUD_G_PlayerStatus",
+  "_RecordId_": "b0e6a5e0-c244-4b5c-b73b-a86ea4e0af0e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BG",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.3b49273c-395f-4c4a-91a1-40a52d93a0a3",
+                  "_RecordId_": "3b49273c-395f-4c4a-91a1-40a52d93a0a3"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": "UI/Textures/Vector/H_HUDScreens/Visor/SC/Default/PU_Generic_Visor_status_widget_fill_1.svg"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.04}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Vertical Divider",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.a83d83cf-6169-43fb-be2c-cd76e3b9c12f",
+                  "_RecordId_": "a83d83cf-6169-43fb-be2c-cd76e3b9c12f"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.af347694-c8c3-49a3-a2bb-f586b53a2440",
+                      "_RecordId_": "af347694-c8c3-49a3-a2bb-f586b53a2440"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionCount",
+                    "type": "First",
+                    "count": 1,
+                    "offset": 0}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": "UI/Textures/Vector/H_HUDScreens/Visor/SC/Default/PU_Generic_Visor_status_widget_divider_1.svg"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.5}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Horizontal Divider",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.c8f60bc4-2d0a-4212-96fc-8b76320c13c7",
+                  "_RecordId_": "c8f60bc4-2d0a-4212-96fc-8b76320c13c7"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.af347694-c8c3-49a3-a2bb-f586b53a2440",
+                      "_RecordId_": "af347694-c8c3-49a3-a2bb-f586b53a2440"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionCount",
+                    "type": "First",
+                    "count": 1,
+                    "offset": 0}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "ImagePath",
+            "value": "UI/Textures/H_HUDscreens/Visor/SC/Default/PU_Generic_Visor_status_widget_lower_bucket_1.tif"}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Text"}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 20.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Greebles",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.36f2c87c-f645-4ab6-ab84-36d120866584",
+                  "_RecordId_": "36f2c87c-f645-4ab6-ab84-36d120866584"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorY",
+            "value": 0.95},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PivotY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+              "value": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_visor_components/hc_hud_v_statuswidget_greebles.json"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Gradient Fill",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.129903d1-330d-41d3-a5a6-071dff07fe2a",
+                  "_RecordId_": "129903d1-330d-41d3-a5a6-071dff07fe2a"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "ImagePath",
+            "value": "UI/Textures/H_HUDscreens/Visor/SC/Default/PU_Generic_Visor_Status_Widget_glow.tif"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 1.1},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosYOffset",
+            "value": -10.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosXOffset",
+            "value": -6.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "OrientationYOffset",
+            "value": 10.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PivotY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "OrientationXOffset",
+            "value": -15.0}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

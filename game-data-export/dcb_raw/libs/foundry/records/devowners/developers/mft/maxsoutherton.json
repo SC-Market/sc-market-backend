@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.MaxSoutherton",
+  "_RecordId_": "c6f240c9-1bb8-44b4-9a32-bf914e5bf002",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Max Southerton",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mdt.json"}}}

@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanFemale_FF",
+  "_RecordId_": "10711986-5778-4817-8175-326e1de10409",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Human_First_Names_F",
+    "nickNameString": "Human_nickNames",
+    "lastNameString": "Human_Surnames",
+    "numFirstNames": 1520,
+    "numNickNames": 410,
+    "numLastNames": 5100,
+    "nicknameChance": 0.05}}

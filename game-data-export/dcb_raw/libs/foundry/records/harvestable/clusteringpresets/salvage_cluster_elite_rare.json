@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.Salvage_Cluster_Elite_Rare",
+  "_RecordId_": "4ea7cc50-5077-41ea-875b-4df58330a0b9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 0.7,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 1.0,
+        "minSize": 2,
+        "maxSize": 2,
+        "minProximity": 3.0,
+        "maxProximity": 10.0}]}}

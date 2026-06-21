@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Security_Rank3",
+  "_RecordId_": "7a9a74c3-87b7-4c5d-9b0d-9c0d008b2ecf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Security_Rank3",
+    "description": "desc",
+    "displayName": "@RepStanding_Security_Rank3",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_security_4.svg",
+    "minReputation": 30000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

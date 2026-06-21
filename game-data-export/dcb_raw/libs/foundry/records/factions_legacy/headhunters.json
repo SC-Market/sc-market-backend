@@ -1,0 +1,60 @@
+{
+  "_RecordName_": "Faction_LEGACY.HeadHunters",
+  "_RecordId_": "6f3699dd-123e-4f1a-82da-51207b073fe0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction_LEGACY",
+    "displayName": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "factionIcon": "",
+    "gameToken": "",
+    "defaultReaction": "Neutral",
+    "friendlyFireBehaviorOverrides": [],
+    "factionRelationships": [
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/hostile.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/neutral.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/ea_friendtoall.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/xenothreat.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/vanduul.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/ninetails.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/pirates.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/slaves.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/outcasts.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/roughandready.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/citizensforpyro.json",
+        "reactionType": "Neutral"}],
+    "disguiseManufacturerTags": {
+      "_Type_": "TagsDNF",
+      "terms": []}}}

@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityClassDefinition.TransportEventItemSpawner",
+  "_RecordId_": "be385f23-dac8-444d-9414-52fda753df92",
+  "_RecordTag_": "CGP5",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "TransportEventListenerParams"},
+      {
+        "_Type_": "TransportEventItemSpawnerParams",
+        "splineEvent": "Friend",
+        "spawnEntityClass": "plushy_orison_whale_1_a"}]}}

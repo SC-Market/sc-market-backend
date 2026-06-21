@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "AudioAllegianceSwitches.AudioAllegianceDefaults",
+  "_RecordId_": "ac6594d3-11a6-430d-86b4-e6730a357f40",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioAllegianceSwitches",
+    "allegianceRTPC": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "Allegiance"},
+    "neutralRtpcValue": 0.5,
+    "friendlyRtpcValue": 1.0,
+    "hostileRtpcValue": 0.0}}

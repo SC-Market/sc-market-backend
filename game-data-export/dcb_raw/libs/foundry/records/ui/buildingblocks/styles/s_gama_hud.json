@@ -1,0 +1,176 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.S_GAMA_HUD",
+  "_RecordId_": "3719f75c-2717-4dca-9046-b78bb3952fc9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 165,
+          "g": 109,
+          "b": 253,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 82,
+          "g": 177,
+          "b": 103,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 254,
+          "g": 231,
+          "b": 82,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 206,
+          "g": 33,
+          "b": 39,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 113,
+          "g": 222,
+          "b": 247,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 117,
+          "g": 31,
+          "b": 251,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 254,
+          "b": 253,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 165,
+          "g": 109,
+          "b": 253,
+          "a": 76}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 51,
+          "g": 30,
+          "b": 83,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 17,
+          "g": 13,
+          "b": 36,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_contact_neutral.json",
+        "alpha": 1.0},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_contact_party.json",
+        "alpha": 1.0},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_contact_positiverep.json",
+        "alpha": 1.0},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_contact_negativerep.json",
+        "alpha": 1.0},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_contact_aggressive.json",
+        "alpha": 1.0},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_contact_unknown.json",
+        "alpha": 1.0},
+      {
+        "_Type_": "BuildingBlocks_ColorRecordReference",
+        "color": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/styles/defaultcolors/c_default_missionobjectives.json",
+        "alpha": 1.0}],
+    "textFieldModifiers": [
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": []},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 148,
+                "g": 250,
+                "b": 255,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 255,
+                "b": 0,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 252,
+                "g": 252,
+                "b": 123,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 216,
+                "g": 41,
+                "b": 76,
+                "a": 255}}}]}]}}

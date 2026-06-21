@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.RespawnMedBedClear",
+  "_RecordId_": "973a6619-7f3a-4315-9127-4a087459261b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Emergency_Treatment_Title",
+    "BodyText": "@Hints_Respawn_MedBed_ClearRespawn",
+    "BodyTextGamePad": "@Hints_Respawn_MedBed_ClearRespawn",
+    "BodyTextJoystick": "@Hints_Respawn_MedBed_ClearRespawn",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

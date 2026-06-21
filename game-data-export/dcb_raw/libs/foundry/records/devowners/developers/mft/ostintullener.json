@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.OstinTullener",
+  "_RecordId_": "dd52025a-d7cf-4761-b26d-930311d24fdb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Edward Fuller",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mdt.json"}}}

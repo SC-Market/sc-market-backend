@@ -1,0 +1,145 @@
+{
+  "_RecordName_": "StarMapObject.RR_CRU_L5",
+  "_RecordId_": "5905eecd-258a-4046-ad08-90571c41b03c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StarMapObject",
+    "name": "@RR_CRU_L5",
+    "affiliation": null,
+    "description": "@RR_CRU_L5_desc",
+    "callout1": "@LOC_UNINITIALIZED",
+    "callout2": "@LOC_UNINITIALIZED",
+    "callout3": "@LOC_UNINITIALIZED",
+    "respawnLocationType": "Other",
+    "jurisdiction": null,
+    "locationHierarchyTag": null,
+    "type": {
+      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmap/starmapobjecttypes.json",
+      "_RecordName_": "StarMapObjectType.4895b5bb-94ac-470a-bf6f-084a54a09be5",
+      "_RecordId_": "4895b5bb-94ac-470a-bf6f-084a54a09be5"},
+    "radarProperties": {
+      "_Type_": "SSCRadarContactProperites",
+      "contactType": {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/radarsystem/radarcontacttypes.json",
+        "_RecordName_": "RadarContactTypeEntry.ce1f9207-36f2-4cc6-b93a-ebdf6b1f777d",
+        "_RecordId_": "ce1f9207-36f2-4cc6-b93a-ebdf6b1f777d"},
+      "baseSignatureParams": {
+        "_Type_": "SSCSignatureSystemBaseSignatureParams",
+        "signatures": [
+          22500.0,
+          75000.0,
+          75000.0,
+          0.0,
+          0.0,
+          75000.0,
+          0.0,
+          0.0],
+        "signatureCategories": [],
+        "taggedSignatures": []},
+      "crossSectionParams": null,
+      "emissionModifierParams": null,
+      "deathParams": null,
+      "scanBounds": {
+        "_Type_": "SSCSignatureSystemScanBounds",
+        "min": {
+          "_Type_": "Vec3",
+          "x": -1000.0,
+          "y": -750.0,
+          "z": -5000.0},
+        "max": {
+          "_Type_": "Vec3",
+          "x": 1000.0,
+          "y": 750.0,
+          "z": 1000.0},
+        "localRotation": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      "roomParams": {
+        "_Type_": "SCSignatureSystemRoomParams",
+        "ignoreInteriorVsExteriorCheck": false}},
+    "navIcon": "Station",
+    "parent": "file://./../../../../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json",
+    "isScannable": true,
+    "size": 1200.0,
+    "hideInStarmap": false,
+    "hideInWorld": false,
+    "hideWhenInAdoptionRadius": false,
+    "blockTravel": false,
+    "onlyShowWhenParentSelected": false,
+    "overrideSpawnNavPoints": "NoOverride",
+    "overrideShowInAllZones": "NoOverride",
+    "overrideShowInRouteOnly": "NoOverride",
+    "overridePermanent": "NoOverride",
+    "minimumDisplaySize": 0.0,
+    "overrideRotationSpeed": false,
+    "overrideRotationSpeedValue": 0.0,
+    "showOrbitLine": false,
+    "useHoloMaterial": true,
+    "noAutoBodyRecovery": false,
+    "starMapGeomPath": "objects/ui/starmap/stations/smap_station_reststop_util_lateral_a.cgf",
+    "starMapMaterialPath": "Materials/UI/Starmap/Stations/ui_sm_stations_1.mtl",
+    "starMapShapePath": "UI/Textures/Vector/General/MarkerIcons/ui_icon_general_01.svg",
+    "assetManagerLocationParams": {
+      "_Type_": "StarMapAssetManagerLocationParams",
+      "previewImagePath": "UI/mobiGlas/assets/TIF/AssetManager/niknax_preview_beautifulglen.tif",
+      "previewIconPath": "UI/mobiGlas/assets/TIF/AssetManager/niknax_listicon_beautifulglen.tif"},
+    "asteroidRings": [],
+    "quantumTravelData": {
+      "_Type_": "StarMapQuantumTravelDataParams",
+      "obstructionRadius": 8000.0,
+      "arrivalRadius": 24000.0,
+      "arrivalPointDetectionOffset": 10000.0,
+      "adoptionRadius": 25000.0,
+      "subPointRadiusMultiplier": 1.5},
+    "locationParams": {
+      "_Type_": "StarMapObjectLocationParams",
+      "setEntityLocationOnEnter": true,
+      "exposeForPlayerCreatedMissions": true,
+      "excludeFromLevelLoad": false},
+    "locationImagePath": "",
+    "locationMedicalImagePath": "",
+    "locationAudioPlayTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "locationAudioStopTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "amenities": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.e9192fcd-d722-4599-b057-6e9aa5ed8fc1",
+        "_RecordId_": "e9192fcd-d722-4599-b057-6e9aa5ed8fc1"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.56d20b90-2e44-4cca-ac14-9f537f7d285e",
+        "_RecordId_": "56d20b90-2e44-4cca-ac14-9f537f7d285e"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.1178cca7-dd66-4b9d-a22f-5515710a5f9e",
+        "_RecordId_": "1178cca7-dd66-4b9d-a22f-5515710a5f9e"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.1fe6d52d-6c5d-4eb8-b620-3a6ab6477935",
+        "_RecordId_": "1fe6d52d-6c5d-4eb8-b620-3a6ab6477935"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.e7534915-ab67-4f62-9599-ca139a4eb60a",
+        "_RecordId_": "e7534915-ab67-4f62-9599-ca139a4eb60a"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.a783bfb9-0f0a-491f-864b-945a49ef5da4",
+        "_RecordId_": "a783bfb9-0f0a-491f-864b-945a49ef5da4"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.9625042e-95ca-48e3-b6ed-f1cc214048f1",
+        "_RecordId_": "9625042e-95ca-48e3-b6ed-f1cc214048f1"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.f2b40e41-e017-4578-83c6-6ce805af3e46",
+        "_RecordId_": "f2b40e41-e017-4578-83c6-6ce805af3e46"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/starmapamenitytypes/starmapamenitytypes.json",
+        "_RecordName_": "StarMapAmenityTypeEntry.65423473-aab4-4ab7-a836-228da342fa31",
+        "_RecordId_": "65423473-aab4-4ab7-a836-228da342fa31"}]}}

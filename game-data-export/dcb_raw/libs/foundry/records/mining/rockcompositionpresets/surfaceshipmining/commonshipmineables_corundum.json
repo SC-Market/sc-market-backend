@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "MineableComposition.CommonShipMineables_Corundum",
+  "_RecordId_": "0d5911b5-0eb3-47c4-a56f-89e4b1e82c1a",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_corundum_raw",
+    "minimumDistinctElements": 3,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/corundum_raw.json",
+        "minPercentage": 5.7,
+        "maxPercentage": 11.7,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/corundum_raw.json",
+        "minPercentage": 28.3,
+        "maxPercentage": 78.3,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/aluminium_ore.json",
+        "minPercentage": 5.0,
+        "maxPercentage": 10.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.789}]}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_IslandRoomSettings",
+  "_RecordId_": "93c6ed79-1aaa-4de0-b106-d337cd7fa3a3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/orison_islandclearance.json"]},
+      "ownerFaction": null},
+    "roomIdentifier": null,
+    "trespassWarningSeconds": 300.0,
+    "trespassRevokeWarningSeconds": 900.0}}

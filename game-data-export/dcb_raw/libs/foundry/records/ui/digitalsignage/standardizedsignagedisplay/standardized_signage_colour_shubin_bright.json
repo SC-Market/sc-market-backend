@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Standardized_Signage_Colour_Shubin_Bright",
+  "_RecordId_": "a8f4c8ac-3973-42f0-8eb3-1107e26b22e7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 255,
+        "g": 254,
+        "b": 246,
+        "a": 255}}}}

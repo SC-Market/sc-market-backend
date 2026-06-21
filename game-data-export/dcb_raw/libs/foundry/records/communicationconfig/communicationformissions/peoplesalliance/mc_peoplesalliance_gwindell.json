@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_PeoplesAlliance_GWindell",
+  "_RecordId_": "84091435-d5dd-4b78-b099-b14858341588",
+  "_RecordTag_": "SocialAI",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_PeoplesAlliance_GWindell",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/mc_tsg.json"]}}

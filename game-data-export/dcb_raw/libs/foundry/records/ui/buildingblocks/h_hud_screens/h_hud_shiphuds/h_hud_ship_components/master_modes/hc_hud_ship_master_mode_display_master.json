@@ -1,0 +1,1263 @@
+{
+  "_RecordName_": "BuildingBlocks_Canvas.HC_HUD_Ship_Master_Mode_Display_Master",
+  "_RecordId_": "c7f4cc10-bf83-4786-b32c-964a5b9bd170",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Canvas",
+    "size": {
+      "_Type_": "Vec3",
+      "x": 1920.0,
+      "y": 1080.0,
+      "z": 0.0},
+    "coordinateMethod": "useRaw",
+    "embeddedStyles": [],
+    "defaultStyles": {
+      "_Type_": "BuildingBlocks_DefaultStyles",
+      "sharedStyles": null,
+      "entries": [
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Set Canvas",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                  "conditions": [
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                        "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                      "type": "Canvas"}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+              "field": {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/generic_hc_hud_ship_masterm_display.json"}}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Set Canvas (Screen)",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                  "conditions": [
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                        "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                      "type": "Canvas"},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+                        "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"}}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+              "field": {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/generic_hc_hud_ship_modes_s.json"}}],
+          "transitions": []}]},
+    "style": null,
+    "brandStyles": [
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_aegs_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/aegs_hc_hud_gladius_masterm_display.json"}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_drak_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas (Screen)",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+                          "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/drak_hc_hud_cutlass_masterm_display.json"}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/drak_hc_hud_masterm_display.json"}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_argo_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas (Screen)",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+                          "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/argo_hc_hud_mpuv_masterm_display.json"}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/argo_hc_hud_mole_masterm_display.json"}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_anvl_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/anvl_hc_hud_hawk_masterm_display.json"}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas (Screen)",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+                          "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/anvl_hc_hud_terrapin_masterm_display.json"}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_mrai_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/mrai_hc_hud_ship_masterm_display.json"}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_rsi_hud_2025.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/rsi_hc_hud_masterm_display.json"}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_grey_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas (Screen)",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+                          "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/drak_hc_hud_cutlass_masterm_display.json"}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Set Canvas",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+                          "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                        "type": "Canvas"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+                  "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/drak_hc_hud_masterm_display.json"}}],
+            "transitions": []}]}],
+    "entityPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneEntityRoot",
+      "renderLayer": "Default"},
+    "rttPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneRttRoot",
+      "renderLayer": "Default",
+      "entityScale": 1.0,
+      "entityOrientation": {
+        "_Type_": "Deg3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}},
+    "arPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneAugmentedRealityRtt",
+      "renderLayer": "Default",
+      "cardsUseStageRadius": true},
+    "previewScenes": [],
+    "staticVariables": [],
+    "proxyRootNode": null,
+    "defaultButtonDownSoundTag": null,
+    "defaultRightButtonDownSoundTag": null,
+    "defaultLeftClickSoundTag": null,
+    "defaultRightClickSoundTag": null,
+    "defaultLeftDoubleClickSoundTag": null,
+    "defaultRollOverSoundTag": null,
+    "defaultRollOffSoundTag": null,
+    "defaultMovementStartSoundTag": null,
+    "defaultMovementStopSoundTag": null,
+    "collisionType": "Cutout",
+    "cacheAmount": 0,
+    "scene": [
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "BuildingBlocks_WidgetCanvas",
+        "name": "canvas_Interchangeable_Master_Mode_Display",
+        "styleTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad32b0a5-5825-4d84-b15b-851802257d8a",
+            "_RecordId_": "ad32b0a5-5825-4d84-b15b-851802257d8a"}],
+        "rendererType": "None",
+        "rendererPolicy": {
+          "_Type_": "BuildingBlocks_FlashRendererPolicy",
+          "useFlashRenderThreadUpdate": false,
+          "transformFrom3D": false},
+        "primitiveSettings": {
+          "_Type_": "BuildingBlocks_PrimitiveSettings",
+          "primitiveMaterialPath": "",
+          "UVStart": {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          "UVSize": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "isUValuePerPixel": false,
+          "isVValuePerPixel": false,
+          "isGrouped": true,
+          "visualState": null},
+        "parent": null,
+        "previewScene": null,
+        "previewSceneFlattened": null,
+        "cullingLevel": "Render",
+        "isActive": true,
+        "affectsLayout": true,
+        "affectsAutosize": true,
+        "exportNode": true,
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientationOffset": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "scale": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "sizing": {
+          "_Type_": "BuildingBlocks_Size",
+          "width": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 1.0,
+            "behavior": "Percent"},
+          "height": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 1.0,
+            "behavior": "Percent"},
+          "depth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "enableMinWidth": false,
+          "enableMinHeight": false,
+          "enableMaxWidth": false,
+          "enableMaxHeight": false},
+        "autoScalingMethod": "None",
+        "padding": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "margin": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "pivot": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "anchor": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "background": {
+          "_Type_": "BuildingBlocks_Background",
+          "enable": false,
+          "color": null,
+          "topLeftColor": null,
+          "topRightColor": null,
+          "bottomLeftColor": null,
+          "bottomRightCColor": null},
+        "segmentedFill": {
+          "_Type_": "BuildingBlocks_SegmentedFill",
+          "enable": false,
+          "segmentSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "spaceSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "angle": 0.0,
+          "xOffset": 0.0,
+          "segmentColor": null,
+          "barFill": false},
+        "svgFill": {
+          "_Type_": "BuildingBlocks_SvgFill",
+          "svgPath": "",
+          "nineSliceRect": {
+            "_Type_": "BuildingBlocks_TRBL",
+            "top": 0.25,
+            "right": 0.75,
+            "bottom": 0.75,
+            "left": 0.25,
+            "front": 0.0,
+            "back": 0.0},
+          "renderShape": true,
+          "flipHorizontal": false,
+          "flipVertical": false,
+          "enableColorOverlay": true,
+          "color": null,
+          "scalingBehavior": "Contain",
+          "containPositionX": 0.0,
+          "containPositionY": 0.0,
+          "enableNineSliceRect": true,
+          "nineSliceScale": 1.0,
+          "strokeExtent": 1.0,
+          "playhead": 0.0},
+        "border": {
+          "_Type_": "BuildingBlocks_Border",
+          "top": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "right": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "bottom": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "left": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "topLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "topRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false}},
+        "layoutPolicy": null,
+        "layoutPolicyItem": null,
+        "layoutItemCommon": null,
+        "dropTargetPolicy": null,
+        "draggablePolicy": null,
+        "tooltipPolicy": null,
+        "contextMenuPolicy": null,
+        "grabControlsPolicy": null,
+        "calloutSettings": null,
+        "virtualCursorPolicy": null,
+        "overflow": {
+          "_Type_": "BuildingBlocks_Overflow",
+          "overflow": "Visible",
+          "widthFadeThreshold": 0.0,
+          "heightFadeThreshold": 0.0,
+          "depthFadeThreshold": 0.0,
+          "fadeXAxis": true,
+          "fadeYAxis": true,
+          "fadeZAxis": true},
+        "scrollPolicy": null,
+        "radialTransform": {
+          "_Type_": "BuildingBlocks_RadialTransform",
+          "transformMultiplier": 0.0,
+          "curvatureAxis": "Z",
+          "mouseTestShape": true,
+          "polyResolution": 45,
+          "conicSlantFactor": 0.0},
+        "radialTransformChild": {
+          "_Type_": "BuildingBlocks_RadialTransformChild",
+          "inheritRotation": true,
+          "inheritShapeWarp": true,
+          "maintainGapLength": true},
+        "animation": {
+          "_Type_": "BuildingBlocks_Animation",
+          "animationTimeline": null,
+          "dynamicStartTimeVariableName": "",
+          "duration": 1.0,
+          "delay": 0.0,
+          "delayRandomRange": 0.0,
+          "direction": "Forward",
+          "fillMode": "None",
+          "iterationCount": 1,
+          "loopIndefinitely": false,
+          "timeSync": false,
+          "additive": true,
+          "timescaleIndependent": false},
+        "interactions": {
+          "_Type_": "BuildingBlocks_Interactions",
+          "canInteract": false,
+          "disabled": false,
+          "selected": false,
+          "collideLeftClick": true,
+          "collideRightClick": true,
+          "collideMouseWheel": false,
+          "hitDetectionOffset": 1.0,
+          "propagateInteractionStates": false,
+          "inheritHoverState": false,
+          "inheritDownState": false,
+          "inheritSelectedState": false,
+          "inheritDisabledState": false,
+          "blocksCursor": false,
+          "blocksNavigation": false,
+          "onLeftClick": [],
+          "onRightClick": [],
+          "onLeftDown": [],
+          "onLeftDoubleClick": [],
+          "onRollOver": [],
+          "onRollOff": [],
+          "boundRestrictionShape": null,
+          "twoVariablePicker": null,
+          "buttonDownSoundTag": null,
+          "rightButtonDownSoundTag": null,
+          "leftClickSoundTag": null,
+          "rightClickSoundTag": null,
+          "leftDoubleClickSoundTag": null,
+          "rollOverSoundTag": null,
+          "rollOffSoundTag": null,
+          "movementStartSoundTag": null,
+          "movementStopSoundTag": null,
+          "movementStopDelayMs": 80.0},
+        "inheritsScale": true,
+        "inheritsRotation": true,
+        "inheritsTranslation": true,
+        "inheritsAlpha": true,
+        "inheritsOverflow": false,
+        "alpha": 1.0,
+        "layer": 5,
+        "aspectRatioLibrary": null,
+        "focusIndex": -1,
+        "inlineStyles": [],
+        "hoverCursor": "Auto",
+        "enableHeldCursor": false,
+        "heldCursor": "Auto",
+        "instantiated": true,
+        "urlOptional": "",
+        "urlPostfix": "",
+        "stylesheetOverride": null,
+        "canvas": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/h_hud_screens/h_hud_shiphuds/h_hud_ship_components/master_modes/master_mode_display_types/aegs_hc_hud_gladius_masterm_display.json",
+        "sizingMethod": "Size",
+        "paramInputValues": [
+          {
+            "_Type_": "BuildingBlocks_ComponentParameterInputLocalization",
+            "parameter": "ParamInput0",
+            "value": "@LOC_PLACEHOLDER"},
+          {
+            "_Type_": "BuildingBlocks_ComponentParameterInputLocalization",
+            "parameter": "ParamInput1",
+            "value": "@LOC_PLACEHOLDER"},
+          {
+            "_Type_": "BuildingBlocks_ComponentParameterInputNumber",
+            "parameter": "ParamInput2",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_ComponentParameterInputBoolean",
+            "parameter": "ParamInput3",
+            "value": false},
+          {
+            "_Type_": "BuildingBlocks_ComponentParameterInputString",
+            "parameter": "ParamInput4",
+            "value": ""},
+          {
+            "_Type_": "BuildingBlocks_ComponentParameterInputString",
+            "parameter": "ParamInput5",
+            "value": ""}]}],
+    "library": [],
+    "operations": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "controllablemanager/mastermode",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "BuildingBlocks_BindingsLocalizationFromIntegerSwitch",
+        "defaultValue": "@LOC_EMPTY",
+        "defaultOverride": null,
+        "values": [
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 2,
+            "second": "@dfm_ui_ifcsSCM",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 1,
+            "second": "@hud_nav",
+            "secondOverride": null}],
+        "input": "_PointsTo_:ptr:1"},
+      {
+        "_Type_": "BuildingBlocks_BindingsLocalizedField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "ParamInput0",
+        "input": "_PointsTo_:ptr:3"},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "BuildingBlocks_BindingsLocalizationFromIntegerSwitch",
+        "defaultValue": "@LOC_EMPTY",
+        "defaultOverride": null,
+        "values": [
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 0,
+            "second": "@LOC_EMPTY",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 1,
+            "second": "@hud_op_inactive",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 2,
+            "second": "@hud_op_Flight",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 3,
+            "second": "@hud_op_Combat",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 4,
+            "second": "@hud_op_Turret",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 5,
+            "second": "@hud_op_Missile",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 6,
+            "second": "@hud_op_Scanning",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 7,
+            "second": "@hud_op_Mining",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 8,
+            "second": "@hud_op_QuantumNavigation",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 9,
+            "second": "@hud_op_Refuel",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 10,
+            "second": "@hud_op_AirTraffic",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 11,
+            "second": "@hud_op_Salvage",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerLocalizedPair",
+            "first": 12,
+            "second": "@hud_op_QuantumBoost",
+            "secondOverride": null}],
+        "input": "_PointsTo_:ptr:4"},
+      {
+        "_Type_": "BuildingBlocks_BindingsLocalizedField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "ParamInput1",
+        "input": "_PointsTo_:ptr:5"},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "controllablemanager/mastermodespooltime",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "servertime",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "controllablemanager/mastermodechangetimestamp",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "BuildingBlocks_BindingsIntegerArithmatic",
+        "type": "Sub",
+        "amount": 1,
+        "inputL": "_PointsTo_:ptr:6",
+        "inputR": "_PointsTo_:ptr:7"},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "BuildingBlocks_BindingsNumberFromInteger",
+        "asSeconds": false,
+        "input": "_PointsTo_:ptr:8"},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "BuildingBlocks_BindingsNumberFromInteger",
+        "asSeconds": false,
+        "input": "_PointsTo_:ptr:9"},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "BuildingBlocks_BindingsNumberArithmatic",
+        "type": "Div",
+        "amount": 1.0,
+        "input": "_PointsTo_:ptr:10",
+        "inputB": "_PointsTo_:ptr:11"},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "BuildingBlocks_BindingsNumberClamp",
+        "minValue": 0.0,
+        "maxValue": 1.0,
+        "inputMinValue": null,
+        "inputMaxValue": null,
+        "input": "_PointsTo_:ptr:12"},
+      {
+        "_Type_": "BuildingBlocks_BindingsNumberField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "ParamInput2",
+        "input": "_PointsTo_:ptr:13"},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "BuildingBlocks_BindingsBooleanVariable",
+        "path": [],
+        "binding": "controllablemanager/usingmastermodes",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Type_": "BuildingBlocks_BindingsBooleanField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "Instantiated",
+        "input": "_PointsTo_:ptr:14"},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "BuildingBlocks_BindingsBooleanFromNumber",
+        "type": "Greater",
+        "number": 0.0,
+        "input": "_PointsTo_:ptr:13",
+        "inputB": null},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "BuildingBlocks_BindingsBooleanFromNumber",
+        "type": "Less",
+        "number": 1.0,
+        "input": "_PointsTo_:ptr:13",
+        "inputB": null},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "BuildingBlocks_BindingsBooleanEvaluateAnd",
+        "inputs": [
+          "_PointsTo_:ptr:15",
+          "_PointsTo_:ptr:16"]},
+      {
+        "_Type_": "BuildingBlocks_BindingsBooleanField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "ParamInput3",
+        "input": "_PointsTo_:ptr:17"},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "BuildingBlocks_BindingsStringFromIntegerSwitch",
+        "defaultValue": "UI/Textures/Vector/General/CommonIcons/standard_control.svg",
+        "defaultOverride": null,
+        "values": [
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 0,
+            "second": "UI/Textures/Vector/General/CommonIcons/standard_control.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 1,
+            "second": "UI/Textures/Vector/General/CommonIcons/standard_control.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 2,
+            "second": "UI/Textures/Vector/General/CommonIcons/standard_control.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 3,
+            "second": "UI/Textures/Vector/General/CommonIcons/guns.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 4,
+            "second": "UI/Textures/Vector/General/MarkerIcons/ui_icon_turret.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 5,
+            "second": "UI/Textures/Vector/General/CommonIcons/missile_bomb.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 6,
+            "second": "UI/Textures/Vector/General/CommonIcons/scanning.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 7,
+            "second": "UI/Textures/Vector/General/CommonIcons/mining.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 8,
+            "second": "UI/Textures/Vector/General/CommonIcons/quantum_travel.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 9,
+            "second": "UI/Textures/Vector/General/CommonIcons/docking_refuel.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 10,
+            "second": "UI/Textures/Vector/General/CommonIcons/standard_control.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 11,
+            "second": "UI/Textures/Vector/General/CommonIcons/salvage.svg",
+            "secondOverride": null},
+          {
+            "_Type_": "BuildingBlocks_IntegerStringPair",
+            "first": 12,
+            "second": "UI/Textures/Vector/General/CommonIcons/quantum_navigation.svg",
+            "secondOverride": null}],
+        "input": "_PointsTo_:ptr:18"},
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "ParamInput4",
+        "input": "_PointsTo_:ptr:19"},
+      {
+        "_Pointer_": "ptr:20",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "controllablemanager/mastermode",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:21",
+        "_Type_": "BuildingBlocks_BindingsTagFromIntegerSwitch",
+        "values": [
+          {
+            "_Type_": "BuildingBlocks_IntegerTagPair",
+            "first": 2,
+            "second": {
+              "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0c69989d-90ea-4e50-9e4d-b3ab09f601de",
+              "_RecordId_": "0c69989d-90ea-4e50-9e4d-b3ab09f601de"}},
+          {
+            "_Type_": "BuildingBlocks_IntegerTagPair",
+            "first": 1,
+            "second": {
+              "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.d677859a-94ae-4904-bdc4-419cf669aaf1",
+              "_RecordId_": "d677859a-94ae-4904-bdc4-419cf669aaf1"}}],
+        "defaultValue": null,
+        "input": "_PointsTo_:ptr:20"},
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "ParamInput5",
+        "input": "_PointsTo_:ptr:21"},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "controllablemanager/mastermode",
+        "inheritsNamespace": false,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:23",
+        "_Type_": "BuildingBlocks_BindingsBooleanFromInteger",
+        "type": "Greater",
+        "inputL": "_PointsTo_:ptr:22",
+        "inputR": null,
+        "value": 0},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "BuildingBlocks_BindingsBooleanEvaluateAnd",
+        "inputs": [
+          "_PointsTo_:ptr:23",
+          "_PointsTo_:ptr:24",
+          "_PointsTo_:ptr:25",
+          "_PointsTo_:ptr:26"]},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "seatdashboard/currentmode",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "seatdashboard/currentmode",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "BuildingBlocks_BindingsBooleanVariable",
+        "path": [],
+        "binding": "screen",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:28",
+        "_Type_": "BuildingBlocks_BindingsTagFromBoolean",
+        "isTrue": {
+          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+          "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"},
+        "isFalse": null,
+        "inputTrue": null,
+        "inputFalse": null,
+        "input": "_PointsTo_:ptr:27"},
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "PrimaryStateTag",
+        "input": "_PointsTo_:ptr:28"},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "BuildingBlocks_BindingsBooleanVariable",
+        "path": [],
+        "binding": "seatdashboard/isactive",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "BuildingBlocks_BindingsBooleanVariable",
+        "path": [],
+        "binding": "flightcontroller/flightuiconfig/dashboardenabled",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:33",
+        "_Type_": "BuildingBlocks_BindingsBooleanEvaluateOr",
+        "inputs": [
+          "_PointsTo_:ptr:29",
+          "_PointsTo_:ptr:30"]},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "BuildingBlocks_BindingsBooleanVariable",
+        "path": [],
+        "binding": "screen",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "BuildingBlocks_BindingsIntegerVariable",
+        "path": [],
+        "binding": "seatdashboard/powerstate",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:32",
+        "_Type_": "BuildingBlocks_BindingsBooleanFromInteger",
+        "type": "Equal",
+        "inputL": "_PointsTo_:ptr:31",
+        "inputR": null,
+        "value": 1},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "BuildingBlocks_BindingsBooleanEvaluateAnd",
+        "inputs": [
+          "_PointsTo_:ptr:32",
+          "_PointsTo_:ptr:33"]},
+      {
+        "_Pointer_": "ptr:34",
+        "_Type_": "BuildingBlocks_BindingsBooleanVariable",
+        "path": [],
+        "binding": "screen",
+        "inheritsNamespace": true,
+        "isPulled": false,
+        "isWatched": false},
+      {
+        "_Pointer_": "ptr:35",
+        "_Type_": "BuildingBlocks_BindingsTagFromBoolean",
+        "isTrue": {
+          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.79f1bb24-172f-41c7-ba8e-c7b15fec91fd",
+          "_RecordId_": "79f1bb24-172f-41c7-ba8e-c7b15fec91fd"},
+        "isFalse": null,
+        "inputTrue": null,
+        "inputFalse": null,
+        "input": "_PointsTo_:ptr:34"},
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:2",
+        "field": "PrimaryStateTag",
+        "input": "_PointsTo_:ptr:35"}],
+    "overrideDefaultTooltipCanvas": null,
+    "overrideDefaultCalloutCanvas": null}}

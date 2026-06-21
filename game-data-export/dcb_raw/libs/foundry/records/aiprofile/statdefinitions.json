@@ -1,0 +1,116 @@
+{
+  "_RecordName_": "StatDefinitions.StatDefinitions",
+  "_RecordId_": "c2a4783e-0e05-4fba-8b62-2577f3c64301",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StatDefinitions",
+    "stats": [
+      {
+        "_Type_": "Stat",
+        "statTag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.69072e1d-d79a-4b47-b82a-b0b8d47cfa86",
+          "_RecordId_": "69072e1d-d79a-4b47-b82a-b0b8d47cfa86"},
+        "minimumValue": 0.3,
+        "influences": [
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.f1f9bf91-5f80-499c-aa56-246f4c74877c",
+              "_RecordId_": "f1f9bf91-5f80-499c-aa56-246f4c74877c"},
+            "percentage": -100},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.983dcf50-2aac-40e5-9de2-df45f52de633",
+              "_RecordId_": "983dcf50-2aac-40e5-9de2-df45f52de633"},
+            "percentage": -100},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0b5f6d80-6a59-4408-aaad-393499fd46e8",
+              "_RecordId_": "0b5f6d80-6a59-4408-aaad-393499fd46e8"},
+            "percentage": -100},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.1edcdd09-64fe-4120-a794-d96ae1ab859f",
+              "_RecordId_": "1edcdd09-64fe-4120-a794-d96ae1ab859f"},
+            "percentage": 50},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.980ce6e8-afa2-4084-b13b-b0d01e5d7848",
+              "_RecordId_": "980ce6e8-afa2-4084-b13b-b0d01e5d7848"},
+            "percentage": 50},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.b6f2ae47-9950-46bb-8c18-69cb7d22be74",
+              "_RecordId_": "b6f2ae47-9950-46bb-8c18-69cb7d22be74"},
+            "percentage": 50}]},
+      {
+        "_Type_": "Stat",
+        "statTag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.332acf2b-6f56-4b4f-965a-83b8355bf52f",
+          "_RecordId_": "332acf2b-6f56-4b4f-965a-83b8355bf52f"},
+        "minimumValue": 0.0,
+        "influences": [
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.071daac7-7305-4975-b89c-0f4e0d65a1cd",
+              "_RecordId_": "071daac7-7305-4975-b89c-0f4e0d65a1cd"},
+            "percentage": 100}]},
+      {
+        "_Type_": "Stat",
+        "statTag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8e4f45f6-9655-4cfc-bcb8-ae8ac8c62e97",
+          "_RecordId_": "8e4f45f6-9655-4cfc-bcb8-ae8ac8c62e97"},
+        "minimumValue": 0.5,
+        "influences": [
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.d93e525f-3081-46f5-afbd-eb459dafbdb3",
+              "_RecordId_": "d93e525f-3081-46f5-afbd-eb459dafbdb3"},
+            "percentage": -50},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.e44fa27e-cc37-485c-a551-d0ab42df2d8d",
+              "_RecordId_": "e44fa27e-cc37-485c-a551-d0ab42df2d8d"},
+            "percentage": -50},
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.a76a99f2-b8b7-49ec-b240-84311dc259e2",
+              "_RecordId_": "a76a99f2-b8b7-49ec-b240-84311dc259e2"},
+            "percentage": 50}]},
+      {
+        "_Type_": "Stat",
+        "statTag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a978d5c2-f4df-407a-a44c-6a48556835e6",
+          "_RecordId_": "a978d5c2-f4df-407a-a44c-6a48556835e6"},
+        "minimumValue": 0.1,
+        "influences": [
+          {
+            "_Type_": "StatInfluence",
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.f1f9bf91-5f80-499c-aa56-246f4c74877c",
+              "_RecordId_": "f1f9bf91-5f80-499c-aa56-246f4c74877c"},
+            "percentage": 98}]}]}}

@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "ServiceBeaconParams.Refuel",
+  "_RecordId_": "7db72908-5e21-49da-bf2e-f6cfd6aa2d6c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ServiceBeaconParams",
+    "params": {
+      "_Type_": "RefuelParams",
+      "serviceBeaconType": "Refuel",
+      "serviceBeaconName": "@ServiceBeacon_Escort_Mission_Title",
+      "beaconTaxPercentage": 5,
+      "beaconMaxPaymentAmount": 2000000000,
+      "npcRequesterNameDef": {
+        "_Type_": "MissionPropertyValue_AIName",
+        "randomName": true,
+        "randomLastName": true,
+        "randomNickName": true,
+        "characterGivenName": "@LOC_UNINITIALIZED",
+        "characterGivenLastName": "@LOC_UNINITIALIZED",
+        "characterGivenNickName": "@LOC_UNINITIALIZED",
+        "characterNameData": "file://./../../../../libs/foundry/records/characternamedata/humanmale.json",
+        "chanceOfNickName": 0.05},
+      "playerCreatorParams": null,
+      "npcCreatorParams": null,
+      "objectiveTitle": "@ServiceBeacon_Escort_Obj_Title",
+      "objectiveDescription": "@ServiceBeacon_Escort_Obj_Desc"}}}

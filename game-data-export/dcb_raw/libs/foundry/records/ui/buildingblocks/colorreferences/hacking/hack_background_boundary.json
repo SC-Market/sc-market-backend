@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Hack_Background_Boundary",
+  "_RecordId_": "15de69ba-c0b7-46d9-8421-bf3d23d37f16",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 200,
+        "g": 228,
+        "b": 250,
+        "a": 255}}}}

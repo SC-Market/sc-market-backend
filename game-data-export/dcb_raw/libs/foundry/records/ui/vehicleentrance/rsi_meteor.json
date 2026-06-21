@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.RSI_Meteor",
+  "_RecordId_": "9b5a8792-2c06-4649-ac1e-ff6c79541f0c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.6,
+      "y": 1.6,
+      "z": 1.6},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "rsi_meteor",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 3.628,
+          "z": -0.757},
+        "shipState": "Both"}]}}

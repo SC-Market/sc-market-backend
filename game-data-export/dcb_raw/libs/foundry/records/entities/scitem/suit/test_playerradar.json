@@ -1,0 +1,234 @@
+{
+  "_RecordName_": "EntityClassDefinition.test_PlayerRadar",
+  "_RecordId_": "a107d68a-769f-4247-b388-42e18d0f328f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SAttachableComponentParams",
+        "AttachDef": {
+          "_Type_": "SItemDefinition",
+          "Type": "Radar",
+          "SubType": "ShortRangeRadar",
+          "Size": 1,
+          "Grade": 1,
+          "Manufacturer": null,
+          "inheritParentManufacturer": false,
+          "Tags": "",
+          "RequiredTags": "",
+          "DisplayType": "",
+          "Localization": {
+            "_Type_": "SCItemLocalization",
+            "Name": "@LOC_PLACEHOLDER",
+            "ShortName": "@LOC_EMPTY",
+            "Description": "@LOC_EMPTY",
+            "displayFeatures": {
+              "_Type_": "SCExtendedLocalizationLevelParams",
+              "LogoSimplifiedWhite": "",
+              "FrontendBackground": "",
+              "History": "@LOC_EMPTY",
+              "Callout1": "@LOC_EMPTY",
+              "Callout2": "@LOC_EMPTY",
+              "Callout3": "@LOC_EMPTY",
+              "UIPriority": 0,
+              "locationAudioPlayTrigger": {
+                "_Type_": "GlobalResourceAudio",
+                "audioTrigger": ""},
+              "locationAudioStopTrigger": {
+                "_Type_": "GlobalResourceAudio",
+                "audioTrigger": ""}}},
+          "mannequinTags": {
+            "_Type_": "SCItemMannequinTags",
+            "mannequinClassTag": "",
+            "mannequinTypeTag": "",
+            "mannequinBaseTag": ""},
+          "inventoryOccupancyVolume": {
+            "_Type_": "SMicroCargoUnit",
+            "microSCU": 1},
+          "inventoryOccupancyDimensions": {
+            "_Type_": "Vec3",
+            "x": 0.15,
+            "y": 0.15,
+            "z": 0.15},
+          "inventoryOccupancyLocalBoundsMin": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "inventoryOccupancyLocalBoundsMax": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "inventoryOccupancyDimensionsUIOverride": null,
+          "inventoryOccupancyDimensionsUIOverrideV4": null,
+          "inventoryOccupancyFixedGridDimensionsUIV4": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "ignoredAttachAxis": "None",
+          "attachCheckCenterOfMass": false},
+        "attachToTileItemPort": "NoConnection",
+        "entityAttachParams": null,
+        "audioAttachParams": {
+          "_Type_": "SAudioAttachParams",
+          "onAttachedTrigger": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""},
+          "onDetachedTrigger": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}}},
+      {
+        "_Type_": "SCItemRadarComponentParams",
+        "contactGroups": {
+          "_Type_": "RadarContactGroupArray",
+          "groups": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/radarsystem/radarcontactgroups.json",
+              "_RecordName_": "RadarContactGroupEntry.5dffa82c-3ba7-473d-a1ea-cccf22a9a678",
+              "_RecordId_": "5dffa82c-3ba7-473d-a1ea-cccf22a9a678"}]},
+        "signatureDetection": [
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true},
+          {
+            "_Type_": "SCItemRadarSignatureDetection",
+            "sensitivity": 0.0,
+            "deltaSignatureSensitivity": 0.0,
+            "piercing": 0.25,
+            "deltaSignaturePierce": 0.25,
+            "permitPassiveDetection": true,
+            "permitActiveDetection": true}],
+        "scanTags": {
+          "_Type_": "TagList",
+          "tags": []},
+        "pingProperties": {
+          "_Type_": "SCItemRadarPingProperties",
+          "cooldownTime": 2.5},
+        "sensitivityModifiers": [],
+        "aiProperties": {
+          "_Type_": "SCItemRadarAIProperties",
+          "forceActiveWhenAIControlled": false,
+          "allowPingWave": false},
+        "deltaSignatureSpike": [
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0},
+          {
+            "_Type_": "DeltaSignatureSpikeParams",
+            "operationType": "Add",
+            "spikeValue": 1.0}],
+        "sharedParams": null,
+        "sharedExperimentalParams": null,
+        "forceActiveAIControlled": false,
+        "aimAssist": {
+          "_Type_": "SRadarAimAssistData",
+          "distanceMinAssignment": 500.0,
+          "distanceMaxAssignment": 700.0,
+          "outsideRangeBufferDistance": 100.0}},
+      {
+        "_Type_": "ItemControlComponentParams",
+        "turnedOnByDefault": false,
+        "forceOn": false,
+        "asopSpawnState": "None",
+        "throttleParams": [],
+        "masterModeExclusionsOverride": null},
+      {
+        "_Type_": "ItemControllerComponentParams",
+        "allowTogglePowerObservedItems": false,
+        "operatorModeDefinitionsOverride": null,
+        "additionalItemControlPriorities": null},
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""}]}}

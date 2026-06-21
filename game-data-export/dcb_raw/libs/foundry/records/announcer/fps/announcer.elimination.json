@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "Announcer.Elimination",
+  "_RecordId_": "22a5bb8b-383b-495b-9444-502324949125",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Announcer",
+    "base": "file://./../../../../../libs/foundry/records/announcer/fps/announcer.fps_common.json",
+    "announcements": [
+      {
+        "_Type_": "Announcement",
+        "name": "FPS_Ready",
+        "conversation": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/conversationbank/starmarine/conversationbank.starmarine.json",
+          "_RecordName_": "Conversation.SM_SIMANN1_Elimination_Ready",
+          "_RecordId_": "e6f7596a-c07d-450b-86a9-dc3960465736"},
+        "gameToken": "",
+        "gameTokenType": "None",
+        "gameTokens": [],
+        "priority": "None",
+        "retriggerDelay": 0.0,
+        "playProbability": 1.0,
+        "playWhenDead": true,
+        "playWhenSpectating": true},
+      {
+        "_Type_": "Announcement",
+        "name": "FPS_Win",
+        "conversation": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/conversationbank/starmarine/conversationbank.starmarine.json",
+          "_RecordName_": "Conversation.SM_SIMANN1_Win",
+          "_RecordId_": "a0a6a5f5-d205-46ca-8bc4-74e8752bda2d"},
+        "gameToken": "",
+        "gameTokenType": "None",
+        "gameTokens": [],
+        "priority": "None",
+        "retriggerDelay": 0.0,
+        "playProbability": 1.0,
+        "playWhenDead": true,
+        "playWhenSpectating": true},
+      {
+        "_Type_": "Announcement",
+        "name": "FPS_Lose",
+        "conversation": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/conversationbank/starmarine/conversationbank.starmarine.json",
+          "_RecordName_": "Conversation.SM_SIMANN1_Lose",
+          "_RecordId_": "b9e9e5c1-76e4-41e5-b661-b7fd71145b95"},
+        "gameToken": "",
+        "gameTokenType": "None",
+        "gameTokens": [],
+        "priority": "None",
+        "retriggerDelay": 0.0,
+        "playProbability": 1.0,
+        "playWhenDead": true,
+        "playWhenSpectating": true}]}}

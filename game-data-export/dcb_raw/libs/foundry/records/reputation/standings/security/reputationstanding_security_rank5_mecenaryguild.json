@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Security_Rank5_MecenaryGuild",
+  "_RecordId_": "68a60c14-efe1-4f0a-b476-e56b4716335d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Security_Rank5_MercenaryGuild",
+    "description": "desc",
+    "displayName": "@RepStanding_Security_Rank5",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_security_6.svg",
+    "minReputation": 480000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

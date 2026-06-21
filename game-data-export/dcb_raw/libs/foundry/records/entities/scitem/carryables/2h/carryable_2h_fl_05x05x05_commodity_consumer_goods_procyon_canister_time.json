@@ -1,0 +1,2826 @@
+{
+  "_RecordName_": "EntityClassDefinition.Carryable_2H_FL_05x05x05_Commodity_consumer_goods_Procyon_canister_time",
+  "_RecordId_": "8307759d-b418-49c9-b161-44dec27f2386",
+  "_RecordTag_": "TechDesign",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": "file://./../../../../../../../libs/foundry/records/densityclasses/cargocommoditiesdensityclass.json",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+        "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.c3f3f211-c145-49b3-a4b8-2b388bc2dd84",
+        "_RecordId_": "c3f3f211-c145-49b3-a4b8-2b388bc2dd84"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.c08564a2-68d2-4eb1-903b-e3c3ecf12ac1",
+        "_RecordId_": "c08564a2-68d2-4eb1-903b-e3c3ecf12ac1"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.0dab030c-d7a0-4066-9d66-118e0feb9dd3",
+        "_RecordId_": "0dab030c-d7a0-4066-9d66-118e0feb9dd3"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityPhysicsControllerParams",
+        "PhysType": {
+          "_Type_": "SEntityRigidPhysicsControllerParams",
+          "Mass": 28.8,
+          "compoundingAllowed": true,
+          "breakableParams": null,
+          "gameCollisionClass": null,
+          "spawnBoxScale": 0.5,
+          "PhysFlagsOverride": [],
+          "PhysFlagsColliderOverride": [],
+          "maxLoggedCollisions": 1,
+          "Damping": 0.01,
+          "DampingZeroG": 0.01,
+          "DampingFreefall": 0.05,
+          "PushableByPlayers": true,
+          "NeverAffectTriggers": false,
+          "UseManualGridTransition": false,
+          "grid": null,
+          "shieldSDFParams": null,
+          "aiNavigationType": "Included",
+          "Kinematic": false,
+          "EnableCrossGridChecks": false,
+          "Resting": false,
+          "physicalizeAllSlots": true,
+          "enableExteriorShadow": false,
+          "buoyancyParams": null,
+          "temperature": {
+            "_Type_": "EntityTemperature",
+            "enable": false,
+            "initialTemperature": -1.0,
+            "coolingEqualizationParams": {
+              "_Type_": "CoolingEqualizationMultiplier",
+              "coolingEqualizationMultiplier": 1.0},
+            "signatureParams": {
+              "_Type_": "EntityTemperatureSignature",
+              "enable": false,
+              "minimumTemperatureForIR": 250.0,
+              "temperatureToIR": 6.0},
+            "itemResourceParams": {
+              "_Type_": "EntityTemperatureItemResource",
+              "poweredAmbientCoolingMultiplier": 1.0,
+              "minOperatingTemperature": 0.0,
+              "minCoolingTemperature": 300.0,
+              "enableOverheat": false,
+              "overheatTemperature": 450.0,
+              "overheatWarningTemperature": 370.0,
+              "overheatRecoveryTemperature": 350.0,
+              "stateHeatGenerationValues": [],
+              "degradationTemperatureMultipliers": []},
+            "misfireTemperatureRange": {
+              "_Type_": "Range",
+              "minimum": 370.0,
+              "maximum": 600.0},
+            "internalTemperatureGeneration": 0.0,
+            "fireHazard": {
+              "_Type_": "EntityFireHazard",
+              "enable": true,
+              "dissolveOnBurn": false,
+              "dissolvePercentageRange": {
+                "_Type_": "Range",
+                "minimum": 0.0,
+                "maximum": 1.0}}}}},
+      {
+        "_Type_": "SAttachableComponentParams",
+        "AttachDef": {
+          "_Type_": "SItemDefinition",
+          "Type": "Cargo",
+          "SubType": "Small",
+          "Size": 2,
+          "Grade": 1,
+          "Manufacturer": null,
+          "inheritParentManufacturer": false,
+          "Tags": "MissionQuestItem TimeCage",
+          "RequiredTags": "",
+          "DisplayType": "",
+          "Localization": {
+            "_Type_": "SCItemLocalization",
+            "Name": "@items_commodities_zetaprolanide",
+            "ShortName": "@LOC_EMPTY",
+            "Description": "@items_commodities_zetaprolanide_desc",
+            "displayFeatures": {
+              "_Type_": "SCExtendedLocalizationLevelParams",
+              "LogoSimplifiedWhite": "",
+              "FrontendBackground": "",
+              "History": "@LOC_EMPTY",
+              "Callout1": "@LOC_EMPTY",
+              "Callout2": "@LOC_EMPTY",
+              "Callout3": "@LOC_EMPTY",
+              "UIPriority": 0,
+              "locationAudioPlayTrigger": {
+                "_Type_": "GlobalResourceAudio",
+                "audioTrigger": ""},
+              "locationAudioStopTrigger": {
+                "_Type_": "GlobalResourceAudio",
+                "audioTrigger": ""}}},
+          "mannequinTags": {
+            "_Type_": "SCItemMannequinTags",
+            "mannequinClassTag": "",
+            "mannequinTypeTag": "",
+            "mannequinBaseTag": ""},
+          "inventoryOccupancyVolume": {
+            "_Type_": "SMicroCargoUnit",
+            "microSCU": 15625},
+          "inventoryOccupancyDimensions": {
+            "_Type_": "Vec3",
+            "x": 0.25,
+            "y": 0.25,
+            "z": 0.25},
+          "inventoryOccupancyLocalBoundsMin": {
+            "_Type_": "Vec3",
+            "x": -0.251,
+            "y": -0.25,
+            "z": 0.001},
+          "inventoryOccupancyLocalBoundsMax": {
+            "_Type_": "Vec3",
+            "x": 0.251,
+            "y": 0.251,
+            "z": 0.5},
+          "inventoryOccupancyDimensionsUIOverride": {
+            "_Type_": "Vec3",
+            "x": 0.75,
+            "y": 0.75,
+            "z": 0.75},
+          "inventoryOccupancyDimensionsUIOverrideV4": null,
+          "inventoryOccupancyFixedGridDimensionsUIV4": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "ignoredAttachAxis": "None",
+          "attachCheckCenterOfMass": false},
+        "attachToTileItemPort": "NoConnection",
+        "entityAttachParams": null,
+        "audioAttachParams": {
+          "_Type_": "SAudioAttachParams",
+          "onAttachedTrigger": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""},
+          "onDetachedTrigger": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}}},
+      {
+        "_Type_": "SEntityComponentCarryableParams",
+        "carryInteraction": "_PointsTo_:ptr:1",
+        "placeInteraction": "_PointsTo_:ptr:2",
+        "dropInteraction": "_PointsTo_:ptr:3",
+        "equipToItemportInteraction": null,
+        "offHandEquipToItemportInteraction": null,
+        "storeInteraction": "_PointsTo_:ptr:4",
+        "offHandStoreInteraction": null,
+        "holdReadyInteraction": null,
+        "equipWearableInteraction": null,
+        "inspectInteraction": null,
+        "flipInteraction": null,
+        "swapAttachmentsInteraction": null,
+        "attachToHeldItemInteraction": null,
+        "interactionMetadata": "file://./../../../../../../../libs/foundry/records/globalinteractionparams/carryableinteractionsmetadata_globaldefault.json",
+        "carryableStatesParams": {
+          "_Type_": "SCarryableStatesParams",
+          "settledState": "_PointsTo_:ptr:5",
+          "carriedState": "_PointsTo_:ptr:6",
+          "equippedToSuitState": null,
+          "inspectingState": "_PointsTo_:ptr:7",
+          "droppedState": "_PointsTo_:ptr:8",
+          "offeredState": null,
+          "heldReadyState": null,
+          "equippedWornState": null,
+          "storedState": "_PointsTo_:ptr:9",
+          "hangingOnOutfitHangerState": null},
+        "enslavementAnimationDatabase": "",
+        "interactionPointToMoveOnEquip": null,
+        "interactionPointOffsets": {
+          "_Type_": "SCarryableInteractionPointOffsets",
+          "interactionOffsetEquipped": {
+            "_Type_": "QuatT",
+            "Rotation": {
+              "_Type_": "Ang3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0},
+            "Position": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0}},
+          "interactionOffsetCarried": {
+            "_Type_": "QuatT",
+            "Rotation": {
+              "_Type_": "Ang3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0},
+            "Position": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0}},
+          "interactionOffsetInspected": {
+            "_Type_": "QuatT",
+            "Rotation": {
+              "_Type_": "Ang3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0},
+            "Position": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0}}},
+        "gripData": {
+          "_Type_": "SGripContainer",
+          "gripOverrideUsingLOS": false,
+          "grips": [
+            {
+              "_Type_": "SCarryableGrip",
+              "carryStyleID": "2H_Standard",
+              "canBeUsedBy": "All",
+              "handMode": "RightHand",
+              "gripAction": "None",
+              "handGrip": {
+                "_Type_": "SGrip",
+                "gripID": "",
+                "optionalHelper": "$grip_right_1",
+                "gripShapeParameters": {
+                  "_Type_": "SGripShapeParams",
+                  "gripShape": "gs_flat",
+                  "dimension": 8.0,
+                  "wristRotation": 0.0},
+                "offset": {
+                  "_Type_": "QuatT",
+                  "Rotation": {
+                    "_Type_": "Ang3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0},
+                  "Position": {
+                    "_Type_": "Vec3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0}}},
+              "offHandGrip": {
+                "_Type_": "SGrip",
+                "gripID": "",
+                "optionalHelper": "$grip_left_1",
+                "gripShapeParameters": {
+                  "_Type_": "SGripShapeParams",
+                  "gripShape": "gs_flat",
+                  "dimension": 8.0,
+                  "wristRotation": 0.0},
+                "offset": {
+                  "_Type_": "QuatT",
+                  "Rotation": {
+                    "_Type_": "Ang3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0},
+                  "Position": {
+                    "_Type_": "Vec3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0}}},
+              "animationParameters": {
+                "_Type_": "SCarryAnimationParams",
+                "motionBase": "2h",
+                "handTag": ""},
+              "carryParameters": {
+                "_Type_": "SCarryParams",
+                "width": 4.2,
+                "height": 0.0,
+                "depth": 0.0}},
+            {
+              "_Type_": "SCarryableGrip",
+              "carryStyleID": "2H_Reverse",
+              "canBeUsedBy": "All",
+              "handMode": "RightHand",
+              "gripAction": "None",
+              "handGrip": {
+                "_Type_": "SGrip",
+                "gripID": "",
+                "optionalHelper": "$grip_left_1",
+                "gripShapeParameters": {
+                  "_Type_": "SGripShapeParams",
+                  "gripShape": "gs_flat",
+                  "dimension": 8.0,
+                  "wristRotation": 0.0},
+                "offset": {
+                  "_Type_": "QuatT",
+                  "Rotation": {
+                    "_Type_": "Ang3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0},
+                  "Position": {
+                    "_Type_": "Vec3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0}}},
+              "offHandGrip": {
+                "_Type_": "SGrip",
+                "gripID": "",
+                "optionalHelper": "$grip_right_1",
+                "gripShapeParameters": {
+                  "_Type_": "SGripShapeParams",
+                  "gripShape": "gs_flat",
+                  "dimension": 8.0,
+                  "wristRotation": 0.0},
+                "offset": {
+                  "_Type_": "QuatT",
+                  "Rotation": {
+                    "_Type_": "Ang3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0},
+                  "Position": {
+                    "_Type_": "Vec3",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0}}},
+              "animationParameters": {
+                "_Type_": "SCarryAnimationParams",
+                "motionBase": "2h",
+                "handTag": ""},
+              "carryParameters": {
+                "_Type_": "SCarryParams",
+                "width": 4.2,
+                "height": 0.0,
+                "depth": 0.0}}]},
+        "abilityLocks": [
+          "Climb",
+          "Sprint",
+          "Vault",
+          "VaultHigh",
+          "Mantle",
+          "MantleHigh"],
+        "carryableTasks": [],
+        "throwableParams": {
+          "_Type_": "SThrowableParams",
+          "reticle": "none",
+          "throwModes": [
+            {
+              "_Type_": "SThrowMode",
+              "mode": "Drop",
+              "angularVelocity": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 1.0},
+              "offset": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0}},
+            {
+              "_Type_": "SThrowMode",
+              "mode": "Place",
+              "angularVelocity": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0},
+              "offset": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0}},
+            {
+              "_Type_": "SThrowMode",
+              "mode": "InteractionMode",
+              "angularVelocity": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0},
+              "offset": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0}},
+            {
+              "_Type_": "SThrowMode",
+              "mode": "TwoHandedThrow",
+              "angularVelocity": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0},
+              "offset": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0}},
+            {
+              "_Type_": "SThrowMode",
+              "mode": "Undefined",
+              "angularVelocity": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0},
+              "offset": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0}}],
+          "faceUpWhenSettled": true,
+          "allowHologramTiltRotation": false,
+          "audioParams": {
+            "_Type_": "SThrowAudioParams",
+            "onThrownAudioTrigger": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": ""},
+            "onCollisionAudioTrigger": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": ""},
+            "collisionSpeedAudioRTPC": {
+              "_Type_": "AudioRtpc",
+              "rtpc": ""},
+            "onCollisionAudioPerceptionInfo": "SmallSound",
+            "onCollisionAudioPerceptionRadius": 20.0},
+          "placementRange": 3.0,
+          "placementRangeHysteresis": 0.5,
+          "defaultPlacementUpDirection": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0},
+          "yawOffset": 0.0,
+          "applyBoundingBoxPlacementOffset": false,
+          "combatThrowable": false,
+          "knockdownThrowUpForce": 0.5},
+        "equipWearableParams": {
+          "_Type_": "SCEquipableParams",
+          "itemPort": ""},
+        "ikInteractionsRecord": null,
+        "carryableSequences": [],
+        "canBeCarriedInProne": false,
+        "disableRotation": false},
+      {
+        "_Type_": "SEntityInteractableParams",
+        "Interactable": {
+          "_Type_": "SInteractableParams",
+          "SharedInteractions": [
+            {
+              "_Pointer_": "ptr:1",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "Carry",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@interaction_carry",
+              "DisplayType": "Show",
+              "GenericCursor": "Grab",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": {
+                "_Type_": "InteractionConditionList",
+                "presetList": [
+                  "file://./../../../../../../../libs/foundry/records/interactionconditions/interactornotinusable_carryitem.json"],
+                "conditionParams": [
+                  {
+                    "_Type_": "InteractionConditionNOT",
+                    "conditionDisplay": {
+                      "_Type_": "ConditionDisplayParams",
+                      "exclusiveDisplay": false,
+                      "blockedText": {
+                        "_Type_": "BlockedTextParams",
+                        "blockedText": "@interaction_condition_deliveryVolatileCargoBox_ejectBeforeCarry"},
+                      "blockedCursor": null,
+                      "blockedColor": null,
+                      "blockedHint": null,
+                      "autoStoreOption": null,
+                      "blockedInteractionAttemptMonologue": null},
+                    "condition": {
+                      "_Type_": "InteractionConditionInteractionStateMachineTag",
+                      "conditionDisplay": null,
+                      "stateTags": {
+                        "_Type_": "TagList",
+                        "tags": [
+                          {
+                            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.60daf4c5-91c1-4900-aac2-1eb57f9de62f",
+                            "_RecordId_": "60daf4c5-91c1-4900-aac2-1eb57f9de62f"}]}}}],
+                "conditionToHideParams": []},
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:3",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "Drop",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@interaction_drop",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": {
+                "_Type_": "InteractionConditionList",
+                "presetList": [
+                  "file://./../../../../../../../libs/foundry/records/interactionconditions/interactornotinusable.json"],
+                "conditionParams": [],
+                "conditionToHideParams": []},
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:2",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "Place",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@interaction_place",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": {
+                "_Type_": "InteractionConditionList",
+                "presetList": [
+                  "file://./../../../../../../../libs/foundry/records/interactionconditions/interactornotinusable_carryitem.json"],
+                "conditionParams": [],
+                "conditionToHideParams": []},
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:4",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "Store",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@interaction_store",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": {
+                "_Type_": "InteractionConditionList",
+                "presetList": [
+                  "file://./../../../../../../../libs/foundry/records/interactionconditions/presets/personalinventory/canstoreinpersonalinventory.json"],
+                "conditionParams": [],
+                "conditionToHideParams": []},
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:18",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "Locked",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": true,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:17",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "Unlocked",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": true,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null}],
+          "InteractionPoints": [
+            {
+              "_Type_": "SInteractionPointParams",
+              "Interactions": [
+                {
+                  "_Type_": "SInteractionParams",
+                  "Interaction": "_PointsTo_:ptr:1",
+                  "DisplayName": "@LOC_EMPTY",
+                  "IsPrimary": true},
+                {
+                  "_Type_": "SInteractionParams",
+                  "Interaction": "_PointsTo_:ptr:3",
+                  "DisplayName": "@LOC_EMPTY",
+                  "IsPrimary": false},
+                {
+                  "_Type_": "SInteractionParams",
+                  "Interaction": "_PointsTo_:ptr:2",
+                  "DisplayName": "@LOC_EMPTY",
+                  "IsPrimary": false},
+                {
+                  "_Type_": "SInteractionParams",
+                  "Interaction": "_PointsTo_:ptr:4",
+                  "DisplayName": "@LOC_EMPTY",
+                  "IsPrimary": false}],
+              "HelperName": "root",
+              "Tags": [],
+              "Primitive": null,
+              "PlayerAnimatedInteractionParams": null,
+              "HighlightBehaviors": [],
+              "AdditionalCollisionBones": [],
+              "InteractionPointModifiers": [],
+              "InteractionPointInternalSettingTemplateRef": null,
+              "FirstInteractionPrimary": false,
+              "UseHelperLocation": false,
+              "ApplyToEntireSkeleton": false,
+              "longRangeIP": false,
+              "Radius": 2.0,
+              "ShowHighlight": true,
+              "HighlightOnRayHitEntity": true,
+              "Offset": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}},
+              "TextJustification": "Middle",
+              "TextOrientation": "RotateToPlayer",
+              "TextScale": 1.0,
+              "ShowInteractionTextAtCursorPos": false,
+              "ScalePromptOffsetWithEntity": false,
+              "InteractionPromptOffset": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}},
+              "PromptStyle": "PromptAndText",
+              "OverrideControlHintDescription": false,
+              "InteractionPromptScale": 1.0,
+              "InteractionPromptLabelVerticalOffset": 70.0,
+              "InteractionPromptBound": "TopBoundingBoxZSurface",
+              "UseHorizontalDistance": false,
+              "MaxCursorScreenDistance": 2.0,
+              "ShowInnerThoughtsOffScreen": false,
+              "OnlySelectableInLookDir": false,
+              "AngleConstraint": {
+                "_Type_": "SAngleConstraint",
+                "forwardDirOffset": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "angleRange": 181.0,
+                "viewAngleLimit": 110.0}}],
+          "interactionTasks": [
+            {
+              "_Pointer_": "ptr:20",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "SetState_01_Fresh",
+              "triggerType": "Children"},
+            {
+              "_Pointer_": "ptr:21",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "SetState_02_Weathered",
+              "triggerType": "Children"},
+            {
+              "_Pointer_": "ptr:22",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "SetState_03_Critical",
+              "triggerType": "Children"},
+            {
+              "_Pointer_": "ptr:23",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "SetState_04_Dead",
+              "triggerType": "Children"}],
+          "actionHandlerTasks": [],
+          "itemActionTasks": [],
+          "menuTitle": null}},
+      {
+        "_Type_": "SGeometryResourceParams",
+        "ModelTag": null,
+        "cacheResources": false,
+        "meshsetup": {
+          "_Type_": "SGeometryMeshsetupParams",
+          "visibilityTags": {
+            "_Type_": "TagList",
+            "tags": []}},
+        "Geometry": {
+          "_Type_": "SGeometryNodeParams",
+          "Tags": "",
+          "Geometry": {
+            "_Type_": "SGeometryDataParams",
+            "Geometry": {
+              "_Type_": "GlobalResourceGeometry",
+              "path": "Objects/buildingsets/human/hightech/prop/storage/canister/canister_time_1_005x005x005_a.cgf"},
+            "Material": {
+              "_Type_": "GlobalResourceMaterial",
+              "path": ""},
+            "SimulationGeometry": null,
+            "Palette": {
+              "_Type_": "TintPaletteRef",
+              "RootRecord": null,
+              "ChildPath": "",
+              "SwizzleOverride": null},
+            "Slot": "Main",
+            "MaterialAttachments": "",
+            "ProxyCDFPath": "",
+            "ModifiersPath": "",
+            "AttachFlags": 0,
+            "DeformerType": "Standard",
+            "ProtosBShapeExclude": 0,
+            "VisTP": true,
+            "VisFP": true,
+            "VisShadow": true,
+            "VisSecondaryViews": true,
+            "WrinkleMap": false,
+            "EnableDecalProjection": false,
+            "BBoxJoint": "",
+            "BBoxRadius": 0.0,
+            "Wear": 0.35,
+            "Dirt": 0.35,
+            "Interference": 0.0,
+            "Damage": 0.0,
+            "RenderLayer": "Default",
+            "VisAreaMode": "AABB_Center",
+            "SunShadowMode": "Upto_400m",
+            "viewDistRatio": {
+              "_RecordPath_": "file://./../../../../../../../libs/foundry/records/sgeometryviewdistanceratiocategories/sgeometryviewdistanceratiocategories.geometryviewdistancecategories.json",
+              "_RecordName_": "SViewDistanceRatioParams.Commodities",
+              "_RecordId_": "56b1881c-d101-4de8-ad07-a3871723ac55"},
+            "LodRatio": 100},
+          "ScaleMultiplier": 1.0,
+          "SubGeometry": [
+            {
+              "_Type_": "SGeometryNodeParams",
+              "Tags": "Destroyed",
+              "Geometry": {
+                "_Type_": "SGeometryDataParams",
+                "Geometry": {
+                  "_Type_": "GlobalResourceGeometry",
+                  "path": "Objects/buildingsets/human/hightech/prop/storage/canister/canister_time_1_005x005x005_a_100.cgf"},
+                "Material": {
+                  "_Type_": "GlobalResourceMaterial",
+                  "path": ""},
+                "SimulationGeometry": null,
+                "Palette": {
+                  "_Type_": "TintPaletteRef",
+                  "RootRecord": null,
+                  "ChildPath": "",
+                  "SwizzleOverride": null},
+                "Slot": "Main",
+                "MaterialAttachments": "",
+                "ProxyCDFPath": "",
+                "ModifiersPath": "",
+                "AttachFlags": 0,
+                "DeformerType": "Standard",
+                "ProtosBShapeExclude": 0,
+                "VisTP": true,
+                "VisFP": true,
+                "VisShadow": true,
+                "VisSecondaryViews": true,
+                "WrinkleMap": false,
+                "EnableDecalProjection": false,
+                "BBoxJoint": "",
+                "BBoxRadius": 0.0,
+                "Wear": 0.0,
+                "Dirt": 0.0,
+                "Interference": 0.0,
+                "Damage": 0.0,
+                "RenderLayer": "Default",
+                "VisAreaMode": "AABB_Center",
+                "SunShadowMode": "Upto_400m",
+                "viewDistRatio": null,
+                "LodRatio": 100},
+              "ScaleMultiplier": 1.0,
+              "SubGeometry": []}]},
+        "Material": {
+          "_Type_": "SMaterialNodeParams",
+          "Tags": "",
+          "Material": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": ""},
+          "Palette": {
+            "_Type_": "TintPaletteRef",
+            "RootRecord": null,
+            "ChildPath": "",
+            "SwizzleOverride": null},
+          "materialVariants": []},
+        "rootOverridePaint": false,
+        "inheritModelTagFromHost": true,
+        "inheritMaterialFromSpawnHost": false},
+      {
+        "_Type_": "SCItemInspectableParams",
+        "inspectInteraction": null,
+        "stopInspectInteraction": null,
+        "flipInteraction": null,
+        "inspectAnimations": [],
+        "inspectRotateScaleX": 0.025,
+        "inspectRotateScaleY": 0.025,
+        "inspectRotateLimitsX": {
+          "_Type_": "Vec2",
+          "x": -1.0,
+          "y": 1.0},
+        "inspectRotateLimitsY": {
+          "_Type_": "Vec2",
+          "x": -1.0,
+          "y": 1.0},
+        "firstSelect": {
+          "_Type_": "SFirstSelect",
+          "firstSelectMode": "None",
+          "itemTag": null}},
+      {
+        "_Type_": "SInteractionStateMachineParams",
+        "StateTypes": [
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "CarryableStates",
+            "bindingsMethod": "None",
+            "DefaultState": "_PointsTo_:ptr:5",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:5",
+                "_Type_": "SInteractionState",
+                "StateName": "Settled",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:1",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:4",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:6",
+                "_Type_": "SInteractionState",
+                "StateName": "Carried",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:2",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:3",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:4",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:8",
+                "_Type_": "SInteractionState",
+                "StateName": "Dropped",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:7",
+                "_Type_": "SInteractionState",
+                "StateName": "Inspecting",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:1",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:4",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:9",
+                "_Type_": "SInteractionState",
+                "StateName": "Stored",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:1",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:10",
+                "_Type_": "SInteractionState",
+                "StateName": "Lootable",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.2ed454aa-54f6-495b-a66f-c700d37e7111",
+                    "_RecordId_": "2ed454aa-54f6-495b-a66f-c700d37e7111"}],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:1",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": [
+              {
+                "_Type_": "SCargoGridSpawnedStateModifier",
+                "defaultStateOverride": "_PointsTo_:ptr:10"}]},
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "DegradationStates",
+            "bindingsMethod": "States",
+            "DefaultState": "_PointsTo_:ptr:11",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:11",
+                "_Type_": "SInteractionState",
+                "StateName": "Degradation_Fine",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.cef7444e-ba6e-4a49-ba3c-f56e1511b231",
+                    "_RecordId_": "cef7444e-ba6e-4a49-ba3c-f56e1511b231"}],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:12",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:14",
+                "_Type_": "SInteractionState",
+                "StateName": "Degradation_Damaged",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.daf8c7b7-5e14-4620-8316-3b788181b827",
+                    "_RecordId_": "daf8c7b7-5e14-4620-8316-3b788181b827"}],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:13",
+                "_Type_": "SInteractionState",
+                "StateName": "Degradation_Compromised",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.693291dc-d148-4444-9132-695ed3626c18",
+                    "_RecordId_": "693291dc-d148-4444-9132-695ed3626c18"}],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:15",
+                "_Type_": "SInteractionState",
+                "StateName": "Degradation_Dead",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "destroyed",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": [
+              {
+                "_Type_": "SDegradationStateModifier",
+                "stateRanges": [
+                  {
+                    "_Type_": "SRangeStateLevel",
+                    "state": "_PointsTo_:ptr:13",
+                    "min": 0.0,
+                    "max": 0.1},
+                  {
+                    "_Type_": "SRangeStateLevel",
+                    "state": "_PointsTo_:ptr:14",
+                    "min": 0.1,
+                    "max": 1.0},
+                  {
+                    "_Type_": "SRangeStateLevel",
+                    "state": "_PointsTo_:ptr:11",
+                    "min": 1.0,
+                    "max": 1.0}],
+                "accumulator": "Wear",
+                "expiredState": "_PointsTo_:ptr:15"}]},
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "Locked",
+            "bindingsMethod": "None",
+            "DefaultState": "_PointsTo_:ptr:16",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:19",
+                "_Type_": "SInteractionState",
+                "StateName": "Locked",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:17",
+                    "NextState": "_PointsTo_:ptr:16"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.60daf4c5-91c1-4900-aac2-1eb57f9de62f",
+                      "_RecordId_": "60daf4c5-91c1-4900-aac2-1eb57f9de62f"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:16",
+                "_Type_": "SInteractionState",
+                "StateName": "Unlocked",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:18",
+                    "NextState": "_PointsTo_:ptr:19"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e5e348ca-7752-4930-8a50-874f34dca55e",
+                      "_RecordId_": "e5e348ca-7752-4930-8a50-874f34dca55e"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": []}]},
+      {
+        "_Type_": "SPersistentComponentParams"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"},
+      {
+        "_Type_": "SCItemPurchasableParams",
+        "Display": null,
+        "displayName": "@items_commodities_zetaprolanide",
+        "displayType": "@items_commodities_type_vice",
+        "displayThumbnail": "",
+        "allowTryOn": false,
+        "allowQuickBuy": false,
+        "tryOnInteractionText": "@shop_ui_item_action_try",
+        "defaultAttachToPortName": "",
+        "interactionPointTemplate": null,
+        "disabledLoadoutInteractions": [],
+        "tutorialParams": null,
+        "interactionPoints": []},
+      {
+        "_Type_": "SEntityComponentEffects",
+        "entityEffects": {
+          "_Type_": "SEntitityEffectSystem_System",
+          "particleEffects": {
+            "_Type_": "SEntityEffectSystem_ParticleCategory",
+            "enabled": true,
+            "allowMultipleTags": true,
+            "tagEffects": [
+              {
+                "_Type_": "SEntityEffectSystem_ParticleTagEffect",
+                "name": "BlinkingLight_Fine",
+                "enabled": true,
+                "primed": true,
+                "holographic": false,
+                "updateEntityBounds": false,
+                "clipToVisArea": "None",
+                "gpuVisAreaCullingMode": "Default",
+                "particleEffect": {
+                  "_Type_": "GlobalResourceParticle",
+                  "path": "3252b8bd-fcfd-96ba-28b9-b949c54a0a92|Props/Generic_Flair_FX.Crate.Blinking_light"},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0}},
+                  "offsetParameter": null},
+                "propertyLinks": [],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dede0c7f-cac6-4a36-b1b7-2e2744fccfa4",
+                  "_RecordId_": "dede0c7f-cac6-4a36-b1b7-2e2744fccfa4"}},
+              {
+                "_Type_": "SEntityEffectSystem_ParticleTagEffect",
+                "name": "explosion_timed",
+                "enabled": true,
+                "primed": false,
+                "holographic": false,
+                "updateEntityBounds": false,
+                "clipToVisArea": "Local",
+                "gpuVisAreaCullingMode": "Default",
+                "particleEffect": {
+                  "_Type_": "GlobalResourceParticle",
+                  "path": "ffd5ca92-efd1-1904-1af6-ffb20d8fb209|Damage/canister_explosions.explosion_canister_timed"},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.25}},
+                  "offsetParameter": null},
+                "propertyLinks": [],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.fb112c65-9c41-417e-89f4-e74d3b29e6de",
+                  "_RecordId_": "fb112c65-9c41-417e-89f4-e74d3b29e6de"}}],
+            "triggerEffects": []},
+          "materialEffects": null,
+          "soundEffects": null,
+          "audioEnvironmentEffects": null,
+          "lightEffects": {
+            "_Type_": "EntityEffectSystem_LightCategory",
+            "enabled": true,
+            "allowMultipleTags": true,
+            "tagEffects": [
+              {
+                "_Type_": "EntityEffectSystem_LightTagEffect",
+                "name": "Fresh",
+                "enabled": true,
+                "color": {
+                  "_Type_": "RGB",
+                  "r": 0.02415763,
+                  "g": 0.6938718,
+                  "b": 0.1384316},
+                "useTemperature": false,
+                "colorTemperature": 6500.0,
+                "diffuseMultiplier": 0.015,
+                "viewDistanceRatio": 4,
+                "castShadow": false,
+                "shadowQualityCap": "Full",
+                "maxShadowCastDistance": 0.0,
+                "ambient": false,
+                "softBulb": true,
+                "fakeLight": false,
+                "affectsFog": true,
+                "affectsGI": true,
+                "affectThisAreaOnly": false,
+                "holographic": false,
+                "visibleThirdPerson": true,
+                "visibleFirstPerson": true,
+                "distantImposter": true,
+                "visibleShadows": true,
+                "lightImportance": "Standard",
+                "lightType": {
+                  "_Type_": "EntityEffectSystem_LightType_PointLight",
+                  "radius": 2.0,
+                  "attenuationBulbSize": 0.25,
+                  "attenuationTweak": 1.0},
+                "lightLink": {
+                  "_Type_": "EntityEffectSystem_LightLink",
+                  "subMeshName": "",
+                  "linkIgnoresColor": false},
+                "flare": {
+                  "_Type_": "LightFlareParams",
+                  "flareEnabled": false,
+                  "flare": "",
+                  "flareFOV": 360.0,
+                  "flareScale": 1.0,
+                  "attachToSun": false},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.25}},
+                  "offsetParameter": null},
+                "propertyLinks": [
+                  {
+                    "_Type_": "EntityEffectSystem_LightPropertyLink",
+                    "modifiers": [
+                      {
+                        "_Type_": "SEntityEffectSystem_PatternModifier",
+                        "startDelay": 0.0,
+                        "maximumValue": 1.0,
+                        "duration": 3.0,
+                        "patternCurve": {
+                          "_Type_": "BezierCurve",
+                          "points": [
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.05220884,
+                              "y": 0.4680851},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.05220884,
+                              "y": 0.680851},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.04518073,
+                              "y": 0.9136383},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.07080322,
+                              "y": 0.9122978},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0964257,
+                              "y": 0.9109575},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.114257,
+                              "y": 0.7879362},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1394779,
+                              "y": 0.7845532},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1646988,
+                              "y": 0.7811702},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1648594,
+                              "y": 0.6569574},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1928916,
+                              "y": 0.6584255},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2209237,
+                              "y": 0.6598936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.243012,
+                              "y": 0.8088298},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2798795,
+                              "y": 0.8088085},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.316747,
+                              "y": 0.8087872},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3795582,
+                              "y": 0.9598936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3995984,
+                              "y": 0.9595745},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4196385,
+                              "y": 0.9592553},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4618072,
+                              "y": 0.861383},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4819277,
+                              "y": 0.8617021},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5020482,
+                              "y": 0.8620213},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5277109,
+                              "y": 0.699},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.546004,
+                              "y": 0.7049787},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5642972,
+                              "y": 0.7109575},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5863052,
+                              "y": 0.8932979},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6024097,
+                              "y": 0.8957447},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6185141,
+                              "y": 0.8981915},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6265462,
+                              "y": 0.7896808},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6546586,
+                              "y": 0.7896808},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6827711,
+                              "y": 0.7896808},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.694739,
+                              "y": 0.955},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7248996,
+                              "y": 0.9574468},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7550603,
+                              "y": 0.9598936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7671084,
+                              "y": 0.9173404},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7971888,
+                              "y": 0.8978723},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8272691,
+                              "y": 0.8784043},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8180321,
+                              "y": 0.7283617},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8534538,
+                              "y": 0.7279787},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8888755,
+                              "y": 0.7275957},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9116867,
+                              "y": 0.9024468},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9418072,
+                              "y": 0.9067021},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9719277,
+                              "y": 0.9109575},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9516867,
+                              "y": 0.9875532},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.048313,
+                              "y": 1.012447}],
+                          "useLUT": false}}],
+                    "parameterName": null,
+                    "lightProperty": "Intensity"}],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cef7444e-ba6e-4a49-ba3c-f56e1511b231",
+                  "_RecordId_": "cef7444e-ba6e-4a49-ba3c-f56e1511b231"}},
+              {
+                "_Type_": "EntityEffectSystem_LightTagEffect",
+                "name": "Damaged",
+                "enabled": true,
+                "color": {
+                  "_Type_": "RGB",
+                  "r": 0.02415763,
+                  "g": 0.6938718,
+                  "b": 0.1384316},
+                "useTemperature": false,
+                "colorTemperature": 1000.0,
+                "diffuseMultiplier": 0.03,
+                "viewDistanceRatio": 5,
+                "castShadow": false,
+                "shadowQualityCap": "Full",
+                "maxShadowCastDistance": 0.0,
+                "ambient": false,
+                "softBulb": true,
+                "fakeLight": false,
+                "affectsFog": true,
+                "affectsGI": true,
+                "affectThisAreaOnly": false,
+                "holographic": false,
+                "visibleThirdPerson": true,
+                "visibleFirstPerson": true,
+                "distantImposter": true,
+                "visibleShadows": true,
+                "lightImportance": "Standard",
+                "lightType": {
+                  "_Type_": "EntityEffectSystem_LightType_PointLight",
+                  "radius": 2.0,
+                  "attenuationBulbSize": 0.25,
+                  "attenuationTweak": 1.0},
+                "lightLink": {
+                  "_Type_": "EntityEffectSystem_LightLink",
+                  "subMeshName": "",
+                  "linkIgnoresColor": false},
+                "flare": {
+                  "_Type_": "LightFlareParams",
+                  "flareEnabled": false,
+                  "flare": "",
+                  "flareFOV": 360.0,
+                  "flareScale": 1.0,
+                  "attachToSun": false},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.25}},
+                  "offsetParameter": null},
+                "propertyLinks": [
+                  {
+                    "_Type_": "EntityEffectSystem_LightPropertyLink",
+                    "modifiers": [
+                      {
+                        "_Type_": "SEntityEffectSystem_PatternModifier",
+                        "startDelay": 0.0,
+                        "maximumValue": 1.0,
+                        "duration": 2.0,
+                        "patternCurve": {
+                          "_Type_": "BezierCurve",
+                          "points": [
+                            {
+                              "_Type_": "Vec2",
+                              "x": -0.04210092,
+                              "y": 0.2234238},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0,
+                              "y": 0.25},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.04210092,
+                              "y": 0.2765762},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.04518073,
+                              "y": 0.9136383},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.07080322,
+                              "y": 0.9122978},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0964257,
+                              "y": 0.9109575},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.114257,
+                              "y": 0.7879362},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1394779,
+                              "y": 0.7845532},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1646988,
+                              "y": 0.7811702},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1648594,
+                              "y": 0.6569574},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1928916,
+                              "y": 0.6584255},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2209237,
+                              "y": 0.6598936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.243012,
+                              "y": 0.8088298},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2798795,
+                              "y": 0.8088085},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.316747,
+                              "y": 0.8087872},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3795582,
+                              "y": 0.9598936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3995984,
+                              "y": 0.9595745},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4196385,
+                              "y": 0.9592553},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4618072,
+                              "y": 0.861383},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4819277,
+                              "y": 0.8617021},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5020482,
+                              "y": 0.8620213},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5277109,
+                              "y": 0.699},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.546004,
+                              "y": 0.7049787},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5642972,
+                              "y": 0.7109575},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5863052,
+                              "y": 0.8932979},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6024097,
+                              "y": 0.8957447},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6185141,
+                              "y": 0.8981915},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6265462,
+                              "y": 0.7896808},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6546586,
+                              "y": 0.7896808},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6827711,
+                              "y": 0.7896808},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.694739,
+                              "y": 0.955},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7248996,
+                              "y": 0.9574468},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7550603,
+                              "y": 0.9598936},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7671084,
+                              "y": 0.9173404},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7971888,
+                              "y": 0.8978723},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8272691,
+                              "y": 0.8784043},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8180321,
+                              "y": 0.7283617},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8534538,
+                              "y": 0.7279787},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8888755,
+                              "y": 0.7275957},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9116867,
+                              "y": 0.9024468},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9418072,
+                              "y": 0.9067021},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9719277,
+                              "y": 0.9109575},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.955691,
+                              "y": 0.2988807},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.0,
+                              "y": 0.25},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.044309,
+                              "y": 0.2011193}],
+                          "useLUT": false}}],
+                    "parameterName": null,
+                    "lightProperty": "Intensity"}],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.daf8c7b7-5e14-4620-8316-3b788181b827",
+                  "_RecordId_": "daf8c7b7-5e14-4620-8316-3b788181b827"}},
+              {
+                "_Type_": "EntityEffectSystem_LightTagEffect",
+                "name": "Compromised",
+                "enabled": true,
+                "color": {
+                  "_Type_": "RGB",
+                  "r": 0.02415763,
+                  "g": 0.6938718,
+                  "b": 0.1384316},
+                "useTemperature": false,
+                "colorTemperature": 6500.0,
+                "diffuseMultiplier": 0.15,
+                "viewDistanceRatio": 5,
+                "castShadow": false,
+                "shadowQualityCap": "Full",
+                "maxShadowCastDistance": 0.0,
+                "ambient": false,
+                "softBulb": true,
+                "fakeLight": false,
+                "affectsFog": true,
+                "affectsGI": true,
+                "affectThisAreaOnly": false,
+                "holographic": false,
+                "visibleThirdPerson": true,
+                "visibleFirstPerson": true,
+                "distantImposter": true,
+                "visibleShadows": true,
+                "lightImportance": "Standard",
+                "lightType": {
+                  "_Type_": "EntityEffectSystem_LightType_PointLight",
+                  "radius": 2.0,
+                  "attenuationBulbSize": 0.25,
+                  "attenuationTweak": 1.0},
+                "lightLink": {
+                  "_Type_": "EntityEffectSystem_LightLink",
+                  "subMeshName": "",
+                  "linkIgnoresColor": false},
+                "flare": {
+                  "_Type_": "LightFlareParams",
+                  "flareEnabled": false,
+                  "flare": "",
+                  "flareFOV": 360.0,
+                  "flareScale": 1.0,
+                  "attachToSun": false},
+                "attachmentSettings": {
+                  "_Type_": "SEntityEffectSystem_Attachment_EntitySlot",
+                  "offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.0,
+                      "z": 0.25}},
+                  "offsetParameter": null},
+                "propertyLinks": [
+                  {
+                    "_Type_": "EntityEffectSystem_LightPropertyLink",
+                    "modifiers": [
+                      {
+                        "_Type_": "SEntityEffectSystem_PatternModifier",
+                        "startDelay": 0.0,
+                        "maximumValue": 1.0,
+                        "duration": 3.0,
+                        "patternCurve": {
+                          "_Type_": "BezierCurve",
+                          "points": [
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.05220884,
+                              "y": 0.4680851},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.05220884,
+                              "y": 0.680851},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.04003554,
+                              "y": 0.9312516},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.06525643,
+                              "y": 0.9278685},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.09047733,
+                              "y": 0.9244856},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.07301002,
+                              "y": 0.1568941},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1010422,
+                              "y": 0.1583622},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1290743,
+                              "y": 0.1598303},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1157775,
+                              "y": 0.550922},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1305129,
+                              "y": 0.546461},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1452482,
+                              "y": 0.5420001},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1483766,
+                              "y": 0.6156264},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1852441,
+                              "y": 0.6156051},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2221116,
+                              "y": 0.6155838},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.1915592,
+                              "y": 0.2542717},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2147147,
+                              "y": 0.2565021},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2378702,
+                              "y": 0.2587326},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2547106,
+                              "y": 0.9278685},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2757611,
+                              "y": 0.9211772},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.2968115,
+                              "y": 0.9144858},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3336076,
+                              "y": 0.9772576},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3536478,
+                              "y": 0.9769385},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.373688,
+                              "y": 0.9766193},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3452276,
+                              "y": 0.2431194},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3704881,
+                              "y": 0.2475803},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3957487,
+                              "y": 0.2520412},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.3966787,
+                              "y": 0.6844301},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4167992,
+                              "y": 0.6847491},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4369197,
+                              "y": 0.6850684},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4511322,
+                              "y": 0.3218979},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4694253,
+                              "y": 0.3278766},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4877185,
+                              "y": 0.3338554},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.4891066,
+                              "y": 0.9834136},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5052111,
+                              "y": 0.9858603},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5213155,
+                              "y": 0.9883072},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5388919,
+                              "y": 0.6334487},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5641524,
+                              "y": 0.6289878},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5894129,
+                              "y": 0.6245269},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5676156,
+                              "y": 0.8431113},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.5957281,
+                              "y": 0.8431113},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6238406,
+                              "y": 0.8431113},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6020432,
+                              "y": 0.4460906},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6251987,
+                              "y": 0.4438602},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6483542,
+                              "y": 0.4416297},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6645046,
+                              "y": 0.5640883},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.6946653,
+                              "y": 0.5665351},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.724826,
+                              "y": 0.5689819},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7388712,
+                              "y": 0.1650535},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7641318,
+                              "y": 0.167284},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7893924,
+                              "y": 0.1695144},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7602857,
+                              "y": 0.5803009},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.7957075,
+                              "y": 0.5799178},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8311291,
+                              "y": 0.5795348},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8504387,
+                              "y": 0.3457203},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8693841,
+                              "y": 0.3412593},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8883295,
+                              "y": 0.3367984},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8666292,
+                              "y": 0.6604198},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8967497,
+                              "y": 0.6646751},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9268702,
+                              "y": 0.6689305},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.8988547,
+                              "y": 0.8698767},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9283254,
+                              "y": 0.8676463},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.957796,
+                              "y": 0.8654159},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 0.9514809,
+                              "y": 0.9702471},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.0,
+                              "y": 1.0},
+                            {
+                              "_Type_": "Vec2",
+                              "x": 1.048519,
+                              "y": 1.029753}],
+                          "useLUT": false}}],
+                    "parameterName": null,
+                    "lightProperty": "Intensity"}],
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.693291dc-d148-4444-9132-695ed3626c18",
+                  "_RecordId_": "693291dc-d148-4444-9132-695ed3626c18"}}],
+            "triggerEffects": []},
+          "uiOwnerEffects": null,
+          "sequencerTags": []},
+        "staticValues": [],
+        "staticColors": [],
+        "tagsToEnableOnLoad": [],
+        "triggersToEnableOnLoad": []},
+      {
+        "_Type_": "EntityPhysicalAudioParams",
+        "collisionTriggers": [
+          {
+            "_Type_": "PhysicalAudioCollisionTrigger",
+            "trigger": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": "Play_PHOB_Med_Cargo_Box_Metal_a_Impacts"},
+            "oneShotMinPlayTime": 0.25,
+            "attachToObject": true},
+          {
+            "_Type_": "PhysicalAudioCollisionTrigger",
+            "trigger": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": ""},
+            "oneShotMinPlayTime": 0.25,
+            "attachToObject": false}],
+        "slideStartTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PHOB_Med_Cargo_Box_Metal_a_Sliding"},
+        "slideStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_PHOB_Med_Cargo_Box_Metal_a_Sliding"},
+        "rollStartTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "rollStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "movementStartTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PHOB_Med_Metal_Container_Handling_Loop"},
+        "movementStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_PHOB_Med_Metal_Container_Handling_Loop"},
+        "pickupTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PHOB_Med_Cargo_Box_Metal_a_Pickup"},
+        "pickFromOwnerTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "dropTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "placeTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PHOB_Med_Cargo_Box_Metal_a_Place"},
+        "tractorBeamPickupTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "tractorBeamDropTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "detachBreakTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "playerCausedDetachBreakTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "rtpcSlideVelocity": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_Velocity"},
+        "rtpcMassSelf": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_MassSelf"},
+        "rtpcMassOther": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_MassOther"},
+        "rtpcDampening": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_Damping"},
+        "rtpcRollVelocity": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_RollVelocity"},
+        "rtpcHealth": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_Health"},
+        "rtpcMovement": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_Movement"},
+        "rtpcRotation": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_Rotation"},
+        "rtpcTimeSinceLastOneshot": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_TimeSinceLastOneshot"},
+        "rtpcMomentum": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_Momentum"},
+        "rtpcCarried": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "PhysicalAudio_CarryState"},
+        "rtpcSize": {
+          "_Type_": "AudioRtpc",
+          "rtpc": ""},
+        "minimumImpulseContinuous": 25.0,
+        "minimumImpulseTransient": 25.0,
+        "minimumVelocityNoImpulse": 100.0,
+        "slideThreshold": 1.0,
+        "rollThreshold": 0.1,
+        "momentumScale": 1.0,
+        "rollVelocityScale": 1.0,
+        "useAABBCentre": true,
+        "oneShotTag": null,
+        "oneShotCooldown": 0.2,
+        "dragOnly": false},
+      {
+        "_Type_": "ResourceContainer",
+        "capacity": {
+          "_Type_": "SCentiCargoUnit",
+          "centiSCU": 1},
+        "immutable": true,
+        "mutabilityLevel": "ReadWrite",
+        "generateRandomQuality": false,
+        "inclusiveResources": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ProcyonCanister_Time",
+            "_RecordId_": "1396faad-eb0c-4ed1-be34-571ca7ca159e"}],
+        "exclusiveResources": [
+          null,
+          null],
+        "inclusiveGroups": [],
+        "exclusiveGroups": [],
+        "defaultComposition": [
+          {
+            "_Type_": "ResourceContainerDefaultCompositionEntry",
+            "entry": {
+              "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+              "_RecordName_": "ResourceType.ProcyonCanister_Time",
+              "_RecordId_": "1396faad-eb0c-4ed1-be34-571ca7ca159e"},
+            "weight": 1.0}],
+        "defaultCompositionFillFactor": 1.0,
+        "hideFromUI": false},
+      {
+        "_Type_": "SDegradationParams",
+        "StopDegradingIfDestroyed": false,
+        "accumulators": [
+          {
+            "_Type_": "SWearAccumulatorParams",
+            "InitialAccumulationRatio": 0.0,
+            "AccumulateWhenUnstreamed": false,
+            "AccumulateOnlyAfterTractorBeam": false,
+            "AccumulateOnlyWhenAttached": false,
+            "StopAccumulationWhenAttached": true,
+            "AccumulationEventThreshold": 1.0,
+            "PortTags": "TimeCage",
+            "RequiredPortTags": "TimeCage",
+            "MaxLifetimeHours": 0.4,
+            "UseAsTimer": false,
+            "InitialAgeRatio": 0.0,
+            "InitialUsageRatio": 0.0,
+            "AtmosphereMultiplier": 1.0,
+            "HeatMultipliers": {
+              "_Type_": "HeatDegradation",
+              "NormalTemperatureMultiplier": 1.0,
+              "OverheatTemperatureMultiplier": 1.0},
+            "FunctionalityMultiplier": {
+              "_Type_": "FunctionalityDegradation",
+              "FunctionalityMultiplyCurve": {
+                "_Type_": "BezierCurve",
+                "points": [],
+                "useLUT": false},
+              "UsePowerRatio": true},
+            "DamageConversionRate": 0.01,
+            "EffectCurve": {
+              "_Type_": "BezierCurve",
+              "points": [],
+              "useLUT": false},
+            "degradeFromParentParams": null,
+            "DegradationPercentageRTPC": {
+              "_Type_": "AudioRtpc",
+              "rtpc": ""}}]},
+      {
+        "_Type_": "SHealthComponentParams",
+        "Health": 45.0,
+        "DamageCap": 0.0,
+        "DamageResistances": {
+          "_Type_": "DamageResistance",
+          "IgnoreMeleeDamage": false,
+          "PhysicalResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "EnergyResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "DistortionResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 0.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "ThermalResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "BiochemicalResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 1.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0},
+          "StunResistance": {
+            "_Type_": "DamageResistanceEntry",
+            "Multiplier": 0.0,
+            "Threshold": 0.0,
+            "DamageCap": 0.0}},
+        "hitManipulationParams": null,
+        "InitialDamage": null,
+        "SerializedDamageMapPath": "",
+        "ClientOnly": false,
+        "UnlockInteractionsOnDeath": false,
+        "PushDamageUpPartsHeirarchyWhenDead": true,
+        "DetachFromItemPortOnDeath": false,
+        "DetachFromEntityOnDeath": false,
+        "DestroySelfOnDeath": false,
+        "DestroyChildrenOnDeath": false,
+        "PropagateExplosionDamageToChildren": false,
+        "UseDirtShaderForDamage": false,
+        "UpdateObservableStatus": false,
+        "HealthLevelStates": [],
+        "DestroyedGeometryTag": "",
+        "ExplodedGeometryTag": "",
+        "DebrisGeometryTag": "Destroyed",
+        "ExplosionDelayTime": 0.0,
+        "ExplosionRandomDelayRange": 0.0,
+        "ExplosionBone": "",
+        "DeathExplosionParams": {
+          "_Type_": "ExplosionParams",
+          "friendlyFire": "None",
+          "minRadius": 1.25,
+          "maxRadius": 2.5,
+          "soundRadius": 50.0,
+          "minPhysRadius": 1.25,
+          "maxPhysRadius": 2.5,
+          "angle": 0.0,
+          "angleVertical": 0.0,
+          "explosionFront": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "explosionUp": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0},
+          "explosionZone": "AdamHosted",
+          "pressure": 100.0,
+          "holeSize": 0.0,
+          "terrainHoleSize": 0.0,
+          "maxblurdist": 0.0,
+          "effectScale": 1.0,
+          "useRandomScale": false,
+          "effectScaleMin": 1.0,
+          "effectScaleMax": 1.0,
+          "damage": {
+            "_Type_": "DamageInfo",
+            "DamagePhysical": 25.0,
+            "DamageEnergy": 0.0,
+            "DamageDistortion": 0.0,
+            "DamageThermal": 0.0,
+            "DamageBiochemical": 0.0,
+            "DamageStun": 100.0},
+          "flashbangParams": null,
+          "shockwaveParams": null,
+          "fragmentParams": null,
+          "hitType": "explosion",
+          "effect": {
+            "_Type_": "GlobalResourceParticle",
+            "path": "ffd5ca92-efd1-1904-1af6-ffb20d8fb209|Damage/canister_explosions.explosion_canister_timed"},
+          "failedEffect": {
+            "_Type_": "GlobalResourceParticle",
+            "path": ""},
+          "customMaterialEffect": "",
+          "sound": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_MCAN_Destruction_Medium_Procyon_Canisters_Time_Sensitive_Explosion"},
+          "failedSound": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_MCAN_Destruction_Medium_Procyon_Canisters_Time_Sensitive_Explosion"},
+          "materialEffectEntry": null,
+          "Offset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "Direction": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 1.0},
+          "particleStrength": -1.0,
+          "radarContactType": null},
+        "DeathGasComposition": [],
+        "InteractionLocks": [],
+        "IsSalvagable": true,
+        "IsRepairable": true,
+        "SalvageDamageModifier": 1.0,
+        "MirrorSalvageHit": false,
+        "DisableMaterialDamage": false,
+        "sequencerTasks": [],
+        "maelstromEvents": [],
+        "alwaysPropagateHitToParent": false,
+        "duplicateHitToParent": false,
+        "sendOnDestructionEventToMasterRootContainer": false,
+        "applyExplosionFalloffFromOrigin": true},
+      {
+        "_Type_": "SCInteractionStateGameplayTriggerComponentParams",
+        "targetPresets": [],
+        "onInteractionStateChangeTriggers": [
+          {
+            "_Type_": "SOnInteractionStateChangeTriggers",
+            "targetState": "_PointsTo_:ptr:15",
+            "gameplayTriggers": [
+              {
+                "_Type_": "SSetHealthGameplayTrigger",
+                "Health": {
+                  "_Type_": "TriggeredHealthValue",
+                  "healthValue": 0.0}}]}],
+        "onInteractionSuccessTriggers": [],
+        "onInteractionFailedTriggers": []},
+      {
+        "_Type_": "SEntityComponentSequencerParams",
+        "sequences": [
+          {
+            "_Pointer_": "ptr:12",
+            "_Type_": "SSequencerDefSequenceParams",
+            "name": "SetState_01_Fresh",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:20",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]},
+          {
+            "_Type_": "SSequencerDefSequenceParams",
+            "name": "SetState_02_Weathered",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:21",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]},
+          {
+            "_Type_": "SSequencerDefSequenceParams",
+            "name": "SetState_03_Critical",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:22",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]},
+          {
+            "_Type_": "SSequencerDefSequenceParams",
+            "name": "SetState_04_Dead",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:23",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]}],
+        "resetSequence": null},
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""},
+      {
+        "_Type_": "UIBindingsConsumerEntityComponentParams",
+        "linkToPort": false},
+      {
+        "_Type_": "UIOwnerEntityComponentParams",
+        "startOpen": true,
+        "areScreens3D": false,
+        "areSounds3D": false,
+        "hasActions": false,
+        "element": "file://./../../../../../../../libs/foundry/records/ui/uielements/buildingblocks.json",
+        "domainName": "global",
+        "loadDistance": 2.0,
+        "moviePath": "",
+        "variantName": "",
+        "invariantName": "",
+        "movieAutoPlay": false,
+        "loopMovie": false,
+        "forceFlashColourCorrection": true,
+        "ignoreTrackviewUnloadRequests": false,
+        "reflectLocalStateMachine": true,
+        "reflectLinkedStateMachines": false,
+        "visibiltyTags": [],
+        "graph": null},
+      {
+        "_Type_": "UIRenderToTextureEntityComponentParams",
+        "directRenderStage": "None",
+        "compositeMaterialName": "",
+        "hideRenderNodeOnUnload": false,
+        "aspectRatioOverride": 0.0,
+        "interactionDistance": 2.0,
+        "transparentListDepthBias": 0.0,
+        "renderFlashBeforeCamera": false,
+        "fieldOfView": 90.0,
+        "nearClip": 0.02,
+        "farClip": 65536.0,
+        "renderType": "FORWARD",
+        "fallbackTextureOnOnload": "",
+        "secondaryTarget": null,
+        "grabCameraControlParams": null,
+        "pickableCollision": "Opaque",
+        "pickableTag": null,
+        "runtimeImageSource": "UserInterface",
+        "runtimeImageToAggregate": false},
+      {
+        "_Type_": "UIBuildingBlocksEntityComponentParams",
+        "layers": [
+          {
+            "_Type_": "BuildingBlocksLayer",
+            "layerName": "StandardView",
+            "renderTarget": "All",
+            "defaultView": "_PointsTo_:ptr:24",
+            "views": [
+              {
+                "_Pointer_": "ptr:24",
+                "_Type_": "BuildingBlocksView",
+                "name": "BoxScreen",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/i_interactivescreens/ind/i_ind_crate_timed_a.json",
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}}]}],
+        "enableFullScreenMouse": false,
+        "defaultStyle": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uihi_a.json",
+        "defaultPreviewScene": null},
+      {
+        "_Type_": "UIBindingsInteractionsComponentParams",
+        "interactionDistance": 50.0},
+      {
+        "_Type_": "SInteractionLinkParams",
+        "vehicleItemPortInteractionLinks": [],
+        "linkPlugs": []},
+      {
+        "_Type_": "SItemPortContainerComponentParams",
+        "masterController": null,
+        "Ports": [
+          {
+            "_Type_": "SItemPortDef",
+            "Name": "screen",
+            "DisplayName": "@LOC_EMPTY",
+            "PortTags": "",
+            "RequiredPortTags": "",
+            "Flags": "",
+            "Tags": [],
+            "OnAttachTags": [],
+            "PropagateOnAttachTagsToHierarchy": false,
+            "MinSize": 0,
+            "MaxSize": 0,
+            "MaxAggregateAttachmentHeight": -1.0,
+            "defaultItem": {
+              "_Type_": "SItemPortDefaultItemDef",
+              "itemPort": "",
+              "entityClass": null,
+              "childItems": []},
+            "gridBehavior": "Both",
+            "PitchLimit": {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            "YawLimit": {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            "RollLimit": {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            "InteractionBaseSize": 2.0,
+            "InteractionPointSize": -1.0,
+            "InteractionPointOffset": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0},
+            "OverrideAttachedInteractionPointsSize": false,
+            "DefaultWeaponGroup": "UNDEFINED",
+            "AttachmentPoints": [],
+            "controllableTag": "",
+            "control": null,
+            "Connections": [],
+            "Types": [],
+            "Extension": null,
+            "AttachmentImplementation": {
+              "_Type_": "SItemPortDefAttachmentImplementationEntity",
+              "usePhysicalAttachment": false,
+              "useEntityAttachment": true,
+              "useExteriorAttachment": false,
+              "usePhysicalParent": false,
+              "useLogicalAttachment": false,
+              "constraintParams": {
+                "_Type_": "SAttachmentConstraintParams",
+                "damping": 0.0,
+                "noSelfCollisions": true,
+                "maxPullForce": 0.0,
+                "maxBendTorque": 0.0,
+                "constrainToLine": false,
+                "constrainToPlane": false,
+                "constrainFully": true,
+                "useWorldConstraintPosition": false,
+                "noRotation": true,
+                "xMin": 0.0,
+                "xMax": 0.0,
+                "yzMax": 0.0,
+                "constraintHelper": "",
+                "constraintMaintainOrientation": false},
+              "hangarPort": false,
+              "createExteriorShadowPhysicalEntity": false,
+              "Helper": {
+                "_Type_": "SItemPortDefHelperNode",
+                "Tags": "",
+                "Helper": {
+                  "_Type_": "SItemPortDefHelper",
+                  "Name": "",
+                  "Offset": {
+                    "_Type_": "QuatT",
+                    "Rotation": {
+                      "_Type_": "Ang3",
+                      "x": 90.0,
+                      "y": 0.0,
+                      "z": 0.0},
+                    "Position": {
+                      "_Type_": "Vec3",
+                      "x": 0.0,
+                      "y": 0.25,
+                      "z": 0.5}},
+                  "ItemOffsetHelperName": "",
+                  "SimulationParams": null},
+                "SubHelpers": []}},
+            "Breakable": {
+              "_Type_": "SItemPortBreakable",
+              "YoungsModulus": 0.0,
+              "BreakStrain": 0.0,
+              "YieldStrain": 0.0,
+              "Breakable": false},
+            "interactions": {
+              "_Type_": "SItemPortInteractionsParams",
+              "detach": null,
+              "allowPlaceInteractionFromInventory": false,
+              "placeInteractionBlockText": "@interaction_condition_placeOnItemport_noMatchingItem"},
+            "linkedItemPorts": [],
+            "resourceLinkToParent": false,
+            "useHelperAsInteractionPointName": false,
+            "itemPortRules": [],
+            "detachDirection": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": -1.0}}],
+        "PortFlags": "",
+        "PortTags": "",
+        "RequiredItemTags": "",
+        "InternalResourceLinks": [],
+        "InternalHardpointLinks": [],
+        "LinkAllItemsToResourceNetwork": false,
+        "cheatResourceNetworkUpdate": false,
+        "doorsIgnorePower": false,
+        "destroyEntitiesOnItemportList": [],
+        "resourceNetworkPowerPools": {
+          "_Type_": "ResourceNetworkPowerPoolSetup",
+          "itemPools": [],
+          "maxDefaultDistribution": false}}]}}

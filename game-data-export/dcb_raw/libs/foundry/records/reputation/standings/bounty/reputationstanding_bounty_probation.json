@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Bounty_Probation",
+  "_RecordId_": "fafd3813-1de7-46d4-b272-e66100b92eea",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "BountyHunter_Probation",
+    "description": "desc",
+    "displayName": "@RepStanding_Bounty_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_bountyhunter_3.svg",
+    "minReputation": 1,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

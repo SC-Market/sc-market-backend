@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableComposition.GroundVehicle_Composition_Carinite",
+  "_RecordId_": "4a907bfe-8a0b-4608-b6e5-793ec1ab722d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_carinite",
+    "minimumDistinctElements": 1,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/minableelement_groundvehicle_carinite.json",
+        "minPercentage": 50.0,
+        "maxPercentage": 100.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0}]}}

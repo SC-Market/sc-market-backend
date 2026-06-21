@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.QuantumTravelCalibration04",
+  "_RecordId_": "fee6124c-5aac-4c27-be01-3c97d4564306",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Quantum_Travel_Calibration_Title",
+    "BodyText": "@Hints_Quantum_Travel_Calibration4",
+    "BodyTextGamePad": "@Hints_Quantum_Travel_Calibration4",
+    "BodyTextJoystick": "@Hints_Quantum_Travel_Calibration4",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

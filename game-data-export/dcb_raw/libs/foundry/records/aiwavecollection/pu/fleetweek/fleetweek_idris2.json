@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "AIWaveCollection.FleetWeek_Idris2",
+  "_RecordId_": "7826b09f-7ac3-4d92-9186-37429b38c653",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Idris_2",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../libs/foundry/records/entities/spaceships/aegs_idris_m_pu_ai_uee.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": -1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": null,
+            "cargoManifests": [],
+            "aiDamageModifiersOverride": null}]}]}}

@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ActorStanceConfig.ActorStanceConfig_NPC_Webhound",
+  "_RecordId_": "4830b96f-ad9c-4c2e-93c0-53c2c22a9adb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorStanceConfig",
+    "stanceSpeeds": [
+      "file://./../../../../libs/foundry/records/actor/stanceinfo/creatures/webhound/speeds/webhoundstand.json"],
+    "stanceDimensions": [
+      "file://./../../../../libs/foundry/records/actor/stanceinfo/creatures/webhound/dimensions/webhoundstand.json"]}}

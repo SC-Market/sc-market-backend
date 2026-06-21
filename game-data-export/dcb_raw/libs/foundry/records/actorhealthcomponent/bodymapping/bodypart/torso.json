@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "BodyPart.torso",
+  "_RecordId_": "cbe3a3e8-5035-4772-acb7-014617c6b03a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BodyPart",
+    "partHealthStat": "HealthTorso",
+    "partWearStat": "WearTorso",
+    "jointName": "Torso"}}

@@ -1,0 +1,132 @@
+{
+  "_RecordName_": "AudioSignalList.MiningUI",
+  "_RecordId_": "968fbfc9-8500-41c1-beea-40730bfaea80",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioSignalList",
+    "Signals": [
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Activate_Mode_Extraction",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_SSME_Mining_Switch_Mode"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Activate_Mode_Laser",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_SSME_Mining_Switch_Mode"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Red_Light_Start",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_MCMN_Scan_Interface_Mining_Red_Light_Loop"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Red_Light_Stop",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Stop_UI_MCMN_Scan_Interface_Mining_Red_Light_Loop"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Green_Light_Start",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_MCMN_Scan_Interface_Mining_Green_Light_Loop"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Green_Light_Stop",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Loading_Bar_Start",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_MCMN_Scan_Interface_Mining_Loading_Bar_Loop"}],
+        "switches": [],
+        "rtpcs": [
+          {
+            "_Type_": "AudioSignalRtpc",
+            "rtpc": "Mining_UI_Loading_Bar",
+            "defaultValue": 0.0,
+            "global": false}]},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Loading_Bar_Stop",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Stop_UI_MCMN_Scan_Interface_Mining_Loading_Bar_End"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Elements_Increase",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Container_Status_Start",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Container_Status_Stop",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Extraction_Throughput_Start",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Extraction_Throughput_Stop",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Mode_Start",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_MCMN_Scan_Interface_Radar_Start_Up"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mining_Mode_Stop",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []}]}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "InnerThought_ConversationSystemConfig.ConversationHologramConfig",
+  "_RecordId_": "68f370b8-709e-492f-92da-a604c2e5f4a8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_ConversationSystemConfig",
+    "minDistance": 0.2,
+    "maxDistance": 0.8,
+    "maxHorizontalAngle": 60.0,
+    "maxVerticalAngle": 30.0,
+    "rotation": {
+      "_Type_": "Deg3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "bone": "Hips",
+    "boneOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.9},
+    "rotationRate": 1.0,
+    "translationRate": 1.0,
+    "innerThought": "file://./../../../../../libs/foundry/records/ui/innerthought/params/innerthought_params.conversationparams.json"}}

@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.RareShipMineable_Cluster",
+  "_RecordId_": "cd074871-2f6d-45c1-a88f-38b21ef02309",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 100.0,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.1,
+        "minSize": 4,
+        "maxSize": 4,
+        "minProximity": 1.0,
+        "maxProximity": 12.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.3,
+        "minSize": 3,
+        "maxSize": 3,
+        "minProximity": 1.0,
+        "maxProximity": 8.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.6,
+        "minSize": 2,
+        "maxSize": 2,
+        "minProximity": 1.0,
+        "maxProximity": 6.0}]}}

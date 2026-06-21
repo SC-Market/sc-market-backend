@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_ShipCombat_Rank1_HeadHunters",
+  "_RecordId_": "e36004cc-3ac6-477a-9087-abb6da7938d8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "ShipCombat_Rank1_HeadHunters",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank1",
+    "perkDescription": "@RepStanding_Perk_NewMission",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_security_2.svg",
+    "minReputation": 1,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

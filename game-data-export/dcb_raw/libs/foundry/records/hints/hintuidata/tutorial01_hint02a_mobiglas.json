@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial01_Hint02a_Mobiglas",
+  "_RecordId_": "726e3c87-d364-4a2b-9858-dfe728d8e788",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut01_Hint02a_Mobiglas_Title",
+    "BodyText": "@Tut01_Hint02a_Mobiglas",
+    "BodyTextGamePad": "@Tut01_Hint02a_Mobiglas",
+    "BodyTextJoystick": "@Tut01_Hint02a_Mobiglas",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

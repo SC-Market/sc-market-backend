@@ -1,0 +1,3235 @@
+{
+  "_RecordName_": "PlayerChoice_PITConfig.PlayerChoicePersonalThought",
+  "_RecordId_": "e27ecc74-a18c-4758-9cb6-b2c97822fd24",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "PlayerChoice_PITConfig",
+    "maxMenuSize": 8,
+    "showDisabledActions": false,
+    "cameraEffects": [
+      {
+        "_Type_": "PersonalThoughtCameraEffectsParams",
+        "openingDelay": 0.0,
+        "closingDelay": 0.0,
+        "backgroundExposure": 0.0,
+        "dynamicCameraEffectsRecord": null},
+      {
+        "_Type_": "PersonalThoughtCameraEffectsParams",
+        "openingDelay": 0.0,
+        "closingDelay": 0.0,
+        "backgroundExposure": 0.0,
+        "dynamicCameraEffectsRecord": "file://./../../../../libs/foundry/records/dynamiccameraeffects/dynamiccameraeffects.personalinnerthoughtdefault.json"},
+      {
+        "_Type_": "PersonalThoughtCameraEffectsParams",
+        "openingDelay": 0.0,
+        "closingDelay": 0.0,
+        "backgroundExposure": 0.0,
+        "dynamicCameraEffectsRecord": "file://./../../../../libs/foundry/records/dynamiccameraeffects/personalinventorydefault.json"},
+      {
+        "_Type_": "PersonalThoughtCameraEffectsParams",
+        "openingDelay": 0.0,
+        "closingDelay": 0.0,
+        "backgroundExposure": 0.0,
+        "dynamicCameraEffectsRecord": "file://./../../../../libs/foundry/records/dynamiccameraeffects/externalinventorydefault.json"},
+      {
+        "_Type_": "PersonalThoughtCameraEffectsParams",
+        "openingDelay": 0.0,
+        "closingDelay": 0.0,
+        "backgroundExposure": -3.0,
+        "dynamicCameraEffectsRecord": "file://./../../../../libs/foundry/records/dynamiccameraeffects/personallootingdefault.json"},
+      {
+        "_Type_": "PersonalThoughtCameraEffectsParams",
+        "openingDelay": 0.0,
+        "closingDelay": 0.0,
+        "backgroundExposure": 0.0,
+        "dynamicCameraEffectsRecord": "file://./../../../../libs/foundry/records/dynamiccameraeffects/personalinventorydefaultv4.json"}],
+    "forceCloseActions": {
+      "_Type_": "PersonalThoughtForceCloseActionsParams",
+      "globalActions": {
+        "_Type_": "PersonalThoughtForceCloseActionList",
+        "actions": [
+          "player:mobiglas",
+          "player:v_starmap",
+          "player:thirdperson",
+          "spectator:spectate_toggle_thirdperson",
+          "spectator:spectate_gen_nextmode",
+          "view_director_mode:view_enable_camview_mode",
+          "vehicle_general:v_view_cycle_fwd",
+          "spaceship_view:v_view_cycle_fwd",
+          "default:toggle_chat",
+          "default:toggle_contact"]},
+      "actionsPerGameMode": [
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": [
+            "player:pl_hud_open_scoreboard",
+            "spaceship_hud:v_hud_open_scoreboard"]},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []},
+        {
+          "_Type_": "PersonalThoughtForceCloseActionList",
+          "actions": []}]},
+    "hologramParams": {
+      "_Type_": "PersonalThoughtHologramParams",
+      "mainColour": {
+        "_Type_": "RGBA",
+        "r": 0.01298303,
+        "g": 0.6239604,
+        "b": 1.0,
+        "a": 1.0},
+      "selectedColour": {
+        "_Type_": "RGBA",
+        "r": 0.004776954,
+        "g": 0.7011019,
+        "b": 0.5775805,
+        "a": 1.0},
+      "defaultHoloMaterialName": "Materials/item_selection/material_hologram_pit_unequippable.mtl",
+      "selectedHoloMaterialName": "Materials/item_selection/material_hologram_pit_equippable.mtl",
+      "animationParams": {
+        "_Type_": "PersonalThoughtHologramAnimationParams",
+        "selectedMaxScaling": 1.2,
+        "scalingAnimationDuration": 0.2,
+        "selectedMaxYaw": 45.0,
+        "rotationAnimationRate": 30.0,
+        "rotationRampDuration": 0.5}},
+    "softAttachColourParams": {
+      "_Type_": "HUDSilhouetteParams",
+      "color": {
+        "_Type_": "RGBA",
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0},
+      "occludedColor": {
+        "_Type_": "RGBA",
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0,
+        "a": 1.0},
+      "outlineWidth": 1.0,
+      "outlineOnly": false,
+      "tintObject": false},
+    "inventoryCameraConfig": "file://./../../../../libs/foundry/records/cameras/playerinventorycamerav4.json",
+    "root": {
+      "_Type_": "PersonalThoughtCategoryAction",
+      "text": "@ui_none",
+      "description": "@LOC_EMPTY",
+      "inputAction": {
+        "_Type_": "InputAction",
+        "actionName": "player_choice:pc_personal_thought"},
+      "optionArray": [
+        {
+          "_Type_": "PersonalThoughtInventoryMenu",
+          "text": "@ui_PersonalInventory",
+          "description": "@ui_PersonalInventory",
+          "inputAction": {
+            "_Type_": "InputAction",
+            "actionName": "player_choice:pc_pit_inventory"}},
+        {
+          "_Type_": "PersonalThoughtActionsMenu",
+          "text": "@PIT_Actions",
+          "description": "@PIT_Actions"},
+        {
+          "_Type_": "PersonalThoughtFavoriteSlot",
+          "text": "@ui_Favorite",
+          "description": "@ui_Favorite"},
+        {
+          "_Type_": "PersonalThoughtFavoriteSlot",
+          "text": "@ui_Favorite",
+          "description": "@ui_Favorite"},
+        {
+          "_Type_": "PersonalThoughtFavoriteSlot",
+          "text": "@ui_Favorite",
+          "description": "@ui_Favorite"},
+        {
+          "_Type_": "PersonalThoughtFavoriteSlot",
+          "text": "@ui_Favorite",
+          "description": "@ui_Favorite"},
+        {
+          "_Type_": "PersonalThoughtFavoriteSlot",
+          "text": "@ui_Favorite",
+          "description": "@ui_Favorite"},
+        {
+          "_Type_": "PersonalThoughtFavoriteSlot",
+          "text": "@ui_Favorite",
+          "description": "@ui_Favorite"}]},
+    "actionDescriptionsList": {
+      "_Type_": "PersonalThoughtActionDescriptionsList",
+      "actionDescriptions": []},
+    "hologramActionsList": {
+      "_Type_": "PersonalThoughtHologramActionsList",
+      "hologramActions": [
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_sidearm_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_primary_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_secondary_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_gadget_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player_choice:pc_qs_grenades"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_primary_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_secondary_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_sidearm_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_meleeweapon_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player:select_gadget_pit"},
+        {
+          "_Type_": "InputAction",
+          "actionName": "player_choice:pc_qs_consumables"}]},
+    "contextualActionsMenus": {
+      "_Type_": "PersonalThoughtContextualActionsMenusParams",
+      "contextualMenus": [
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "player",
+            "default"]},
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "spaceship_general",
+            "default",
+            "spaceship_movement",
+            "spaceship_power",
+            "spaceship_mining",
+            "spaceship_scanning",
+            "lights_controller",
+            "spaceship_hud",
+            "spaceship_defensive",
+            "spaceship_weapons",
+            "spaceship_targeting"]},
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "spaceship_general",
+            "default",
+            "spaceship_power",
+            "spaceship_mining",
+            "spaceship_scanning",
+            "lights_controller",
+            "spaceship_hud",
+            "spaceship_defensive",
+            "spaceship_weapons",
+            "spaceship_targeting"]},
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "player",
+            "default",
+            "player_emotes",
+            "player_choice"]},
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "default"]},
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "spaceship_general",
+            "default",
+            "lights_controller",
+            "spaceship_weapons",
+            "spaceship_targeting",
+            "turret_movement",
+            "spaceship_hud",
+            "spaceship_mining"]},
+        {
+          "_Type_": "PersonalThoughtContextualActionsMenu",
+          "enabledActionMaps": [
+            "default"]}],
+      "gameModeDef": [
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleAttachHelmet"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player:toggleEquipHelmet"}]},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []},
+        {
+          "_Type_": "PersonalThoughtGameModeDef",
+          "disabledActions": []}]},
+    "inventoryParams": {
+      "_Type_": "PersonalThoughtInventoryParams",
+      "proximityDetectionParams": {
+        "_Type_": "ProximityInventoryDetectionParams",
+        "filterTags": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.039eb697-7307-409b-a176-a778de49a613",
+                  "_RecordId_": "039eb697-7307-409b-a176-a778de49a613"}],
+              "negativeTags": []},
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.57884827-52f2-41fb-9e95-8ea5b769caf0",
+                  "_RecordId_": "57884827-52f2-41fb-9e95-8ea5b769caf0"}],
+              "negativeTags": []}]},
+        "zoneQueryRadius": 2.0,
+        "maxHeightStep": 3.0,
+        "losTargetGroundOffset": 0.1,
+        "losPlayerGroundOffsets": [
+          1.85,
+          0.4]},
+      "lootingScreenParams": {
+        "_Type_": "PersonalThoughtLootingScreenParams",
+        "itemPortClasses": [
+          {
+            "_Type_": "LootingItemPortSizeClass",
+            "sizeClass": 1,
+            "itemPortTypeSubtypes": [
+              {
+                "_Type_": "TypeSubtypeParams",
+                "itemType": "WeaponPersonal",
+                "itemSubType": "Medium"},
+              {
+                "_Type_": "TypeSubtypeParams",
+                "itemType": "WeaponPersonal",
+                "itemSubType": "Large"}]}],
+        "lootingInventoryParams": {
+          "_Type_": "LootingInventoryParams",
+          "defaultTabIconPath": "UI/Textures/General/Markers/marker_icon_storage.svg",
+          "groupSubTabParams": {
+            "_Type_": "LootingTabParams",
+            "title": "@vehicle_focus_all",
+            "iconPath": "UI/Textures/Vector/PIT/Looting/PIT_Looting_All_Icon.svg",
+            "itemCategories": []},
+          "locationTabParams": {
+            "_Type_": "LootingTabParams",
+            "title": "@ui_inventory_tab_location",
+            "iconPath": "UI/Textures/Vector/MobiGlas/Icons/PU_mobiapp_icon_pin.svg",
+            "itemCategories": []},
+          "tabParams": [
+            {
+              "_Type_": "LootingTabParams",
+              "title": "@item_TypeChar_Armor_Backpack",
+              "iconPath": "UI/Textures/Vector/PIT/Looting/PIT_Looting_Backpack_Icon.svg",
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Backpack",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Backpack",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "LootingTabParams",
+              "title": "@item_TypeChar_Armor_Torso",
+              "iconPath": "UI/Textures/Vector/PIT/Looting/PIT_Looting_Core_Icon.svg",
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Torso",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Torso_1",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "LootingTabParams",
+              "title": "@item_TypeChar_Armor_Legs",
+              "iconPath": "UI/Textures/Vector/PIT/Looting/PIT_Looting_Legs_Icon.svg",
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Legs",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Legs",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "LootingTabParams",
+              "title": "@hud_corpseMarker_name",
+              "iconPath": "UI/Textures/Vector/General/MarkerIcons/ui_icon_enemy.svg",
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "NOITEM_Player",
+                  "subType": "UNDEFINED",
+                  "requiredTag": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.e08d34fb-cb56-4b3f-9e8b-60fa8f80a7f4",
+                    "_RecordId_": "e08d34fb-cb56-4b3f-9e8b-60fa8f80a7f4"}}]},
+            {
+              "_Type_": "LootingTabParams",
+              "title": "@ui_inventory_tab_player",
+              "iconPath": "UI/Textures/Vector/MobiGlas/Icons/PU_mobiapp_icon_personal_status.svg",
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "NOITEM_Player",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "LootingTabParams",
+              "title": "@ui_inventory_tab_vehicle",
+              "iconPath": "UI/Textures/Vector/MobiGlas/Icons/PU_mobiapp_icon_vehicle.svg",
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "NOITEM_Vehicle",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]}]}},
+      "inventoryDropInteractionConditions": "file://./../../../../libs/foundry/records/interactionconditions/presets/personalinventory/candropitemfrominventory.json",
+      "inventoryTitle": "@ui_PersonalInventory",
+      "capacityBarTitle": "@ui_Capacity",
+      "defaultItemDisplayThumbnail": "ui/textures/vector/general/items/inv_icon_default.svg",
+      "emptyInventoryMessage": "@ui_EmptyInventoryMessage",
+      "fullInventoryMessage": "@ui_InventoryFull",
+      "noSpaceForItemInInventoryMessage": "@ui_Inventory_ContainerStatus_NotEnoughSpace",
+      "itemCantFitInInventoryMessage": "@ui_Inventory_ContainerStatus_TooSmall",
+      "genericInvalidMovementMessage": "@ui_InventoryCannotAcceptItemFromPlayers",
+      "filters": [
+        {
+          "_Type_": "PersonalThoughtInventoryCategoryFilter",
+          "name": "@ui_inventory_filter_category_name_armor",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_armor.svg",
+          "disableForFPSKiosk": false,
+          "filters": [
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_undersuits",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Undersuit",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_armor_helmets",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Helmet",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_armor_core",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Torso",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_armor_arms",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Arms",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_armor_legs",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Legs",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_armor_backpack",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Armor_Backpack",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_armor_flair",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Flair",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]}]},
+        {
+          "_Type_": "PersonalThoughtInventoryCategoryFilter",
+          "name": "@ui_inventory_filter_category_name_clothing",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_clothing.svg",
+          "disableForFPSKiosk": false,
+          "filters": [
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_hats",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Hat",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_torso0",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Torso_0",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_torso1",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Torso_1",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Torso_2",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_hands",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Hands",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_legs",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Legs",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_feet",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Clothing_Feet",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_clothing_eyewear",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Char_Accessory_Eyes",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]}]},
+        {
+          "_Type_": "PersonalThoughtInventoryCategoryFilter",
+          "name": "@ui_inventory_filter_category_name_weapons",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_weapons.svg",
+          "disableForFPSKiosk": false,
+          "filters": [
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_pistols",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Small",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_stocked",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Medium",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_shouldered",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Large",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_melee",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Knife",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_weaponattachments",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponAttachment",
+                  "subType": "IronSight",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponAttachment",
+                  "subType": "BottomAttachment",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponAttachment",
+                  "subType": "Barrel",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_throwables",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Grenade",
+                  "requiredTag": null}]}]},
+        {
+          "_Type_": "PersonalThoughtInventoryCategoryFilter",
+          "name": "@ui_inventory_filter_category_name_utility",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_utilities.svg",
+          "disableForFPSKiosk": false,
+          "filters": [
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_gadgets",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Gadget",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Gadget",
+                  "subType": "Gadget",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_gadgetattachments",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponAttachment",
+                  "subType": "Utility",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_consumables_medical",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "MedPack",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "OxygenCap",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_consumables_chips",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "Hacking",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_technology",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "MobiGlas",
+                  "subType": "Personal",
+                  "requiredTag": null}]}]},
+        {
+          "_Type_": "PersonalThoughtInventorySingleFilter",
+          "name": "@ui_inventory_filter_category_name_ammo",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_ammo.svg",
+          "disableForFPSKiosk": false,
+          "categories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "Magazine",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryCategoryFilter",
+          "name": "@ui_inventory_filter_category_name_vehicle",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_vehicle_parts.svg",
+          "disableForFPSKiosk": true,
+          "filters": [
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_ordnance",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Bomb",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Missile",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_cooler",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Cooler",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_emp",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "EMP",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_mining",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "MiningModifier",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponMining",
+                  "subType": "Gun",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_missilerack",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "MissileLauncher",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_powerplant",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "PowerPlant",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_quantumdrive",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "QuantumDrive",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_shield",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Shield",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_turret",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Turret",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_weapon",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponGun",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_countermeasure",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponDefensive",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_paint",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Paints",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_jumpdrive",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "JumpDrive",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@ui_inventory_filter_category_name_vehicle_radar",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Radar",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]}]},
+        {
+          "_Type_": "PersonalThoughtInventorySingleFilter",
+          "name": "@ui_inventory_filter_category_name_sustenance",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_sustenance.svg",
+          "disableForFPSKiosk": false,
+          "categories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Drink",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryCategoryFilter",
+          "name": "@vehicle_container_Key001",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_container.svg",
+          "disableForFPSKiosk": false,
+          "filters": [
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@shop_ui_commodity_cargo",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Cargo",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]},
+            {
+              "_Type_": "PersonalThoughtInventorySingleFilter",
+              "name": "@item_container_lootcontainer_2",
+              "displayIconPath": "",
+              "disableForFPSKiosk": false,
+              "categories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Container",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "InventoryContainer",
+                  "subType": "UNDEFINED",
+                  "requiredTag": null}]}]},
+        {
+          "_Type_": "PersonalThoughtInventoryOtherFilter",
+          "name": "@ui_inventory_filter_category_name_other",
+          "displayIconPath": "UI/Textures/Vector/General/Items/Inv_filter_Icons_other.svg",
+          "disableForFPSKiosk": false},
+        {
+          "_Type_": "PersonalThoughtInventoryMissionFilter",
+          "name": "@Hints_Missions_Title",
+          "displayIconPath": "UI/Textures/General/Markers/marker_icon_mission_giver.svg",
+          "disableForFPSKiosk": false}],
+      "inventorySortMenu": {
+        "_Type_": "PersonalThoughtInventorySortMenu",
+        "modes": [
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@ui_pit_inventory_sorting_nameAZ"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@ui_pit_inventory_sorting_nameZA"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@text_ui_list_separator"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@ui_pit_inventory_sorting_sizeSmallestToLargest"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@ui_pit_inventory_sorting_sizeLargestToSmallest"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@text_ui_list_separator"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@ui_pit_inventory_sorting_typeAZ"},
+          {
+            "_Type_": "InventorySortMode",
+            "name": "@ui_pit_inventory_sorting_typeZA"}]},
+      "inventoryActionsParams": {
+        "_Type_": "PersonalThoughtInventoryActionsParams",
+        "dropItemActionThumbnail": "ui/textures/vector/general/items/inv_icon_dropitem.svg",
+        "emptyBackpackActionThumbnail": "ui/textures/vector/general/items/inv_icon_boxall.svg"},
+      "emptyBackpackPopWindowParams": {
+        "_Type_": "PersonalThoughtPopWindowParams",
+        "message": "@ui_StoreAllItemsOnFloor",
+        "acceptButtonText": "@ui_diag_ok",
+        "cancelButtonText": "@ui_Cancel"},
+      "inventoryGridParams": {
+        "_Type_": "PersonalThoughtInventoryGridParams",
+        "panelWidth": 0.1894531,
+        "panelPadding": 0.0,
+        "numberOfGrids": 4,
+        "itemPadding": 0.0,
+        "paddingWidth": 0.0,
+        "paddingHeight": 0.0,
+        "tabsNavHeight": 0.0,
+        "containerTitleHeight": 0.0,
+        "spaceBetweenContainers": 0.0,
+        "sizeMultiplicatorForPit": 1.0,
+        "sizeMultiplicatorForKiosk": 1.0,
+        "fixedGridSizeMultiplicatorV4": 2.0,
+        "bigContainerCapacity": {
+          "_Type_": "SMicroCargoUnit",
+          "microSCU": 15000},
+        "inventoryContainers": [
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@delivery_PickupType_Corpse",
+            "tags": "CorpseLootbox",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "UNDEFINED",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Armor_Backpack",
+            "tags": "backpack",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Backpack",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Armor_Backpack",
+            "tags": "backpack",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Backpack",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Armor_Torso",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Torso",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Armor_Torso",
+            "tags": "fakeChestUIcontainer",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Undersuit",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Clothing_Torso1",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_1",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Clothing_Torso1",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_2",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Clothing_Torso1",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_0",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Armor_Legs",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Legs",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_Clothing_Legs",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Legs",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_External",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Cargo",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_StorageLocker",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Usable",
+              "subType": "UNDEFINED",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.595d61ab-4b2e-4402-a65e-ddb959480a98",
+                "_RecordId_": "595d61ab-4b2e-4402-a65e-ddb959480a98"}}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_External",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Usable",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_External",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "SeatAccess",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_External",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Container",
+              "subType": "Box",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_External",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "Container",
+              "subType": "UNDEFINED",
+              "requiredTag": null}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_LootableContainer",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "UNDEFINED",
+              "subType": "UNDEFINED",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d",
+                "_RecordId_": "2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d"}}},
+          {
+            "_Type_": "InventoryContainerParams",
+            "name": "@ui_Inventory_ContainerType_DrawerClothing",
+            "tags": "",
+            "itemCategory": {
+              "_Type_": "ItemCategory",
+              "type": "UNDEFINED",
+              "subType": "UNDEFINED",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.3b07d359-9d85-41f4-bdc1-496bd8f1741d",
+                "_RecordId_": "3b07d359-9d85-41f4-bdc1-496bd8f1741d"}}}]},
+      "defaultStackLimit": 99,
+      "listOfItemStackLimit": [
+        {
+          "_Type_": "PersonalThoughtInventoryItemStackLimit",
+          "stackLimit": 999,
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Currency",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]}],
+      "defaultOrientation": {
+        "_Type_": "Vec3",
+        "x": 90.0,
+        "y": 0.0,
+        "z": 0.0},
+      "listOfItemsOrientationOffset": [
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 95.0,
+            "y": 45.0,
+            "z": 135.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Knife",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 125.0,
+            "z": 5.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Gadget",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 125.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Grenade",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 125.0,
+            "z": 5.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 135.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Feet",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Feet",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Hands",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 325.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Backpack",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Backpack",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 180.0,
+            "y": 315.0,
+            "z": 347.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "Utility",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 335.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "Magazine",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 130.0,
+            "z": 5.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 135.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Arms",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_2",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_1",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_0",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Undershirt",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Torso",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 180.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Undersuit",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 135.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Legs",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Legs",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 157.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Helmet",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Hat",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 345.0,
+            "y": 30.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Accessory_Eyes",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 270.0,
+            "y": 345.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "FPS_Consumable",
+              "subType": "Hacking",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Gadget",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "RemovableChip",
+              "subType": "Utility",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Utility",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 180.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Drink",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "Tin",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "Box",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 45.0,
+            "y": 0.0,
+            "z": 90.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "Bar",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 35.0,
+            "y": 315.0,
+            "z": 335.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "Junk",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 155.0,
+            "z": 2.5},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "UNDEFINED",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e2e3fcd0-49ac-4d15-a122-8509849210a3",
+                "_RecordId_": "e2e3fcd0-49ac-4d15-a122-8509849210a3"}}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 345.0,
+            "y": 155.0,
+            "z": 22.5},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "UNDEFINED",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.a0baca9a-b424-4977-9c44-2c0789e804db",
+                "_RecordId_": "a0baca9a-b424-4977-9c44-2c0789e804db"}}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 90.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Harvestable",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.5fa565e3-fbc2-414b-87f2-e3f1efb2ae38",
+                "_RecordId_": "5fa565e3-fbc2-414b-87f2-e3f1efb2ae38"}}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "Plant",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Harvestable",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 50.0,
+            "y": 345.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 315.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "MobiGlas",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 125.0,
+            "z": 5.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Bomb",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Missile",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "MissileLauncher",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponDefensive",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponGun",
+              "subType": "Gun",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 180.0,
+            "y": 180.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponMining",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 125.0,
+            "z": 5.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Turret",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "EMP",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 20.0,
+            "y": 45.0,
+            "z": 17.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Cooler",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "MiningModifier",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "PowerPlant",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "QuantumDrive",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Shield",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Shield",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 20.0,
+            "y": 60.0,
+            "z": 20.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Container",
+              "subType": "Box",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 345.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Gadget",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Fuse",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "UNDEFINED",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Gadget",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 0.0,
+            "z": 180.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Personal",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "RemovableChip",
+              "subType": "SystemAccess",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 90.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "InventoryContainer",
+              "subType": "Cargo",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Cargo",
+              "subType": "Cargo",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 110.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Usable",
+              "subType": "Cargo",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 180.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Flair_Wall_Picture",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "FlightController",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 270.0,
+            "y": 0.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Misc",
+              "subType": "Trophy",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 90.0,
+            "y": 0.0,
+            "z": 180.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Currency",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 180.0,
+            "z": 0.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Thumbnail",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemOrientationOffset",
+          "orientationOffset": {
+            "_Type_": "Vec3",
+            "x": 335.0,
+            "y": 225.0,
+            "z": 15.0},
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Crafter",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]}],
+      "defaultLightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_other.json",
+      "listOfItemLightGroups": [
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_ammo_magazine.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "Magazine",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_arms.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Arms",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_backpacks.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Backpack",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_core.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Torso",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_flair.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Flair",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_helmets.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Helmet",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_legs.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Legs",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_armor_undersuits.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Armor_Undersuit",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_eyewear.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Accessory_Eyes",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_footwear.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Feet",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_gloves.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Hands",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_headwear.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Hat",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_jackets.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_1",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_legwear.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Legs",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_clothing_shirts.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Char_Clothing_Torso_0",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_container_commoditycargo.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Cargo",
+              "subType": "Cargo",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_container_standardcontainer.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "InventoryContainer",
+              "subType": "Cargo",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_sustenance_drink.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Drink",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_sustenance_food.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Food",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_utility_attachments.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "Utility",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_utility_cryptokeys.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "RemovableChip",
+              "subType": "Utility",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_utility_gadgets.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Gadget",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Gadget",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_utility_medical.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "FPS_Consumable",
+              "subType": "MedPack",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_coolers.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Cooler",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_emp.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "EMP",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_mining.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponMining",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_missileracks.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "MissileLauncher",
+              "subType": "MissileRack",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_ordnance.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Missile",
+              "subType": "UNDEFINED",
+              "requiredTag": null},
+            {
+              "_Type_": "ItemCategory",
+              "type": "Bomb",
+              "subType": "Utility",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_powerplants.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "PowerPlant",
+              "subType": "Power",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_quantumdrives.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "QuantumDrive",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_shields.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Shield",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_turrets.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "Turret",
+              "subType": "GunTurret",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_vehicles_weapons.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponGun",
+              "subType": "Gun",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_weapons_attachments.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponAttachment",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_weapons_melee.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Knife",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_weapons_primary.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "UNDEFINED",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_weapons_sidearms.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "UNDEFINED",
+              "requiredTag": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cdef6808-2dff-487b-8183-47c83694772c",
+                "_RecordId_": "cdef6808-2dff-487b-8183-47c83694772c"}}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_weapons_special.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Large",
+              "requiredTag": null}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemLightGroup",
+          "lightGroupEntityClass": "file://./../../../../libs/foundry/records/entities/lights/scene/inventory/inventorylightgroup_weapons_throwables.json",
+          "itemCategories": [
+            {
+              "_Type_": "ItemCategory",
+              "type": "WeaponPersonal",
+              "subType": "Grenade",
+              "requiredTag": null}]}],
+      "defaultDisplayIconType": "",
+      "itemClassUIIconsList": [
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_consumable.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "FPS_Consumable",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_grenade.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponPersonal",
+              "itemSubType": "Grenade"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_magazine.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponAttachment",
+              "itemSubType": "Magazine"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_backpack_small.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Backpack",
+              "itemSubType": "UNDEFINED"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Clothing_Backpack",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_weapon_attachment_scope.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponAttachment",
+              "itemSubType": "IronSight"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Inventory_WeaponBarrel.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponAttachment",
+              "itemSubType": "Barrel"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_weapon_attachment_underbarrel.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponAttachment",
+              "itemSubType": "BottomAttachment"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_primary_weapon.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponPersonal",
+              "itemSubType": "Medium"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponPersonal",
+              "itemSubType": "Large"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_knife.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponPersonal",
+              "itemSubType": "Knife"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_gadgets.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponPersonal",
+              "itemSubType": "Gadget"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/General/CommonIcons/icon_common_sidearm_pistol.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponPersonal",
+              "itemSubType": "Small"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_arms.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Arms",
+              "itemSubType": "Heavy"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Arms",
+              "itemSubType": "Medium"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Arms",
+              "itemSubType": "Light"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_helmet.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Helmet",
+              "itemSubType": "Heavy"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Helmet",
+              "itemSubType": "Medium"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Helmet",
+              "itemSubType": "Light"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/PIT_Looting_Legs_Icon.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Legs",
+              "itemSubType": "Heavy"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Legs",
+              "itemSubType": "Medium"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Legs",
+              "itemSubType": "Light"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/PIT_Looting_Core_Icon.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Torso",
+              "itemSubType": "Heavy"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Torso",
+              "itemSubType": "Medium"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Torso",
+              "itemSubType": "Light"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_under_suit.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Armor_Undersuit",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_shirt.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Clothing_Torso_0",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_pants.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Clothing_Legs",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_hat.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Clothing_Hat",
+              "itemSubType": "UNDEFINED"},
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Accessory_Head",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_shoe.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Clothing_Feet",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_coat.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Clothing_Torso_1",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_glasses.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "Char_Accessory_Eyes",
+              "itemSubType": "UNDEFINED"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_multitool_canister.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponAttachment",
+              "itemSubType": "Magazine"}]},
+        {
+          "_Type_": "PersonalThoughtInventoryItemUIIcon",
+          "displayIconType": "UI/Textures/Vector/PIT/Looting/icon_common_multitool_attachment.svg",
+          "itemCategories": [
+            {
+              "_Type_": "TypeSubtypeParams",
+              "itemType": "WeaponAttachment",
+              "itemSubType": "Utility"}]}]},
+    "quickAccessWheelsParams": {
+      "_Type_": "PersonalThoughtQuickAccessWheels",
+      "mouseCursorRadius": 80.0,
+      "nonMouseCursorRadius": 25.0,
+      "quickAccessWheels": [
+        {
+          "_Type_": "PersonalThoughtQuickAccessWheel",
+          "name": "WeaponSelection",
+          "triggerInputActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player_choice:pc_qs_weapons_pit_primary"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player_choice:pc_qs_weapons_pit_secondary"},
+            {
+              "_Type_": "InputAction",
+              "actionName": "player_choice:pc_qs_weapons_pit_sidearm"}],
+          "triggerEventHash": "",
+          "saveSelection": false,
+          "elements": [
+            {
+              "_Type_": "QuickAccessWheelAttachableSlotsDef",
+              "openContextMenuAsFolder": false,
+              "itemPortNames": [
+                "weapon_attach_hand_right",
+                "weapon_attach_hand_left",
+                "wep_stocked_2",
+                "wep_stocked_3",
+                "wep_sidearm",
+                "utility_attach_1",
+                "utility_attach_2",
+                "tools_attach_2",
+                "military_multitool_attach"],
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Gadget",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Knife",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Small",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Medium",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Large",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Gadget",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Deployable",
+                  "subType": "UNDEFINED",
+                  "requiredTag": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.200d805d-715c-46d9-92ed-a37b292a1c3c",
+                    "_RecordId_": "200d805d-715c-46d9-92ed-a37b292a1c3c"}},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "MeleeMedium",
+                  "requiredTag": null}],
+              "clenchPreviousItem": false,
+              "postUnstowAction": "None"},
+            {
+              "_Type_": "QuickAccessWheelActionDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:selectUnarmedCombat"},
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_equipped",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_unarmedcombat",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_consumable",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelMenuDef",
+              "openContextMenuAsFolder": false,
+              "menuName": "@pit_qswheel_weapons_fromInventory",
+              "menuElements": [
+                {
+                  "_Type_": "QuickAccessWheelInventoryItemDef",
+                  "openContextMenuAsFolder": false,
+                  "itemCategories": [
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "WeaponPersonal",
+                      "subType": "Small",
+                      "requiredTag": null}],
+                  "clenchPreviousItem": false,
+                  "postUnstowAction": "Equip"}]}]},
+        {
+          "_Type_": "PersonalThoughtQuickAccessWheel",
+          "name": "GrenadeSelection",
+          "triggerInputActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player_choice:pc_qs_grenades"}],
+          "triggerEventHash": "",
+          "saveSelection": true,
+          "elements": [
+            {
+              "_Type_": "QuickAccessWheelAttachableSlotsDef",
+              "openContextMenuAsFolder": false,
+              "itemPortNames": [
+                "grenade_attach_1",
+                "grenade_attach_2",
+                "grenade_attach_3",
+                "grenade_attach_4",
+                "grenade_attach_5",
+                "grenade_attach_6",
+                "grenade_attach_7",
+                "grenade_attach_8",
+                "grenade_attach_9"],
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Grenade",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Deployable",
+                  "subType": "UNDEFINED",
+                  "requiredTag": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.ccc421d5-f55a-4f42-9b92-c6af2c712ada",
+                    "_RecordId_": "ccc421d5-f55a-4f42-9b92-c6af2c712ada"}},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "Misc",
+                  "subType": "Fuse",
+                  "requiredTag": null}],
+              "clenchPreviousItem": true,
+              "postUnstowAction": "None"},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_equipped",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_unarmedcombat",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_consumable",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelMenuDef",
+              "openContextMenuAsFolder": false,
+              "menuName": "@pit_qswheel_combatThrowables_fromInventory",
+              "menuElements": [
+                {
+                  "_Type_": "QuickAccessWheelInventoryItemDef",
+                  "openContextMenuAsFolder": false,
+                  "itemCategories": [
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "WeaponPersonal",
+                      "subType": "Grenade",
+                      "requiredTag": null},
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "Misc",
+                      "subType": "Fuse",
+                      "requiredTag": null}],
+                  "clenchPreviousItem": true,
+                  "postUnstowAction": "Equip"}]}]},
+        {
+          "_Type_": "PersonalThoughtQuickAccessWheel",
+          "name": "MedpackSelection",
+          "triggerInputActions": [
+            {
+              "_Type_": "InputAction",
+              "actionName": "player_choice:pc_qs_consumables"}],
+          "triggerEventHash": "",
+          "saveSelection": true,
+          "elements": [
+            {
+              "_Type_": "QuickAccessWheelAttachableSlotsDef",
+              "openContextMenuAsFolder": false,
+              "itemPortNames": [
+                "medPen_attach_1",
+                "medPen_attach_2",
+                "medPen_attach_3",
+                "medPen_attach_4",
+                "medPen_attach_5",
+                "medPen_attach_6",
+                "medPen_attach_7",
+                "medPen_attach_8",
+                "medPen_attach_9",
+                "oxyPen_attach_1",
+                "oxyPen_attach_2",
+                "oxyPen_attach_3",
+                "oxyPen_attach_4",
+                "oxyPen_attach_5",
+                "oxyPen_attach_6",
+                "oxyPen_attach_7",
+                "oxyPen_attach_8",
+                "oxyPen_attach_9"],
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "MedPack",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "Medical",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "OxygenCap",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "FPS_Consumable",
+                  "subType": "Hacking",
+                  "requiredTag": null}],
+              "clenchPreviousItem": true,
+              "postUnstowAction": "None"},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_equipped",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_unarmedcombat",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelActionStateDef",
+              "openContextMenuAsFolder": false,
+              "inputAction": {
+                "_Type_": "InputAction",
+                "actionName": "player:holster"},
+              "actionStateName": "holster_consumable",
+              "iconPathOverride": ""},
+            {
+              "_Type_": "QuickAccessWheelMenuDef",
+              "openContextMenuAsFolder": false,
+              "menuName": "@pit_qswheel_consumables_fromInventory",
+              "menuElements": [
+                {
+                  "_Type_": "QuickAccessWheelInventoryItemDef",
+                  "openContextMenuAsFolder": false,
+                  "itemCategories": [
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "FPS_Consumable",
+                      "subType": "MedPack",
+                      "requiredTag": null},
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "FPS_Consumable",
+                      "subType": "Medical",
+                      "requiredTag": null},
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "FPS_Consumable",
+                      "subType": "OxygenCap",
+                      "requiredTag": null},
+                    {
+                      "_Type_": "ItemCategory",
+                      "type": "FPS_Consumable",
+                      "subType": "Hacking",
+                      "requiredTag": null}],
+                  "clenchPreviousItem": true,
+                  "postUnstowAction": "Equip"}]}]},
+        {
+          "_Type_": "PersonalThoughtQuickAccessWheel",
+          "name": "Armoury Weapon Selection",
+          "triggerInputActions": [],
+          "triggerEventHash": "ArmouryWeaponWheel",
+          "saveSelection": true,
+          "elements": [
+            {
+              "_Type_": "QuickAccessWheelAttachableSlotsDef",
+              "openContextMenuAsFolder": false,
+              "itemPortNames": [
+                "weapon_attach_hand_right",
+                "weapon_attach_hand_left",
+                "wep_stocked_2",
+                "wep_stocked_3",
+                "wep_sidearm"],
+              "itemCategories": [
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Small",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Medium",
+                  "requiredTag": null},
+                {
+                  "_Type_": "ItemCategory",
+                  "type": "WeaponPersonal",
+                  "subType": "Large",
+                  "requiredTag": null}],
+              "clenchPreviousItem": false,
+              "postUnstowAction": "SwapAttachments"}]}],
+      "angularSelectWheelRadius": 190.0,
+      "angularSelectWheelRadiusSubmenu": 261.0,
+      "angularSelectWheelRadiusV2": 250.0,
+      "angularSelectWheelRadiusSubmenuV2": 400.0},
+    "actionRulesParams": {
+      "_Type_": "PersonalThoughtActionsRulesParams",
+      "actionRulesList": [
+        {
+          "_Type_": "ActionRuleList",
+          "inputAction": {
+            "_Type_": "InputAction",
+            "actionName": "player:holster"},
+          "preset": "file://./../../../../libs/foundry/records/personalinnerthoughtrules/presets/notallowedingreenzone.json",
+          "ruleParams": []},
+        {
+          "_Type_": "ActionRuleList",
+          "inputAction": {
+            "_Type_": "InputAction",
+            "actionName": "player:select_sidearm_pit"},
+          "preset": "file://./../../../../libs/foundry/records/personalinnerthoughtrules/presets/notallowedingreenzone.json",
+          "ruleParams": []},
+        {
+          "_Type_": "ActionRuleList",
+          "inputAction": {
+            "_Type_": "InputAction",
+            "actionName": "player:select_primary_pit"},
+          "preset": "file://./../../../../libs/foundry/records/personalinnerthoughtrules/presets/notallowedingreenzone.json",
+          "ruleParams": []},
+        {
+          "_Type_": "ActionRuleList",
+          "inputAction": {
+            "_Type_": "InputAction",
+            "actionName": "player:select_secondary_pit"},
+          "preset": "file://./../../../../libs/foundry/records/personalinnerthoughtrules/presets/notallowedingreenzone.json",
+          "ruleParams": []}]},
+    "dropDetachRules": [
+      {
+        "_Type_": "InventoryDropDetachRules",
+        "category": {
+          "_Type_": "ItemCategory",
+          "type": "Char_Armor_Torso",
+          "subType": "UNDEFINED",
+          "requiredTag": null},
+        "dropDetachTypes": [
+          {
+            "_Type_": "ItemCategory",
+            "type": "Char_Clothing_Backpack",
+            "subType": "UNDEFINED",
+            "requiredTag": null},
+          {
+            "_Type_": "ItemCategory",
+            "type": "Char_Armor_Backpack",
+            "subType": "UNDEFINED",
+            "requiredTag": null}]}]}}

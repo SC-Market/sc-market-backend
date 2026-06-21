@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "SGlobalHitBehaviorParams.SGlobalHitBehaviorParams",
+  "_RecordId_": "c52b042d-8ea6-4862-ac2b-a27c2f15caad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SGlobalHitBehaviorParams",
+    "damagePerTickUpperLimit": 0.0,
+    "timeUpperLimit": 0.0}}

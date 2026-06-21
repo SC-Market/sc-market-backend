@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSMining05",
+  "_RecordId_": "c5f1ce2e-b4a6-4f59-a786-a70f28226c06",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_FPSMining_Scanning_Title",
+    "BodyText": "@Hints_FPSMining_OnPlayerTargetsFPSRock",
+    "BodyTextGamePad": "@Hints_FPSMining_OnPlayerTargetsFPSRock",
+    "BodyTextJoystick": "@Hints_FPSMining_OnPlayerTargetsFPSRock",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

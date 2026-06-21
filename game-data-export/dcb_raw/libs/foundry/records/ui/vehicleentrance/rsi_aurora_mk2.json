@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.RSI_Aurora_Mk2",
+  "_RecordId_": "042caa8d-6a9c-4d3e-9af5-ffa402219a07",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_hatch",
+        "jointName": "rsi_aurora_mk2",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -1.332,
+          "y": 7.941,
+          "z": -1.155},
+        "shipState": "Both"}]}}

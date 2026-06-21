@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.TMBL",
+  "_RecordId_": "f136d430-3c79-4123-8747-e84a76fe8364",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_tmbl.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 10.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

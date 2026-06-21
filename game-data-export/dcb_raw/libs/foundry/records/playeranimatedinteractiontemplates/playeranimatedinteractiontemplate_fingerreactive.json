@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "PlayerAnimatedInteractionTemplate.PlayerAnimatedInteractionTemplate_FingerReactive",
+  "_RecordId_": "0d79026d-0020-47dd-b162-186bdd989f80",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerAnimatedInteractionTemplate",
+    "playerAnimatedInteraction": {
+      "_Type_": "PlayerAnimatedInteraction",
+      "supportWalkToAlign": true,
+      "type": "Reactive",
+      "fragTags": [
+        "finger"],
+      "CDIKTargetName": "button",
+      "handModeParams": null}}}

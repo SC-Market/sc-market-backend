@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MissionItem.DeliveryUpload",
+  "_RecordId_": "3d5a1433-75fd-4463-b306-e2bd8f44b5bd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.78a8b1bc-cf14-4c43-b717-28edfc61e7ef",
+        "_RecordId_": "78a8b1bc-cf14-4c43-b717-28edfc61e7ef"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9597183-d128-4c72-a8b2-61b16868af5a",
+            "_RecordId_": "b9597183-d128-4c72-a8b2-61b16868af5a"},
+          "string": "@delivery_DropoffType_Upload"}]},
+    "weighting": 1.0,
+    "entityClass": null}}

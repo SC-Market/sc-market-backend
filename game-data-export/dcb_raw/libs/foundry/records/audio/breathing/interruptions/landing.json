@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "AudioBreathInterrupt.Landing",
+  "_RecordId_": "b74bf9d2-31ce-4c76-9b9e-852515fdf506",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathInterrupt",
+    "description": "Landings are code driven. Curve sets pause duration: X meters per second, Y is duration in sec.",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -2.921687,
+          "y": 0.4574468},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.8},
+        {
+          "_Type_": "Vec2",
+          "x": 2.921687,
+          "y": 0.5425532},
+        {
+          "_Type_": "Vec2",
+          "x": 11.71687,
+          "y": 0.2553191},
+        {
+          "_Type_": "Vec2",
+          "x": 15.0,
+          "y": 0.8},
+        {
+          "_Type_": "Vec2",
+          "x": 18.28313,
+          "y": 0.3446809}],
+      "useLUT": false},
+    "breathEvent": "BreathRelease",
+    "customEvent": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_DXHN_Player_Breathing_Grunt_Land"},
+    "triggerCustomEventOnly": true}}

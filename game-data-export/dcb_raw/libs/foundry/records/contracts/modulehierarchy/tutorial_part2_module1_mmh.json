@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.Tutorial_Part2_Module1_MMH",
+  "_RecordId_": "32204122-74fc-482c-afcc-8ea21ed45b9d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Tutorial02_Shopping.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/PlayerTracker.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/Interaction/InteractionCheck.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Modules/Tutorial_Transport.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/Interaction/FollowChainCheck.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/Interaction/FollowChainCheck.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Modules/Tutorial_Transport.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Tutorial02_Shopping.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/tutorial_part2_module2_mmh.json"}]}}

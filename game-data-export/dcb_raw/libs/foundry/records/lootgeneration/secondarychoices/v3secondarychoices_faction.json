@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "LootV3SecondaryChoicesSingleLayerRecord.V3SecondaryChoices_Faction",
+  "_RecordId_": "4ed47365-fe4f-4117-8fe6-bbf9ae9fb2b6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootV3SecondaryChoicesSingleLayerRecord",
+    "choices": [
+      {
+        "_Type_": "LootV3SecondaryChoiceEntry",
+        "name": "Faction",
+        "weight": 0.1,
+        "selector": {
+          "_Type_": "LootV3SecondaryChoiceEntrySelector_Tags",
+          "tags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.b76e5e37-58b1-4fd9-b5ce-f3a8ed11bf62",
+                "_RecordId_": "b76e5e37-58b1-4fd9-b5ce-f3a8ed11bf62"}],
+            "negativeTags": []}}},
+      {
+        "_Type_": "LootV3SecondaryChoiceEntry",
+        "name": "Non-faction",
+        "weight": 1.0,
+        "selector": {
+          "_Type_": "LootV3SecondaryChoiceEntrySelector_Tags",
+          "tags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.b76e5e37-58b1-4fd9-b5ce-f3a8ed11bf62",
+                "_RecordId_": "b76e5e37-58b1-4fd9-b5ce-f3a8ed11bf62"}]}}}]}}

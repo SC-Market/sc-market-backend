@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.ContestedZone_FireRat_Mom",
+  "_RecordId_": "16afdc45-3760-416d-a5a5-cc3ded957f3f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@datapad_contestedzone_firerat_mom_title",
+    "ShortTitle": "@datapad_contestedzone_firerat_mom_title",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@datapad_contestedzone_firerat_mom_body"},
+    "tutorialEntry": false}}

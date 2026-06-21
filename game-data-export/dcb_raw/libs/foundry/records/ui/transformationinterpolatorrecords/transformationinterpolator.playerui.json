@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "TransformationInterpolator.PlayerUI",
+  "_RecordId_": "354cdb9c-31b6-4cc3-b26b-c46b43a8ba8c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TransformationInterpolator",
+    "interpolationTime": 0.4,
+    "transformationInterpolatorParams": {
+      "_Type_": "TransformationInterpolatorParams",
+      "startOffsetValues": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.7},
+      "endOffsetValues": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.7},
+      "offsetInterpolationModes": [
+        "EaseInOutCubic",
+        "EaseInOutCubic",
+        "EaseInOutCubic"],
+      "startRotationValues": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "endRotationValues": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "rotationInterpolationModes": [
+        "EaseInCubic",
+        "EaseInCubic",
+        "EaseInCubic"],
+      "startScaleValue": 1.0,
+      "endScaleValue": 1.0,
+      "scaleInterpolationMode": "Linear"}}}

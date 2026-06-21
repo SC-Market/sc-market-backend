@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "StarMapPartyMemberObject.PartyMemberMarker",
+  "_RecordId_": "be648da9-5b0e-4958-9ab6-34ab2bbcea24",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StarMapPartyMemberObject",
+    "minimumDisplaySize": 0.036,
+    "rotationSpeed": 0.0,
+    "facingMode": "Default",
+    "geometry": {
+      "_Type_": "GlobalResourceGeometry",
+      "path": "objects/ui/starmap/party_member_icon_1.cgf"},
+    "material": {
+      "_Type_": "GlobalResourceMaterial",
+      "path": "objects/ui/starmap/party_icon_1.mtl"}}}

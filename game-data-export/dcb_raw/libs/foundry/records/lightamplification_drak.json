@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "SCItemLightAmplification.LightAmplification_DRAK",
+  "_RecordId_": "b3b0ae42-bd6b-47f3-9fce-38ca2aac7bcb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SCItemLightAmplification",
+    "Tint": {
+      "_Type_": "SRGB8",
+      "r": 244,
+      "g": 105,
+      "b": 24},
+    "Saturation": 0.1,
+    "EVAmplification": 8.0,
+    "AmplificationOnAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_SSNV_Activate"},
+    "AmplificationOffAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_SSNV_Deactivate"}}}

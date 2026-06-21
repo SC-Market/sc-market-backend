@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "JournalEntryType.VideoLog",
+  "_RecordId_": "d9dbe83c-7380-4282-b581-130b9636e752",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntryType",
+    "DisplayName": "@mobiGlas_ui_JournalEntryType_VideoLog",
+    "NotificationName": "@mobiGlas_ui_JournalVideoTextEntry_Added",
+    "IconName": "Audio_ico"}}

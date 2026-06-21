@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "CommsNotification.MCN_InterSec_Tobin_PreNyx_First_VanduulEliminated",
+  "_RecordId_": "802af892-c2f3-4720-b7a3-dfb677b45544",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ed75fbfc-5ab5-4938-9bf5-093b435dde27",
+          "_RecordId_": "ed75fbfc-5ab5-4938-9bf5-093b435dde27"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9143ac19-c526-475c-a8b4-c5597e377366",
+          "_RecordId_": "9143ac19-c526-475c-a8b4-c5597e377366"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.af03b900-7247-49b8-b735-cd66345f05e4",
+          "_RecordId_": "af03b900-7247-49b8-b735-cd66345f05e4"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a01573a9-9aec-40b9-8d71-004f5468d11a",
+          "_RecordId_": "a01573a9-9aec-40b9-8d71-004f5468d11a"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f6f3c56b-9b83-4f5b-9ab3-b5895b3ac4ad",
+          "_RecordId_": "f6f3c56b-9b83-4f5b-9ab3-b5895b3ac4ad"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.97d07b0a-8f90-45a7-af7c-b7fcdcd6de02",
+          "_RecordId_": "97d07b0a-8f90-45a7-af7c-b7fcdcd6de02"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/prenyx/prenyx_firstmission_vanduuleliminated.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-deacontobin.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

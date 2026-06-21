@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Default_Params",
+  "_RecordId_": "5a1e7b5c-e175-4790-b3dc-d917477529f7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Spool_State"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_Speed"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_Speed_NonNormalised"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Health"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_HasOverheatedThruster"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "PlayerActorContained"}]}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Inventory_Box_2SCU_250x125x125",
+  "_RecordId_": "b98ddd44-132f-4c28-a7c9-48e04b50c61f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 1.25,
+      "y": 2.5,
+      "z": 1.25},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 2.0}}}}

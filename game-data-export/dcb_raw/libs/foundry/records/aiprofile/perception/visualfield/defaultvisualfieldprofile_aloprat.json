@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "AIVisualFieldProfile.DefaultVisualFieldProfile_Aloprat",
+  "_RecordId_": "a4a9f880-ade8-4455-916e-5eb7341a41b5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldProfile",
+    "profile": [
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/creature/defaultfov_quadruped.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]},
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/creature/defaultfov_quadruped.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]}]}}

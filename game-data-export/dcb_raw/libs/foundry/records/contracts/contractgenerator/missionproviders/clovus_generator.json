@@ -1,0 +1,647 @@
+{
+  "_RecordName_": "ContractGenerator.Clovus_Generator",
+  "_RecordId_": "812bb548-7802-4266-8031-48c03291b081",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractGenerator",
+    "generators": [
+      {
+        "_Type_": "ContractGeneratorHandler_Career",
+        "notForRelease": true,
+        "workInProgress": false,
+        "debugName": "Clovus_InitialInvite_Career",
+        "required_active_scenarios": [],
+        "defaultAvailability": {
+          "_Type_": "ContractAvailability",
+          "prerequisites": [
+            {
+              "_Type_": "ContractPrerequisite_CrimeStat",
+              "includePrerequisiteWhenSharing": true,
+              "crimeStatJurisdictionOverride": null,
+              "minCrimeStat": 0.0,
+              "maxCrimeStat": 5.0},
+            {
+              "_Type_": "ContractPrerequisite_Location",
+              "locationAvailable": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json"}],
+          "notifyOnAvailable": false,
+          "maxPlayersPerInstance": 1,
+          "onceOnly": false,
+          "availableInPrison": false,
+          "canReacceptAfterAbandoning": true,
+          "abandonedCooldownTime": 1.0,
+          "abandonedCooldownTimeVariation": 1.0,
+          "canReacceptAfterFailing": false,
+          "hasPersonalCooldown": false,
+          "personalCooldownTime": 1.0,
+          "personalCooldownTimeVariation": 1.0,
+          "hideInMobiGlas": false},
+        "contractParams": {
+          "_Type_": "ContractParamOverrides",
+          "stringParamOverrides": [
+            {
+              "_Type_": "ContractStringParam",
+              "param": "Contractor",
+              "value": "@mg_clovus_from"}],
+          "boolParamOverrides": [],
+          "intParamOverrides": [],
+          "propertyTagReplacement": [],
+          "propertyOverrides": [
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "",
+              "extendedTextToken": "Contractor",
+              "value": {
+                "_Type_": "MissionPropertyValue_Organization",
+                "matchConditions": [
+                  {
+                    "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+                    "organizations": [
+                      "file://./../../../../../../libs/foundry/records/missiondata/pu_organizations/unaffiliated.json"]}],
+                "debugForceChosenOrganization": null}}],
+          "modifierOverrides": [],
+          "missionTypeOverride": null,
+          "overridePhaseMissionDetailsDisplayInfo": []},
+        "introContracts": [
+          {
+            "_Type_": "Contract",
+            "id": "40066a48-76c0-2bb6-f616-6d62f83b4c9f",
+            "notForRelease": true,
+            "workInProgress": false,
+            "debugName": "Clovus_InitialInvite",
+            "template": "file://./../../../../../../libs/foundry/records/contracts/contracttemplates/initialinvite.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Title",
+                  "value": "@mg_clovus_havejob_title"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Description",
+                  "value": "@mg_clovus_havejob_desc"}],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Mission_Title_StringHash",
+                  "extendedTextToken": "Title",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_title_0001",
+                        "weighting": 0.25,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Title_1"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_title_0002",
+                        "weighting": 0.25,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Title_2"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_title_0003",
+                        "weighting": 0.25,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Title_3"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_title_0004",
+                        "weighting": 0.25,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Title_4"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_title_0005",
+                        "weighting": 0.25,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Title_5"}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Mission_Description_StringHash",
+                  "extendedTextToken": "Description",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_desc_0001",
+                        "weighting": 0.33,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Description_1"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_desc_0002",
+                        "weighting": 0.33,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Description_2"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_desc_0003",
+                        "weighting": 0.33,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Description_3"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_desc_0004",
+                        "weighting": 0.33,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Description_4"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mg_clovus_havejob_desc_0005",
+                        "weighting": 0.33,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Description_5"}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Mission_Giver_StringHash",
+                  "extendedTextToken": "Giver",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@LOC_UNINITIALIZED",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "Clovus"}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Mission_Location_StringHash",
+                  "extendedTextToken": "Location",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mission_location_stanton_0128",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": "1"},
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mission_location_stanton_0129",
+                        "weighting": 0.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.edc95b6a-13ea-4237-a56f-a046a338da41",
+                                "_RecordId_": "edc95b6a-13ea-4237-a56f-a046a338da41"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": 5,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 5.0,
+              "respawnTimeVariation": 2.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 5.0,
+              "instanceLifeTimeVariation": 2.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "ContractResult_CalculatedReward",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false]},
+                {
+                  "_Type_": "ContractResult_CompletionTags",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "completionTags": [
+                    {
+                      "_Type_": "ContractResult_CompletionTag",
+                      "count": 1,
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.d0417877-892c-406e-9725-fa6f6fd3d42d",
+                        "_RecordId_": "d0417877-892c-406e-9725-fa6f6fd3d42d"}}]}],
+              "contractBuyInAmount": 0,
+              "timeToComplete": 5.0,
+              "difficulty": {
+                "_Type_": "ContractDifficulty",
+                "difficultyProfile": "file://./../../../../../../libs/foundry/records/contracts/contractdifficultyprofiles/general.json",
+                "mechanicalSkill": "Hands_free_gaming_1",
+                "mentalLoad": "AFK_gaming_1",
+                "riskOfLoss": "Safe_and_sound_zzzz_1",
+                "gameKnowledge": "Noob_gaming_or_tutorial_1"}}}],
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_clovusdarneely.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+        "contracts": [
+          {
+            "_Type_": "CareerContract",
+            "id": "a849a011-5877-4248-b5be-a49b7fbd4f8a",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "LawlessSalvage_Clovus",
+            "template": "file://./../../../../../../libs/foundry/records/contracts/contracttemplates/salvage_unlawful_withqt.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Title",
+                  "value": "@mgClovus_opensalvage_title_001"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Description",
+                  "value": "@mgClovus_opensalvage_desc_001"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Contractor",
+                  "value": "@mg_clovus_from"}],
+              "boolParamOverrides": [
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "CanReacceptAfterFailing",
+                  "value": true},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "CanReacceptAfterAbandoning",
+                  "value": true},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "ShowLifeTimeInMobiGlas",
+                  "value": true},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "FailIfSentToPrison",
+                  "value": false},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "FailIfBecameCriminal",
+                  "value": false},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "FailIfLeavePrison",
+                  "value": false}],
+              "intParamOverrides": [
+                {
+                  "_Type_": "ContractIntParam",
+                  "param": "MaxPlayersPerInstance",
+                  "value": -1}],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "location",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.e513a3cd-fdf8-4a03-80d7-64a8c9888e44",
+                                "_RecordId_": "e513a3cd-fdf8-4a03-80d7-64a8c9888e44"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.a47673ef-8511-490d-90ea-fd171d99b626",
+                                "_RecordId_": "a47673ef-8511-490d-90ea-fd171d99b626"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13c08536-06ca-442f-9fc4-a8d068066f1b",
+                                "_RecordId_": "13c08536-06ca-442f-9fc4-a8d068066f1b"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "SalvageSpawnDescription_BP",
+                  "extendedTextToken": "Ship",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+                    "spawnDescriptions": [
+                      {
+                        "_Type_": "SpawnDescription_ShipGroup",
+                        "Name": "SalvageableShip",
+                        "embeddedName": null,
+                        "ships": [
+                          {
+                            "_Type_": "SpawnDescription_ShipOptions",
+                            "options": [
+                              {
+                                "_Type_": "SpawnDescription_Ship",
+                                "tags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.546320ee-f027-4b16-ac2c-77186012655f",
+                                      "_RecordId_": "546320ee-f027-4b16-ac2c-77186012655f"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.ec16cf06-3ee1-49a2-9aae-e81d64412941",
+                                      "_RecordId_": "ec16cf06-3ee1-49a2-9aae-e81d64412941"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.4198e153-f43f-4102-abda-80993f7b282e",
+                                      "_RecordId_": "4198e153-f43f-4102-abda-80993f7b282e"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.6d1c270a-3b7b-4f19-9384-967edfb77779",
+                                      "_RecordId_": "6d1c270a-3b7b-4f19-9384-967edfb77779"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2ab4dfdc-92ad-4370-8825-5b5dccb609ed",
+                                      "_RecordId_": "2ab4dfdc-92ad-4370-8825-5b5dccb609ed"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.9e56e0af-6ee3-49c5-a4ac-33102f707e28",
+                                      "_RecordId_": "9e56e0af-6ee3-49c5-a4ac-33102f707e28"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2a1e6a7a-5f31-4f60-9dc6-d54e07d1826b",
+                                      "_RecordId_": "2a1e6a7a-5f31-4f60-9dc6-d54e07d1826b"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.5f979294-abda-4664-bf08-07aaac65f8b3",
+                                      "_RecordId_": "5f979294-abda-4664-bf08-07aaac65f8b3"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.5f399a3f-1c3d-4798-a706-11c3ca9ca171",
+                                      "_RecordId_": "5f399a3f-1c3d-4798-a706-11c3ca9ca171"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.fabeeeb1-35ec-44f1-85f0-b6becb35ce79",
+                                      "_RecordId_": "fabeeeb1-35ec-44f1-85f0-b6becb35ce79"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.076afa9c-f5ae-4d2c-a946-593ecef1ad78",
+                                      "_RecordId_": "076afa9c-f5ae-4d2c-a946-593ecef1ad78"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.e35b34f5-98ca-42a3-a007-ebfce380fdcc",
+                                      "_RecordId_": "e35b34f5-98ca-42a3-a007-ebfce380fdcc"}]},
+                                "negativeTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "markupTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "entityTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "concurrentAmount": 5,
+                                "includeLocationAISpawnTags": false,
+                                "nameProperty": null,
+                                "weight": 0.5,
+                                "initialDamageSettings": "file://./../../../../../../libs/foundry/records/initialdamageoverrides/salvageinitialdamage/salvagecontractor_lightdamage.json"},
+                              {
+                                "_Type_": "SpawnDescription_Ship",
+                                "tags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.546320ee-f027-4b16-ac2c-77186012655f",
+                                      "_RecordId_": "546320ee-f027-4b16-ac2c-77186012655f"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.ec16cf06-3ee1-49a2-9aae-e81d64412941",
+                                      "_RecordId_": "ec16cf06-3ee1-49a2-9aae-e81d64412941"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.4198e153-f43f-4102-abda-80993f7b282e",
+                                      "_RecordId_": "4198e153-f43f-4102-abda-80993f7b282e"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.6d1c270a-3b7b-4f19-9384-967edfb77779",
+                                      "_RecordId_": "6d1c270a-3b7b-4f19-9384-967edfb77779"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2ab4dfdc-92ad-4370-8825-5b5dccb609ed",
+                                      "_RecordId_": "2ab4dfdc-92ad-4370-8825-5b5dccb609ed"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.9e56e0af-6ee3-49c5-a4ac-33102f707e28",
+                                      "_RecordId_": "9e56e0af-6ee3-49c5-a4ac-33102f707e28"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2a1e6a7a-5f31-4f60-9dc6-d54e07d1826b",
+                                      "_RecordId_": "2a1e6a7a-5f31-4f60-9dc6-d54e07d1826b"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.e2dfa9bb-18a6-4ee2-a830-b7c4db9d439d",
+                                      "_RecordId_": "e2dfa9bb-18a6-4ee2-a830-b7c4db9d439d"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.5f399a3f-1c3d-4798-a706-11c3ca9ca171",
+                                      "_RecordId_": "5f399a3f-1c3d-4798-a706-11c3ca9ca171"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.fabeeeb1-35ec-44f1-85f0-b6becb35ce79",
+                                      "_RecordId_": "fabeeeb1-35ec-44f1-85f0-b6becb35ce79"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.076afa9c-f5ae-4d2c-a946-593ecef1ad78",
+                                      "_RecordId_": "076afa9c-f5ae-4d2c-a946-593ecef1ad78"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.e35b34f5-98ca-42a3-a007-ebfce380fdcc",
+                                      "_RecordId_": "e35b34f5-98ca-42a3-a007-ebfce380fdcc"}]},
+                                "negativeTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "markupTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "entityTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "concurrentAmount": 2,
+                                "includeLocationAISpawnTags": false,
+                                "nameProperty": null,
+                                "weight": 0.5,
+                                "initialDamageSettings": "file://./../../../../../../libs/foundry/records/initialdamageoverrides/salvageinitialdamage/salvagecontractor_lightdamage.json"}]},
+                          {
+                            "_Type_": "SpawnDescription_ShipOptions",
+                            "options": [
+                              {
+                                "_Type_": "SpawnDescription_Ship",
+                                "tags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.546320ee-f027-4b16-ac2c-77186012655f",
+                                      "_RecordId_": "546320ee-f027-4b16-ac2c-77186012655f"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.ec16cf06-3ee1-49a2-9aae-e81d64412941",
+                                      "_RecordId_": "ec16cf06-3ee1-49a2-9aae-e81d64412941"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.4198e153-f43f-4102-abda-80993f7b282e",
+                                      "_RecordId_": "4198e153-f43f-4102-abda-80993f7b282e"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.6d1c270a-3b7b-4f19-9384-967edfb77779",
+                                      "_RecordId_": "6d1c270a-3b7b-4f19-9384-967edfb77779"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2ab4dfdc-92ad-4370-8825-5b5dccb609ed",
+                                      "_RecordId_": "2ab4dfdc-92ad-4370-8825-5b5dccb609ed"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.9e56e0af-6ee3-49c5-a4ac-33102f707e28",
+                                      "_RecordId_": "9e56e0af-6ee3-49c5-a4ac-33102f707e28"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2a1e6a7a-5f31-4f60-9dc6-d54e07d1826b",
+                                      "_RecordId_": "2a1e6a7a-5f31-4f60-9dc6-d54e07d1826b"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.7eff7bb0-14bf-4b49-933c-46166660e1dd",
+                                      "_RecordId_": "7eff7bb0-14bf-4b49-933c-46166660e1dd"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.5f399a3f-1c3d-4798-a706-11c3ca9ca171",
+                                      "_RecordId_": "5f399a3f-1c3d-4798-a706-11c3ca9ca171"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.ea9a5d42-f879-433f-bef4-1775b16d097b",
+                                      "_RecordId_": "ea9a5d42-f879-433f-bef4-1775b16d097b"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.9e44d5a3-ed27-4025-9699-3b4a27679458",
+                                      "_RecordId_": "9e44d5a3-ed27-4025-9699-3b4a27679458"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.4b79d71e-bf3a-47cd-9069-f9b54da529c8",
+                                      "_RecordId_": "4b79d71e-bf3a-47cd-9069-f9b54da529c8"}]},
+                                "negativeTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "markupTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "entityTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "concurrentAmount": 1,
+                                "includeLocationAISpawnTags": false,
+                                "nameProperty": null,
+                                "weight": 1.0,
+                                "initialDamageSettings": "file://./../../../../../../libs/foundry/records/initialdamageoverrides/salvageinitialdamage/salvagecontractor_lightdamage.json"}]}]}],
+                    "allowedForMissionRestrictedDeliveries": false}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "CompletionPercentage_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Integer",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_Integer",
+                        "textId": "@LOC_UNINITIALIZED",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": 10,
+                        "variation": 0}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "AbandonCompletionPercentage_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Float",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_Float",
+                        "textId": "@LOC_UNINITIALIZED",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": 50.0,
+                        "variation": 0.0}]}}],
+              "modifierOverrides": [
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/salvage_clearance.json",
+                  "locationProperty": null}],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": 1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 240.0,
+              "respawnTimeVariation": 2.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 30.0,
+              "instanceLifeTimeVariation": 0.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [],
+              "contractBuyInAmount": 200000,
+              "timeToComplete": 0.0,
+              "difficulty": null},
+            "minStanding": "file://./../../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-005.json",
+            "maxStanding": "file://./../../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_ally_100.json"}]}],
+    "required_active_scenarios": []}}

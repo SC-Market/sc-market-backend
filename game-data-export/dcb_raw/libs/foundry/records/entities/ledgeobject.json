@@ -1,0 +1,302 @@
+{
+  "_RecordName_": "EntityClassDefinition.LedgeObject",
+  "_RecordId_": "015ac765-d28e-4b36-a215-1efe97236ed5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "Ledge.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "LedgeObjectComponentParams",
+        "isEnabled": true,
+        "isVault": false,
+        "isDoubleSided": false,
+        "isFlipped": false,
+        "autoTransition": false,
+        "followTerrain": false,
+        "ledgeMaxDepth": 3.0,
+        "ledgeMaxExitAngle": 60.0,
+        "cornerMaxAngle": 130.0,
+        "cornerEndAdjustAmount": 0.5,
+        "aiParams": {
+          "_Type_": "SAILedgeParams",
+          "navigationLinksSpacing": 1.0},
+        "pEnityParams": null},
+      {
+        "_Type_": "SGameVolumeComponentParams"},
+      {
+        "_Type_": "LedgeShapeComponentParams"},
+      {
+        "_Type_": "NavigationLinkComponentParams",
+        "enabledForAI": false,
+        "navLinks": [
+          {
+            "_Type_": "MantleNavigationLink",
+            "linkValidForAgentType": "MediumSizedCharacters",
+            "costMultiplierSetup": {
+              "_Type_": "NavigationLinkCostCustomization",
+              "tagCosts": [
+                {
+                  "_Type_": "NavigationLinkTagCost",
+                  "conditionTags": {
+                    "_Type_": "TagsDNF",
+                    "terms": [
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.ba232ea7-8627-4b4d-80ab-55f8342e3d48",
+                            "_RecordId_": "ba232ea7-8627-4b4d-80ab-55f8342e3d48"}],
+                        "negativeTags": []}]},
+                  "costMultiplier": 0.0,
+                  "unavailableIfConditionIsMet": true},
+                {
+                  "_Type_": "NavigationLinkTagCost",
+                  "conditionTags": {
+                    "_Type_": "TagsDNF",
+                    "terms": [
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.21487377-c2e0-4f87-9357-bd18f0146930",
+                            "_RecordId_": "21487377-c2e0-4f87-9357-bd18f0146930"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.caf94bc8-daab-4b13-b748-9945317c7384",
+                            "_RecordId_": "caf94bc8-daab-4b13-b748-9945317c7384"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.7021995b-c84f-43f9-a035-3dfe8521ebbd",
+                            "_RecordId_": "7021995b-c84f-43f9-a035-3dfe8521ebbd"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]}]},
+                  "costMultiplier": 100.0,
+                  "unavailableIfConditionIsMet": false}]},
+            "linkingType": "LinksInsideSameZone",
+            "useChannel": null,
+            "topAnchor": {
+              "_Type_": "NavLinkLedgeLocation",
+              "relativeTransform": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 180.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}}},
+            "mannequinTags": "navlink+navlink_mantle",
+            "motionWarpSearchDistance": 2.0},
+          {
+            "_Type_": "JumpDownNavigationLink",
+            "linkValidForAgentType": "MediumSizedCharacters",
+            "costMultiplierSetup": {
+              "_Type_": "NavigationLinkCostCustomization",
+              "tagCosts": [
+                {
+                  "_Type_": "NavigationLinkTagCost",
+                  "conditionTags": {
+                    "_Type_": "TagsDNF",
+                    "terms": [
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.ba232ea7-8627-4b4d-80ab-55f8342e3d48",
+                            "_RecordId_": "ba232ea7-8627-4b4d-80ab-55f8342e3d48"}],
+                        "negativeTags": []}]},
+                  "costMultiplier": 0.0,
+                  "unavailableIfConditionIsMet": true},
+                {
+                  "_Type_": "NavigationLinkTagCost",
+                  "conditionTags": {
+                    "_Type_": "TagsDNF",
+                    "terms": [
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.21487377-c2e0-4f87-9357-bd18f0146930",
+                            "_RecordId_": "21487377-c2e0-4f87-9357-bd18f0146930"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.caf94bc8-daab-4b13-b748-9945317c7384",
+                            "_RecordId_": "caf94bc8-daab-4b13-b748-9945317c7384"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.7021995b-c84f-43f9-a035-3dfe8521ebbd",
+                            "_RecordId_": "7021995b-c84f-43f9-a035-3dfe8521ebbd"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]}]},
+                  "costMultiplier": 200.0,
+                  "unavailableIfConditionIsMet": false}]},
+            "linkingType": "LinksInsideSameZone",
+            "useChannel": null,
+            "topAnchor": {
+              "_Type_": "NavLinkLedgeLocation",
+              "relativeTransform": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}}},
+            "mannequinTags": "navlink+navlink_jumpDown",
+            "motionWarpSearchDistance": 2.0},
+          {
+            "_Type_": "VaultNavigationLink",
+            "linkValidForAgentType": "MediumSizedCharacters",
+            "costMultiplierSetup": {
+              "_Type_": "NavigationLinkCostCustomization",
+              "tagCosts": [
+                {
+                  "_Type_": "NavigationLinkTagCost",
+                  "conditionTags": {
+                    "_Type_": "TagsDNF",
+                    "terms": [
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.ba232ea7-8627-4b4d-80ab-55f8342e3d48",
+                            "_RecordId_": "ba232ea7-8627-4b4d-80ab-55f8342e3d48"}],
+                        "negativeTags": []}]},
+                  "costMultiplier": 0.0,
+                  "unavailableIfConditionIsMet": true},
+                {
+                  "_Type_": "NavigationLinkTagCost",
+                  "conditionTags": {
+                    "_Type_": "TagsDNF",
+                    "terms": [
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.21487377-c2e0-4f87-9357-bd18f0146930",
+                            "_RecordId_": "21487377-c2e0-4f87-9357-bd18f0146930"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.caf94bc8-daab-4b13-b748-9945317c7384",
+                            "_RecordId_": "caf94bc8-daab-4b13-b748-9945317c7384"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.7021995b-c84f-43f9-a035-3dfe8521ebbd",
+                            "_RecordId_": "7021995b-c84f-43f9-a035-3dfe8521ebbd"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]},
+                      {
+                        "_Type_": "TagsDNFTerm",
+                        "positiveTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.b4be2a4f-57fa-4da8-8d48-4f89772b2220",
+                            "_RecordId_": "b4be2a4f-57fa-4da8-8d48-4f89772b2220"}],
+                        "negativeTags": [
+                          {
+                            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.2f0d5c12-b07c-4f25-81f6-2ce1640660a7",
+                            "_RecordId_": "2f0d5c12-b07c-4f25-81f6-2ce1640660a7"}]}]},
+                  "costMultiplier": 200.0,
+                  "unavailableIfConditionIsMet": false}]},
+            "linkingType": "LinksInsideSameZone",
+            "useChannel": null,
+            "topAnchor": {
+              "_Type_": "NavLinkLedgeLocation",
+              "relativeTransform": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 180.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}}},
+            "mannequinTags": "navlink+navlink_vault",
+            "motionWarpSearchDistance": 2.0}],
+        "controller": null}]}}

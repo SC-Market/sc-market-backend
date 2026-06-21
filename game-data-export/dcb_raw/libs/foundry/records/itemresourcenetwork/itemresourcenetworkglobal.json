@@ -1,0 +1,1170 @@
+{
+  "_RecordName_": "ItemResourceNetworkGlobal.ItemResourceNetworkGlobal",
+  "_RecordId_": "384f18f9-010b-4818-b3ce-7fa1aa160705",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "ItemResourceNetworkGlobal",
+    "networkResources": [
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_Power",
+        "containerResources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Electricity",
+            "_RecordId_": "bcc8cde9-de58-4e6b-8ee9-37d4aaa507eb"}],
+        "affectsItemFunctionality": true,
+        "isShared": false,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_Fuel",
+        "containerResources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.PlasmaFuel",
+            "_RecordId_": "de9f4d03-6b60-429d-9b26-9f2308bae973"}],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_Coolant",
+        "containerResources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.cold",
+            "_RecordId_": "c4aab556-6ac3-4c62-a81a-8608d2855f20"}],
+        "affectsItemFunctionality": false,
+        "isShared": true,
+        "itemMustBeOnline": false},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_Shield",
+        "containerResources": [],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_Gravity",
+        "containerResources": [],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_QuantumFuel",
+        "containerResources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.QuantumFuel",
+            "_RecordId_": "f4846780-182f-49d1-a711-f08c0172735e"}],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@LOC_EMPTY",
+        "containerResources": [],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@RN_resource_Gas",
+        "containerResources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.CarbonDioxide",
+            "_RecordId_": "0efb796d-49c7-4f8f-8640-21ce6b1fbd97"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Oxygen",
+            "_RecordId_": "15fe1d6a-8e3e-41ad-b4b0-8a5960d75f2d"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Nitrogen",
+            "_RecordId_": "8ee121cc-aabb-4394-87dd-02552d228d0b"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Argon",
+            "_RecordId_": "0d41371c-3cde-4939-8583-cd718f5edd60"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Methane",
+            "_RecordId_": "9e65a7bd-adcf-4129-9ef5-26f4fe13f85b"}],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@LOC_EMPTY",
+        "containerResources": [],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true},
+      {
+        "_Type_": "ItemResourceCompositionMap",
+        "name": "@LOC_EMPTY",
+        "containerResources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.LifeSupport",
+            "_RecordId_": "250d5b5c-9699-4347-95e4-6bc436e8bf73"}],
+        "affectsItemFunctionality": true,
+        "isShared": true,
+        "itemMustBeOnline": true}],
+    "resourcePairs": [
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.Ammonia",
+          "_RecordId_": "a11394c9-ad7c-404d-9209-3a5e57bb4aa4"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/ammonia.json"},
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.Argon",
+          "_RecordId_": "0d41371c-3cde-4939-8583-cd718f5edd60"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/gasparams.argon.json"},
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.Helium",
+          "_RecordId_": "00686389-dfb8-49e4-9eea-66a4ebf24db2"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/helium.json"},
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.CarbonDioxide",
+          "_RecordId_": "0efb796d-49c7-4f8f-8640-21ce6b1fbd97"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/gasparams.carbondioxide.json"},
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.Oxygen",
+          "_RecordId_": "15fe1d6a-8e3e-41ad-b4b0-8a5960d75f2d"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/gasparams.oxygen.json"},
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.Nitrogen",
+          "_RecordId_": "8ee121cc-aabb-4394-87dd-02552d228d0b"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/gasparams.nitrogen.json"},
+      {
+        "_Type_": "ItemRoomResourcePair",
+        "resourceGasRef": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+          "_RecordName_": "ResourceType.Methane",
+          "_RecordId_": "9e65a7bd-adcf-4129-9ef5-26f4fe13f85b"},
+        "roomGasRef": "file://./../../../../libs/foundry/records/roomsystem/gasparams/gasparams.methane.json"}],
+    "itemResourceTypeData": [
+      {
+        "_Type_": "ItemResourceTypeData",
+        "resourceTypeName": "@ui_StoreAll",
+        "resourceTypeDevName": "All",
+        "resourceType": "All"},
+      {
+        "_Type_": "ItemResourceTypeData",
+        "resourceTypeName": "@ui_inventory_tab_vehicle",
+        "resourceTypeDevName": "vent",
+        "resourceType": "Vent"},
+      {
+        "_Type_": "ItemResourceTypeData",
+        "resourceTypeName": "@C07_Search_CommsRelay_Marker",
+        "resourceTypeDevName": "relay",
+        "resourceType": "Relay"},
+      {
+        "_Type_": "ItemResourceTypeData",
+        "resourceTypeName": "@ui_label_lights",
+        "resourceTypeDevName": "light",
+        "resourceType": "Light"}],
+    "maxPowerToCoolantRatio": 2.5,
+    "thrusterCoolantMultiplier": 1.0,
+    "powerBaseConversionRate": 1.0,
+    "uiParams": {
+      "_Type_": "ItemResourceNetworkUIParams",
+      "typeData": [
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemCPU.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_battery_heavy.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemMissile.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemRack.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_Coolant",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_coolant.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_door.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_RoomLift.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_EMP.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_Engine",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemThrusters.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemTank.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_generator_gravity.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemJumpDrive.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_LifeSupportGenerator",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_life_support.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_NotificationVent_on.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_NotificationLights_on.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_Engine",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemThrusters.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_Engine",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemThrusters.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_mining.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_mining.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemMissile.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemMissile.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_PowerPlant",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_generator_power.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_quantum.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_QED.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemTank.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_radar.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_NotificationFuse_on.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_room.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_salvage.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_RoomTurretSeat.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemDashboard.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_ShieldGenerator",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_generator_shield.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_tractor beam.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_OnOffOnly",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_tractor beam.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_turret.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemTurret.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_turret.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemTurret.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemGun.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@RN_Tooltips_Gun",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_weapon_gun.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemGun.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/General/CommonIcons/icon_common_vehicle_wheel_control.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": "UI/Textures/Vector/Ships/ProfessionScreens/Engineering/Engineering_Icon_ItemRack.svg"},
+        {
+          "_Type_": "ItemResourceNetworkTypeUIData",
+          "toolTip": "@LOC_EMPTY",
+          "typeIcon": ""}],
+      "exclusiveTypes": [
+        "SeatAccess",
+        "SeatDashboard",
+        "WeaponRegenPool",
+        "ShieldController",
+        "Seat",
+        "Turret",
+        "SelfDestruct",
+        "ManneuverThruster",
+        "MainThruster",
+        "MainEngine",
+        "UNDEFINED",
+        "QuantumFuelTank",
+        "Gadget",
+        "Usable"],
+      "doorFilter": {
+        "_Type_": "ItemResourceNetworkMapTriggerEntry",
+        "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Icon_Doors.svg",
+        "name": "@RN_Filters_Doors"},
+      "itemFilter": {
+        "_Type_": "ItemResourceNetworkMapTriggerEntry",
+        "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Icon_Systems.svg",
+        "name": "@RN_Filters_Systems"},
+      "roomFilter": {
+        "_Type_": "ItemResourceNetworkMapTriggerEntry",
+        "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Icon_Rooms.svg",
+        "name": "@RN_Filters_Rooms"},
+      "healthRanges": [
+        0.8,
+        0.25,
+        1e-8,
+        0.0],
+      "wearRanges": [
+        0.0,
+        0.6,
+        0.8,
+        1.0],
+      "notificationMessages": [
+        {
+          "_Type_": "EngineeringStateMessages",
+          "message": "@RN_Notifications_Fixed"},
+        {
+          "_Type_": "EngineeringStateMessages",
+          "message": "@RN_Notifications_ProblemDetected"},
+        {
+          "_Type_": "EngineeringStateMessages",
+          "message": "@RN_Notifications_Warning"},
+        {
+          "_Type_": "EngineeringStateMessages",
+          "message": "@RN_Notifications_Disabled"}],
+      "boxoutParams": {
+        "_Type_": "ItemResourceBoxoutUIParams",
+        "temperature": {
+          "_Type_": "BoxoutStat",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_hullscraping_temperature.svg",
+          "title": "@RN_stat_temperature",
+          "descriptor": "@text_ui_SIUnit_Temperature"},
+        "health": {
+          "_Type_": "BoxoutStat",
+          "icon": "UI/Textures/Vector/Visor/Status/HealthIcon.svg",
+          "title": "@RN_stat_health",
+          "descriptor": "@text_ui_SIUnit_Percent"},
+        "wear": {
+          "_Type_": "BoxoutStat",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_common_ship_component_wear.svg",
+          "title": "@RN_stat_wearAndTear",
+          "descriptor": "@text_ui_SIUnit_Percent"},
+        "filter": {
+          "_Type_": "BoxoutStat",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_common_filter.svg",
+          "title": "@RN_stat_filter",
+          "descriptor": "@text_ui_SIUnit_Percent"},
+        "pressure": {
+          "_Type_": "BoxoutStat",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_common_pressure.svg",
+          "title": "@RN_stat_pressure",
+          "descriptor": "@engineering_ui_unit_pressure"},
+        "bricking": {
+          "_Type_": "BoxoutStat",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_fleetmanager_bricked.svg",
+          "title": "@UI_TooltipEntitlement_Bricking",
+          "descriptor": "@LOC_EMPTY"},
+        "stateArray": [
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Baseline",
+            "icon": "",
+            "toolTip": "@RN_Notifications_Fixed"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Warning",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_Damaged.svg",
+            "toolTip": "@RN_Warning_Damaged"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Warning",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_Overheat.svg",
+            "toolTip": "@RN_Warning_Overheating"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Critical",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_NoPower.svg",
+            "toolTip": "@RN_Warning_NoPower"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Warning",
+            "icon": "UI/Textures/Vector/General/CommonIcons/icon_fleetmanager_Warning_Bricked.svg",
+            "toolTip": "@UI_TooltipEntitlement_Bricking"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Critical",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_Distorted.svg",
+            "toolTip": "@RN_Warning_Distorted"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Critical",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_Overheat.svg",
+            "toolTip": "@RN_Warning_OverheatAutoShutOff"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Disabled",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_Destroyed.svg",
+            "toolTip": "@RN_Warning_Destroyed"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Disabled",
+            "icon": "UI/Textures/Vector/General/CommonIcons/icon_fleetmanager_Warning_Bricked.svg",
+            "toolTip": "@UI_TooltipEntitlement_Bricked"},
+          {
+            "_Type_": "BoxoutItemStatus",
+            "state": "Critical",
+            "icon": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Warning_Fire.svg",
+            "toolTip": "@RN_Warning_Burning"}],
+        "atmosphereGood": {
+          "_Type_": "BoxoutAtmosphereStatus",
+          "icon": "UI/Textures/General/Markers/marker_icon_vehicle_water.svg",
+          "title": "@RN_stat_atmosphere",
+          "pressureRange": 0.05,
+          "temperatureRange": 10.0},
+        "atmosphereWarning": {
+          "_Type_": "BoxoutAtmosphereStatus",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_common_warning_exclamation.svg",
+          "title": "@Frontend_Warning",
+          "pressureRange": 0.25,
+          "temperatureRange": 25.0},
+        "atmosphereDanger": {
+          "_Type_": "BoxoutAtmosphereStatus",
+          "icon": "UI/Textures/Vector/General/CommonIcons/icon_mining_explosivecharge.svg",
+          "title": "@UI_MF_Danger",
+          "pressureRange": 0.0,
+          "temperatureRange": 0.0},
+        "leftPivot": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 0.0,
+          "z": 0.0},
+        "leftAnchor": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 0.0,
+          "z": 0.0},
+        "rightPivot": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "rightAnchor": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      "defaultPreset": "@RN_Presets_Default",
+      "unknownPreset": "@RN_Presets_Unknown"},
+    "powerParams": {
+      "_Type_": "ItemResourceNetworkPowerParams",
+      "modifiers": [
+        {
+          "_Type_": "ItemResourceNetworkPowerModifier",
+          "additiveModifier": 0},
+        {
+          "_Type_": "ItemResourceNetworkPowerModifier",
+          "additiveModifier": 1},
+        {
+          "_Type_": "ItemResourceNetworkPowerModifier",
+          "additiveModifier": 2},
+        {
+          "_Type_": "ItemResourceNetworkPowerModifier",
+          "additiveModifier": 3},
+        {
+          "_Type_": "ItemResourceNetworkPowerModifier",
+          "additiveModifier": 4}]},
+    "defaultPowerDistributionParams": {
+      "_Type_": "ItemResourceNetworkDefaultPowerDistributionParams",
+      "powerDistPoolsFillMin": true,
+      "powerDistCoolerMin": 1.0,
+      "powerDistPoolsProportion": 1.0,
+      "poolDefaultWeapons": 0.5,
+      "poolDefaultEngines": 0.5,
+      "poolDefaultShields": 0.5},
+    "misfireRepairGracePeriod": 1.5}}

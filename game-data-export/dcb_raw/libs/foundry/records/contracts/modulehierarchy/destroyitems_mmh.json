@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.DestroyItems_MMH",
+  "_RecordId_": "594270d4-990e-4921-b6df-4ad9ac66257f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/ModularParts/ClearAll.xml",
+        "subModuleHierarchy": null}]}}

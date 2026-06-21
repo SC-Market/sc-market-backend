@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.ORIG_100i_BlueAmertrine_Blue_Gold",
+  "_RecordId_": "b5b65351-cdbb-44a7-91ba-5d446b58bf34",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_Name100i_Paint_Blue_Gold",
+    "description": "@item_Desc100i_Paint_Blue_Gold",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_100i_blue_gold.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

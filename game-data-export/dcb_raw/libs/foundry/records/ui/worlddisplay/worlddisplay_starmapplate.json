@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "WorldDisplayEnvironment.WorldDisplay_StarMapPlate",
+  "_RecordId_": "4c682271-20cb-417a-8c39-d3b98984c5f2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WorldDisplayEnvironment",
+    "environments": [
+      {
+        "_Type_": "WorldDisplay_PlaneEnvironment",
+        "alignment": "Owner",
+        "environmentColor": {
+          "_Type_": "WorldDisplayEnvironmentColor_Manufacturer",
+          "color": "Neutral",
+          "alpha": 20},
+        "segments": 64,
+        "rings": [
+          {
+            "_Type_": "WorldDisplay_PlaneEnvironment_Ring",
+            "relativeRadius": 0.81,
+            "width": 0.02,
+            "elevation": 0.0,
+            "spriteSlot": {
+              "_Type_": "SimpleSpriteSlot",
+              "sheet": "file://./../../../../../libs/foundry/records/ui/simplespritesheet.holodisplaysprites.json",
+              "column": 2,
+              "row": 2,
+              "flipU": false,
+              "flipV": false},
+            "uvInset": {
+              "_Type_": "UvInset",
+              "top": 0.05,
+              "right": 0.01,
+              "bottom": 0.05,
+              "left": 0.01},
+            "innerRings": 0,
+            "gapAngle": 0.0,
+            "rotation": 0.0}]}]}}

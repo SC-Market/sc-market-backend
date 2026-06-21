@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.NorthRock_SeniorAgent_Demotion",
+  "_RecordId_": "17e1d734-1959-4553-b0f9-07dc42592149",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@NorthRock_ReputationJournal_SeniorAgent_Demotion_Title",
+    "ShortTitle": "@NorthRock_ReputationJournal_Generic_Demotion_ShortTitle",
+    "SubHeading": "@northrock_from_001",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@NorthRock_ReputationJournal_SeniorAgent_Demotion_BodyText"},
+    "tutorialEntry": false}}

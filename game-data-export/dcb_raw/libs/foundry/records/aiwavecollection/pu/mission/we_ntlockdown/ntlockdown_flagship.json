@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.NTLockdown_Flagship",
+  "_RecordId_": "4b532733-3f85-4321-9393-623fa94169a6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 0,
+        "textId": "",
+        "staggerTime": 0.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/aegs_reclaimer_pu_ai_ninetails.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot50.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_PU_Turret_incombat",
+  "_RecordId_": "4d958f64-4ae5-4217-a01f-c9773e9d98ac",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 50.0,
+    "sixthSenseRange": 0.0,
+    "clampDistanceForHorizontalFOV": 15.0,
+    "clampDistanceForVerticalFOV": 10.0,
+    "FOVHorizontal": 320.0,
+    "FOVVertical": 120.0,
+    "PrimaryFOVHorizontal": 160.0,
+    "PrimaryFOVVertical": 120.0}}

@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "SubHarvestableMultiConfigRecord.LootGeneration_MultiSlotpreset_Kareah",
+  "_RecordId_": "cdeb95be-bf84-4336-9088-ed17c6771864",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableMultiConfigRecord",
+    "multiConfig": {
+      "_Type_": "SubHarvestableMultiConfig",
+      "defaultConfig": {
+        "_Type_": "SubHarvestableConfigSingleRef",
+        "subConfigRef": "file://./../../../../../libs/foundry/records/harvestable/slotpresets/lootgeneration_slotpreset_kareah.json"},
+      "ignoreAttachableTagsForTaggedConfigs": true,
+      "taggedConfigs": [
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "Legendary - Contraband Room",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.cc8957cf-45da-4a55-84cc-af4a125eff2e",
+                "_RecordId_": "cc8957cf-45da-4a55-84cc-af4a125eff2e"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 0.2,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/lootcontainer_crate01_nologo.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 1.0,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": {
+                    "_Type_": "LootConfig",
+                    "lootConstraints": {
+                      "_Type_": "LootConstraints",
+                      "poolFilter": null,
+                      "secondaryChoices": null,
+                      "fullnessFactorRange": {
+                        "_Type_": "FloatFactorRange",
+                        "min": 0.2,
+                        "max": 1.0},
+                      "totalResultsLimit": 1,
+                      "chanceToGenerate": 1.0,
+                      "chanceToGenerateAdditionalAttachedInventories": 1.0,
+                      "advanced": {
+                        "_Type_": "AdvancedLootConstraints",
+                        "pruningLevel": "containerSize",
+                        "fullnessMode": "stopAfterExceed"}},
+                    "lootTable": "file://./../../../../../libs/foundry/records/lootgeneration/loottables/securityoutpost_loot.json",
+                    "lootTableV3": null}}]}}}]}}}

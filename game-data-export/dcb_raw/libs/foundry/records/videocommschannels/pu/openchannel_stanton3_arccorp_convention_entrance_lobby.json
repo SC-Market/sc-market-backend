@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_Stanton3_ArcCorp_Convention_Entrance_Lobby",
+  "_RecordId_": "1f00ce3d-446b-4fd9-993d-8f7df58f1335",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_Stanton3_ArcCorp_Convention_Entrance_Lobby",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

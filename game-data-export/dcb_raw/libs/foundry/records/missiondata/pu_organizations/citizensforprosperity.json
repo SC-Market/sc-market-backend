@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "MissionOrganization.CitizensForProsperity",
+  "_RecordId_": "ea682a0c-2ece-46a8-82b2-d03d941bd7c7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e2bbeaec-58b4-4e16-83c3-8e4ee6c41552",
+            "_RecordId_": "e2bbeaec-58b4-4e16-83c3-8e4ee6c41552"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@CitizensForPyro_RepUI_Name"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_citizensforprosperity.json"}}

@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Fdcrt_Ellroys",
+  "_RecordId_": "3d46c78c-2ba7-4284-9bf5-52f22fd88ffa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_fdcrt_ellroys",
+    "restrictViewBounds": false}}

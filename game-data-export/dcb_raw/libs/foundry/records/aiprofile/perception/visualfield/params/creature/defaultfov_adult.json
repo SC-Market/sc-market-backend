@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_Adult",
+  "_RecordId_": "30d5b83b-c1ff-4cf6-86a6-580114d9adf6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 50.0,
+    "sixthSenseRange": 0.0,
+    "clampDistanceForHorizontalFOV": 200.0,
+    "clampDistanceForVerticalFOV": 200.0,
+    "FOVHorizontal": 360.0,
+    "FOVVertical": 179.0,
+    "PrimaryFOVHorizontal": 360.0,
+    "PrimaryFOVVertical": 360.0}}

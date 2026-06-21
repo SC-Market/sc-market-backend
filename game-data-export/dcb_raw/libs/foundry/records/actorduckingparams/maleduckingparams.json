@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "ActorDuckingParams.MaleDuckingParams",
+  "_RecordId_": "4a83e669-417c-4be2-97bb-f900f8f31114",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorDuckingParams",
+    "heightRefBone": "Head",
+    "hipBone": "Hips",
+    "headLowpassBone": "Head_LowPass",
+    "refBoneDesiredClearance": 0.3,
+    "collisionCheckOrigin": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 1.2},
+    "collisionCheckDistance": 1.2,
+    "minDuckHeight": 1.5,
+    "noWeaponPoseParams": {
+      "_Type_": "DuckPose",
+      "spineMaxBendAngle": 44.5,
+      "spineToHipRatio": 0.5,
+      "hipHorOffsetScale": {
+        "_Type_": "Vec2",
+        "x": -0.2,
+        "y": -0.17}},
+    "stockedPoseParams": {
+      "_Type_": "DuckPose",
+      "spineMaxBendAngle": 39.9,
+      "spineToHipRatio": 0.83,
+      "hipHorOffsetScale": {
+        "_Type_": "Vec2",
+        "x": 0.0,
+        "y": -0.37}},
+    "spine": [
+      {
+        "_Type_": "SpineBone",
+        "boneName": "Spine",
+        "weight": 1.0,
+        "bonesToCounterRotate": []},
+      {
+        "_Type_": "SpineBone",
+        "boneName": "Spine1",
+        "weight": 1.0,
+        "bonesToCounterRotate": []},
+      {
+        "_Type_": "SpineBone",
+        "boneName": "Spine2",
+        "weight": 1.0,
+        "bonesToCounterRotate": [
+          {
+            "_Type_": "BoneCounterRotateConfig",
+            "boneName": "RightForearm",
+            "smoothingChainLength": 0},
+          {
+            "_Type_": "BoneCounterRotateConfig",
+            "boneName": "LeftForearm",
+            "smoothingChainLength": 0},
+          {
+            "_Type_": "BoneCounterRotateConfig",
+            "boneName": "Head",
+            "smoothingChainLength": 2}]}]}}

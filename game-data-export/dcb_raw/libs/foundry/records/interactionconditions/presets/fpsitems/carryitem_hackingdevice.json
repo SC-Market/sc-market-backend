@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "InteractionConditionPreset.CarryItem_HackingDevice",
+  "_RecordId_": "87e08454-857d-43c2-8a41-a0f6e8113b0e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      null,
+      null],
+    "conditionToHideParams": []}}

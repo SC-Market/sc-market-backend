@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.Aldrich",
+  "_RecordId_": "70afd5fb-e950-443f-9268-fad2503b3548",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Aldrich",
+    "paintFile": "UI/fonts/Install/Aldrich regular.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.86,
+    "leadingModifier": -0.04,
+    "topMarginModifier": 0.05,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 4}}

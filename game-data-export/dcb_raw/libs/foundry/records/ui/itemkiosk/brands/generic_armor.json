@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Generic_Armor",
+  "_RecordId_": "c4fd1297-4c90-4f73-8cb7-56787957b301",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "genericArmor",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/genericArmor.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 46,
+      "g": 189,
+      "b": 210,
+      "a": 255}}}

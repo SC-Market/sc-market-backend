@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "EntityClassDefinition.PlanetInclusionVolume",
+  "_RecordId_": "a89515cd-0726-46fc-9e48-dbdc2974ea4f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "PlanetInclusionVolumeParams",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 20.0,
+          "y": 20.0,
+          "z": 20.0}}]}}

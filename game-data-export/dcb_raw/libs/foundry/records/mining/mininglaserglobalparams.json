@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "MiningLaserGlobalParams.MiningLaserGlobalParams",
+  "_RecordId_": "a3c468d8-1194-44a3-b3e6-a8d65ecebd85",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MiningLaserGlobalParams",
+    "blockThrottleChangeWhenNotFiring": false,
+    "throttleResetOnStopFire": false,
+    "throttleChangePerAction": 0.01,
+    "throttleAccPeriod": 0.1,
+    "throttleAccFactor": 2.0,
+    "throttleHoldAccFactor": 0.25,
+    "throttleRTPC": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "Mineable_Laser_Throttle"},
+    "mineableGlowStrengthRTPC": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "mineableOptimalBreakZoneRTPC": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""}}}

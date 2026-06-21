@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_FOB_Abandoned",
+  "_RecordId_": "ed7d8ae6-2ff6-40cd-aa57-b15cb316a203",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_unlawful_ninetails.json"},
+    "roomIdentifier": null,
+    "trespassWarningSeconds": 30.0,
+    "trespassRevokeWarningSeconds": 900.0}}

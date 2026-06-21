@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus34",
+  "_RecordId_": "bae8eaab-d061-4dc1-b020-f7e6227e2b96",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusRespawnPrison_Title",
+    "BodyText": "@Hints_ActorStatusRespawnPrison",
+    "BodyTextGamePad": "@Hints_ActorStatusRespawnPrison",
+    "BodyTextJoystick": "@Hints_ActorStatusRespawnPrison",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

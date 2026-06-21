@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "AIWaveCollection.EA_WingMan_Wave",
+  "_RecordId_": "d1389839-a74d-4bdc-a43f-5115f2035ac6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 0.5,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/spaceships/anvl_hornet_f7cs_pu_ai_uee_vixen.json",
+            "name": "@dfm_ui_WingmanVixen",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../libs/foundry/records/crewmanifest/pu/uee/pu_human_uee_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../libs/foundry/records/aiprofile/skills/ea_3_veteran.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null},
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/spaceships/anvl_hornet_f7cr_pu_ai_uee_warlord.json",
+            "name": "@dfm_ui_WingmanWarlord",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../libs/foundry/records/crewmanifest/pu/uee/pu_human_uee_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../libs/foundry/records/aiprofile/skills/ea_3_veteran.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

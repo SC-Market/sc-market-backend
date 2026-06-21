@@ -1,0 +1,474 @@
+{
+  "_RecordName_": "AIMotiveList.YormandiMotiveList",
+  "_RecordId_": "8937cb88-4d41-4fc8-b83b-378c21688501",
+  "_RecordTag_": "CoreAI",
+  "_RecordValue_": {
+    "_Type_": "AIMotiveList",
+    "motiveList": [
+      {
+        "_Type_": "AIBossMotive",
+        "id": "1c23e5f2-a111-4cf9-b33f-23e7a99ff12d",
+        "actionDefs": [
+          {
+            "_Pointer_": "ptr:3",
+            "_Type_": "AIMotiveAction",
+            "id": "95b4ac66-9ca8-4cf5-8937-2d4d091c057e",
+            "actionName": "Bite",
+            "conditions": [
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "74d795ce-2d1c-415f-adbb-76865d710bcd",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 15.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true},
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "2cbefc27-b692-428d-8f20-83c00eec65cd",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true}],
+            "priority": -1,
+            "actionDetails": [],
+            "params": []},
+          {
+            "_Pointer_": "ptr:4",
+            "_Type_": "AIMotiveAction",
+            "id": "a2acf757-c970-4cb7-8ded-fa459e49895d",
+            "actionName": "ShortBeam",
+            "conditions": [
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "c2bbe6f9-60a2-4e7a-9233-70204227f5df",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 1.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true},
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "2c98cc52-e418-400a-a794-c03d70098acc",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true}],
+            "priority": -1,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "",
+                "fragmentId": "melee_heavy",
+                "fragmentTags": "projectile+short"},
+              {
+                "_Type_": "AIMotiveActionFireModeDetails",
+                "detailsId": "",
+                "fireModeName": "Phase 1 weapon"}],
+            "params": []},
+          {
+            "_Pointer_": "ptr:6",
+            "_Type_": "AIMotiveAction",
+            "id": "47e08ede-f2be-49ae-819f-654683dcf525",
+            "actionName": "MediumBeam",
+            "conditions": [
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "d4d5ae28-90c1-4f0a-8481-6871ffba6239",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 1.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true},
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "757bfedd-9891-4e08-b903-2dbd668538f1",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true}],
+            "priority": -1,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "",
+                "fragmentId": "melee_heavy",
+                "fragmentTags": "projectile+medium"},
+              {
+                "_Type_": "AIMotiveActionFireModeDetails",
+                "detailsId": "",
+                "fireModeName": "Phase 2 Medium Beam"}],
+            "params": []},
+          {
+            "_Pointer_": "ptr:7",
+            "_Type_": "AIMotiveAction",
+            "id": "e1d80d13-4653-4878-9e6a-507a24b67787",
+            "actionName": "Spin",
+            "conditions": [
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "2d3dc4da-e9fa-4a44-aa21-5f09cc2ef838",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 15.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true},
+              {
+                "_Type_": "Condition_Token",
+                "id": "a583eea3-e60e-4bc4-8bae-c9fea6921bac",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "maxAllowed": 1,
+                "token": "YormandiSpinActionToken"},
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "1c2d1fad-574f-4fce-9b67-213ef5868314",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true}],
+            "priority": -1,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "",
+                "fragmentId": "melee_heavy",
+                "fragmentTags": "projectile+spin"},
+              {
+                "_Type_": "AIMotiveActionFireModeDetails",
+                "detailsId": "",
+                "fireModeName": "Phase 3 AOE"}],
+            "params": []},
+          {
+            "_Pointer_": "ptr:8",
+            "_Type_": "AIMotiveAction",
+            "id": "a5cca6e2-1438-45c0-9c7f-7d93347a2ddc",
+            "actionName": "SpawnSecondYormandi",
+            "conditions": [
+              {
+                "_Type_": "Condition_HPThreshold",
+                "id": "446cc1c0-455b-4775-b207-38d950994c38",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "threshold": 0.666}],
+            "priority": 1000,
+            "actionDetails": [],
+            "params": []},
+          {
+            "_Pointer_": "ptr:1",
+            "_Type_": "AIMotiveAction",
+            "id": "544d8b0a-419a-4ffb-aae3-e9820f110b0e",
+            "actionName": "MinorPainReaction",
+            "conditions": [
+              {
+                "_Type_": "Condition_AttachedEntityDestruction",
+                "id": "895ba487-5fab-4264-9f04-e345913dd8c0",
+                "interrupt": true,
+                "minSatisfactionDuration": -1.0,
+                "tags": {
+                  "_Type_": "TagsDNF",
+                  "terms": [
+                    {
+                      "_Type_": "TagsDNFTerm",
+                      "positiveTags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.71962356-b50e-4c43-99f8-4ff7c7a16c82",
+                          "_RecordId_": "71962356-b50e-4c43-99f8-4ff7c7a16c82"}],
+                      "negativeTags": []}]},
+                "resetAfterTrigger": true},
+              {
+                "_Type_": "Condition_SharedTimer",
+                "id": "cd4ddc68-9169-4ab1-a817-064b155cb1ac",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 0.0,
+                "timerName": "DiveTimer"}],
+            "priority": 10,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionBurrowDetails",
+                "detailsId": "",
+                "burrowType": "MinorPain"},
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/yormandibehaviourqueries/yormandirelocationposition_forced.json"}],
+            "params": []},
+          {
+            "_Pointer_": "ptr:2",
+            "_Type_": "AIMotiveAction",
+            "id": "a0db12bc-08f8-4b09-a1dd-ef6571fae994",
+            "actionName": "MajorPainReaction",
+            "conditions": [
+              {
+                "_Type_": "Condition_DamageReceivedWhileTracking",
+                "id": "989754e5-fff6-485d-ac83-dd5bd156283a",
+                "interrupt": true,
+                "minSatisfactionDuration": -1.0,
+                "damage": {
+                  "_Type_": "DamageInfo",
+                  "DamagePhysical": 0.0,
+                  "DamageEnergy": 0.0,
+                  "DamageDistortion": 100.0,
+                  "DamageThermal": 0.0,
+                  "DamageBiochemical": 0.0,
+                  "DamageStun": 0.0},
+                "resetWhenTrackingRestarts": true}],
+            "priority": 0,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionBurrowDetails",
+                "detailsId": "",
+                "burrowType": "MajorPain"},
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "PainReactionAnim",
+                "fragmentId": "SpecialEvent",
+                "fragmentTags": "WeakspotMajorHit"},
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "PainRecoveryAnim",
+                "fragmentId": "SpecialEvent",
+                "fragmentTags": "WeakspotMajorRecover"}],
+            "params": []},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "692cd600-34c5-4999-bdf4-477272adea9f",
+            "actionName": "ShortBeamMulti",
+            "conditions": [
+              {
+                "_Type_": "Condition_PerceivedHostilesInRange",
+                "id": "f90b4a3b-236e-4e87-abb3-7632e411857c",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "minimumCount": 2,
+                "maximumCount": -1,
+                "minimumRange": 0.0,
+                "maximumRange": 300.0,
+                "halfAngle": 60.0,
+                "maxTime": 3.0},
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "b898c9c8-32dc-4f3c-9ff4-3f5d9333f79e",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 15.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true}],
+            "priority": -1,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "",
+                "fragmentId": "melee_heavy",
+                "fragmentTags": "projectile+short+multi"},
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/ttsqueries/yormandicombattarget_multi.json"},
+              {
+                "_Type_": "AIMotiveActionFireModeDetails",
+                "detailsId": "",
+                "fireModeName": "Phase 1 weapon"}],
+            "params": []},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "ca356c7f-d6e4-48e4-845b-58f9087ffee3",
+            "actionName": "MediumBeamMulti",
+            "conditions": [
+              {
+                "_Type_": "Condition_PerceivedHostilesInRange",
+                "id": "4935c3e0-8a86-4bbc-9eac-3539299b0607",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "minimumCount": 2,
+                "maximumCount": -1,
+                "minimumRange": 0.0,
+                "maximumRange": 300.0,
+                "halfAngle": 60.0,
+                "maxTime": 3.0},
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "8184cb89-7dd6-4ae9-9b0a-904be41392b9",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 10.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true}],
+            "priority": -1,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "",
+                "fragmentId": "melee_heavy",
+                "fragmentTags": "projectile+medium+multi"},
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/ttsqueries/yormandicombattarget_multi.json"},
+              {
+                "_Type_": "AIMotiveActionFireModeDetails",
+                "detailsId": "",
+                "fireModeName": "Phase 2 Multi-Beam"}],
+            "params": []},
+          {
+            "_Pointer_": "ptr:9",
+            "_Type_": "AIMotiveAction",
+            "id": "af6edc42-5292-459d-85ee-cdec786cab05",
+            "actionName": "Despawn",
+            "conditions": [
+              {
+                "_Type_": "Condition_TimeSinceSpawn",
+                "id": "5f04c5d7-4af6-4d93-8dc2-ec481dcb27ea",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "timerDuration": 30.0},
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "98bdde7f-4059-4891-b181-4186db255f66",
+                "interrupt": false,
+                "minSatisfactionDuration": 10.0,
+                "requiresTarget": false}],
+            "priority": 0,
+            "actionDetails": [],
+            "params": []},
+          {
+            "_Pointer_": "ptr:5",
+            "_Type_": "AIMotiveAction",
+            "id": "45406ceb-cc59-4c7b-b252-789218810583",
+            "actionName": "RelocateForProximity",
+            "conditions": [
+              {
+                "_Type_": "Condition_PerceivedHostilesInRange",
+                "id": "5b5bd2d4-9344-4fe7-ad43-63a3f3369a8a",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "minimumCount": -1,
+                "maximumCount": 0,
+                "minimumRange": 0.0,
+                "maximumRange": 30.0,
+                "halfAngle": 180.0,
+                "maxTime": 3.0},
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "95d8bfc7-fa5e-4d99-b1cd-8d6540f64947",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true},
+              {
+                "_Type_": "Condition_TimeSinceSpawn",
+                "id": "a7ddbfbf-a2bc-4111-8e78-84a23b082b07",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "timerDuration": 30.0},
+              {
+                "_Type_": "Condition_SharedTimer",
+                "id": "256ac6a5-1425-4e31-8a7c-2fcc5a298ea1",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 10.0,
+                "timerName": "DiveTimer"}],
+            "priority": 30,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/yormandibehaviourqueries/yormandirelocationposition_effectiverange.json"},
+              {
+                "_Type_": "AIMotiveActionBurrowDetails",
+                "detailsId": "",
+                "burrowType": "Relocate"}],
+            "params": []},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "9abbbc0a-331e-4fd2-919d-bbd0155537ca",
+            "actionName": "RelocateForTime",
+            "conditions": [
+              {
+                "_Type_": "Condition_SharedTimer",
+                "id": "e4fe02f6-852a-4ad4-aa80-d86a4395c894",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 15.0,
+                "timerName": ""}],
+            "priority": 30,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/yormandibehaviourqueries/yormandirelocationposition_forced.json"},
+              {
+                "_Type_": "AIMotiveActionBurrowDetails",
+                "detailsId": "",
+                "burrowType": "Relocate"}],
+            "params": []}],
+        "triggerableActions": [
+          "_PointsTo_:ptr:1",
+          "_PointsTo_:ptr:2"],
+        "globalBehaviorParameters": [],
+        "phases": [
+          {
+            "_Pointer_": "ptr:10",
+            "_Type_": "AIBossPhase",
+            "id": "58dd5e1b-ef35-4eaa-bf51-700c1b57fa7d",
+            "phaseName": "Phase1_Start",
+            "availableActions": [
+              "_PointsTo_:ptr:3",
+              "_PointsTo_:ptr:4",
+              "_PointsTo_:ptr:5"],
+            "behaviorParameters": []},
+          {
+            "_Pointer_": "ptr:11",
+            "_Type_": "AIBossPhase",
+            "id": "8a5647ad-87cc-4f8f-9e50-6fc28f49dd45",
+            "phaseName": "Phase2",
+            "availableActions": [
+              "_PointsTo_:ptr:3",
+              "_PointsTo_:ptr:6",
+              "_PointsTo_:ptr:5"],
+            "behaviorParameters": []},
+          {
+            "_Pointer_": "ptr:12",
+            "_Type_": "AIBossPhase",
+            "id": "d6803eae-f802-4e18-9cb7-432a3e198846",
+            "phaseName": "Phase3",
+            "availableActions": [
+              "_PointsTo_:ptr:6",
+              "_PointsTo_:ptr:7",
+              "_PointsTo_:ptr:5"],
+            "behaviorParameters": []},
+          {
+            "_Pointer_": "ptr:13",
+            "_Type_": "AIBossPhase",
+            "id": "10e0b4bc-3cf8-4bf4-9960-200e4ec23bbc",
+            "phaseName": "Global",
+            "availableActions": [
+              "_PointsTo_:ptr:8",
+              "_PointsTo_:ptr:1",
+              "_PointsTo_:ptr:2",
+              "_PointsTo_:ptr:9"],
+            "behaviorParameters": []}],
+        "transitions": [
+          {
+            "_Type_": "AIBossPhaseTransition",
+            "id": "15985f91-d575-48dd-80fc-fd09558ddfa7",
+            "from": "_PointsTo_:ptr:10",
+            "to": "_PointsTo_:ptr:11",
+            "conditions": [
+              {
+                "_Type_": "Condition_HPThreshold",
+                "id": "30b04c19-9be8-478a-8755-076d4dddb487",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "threshold": 0.666}]},
+          {
+            "_Type_": "AIBossPhaseTransition",
+            "id": "d2aa0d1e-b5b4-41b6-91b1-ba1287155d9b",
+            "from": "_PointsTo_:ptr:11",
+            "to": "_PointsTo_:ptr:12",
+            "conditions": [
+              {
+                "_Type_": "Condition_HPThreshold",
+                "id": "27719561-97a7-4902-8193-7611717a6ab0",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "threshold": 0.333}]}],
+        "initialPhase": "_PointsTo_:ptr:10",
+        "globalPhase": "_PointsTo_:ptr:13"}]}}

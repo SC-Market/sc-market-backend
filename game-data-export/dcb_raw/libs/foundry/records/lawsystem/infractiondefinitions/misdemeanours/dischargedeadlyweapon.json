@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "InfractionDefinition.DischargeDeadlyWeapon",
+  "_RecordId_": "306a4c35-497b-4c47-aca2-18b0215968fa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InfractionDefinition",
+    "name": "@Infractions_Name_002",
+    "description": "@Infractions_Desc_002",
+    "triggers": [
+      "FireWeapon"],
+    "defaultParameters": {
+      "_Type_": "InfractionParameters",
+      "isFelony": -1,
+      "graceAllowance": -1,
+      "graceAllowanceCooldown": -1.0,
+      "gracePeriod": -1.0,
+      "graceCooloffScale": -1.0,
+      "graceWarnings": [],
+      "displayGraceTime": -1,
+      "escalatedPaymentFineMultiplier": 64.0,
+      "earlyPaymentPeriod": 168.0,
+      "lifetime": 168.0,
+      "coolOffTime": 20.0,
+      "pressChargesNotificationTime": -1.0,
+      "removeTimeSeconds": -1.0,
+      "felonyMerits": -1,
+      "ignoreIfAgainstPartyMember": -1,
+      "hideCrimeNotification": -1,
+      "hideCrimeInJournal": -1}}}

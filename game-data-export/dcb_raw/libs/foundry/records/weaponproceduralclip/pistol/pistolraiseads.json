@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "WeaponProceduralClip.PistolRaiseADS",
+  "_RecordId_": "5acaca96-eb86-4de5-a2c7-8896bc6e01c6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipRaise",
+      "blendTime": 1.0,
+      "weaponRaise": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "weaponShift": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "raiseTime": 0.01}}}

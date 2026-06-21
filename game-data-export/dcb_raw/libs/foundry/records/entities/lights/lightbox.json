@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "EntityClassDefinition.LightBox",
+  "_RecordId_": "fbadb5bb-b57c-4390-9d3f-804499db58f9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Box.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 0.0,
+      "b": 1.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "LightBoxComponentParams"}]}}

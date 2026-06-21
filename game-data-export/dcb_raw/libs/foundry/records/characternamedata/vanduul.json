@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.Vanduul",
+  "_RecordId_": "137d2b62-d278-4ade-865a-6b00722bb11e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "actor_species_vanduul",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 0,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.05}}

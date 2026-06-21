@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "WebCustomizationGlobalParams.WebCustomizationGlobalParams",
+  "_RecordId_": "f2ffc641-9872-4157-b45f-eb8e54636230",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WebCustomizationGlobalParams",
+    "defaultLoadoutKitName": "@item_NameClassic_LoadoutKit",
+    "typeNames": [
+      {
+        "_Type_": "WebCustomizationItemTypeName",
+        "name": "@item_TypeWeapon",
+        "itemTypes": [
+          "WeaponGun",
+          "Missile",
+          "MissileLauncher",
+          "Turret"]},
+      {
+        "_Type_": "WebCustomizationItemTypeName",
+        "name": "@item_TypePowerPlant",
+        "itemTypes": [
+          "PowerPlant"]},
+      {
+        "_Type_": "WebCustomizationItemTypeName",
+        "name": "@item_TypeShield",
+        "itemTypes": [
+          "Shield"]},
+      {
+        "_Type_": "WebCustomizationItemTypeName",
+        "name": "@item_TypeCooler",
+        "itemTypes": [
+          "Cooler"]},
+      {
+        "_Type_": "WebCustomizationItemTypeName",
+        "name": "@item_TypeQuantumDrive",
+        "itemTypes": [
+          "QuantumDrive"]}]}}

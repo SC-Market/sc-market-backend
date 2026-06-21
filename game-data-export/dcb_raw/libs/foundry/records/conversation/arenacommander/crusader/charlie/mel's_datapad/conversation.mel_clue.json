@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Mel_Clue",
+  "_RecordId_": "13566985-0ef5-40de-b86e-ae98a780e753",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_ososky_covalex_clue6_smugglersnote_001.json",
+        "skipNodeInXSecs": -1.0}]}}

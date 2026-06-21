@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "CargoManifest.LegalCargo_CleanAir_Large",
+  "_RecordId_": "c30bf0fa-9e9a-482d-b481-36af80264baf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b9a647c-91f4-4732-b572-912ac03e73f2",
+          "_RecordId_": "4b9a647c-91f4-4732-b572-912ac03e73f2"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.392f2821-b345-4579-94de-5933fbc033fd",
+          "_RecordId_": "392f2821-b345-4579-94de-5933fbc033fd"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6722405f-bacd-4830-bdbd-4a3ada93ade4",
+          "_RecordId_": "6722405f-bacd-4830-bdbd-4a3ada93ade4"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Random",
+      "resources": [
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.VentFilters",
+            "_RecordId_": "990291f7-211f-4c04-914f-bc98385451be"},
+          "probability": 1.0}],
+      "minCapacityRange": 0.7,
+      "maxCapacityRange": 1.0},
+    "cargoSpawnRules": [],
+    "tags": []}}

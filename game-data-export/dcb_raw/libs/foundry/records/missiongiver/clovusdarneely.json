@@ -1,0 +1,45 @@
+{
+  "_RecordName_": "MissionGiver.ClovusDarneely",
+  "_RecordId_": "2f3e41cc-d01f-45f3-b6f3-80cf81691677",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-clovusdarneely.json",
+    "reputation": null,
+    "displayName": "@MissionGivers_ClovusDarneely",
+    "description": "@ClovusDarneely_RepUI_Biography",
+    "headquarters": "@ClovusDarneely_RepUI_Location",
+    "invitationTimeout": 10.0,
+    "visitTimeout": 120.0,
+    "shortCooldown": 15.0,
+    "mediumCooldown": 45.0,
+    "longCooldown": 135.0,
+    "Allies": [
+      "@Darneely_Allies"],
+    "Enemies": [
+      "@Darneely_Rivals"],
+    "propertiesBB": [
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLoadout",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyString",
+          "value": "Scripts/Loadouts/Character/Human/Body/PUCast/Stanton/PU_Darneely_FullOutfit_Temp.xml"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityNPCIcon",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyString",
+          "value": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_NPC_clovusdarneely.tif"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityOccupation",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@ClovusDarneely_RepUI_Occupation"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityAssociation",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@ClovusDarneely_RepUI_Association"}}]}}

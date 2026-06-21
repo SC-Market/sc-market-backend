@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_DefendNPC01_DefendMission_MissionFail",
+  "_RecordId_": "69d41241-2896-4186-9a58-86acf77bcbcc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+          "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+          "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4d04f555-f7f8-4518-b004-27426a047e79",
+          "_RecordId_": "4d04f555-f7f8-4518-b004-27426a047e79"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/missionfail_defend.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-defendnpc01.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_civilian_defendnpc01.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "EntityClassDefinition.EATransportController",
+  "_RecordId_": "055c30f4-1206-4ef1-8734-e1b7c5e4655d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "EA",
+    "Icon": "",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EATransportControllerComponentParams",
+        "activePhase": -1,
+        "spawnDelay": 1.0,
+        "onlyTransferActiveSpawns": true,
+        "replaceSpawningTransport": true,
+        "transitionGroups": []}]}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MissionItem.Aluminum_1SCU",
+  "_RecordId_": "fb72fcac-e306-45ce-af52-c03b66f00d26",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+        "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.c6f1e606-4845-4a4a-bfb6-9d1f1de6d587",
+        "_RecordId_": "c6f1e606-4845-4a4a-bfb6-9d1f1de6d587"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.69169477-cb7a-4b2a-ae83-40de35124691",
+        "_RecordId_": "69169477-cb7a-4b2a-ae83-40de35124691"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_metal_aluminum.json"}}

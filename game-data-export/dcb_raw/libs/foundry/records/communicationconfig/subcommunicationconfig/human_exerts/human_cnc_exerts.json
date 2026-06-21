@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "CommunicationConfig.Human_CNC_Exerts",
+  "_RecordId_": "4dbbbaa9-bcab-47ff-bc35-5208ebcb179a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "Human_Exerts_CNC",
+    "communications": [],
+    "subConfigs": []}}

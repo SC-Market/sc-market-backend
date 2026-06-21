@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Hack_Ability_StandBy",
+  "_RecordId_": "e8b4c07d-cafe-4984-a3a2-a1aa87df9802",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorRecordReference",
+      "color": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/colorreferences/hacking/hack_intruder.json",
+      "alpha": 1.0}}}

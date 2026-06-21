@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Bounty_Hunter_Pilot",
+  "_RecordId_": "b57f9670-4a0c-48e5-bfae-37d1f6a5f96e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": "file://./../../../../../../libs/foundry/records/characternamedata/humanfemale.json",
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "MissionItem.Hydrogen",
+  "_RecordId_": "c7c130a5-0d6c-4bfe-81b3-8f237bc6bd41",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.56b3cdd1-6eb5-4f52-b389-9726a5caea3c",
+        "_RecordId_": "56b3cdd1-6eb5-4f52-b389-9726a5caea3c"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a",
+        "_RecordId_": "b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.7ef19e57-ffd2-4af2-859b-54d0bb4a4dc2",
+        "_RecordId_": "7ef19e57-ffd2-4af2-859b-54d0bb4a4dc2"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@items_commodities_hydrogen"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_commodity_gas_flammable_hydrogen.json"}}

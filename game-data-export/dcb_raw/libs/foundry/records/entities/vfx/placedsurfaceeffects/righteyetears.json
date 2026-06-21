@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "PlacedSurfaceEffects_Emitter.RightEyeTears",
+  "_RecordId_": "d41adc75-7a7b-4995-a83c-1514f642843c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlacedSurfaceEffects_Emitter",
+    "name": "Right Eye Tears",
+    "tag": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.1131e88a-593c-4871-902a-d5758bf7a464",
+      "_RecordId_": "1131e88a-593c-4871-902a-d5758bf7a464"},
+    "particleEffect": {
+      "_Type_": "GlobalResourceParticle",
+      "path": "158e17f1-d162-628a-ca5b-71d04ff8311a|master/rtt_effects.tears.face.tear_droplet"},
+    "emitterPosition": {
+      "_Type_": "Vec3",
+      "x": 0.4,
+      "y": 0.61,
+      "z": 0.0},
+    "linkedToSdf": true,
+    "fadeOutDuration": 10.0}}

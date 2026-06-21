@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "Level.EA_RiverZero",
+  "_RecordId_": "c1dff840-1670-49c8-9efb-4ef0cb9c183b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Level",
+    "id": "INVALID",
+    "locDisplayName": "@ea_ui_map_RiverZero",
+    "description": "@ea_ui_mapdesc_RiverZero",
+    "displayFeatures": null,
+    "thumbnail": "ui/frontend/assets/tif/gametypesmaps/map_race_01.tif",
+    "gameToken": "riversedge",
+    "universeLocationUniqueId": 0,
+    "defaultGameRules": "file://./../../../../../libs/foundry/records/gamemode/ea_classicrace_gravlev.json",
+    "validGameRules": [
+      "file://./../../../../../libs/foundry/records/gamemode/ea_classicrace_gravlev.json"],
+    "loadingScreenInfo": {
+      "_Type_": "SLoadingScreenInformationDef",
+      "loadingScreenType": "ElectronicAccess",
+      "imagePath": "UI/GlobalGameUI/assets/TIF/LoadingScreen/AC/EA_TEMP.dds",
+      "imagePath_2k": "",
+      "imagePath_4k": "",
+      "primaryTitle": "@LOC_EMPTY",
+      "secondaryTitle": "@LOC_EMPTY",
+      "subtitle": "@ea_ui_map_RiverZero",
+      "description": "@ea_ui_mapdesc_RiverZero",
+      "tips": []},
+    "potentialSpawnLocations": [],
+    "potentialDevOnlySpawnLocations": [],
+    "systemImagePath": ""}}

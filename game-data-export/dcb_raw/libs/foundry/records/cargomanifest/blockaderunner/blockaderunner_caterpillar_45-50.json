@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "CargoManifest.BlockadeRunner_Caterpillar_45-50",
+  "_RecordId_": "2057d681-0232-41e7-8536-346e090e401f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c3fd2d41-d8ab-4482-a545-dff2cc7e35b0",
+          "_RecordId_": "c3fd2d41-d8ab-4482-a545-dff2cc7e35b0"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Even",
+      "resources": [
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ProcyonCanister_Time",
+            "_RecordId_": "1396faad-eb0c-4ed1-be34-571ca7ca159e"},
+          "probability": 1.0}],
+      "minCapacityRange": 0.45,
+      "maxCapacityRange": 0.5},
+    "cargoSpawnRules": [],
+    "tags": []}}

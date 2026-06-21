@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.HTP_SupportAttackedShipBeat_MMH",
+  "_RecordId_": "4db285ef-c0f9-4ac5-9577-93835886dcbc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/HuntThePolaris/HTP_SupportAttackedShipBeat.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/SupportAttackedShip/SupportAttackedShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/supportattackedship_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/killship_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/ChickenShip.xml",
+        "subModuleHierarchy": null}]}}

@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "CommsNotification.MissionCommsNotification_CDF_Dulli_Polaris_AmeliaResponse_A",
+  "_RecordId_": "d64806c5-5ea6-485d-be54-75a0265618fe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.baa1a7de-a6c9-4162-8b67-1906f649f120",
+          "_RecordId_": "baa1a7de-a6c9-4162-8b67-1906f649f120"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d3215b79-bcbd-4b31-8837-ffe5b8119646",
+          "_RecordId_": "d3215b79-bcbd-4b31-8837-ffe5b8119646"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6bc1aed7-2c00-4d6a-90f9-6d047e1f4ea5",
+          "_RecordId_": "6bc1aed7-2c00-4d6a-90f9-6d047e1f4ea5"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.52b40f62-d9e0-4a0d-b82c-99af0830c296",
+          "_RecordId_": "52b40f62-d9e0-4a0d-b82c-99af0830c296"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a5368b70-ac2b-424a-a6c2-aa899464d93e",
+          "_RecordId_": "a5368b70-ac2b-424a-a6c2-aa899464d93e"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/shipbattle/polaris_ameliaresponse_a.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-saic_rowenadulli_polarishunt.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_cdf_dulli.json",
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

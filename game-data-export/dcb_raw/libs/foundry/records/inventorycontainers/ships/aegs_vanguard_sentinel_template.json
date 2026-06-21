@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.AEGS_Vanguard_Sentinel_Template",
+  "_RecordId_": "7086d297-ed4e-4444-8c57-5839a5e2c831",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 1.85}}}}

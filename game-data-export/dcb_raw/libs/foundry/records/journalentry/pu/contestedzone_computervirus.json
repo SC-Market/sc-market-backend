@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.ContestedZone_ComputerVirus",
+  "_RecordId_": "fe1fe05b-6b5f-4ed9-b08b-9e4ea70862aa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@datapad_contestedzone_firerat_prayer_title",
+    "ShortTitle": "@datapad_contestedzone_firerat_prayer_title",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@datapad_contestedzone_firerat_prayer_body"},
+    "tutorialEntry": false}}

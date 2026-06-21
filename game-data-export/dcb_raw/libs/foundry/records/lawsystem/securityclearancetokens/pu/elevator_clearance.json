@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "SecurityClearanceToken.Elevator_Clearance",
+  "_RecordId_": "92c14c84-1432-4bb9-92e3-ef895a146ae3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": null,
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

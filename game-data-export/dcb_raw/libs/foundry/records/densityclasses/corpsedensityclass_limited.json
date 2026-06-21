@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.CorpseDensityClass_Limited",
+  "_RecordId_": "3517a9a7-14cf-4c0a-b626-e3b2275ce9a7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 200.0,
+    "clusterUpperObjectCountDGS": 4,
+    "clusterUpperObjectCountPersistence": 4,
+    "clusterPersistenceTimeout": 15.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

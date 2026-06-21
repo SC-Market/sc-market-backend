@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "CraftingQualityDistributionRecord.EpicShipMineable_QualityDistribution_Default",
+  "_RecordId_": "62d5b862-9ee1-4b8f-bbf7-6ab0ef707ad7",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityDistributionRecord",
+    "qualityDistribution": {
+      "_Type_": "CraftingQualityDistributionNormal",
+      "min": 501,
+      "max": 1000,
+      "mean": 500.0,
+      "stddev": 190.0}}}

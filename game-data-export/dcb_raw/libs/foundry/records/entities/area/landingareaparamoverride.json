@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.LandingAreaParamOverride",
+  "_RecordId_": "7d85de12-d767-4c5a-917f-d73df9a3fbed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "LandingAreaParamOverrideParams",
+        "landingAreaOverride": "",
+        "HUDDisplayName": "@LOC_UNINITIALIZED"}]}}

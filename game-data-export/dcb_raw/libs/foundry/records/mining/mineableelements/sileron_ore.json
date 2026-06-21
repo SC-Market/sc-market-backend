@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Sileron_Ore",
+  "_RecordId_": "9498a080-84c0-41f4-b88f-71942c60c43f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Ore_Stileron",
+      "_RecordId_": "32bafbd4-c52a-476d-b31c-97c4b3102471"},
+    "elementInstability": 870.0,
+    "elementResistance": 0.6,
+    "elementOptimalWindowMidpoint": 0.7,
+    "elementOptimalWindowMidpointRandomness": 0.3,
+    "elementOptimalWindowThinness": 0.6,
+    "elementExplosionMultiplier": 260.0,
+    "elementClusterFactor": 0.0}}

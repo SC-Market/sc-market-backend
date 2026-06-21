@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.DeliveryTarget_ItemPort_1SCU_DropOff",
+  "_RecordId_": "d9f1073c-41e0-4899-93bd-36809caa4bc5",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+          "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9687e23a-dab4-4965-870e-8bf630766fef",
+          "_RecordId_": "9687e23a-dab4-4965-870e-8bf630766fef"}]},
+    "type": {
+      "_Type_": "LocationEntityType_DeliveryTarget",
+      "type": "ItemPort_Entity",
+      "targetDescription": "@location_delivery_target_item_port"},
+    "resourceSlot": null}}

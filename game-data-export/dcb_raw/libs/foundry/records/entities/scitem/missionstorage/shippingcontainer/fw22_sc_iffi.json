@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "EntityClassDefinition.FW22_SC_IFFI",
+  "_RecordId_": "e4a91628-ffb1-4230-a788-fe027db59681",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.20e5edda-d1ae-4c2c-a1db-deec5d6cf3ce",
+        "_RecordId_": "20e5edda-d1ae-4c2c-a1db-deec5d6cf3ce"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8",
+        "_RecordId_": "3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+        "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/design/FleetWeek2022/ShippingContainer/shippingcontainer_aacontrols.socpak"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"}]}}

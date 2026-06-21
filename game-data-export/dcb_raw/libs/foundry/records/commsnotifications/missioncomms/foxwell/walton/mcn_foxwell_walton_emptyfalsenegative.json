@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Foxwell_Walton_EmptyFalseNegative",
+  "_RecordId_": "6912cc71-3650-42c4-b42f-7ebe5dc02c5f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+          "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+          "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a78dfd4e-aed3-44dd-b8e4-860b1ea83e6c",
+          "_RecordId_": "a78dfd4e-aed3-44dd-b8e4-860b1ea83e6c"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ccdeca91-4752-460f-97d8-a947e16f4d1c",
+          "_RecordId_": "ccdeca91-4752-460f-97d8-a947e16f4d1c"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6e4a8887-0321-4c6a-bd04-f0d8593984b2",
+          "_RecordId_": "6e4a8887-0321-4c6a-bd04-f0d8593984b2"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/emptyobjective/empty_scan_findsomething.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-walton.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_foxwell_walton.json",
+    "stage": null}}

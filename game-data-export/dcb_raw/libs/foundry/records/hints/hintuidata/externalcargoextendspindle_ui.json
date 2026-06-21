@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ExternalCargoExtendSpindle_UI",
+  "_RecordId_": "aacc523d-b75b-4882-b991-41d63e9a119f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Cargo_Spindles_Title",
+    "BodyText": "@Hints_Cargo_Spindles",
+    "BodyTextGamePad": "@room_cargo_bay",
+    "BodyTextJoystick": "@room_cargo_bay",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

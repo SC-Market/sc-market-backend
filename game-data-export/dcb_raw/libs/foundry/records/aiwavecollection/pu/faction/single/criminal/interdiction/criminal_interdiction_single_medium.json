@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Criminal_Interdiction_Single_Medium",
+  "_RecordId_": "fdb01114-d9f9-46fb-88eb-254a812dae0e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/drak_cutlass_black_pu_ai_crim_qig.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../../libs/foundry/records/crewmanifest/pu/criminal/pu_human_criminal_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot30.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

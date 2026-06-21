@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "PoolFilterRecord.V3PoolFilter_StormBreaker_Lab",
+  "_RecordId_": "23193233-aec5-4cee-8db4-e23ddbb0521a",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "PoolFilterRecord",
+    "filter": {
+      "_Type_": "PoolFilter_Sequence",
+      "filters": [
+        {
+          "_Type_": "PoolFilterInstance",
+          "name": "No faction",
+          "mode": "Cumulative",
+          "filter": {
+            "_Type_": "PoolFilter_RecordRef",
+            "filterRecord": "file://./../../../../../libs/foundry/records/lootgeneration/filters/v3poolfilter_nofactions.json"}},
+        {
+          "_Type_": "PoolFilterInstance",
+          "name": "No special events",
+          "mode": "Cumulative",
+          "filter": {
+            "_Type_": "PoolFilter_RecordRef",
+            "filterRecord": "file://./../../../../../libs/foundry/records/lootgeneration/filters/v3poolfilter_nospecialevents.json"}},
+        {
+          "_Type_": "PoolFilterInstance",
+          "name": "Event Stormbreaker Lab",
+          "mode": "Additive",
+          "filter": {
+            "_Type_": "PoolFilter_Tags",
+            "tagFilter": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.09830fb8-ec58-495a-9811-7a73de5247f5",
+                  "_RecordId_": "09830fb8-ec58-495a-9811-7a73de5247f5"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.60b17626-e260-4bdf-b2f2-03a0e7242eff",
+                  "_RecordId_": "60b17626-e260-4bdf-b2f2-03a0e7242eff"}]}}}]}}}

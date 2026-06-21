@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "MineableComposition.IgneousDeposit_Quartz",
+  "_RecordId_": "e8291c67-7a49-42b1-9450-8a4e24aeec1a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@hud_mining_rock_name_3",
+    "minimumDistinctElements": 2,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/quartz_raw.json",
+        "minPercentage": 30.0,
+        "maxPercentage": 70.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/laranite_raw.json",
+        "minPercentage": 30.0,
+        "maxPercentage": 60.0,
+        "probability": 0.4,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/gold_ore.json",
+        "minPercentage": 20.0,
+        "maxPercentage": 50.0,
+        "probability": 0.2,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/taranite_raw.json",
+        "minPercentage": 20.0,
+        "maxPercentage": 50.0,
+        "probability": 0.3,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/bexalite_raw.json",
+        "minPercentage": 20.0,
+        "maxPercentage": 50.0,
+        "probability": 0.1,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/quantainium_raw.json",
+        "minPercentage": 20.0,
+        "maxPercentage": 50.0,
+        "probability": 0.06,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0}]}}

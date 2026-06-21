@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.AEGS_Tiburon_Enforcer_Grey_White_Silver",
+  "_RecordId_": "6baffacc-cb61-41e5-a408-9fde55f9ff4e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameTiburon_Paint_grey_white_silver",
+    "description": "@item_DescTiburon_Paint_grey_white_silver",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_tiburon_grey_white_silver.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

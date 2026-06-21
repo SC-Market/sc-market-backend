@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus28",
+  "_RecordId_": "6505540b-e274-47e6-86c2-b47b2808e11c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusBleeding_Title",
+    "BodyText": "@Hints_ActorStatusEffectBleedStart",
+    "BodyTextGamePad": "@Hints_ActorStatusEffectBleedStart",
+    "BodyTextJoystick": "@Hints_ActorStatusEffectBleedStart",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

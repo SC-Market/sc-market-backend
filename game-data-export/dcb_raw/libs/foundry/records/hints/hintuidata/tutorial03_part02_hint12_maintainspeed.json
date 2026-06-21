@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial03_Part02_Hint12_MaintainSpeed",
+  "_RecordId_": "c1124ed0-f8d4-42ce-9495-8ecd5485417d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut03_Part02_Hint12_MaintainSpeed_Title",
+    "BodyText": "@Tut03_Part02_Hint12_MaintainSpeed",
+    "BodyTextGamePad": "@Tut03_Part02_Hint12_MaintainSpeed",
+    "BodyTextJoystick": "@Tut03_Part02_Hint12_MaintainSpeed",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

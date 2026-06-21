@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CargoManifest.CargoTest",
+  "_RecordId_": "ba511a98-b1f1-498a-8305-134b47fe417f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Even",
+      "resources": [],
+      "minCapacityRange": 1.0,
+      "maxCapacityRange": 1.0},
+    "cargoSpawnRules": [],
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.eee84e1f-63be-4d94-8150-ef277d014f72",
+        "_RecordId_": "eee84e1f-63be-4d94-8150-ef277d014f72"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.8fe470c3-e2c0-4d25-8366-0e45fd1e63af",
+        "_RecordId_": "8fe470c3-e2c0-4d25-8366-0e45fd1e63af"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.b1a87dbe-cf0a-45a7-a569-479c55c76597",
+        "_RecordId_": "b1a87dbe-cf0a-45a7-a569-479c55c76597"}]}}

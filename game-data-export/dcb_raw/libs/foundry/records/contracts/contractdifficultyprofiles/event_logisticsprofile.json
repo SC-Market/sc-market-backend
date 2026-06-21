@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ContractDifficultyProfile.Event_LogisticsProfile",
+  "_RecordId_": "e875ecd9-80a7-4b72-a6ec-5fce274e84e6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractDifficultyProfile",
+    "mechanicalSkillWeight": 0.129,
+    "mentalLoadWeight": 0.532,
+    "riskOfLossWeight": 0.39,
+    "gameKnowledgeWeight": 0.12}}

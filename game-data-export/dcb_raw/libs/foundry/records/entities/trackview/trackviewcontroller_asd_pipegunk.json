@@ -1,0 +1,875 @@
+{
+  "_RecordName_": "EntityClassDefinition.TrackviewController_ASD_PipeGunk",
+  "_RecordId_": "9d8afb83-567b-482a-8b4d-67bc10a5773b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityInteractableParams",
+        "Interactable": {
+          "_Type_": "SInteractableParams",
+          "SharedInteractions": [
+            {
+              "_Pointer_": "ptr:5",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "PlaySolved",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": true,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Type_": "SSharedInteractionParams",
+              "Name": "OnPlaying",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Type_": "SSharedInteractionParams",
+              "Name": "OnStopped",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:3",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "PlayUnsolved",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": true,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:8",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "PlayReset",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": true,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Type_": "SSharedInteractionParams",
+              "Name": "OnState_PlayState_StoppedPipeConnected",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Type_": "SSharedInteractionParams",
+              "Name": "OnState_PlayState_StoppedPipeDisconnected",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:10",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "DEBUG_ToggleState_GunkState",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Show",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": false,
+              "Linkable": true,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null}],
+          "InteractionPoints": [
+            {
+              "_Type_": "SInteractionPointParams",
+              "Interactions": [
+                {
+                  "_Type_": "SInteractionParams",
+                  "Interaction": null,
+                  "DisplayName": "@LOC_EMPTY",
+                  "IsPrimary": false}],
+              "HelperName": "",
+              "Tags": [],
+              "Primitive": null,
+              "PlayerAnimatedInteractionParams": null,
+              "HighlightBehaviors": [],
+              "AdditionalCollisionBones": [],
+              "InteractionPointModifiers": [],
+              "InteractionPointInternalSettingTemplateRef": null,
+              "FirstInteractionPrimary": true,
+              "UseHelperLocation": false,
+              "ApplyToEntireSkeleton": false,
+              "longRangeIP": false,
+              "Radius": 1.6,
+              "ShowHighlight": true,
+              "HighlightOnRayHitEntity": false,
+              "Offset": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}},
+              "TextJustification": "Middle",
+              "TextOrientation": "RotateToPlayer",
+              "TextScale": 1.0,
+              "ShowInteractionTextAtCursorPos": false,
+              "ScalePromptOffsetWithEntity": false,
+              "InteractionPromptOffset": {
+                "_Type_": "QuatT",
+                "Rotation": {
+                  "_Type_": "Ang3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "Position": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0}},
+              "PromptStyle": "PromptAndText",
+              "OverrideControlHintDescription": false,
+              "InteractionPromptScale": 1.0,
+              "InteractionPromptLabelVerticalOffset": 70.0,
+              "InteractionPromptBound": "EntityRoot",
+              "UseHorizontalDistance": false,
+              "MaxCursorScreenDistance": 2.0,
+              "ShowInnerThoughtsOffScreen": false,
+              "OnlySelectableInLookDir": false,
+              "AngleConstraint": {
+                "_Type_": "SAngleConstraint",
+                "forwardDirOffset": {
+                  "_Type_": "Vec3",
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0.0},
+                "angleRange": 181.0,
+                "viewAngleLimit": 110.0}}],
+          "interactionTasks": [
+            {
+              "_Pointer_": "ptr:21",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "OnPlaying",
+              "triggerType": "Self"},
+            {
+              "_Pointer_": "ptr:22",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "OnStopped",
+              "triggerType": "Self"},
+            {
+              "_Pointer_": "ptr:24",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "PlayReset",
+              "triggerType": "Self"},
+            {
+              "_Pointer_": "ptr:25",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "OnState_PlayState_StoppedPipeConnected",
+              "triggerType": "Self"},
+            {
+              "_Pointer_": "ptr:23",
+              "_Type_": "SSequencerInteractionTask",
+              "interaction": "OnState_PlayState_StoppedPipeDisconnected",
+              "triggerType": "Self"}],
+          "actionHandlerTasks": [],
+          "itemActionTasks": [],
+          "menuTitle": null}},
+      {
+        "_Type_": "SInteractionStateMachineParams",
+        "StateTypes": [
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "PlayState",
+            "bindingsMethod": "None",
+            "DefaultState": "_PointsTo_:ptr:1",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:7",
+                "_Type_": "SInteractionState",
+                "StateName": "TryConnect",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:2",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:3",
+                    "NextState": "_PointsTo_:ptr:4"},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:5",
+                    "NextState": "_PointsTo_:ptr:6"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:4",
+                "_Type_": "SInteractionState",
+                "StateName": "FailConnect",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:2",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:3",
+                    "NextState": "_PointsTo_:ptr:7"},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:5",
+                    "NextState": "_PointsTo_:ptr:6"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:6",
+                "_Type_": "SInteractionState",
+                "StateName": "Connect",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:2",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:8",
+                    "NextState": "_PointsTo_:ptr:1"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:1",
+                "_Type_": "SInteractionState",
+                "StateName": "Disconnect",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:5",
+                    "NextState": "_PointsTo_:ptr:6"},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:3",
+                    "NextState": "_PointsTo_:ptr:7"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": []},
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "GunkState",
+            "bindingsMethod": "None",
+            "DefaultState": "_PointsTo_:ptr:9",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:12",
+                "_Type_": "SInteractionState",
+                "StateName": "Cleared",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:10",
+                    "NextState": "_PointsTo_:ptr:9"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.630d2bb0-e66c-4dc6-9648-261822326bdb",
+                      "_RecordId_": "630d2bb0-e66c-4dc6-9648-261822326bdb"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:9",
+                "_Type_": "SInteractionState",
+                "StateName": "Blocked",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:11",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:10",
+                    "NextState": "_PointsTo_:ptr:12"}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.727ccaa9-7cc3-4238-b25d-c4f7633dbdab",
+                      "_RecordId_": "727ccaa9-7cc3-4238-b25d-c4f7633dbdab"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": []},
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "PipeState",
+            "bindingsMethod": "None",
+            "DefaultState": "_PointsTo_:ptr:13",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:14",
+                "_Type_": "SInteractionState",
+                "StateName": "Repaired",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5539b4ca-97e6-41a7-8a6f-0d1c3c639f32",
+                      "_RecordId_": "5539b4ca-97e6-41a7-8a6f-0d1c3c639f32"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:13",
+                "_Type_": "SInteractionState",
+                "StateName": "Broken",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:11",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.cb3e12cd-1013-4780-819a-949cbf7d0268",
+                      "_RecordId_": "cb3e12cd-1013-4780-819a-949cbf7d0268"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": [
+              {
+                "_Type_": "SLinkedInteractionStateChangedStateModifier",
+                "context": {
+                  "_Type_": "SEntityLinkedContext"},
+                "onChangeStateTagStates": [
+                  {
+                    "_Type_": "SLinkedInteractionStateTags",
+                    "stateTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.111f5b25-c51a-4fb3-8a79-3e0d9e99d317",
+                          "_RecordId_": "111f5b25-c51a-4fb3-8a79-3e0d9e99d317"}]},
+                    "isANDList": false,
+                    "checkAllEntities": false,
+                    "state": "_PointsTo_:ptr:14"},
+                  {
+                    "_Type_": "SLinkedInteractionStateTags",
+                    "stateTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.1b8c706e-6b40-4b9a-8243-b3dcbf8a31f9",
+                          "_RecordId_": "1b8c706e-6b40-4b9a-8243-b3dcbf8a31f9"}]},
+                    "isANDList": false,
+                    "checkAllEntities": false,
+                    "state": "_PointsTo_:ptr:13"}],
+                "nullEntityState": "_PointsTo_:ptr:13"}]},
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "PuzzleState",
+            "bindingsMethod": "None",
+            "DefaultState": null,
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:16",
+                "_Type_": "SInteractionState",
+                "StateName": "NotSolved",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:11",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:3",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:8",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:15",
+                "_Type_": "SInteractionState",
+                "StateName": "Solved",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:5",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:8",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": [
+              {
+                "_Type_": "AggregateStateModifier",
+                "aggregateStateParams": [
+                  {
+                    "_Type_": "AggregateStateParams",
+                    "aggregateStates": [
+                      "_PointsTo_:ptr:12",
+                      "_PointsTo_:ptr:14"],
+                    "state": "_PointsTo_:ptr:15",
+                    "elseState": null},
+                  {
+                    "_Type_": "AggregateStateParams",
+                    "aggregateStates": [
+                      "_PointsTo_:ptr:9",
+                      "_PointsTo_:ptr:13"],
+                    "state": "_PointsTo_:ptr:16",
+                    "elseState": null},
+                  {
+                    "_Type_": "AggregateStateParams",
+                    "aggregateStates": [
+                      "_PointsTo_:ptr:14",
+                      "_PointsTo_:ptr:9"],
+                    "state": "_PointsTo_:ptr:16",
+                    "elseState": null},
+                  {
+                    "_Type_": "AggregateStateParams",
+                    "aggregateStates": [
+                      "_PointsTo_:ptr:13",
+                      "_PointsTo_:ptr:12"],
+                    "state": "_PointsTo_:ptr:16",
+                    "elseState": null}]}]},
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "ConnectionState",
+            "bindingsMethod": "States",
+            "DefaultState": "_PointsTo_:ptr:17",
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:20",
+                "_Type_": "SInteractionState",
+                "StateName": "Connected",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:18",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:8",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.907f3b1c-dab1-4a58-aec7-2904d5db0cdf",
+                      "_RecordId_": "907f3b1c-dab1-4a58-aec7-2904d5db0cdf"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:17",
+                "_Type_": "SInteractionState",
+                "StateName": "NotConnected",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": "_PointsTo_:ptr:19",
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:5",
+                    "NextState": null},
+                  {
+                    "_Type_": "SInteractionStateTransition",
+                    "Interaction": "_PointsTo_:ptr:3",
+                    "NextState": null}],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fe199e51-ed91-4e5e-98d8-e64082ab3d99",
+                      "_RecordId_": "fe199e51-ed91-4e5e-98d8-e64082ab3d99"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": []}]},
+      {
+        "_Type_": "SInteractionLinkParams",
+        "vehicleItemPortInteractionLinks": [],
+        "linkPlugs": []},
+      {
+        "_Type_": "SCInteractionStateGameplayTriggerComponentParams",
+        "targetPresets": [],
+        "onInteractionStateChangeTriggers": [
+          {
+            "_Type_": "SOnInteractionStateChangeTriggers",
+            "targetState": "_PointsTo_:ptr:7",
+            "gameplayTriggers": [
+              {
+                "_Type_": "SPlayTrackviewGameplayTrigger",
+                "sequenceEntity": {
+                  "_Type_": "EntityReferenceDef",
+                  "superGUID": ""},
+                "targetState": "_PointsTo_:ptr:4"}]},
+          {
+            "_Type_": "SOnInteractionStateChangeTriggers",
+            "targetState": "_PointsTo_:ptr:4",
+            "gameplayTriggers": [
+              {
+                "_Type_": "SPlayTrackviewGameplayTrigger",
+                "sequenceEntity": {
+                  "_Type_": "EntityReferenceDef",
+                  "superGUID": ""},
+                "targetState": "_PointsTo_:ptr:17"}]},
+          {
+            "_Type_": "SOnInteractionStateChangeTriggers",
+            "targetState": "_PointsTo_:ptr:6",
+            "gameplayTriggers": [
+              {
+                "_Type_": "SPlayTrackviewGameplayTrigger",
+                "sequenceEntity": {
+                  "_Type_": "EntityReferenceDef",
+                  "superGUID": ""},
+                "targetState": "_PointsTo_:ptr:20"}]},
+          {
+            "_Type_": "SOnInteractionStateChangeTriggers",
+            "targetState": "_PointsTo_:ptr:1",
+            "gameplayTriggers": [
+              {
+                "_Type_": "SPlayTrackviewGameplayTrigger",
+                "sequenceEntity": {
+                  "_Type_": "EntityReferenceDef",
+                  "superGUID": ""},
+                "targetState": "_PointsTo_:ptr:17"}]}],
+        "onInteractionSuccessTriggers": [],
+        "onInteractionFailedTriggers": []},
+      {
+        "_Type_": "SEntityComponentSequencerParams",
+        "sequences": [
+          {
+            "_Pointer_": "ptr:2",
+            "_Type_": "SReplicatedSequencerDefSequenceParams",
+            "name": "EnterState_OnPlaying",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:21",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]},
+          {
+            "_Pointer_": "ptr:19",
+            "_Type_": "SReplicatedSequencerDefSequenceParams",
+            "name": "EnterState_OnStoppedDisconnected",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:22",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true},
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:23",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]},
+          {
+            "_Pointer_": "ptr:11",
+            "_Type_": "SReplicatedSequencerDefSequenceParams",
+            "name": "ActivateReset",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:24",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]},
+          {
+            "_Pointer_": "ptr:18",
+            "_Type_": "SReplicatedSequencerDefSequenceParams",
+            "name": "EnterState_OnStoppedConnected",
+            "interaction": null,
+            "taskEntries": [
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:25",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true},
+              {
+                "_Type_": "SSequencerSequenceTaskEntryParams",
+                "task": "_PointsTo_:ptr:22",
+                "postDelay": 0.0,
+                "dependentTasks": [],
+                "haltOnFailure": true}]}],
+        "resetSequence": null},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"},
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""},
+      {
+        "_Type_": "UIBindingsInteractionsComponentParams",
+        "interactionDistance": 50.0}]}}

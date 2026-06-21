@@ -1,0 +1,108 @@
+{
+  "_RecordName_": "ScanDisplayLayoutParams.ActorScanUILayout",
+  "_RecordId_": "4468dbfd-c9cf-4339-8fb2-9c294cd9de9e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanDisplayLayoutParams",
+    "displaySections": [
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": [
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayspecies.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycommschannel.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayactorstatus.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycustomdata.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaynameactor.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaydeath.json"]},
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": [
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayname.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayspecies.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayorganization.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycustomdata.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycommschannel.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayhealth.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaydeath.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaydeathtrauma1.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaydeathtrauma2.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaydeathtrauma3.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaydeathtrauma4.json"]},
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": [
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycustomdata.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayarraysubitems.json"]},
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": [
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycustomdata.json"]}],
+    "contactDisplay": {
+      "_Type_": "ScanDisplayHeaderWithBodySetupParams",
+      "scanTable": "Self",
+      "failIfNoBody": true,
+      "checkDisplaySection": false,
+      "headerVariable": {
+        "_Type_": "ScanDisplayScanDataEntryVariableParams",
+        "truncateSize": 0,
+        "displayIsHidden": false,
+        "displayInBrackets": false,
+        "suffixArrayIndex": false,
+        "suffixSemiColon": false,
+        "auxiliaryFlag": "None",
+        "fallback": {
+          "_Type_": "ScanDisplayScanDataEntryVariableParams",
+          "truncateSize": 0,
+          "displayIsHidden": false,
+          "displayInBrackets": false,
+          "suffixArrayIndex": false,
+          "suffixSemiColon": false,
+          "auxiliaryFlag": "None",
+          "fallback": null,
+          "scanCategory": "General",
+          "scanInformation": "Species"},
+        "scanCategory": "General",
+        "scanInformation": "Name"},
+      "bodyVariable": {
+        "_Type_": "ScanDisplayLocStringVariableParams",
+        "truncateSize": 0,
+        "displayIsHidden": false,
+        "displayInBrackets": false,
+        "suffixArrayIndex": false,
+        "suffixSemiColon": false,
+        "auxiliaryFlag": "None",
+        "fallback": {
+          "_Type_": "ScanDisplayLocStringVariableParams",
+          "truncateSize": 0,
+          "displayIsHidden": false,
+          "displayInBrackets": false,
+          "suffixArrayIndex": false,
+          "suffixSemiColon": false,
+          "auxiliaryFlag": "None",
+          "fallback": null,
+          "locString": "@input_key_keyboard_minus"},
+        "locString": "@input_key_keyboard_minus"},
+      "capacityVariable": null,
+      "extensionVariable": null},
+    "boxoutIconDefs": [
+      {
+        "_Type_": "ScanBoxoutIconDef",
+        "showConditions": [
+          "IsFPSRadar",
+          "ContainsMatchingAmmo",
+          "IsDeadOrIncapacitatedActor"],
+        "iconPath": "UI/Textures/Vector/PIT/Looting/icon_common_magazine.svg"},
+      {
+        "_Type_": "ScanBoxoutIconDef",
+        "showConditions": [
+          "IsFPSRadar",
+          "ContainsFPSConsumable",
+          "IsDeadOrIncapacitatedActor"],
+        "iconPath": "UI/Textures/Vector/PIT/Looting/icon_common_consumable.svg"},
+      {
+        "_Type_": "ScanBoxoutIconDef",
+        "showConditions": [
+          "IsFPSRadar",
+          "ContainsFPSDevice",
+          "IsDeadOrIncapacitatedActor"],
+        "iconPath": "UI/Textures/Vector/PIT/Looting/icon_common_grenade.svg"}]}}

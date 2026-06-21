@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_FPS_Dolivine",
+  "_RecordId_": "c2a1ab26-6b2a-4258-8bae-b32cf08818bc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Dolivine",
+      "_RecordId_": "7e86e2f4-6c31-41f8-9438-0fd8ad037426"},
+    "elementInstability": 0.0,
+    "elementResistance": 0.1,
+    "elementOptimalWindowMidpoint": 0.6,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 0.0,
+    "elementExplosionMultiplier": 0.0,
+    "elementClusterFactor": 0.0}}

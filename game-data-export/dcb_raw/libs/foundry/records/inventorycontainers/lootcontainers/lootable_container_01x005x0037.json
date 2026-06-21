@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Lootable_Container_01x005x0037",
+  "_RecordId_": "87c5cad1-245a-4d82-915a-a2c9b4ecf4a4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 1.4,
+      "y": 0.7,
+      "z": 0.5},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 147936}}}}

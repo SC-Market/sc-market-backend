@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "LegacyCraftingRecipeDefRecord.Recipe_template",
+  "_RecordId_": "a00d861c-41c2-4a22-b267-1767dd01f34d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LegacyCraftingRecipeDefRecord",
+    "recipe": {
+      "_Type_": "LegacyCraftingRecipe_Default",
+      "timeSeconds": 0.0,
+      "outputs": [],
+      "costs": [],
+      "iconImagePath": "",
+      "recipeName": "@LOC_EMPTY"}}}

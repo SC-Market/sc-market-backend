@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "EntityClassDefinition.PrefabAnchor",
+  "_RecordId_": "86a501e2-f7de-4a2c-a9d2-b69f932012fa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "Magnet.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": []}}

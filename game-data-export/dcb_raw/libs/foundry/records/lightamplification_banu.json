@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "SCItemLightAmplification.LightAmplification_BANU",
+  "_RecordId_": "6305e167-ed9f-4f39-a8d9-20832bd3f387",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SCItemLightAmplification",
+    "Tint": {
+      "_Type_": "SRGB8",
+      "r": 255,
+      "g": 237,
+      "b": 67},
+    "Saturation": 0.5,
+    "EVAmplification": 8.0,
+    "AmplificationOnAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_SSNV_Activate"},
+    "AmplificationOffAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_SSNV_Deactivate"}}}

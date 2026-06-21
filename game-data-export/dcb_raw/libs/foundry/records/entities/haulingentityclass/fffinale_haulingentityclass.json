@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.FFFinale_HaulingEntityClass",
+  "_RecordId_": "b29f9ea2-a57a-472b-a7cf-17e54f9c3184",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_sq_datapad_fluff_fffinale_001.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_sq_datapad_fluff_fffinale_002.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_sq_datapad_fluff_fffinale_003.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_sq_datapad_fluff_fffinale_004.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_sq_datapad_fluff_fffinale_005.json"]},
+    "orderDisplayName": "@item_NameCommon_Datapad"}}

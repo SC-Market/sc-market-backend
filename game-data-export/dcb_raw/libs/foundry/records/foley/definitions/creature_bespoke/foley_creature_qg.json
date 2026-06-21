@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "FoleyDefinition.Foley_Creature_QG",
+  "_RecordId_": "130e66e2-d92e-426e-8c32-be7da295b854",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FoleyDefinition",
+    "priority": 0,
+    "items": [
+      {
+        "_Type_": "FoleyItem",
+        "bone": "file://./../../../../../../libs/foundry/records/foley/bones/bespoke_creature_quasigrazer/neck_01.json",
+        "trackedBoneOverride": null,
+        "referenceBone": "file://./../../../../../../libs/foundry/records/foley/bones/bespoke_creature_quasigrazer/spine1.json",
+        "velocityRTPCName": "",
+        "velocityRTPCMinimum": 0.0,
+        "velocityRTPCMaximum": 5.0,
+        "collisionImpactRTPCName": "Character_Collision_Impact_Speed",
+        "collisionScuffRTPCName": "Character_Collision_Scuff_Speed",
+        "equipmentMassRTPCName": "",
+        "oneShots": [],
+        "loops": [],
+        "collisions": [
+          {
+            "_Type_": "FoleyCollision",
+            "trigger": "Play_CMQG_QuasiGrazer_Body_Collision",
+            "minImpactSpeed": 0.05,
+            "retriggerTimeout": 0.1,
+            "applyToClient": true,
+            "applyToNLPC": true}]}],
+    "userRTPCs": []}}

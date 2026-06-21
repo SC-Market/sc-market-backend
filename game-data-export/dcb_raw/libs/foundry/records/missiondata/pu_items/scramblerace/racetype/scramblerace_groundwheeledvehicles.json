@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "MissionItem.ScrambleRace_GroundWheeledVehicles",
+  "_RecordId_": "5679c490-98be-4ff0-b5bd-e2e1e5986a6a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.7131f390-96b2-4ea3-8a7a-78c7a3a12528",
+        "_RecordId_": "7131f390-96b2-4ea3-8a7a-78c7a3a12528"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.201a1025-0343-462d-acc0-507a396a4940",
+        "_RecordId_": "201a1025-0343-462d-acc0-507a396a4940"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@ScrambleRace_RaceType_03"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5e22ff70-06a3-4060-8660-9cae8c4bcf52",
+            "_RecordId_": "5e22ff70-06a3-4060-8660-9cae8c4bcf52"},
+          "string": "@ScrambleRace_RaceTypeShort_03"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.83501a67-e92c-4154-acf6-6ab77dd233f7",
+            "_RecordId_": "83501a67-e92c-4154-acf6-6ab77dd233f7"},
+          "string": "@ScrambleRace_RaceTypeTitle_03"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.84be4467-2f3a-469c-b3df-eb3689630d8f",
+            "_RecordId_": "84be4467-2f3a-469c-b3df-eb3689630d8f"},
+          "string": "@ScrambleRace_ASOP_01"}]},
+    "weighting": 1.0,
+    "entityClass": null}}

@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "TacticalQuery.KarneFindReloadingCover",
+  "_RecordId_": "e21cd83a-7e99-4363-ad9e-6abf0d38e8a9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "KarneFindReloadingCover",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [],
+          "generation": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "cover_from_realTarget_around_referencePoint",
+              "value": 25,
+              "overrides": []}],
+          "conditions": [],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "distance_from_puppet",
+              "weight": -1.0,
+              "overrides": []}]},
+        "optionOverrides": []}]}}

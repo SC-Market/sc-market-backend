@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "LootTableV3Record.V3LootTable_Event_Legs",
+  "_RecordId_": "a004fafa-f957-4874-8e44-1b3f1ac3cb36",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTableV3Record",
+    "lootTable": {
+      "_Type_": "LootTableV3",
+      "lootArchetypes": [
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "Legs",
+          "weight": 1.0,
+          "archetype": {
+            "_Type_": "LootArchetypeV3",
+            "entries": [
+              {
+                "_Type_": "LootArchetypeV3Entry",
+                "name": "Legs",
+                "weight": 1.0,
+                "selector": {
+                  "_Type_": "LootArchetypeV3Selector_Tags",
+                  "tags": {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4cd7531a-c014-496d-96c1-cff1f54892e2",
+                        "_RecordId_": "4cd7531a-c014-496d-96c1-cff1f54892e2"},
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+                        "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}],
+                    "negativeTags": []}},
+                "optionalData": []}]},
+          "optionalData": [
+            {
+              "_Type_": "LootTableOptionalDataV3_ChoiceLimit",
+              "choiceLimit": 1}]}]}}}

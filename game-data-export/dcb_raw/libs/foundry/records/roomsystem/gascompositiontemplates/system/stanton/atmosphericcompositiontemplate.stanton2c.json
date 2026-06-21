@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "AtmosphericCompositionTemplate.Stanton2c",
+  "_RecordId_": "082b4e03-796c-4936-9dc0-08ccb2d085c2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphericCompositionTemplate",
+    "composition": {
+      "_Type_": "SAtmosphericCompositionParams",
+      "gases": [
+        {
+          "_Type_": "SGasAtmosphereEntryParams",
+          "gasParams": "file://./../../../../../../../libs/foundry/records/roomsystem/gasparams/gasparams.oxygen.json",
+          "parts": 1.0}]}}}

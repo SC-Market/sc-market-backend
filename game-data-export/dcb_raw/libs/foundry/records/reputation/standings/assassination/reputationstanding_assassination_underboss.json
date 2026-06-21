@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Assassination_Underboss",
+  "_RecordId_": "d71c2555-36b7-4eb0-9306-f9a2ecc1eb41",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Assassination_Underboss",
+    "description": "desc",
+    "displayName": "@RepStanding_Assassination_Rank6",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_8.svg",
+    "minReputation": 112000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.XNAA_Nox_Template",
+  "_RecordId_": "b5a41c0e-4038-44e6-b8c8-04dd949bc03b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.39}}}}

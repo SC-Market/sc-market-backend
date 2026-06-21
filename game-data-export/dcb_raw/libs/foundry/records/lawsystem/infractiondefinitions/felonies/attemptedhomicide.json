@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "InfractionDefinition.AttemptedHomicide",
+  "_RecordId_": "bee40ce2-0b37-42d4-81bf-58266fa22b21",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InfractionDefinition",
+    "name": "@Infractions_Name_043",
+    "description": "@Infractions_Desc_043",
+    "triggers": [
+      "DownedDirectDamage"],
+    "defaultParameters": {
+      "_Type_": "InfractionParameters",
+      "isFelony": 1,
+      "graceAllowance": -1,
+      "graceAllowanceCooldown": -1.0,
+      "gracePeriod": -1.0,
+      "graceCooloffScale": -1.0,
+      "graceWarnings": [],
+      "displayGraceTime": -1,
+      "escalatedPaymentFineMultiplier": -1.0,
+      "earlyPaymentPeriod": -1.0,
+      "lifetime": 168.0,
+      "coolOffTime": 900.0,
+      "pressChargesNotificationTime": -1.0,
+      "removeTimeSeconds": -1.0,
+      "felonyMerits": 3000,
+      "ignoreIfAgainstPartyMember": -1,
+      "hideCrimeNotification": -1,
+      "hideCrimeInJournal": -1}}}

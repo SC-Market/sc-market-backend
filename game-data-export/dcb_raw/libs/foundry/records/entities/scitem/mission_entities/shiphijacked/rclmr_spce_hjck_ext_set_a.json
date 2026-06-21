@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "EntityClassDefinition.rclmr_spce_hjck_ext_set_a",
+  "_RecordId_": "08d851c7-5240-4206-b584-0bf4ab7d7284",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/HijackedShips/spce_hjck_set_art_test.socpak"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"}]}}

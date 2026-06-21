@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.AssistShipInCombat_MMH",
+  "_RecordId_": "2b575508-8e1a-489a-b66e-332b825cb02d",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/AssistShipInCombat/AssistShipInCombat.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/ShipWaveAttack/ShipWaveAttack.xml",
+        "subModuleHierarchy": "file://./../../../libs/foundry/records/contracts/modulehierarchy/shipwaveattack_mmh.json"}]}}

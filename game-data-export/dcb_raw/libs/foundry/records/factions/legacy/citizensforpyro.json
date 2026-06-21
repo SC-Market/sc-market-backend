@@ -1,0 +1,95 @@
+{
+  "_RecordName_": "EntityClassDefinition.CitizensForPyro",
+  "_RecordId_": "42fa5270-3b6b-4dd3-bf5f-f51dbf044031",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "SOrganizationProperties",
+        "Name": "CitizensForPyro",
+        "DisplayName": "@CitizensForPyro_RepUI_Name",
+        "Description": "@CitizensForPyro_RepUI_Description",
+        "Headquarters": "@CitizensForPyro_RepUI_Headquarters",
+        "GEID": 199998949439,
+        "Logo": "UI/SharedAssets/ManufacturerLogos/Branding_CitizensForPyro_Icon_1x1.tif",
+        "ReputationContextPropertiesUI": null,
+        "MemberCount": 0,
+        "Lawful": false,
+        "DisableReputationTracking": false,
+        "Allies": [],
+        "Enemies": [
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/xenothreat.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_neutral_015.json"},
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/headhunters.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json"}],
+        "hostilityParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_negativerep.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "alliedParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "propertiesBB": [
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFounded",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@CitizensForPyro_RepUI_Founded"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityLeadership",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@CitizensForPyro_RepUI_Leadership"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityArea",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@CitizensForPyro_RepUI_Area"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFocus",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@CitizensForPyro_RepUI_Focus"}}],
+        "perkReputationRewardList": [],
+        "sandboxTriggers": [
+          {
+            "_Type_": "SandboxTriggerRecordParams",
+            "triggerRecord": "file://./../../../../../libs/foundry/records/reputation/sandboxtriggers/grievousharm_ai.json"}]},
+      {
+        "_Type_": "SUniqueEntityClass",
+        "fixed_geid": 199998948058},
+      {
+        "_Type_": "SReputationContextPropertiesUI",
+        "context": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_citizensforprosperity.json"}],
+    "Components": []}}

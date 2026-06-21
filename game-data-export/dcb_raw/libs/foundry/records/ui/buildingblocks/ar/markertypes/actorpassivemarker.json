@@ -1,0 +1,672 @@
+{
+  "_RecordName_": "BuildingBlocks_Canvas.ActorPassiveMarker",
+  "_RecordId_": "813a4a07-9e1c-4690-a808-ad3a49ddfbab",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Canvas",
+    "size": {
+      "_Type_": "Vec3",
+      "x": 1920.0,
+      "y": 1080.0,
+      "z": 0.0},
+    "coordinateMethod": "useRaw",
+    "embeddedStyles": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Geo",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"}]}],
+        "modifiers": [],
+        "transitions": [
+          {
+            "_Type_": "BuildingBlocks_FieldTransitionNumber",
+            "duration": 0.2,
+            "delay": 0.0,
+            "delayRandomRange": 0.0,
+            "timescaleIndependent": false,
+            "timingFunction": {
+              "_Type_": "BuildingBlocks_TimingFunctionPreset",
+              "preset": "EaseOutCubic"},
+            "field": "SizeX"},
+          {
+            "_Type_": "BuildingBlocks_FieldTransitionNumber",
+            "duration": 0.2,
+            "delay": 0.0,
+            "delayRandomRange": 0.0,
+            "timescaleIndependent": false,
+            "timingFunction": {
+              "_Type_": "BuildingBlocks_TimingFunctionPreset",
+              "preset": "EaseOutCubic"},
+            "field": "SizeY"},
+          {
+            "_Type_": "BuildingBlocks_FieldTransitionNumber",
+            "duration": 0.2,
+            "delay": 0.0,
+            "delayRandomRange": 0.0,
+            "timescaleIndependent": false,
+            "timingFunction": {
+              "_Type_": "BuildingBlocks_TimingFunctionPreset",
+              "preset": "EaseOutCubic"},
+            "field": "SizeZ"}]},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "GeoSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.0d187a2e-774e-4bd1-af01-9af2ba791577",
+                      "_RecordId_": "0d187a2e-774e-4bd1-af01-9af2ba791577"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeX",
+            "value": 0.004},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeY",
+            "value": 0.004},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeZ",
+            "value": 0.004}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HostilityNeutral",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.1eba9b39-e4c7-45d1-94b6-1ed90cda222a",
+                      "_RecordId_": "1eba9b39-e4c7-45d1-94b6-1ed90cda222a"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "EntityMaterialPath",
+            "value": "Materials/UI/AR/vehicle_passive_marker_neutral.mtl"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "SilhouetteColor",
+            "color": null}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HostilityFriendly",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7fc923d6-2316-4e60-b9df-258ffef78435",
+                      "_RecordId_": "7fc923d6-2316-4e60-b9df-258ffef78435"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "EntityMaterialPath",
+            "value": "Materials/UI/AR/vehicle_passive_marker_friendly.mtl"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "SilhouetteColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 27,
+                "g": 193,
+                "b": 243,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HostilityHostile",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fb6a4f0c-7b97-4ed1-aae0-3466907fcedd",
+                      "_RecordId_": "fb6a4f0c-7b97-4ed1-aae0-3466907fcedd"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "EntityMaterialPath",
+            "value": "Materials/UI/AR/vehicle_passive_marker_hostile.mtl"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "SilhouetteColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 0,
+                "b": 0,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HostilityNeutralSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.1eba9b39-e4c7-45d1-94b6-1ed90cda222a",
+                      "_RecordId_": "1eba9b39-e4c7-45d1-94b6-1ed90cda222a"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.0d187a2e-774e-4bd1-af01-9af2ba791577",
+                      "_RecordId_": "0d187a2e-774e-4bd1-af01-9af2ba791577"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "EntityMaterialPath",
+            "value": "Materials/UI/AR/vehicle_passive_marker_selected_neutral.mtl"}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HostilityFriendlySelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7fc923d6-2316-4e60-b9df-258ffef78435",
+                      "_RecordId_": "7fc923d6-2316-4e60-b9df-258ffef78435"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.0d187a2e-774e-4bd1-af01-9af2ba791577",
+                      "_RecordId_": "0d187a2e-774e-4bd1-af01-9af2ba791577"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "EntityMaterialPath",
+            "value": "Materials/UI/AR/vehicle_passive_marker_selected_friendly.mtl"}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HostilityHostileSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeomEntity"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fb6a4f0c-7b97-4ed1-aae0-3466907fcedd",
+                      "_RecordId_": "fb6a4f0c-7b97-4ed1-aae0-3466907fcedd"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.0d187a2e-774e-4bd1-af01-9af2ba791577",
+                      "_RecordId_": "0d187a2e-774e-4bd1-af01-9af2ba791577"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "EntityMaterialPath",
+            "value": "Materials/UI/AR/vehicle_passive_marker_selected_hostile.mtl"}],
+        "transitions": []}],
+    "defaultStyles": {
+      "_Type_": "BuildingBlocks_DefaultStyles",
+      "sharedStyles": null,
+      "entries": []},
+    "style": null,
+    "brandStyles": [],
+    "entityPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneEntityRoot",
+      "renderLayer": "Default"},
+    "rttPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneRttRoot",
+      "renderLayer": "Default",
+      "entityScale": 1.0,
+      "entityOrientation": {
+        "_Type_": "Deg3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}},
+    "arPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneAugmentedRealityRtt",
+      "renderLayer": "Default",
+      "cardsUseStageRadius": true},
+    "previewScenes": [],
+    "staticVariables": [],
+    "proxyRootNode": null,
+    "defaultButtonDownSoundTag": null,
+    "defaultRightButtonDownSoundTag": null,
+    "defaultLeftClickSoundTag": null,
+    "defaultRightClickSoundTag": null,
+    "defaultLeftDoubleClickSoundTag": null,
+    "defaultRollOverSoundTag": null,
+    "defaultRollOffSoundTag": null,
+    "defaultMovementStartSoundTag": null,
+    "defaultMovementStopSoundTag": null,
+    "collisionType": "Cutout",
+    "cacheAmount": 0,
+    "scene": [
+      {
+        "_Type_": "BuildingBlocks_GeometryEntityWidget",
+        "name": "CanvasProxyRoot",
+        "styleTags": [],
+        "rendererType": "Entity",
+        "rendererPolicy": {
+          "_Type_": "BuildingBlocks_EntityRendererPolicy",
+          "sortViaPivot": false,
+          "includeInGroundingEffects": true},
+        "primitiveSettings": {
+          "_Type_": "BuildingBlocks_PrimitiveSettings",
+          "primitiveMaterialPath": "",
+          "UVStart": {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          "UVSize": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "isUValuePerPixel": false,
+          "isVValuePerPixel": false,
+          "isGrouped": true,
+          "visualState": null},
+        "parent": null,
+        "previewScene": null,
+        "previewSceneFlattened": null,
+        "cullingLevel": "Render",
+        "isActive": true,
+        "affectsLayout": true,
+        "affectsAutosize": true,
+        "exportNode": true,
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Deg3",
+          "x": 180.0,
+          "y": 90.0,
+          "z": 0.0},
+        "orientationOffset": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "scale": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "sizing": {
+          "_Type_": "BuildingBlocks_Size",
+          "width": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.003,
+            "behavior": "Fixed"},
+          "height": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.003,
+            "behavior": "Fixed"},
+          "depth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.003,
+            "behavior": "Fixed"},
+          "minWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "enableMinWidth": false,
+          "enableMinHeight": false,
+          "enableMaxWidth": false,
+          "enableMaxHeight": false},
+        "autoScalingMethod": "None",
+        "padding": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "margin": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "pivot": {
+          "_Type_": "Vec3",
+          "x": 0.5,
+          "y": 0.5,
+          "z": 0.5},
+        "anchor": {
+          "_Type_": "Vec3",
+          "x": 0.5,
+          "y": 0.5,
+          "z": 0.5},
+        "background": {
+          "_Type_": "BuildingBlocks_Background",
+          "enable": false,
+          "color": null,
+          "topLeftColor": null,
+          "topRightColor": null,
+          "bottomLeftColor": null,
+          "bottomRightCColor": null},
+        "segmentedFill": {
+          "_Type_": "BuildingBlocks_SegmentedFill",
+          "enable": false,
+          "segmentSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "spaceSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "angle": 0.0,
+          "xOffset": 0.0,
+          "segmentColor": null,
+          "barFill": false},
+        "svgFill": {
+          "_Type_": "BuildingBlocks_SvgFill",
+          "svgPath": "",
+          "nineSliceRect": {
+            "_Type_": "BuildingBlocks_TRBL",
+            "top": 0.25,
+            "right": 0.75,
+            "bottom": 0.75,
+            "left": 0.25,
+            "front": 0.0,
+            "back": 0.0},
+          "renderShape": true,
+          "flipHorizontal": false,
+          "flipVertical": false,
+          "enableColorOverlay": true,
+          "color": null,
+          "scalingBehavior": "Contain",
+          "containPositionX": 0.0,
+          "containPositionY": 0.0,
+          "enableNineSliceRect": true,
+          "nineSliceScale": 1.0,
+          "strokeExtent": 1.0,
+          "playhead": 0.0},
+        "border": {
+          "_Type_": "BuildingBlocks_Border",
+          "top": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "right": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "bottom": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "left": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "topLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "topRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false}},
+        "layoutPolicy": null,
+        "layoutPolicyItem": null,
+        "layoutItemCommon": null,
+        "dropTargetPolicy": null,
+        "draggablePolicy": null,
+        "tooltipPolicy": null,
+        "contextMenuPolicy": null,
+        "grabControlsPolicy": null,
+        "calloutSettings": null,
+        "virtualCursorPolicy": null,
+        "overflow": {
+          "_Type_": "BuildingBlocks_Overflow",
+          "overflow": "Visible",
+          "widthFadeThreshold": 0.0,
+          "heightFadeThreshold": 0.0,
+          "depthFadeThreshold": 0.0,
+          "fadeXAxis": true,
+          "fadeYAxis": true,
+          "fadeZAxis": true},
+        "scrollPolicy": null,
+        "radialTransform": {
+          "_Type_": "BuildingBlocks_RadialTransform",
+          "transformMultiplier": 0.0,
+          "curvatureAxis": "Z",
+          "mouseTestShape": true,
+          "polyResolution": 45,
+          "conicSlantFactor": 0.0},
+        "radialTransformChild": {
+          "_Type_": "BuildingBlocks_RadialTransformChild",
+          "inheritRotation": true,
+          "inheritShapeWarp": true,
+          "maintainGapLength": true},
+        "animation": {
+          "_Type_": "BuildingBlocks_Animation",
+          "animationTimeline": null,
+          "dynamicStartTimeVariableName": "",
+          "duration": 1.0,
+          "delay": 0.0,
+          "delayRandomRange": 0.0,
+          "direction": "Forward",
+          "fillMode": "None",
+          "iterationCount": 1,
+          "loopIndefinitely": false,
+          "timeSync": false,
+          "additive": true,
+          "timescaleIndependent": false},
+        "interactions": {
+          "_Type_": "BuildingBlocks_Interactions",
+          "canInteract": false,
+          "disabled": false,
+          "selected": false,
+          "collideLeftClick": true,
+          "collideRightClick": true,
+          "collideMouseWheel": false,
+          "hitDetectionOffset": 1.0,
+          "propagateInteractionStates": false,
+          "inheritHoverState": false,
+          "inheritDownState": false,
+          "inheritSelectedState": false,
+          "inheritDisabledState": false,
+          "blocksCursor": false,
+          "blocksNavigation": false,
+          "onLeftClick": [],
+          "onRightClick": [],
+          "onLeftDown": [],
+          "onLeftDoubleClick": [],
+          "onRollOver": [],
+          "onRollOff": [],
+          "boundRestrictionShape": null,
+          "twoVariablePicker": null,
+          "buttonDownSoundTag": null,
+          "rightButtonDownSoundTag": null,
+          "leftClickSoundTag": null,
+          "rightClickSoundTag": null,
+          "leftDoubleClickSoundTag": null,
+          "rollOverSoundTag": null,
+          "rollOffSoundTag": null,
+          "movementStartSoundTag": null,
+          "movementStopSoundTag": null,
+          "movementStopDelayMs": 80.0},
+        "inheritsScale": true,
+        "inheritsRotation": true,
+        "inheritsTranslation": true,
+        "inheritsAlpha": true,
+        "inheritsOverflow": false,
+        "alpha": 1.0,
+        "layer": 5,
+        "aspectRatioLibrary": null,
+        "focusIndex": -1,
+        "inlineStyles": [],
+        "hoverCursor": "Auto",
+        "enableHeldCursor": false,
+        "heldCursor": "Auto",
+        "contentOrientation": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "geometryTag": null,
+        "materialPath": "Materials/UI/AR/vehicle_passive_marker_neutral.mtl",
+        "useCustomPivot": false,
+        "contentScaleLimitMax": 0.0,
+        "contentScaleLimitMin": 0.0,
+        "effects": {
+          "_Type_": "SBuildingBlocks_EntityEffects",
+          "glow": null,
+          "tint": null,
+          "silhouette": null,
+          "interferenceAmount": -1.0,
+          "dissolveOpacity": 0.0},
+        "loadoutNames": [],
+        "dirt": 0.0,
+        "wear": 0.0,
+        "tintPalette": {
+          "_Type_": "TintPaletteRef",
+          "RootRecord": null,
+          "ChildPath": "",
+          "SwizzleOverride": null},
+        "imageSource": "None",
+        "spawnerType": "",
+        "geometryPath": "Objects/UI/reticle/pip_fixed_segment.cgf",
+        "viewDistRatio": 255,
+        "lodCullDistMultiplier": 255,
+        "animationParams": null}],
+    "library": [],
+    "operations": [],
+    "overrideDefaultTooltipCanvas": null,
+    "overrideDefaultCalloutCanvas": null}}

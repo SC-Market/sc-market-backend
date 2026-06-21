@@ -1,0 +1,84 @@
+{
+  "_RecordName_": "TQSOptionContentRecord.ApexVLKCombatContent",
+  "_RecordId_": "9cbf1e52-7543-48e6-8ec3-046c49510ea6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TQSOptionContentRecord",
+    "content": {
+      "_Type_": "TQSOptionContent",
+      "parameters": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "maximumDistance",
+          "value": 900.0,
+          "overrides": []}],
+      "generation": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "perceivedHostileTargets_around_entity",
+          "value": 900.0,
+          "overrides": []}],
+      "conditions": [
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isAlive",
+          "value": true,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isIncapacitated",
+          "value": false,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "max_distance_from_puppet",
+          "value": 900.0,
+          "overrides": []}],
+      "weights": [
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "distance_to_entity",
+          "weight": -1.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": [
+              {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.919732a9-48d2-40a0-8b09-10305cb0efef",
+                    "_RecordId_": "919732a9-48d2-40a0-8b09-10305cb0efef"}],
+                "negativeTags": []}]},
+          "condition": "isInside_of_area",
+          "weight": 100.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isPlayer",
+          "weight": 3.0,
+          "overrides": []}]}}}

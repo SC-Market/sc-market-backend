@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "InfractionDefinition.PrisonSuicide",
+  "_RecordId_": "15cbc51f-4a16-4035-8b95-a56c3a382561",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InfractionDefinition",
+    "name": "@Infractions_Name_045",
+    "description": "@Infractions_Desc_045",
+    "triggers": [
+      "PrisonSuicide"],
+    "defaultParameters": {
+      "_Type_": "InfractionParameters",
+      "isFelony": 1,
+      "graceAllowance": -1,
+      "graceAllowanceCooldown": -1.0,
+      "gracePeriod": -1.0,
+      "graceCooloffScale": -1.0,
+      "graceWarnings": [],
+      "displayGraceTime": -1,
+      "escalatedPaymentFineMultiplier": -1.0,
+      "earlyPaymentPeriod": -1.0,
+      "lifetime": -1.0,
+      "coolOffTime": -1.0,
+      "pressChargesNotificationTime": -1.0,
+      "removeTimeSeconds": -1.0,
+      "felonyMerits": 1000,
+      "ignoreIfAgainstPartyMember": -1,
+      "hideCrimeNotification": -1,
+      "hideCrimeInJournal": -1}}}

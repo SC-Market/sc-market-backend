@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "SecurityClearanceToken.NeutralTerritory",
+  "_RecordId_": "0127376a-638c-4c43-97bb-e23f09a8c689",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": {
+      "_Type_": "SecurityClearanceTokenData_NeutralZone",
+      "conditionFailedTag": null},
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

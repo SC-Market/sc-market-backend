@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "MegaMap.EA_MinersLament_PirateSwarm",
+  "_RecordId_": "234fb8e4-544d-4e4d-9420-6aa358bc918e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_pirateswarm.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/MinersLament/minerslament_global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "libs/subsumption/missions/ac/ac_swarm/ac_swarm.xml",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/race_timetrial_stanton2c_asteroidcluster.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/MinersLament/minerslament_survivalsolo.socpak"]},
+      "planetOverrideParams": {
+        "_Type_": "ArenaCommanderPlanetOverrideParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/race_timetrial_stanton2c_asteroidcluster.json",
+        "fixedRotation": 0.0}},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_minerslament.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

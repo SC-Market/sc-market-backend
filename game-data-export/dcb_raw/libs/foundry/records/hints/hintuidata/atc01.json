@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ATC01",
+  "_RecordId_": "3c895fba-be6c-4075-b175-5950cf1be843",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ATC_Title",
+    "BodyText": "@Hints_ATC1",
+    "BodyTextGamePad": "@Hints_ATC1",
+    "BodyTextJoystick": "@Hints_ATC1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

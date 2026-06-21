@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BeaconsContracts.ServiceBeaconTypes",
+  "_RecordId_": "71b7a374-2358-4f11-afad-c2892c641e53",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BeaconsContracts",
+    "serviceBeacons": [
+      "file://./../../../../libs/foundry/records/servicebeacon/escortbeacon.json",
+      "file://./../../../../libs/foundry/records/servicebeacon/combatassistancebeacon.json",
+      "file://./../../../../libs/foundry/records/servicebeacon/revivebeacon.json",
+      "file://./../../../../libs/foundry/records/servicebeacon/personaltransportbeacon.json",
+      "file://./../../../../libs/foundry/records/servicebeacon/healbeacon.json",
+      "file://./../../../../libs/foundry/records/servicebeacon/refuelbeacon.json"],
+    "serviceBeaconContractGenerator": "file://./../../../../libs/foundry/records/servicebeacon/beaconcontractgenerator.json"}}

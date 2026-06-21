@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.InstancedHangarGateway_Nyx_LargeFront_Rest_Nyx",
+  "_RecordId_": "b7f3b53b-6ff2-4d46-aa65-2a8393e69f3c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "InstancedHangarGateway",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SInstancedInteriorGatewayParams",
+        "gatewaySize": 5,
+        "instance": "file://./../../../../../../../libs/foundry/records/instancedinterior/hangar/hangar_largefront_rest_nyx.json"}]}}

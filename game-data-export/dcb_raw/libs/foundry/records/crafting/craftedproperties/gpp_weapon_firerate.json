@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_FireRate",
+  "_RecordId_": "551b651c-8a34-438f-9d19-93fdffe56246",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Weapon_FireRate",
+    "displayTransformation": null,
+    "unitFormat": "@StatUnits_RPM",
+    "nameOverrides": []}}

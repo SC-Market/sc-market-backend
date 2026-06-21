@@ -1,0 +1,200 @@
+{
+  "_RecordName_": "MissionOrganization.HDActivists",
+  "_RecordId_": "79dcd739-33fb-40e8-9f40-bc6d2b00a8e9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9ffdcf90-e86f-4632-a099-63ec42652ae3",
+            "_RecordId_": "9ffdcf90-e86f-4632-a099-63ec42652ae3"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aa322835-0098-403f-a0ee-0d1c19c0efb0",
+            "_RecordId_": "aa322835-0098-403f-a0ee-0d1c19c0efb0"},
+          "string": "@hdactivist_basesweep_danger_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aa322835-0098-403f-a0ee-0d1c19c0efb0",
+            "_RecordId_": "aa322835-0098-403f-a0ee-0d1c19c0efb0"},
+          "string": "@hdactivist_basesweep_danger_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aa322835-0098-403f-a0ee-0d1c19c0efb0",
+            "_RecordId_": "aa322835-0098-403f-a0ee-0d1c19c0efb0"},
+          "string": "@hdactivist_basesweep_danger_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aa322835-0098-403f-a0ee-0d1c19c0efb0",
+            "_RecordId_": "aa322835-0098-403f-a0ee-0d1c19c0efb0"},
+          "string": "@hdactivist_basesweep_danger_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@hdactivist_basesweep_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@hdactivist_basesweep_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@hdactivist_basesweep_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@hdactivist_basesweep_title_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@hdactivist_basesweep_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@hdactivist_basesweep_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@hdactivist_basesweep_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@hdactivist_basesweep_desc_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@hdactivist_basesweep_desc_005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.44d22c9d-872b-4114-84a7-6401240e0d1b",
+            "_RecordId_": "44d22c9d-872b-4114-84a7-6401240e0d1b"},
+          "string": "@hdactivist_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@hdactivist_assassination_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@hdactivist_assassination_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@hdactivist_assassination_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@hdactivist_assassination_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@hdactivist_assassination_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@hdactivist_assassination_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@hdactivist_assassination_danger_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@hdactivist_assassination_danger_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@hdactivist_assassination_danger_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@hdactivist_assassination_danger_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@hdactivist_from"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

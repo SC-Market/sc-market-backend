@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "Item.DefaultInteriorController",
+  "_RecordId_": "f71606f6-6bd4-4634-81b2-28130aa7b25f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Item",
+    "type": {
+      "_Type_": "VehicleItemInteriorController",
+      "GameTokenList": {
+        "_Type_": "GameTokens",
+        "GameTokenLibraries": [
+          "ShipStatus"],
+        "FlowGraphs": [
+          "InteriorControllers\\DefaultInteriorController.xml"]}}}}

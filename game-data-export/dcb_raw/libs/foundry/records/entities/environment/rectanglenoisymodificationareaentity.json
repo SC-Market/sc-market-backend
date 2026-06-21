@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "EntityClassDefinition.RectangleNoisyModificationAreaEntity",
+  "_RecordId_": "e2190d85-c2ea-4ee1-84cb-14b7778d0820",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Environment",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": true,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentRectangleModificationObjectParams",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "rollOff": 1.0,
+        "strength": 20.0,
+        "dishEffect": 0.0,
+        "sortOrder": -1}]}}

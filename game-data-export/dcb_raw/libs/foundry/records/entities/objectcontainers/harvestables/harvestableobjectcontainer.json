@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "EntityClassDefinition.HarvestableObjectContainer",
+  "_RecordId_": "94ae8454-359d-4637-8b0b-4eb277dc250c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": "file://./../../../../../../libs/foundry/records/densityclasses/harvestablelootdensityclass.json",
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": ""},
+      {
+        "_Type_": "HarvestableParams",
+        "looseSubConfigBase": {
+          "_Type_": "SubHarvestableConfigRef",
+          "subConfigRef": null},
+        "allowAutoRespawning": true},
+      {
+        "_Type_": "SSuperGUIDComponentParams"},
+      {
+        "_Type_": "SubsumptionPlatformComponentParams",
+        "missionLocation": null,
+        "additionalLocations": []}]}}

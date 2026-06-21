@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "SecurityClearanceToken.PlayerShip",
+  "_RecordId_": "ea38aada-c476-4767-8df2-cbc0c8357ba6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": {
+      "_Type_": "SecurityClearanceTokenData_Ownership",
+      "conditionFailedTag": null},
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

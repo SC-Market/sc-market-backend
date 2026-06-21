@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "Faction.Faction_Reputation_Lawful_ShubinInterstellar",
+  "_RecordId_": "04b1380a-c598-4e3d-8ebf-debde07cfe3d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [
+      {
+        "_Type_": "FriendlyFireReactionOverride",
+        "reactionType": "Neutral",
+        "shouldAllowFriendlyFire": false}],
+    "factionType": "Lawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": "file://./../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json"}}

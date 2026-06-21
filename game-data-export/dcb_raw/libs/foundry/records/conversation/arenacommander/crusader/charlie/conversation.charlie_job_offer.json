@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Charlie_Job_Offer",
+  "_RecordId_": "6e4dfdbe-a490-4e18-a049-9c37311a556e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_eward_covalex_regardingjob_001.json",
+        "skipNodeInXSecs": -1.0}]}}

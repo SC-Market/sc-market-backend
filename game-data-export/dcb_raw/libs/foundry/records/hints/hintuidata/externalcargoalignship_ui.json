@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ExternalCargoAlignShip_UI",
+  "_RecordId_": "a439857a-6496-4b8c-801d-86f2fbded974",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Cargo_Align_Title",
+    "BodyText": "@Hints_Cargo_Align",
+    "BodyTextGamePad": "@room_cargo_bay",
+    "BodyTextJoystick": "@room_cargo_bay",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

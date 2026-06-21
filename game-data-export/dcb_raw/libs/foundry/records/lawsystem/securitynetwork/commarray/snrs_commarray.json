@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_CommArray",
+  "_RecordId_": "b9894c4b-8ff4-4b0e-9b26-5bbe07a6974b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/commarray_clearance.json"]},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_lawful_aciedo.json"},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.f6a20920-f311-4d8a-b1f1-102e537ee62a",
+      "_RecordId_": "f6a20920-f311-4d8a-b1f1-102e537ee62a"},
+    "trespassWarningSeconds": 7.0,
+    "trespassRevokeWarningSeconds": 300.0}}

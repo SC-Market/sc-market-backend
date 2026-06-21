@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.ESPR",
+  "_RecordId_": "ce315122-4a74-4f39-a658-ff780ffa77c3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_espr.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

@@ -1,0 +1,69 @@
+{
+  "_RecordName_": "BodyHealthConfig.HealthConfig_Player",
+  "_RecordId_": "e4fa8e8f-e99f-4e94-a9e9-52d767bdf1e7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BodyHealthConfig",
+    "bleedingRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "Player_Bleeding"},
+    "bleedRateRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "Player_Bleeding_Rate"},
+    "isInvulnerable": false,
+    "isVulnerableOnlyToPlayer": false,
+    "setDamageEffectRatioOnChildren": false,
+    "canBeRepaired": false,
+    "ignoreZeroDamageHitEventsForTypes": [
+      "Distortion"],
+    "bodyPartConfigs": [
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/torso.json"],
+        "damageMultiplier": 1.0,
+        "nakedDamageMultiplier": 2.0,
+        "stunMultiplier": 1.0,
+        "impactForceMultiplier": 1.0,
+        "isHeadShot": false,
+        "isFallDamageTarget": false,
+        "isFPViewOccluder": false,
+        "damageCap": -1.0},
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/head.json"],
+        "damageMultiplier": 1.5,
+        "nakedDamageMultiplier": 4.0,
+        "stunMultiplier": 2.0,
+        "impactForceMultiplier": 1.0,
+        "isHeadShot": true,
+        "isFallDamageTarget": false,
+        "isFPViewOccluder": false,
+        "damageCap": -1.0},
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/rightarm.json",
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/leftarm.json"],
+        "damageMultiplier": 0.8,
+        "nakedDamageMultiplier": 1.5,
+        "stunMultiplier": 0.1,
+        "impactForceMultiplier": 0.65,
+        "isHeadShot": false,
+        "isFallDamageTarget": false,
+        "isFPViewOccluder": true,
+        "damageCap": -1.0},
+      {
+        "_Type_": "BodyPartConfig",
+        "bodyParts": [
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/rightleg.json",
+          "file://./../../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodypart/leftleg.json"],
+        "damageMultiplier": 0.8,
+        "nakedDamageMultiplier": 1.5,
+        "stunMultiplier": 1.0,
+        "impactForceMultiplier": 1.0,
+        "isHeadShot": false,
+        "isFallDamageTarget": true,
+        "isFPViewOccluder": true,
+        "damageCap": -1.0}]}}

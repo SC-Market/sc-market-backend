@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_ViewRoom",
+  "_RecordId_": "aa9e08f4-2854-4a4e-835c-2d01233bc27d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_viewroom",
+    "restrictViewBounds": false}}

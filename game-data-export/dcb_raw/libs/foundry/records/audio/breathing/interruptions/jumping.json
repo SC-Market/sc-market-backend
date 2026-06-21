@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "AudioBreathInterrupt.Jumping",
+  "_RecordId_": "db6d52fd-10aa-46ef-8719-9a14052cece4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathInterrupt",
+    "description": "Value will most likely always be 1 until we learn to have different jump strengths.",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.1939586,
+          "y": 1.05398},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.9,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.335902,
+          "y": 0.9990368}],
+      "useLUT": false},
+    "breathEvent": "BreathHold",
+    "customEvent": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_DXHN_Player_Breathing_Grunt_Effort"},
+    "triggerCustomEventOnly": true}}

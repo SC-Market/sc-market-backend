@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.EpicShipMineable_Cluster",
+  "_RecordId_": "b097c899-4a14-4092-8d07-75c1cf9d05c2",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 40.0,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.1,
+        "minSize": 3,
+        "maxSize": 3,
+        "minProximity": 1.0,
+        "maxProximity": 12.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.3,
+        "minSize": 2,
+        "maxSize": 2,
+        "minProximity": 1.0,
+        "maxProximity": 8.0}]}}

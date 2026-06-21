@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "LegacyCraftingRecipeDefRecord.Recipe_ammunition_grin_tool_salvage_repair_01",
+  "_RecordId_": "a376fac0-2e11-4530-b60d-d4dacaac6ccc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LegacyCraftingRecipeDefRecord",
+    "recipe": {
+      "_Type_": "LegacyCraftingRecipe_Default",
+      "timeSeconds": 4.0,
+      "outputs": [
+        {
+          "_Type_": "LegacyCraftingOutput_Entity",
+          "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_tool_resource_salvage_repair_01.json",
+          "amount": 1,
+          "fillAmmo": true}],
+      "costs": [
+        {
+          "_Type_": "LegacyCraftingCost_ResourceAmountDerivedFromAmmoContainer",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.RMC",
+            "_RecordId_": "a0e6c4cf-face-4f52-a020-dfa869607901"}}],
+      "iconImagePath": "UI/Textures/ModularKitStyles/GRIN/salvage_01/grin_salvage_01.tif",
+      "recipeName": "@item_Namegrin_tool_01_salvage_mag"}}}

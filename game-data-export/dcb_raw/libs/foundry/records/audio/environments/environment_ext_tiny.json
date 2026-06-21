@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "AudioEnvironment.Environment_Ext_Tiny",
+  "_RecordId_": "0ae1845f-041a-4434-be2d-56d419890b8e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioEnvironment",
+    "wwiseEnvironmentName": "VERB_SYS_EXT_Tiny",
+    "interiorityMinimum": 0.25,
+    "interiorityMaximum": 0.9,
+    "sizeMinimum": 10.0,
+    "sizeMaximum": 30.0,
+    "primarySurfaceType": "sand",
+    "secondarySurfaceType": "snow"}}

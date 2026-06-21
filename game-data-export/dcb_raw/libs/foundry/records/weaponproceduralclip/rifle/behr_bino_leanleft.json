@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "WeaponProceduralClip.Behr_Bino_LeanLeft",
+  "_RecordId_": "6c02c6d3-7b6b-4800-bc4f-9fcaf7530bed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipLean",
+      "blendTime": 0.2,
+      "weaponLean": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": -3.0,
+        "z": 0.0},
+      "weaponLeanAxisOffset": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "weaponShift": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}}}}

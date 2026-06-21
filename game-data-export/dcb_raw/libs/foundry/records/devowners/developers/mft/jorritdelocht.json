@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.JorritDeLocht",
+  "_RecordId_": "4d1f6388-c201-4c2e-b00d-ab47a3e8455c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Jorrit De Locht",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mdt.json"}}}

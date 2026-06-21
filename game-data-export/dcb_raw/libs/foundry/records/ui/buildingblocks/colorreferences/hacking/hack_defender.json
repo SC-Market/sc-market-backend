@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Hack_Defender",
+  "_RecordId_": "339a5ae5-58ec-4bcc-b1d7-d2af2f01ad5a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 242,
+        "g": 131,
+        "b": 3,
+        "a": 255}}}}

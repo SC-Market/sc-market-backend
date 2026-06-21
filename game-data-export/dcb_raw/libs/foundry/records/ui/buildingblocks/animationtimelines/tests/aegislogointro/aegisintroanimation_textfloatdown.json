@@ -1,0 +1,62 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AegisIntroAnimation_TextFloatDown",
+  "_RecordId_": "18e86dae-d2c5-4c56-85af-094560f82bc4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionCustomCurve",
+                "curve": {
+                  "_Type_": "BezierCurve",
+                  "points": [
+                    {
+                      "_Type_": "Vec2",
+                      "x": -0.9096386,
+                      "y": 0.0},
+                    {
+                      "_Type_": "Vec2",
+                      "x": 0.0,
+                      "y": 0.0},
+                    {
+                      "_Type_": "Vec2",
+                      "x": 0.9096386,
+                      "y": 0.0},
+                    {
+                      "_Type_": "Vec2",
+                      "x": 0.08835341,
+                      "y": 1.004255},
+                    {
+                      "_Type_": "Vec2",
+                      "x": 1.0,
+                      "y": 1.0},
+                    {
+                      "_Type_": "Vec2",
+                      "x": 1.911647,
+                      "y": 0.9957447}],
+                  "useLUT": false}},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PosY",
+                "value": 220.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PosY",
+                "value": 0.0}}]}]}}}

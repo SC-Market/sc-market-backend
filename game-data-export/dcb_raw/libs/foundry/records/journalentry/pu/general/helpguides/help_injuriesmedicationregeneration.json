@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Help_InjuriesMedicationRegeneration",
+  "_RecordId_": "f668cc19-b419-46f9-a2a4-78581cefccf1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Journal_General_Healing_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@Journal_General_Healing_From",
+    "autoOpenMobiGlas": false,
+    "showNotification": false,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Journal_General_Healing_Content"},
+    "tutorialEntry": false}}

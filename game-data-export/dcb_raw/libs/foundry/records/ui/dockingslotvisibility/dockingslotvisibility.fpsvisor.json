@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "DockingSlotVisibility.FPSVisor",
+  "_RecordId_": "6ebd02e8-dc19-4ad4-9d63-3122949b2a88",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DockingSlotVisibility",
+    "rules": [
+      {
+        "_Type_": "DockingSlotVisibilityRule",
+        "modes": [
+          "ScanMode"],
+        "tagSets": [
+          {
+            "_Type_": "DockingSlotVisibilityTagSet",
+            "tags": [
+              "EquippedItem"]},
+          {
+            "_Type_": "DockingSlotVisibilityTagSet",
+            "tags": [
+              "HealthBar"]}]}]}}

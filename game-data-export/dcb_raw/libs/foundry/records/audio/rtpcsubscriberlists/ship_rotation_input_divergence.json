@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Rotation_Input_Divergence",
+  "_RecordId_": "0c71e718-1ef4-4cbc-9380-78ec72d3458e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence_MaxAll"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence_MaxPitchYaw"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence_Pitch"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence_Roll"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence_SlowLerp"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_InputDivergence_Yaw"}]}}

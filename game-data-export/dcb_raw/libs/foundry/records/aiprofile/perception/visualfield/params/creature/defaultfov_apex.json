@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_Apex",
+  "_RecordId_": "f7dc2a31-cada-4540-964f-46feba9d185f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 1500.0,
+    "sixthSenseRange": 25.0,
+    "clampDistanceForHorizontalFOV": 200.0,
+    "clampDistanceForVerticalFOV": 200.0,
+    "FOVHorizontal": 360.0,
+    "FOVVertical": 179.0,
+    "PrimaryFOVHorizontal": 360.0,
+    "PrimaryFOVVertical": 360.0}}

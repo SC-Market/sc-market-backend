@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "VoiceBundle.PU_GenNPC_Male",
+  "_RecordId_": "9a2eb3bb-ce35-48df-a94f-61858c5dcd3b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_GenNPC_Male",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_04.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_07.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_08.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_09.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_10.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_11.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_12.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_13.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_14.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_16.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_17.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_19.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_male_20.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_gennpc_01_malefriendly.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_gennpc_01_malegruff.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_gennpc_04_malefriendly.json"]}}

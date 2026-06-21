@@ -1,0 +1,162 @@
+{
+  "_RecordName_": "AudioSignalList.AudioSignals",
+  "_RecordId_": "3693f74b-5afa-4185-9f2c-cd35bb9851c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioSignalList",
+    "Signals": [
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Enter_Exclusion_Boundary",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Leave_Exclusion_Boundary",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Wanted_Level_Up",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_Game_UI_notify_Wanted_Up"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Wanted_Level_Down",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_Game_UI_notify_Wanted_Down"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Wanted_Level_Max",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_Game_UI_notify_Wanted_Max"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "FlashbangEnter",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_SC_Game_Do_Nothing"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "FlashbangLeave",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_SC_Game_Do_Nothing"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mobiglas_Open",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [
+          {
+            "_Type_": "AudioSwitch",
+            "switch": "SC_Mobiglas:Active"}],
+        "rtpcs": [
+          {
+            "_Type_": "AudioSignalRtpc",
+            "rtpc": "mobiGlas",
+            "defaultValue": 1.0,
+            "global": true}]},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Mobiglas_Close",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [
+          {
+            "_Type_": "AudioSwitch",
+            "switch": "SC_Mobiglas:Inactive"}],
+        "rtpcs": [
+          {
+            "_Type_": "AudioSignalRtpc",
+            "rtpc": "mobiGlas",
+            "defaultValue": 0.0,
+            "global": true}]},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "UI_Show_Timed_Hint",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_Hint_Notification"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "UI_Show_Continuous_Hint",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_Hint_Notification"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "UI_LocalPlayer_HighlightChoice",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_InnerThought_MouseOver"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "UI_LocalPlayer_MakeChoice",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_InnerThought_Select"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Kiosk_Start_Use",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": [
+          {
+            "_Type_": "AudioSignalRtpc",
+            "rtpc": "UI_Effect",
+            "defaultValue": 1.0,
+            "global": true}]},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "Kiosk_Stop_Use",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": [
+          {
+            "_Type_": "AudioSignalRtpc",
+            "rtpc": "UI_Effect",
+            "defaultValue": 0.0,
+            "global": true}]},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "LobbyPlayerLeave",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []}]}}

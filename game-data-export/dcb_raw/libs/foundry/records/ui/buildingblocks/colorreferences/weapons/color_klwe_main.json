@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Color_KLWE_Main",
+  "_RecordId_": "bef8da21-f47c-479e-83db-200bd37c612a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 232,
+        "g": 231,
+        "b": 102,
+        "a": 255}}}}

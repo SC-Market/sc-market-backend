@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.Outfit-Bold",
+  "_RecordId_": "d3d1ebae-0cc7-4d13-967f-00eb34b0422a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$OutfitBold",
+    "paintFile": "UI/fonts/Install/Outfit-Bold.slug",
+    "isBold": true,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.89,
+    "leadingModifier": -0.09,
+    "topMarginModifier": 0.03,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 5}}

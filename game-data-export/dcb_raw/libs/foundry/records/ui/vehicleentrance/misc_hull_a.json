@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "SEntrancesDef.MISC_Hull_A",
+  "_RecordId_": "1907e7a0-ecf5-40f6-aa55-7427138e910e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.8,
+      "y": 1.8,
+      "z": 1.8},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "MISC_Hull_A",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -3.27,
+          "y": 2.714,
+          "z": -1.925},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_airlock",
+        "jointName": "MISC_Hull_A",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -3.27,
+          "y": 2.813,
+          "z": -0.337},
+        "shipState": "Flying"}]}}

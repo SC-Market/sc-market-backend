@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Worker_Rank1",
+  "_RecordId_": "fffc6fcf-bb76-40c3-8901-3b5ba4d7326e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Worker_Rank1",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 1000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

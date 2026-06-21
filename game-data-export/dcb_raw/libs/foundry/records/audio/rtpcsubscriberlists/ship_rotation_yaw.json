@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Rotation_Yaw",
+  "_RecordId_": "d51387cc-8c45-44bf-be78-dede2a730869",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_Yaw"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_Yaw_Signed"}]}}

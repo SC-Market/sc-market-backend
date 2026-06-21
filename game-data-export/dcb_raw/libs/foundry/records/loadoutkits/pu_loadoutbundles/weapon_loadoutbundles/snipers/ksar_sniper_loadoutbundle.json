@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "SLoadoutAssortment.ksar_sniper_loadoutbundle",
+  "_RecordId_": "016c1080-62f6-4633-9524-3ff6054af3eb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_sniper/ksar_sniper.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_sniper/ksar_sniper.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_sniper/ksar_sniper.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_sniper/sniper_skins/ksar_sniper_ballistic_01_white_blue_01.xml"}]}]}}

@@ -1,0 +1,1100 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Beard_WhiteCollar_01",
+  "_RecordId_": "b39c78ae-6c92-4610-8e37-eab8458a53e7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "facial_hair_001",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "facial_hair_012",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "facial_hair_011",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Beard_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Criminality03",
+  "_RecordId_": "0d7862c7-b8d3-4eb0-96c3-5192f0d84291",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Criminality_Title",
+    "BodyText": "@Hints_Criminality3",
+    "BodyTextGamePad": "@Hints_Criminality3",
+    "BodyTextJoystick": "@Hints_Criminality3",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

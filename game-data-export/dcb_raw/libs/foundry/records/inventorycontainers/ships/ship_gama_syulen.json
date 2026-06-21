@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Ship_Gama_Syulen",
+  "_RecordId_": "2243f613-073e-446f-a941-6287a9742fc6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 5.0,
+      "y": 5.0,
+      "z": 5.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 6.0}}}}

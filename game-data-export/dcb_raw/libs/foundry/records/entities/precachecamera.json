@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "EntityClassDefinition.PrecacheCamera",
+  "_RecordId_": "2791ac6f-c91a-4cb5-a2ae-120563303ac0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "PrecacheCamera.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": []}}

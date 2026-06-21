@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ESPR_Talon_Shrike_Template",
+  "_RecordId_": "b14b3d31-7c82-42be-990e-cdb8935c8689",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.65}}}}

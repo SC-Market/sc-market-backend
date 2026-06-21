@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.InstancedHangarGateway_Nyx_SmallTop_Levski",
+  "_RecordId_": "0a75124c-fba1-461d-b2da-a243af7f1a9e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "InstancedHangarGateway",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SInstancedInteriorGatewayParams",
+        "gatewaySize": 3,
+        "instance": "file://./../../../../../../../libs/foundry/records/instancedinterior/hangar/hangar_smalltop_levski_nyx.json"}]}}

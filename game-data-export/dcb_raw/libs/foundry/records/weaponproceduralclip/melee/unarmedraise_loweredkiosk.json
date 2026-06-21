@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "WeaponProceduralClip.UnarmedRaise_LoweredKiosk",
+  "_RecordId_": "fb7af30e-3e28-46e8-bb8d-e54886991ef8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipRaise",
+      "blendTime": 1.0,
+      "weaponRaise": {
+        "_Type_": "Ang3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "weaponShift": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "raiseTime": 0.1}}}

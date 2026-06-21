@@ -1,0 +1,51 @@
+{
+  "_RecordName_": "SandboxTriggerRecord.GrievousHarm_AI_Pyro",
+  "_RecordId_": "5439c0de-f891-458b-859c-3407653d21a1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SandboxTriggerRecord",
+    "triggerManualParams": [
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxTrigger",
+          "sandboxTrigger": "KillActor"},
+        "triggerOnInnocentsOnly": false,
+        "outcomes": [
+          {
+            "_Type_": "ReputationRewardBaseDef",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+            "reward": "file://./../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_negative_xs.json"}]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxTrigger",
+          "sandboxTrigger": "Manslaughter"},
+        "triggerOnInnocentsOnly": false,
+        "outcomes": [
+          {
+            "_Type_": "ReputationRewardBaseDef",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+            "reward": "file://./../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_negative_xs.json"}]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxTrigger",
+          "sandboxTrigger": "KnockoutActor"},
+        "triggerOnInnocentsOnly": false,
+        "outcomes": [
+          {
+            "_Type_": "ReputationRewardBaseDef",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+            "reward": "file://./../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_negative_xxxs.json"}]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxTrigger",
+          "sandboxTrigger": "HighBDL"},
+        "triggerOnInnocentsOnly": false,
+        "outcomes": [
+          {
+            "_Type_": "ReputationRewardBaseDef",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+            "reward": "file://./../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_negative_xxxs.json"}]}]}}

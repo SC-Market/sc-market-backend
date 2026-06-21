@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_FPSCombat_RoughAndReady",
+  "_RecordId_": "3ddd16a2-1e76-45f8-a82b-19fcb861e386",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "FPS_Combat_RoughAndReady",
+    "displayName": "@mobiglas_ui_Mercenary",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 1001,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/fps_combat/reputationstanding_fpscombat_noteligible_roughandready.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/fps_combat/reputationstanding_fpscombat_rank0_roughandready.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/fps_combat/reputationstanding_fpscombat_rank1_roughandready.json"]}}}

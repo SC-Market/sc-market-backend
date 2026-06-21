@@ -1,0 +1,52 @@
+{
+  "_RecordName_": "InteractionConditionPreset.EnterRestriction_Sink",
+  "_RecordId_": "579c890c-deea-4098-825c-f00167f21e1c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_sink_wearingUndersuit"},
+          "blockedCursor": null,
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Armor_Undersuit"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": []},
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_sink_wearingGloves"},
+          "blockedCursor": null,
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Clothing_Hands"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": []}],
+    "conditionToHideParams": []}}

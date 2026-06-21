@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Courier_NotEligible_TransportGuild",
+  "_RecordId_": "8933527f-8e1b-469b-9162-240d5ce1ea91",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Courier_NotEligible_TransportGuild",
+    "description": "desc",
+    "displayName": "@RepStanding_NotEligible",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_1.svg",
+    "minReputation": -1000,
+    "driftReputation": 250,
+    "driftTimeHours": 1.0,
+    "gated": false}}

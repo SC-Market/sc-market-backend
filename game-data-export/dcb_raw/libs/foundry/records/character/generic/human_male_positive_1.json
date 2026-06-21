@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "Character.Human_Male_Positive_1",
+  "_RecordId_": "fdc5936a-2df4-4a79-96b6-06ded7aa0c71",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "Human_Male_Positive_1",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "positive",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [
+      {
+        "_Type_": "MovementSpeedOverride",
+        "speedCategory": "WalkSlow",
+        "speedOverride": 0.69},
+      {
+        "_Type_": "MovementSpeedOverride",
+        "speedCategory": "WalkMid",
+        "speedOverride": 0.69},
+      {
+        "_Type_": "MovementSpeedOverride",
+        "speedCategory": "WalkFast",
+        "speedOverride": 1.2}],
+    "nicknameChance": 0.0,
+    "name": ""}}

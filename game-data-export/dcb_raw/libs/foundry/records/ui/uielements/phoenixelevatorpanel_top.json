@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.PhoenixElevatorPanel_Top",
+  "_RecordId_": "ce4f7e15-1649-4099-9c84-7c40bb39b5a9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/Ships/Constellation/assets/SWF/ElevatorPanel_Top.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MissionGiver.Vaughn",
+  "_RecordId_": "5c3c1c1f-3833-44f2-8ef1-879ff6fe1769",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../../libs/foundry/records/factions/legacy/vaughn.json",
+    "reputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_vaughn.json",
+    "displayName": "@LOC_UNINITIALIZED",
+    "description": "@LOC_UNINITIALIZED",
+    "headquarters": "@LOC_UNINITIALIZED",
+    "invitationTimeout": 5.0,
+    "visitTimeout": 20.0,
+    "shortCooldown": 10.0,
+    "mediumCooldown": 20.0,
+    "longCooldown": 30.0,
+    "Allies": [],
+    "Enemies": [],
+    "propertiesBB": []}}

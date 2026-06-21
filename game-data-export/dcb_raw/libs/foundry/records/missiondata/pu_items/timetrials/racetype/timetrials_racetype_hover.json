@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MissionItem.TimeTrials_RaceType_Hover",
+  "_RecordId_": "6288a01e-cbe4-44a1-a054-9078bdbdf087",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.967a634a-fb30-4a60-a33c-addad2c06b40",
+        "_RecordId_": "967a634a-fb30-4a60-a33c-addad2c06b40"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@TimeTrial_ExtendedTextToken_RaceType_Hover"}]},
+    "weighting": 1.0,
+    "entityClass": null}}

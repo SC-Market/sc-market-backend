@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ShipCustomization01",
+  "_RecordId_": "a314fd7f-64f8-45e5-9c5a-94b757918140",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Ship_Customization_Title",
+    "BodyText": "@Hints_Ship_Customization1",
+    "BodyTextGamePad": "@Hints_Ship_Customization1",
+    "BodyTextJoystick": "@Hints_Ship_Customization1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

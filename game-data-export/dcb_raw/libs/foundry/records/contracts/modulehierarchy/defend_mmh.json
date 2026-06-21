@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.Defend_MMH",
+  "_RecordId_": "e8d1f394-e8d7-44b1-b948-66ca71e34c66",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/InfiltrateAndDefend/PU_Defend.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/eliminateall_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/eliminateall_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/eliminateall_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/eliminateall_mmh.json"}]}}

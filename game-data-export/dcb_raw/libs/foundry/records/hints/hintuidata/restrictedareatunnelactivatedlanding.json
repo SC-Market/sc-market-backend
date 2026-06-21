@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.RestrictedAreaTunnelActivatedLanding",
+  "_RecordId_": "1badb85b-eb5c-4c73-8f69-daf9f4b6d2f6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_RestrictedAreaNavigation_Title",
+    "BodyText": "@Hints_RestrictedAreaTunnelActivatedLanding",
+    "BodyTextGamePad": "@Hints_RestrictedAreaTunnelActivatedLanding",
+    "BodyTextJoystick": "@Hints_RestrictedAreaTunnelActivatedLanding",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

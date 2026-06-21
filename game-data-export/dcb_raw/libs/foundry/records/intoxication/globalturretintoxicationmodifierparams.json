@@ -1,0 +1,89 @@
+{
+  "_RecordName_": "IntoxicationTurretModifierParams.GlobalTurretIntoxicationModifierParams",
+  "_RecordId_": "da01cefe-07b3-4533-aac4-09d4c624dc2e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "IntoxicationTurretModifierParams",
+    "distortion": {
+      "_Type_": "ToxiInputModifierDistortion",
+      "enable": true,
+      "amplitudeInterpolant": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.4910843,
+            "y": -0.002468079},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.4910843,
+            "y": 0.002468079},
+          {
+            "_Type_": "Vec2",
+            "x": 0.9723571,
+            "y": 0.2684056},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.027643,
+            "y": 1.731594}],
+        "useLUT": false},
+      "axesInputScale": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.475502,
+            "y": -0.1002553},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.475502,
+            "y": 0.1002553},
+          {
+            "_Type_": "Vec2",
+            "x": 0.9267484,
+            "y": 0.2537194},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.073252,
+            "y": 1.746281}],
+        "useLUT": false},
+      "minAmplitude": 1.0,
+      "maxAmplitude": 3.5,
+      "frequency": 0.5},
+    "delay": {
+      "_Type_": "ToxiInputModifierDelay",
+      "enable": true,
+      "minSpeed": 0.75,
+      "maxSpeed": 1.1},
+    "yaw": {
+      "_Type_": "ToxiInputModifierAxis",
+      "strength": 1.0,
+      "triggerAxes": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0}},
+    "pitch": {
+      "_Type_": "ToxiInputModifierAxis",
+      "strength": 1.0,
+      "triggerAxes": {
+        "_Type_": "Vec3",
+        "x": 1.0,
+        "y": 0.0,
+        "z": 0.0}}}}

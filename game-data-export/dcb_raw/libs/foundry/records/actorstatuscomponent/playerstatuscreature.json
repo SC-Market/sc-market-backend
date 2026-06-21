@@ -1,0 +1,1096 @@
+{
+  "_RecordName_": "ActorStatusComponent.PlayerStatusCreature",
+  "_RecordId_": "1534d90d-5f20-4d11-b16f-0d06090d4d1e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorStatusComponent",
+    "speedThresholds": [
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 15.0,
+        "speedFactor": 0.95},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 25.0,
+        "speedFactor": 0.9},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 35.0,
+        "speedFactor": 0.85},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 45.0,
+        "speedFactor": 0.8},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 55.0,
+        "speedFactor": 0.75},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 60.0,
+        "speedFactor": 0.7},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 65.0,
+        "speedFactor": 0.65},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 70.0,
+        "speedFactor": 0.6},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 75.0,
+        "speedFactor": 0.55},
+      {
+        "_Type_": "SpeedThreshold",
+        "inventoryWeight": 80.0,
+        "speedFactor": 0.5}],
+    "actorStats": [
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthPool",
+        "initialValue": 75.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 75.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "LowHealth",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 0.0},
+              "statusEffectTriggers": []},
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Hurt",
+              "statusTrigger": {
+                "_Type_": "PercentageStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinPercentage": 0.0,
+                "triggerMaxPercentage": 90.0},
+              "statusEffectTriggers": []},
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Dying",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 0.0},
+              "statusEffectTriggers": [
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "Dead",
+                  "triggerMinThreshold": 0.0,
+                  "triggerMaxThreshold": 0.0,
+                  "value": {
+                    "_Type_": "StatusEffectValueAbsolute",
+                    "value": 1.0}}]}]},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthHead",
+        "initialValue": 30.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 30.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStatPreset",
+            "linkedStat": "HealthPool",
+            "preset": "_PointsTo_:ptr:1"}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Damaged",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 0.0},
+              "statusEffectTriggers": []}]},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthTorso",
+        "initialValue": 60.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 60.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStatPreset",
+            "linkedStat": "HealthPool",
+            "preset": "_PointsTo_:ptr:1"}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Damaged",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 0.0},
+              "statusEffectTriggers": []}]},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthLeftArm",
+        "initialValue": 36.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 36.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStatPreset",
+            "linkedStat": "HealthPool",
+            "preset": "_PointsTo_:ptr:1"}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetupPreset",
+          "preset": "_PointsTo_:ptr:2"},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthRightArm",
+        "initialValue": 36.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 36.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStatPreset",
+            "linkedStat": "HealthPool",
+            "preset": "_PointsTo_:ptr:1"}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetupPreset",
+          "preset": "_PointsTo_:ptr:2"},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthLeftLeg",
+        "initialValue": 48.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 48.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStatPreset",
+            "linkedStat": "HealthPool",
+            "preset": "_PointsTo_:ptr:1"}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetupPreset",
+          "preset": "_PointsTo_:ptr:3"},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "HealthRightLeg",
+        "initialValue": 48.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 48.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": true,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStatPreset",
+            "linkedStat": "HealthPool",
+            "preset": "_PointsTo_:ptr:1"}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetupPreset",
+          "preset": "_PointsTo_:ptr:3"},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "Pressure",
+        "initialValue": 1.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 100.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": false,
+        "useIdealStatValue": true,
+        "linkedStats": [],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Depressurization",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 0.15},
+              "statusEffectTriggers": [
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "DepressurizationDamage",
+                  "triggerMinThreshold": 0.0,
+                  "triggerMaxThreshold": 0.15,
+                  "value": {
+                    "_Type_": "StatusEffectDamageOverTime",
+                    "effectMin": 0.15,
+                    "effectMax": 0.0,
+                    "ignoresMultiplier": true,
+                    "damagedParts": [],
+                    "damageAtMin": 0.0,
+                    "damageAtMax": 4.0}}]}]},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "GasSaturationO2",
+        "initialValue": 1.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 1.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": false,
+        "useIdealStatValue": true,
+        "linkedStats": [],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "PoorAtmosphereQuality",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 0.95},
+              "statusEffectTriggers": [
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "Suffocation",
+                  "triggerMinThreshold": 0.0,
+                  "triggerMaxThreshold": 0.9,
+                  "value": {
+                    "_Type_": "StatusEffectValueAbsolute",
+                    "value": 0.012}},
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "SuffocationDamage",
+                  "triggerMinThreshold": 0.0,
+                  "triggerMaxThreshold": 0.1,
+                  "value": {
+                    "_Type_": "StatusEffectDamageOverTime",
+                    "effectMin": 0.1,
+                    "effectMax": 0.0,
+                    "ignoresMultiplier": true,
+                    "damagedParts": [],
+                    "damageAtMin": 0.0,
+                    "damageAtMax": 2.0}}]}]},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "BodyRadiation",
+        "initialValue": 0.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 10000.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": false,
+        "useIdealStatValue": true,
+        "linkedStats": [
+          {
+            "_Type_": "LinkedStat",
+            "linkedStat": "WearHead",
+            "linkedStatSetup": {
+              "_Type_": "LinkedStatSetup",
+              "ruleForPassingValue": {
+                "_Type_": "LinkedStatRulePassCrossingAboveThreshold",
+                "threshold": 1000.0},
+              "valueToPass": {
+                "_Type_": "LinkedStatPassIncreaseToValue",
+                "targetValue": 100.0}}},
+          {
+            "_Type_": "LinkedStat",
+            "linkedStat": "WearHead",
+            "linkedStatSetup": {
+              "_Type_": "LinkedStatSetup",
+              "ruleForPassingValue": {
+                "_Type_": "LinkedStatRulePassCrossingAboveThreshold",
+                "threshold": 3300.0},
+              "valueToPass": {
+                "_Type_": "LinkedStatPassIncreaseToValue",
+                "targetValue": 230.0}}},
+          {
+            "_Type_": "LinkedStat",
+            "linkedStat": "WearHead",
+            "linkedStatSetup": {
+              "_Type_": "LinkedStatSetup",
+              "ruleForPassingValue": {
+                "_Type_": "LinkedStatRulePassCrossingAboveThreshold",
+                "threshold": 6600.0},
+              "valueToPass": {
+                "_Type_": "LinkedStatPassIncreaseToValue",
+                "targetValue": 350.0}}},
+          {
+            "_Type_": "LinkedStat",
+            "linkedStat": "WearTorso",
+            "linkedStatSetup": {
+              "_Type_": "LinkedStatSetup",
+              "ruleForPassingValue": {
+                "_Type_": "LinkedStatRulePassCrossingAboveThreshold",
+                "threshold": 1000.0},
+              "valueToPass": {
+                "_Type_": "LinkedStatPassIncreaseToValue",
+                "targetValue": 115.0}}},
+          {
+            "_Type_": "LinkedStat",
+            "linkedStat": "WearTorso",
+            "linkedStatSetup": {
+              "_Type_": "LinkedStatSetup",
+              "ruleForPassingValue": {
+                "_Type_": "LinkedStatRulePassCrossingAboveThreshold",
+                "threshold": 3300.0},
+              "valueToPass": {
+                "_Type_": "LinkedStatPassIncreaseToValue",
+                "targetValue": 270.0}}},
+          {
+            "_Type_": "LinkedStat",
+            "linkedStat": "WearTorso",
+            "linkedStatSetup": {
+              "_Type_": "LinkedStatSetup",
+              "ruleForPassingValue": {
+                "_Type_": "LinkedStatRulePassCrossingAboveThreshold",
+                "threshold": 6600.0},
+              "valueToPass": {
+                "_Type_": "LinkedStatPassIncreaseToValue",
+                "targetValue": 420.0}}}],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "RadiationSicknessMild",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 1000.0,
+                "triggerMaxThreshold": 3299.0},
+              "statusEffectTriggers": [
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "MacularDegeneration",
+                  "triggerMinThreshold": 1000.0,
+                  "triggerMaxThreshold": 3299.0,
+                  "value": {
+                    "_Type_": "StatusEffectValueAbsolute",
+                    "value": 1.0}}]},
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "RadiationSicknessModerate",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 3300.0,
+                "triggerMaxThreshold": 6599.0},
+              "statusEffectTriggers": [
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "MacularDegeneration",
+                  "triggerMinThreshold": 3300.0,
+                  "triggerMaxThreshold": 6599.0,
+                  "value": {
+                    "_Type_": "StatusEffectValueAbsolute",
+                    "value": 1.0}},
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "RadiationDamageHigh",
+                  "triggerMinThreshold": 3300.0,
+                  "triggerMaxThreshold": 6599.0,
+                  "value": {
+                    "_Type_": "StatusEffectDamageOverTime",
+                    "effectMin": 3300.0,
+                    "effectMax": 6599.0,
+                    "ignoresMultiplier": false,
+                    "damagedParts": [],
+                    "damageAtMin": 0.35,
+                    "damageAtMax": 3.5}}]},
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "RadiationSicknessSevere",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 6600.0,
+                "triggerMaxThreshold": 10000.0},
+              "statusEffectTriggers": [
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "MacularDegeneration",
+                  "triggerMinThreshold": 6600.0,
+                  "triggerMaxThreshold": 10000.0,
+                  "value": {
+                    "_Type_": "StatusEffectValueAbsolute",
+                    "value": 1.0}},
+                {
+                  "_Type_": "StatusEffectTrigger",
+                  "statusEffectType": "RadiationDamageHigh",
+                  "triggerMinThreshold": 6600.0,
+                  "triggerMaxThreshold": 10000.0,
+                  "value": {
+                    "_Type_": "StatusEffectDamageOverTime",
+                    "effectMin": 6600.0,
+                    "effectMax": 10000.0,
+                    "ignoresMultiplier": false,
+                    "damagedParts": [],
+                    "damageAtMin": 3.5,
+                    "damageAtMax": 140.0}}]}]},
+        "maskedRetriggerSetup": null},
+      {
+        "_Type_": "ActorStatData",
+        "statType": "SuitRadiation",
+        "initialValue": 0.0,
+        "minimumStatValue": 0.0,
+        "maximumStatValue": 55000.0,
+        "decayRate": 0.0,
+        "baseDecayCooldown": 0.0,
+        "initialCooldown": 0.0,
+        "cooldownType": "Time",
+        "decayToCurrentStatus": false,
+        "mutuallyExclusiveStatuses": false,
+        "remoteClientPredicted": false,
+        "useIdealStatValue": true,
+        "linkedStats": [],
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": []},
+        "maskedRetriggerSetup": null}],
+    "actorStatusPresets": [
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "ActorStatusPreset",
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Damaged",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 7.2},
+              "statusEffectTriggers": []}]}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "ActorStatusPreset",
+        "effectSetup": {
+          "_Type_": "StatusEffectSetup",
+          "actorStatuses": [
+            {
+              "_Type_": "ActorStatusData",
+              "actorStatusType": "Damaged",
+              "statusTrigger": {
+                "_Type_": "DefaultStatusTrigger",
+                "fortitudeLevelModifier": null,
+                "triggerMinThreshold": 0.0,
+                "triggerMaxThreshold": 9.6},
+              "statusEffectTriggers": []}]}}],
+    "linkedStatPresets": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "LinkedStatSetupPreset",
+        "setup": {
+          "_Type_": "LinkedStatSetup",
+          "ruleForPassingValue": {
+            "_Type_": "LinkedStatRulePassAlways"},
+          "valueToPass": {
+            "_Type_": "LinkedStatPassFullValue",
+            "multiplier": 1.0,
+            "reverseSignFlag": "None"}}}],
+    "maskedRetriggerPresets": [],
+    "actorStatusUIData": {
+      "_Type_": "ActorStatusUIData",
+      "lifeExpectancyWarning": "@hud_Label_LifeExpectancy",
+      "downedRescueNotification": "@hud_incapacitated_landingZoneRescue_notification",
+      "incapacitatedWarningStrings": {
+        "_Type_": "ActorStatusIncapacitatedUIData",
+        "unconsciousStateWarning": "@hud_incapacitated_unconsciousStateWarning",
+        "downedStateWarning": "@hud_incapacitated_downedStateWarning",
+        "overdosedStateWarning": "@hud_incapacitated_overdosedStateWarning",
+        "timeToRevivalString": "@hud_incapacitated_timeToRevival",
+        "timeToDeathString": "@hud_incapacitated_timeTodeath",
+        "downedRevivalBeaconInsufficientFunds": "@hud_incapacitated_downedReviveInsufficientFunds",
+        "downedRevivalBeaconAvailable": "@hud_incapacitated_downedReviveRescueBeacon",
+        "downedRevivalBeaconRequested": "@hud_incapacitated_downedReviveWasRequestedMessage",
+        "downedRevivalBeaconAccepted": "@hud_incapacitated_downedReviveRequestAccepted",
+        "downedRevivalBeaconAcceptedGeneric": "@hud_incapacitated_downedReviveRequestAccepted_Generic",
+        "downedRevivalBeaconAbandoned": "@hud_incapacitated_downedReviveRequestAbandoned"},
+      "actorStatusWarnings": [],
+      "healthIconData": {
+        "_Type_": "HealthIconData",
+        "healthIconStatusEffect": [
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "Bleed",
+            "index": 0},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "SuffocationDamage",
+            "index": 1},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "RadiationDamageLow",
+            "index": 2},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "RadiationDamageHigh",
+            "index": 2},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "DehydrationDamage",
+            "index": 3},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "StarvationDamage",
+            "index": 4},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "HypothermiaDamage",
+            "index": 5},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "HyperthermiaDamage",
+            "index": 5},
+          {
+            "_Type_": "HealthIconStatusEffect",
+            "statusEffectType": "DepressurizationDamage",
+            "index": 6}],
+        "checkPlasmaDamage": true,
+        "plasmaDamageIconIndex": 7}},
+    "abilityStatusCosts": [
+      {
+        "_Type_": "AbilityStatusCosts",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Stand",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "ability": "Run",
+        "lastingStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.007407407},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01111111}],
+        "instantStatusCost": []},
+      {
+        "_Type_": "AbilityStatusCosts",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Stand",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "ability": "Sprint",
+        "lastingStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01111111},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01666667}],
+        "instantStatusCost": []},
+      {
+        "_Type_": "AbilityStatusCosts",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "ability": "Jump",
+        "lastingStatusCost": [],
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.02962963},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.04444445}]},
+      {
+        "_Type_": "AbilityStatusCosts",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "ability": "Climb",
+        "lastingStatusCost": [],
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.02962963},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.04444445}]},
+      {
+        "_Type_": "AbilityStatusCosts",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "ability": "TakeDown",
+        "lastingStatusCost": [],
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.02962963},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.04444445}]},
+      {
+        "_Type_": "AbilityStatusCosts",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "ability": "ThrowOverhand",
+        "lastingStatusCost": [],
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01111111},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01666667}]}],
+    "actionStatusCosts": [
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "MeleeJab",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01111111},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01666667}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "MeleeHook",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01851852},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.02777778}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "MeleeArmed",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01111111},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01666667}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "MeleeUpperCut",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01851852},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.02777778}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "MeleeHaymaker",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01851852},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.02777778}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "BladeSlash",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01111111},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01666667}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "BladeStab",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.01111111},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01666667}]},
+      {
+        "_Type_": "ActionStatusCosts",
+        "actionCategory": "Blocking",
+        "instantStatusCost": [
+          {
+            "_Type_": "StatusCost",
+            "statType": "Hunger",
+            "cost": 0.007407407},
+          {
+            "_Type_": "StatusCost",
+            "statType": "Thirst",
+            "cost": 0.01111111}]}],
+    "statusEffectAbilityLocks": [
+      {
+        "_Type_": "StatusEffectAbilityLock",
+        "statusEffectType": "ArmsLock",
+        "abilitiesToLock": [
+          "Climb",
+          "WeaponMount",
+          "UsingMovable",
+          "TakeDown",
+          "CanUseMovable",
+          "VaultHigh",
+          "MantleHigh"]},
+      {
+        "_Type_": "StatusEffectAbilityLock",
+        "statusEffectType": "PassOutDowned",
+        "abilitiesToLock": [
+          "InteractionMode",
+          "PersonalInnerThought"]},
+      {
+        "_Type_": "StatusEffectAbilityLock",
+        "statusEffectType": "PassOutUnconscious",
+        "abilitiesToLock": [
+          "InteractionMode",
+          "PersonalInnerThought"]},
+      {
+        "_Type_": "StatusEffectAbilityLock",
+        "statusEffectType": "HurtLocomotion",
+        "abilitiesToLock": [
+          "Run",
+          "Sprint"]},
+      {
+        "_Type_": "StatusEffectAbilityLock",
+        "statusEffectType": "TraversalLockProne",
+        "abilitiesToLock": [
+          "TakeDown",
+          "Climb",
+          "Crouch",
+          "Jump",
+          "Run",
+          "Sprint",
+          "Stand",
+          "Mantle",
+          "MantleHigh",
+          "Vault",
+          "VaultHigh",
+          "SyncedRevival",
+          "WeaponMount",
+          "UsingMovable"]},
+      {
+        "_Type_": "StatusEffectAbilityLock",
+        "statusEffectType": "DrunkLocomotion",
+        "abilitiesToLock": [
+          "Sprint"]}],
+    "consumptionParams": {
+      "_Type_": "ConsumableParams",
+      "liquidOneShotConsumptionRate": 100.0,
+      "liquidOneShotVisualConsumptionTime": 0.5,
+      "liquidContinuousConsumptionRate": 100.0},
+    "armsLockParams": {
+      "_Type_": "ArmsLockConfig",
+      "minWeight": 0.0,
+      "maxWeight": 35.0,
+      "baseMinDuration": 5.0,
+      "baseMaxDuration": 10.0,
+      "baseMinShaking": 0.25,
+      "baseMaxShaking": 1.0,
+      "heavyItemDropDelay": 0.7,
+      "shakingDecayRate": 0.1,
+      "singleUseAbilities": [
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "UseConsumable",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "UseConsumable2H",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "EatAndDrink",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "EatAndDrink2H",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "Fire",
+          "exclusions": [
+            "SelfTarget"]},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "Melee",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "MedicalMelee",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "Place",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "ThrowOverhand",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "ThrowUnderhand",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "Mantle",
+          "exclusions": []},
+        {
+          "_Type_": "ArmsLockSingleAbility",
+          "ability": "Vault",
+          "exclusions": []}],
+      "abilitiesToLock": [
+        "Fire",
+        "Equip",
+        "ThrowReady",
+        "PlaceReady",
+        "UnarmedCombat",
+        "Inspect"],
+      "abilitiesThatPreventArmsLowering": [
+        "SelfTarget",
+        "Reload"],
+      "breathTriggerOnDrop": "file://./../../../../libs/foundry/records/audio/breathing/breathingtriggerdefs/triggerforceddropinterrupt.json"},
+    "driftingConsciousnessParams": {
+      "_Type_": "DriftingConsciousnessConfig",
+      "minValue": 0.3,
+      "maxValue": 1.0,
+      "fadeInSpeed": 0.65,
+      "fadeOutSpeed": 0.1,
+      "fadeInDelay": 0.4,
+      "fadeOutDelay": 1.8},
+    "downedParams": {
+      "_Type_": "DownedConfig",
+      "excessDamageToInstaKill": 225.0,
+      "damageToInstaKillFromDowned": 70.0,
+      "downedReviveTempFOVFadeInSpeed": 0.45,
+      "downedReviveTempFOVFadeOutSpeed": 0.9,
+      "downedReviveTempFOVDuration": 1.2,
+      "downedReviveTempFOVScaleAdjustment": -0.2,
+      "landingZoneRescueTime": 30.0,
+      "isPlayerBuddy": false},
+    "driftingDrunkParams": {
+      "_Type_": "DriftingDrunkConfig",
+      "stumbleForwardWeight": 15.0,
+      "stumbleBackwardWeight": 15.0,
+      "stumbleLeftWeight": 40.0,
+      "stumbleRightWeight": 40.0,
+      "minBDLEffects": {
+        "_Type_": "DriftingDrunkBDLEffects",
+        "stumbleMinCooldown": 2.0,
+        "stumbleMaxCooldown": 4.0,
+        "stumbleMinDuration": 1.0,
+        "stumbleMaxDuration": 2.0,
+        "stumbleFrequency": 0.3,
+        "stumbleMinMagnitude": 0.3,
+        "stumbleMaxMagnitude": 0.8,
+        "minValue": 0.1,
+        "maxValue": 0.5,
+        "fadeSpeedMin": 0.2,
+        "fadeSpeedMax": 0.8,
+        "fadeFrequency": 2.0,
+        "fovScaleAdjust": 0.1,
+        "breathingAmplifier": 1.0},
+      "maxBDLEffects": {
+        "_Type_": "DriftingDrunkBDLEffects",
+        "stumbleMinCooldown": 1.0,
+        "stumbleMaxCooldown": 3.0,
+        "stumbleMinDuration": 3.0,
+        "stumbleMaxDuration": 4.0,
+        "stumbleFrequency": 0.75,
+        "stumbleMinMagnitude": 0.5,
+        "stumbleMaxMagnitude": 1.5,
+        "minValue": 0.3,
+        "maxValue": 1.0,
+        "fadeSpeedMin": 0.2,
+        "fadeSpeedMax": 0.8,
+        "fadeFrequency": 2.0,
+        "fovScaleAdjust": 0.1,
+        "breathingAmplifier": 6.0}},
+    "actorSignatureParams": {
+      "_Type_": "SignatureParams",
+      "defaultBodyTemperature": 36.5,
+      "distressIdentitySignature": 100.0},
+    "bodyResistanceWeights": {
+      "_Type_": "ResistanceWeightParams",
+      "headWeighting": 0.25,
+      "bodyWeighting": 0.35,
+      "armsWeighting": 0.125,
+      "handsWeighting": 0.025,
+      "legsWeighting": 0.2,
+      "feetWeighting": 0.05},
+    "revivalFadeinParams": {
+      "_Type_": "RevivalFadeInParams",
+      "fadeinTime": 3.0,
+      "fadeinBlur": 1.0},
+    "globalParams": "file://./../../../../libs/foundry/records/actorstatuscomponent/globalactorstatusparams.json",
+    "BDLSafeLimit": 75.0,
+    "toxicGasParams": {
+      "_Type_": "ActorToxicGasParams",
+      "toxicGases": []},
+    "hygieneParams": {
+      "_Type_": "HygieneParams",
+      "sweatingParams": null,
+      "bloodParams": null}}}

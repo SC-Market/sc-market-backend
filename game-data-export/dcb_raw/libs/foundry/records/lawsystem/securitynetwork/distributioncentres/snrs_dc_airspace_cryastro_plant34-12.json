@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_DC_Airspace_CryAstro_Plant34-12",
+  "_RecordId_": "a6fd1457-a154-4da1-bcf9-4c152eef04a5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_lawfulsecurity_generic.json"},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.2c97d70b-2ff0-4ebe-80c7-8b7c22333df2",
+      "_RecordId_": "2c97d70b-2ff0-4ebe-80c7-8b7c22333df2"},
+    "trespassWarningSeconds": 10.0,
+    "trespassRevokeWarningSeconds": 1800.0}}

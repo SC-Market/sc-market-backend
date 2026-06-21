@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "CommsNotification.MCN_DefendNPC01_FriendlyCallouts",
+  "_RecordId_": "b27892b7-e737-4784-b30f-8a1ea977e8cf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+          "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f97d014a-083e-4e7a-8aad-aa9ca0e8ae10",
+          "_RecordId_": "f97d014a-083e-4e7a-8aad-aa9ca0e8ae10"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/friendlycallouts/friendly_ship_reinforcements.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-defendnpc01.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_civilian_defendnpc01.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

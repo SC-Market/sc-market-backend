@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ANVL_Centurion_CargoGrid_Template",
+  "_RecordId_": "c898c420-4f00-4a48-b4b3-c6c1968b5bcc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 1.0,
+      "z": 1.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 1}}}}

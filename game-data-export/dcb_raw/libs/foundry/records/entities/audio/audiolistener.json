@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "EntityClassDefinition.AudioListener",
+  "_RecordId_": "738757c5-54a9-48c9-87de-ac96f151a031",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Audio",
+    "Icon": "AudioListener.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AudioListenerParams",
+        "primaryListener": false,
+        "inputRadius": 5.0,
+        "outputRadius": 0.5,
+        "enabled": false,
+        "entityExclusive": false,
+        "bus": "ListenerBus"}]}}

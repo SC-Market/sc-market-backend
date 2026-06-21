@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.MarkerEntityDensityClass",
+  "_RecordId_": "1bcedb41-51c7-41fd-b96b-0c736f179f38",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 20000.0,
+    "clusterUpperObjectCountDGS": 3,
+    "clusterUpperObjectCountPersistence": 3,
+    "clusterPersistenceTimeout": 30.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

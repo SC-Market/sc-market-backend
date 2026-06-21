@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.Ship_Intensity_Burst_Slow",
+  "_RecordId_": "2109ce9c-ada5-4e82-b2bd-2a93cdd9aa76",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "Ship_Intensity_Burst_Slow",
+    "min": 0.0,
+    "max": 9999.0,
+    "defaultValue": 0.0,
+    "decayRate": 20.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

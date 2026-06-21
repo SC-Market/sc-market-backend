@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.KillAllAnimals_MMH",
+  "_RecordId_": "f1179a5b-6821-4de3-ba94-8947916991d0",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/JobBoardMissions/AnimalMissions/KillAllAnimals/KillAllAnimals.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/JobBoardMissions/AnimalMissions/KillAndCollectAnimals/EntityTracker.xml",
+        "subModuleHierarchy": null}]}}

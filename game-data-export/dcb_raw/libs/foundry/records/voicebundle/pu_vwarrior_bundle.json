@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "VoiceBundle.PU_VWARRIOR_Bundle",
+  "_RecordId_": "eb2d2c4a-69b5-46cb-9a18-c77ae28a7cac",
+  "_RecordTag_": "Audio",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_VWARRIOR_Bundle",
+    "voices": [
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pu_vwarrior1.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pu_vwarrior2.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pu_vwarrior3.json"]}}

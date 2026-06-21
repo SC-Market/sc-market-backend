@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Clovis_Contents_01",
+  "_RecordId_": "5c0c26ea-e63a-4d1a-9f4f-00ce6cbd22de",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Journal_System_Stanton_Stanton2_Covalex_InvestigatorDarnellDoor_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@Journal_System_Stanton_Stanton2_Covalex_InvestigatorDarnellDoor_Author",
+    "autoOpenMobiGlas": true,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Text_Clovis_Safe_Contents_01"},
+    "tutorialEntry": false}}

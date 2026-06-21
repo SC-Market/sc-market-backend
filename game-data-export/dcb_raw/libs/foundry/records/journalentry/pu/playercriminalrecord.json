@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "JournalEntry.PlayerCriminalRecord",
+  "_RecordId_": "ea17b191-a2a3-4ac2-a493-d7f8aeef93e2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Journal_General_CriminalRecord_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryLawText",
+      "BodyText": "@Journal_General_CriminalRecord_Content",
+      "jurisdiction": null},
+    "tutorialEntry": false}}

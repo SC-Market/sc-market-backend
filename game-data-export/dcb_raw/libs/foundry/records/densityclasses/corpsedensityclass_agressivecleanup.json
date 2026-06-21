@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.CorpseDensityClass_AgressiveCleanUp",
+  "_RecordId_": "64c135c1-37ed-4e83-afc8-4f58914c1747",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 50.0,
+    "clusterUpperObjectCountDGS": 12,
+    "clusterUpperObjectCountPersistence": 5,
+    "clusterPersistenceTimeout": 5.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

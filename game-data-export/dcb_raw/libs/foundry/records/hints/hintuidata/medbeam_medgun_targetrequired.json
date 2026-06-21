@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MedBeam_Medgun_TargetRequired",
+  "_RecordId_": "c7158bbf-17ff-44d9-bf64-b84e70823fcb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Medical_Device_Title",
+    "BodyText": "@Hints_MedBeam_Medgun_TargetRequired",
+    "BodyTextGamePad": "@Hints_MedBeam_Medgun_TargetRequired",
+    "BodyTextJoystick": "@Hints_MedBeam_Medgun_TargetRequired",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

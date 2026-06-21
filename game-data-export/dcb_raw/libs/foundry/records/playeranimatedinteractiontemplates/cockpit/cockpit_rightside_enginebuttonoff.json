@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "PlayerAnimatedInteractionTemplate.Cockpit_RightSide_EngineButtonOff",
+  "_RecordId_": "bf9d0b12-e550-4eae-9d73-26e8f4105e1e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerAnimatedInteractionTemplate",
+    "playerAnimatedInteraction": {
+      "_Type_": "PlayerAnimatedInteraction",
+      "supportWalkToAlign": false,
+      "type": "Reactive",
+      "fragTags": [
+        "engine_off"],
+      "CDIKTargetName": "button_R_loc",
+      "handModeParams": {
+        "_Type_": "PlayerAnimatedInteractionHandParams",
+        "handMode": "RightHand"}}}}

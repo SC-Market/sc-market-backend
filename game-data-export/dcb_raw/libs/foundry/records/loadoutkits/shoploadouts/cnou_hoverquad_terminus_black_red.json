@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.CNOU_HoverQuad_Terminus_Black_Red",
+  "_RecordId_": "8ead8738-e32b-48d1-955a-a884051703e2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameHoverQuad_Paint_Terminus_Black_Red",
+    "description": "@item_DescHoverQuad_Paint_Terminus_Black_Red",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_hoverquad_terminus_black_red.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

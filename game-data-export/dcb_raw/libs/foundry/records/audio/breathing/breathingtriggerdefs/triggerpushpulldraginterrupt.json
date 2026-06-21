@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "BreathingTriggerDef.TriggerPushPullDragInterrupt",
+  "_RecordId_": "71530c5a-4f54-4e7a-9fba-1a6e2abf95ad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BreathingTriggerDef",
+    "audioBreathInterrupt": "file://./../../../../../../libs/foundry/records/audio/breathing/interruptions/pushpulldrag.json",
+    "interruptParam": 1.0,
+    "resumeBreathingWhenAudioEnds": true,
+    "forceInhaleAfterResume": false,
+    "forceExhaleAfterResume": true}}

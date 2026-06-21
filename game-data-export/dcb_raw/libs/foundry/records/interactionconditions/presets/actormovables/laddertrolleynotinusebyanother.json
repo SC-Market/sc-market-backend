@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "InteractionConditionPreset.LadderTrolleyNotInUseByAnother",
+  "_RecordId_": "a1431aa7-fe27-4317-bd52-557d9d243cfc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionInteractionStateMachineTag",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_InUseByAnother"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "stateTags": {
+          "_Type_": "TagList",
+          "tags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.c9c55c09-23f1-4f9d-859c-5692b986fd5a",
+              "_RecordId_": "c9c55c09-23f1-4f9d-859c-5692b986fd5a"}]}}],
+    "conditionToHideParams": []}}

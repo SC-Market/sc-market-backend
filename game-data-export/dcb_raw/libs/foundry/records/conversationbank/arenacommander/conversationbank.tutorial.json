@@ -1,0 +1,3577 @@
+{
+  "_RecordName_": "ConversationBank.Tutorial",
+  "_RecordId_": "a29667d2-0942-4280-9a89-631efe312b46",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ConversationBank",
+    "region": "Tutorial",
+    "conversations": [
+      {
+        "_RecordId_": "f3c17866-308a-41c0-b714-c46b9dd32a11",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_fails_to_mark_target",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:1"},
+          {
+            "_Pointer_": "ptr:1",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1270_Combat_Player_Did_Not_Mark_Target",
+              "_RecordId_": "e4f817f1-b1f7-44b6-a768-0471510775ac"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b9abb7cf-3a06-49f7-b4df-8c8c932632e6",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_glaive_defeated",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:2"},
+          {
+            "_Pointer_": "ptr:2",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1360_Combat_Vanduul_Glaive_Defeated",
+              "_RecordId_": "b1a0967c-57af-43b9-ab23-e868dcca8bee"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "460ea959-1aa1-4d60-bb13-de9fd21090e7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_glaive_id",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:3"},
+          {
+            "_Pointer_": "ptr:3",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1330_Combat_Vanduul_Id_Glaive",
+              "_RecordId_": "3adb9cc9-e3af-411b-91e2-2d2b55cd35ca"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "455a6a67-89a7-4bed-aa71-f1fb1955ed8b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_glaive_id_short",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:4"},
+          {
+            "_Pointer_": "ptr:4",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.SC_tut_advmans_combat_glaive_id_short_1",
+              "_RecordId_": "a3768132-9ec9-4305-baa9-3fbe48a18736"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6e65cdb7-687d-43ea-88bf-4803de6e1391",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_marks_target",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:5"},
+          {
+            "_Pointer_": "ptr:5",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1280_Combat_Player_Did_Mark_Target",
+              "_RecordId_": "d35c0196-1d2a-404f-8e7c-f8e8a7ba3a0e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "09811d95-ca07-4b1b-b2a1-6db529465e8d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_mark_target",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:6"},
+          {
+            "_Pointer_": "ptr:6",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1260_Combat_Player_Mark_Target",
+              "_RecordId_": "13a6f3bc-5080-4861-9cfa-2a712ddc4475"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "7f6b3994-d4dc-4226-8115-f03f91eb939f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_multiple_missiles",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:7"},
+          {
+            "_Pointer_": "ptr:7",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1310_Combat_Multiple_Missile",
+              "_RecordId_": "729d27a3-1fba-4e11-ac1f-5075cc54c4f7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "164a5e56-c99a-47ea-9eb3-e29055187e48",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_player_dawdles",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:8"},
+          {
+            "_Pointer_": "ptr:8",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1350_Combat_Vanduul_Player_Dawdles_Target_Glaive",
+              "_RecordId_": "06be4616-9be4-4143-81b1-4e5c21bed261"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "27b1adfe-ee11-48ae-b647-63eb453dc4be",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_takes_damage",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:9"},
+          {
+            "_Pointer_": "ptr:9",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1290_Combat_Player_Hull_Damage",
+              "_RecordId_": "e9348fc5-d6e1-47c8-83cb-3cd1cdb50cab"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "90c56804-11b0-48e3-861a-ee91acfa7372",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_target_glaive",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:10"},
+          {
+            "_Pointer_": "ptr:10",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1340_Combat_Vanduul_Target_Glaive",
+              "_RecordId_": "91a3c802-f665-4c94-b69c-f3d25d82403c"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ac348cd0-7214-4035-a7d8-485eaf042876",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_vanduul_all_dead",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:11"},
+          {
+            "_Pointer_": "ptr:11",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1380_Combat_Vanduul_All_Dead",
+              "_RecordId_": "0ace900a-e816-4932-907c-5358f690d73e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "791fd6e3-ae9b-4836-945d-d10e53f73500",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_vanduul_freefire",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:12"},
+          {
+            "_Pointer_": "ptr:12",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1370_Combat_Vanduul_Freefire",
+              "_RecordId_": "a88ad98b-3108-4b73-8eb3-857507225b4e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "7c84bd5f-abfc-4b6d-9554-1b276331f0c7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_vanduul_intro_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:13"},
+          {
+            "_Pointer_": "ptr:13",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1230_Combat_Intro",
+              "_RecordId_": "38c5c801-af02-44c0-8846-6c7302d2cb20"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a66aad9b-bbcb-4915-9cb7-0c048b16913c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_vanduul_intro_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:14"},
+          {
+            "_Pointer_": "ptr:14",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1240_Combat_Vanduul_Contact",
+              "_RecordId_": "44fccb23-f974-45c2-ab5f-02bdff2423ce"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d3edb670-bf1c-4c94-abd2-f84ee7619945",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_vanduul_intro_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:15"},
+          {
+            "_Pointer_": "ptr:15",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1250_Combat_All_Weapon_Systems_Active",
+              "_RecordId_": "7071610a-9c55-41ba-b181-e6c07f1e606f"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "07124275-0cf9-48ef-b13a-96318f6ac8e0",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_vanduul_wave_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:16"},
+          {
+            "_Pointer_": "ptr:16",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1320_Combat_Vanduul_Wave_Two",
+              "_RecordId_": "5e5d9134-9810-4102-806a-6f5f9a26e385"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "347024d0-5058-40d9-8abc-374bdd605ac1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_weapons_hot",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:17"},
+          {
+            "_Pointer_": "ptr:17",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1300_Combat_Player_Weapons_Overheating_01",
+              "_RecordId_": "810afae8-bf44-403a-9984-84042afcd4e0"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1953932a-4def-481e-9bf0-6a3902a38101",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_combat_weapons_overheat_advice",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:18"},
+          {
+            "_Pointer_": "ptr:18",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1300_Combat_Player_Weapons_Overheating_02",
+              "_RecordId_": "cef23949-0be8-430c-97c1-61f3a55c5a67"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e0ee8515-5379-4e6d-b127-a4bbda678fbb",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_2nd_half_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:19"},
+          {
+            "_Pointer_": "ptr:19",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1050_2nd_Half_Intro",
+              "_RecordId_": "02e7ae4f-8a4b-4136-aadb-5a7dd9995218"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "45aef2a5-2136-47f4-a225-0647ed419c12",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_2nd_half_launch",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:20"},
+          {
+            "_Pointer_": "ptr:20",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1060_2nd_Half_Launch",
+              "_RecordId_": "c8d16e73-3214-4e7a-8077-dfa7b714651c"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "205dcac8-f6ff-44b7-8d0c-7bbea36da911",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_back_to_base",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:21"},
+          {
+            "_Pointer_": "ptr:21",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1460_Training_Complete_Return_To_Base",
+              "_RecordId_": "4c283540-d08b-4b82-a7f4-cd71a47613d7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "7f7150a6-57e8-44f5-a51a-a1ff7a837ac6",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_boost_alt_use",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:22"},
+          {
+            "_Pointer_": "ptr:22",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1090_Flight_Boost_Alt_Use",
+              "_RecordId_": "eb590731-8906-4662-8483-799bf7fab773"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "922fd4e2-5458-42ad-a849-c271eddc690a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_boost_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:23"},
+          {
+            "_Pointer_": "ptr:23",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1080_Flight_Boost_Explanation",
+              "_RecordId_": "8bacd3c8-f7ae-4cbc-a0fb-31008786cb6b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "18fa7d5c-c1f0-449d-ab42-5a7b4c718e2b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_boost_recharge",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:24"},
+          {
+            "_Pointer_": "ptr:24",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1100_Flight_Boost_Recharge",
+              "_RecordId_": "e8e19607-8e5f-40cf-88a5-691a0068a2fa"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8a243206-f4a3-42d7-912e-e88b2b049205",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_comstab_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:25"},
+          {
+            "_Pointer_": "ptr:25",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1170_Flight_Comstab_Explanation",
+              "_RecordId_": "287878a7-9a99-4fd3-87c8-1b4e15afa320"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a60b8d26-9672-497c-a226-fe30e33c32cc",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_gsafe_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:26"},
+          {
+            "_Pointer_": "ptr:26",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1130_Flight_G_Safe_Explanation_01",
+              "_RecordId_": "e648026e-0448-42cb-b5cb-6349890a4141"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8d39d933-f060-4cc2-9cf3-060cfa1a51c0",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_gsafe_explanation_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:27"},
+          {
+            "_Pointer_": "ptr:27",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1130_Flight_G_Safe_Explanation_02",
+              "_RecordId_": "ab203adf-e2ce-4714-b0b0-a0d96e1bd680"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d3e92e11-cb55-47d7-a608-d78ce86464f7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_gsafe_explanation_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:28"},
+          {
+            "_Pointer_": "ptr:28",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1130_Flight_G_Safe_Explanation_03",
+              "_RecordId_": "bf35c7cb-11d8-4af5-a6eb-a555ef6f0a2a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "00c73e17-d4ff-489f-87b1-7b9b837bd16f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_player_test",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:29"},
+          {
+            "_Pointer_": "ptr:29",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1120_Race_Challenge_01",
+              "_RecordId_": "da344969-c2dd-4f59-a021-f49e2ab66f77"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "256f4de3-87f7-4ad0-bbbf-900cd04f31d7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_space_brake_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:30"},
+          {
+            "_Pointer_": "ptr:30",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1110_Flight_Space_Brake_Explanation",
+              "_RecordId_": "091f574f-21d7-4468-bf79-71da7b7fc124"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "88b0de56-7783-4653-a797-3dc5a6b3ad44",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_flight_spire_filler",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:31"},
+          {
+            "_Pointer_": "ptr:31",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1470_Filler_And_Foreshadow_The_Spire",
+              "_RecordId_": "2acee664-c476-43fa-b5f0-35bf5202544d"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1fce2931-2d7f-40fd-9df8-fb299842e430",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_race_player_fails",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:32"},
+          {
+            "_Pointer_": "ptr:32",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1200_Race_Player_Fails",
+              "_RecordId_": "14a67593-ff33-4fe2-aef3-e367e959d009"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "486427a0-cc3c-4366-b100-2a36089caad2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_race_race_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:33"},
+          {
+            "_Pointer_": "ptr:33",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1220_Race_Challenge_02",
+              "_RecordId_": "19631abc-527d-4e49-8ffd-11c7dd1bd744"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6c7ebc82-4684-4fef-b854-83ea41b41883",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_race_race_intro_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:34"},
+          {
+            "_Pointer_": "ptr:34",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1070_Race_Intro",
+              "_RecordId_": "d1b910b1-c0e7-4bfa-9872-5d89f8355ddb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1ddfc764-0f91-429f-b74a-4bae7bcbae6f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_race_shortcut",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:35"},
+          {
+            "_Pointer_": "ptr:35",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1140_Race_Shortcut",
+              "_RecordId_": "ed91a560-f668-442e-8023-6b9fc9567b10"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8306005c-5102-479a-8286-6fce03ed4aaf",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_self_destruct_initiate_self_destruct",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:36"},
+          {
+            "_Pointer_": "ptr:36",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1430_Self_Destruct_Player_Finally_Initiates",
+              "_RecordId_": "679c3266-ae2d-45d0-a2af-9150d3c1232e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "2399e98f-6f44-4632-8eb9-167186ee4ed0",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_self_destruct_power_plant_warning",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:37"},
+          {
+            "_Pointer_": "ptr:37",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1390_Power_Plant_Warning",
+              "_RecordId_": "97eb837e-75a9-44bc-8a5c-f6d983b6ff49"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "de1b425f-5baa-43bf-9e0d-8330343a30cc",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_self_destruct_self_destruct_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:38"},
+          {
+            "_Pointer_": "ptr:38",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1400_Self_Destruct_Intro",
+              "_RecordId_": "9910ba95-860c-4667-9f9d-5889486c4db9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "44b1ffc1-2c43-4cdd-8469-6c3f2881b4c2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_advmans_self_destruct_told_to_eject",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:39"},
+          {
+            "_Pointer_": "ptr:39",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.SC_tut_advmans_self_destruct_told_to_eject_1",
+              "_RecordId_": "0e0bf486-d2af-42e8-926d-4991f83f8390"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "c5566de3-e164-429e-a80d-56567a0a6ac4",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_axial_roll_axial_roll_executed",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:40"},
+          {
+            "_Pointer_": "ptr:40",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0440_Flight_Axial_Roll_Gilly_Executed",
+              "_RecordId_": "5e37929e-722d-4219-b25b-bd23f931fc88"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b54e7c10-5ebe-40f0-bce9-1244da2ccc68",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_axial_roll_axial_roll_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:41"},
+          {
+            "_Pointer_": "ptr:41",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0450_Flight_Axial_Roll_Explanation",
+              "_RecordId_": "4ecb452e-3806-4746-b4f1-f86ef51d55a2"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a7a74047-9d1d-4263-b085-614a9b057ed1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_axial_roll_axial_roll_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:42"},
+          {
+            "_Pointer_": "ptr:42",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0430_Flight_Axial_Roll_Intro",
+              "_RecordId_": "074ce7a0-c297-46b1-86e0-47d17e710fbb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "00ae4e3c-de6e-4458-b6b9-bb4a85b8e75a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_axial_roll_complete_axial_roll",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:43"},
+          {
+            "_Pointer_": "ptr:43",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0460_Flight_Player_Compliment_01",
+              "_RecordId_": "99d6974b-6ea0-40f9-97fe-5354ef6cb0e6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "285aa412-8c70-4ec2-bc74-9e6e7e26fa7c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_barrel_roll_barrel_roll_executed",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:44"},
+          {
+            "_Pointer_": "ptr:44",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": null,
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "22b57edf-7665-4124-97ad-0e11d31e85e6",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_barrel_roll_barrel_roll_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:45"},
+          {
+            "_Pointer_": "ptr:45",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": null,
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ce56dae2-a183-4dbd-8a35-e92ead9f385c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_barrel_roll_barrel_roll_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:46"},
+          {
+            "_Pointer_": "ptr:46",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": null,
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "df9fffbb-9b90-488e-9714-56ac0f7c3a9b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_barrel_roll_complete_barrel_roll",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:47"},
+          {
+            "_Pointer_": "ptr:47",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": null,
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "50a31cb5-9fe7-4b7f-b66d-3c6b01d1c143",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_leader_targeted",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:48"},
+          {
+            "_Pointer_": "ptr:48",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0320_Targeting_Intro_02",
+              "_RecordId_": "81c33a03-4276-4ea5-b8e3-6feb709d7114"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "07266b2e-2ccf-4f92-9aa9-90efee762910",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_match_speed_explain",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:49"},
+          {
+            "_Pointer_": "ptr:49",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0320_Targeting_Intro_03",
+              "_RecordId_": "463f50cb-9180-498d-ab9e-d5c8015121aa"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "73fd5aea-68ae-411a-b5bf-66ef994e7915",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_match_speed_fast_brake",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:50"},
+          {
+            "_Pointer_": "ptr:50",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0420_Flight_Match_Speed_Fast_Brake",
+              "_RecordId_": "4afb2ed2-8bd4-4f66-bcc0-c5198ea1d7b7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6c09ce51-741f-44e6-977c-e217c70009ff",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_match_speed_target_speed",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:51"},
+          {
+            "_Pointer_": "ptr:51",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0410_Flight_Match_Speed_Target_Speed_Change",
+              "_RecordId_": "8a9709fa-8e1b-48b8-834b-5c2a3db76f45"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9d15eedc-afc2-42ab-8ef4-51d10921b518",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_outro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:52"},
+          {
+            "_Pointer_": "ptr:52",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0470_Combat_Intro_01",
+              "_RecordId_": "00ea9e40-d570-4520-992a-7b747462fa60"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "981561f0-ce23-41ea-a361-bab12c8e0d7a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_player_match_speed",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:53"},
+          {
+            "_Pointer_": "ptr:53",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0400_Flight_Player_Has_Matched_Speed",
+              "_RecordId_": "15fd461a-e541-480e-9273-e6cc1501d1b6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6bafb619-7791-4d5f-b977-5aa1e85a61ab",
+        "_RecordName_": "Conversation.Dlg_SC_tut_basicmans_flight_target_leader",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:54"},
+          {
+            "_Pointer_": "ptr:54",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0320_Targeting_Intro_01",
+              "_RecordId_": "22e9f05a-0064-44c9-bd09-2c6403f2f0f8"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "0b43a722-3047-48a8-8cea-9bc38e6d839c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_decoupled_mode",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:55"},
+          {
+            "_Pointer_": "ptr:55",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0820_Combat_Decoupled_Mode_Intro_01",
+              "_RecordId_": "d4fcc18d-d4b8-46dc-80d4-b809b7d940ca"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "56cc406d-62e1-41a3-ab2d-e9dca6f47171",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_decoupled_player_try",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:56"},
+          {
+            "_Pointer_": "ptr:56",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0820_Combat_Decoupled_Mode_Intro_03",
+              "_RecordId_": "c20aff65-a413-4788-953c-da36cf4bf518"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "50ba43c0-fe27-4869-8eb3-6b57bafae1ba",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_decoupled_warning",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:57"},
+          {
+            "_Pointer_": "ptr:57",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0820_Combat_Decoupled_Mode_Intro_02",
+              "_RecordId_": "fb78337d-08e5-4683-bce2-a0f2cd36df44"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "74488f49-6641-4ad0-ab84-9616cfc1710d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_drone_1_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:58"},
+          {
+            "_Pointer_": "ptr:58",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0470_Combat_Intro_03",
+              "_RecordId_": "7c98b014-4aa9-470b-9e84-850a0569c0a6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "7af9274f-d342-4e46-9ad3-71b2f3fe68bc",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_drone_2_killed",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:59"},
+          {
+            "_Pointer_": "ptr:59",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0840_Combat_Decoupled_Mode_Player_Kill_Drone",
+              "_RecordId_": "c9cafad3-fe91-42c0-a4e4-555bf76510e1"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6d50896e-6fdd-4398-9df7-042cbe63b2a7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_drone_dead",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:60"},
+          {
+            "_Pointer_": "ptr:60",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0700_Combat_Drone_Dead",
+              "_RecordId_": "81123254-9de0-4c1e-a5cd-988df7a11b81"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e3ca4df3-be31-47b9-9e04-f5ffe7202f5b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_drone_flees",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:61"},
+          {
+            "_Pointer_": "ptr:61",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0570_Combat_Fire_Drone_Flees",
+              "_RecordId_": "2cdcd71a-f65c-4976-a597-e23439c6ebe5"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "4c471384-c403-4bbb-9861-3417a5ea7cdd",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_drone_missile",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:62"},
+          {
+            "_Pointer_": "ptr:62",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0720_Combat_Missiles_Incoming",
+              "_RecordId_": "d2d73e6c-369d-4ba8-9e84-fcb8b7c0d25c"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e04a30d7-78a6-47bf-b676-ca7f8f341ec1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_drone_shields_down",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:63"},
+          {
+            "_Pointer_": "ptr:63",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0650_Combat_Drone_Shields_Down",
+              "_RecordId_": "b8fd37bd-4f7f-406a-9734-d1bc5107d16f"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "74efaaa3-0aae-4ed8-b126-289029de4953",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_new_drone_target",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:64"},
+          {
+            "_Pointer_": "ptr:64",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0710_Combat_New_Drone_Target",
+              "_RecordId_": "68a97633-4817-407e-b756-812e0024329e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "bb439f19-bae9-4baa-9435-d37e370f2797",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_player_gets_hit",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:65"},
+          {
+            "_Pointer_": "ptr:65",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0640_Combat_Drone_Player_Gets_Hit",
+              "_RecordId_": "bd0190ee-0dc7-419a-8c6e-cea454d32698"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "3b6f2ceb-169e-4e63-a2d5-2f6972be9089",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_player_hits_drone",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:66"},
+          {
+            "_Pointer_": "ptr:66",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0560_Combat_Fire_Player_Hits_Shields",
+              "_RecordId_": "aa692d11-130e-4287-84fe-88bf61bd97e5"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9de572f3-fda1-4638-9a41-f728b526181a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_drone_player_no_weapons",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:67"},
+          {
+            "_Pointer_": "ptr:67",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0730_Combat_No_Weapons",
+              "_RecordId_": "d5c952d7-5f3e-4d9d-8d0b-c77d510694b8"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "baced17e-f603-4f1f-b1fc-f832d8a45c0f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_chaff_difficulty",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:68"},
+          {
+            "_Pointer_": "ptr:68",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0800_Combat_CM_Chaff_Difficulty",
+              "_RecordId_": "4b29c82f-8337-4359-824f-032bb13f5a8e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d6d8d52e-a22f-4080-b796-f987b80f9f71",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_chaff_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:69"},
+          {
+            "_Pointer_": "ptr:69",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0790_Combat_CM_Chaff_Explanation",
+              "_RecordId_": "a347b017-91b4-418c-8d9b-c125c3de71dd"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "cfda6bae-f7d3-4644-bf2c-19e1c19f365a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_cycle",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:70"},
+          {
+            "_Pointer_": "ptr:70",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0780_Combat_CM_Cycle_Countermeasure",
+              "_RecordId_": "fcffc781-618c-4c16-891a-dcc117e7b905"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1621f0e2-a4b9-4d2d-8cec-883103ce9a58",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_flare_duration",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:71"},
+          {
+            "_Pointer_": "ptr:71",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0760_Combat_CM_Flare_Duration",
+              "_RecordId_": "ac62194f-fd42-4f3e-86c9-02580e3c05ee"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "379ae70c-273c-477c-a936-6df7b874a861",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_flare_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:72"},
+          {
+            "_Pointer_": "ptr:72",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0740_Combat_CM_Flare_Explanation",
+              "_RecordId_": "dddcc02e-3219-48cc-941a-7b22f5429c04"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "623bdc27-bc7c-4789-9644-222b163131c1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_flare_launch_success",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:73"},
+          {
+            "_Pointer_": "ptr:73",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0770_Combat_CM_Flare_Launch_Good",
+              "_RecordId_": "2cc9e6d0-1ee8-49be-a26a-8645928e91cf"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b321b095-0196-4986-90b5-90f12dc4449c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_guns_back",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:74"},
+          {
+            "_Pointer_": "ptr:74",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0810_Combat_Guns_Up_Missles_Later",
+              "_RecordId_": "86840d90-db44-4ed3-ab45-e4a79cdfbe42"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "2333d13b-6bd1-4c8b-96a5-db2573390d6a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_missiles_back",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:75"},
+          {
+            "_Pointer_": "ptr:75",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0830_Combat_Decoupled_Mode_Player_Rotates",
+              "_RecordId_": "fb630a92-b9d6-4658-8065-3b2347e07924"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "2ec52075-40eb-4971-be13-ef2413dc6d1f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_missile_launch",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:76"},
+          {
+            "_Pointer_": "ptr:76",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0680_Combat_Missile_Fire",
+              "_RecordId_": "9b4aedb4-cff1-417e-80cb-b50ac0fd36d4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "4a85131d-ed83-46bc-9661-09ef2946efd9",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_missile_lock_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:77"},
+          {
+            "_Pointer_": "ptr:77",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0660_Combat_Missile_Lock_Explanation",
+              "_RecordId_": "39ca6336-1a85-42de-9d7a-4d0dc615636b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e35a6fcb-3f68-4868-9321-3e13fda46ded",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_missile_lock_hold",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:78"},
+          {
+            "_Pointer_": "ptr:78",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0670_Combat_Missile_Hold_For_Lock",
+              "_RecordId_": "aa9b343c-789f-48c6-bfec-364b6100f4a3"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d5a9e698-92aa-4f21-8792-1ee50599de51",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_missile_cm_ship_position",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:79"},
+          {
+            "_Pointer_": "ptr:79",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0750_Combat_CM_Ship_Position",
+              "_RecordId_": "7c01edf4-d06e-40c9-9cf9-67c294b5c62b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "fc368dae-ccb5-4d4a-85da-cb2ac942509a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_radar_radar_check",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:80"},
+          {
+            "_Pointer_": "ptr:80",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0470_Combat_Intro_02",
+              "_RecordId_": "1853fe9f-32af-4674-8ce1-710fd9d890b1"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d53924a1-5302-4b66-9d5e-68f5742679b8",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_keep_shooting",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:81"},
+          {
+            "_Pointer_": "ptr:81",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0630_Combat_Chase_Keep_Shooting",
+              "_RecordId_": "f8e8912b-b57a-49c6-bc16-f1c0117652c7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "2dc70f96-676e-48c4-ae13-9576c7fe0699",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_lead_target",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:82"},
+          {
+            "_Pointer_": "ptr:82",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0600_Combat_Hud_Pip_Lead_Target",
+              "_RecordId_": "30b23a81-d3b5-414f-bf57-34e1e79e70c3"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "5b8d8605-c9b5-44d3-9685-51e1403d3dbb",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_multiple_pip",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:83"},
+          {
+            "_Pointer_": "ptr:83",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0590_Combat_Hud_Pip_Multiple_Reticles",
+              "_RecordId_": "932c4b96-109f-40f1-b9ee-50f4c03ee4a4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6188bc24-3bf9-4283-a2f1-4de524465231",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_pip_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:84"},
+          {
+            "_Pointer_": "ptr:84",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0530_Combat_Target_Pip_Intro",
+              "_RecordId_": "ee5ab67e-5a99-49dc-b5d4-7aeb5909a2c9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b8f7c3dd-6e5b-4393-87ad-444ce2e7ab22",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_player_falls_off_trail",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:85"},
+          {
+            "_Pointer_": "ptr:85",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0620_Combat_Chase_Player_Falls_Off_Trail",
+              "_RecordId_": "92d0838f-32ef-4fc8-8a89-c1196c03e154"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "66a466a1-6b89-4fd5-bb50-81fbe7ce1968",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_successful_target",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:86"},
+          {
+            "_Pointer_": "ptr:86",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0520_Combat_Target_Weapons_Online",
+              "_RecordId_": "fcbd7e9a-3b68-46de-8aa9-692eba3e80a1"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "6a4fa1c3-d094-428e-ad14-87cfaab2dbe8",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_target_closest",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:87"},
+          {
+            "_Pointer_": "ptr:87",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0480_Combat_Target_Enemy_01",
+              "_RecordId_": "5776e261-c88e-4f62-b598-5233a67f57e9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "5870d5dd-dd37-49fc-b526-aa6e36b5f52a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_target_hit",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:88"},
+          {
+            "_Pointer_": "ptr:88",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0610_Combat_Hud_Pip_Fire_On_Target",
+              "_RecordId_": "215e3f5a-fb05-410b-b9bb-950f2fb04776"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ae38606b-75f6-44c0-a9c6-6d2b55ddd060",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_target_hud",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:89"},
+          {
+            "_Pointer_": "ptr:89",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0480_Combat_Target_Enemy_02",
+              "_RecordId_": "f49a1a23-547e-4d15-be83-356c59b305bb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f8f86e96-387d-4ee2-b630-422bd75f6128",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_target_hud_explanation",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:90"},
+          {
+            "_Pointer_": "ptr:90",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0490_Combat_Target_Enemy_Hud_Explanation_01",
+              "_RecordId_": "c129f24a-9fe7-46c0-8346-02cb5cb0f0ca"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "bf6de110-adc0-4eec-af36-ef5907bb7cfa",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_target_hud_explanation_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:91"},
+          {
+            "_Pointer_": "ptr:91",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0490_Combat_Target_Enemy_Hud_Explanation_02",
+              "_RecordId_": "f02f0e6d-f857-449b-ade1-e91fea12e3b6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "762673d3-3b42-4f3e-8a5c-be7d83bba109",
+        "_RecordName_": "Conversation.Dlg_SC_tut_combat_targeting_target_lines_up",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:92"},
+          {
+            "_Pointer_": "ptr:92",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0540_Combat_Target_Fire_When_Ready_01",
+              "_RecordId_": "e64fb584-eca5-47e0-9e55-12a6414b3a6b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e51ebcdc-df8e-4569-849c-b530cb1aba55",
+        "_RecordName_": "Conversation.Dlg_SC_tut_fps_fps_intro_beckoning_player",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:93"},
+          {
+            "_Pointer_": "ptr:93",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0010_Player_Report_To_Leader",
+              "_RecordId_": "82dd954f-2980-4aaa-8420-0243b57a1c8b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b7ce22d1-c747-4310-9ba3-d905dedbf052",
+        "_RecordName_": "Conversation.Dlg_SC_tut_fps_fps_intro_introduction",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:94"},
+          {
+            "_Pointer_": "ptr:94",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:95",
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0030_Introduction_01",
+              "_RecordId_": "eed9e09d-f973-4564-887c-bd6c4664d18b"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:95",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0040_Player_Report_To_Pod",
+              "_RecordId_": "84a23a68-0372-4a3c-96d1-25972e747c50"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e4125d40-f55c-43db-abee-aa7c483eb942",
+        "_RecordName_": "Conversation.Dlg_SC_tut_fps_fps_intro_points_to_ship",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:96"},
+          {
+            "_Pointer_": "ptr:96",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": null,
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "abc160d9-ea29-4f5a-95ff-f0a29a073c3b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_fps_fps_intro_start",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:97"},
+          {
+            "_Pointer_": "ptr:97",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0030_Introduction_03",
+              "_RecordId_": "f46a030b-a253-4e5a-b3ba-003ebf099174"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f506880b-7c31-4269-845d-fa8aa28572f1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_fps_fps_intro_warning",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:98"},
+          {
+            "_Pointer_": "ptr:98",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0030_Introduction_02",
+              "_RecordId_": "5e9ef4c7-d646-4823-b3c4-d0899df3c0b7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "dcd18285-4eec-4c74-aeb5-04937c2089e2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_approach_landing_pad",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:99"},
+          {
+            "_Pointer_": "ptr:99",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0850_Landing_Gentle_Encouragement",
+              "_RecordId_": "95da7719-b109-483d-a4de-31260a826240"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9f139fd6-01fa-4e8b-874d-ab188ee8f1e2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_auto_or_manual",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:100"},
+          {
+            "_Pointer_": "ptr:100",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0960_Landing_Auto_Or_Manual_Landing",
+              "_RecordId_": "b19d9346-f169-4a20-9967-96f3cd444360"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "147134b6-3451-4631-a09b-205a8a8fcdd7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_decoupled_reminder",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:101"},
+          {
+            "_Pointer_": "ptr:101",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.SC_tut_landing_decoupled_reminder_1",
+              "_RecordId_": "9ec1af5c-1321-492c-a946-4f51e242c416"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "adc092b0-da49-42ae-9f93-663c02bd6b32",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_decoupled_reminder_auto",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:102"},
+          {
+            "_Pointer_": "ptr:102",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0880_Landing_Mode_Auto_Engage_Decoupled",
+              "_RecordId_": "80370bbf-1436-40f3-9fc1-bf6e4a2738ef"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ef4c98a3-da5b-4658-8b09-3e19321f0705",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_decoupled_reminder_manual",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:103"},
+          {
+            "_Pointer_": "ptr:103",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0890_Landing_Mode_Manual_Engage_Decoupled",
+              "_RecordId_": "6958665f-b5ad-4723-b06b-ee8d14cd6a26"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "cdb12dc7-64f7-4ca6-9ebc-508604145a8c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_deviate_from_landing",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:104"},
+          {
+            "_Pointer_": "ptr:104",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0950_Landing_Deviate_From_Landing",
+              "_RecordId_": "08cdc8dc-fbfe-46ca-a123-308852edcaaa"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "fc0ebbc8-c0b4-4f91-985c-0e2b54ab96f1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_enter_landing_mode",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:105"},
+          {
+            "_Pointer_": "ptr:105",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0870_Landing_Entering_Landing_Mode",
+              "_RecordId_": "194e5063-6e4a-4c1f-bccf-3bd96de51513"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "93a87cf0-7970-4149-88a0-37f093b36cc7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_good_distance",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:106"},
+          {
+            "_Pointer_": "ptr:106",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0900_Landing_Good_Deploy_Distance",
+              "_RecordId_": "1a7945fc-c8f3-4915-af1b-32c2c1253700"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "3a6e4bab-3fe0-4b03-b950-5a3624362a6e",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_good_landing",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:107"},
+          {
+            "_Pointer_": "ptr:107",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0990_Landing_Good_Landing",
+              "_RecordId_": "985fdb85-f4f3-43bc-bb6f-5c695f31c0dd"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d8fa1da8-6d96-4f05-9984-60c841573156",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_landing_mode_info",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:108"},
+          {
+            "_Pointer_": "ptr:108",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0910_Landing_Hud_Landing_Specific_Info",
+              "_RecordId_": "1a6f26c8-2040-423c-b6b5-cbfc076774d1"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a029d102-cd95-4105-9ebf-1f90290d0bcc",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_landing_pad_id",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:109"},
+          {
+            "_Pointer_": "ptr:109",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0860_Landing_Id_Landing_Pad",
+              "_RecordId_": "febe750d-ed1f-40e0-b200-709b4c1d3d07"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1bba014c-dff8-456b-83d9-87e46a818781",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_landing_radar",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:110"},
+          {
+            "_Pointer_": "ptr:110",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0970_Landing_Landing_Radar",
+              "_RecordId_": "b5346642-d59b-412a-9982-e8fb2682fada"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "984f806e-2341-4686-8aa5-60cd3a0ea252",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_landing_radar_help",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:111"},
+          {
+            "_Pointer_": "ptr:111",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0980_Landing_Landing_Radar_Help",
+              "_RecordId_": "07264b00-bd0a-413e-9d45-f2333d1f7814"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "97f5fbd0-a34c-453b-8372-7f84c11f2077",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_permission",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:112"},
+          {
+            "_Pointer_": "ptr:112",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0940_Landing_Call_For_Permission",
+              "_RecordId_": "942f0d54-1b0e-4ab3-a57d-4c797ba7bc2b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "256acff3-ecd9-4b5f-bdde-6517c7f2e919",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_selecting_landing_pad",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:113"},
+          {
+            "_Pointer_": "ptr:113",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0920_Landing_Hud_Selecting_Landing_Pad",
+              "_RecordId_": "bcd308e4-3b00-47be-8906-1acd6666c757"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "df22bb95-1853-4d49-ac89-6dc75fe038c4",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_select_landing_pad",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:114"},
+          {
+            "_Pointer_": "ptr:114",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0930_Landing_Select_Landing_Pad",
+              "_RecordId_": "beb682df-89e3-46fb-b32d-effbe2d2312f"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "67871a34-07b0-4cb1-a7e7-f79787f91667",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_ship_menu_groups",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:115"},
+          {
+            "_Pointer_": "ptr:115",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1480_Ship_Config_Menu_Intro_02",
+              "_RecordId_": "48a4b0bf-e247-4b37-9c29-14929d6fb945"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d3c74659-fe7c-4287-9035-dc074dfe9e4c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_ship_menu_intro",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:116"},
+          {
+            "_Pointer_": "ptr:116",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1480_Ship_Config_Menu_Intro_01",
+              "_RecordId_": "70a109a1-0ec4-4803-a778-ac7757698454"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "fc183f21-9dcb-46d4-97e3-97b3284ec946",
+        "_RecordName_": "Conversation.Dlg_SC_tut_landing_ship_menu_warnings",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:117"},
+          {
+            "_Pointer_": "ptr:117",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1480_Ship_Config_Menu_Intro_03",
+              "_RecordId_": "39568368-c390-40e6-923f-b49be2fe170b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a782b3e2-c1d1-4c3c-8e06-0767f606ed95",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_cockpit_intro_disabled_controls",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:118"},
+          {
+            "_Pointer_": "ptr:118",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_02",
+              "_RecordId_": "457b9b31-478f-47da-a768-793328349872"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "62cd16f5-7812-40bf-b9dc-178c87054a12",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_cockpit_intro_free_look",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:119"},
+          {
+            "_Pointer_": "ptr:119",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_01",
+              "_RecordId_": "4e575c63-efc0-405a-ba43-ab1b90c612e0"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "815ad472-98df-4b09-8200-fcea9589fec9",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_intro_engines_check",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:120"},
+          {
+            "_Pointer_": "ptr:120",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_05",
+              "_RecordId_": "c1365403-187d-49ea-b077-71b3294613c3"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "458893df-6e06-4a38-95e7-66ad54238044",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_intro_permission_for_launch",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:121"},
+          {
+            "_Pointer_": "ptr:121",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_06",
+              "_RecordId_": "3607d8b5-d5a1-42e7-935d-c4a1de800962"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "048a7b56-cfa7-49b2-bd89-ff2989e46ea1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_intro_ship_check",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:122"},
+          {
+            "_Pointer_": "ptr:122",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_03",
+              "_RecordId_": "31ef7d43-b517-4afa-b787-c64f92b99c5e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "bb595cbf-d93f-4cc4-b3bb-859f51e26440",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_intro_system_check",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:123"},
+          {
+            "_Pointer_": "ptr:123",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_04",
+              "_RecordId_": "21eac43a-fb0d-42d2-b3e6-de8de9d05c03"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ea8002ec-05a7-4963-9a72-4da249d538ec",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_intro_tower_permission",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:124"},
+          {
+            "_Pointer_": "ptr:124",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0070_Cockpit_Intro_07",
+              "_RecordId_": "c7cf23ec-9b41-4db1-ab13-c55ea7491bf6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a41a9fe3-112c-4738-b627-d752b0caaf14",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_decoupled",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:125"},
+          {
+            "_Pointer_": "ptr:125",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.SC_tut_takeoff_take_off_sequence_decoupled_1",
+              "_RecordId_": "34902b38-d561-4f80-bef1-c9c63bb84e43"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "02652fa0-f6d6-4244-9032-6e5fadf14800",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_decoupled_auto",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:126"},
+          {
+            "_Pointer_": "ptr:126",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0150_Landing_Mode_Auto_Engage_Decoupled",
+              "_RecordId_": "9997f252-e435-4d48-bcbb-3c0c58bb4daa"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "192133b4-c395-4311-8cfe-59a6a238e520",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_decoupled_manual",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:127"},
+          {
+            "_Pointer_": "ptr:127",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0150_Landing_Mode_Manual_Engage_Decoupled",
+              "_RecordId_": "b0c10aa7-d5b2-4224-ae19-0ea4ae15ccb4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9b4acce7-8f27-4443-bf71-e45eecc88344",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_doors_open",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:128"},
+          {
+            "_Pointer_": "ptr:128",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0110_Take_Off_Doors_Open",
+              "_RecordId_": "f6bfe73e-b196-483d-be0e-a91337339a4d"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b4722682-395c-4e13-8198-f4904638e38e",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_hud",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:129"},
+          {
+            "_Pointer_": "ptr:129",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0140_Take_Off_Hud_Mode_Active",
+              "_RecordId_": "ea2071d4-394e-4cb9-9144-263025c82a4b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "7e4e8690-5946-42a2-87a6-89eff50d2e7a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_leader_exits",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:130"},
+          {
+            "_Pointer_": "ptr:130",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0120_Take_Off_Gilly_Exits",
+              "_RecordId_": "9bb64e60-e9ab-4ce3-935f-6068510a42f1"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1b894c01-3121-4288-8258-94219a3f220a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_pitch_roll",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:131"},
+          {
+            "_Pointer_": "ptr:131",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0160_Take_Off_Pitch_Roll_Warning",
+              "_RecordId_": "d9c386f1-1122-4b4e-9ab5-da8b8ddfa8aa"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "bbb93ede-1324-42df-a5e7-02a5bc394a10",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_players_turn",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:132"},
+          {
+            "_Pointer_": "ptr:132",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0130_Take_Off_Players_Turn",
+              "_RecordId_": "c7f39132-60b1-440b-8fff-58b7ac93b6dd"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "25efaba8-dc34-4078-8769-a89fee0bfc3f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_aligned",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:133"},
+          {
+            "_Pointer_": "ptr:133",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0210_Take_Off_Player_Aligned_Doors_Open",
+              "_RecordId_": "f489644e-c406-45ed-9508-d8da39214feb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "87bd8a23-2952-470c-ae67-5f767df93d96",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_damage",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:134"},
+          {
+            "_Pointer_": "ptr:134",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0290_Take_Off_No_Damage",
+              "_RecordId_": "470fee23-1ad1-4c33-b2a6-aabfc822bc7a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "daa8e2c0-7389-4f7f-8afa-66626981b8bc",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_lined_up",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:135"},
+          {
+            "_Pointer_": "ptr:135",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0220_Take_Off_Player_In_Correct_Position",
+              "_RecordId_": "64683a44-ad4f-4b30-a893-eaae728407ab"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "851e72e1-016f-4294-a401-4962c2991c18",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_off_centre",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:136"},
+          {
+            "_Pointer_": "ptr:136",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0200_Take_Off_Player_Off",
+              "_RecordId_": "cfcb6273-513d-4ed2-b3e3-ce444f14646f"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "5117b8d1-d111-4386-9d1f-1ab453ae4c1d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_strafe_forward",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:137"},
+          {
+            "_Pointer_": "ptr:137",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0180_Take_Off_Player_Move_Forward",
+              "_RecordId_": "8625f333-d0a7-4472-a9e3-027e3697e128"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "3d071d1b-1bda-45e3-b383-0c097b0319a2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_take_off",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:138"},
+          {
+            "_Pointer_": "ptr:138",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0170_Take_Off_Player_Dust_Off",
+              "_RecordId_": "88b62f4c-3c95-4523-84dc-06bc802cb332"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "c62acff9-2240-4449-abfb-2d3259645273",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_player_turning",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:139"},
+          {
+            "_Pointer_": "ptr:139",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0190_Take_Off_Player_Turning",
+              "_RecordId_": "a659c74b-08ba-4c44-9671-8d32d6420941"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ad43fc7e-3229-4070-bffc-b5c07b9a434a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_strafe_forward",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:140"},
+          {
+            "_Pointer_": "ptr:140",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0090_Take_Off_Move_Forward",
+              "_RecordId_": "e5db6db3-114f-4264-bbd7-b7fd6ac6ab93"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ee2990d2-58e4-434f-9259-292b6e1fb771",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_strafe_sideways",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:141"},
+          {
+            "_Pointer_": "ptr:141",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0100_Take_Off_Center_Under_Doors",
+              "_RecordId_": "fc8be8d0-9412-4653-99f9-246335d4432e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9508992b-90e0-4d16-abf9-1f2fe09e8e0d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_takeoff_take_off_sequence_vertical_lift_off",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:142"},
+          {
+            "_Pointer_": "ptr:142",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0080_Take_Off_Dust_Off",
+              "_RecordId_": "a895b323-e0e8-4661-84ae-688b4777c158"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "cb731a13-df72-4205-b9c5-401e2b16fefb",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_adjust_back",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:143"},
+          {
+            "_Pointer_": "ptr:143",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0250_Take_Off_Player_Adjust_Back",
+              "_RecordId_": "51dcd6b8-76e1-43ed-b74d-2f59a6282470"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "05e77927-10d0-495e-8d25-53066e92f23c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_adjust_forward",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:144"},
+          {
+            "_Pointer_": "ptr:144",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0240_Take_Off_Player_Adjust_Forward",
+              "_RecordId_": "77fc3ddf-acfb-4e41-b199-8b58df612ed2"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "716010c8-32af-4376-b4c5-83c829eb11ef",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_adjust_left",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:145"},
+          {
+            "_Pointer_": "ptr:145",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0260_Take_Off_Player_Adjust_Left",
+              "_RecordId_": "2301d5ac-56f3-4076-8f9c-76bf26768b50"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8e075d95-1d42-43e5-ba72-771bdcc696ed",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_adjust_right",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:146"},
+          {
+            "_Pointer_": "ptr:146",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0270_Take_Off_Player_Adjust_Right",
+              "_RecordId_": "4c628ec9-aa91-4356-85f4-a58e1abfbccb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "7ade99d8-f6df-4d96-9b33-6105479d0e2d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_average_landing",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:147"},
+          {
+            "_Pointer_": "ptr:147",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1000_Landing_Average_Landing",
+              "_RecordId_": "d4f367b8-81d0-47e0-9779-335c6b8bd2fe"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ecfbec99-2f62-482a-ad80-6b40aa0a83d1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_bad_landing",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:148"},
+          {
+            "_Pointer_": "ptr:148",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1010_Landing_Bad_Landing",
+              "_RecordId_": "c2436cb6-72d3-40ca-ad3c-d72872cf9131"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1efb0c68-2b27-4711-af73-d1233e4a972e",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_chase_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:149"},
+          {
+            "_Pointer_": "ptr:149",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0580_Combat_Chase_Player_Dawdles_01",
+              "_RecordId_": "2235d96b-ba22-4b58-a86f-4621cf1c30d6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1834dd19-56ac-4248-9a05-b0295192e923",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_chase_player_dawdles_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:150"},
+          {
+            "_Pointer_": "ptr:150",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0580_Combat_Chase_Player_Dawdles_02",
+              "_RecordId_": "a4cb8686-ece8-43d9-88b7-995c44556a73"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "3a9a13e9-b4e8-4534-81a4-09f92becdde2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_chase_player_dawdles_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:151"},
+          {
+            "_Pointer_": "ptr:151",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0580_Combat_Chase_Player_Dawdles_03",
+              "_RecordId_": "670bbbcf-48fa-498c-aca1-8c101de0b645"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a318f1fd-8c64-457c-97ac-8b164c8cf473",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_ejects_before_warning_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:152"},
+          {
+            "_Pointer_": "ptr:152",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1410_Self_Destruct_Player_Hit_Eject_Before_Warning",
+              "_RecordId_": "43a2a340-a662-4a23-9d6b-8a8fc4f5adc9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b2d2529e-84e5-4428-9b49-efbcaf602bc5",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_ejects_before_warning_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:153"},
+          {
+            "_Pointer_": "ptr:153",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1420_Self_Destruct_Player_Eject_Prompt_01",
+              "_RecordId_": "2e0b7834-6ee3-4b71-92b5-caa3b6169662"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "766710d8-c603-4973-a4e9-1ad44d15244c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_ejects_before_warning_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:154"},
+          {
+            "_Pointer_": "ptr:154",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1420_Self_Destruct_Player_Eject_Prompt_02",
+              "_RecordId_": "86a47687-ce0d-4bf5-b315-b45056a6cd0d"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e6196095-798b-435f-ae0d-e9c7930a1e5c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_ejects_before_warning_4",
+        "_Type_": "Conversation",
+        "fragments": []},
+      {
+        "_RecordId_": "ddfc2010-c14b-4dbd-9387-aabc0ed3e9dd",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_eject_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:155"},
+          {
+            "_Pointer_": "ptr:155",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1450_Self_Destruct_Eject_Player_Dawdles_01",
+              "_RecordId_": "f7145b73-38a4-4c02-ac3a-01c2b21ba8cd"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1b062d57-b5b7-4317-9009-139219925870",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_eject_player_dawdles_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:156"},
+          {
+            "_Pointer_": "ptr:156",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1450_Self_Destruct_Eject_Player_Dawdles_02",
+              "_RecordId_": "32b45f7c-e861-46b4-8525-bd844dc06aac"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "96b7c206-554a-4781-adec-31148d687189",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_fire_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:157"},
+          {
+            "_Pointer_": "ptr:157",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0550_Combat_Fire_Player_Dawdles_01",
+              "_RecordId_": "fbe00bb7-dfb7-40a9-b6bb-e9a3b6c24bf7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "20252aa0-6964-49e2-9afd-f7f36edfaf03",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_fire_player_dawdles_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:158"},
+          {
+            "_Pointer_": "ptr:158",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0550_Combat_Fire_Player_Dawdles_02",
+              "_RecordId_": "ea1516b0-3d0d-4df6-937c-e8a29d52d07b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "bc14a4cd-e4b1-4fbb-a865-c81cbb53f6ac",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_fire_player_dawdles_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:159"},
+          {
+            "_Pointer_": "ptr:159",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0550_Combat_Fire_Player_Dawdles_03",
+              "_RecordId_": "8ea51da6-d223-4bf2-a2a3-a5e12b530315"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "11da35e4-8a01-45a0-afdd-fc40237aae49",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_fire_player_doesnt_fire",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:160"},
+          {
+            "_Pointer_": "ptr:160",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0540_Combat_Target_Fire_When_Ready_02",
+              "_RecordId_": "57dc88a6-07b1-459b-a779-b1ba5648a111"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9754b8f6-ade5-4520-8195-e4bd663c6d11",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_good_alignment_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:161"},
+          {
+            "_Pointer_": "ptr:161",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0230_Take_Off_Player_Good_Alignment_01",
+              "_RecordId_": "53b6c40e-16a7-4a33-8f6f-a7674da4085e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f49648cd-c7e1-4770-9f5a-06307c70f5c4",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_good_alignment_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:162"},
+          {
+            "_Pointer_": "ptr:162",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0230_Take_Off_Player_Good_Alignment_02",
+              "_RecordId_": "c06ceee8-a695-4b92-968b-53926a23ce74"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "5dc7be4e-8c5d-4ff2-981d-960a11780d2d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_heavy_damage",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:163"},
+          {
+            "_Pointer_": "ptr:163",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0300_Take_Off_Heavy_Damage",
+              "_RecordId_": "dee8b787-b86a-4582-b54d-c9bb72af83ce"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "08c1cc06-3f77-41eb-8963-40d3bca3645a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_leader_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:164"},
+          {
+            "_Pointer_": "ptr:164",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0050_Player_Dawdles_01",
+              "_RecordId_": "8353342a-e8ba-4178-b2eb-1b30a8541628"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e9413945-b5cf-4e22-8e0f-b5ddd3814e15",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_leader_player_dawdles_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:165"},
+          {
+            "_Pointer_": "ptr:165",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0050_Player_Dawdles_02",
+              "_RecordId_": "53c78e74-bf62-42aa-90ac-d205f7acd23d"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "0d24f03f-e519-4c24-aff5-ad2bd3121dd0",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_leader_player_dawdles_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:166"},
+          {
+            "_Pointer_": "ptr:166",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0050_Player_Dawdles_03",
+              "_RecordId_": "c0863cf1-1157-45df-bc03-eb5b16f94bfb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "97b5d60f-d8ce-4d32-9456-28a0579af7e0",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_missile_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:167"},
+          {
+            "_Pointer_": "ptr:167",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0690_Combat_Missile_Player_Dawdles_01",
+              "_RecordId_": "e7a94efc-b94d-4db6-88c7-a0c63e9c1130"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "87c89792-4749-459a-bb60-d5b7f28126db",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_move_it_rookie",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:168"},
+          {
+            "_Pointer_": "ptr:168",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0020_Player_Dawdles_06",
+              "_RecordId_": "8bc1ba3b-f170-4803-838f-5b1e8fcf9779"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "21c836b9-1b8e-4a4d-8a05-c55d51e184ce",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_on_the_clock",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:169"},
+          {
+            "_Pointer_": "ptr:169",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0020_Player_Dawdles_05",
+              "_RecordId_": "d94187fe-5c54-44c9-a555-30d024774bba"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ffa0c925-2a90-43d3-a283-ff96a46480e7",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_performance_average",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:170"},
+          {
+            "_Pointer_": "ptr:170",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1030_1st_Half_Performance_Average",
+              "_RecordId_": "b5b2d477-cc8b-4ad8-9260-17d136fe9059"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "fd36e1f0-912a-41a8-98b0-281059cc7947",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_performance_good",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:171"},
+          {
+            "_Pointer_": "ptr:171",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1020_1st_Half_Performance_Good",
+              "_RecordId_": "811f7b1a-7fb4-4678-a62a-3cea446aee34"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a974babf-4309-4b2a-9f67-06e823088473",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_performance_poor",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:172"},
+          {
+            "_Pointer_": "ptr:172",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1040_1st_Half_Performance_Poor",
+              "_RecordId_": "444eb5de-ba76-4a1e-99db-0f568e1a9c53"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "2d1547d3-4b1a-4b83-b731-c672f0a7282b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_boards_gilly_ship_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:173"},
+          {
+            "_Pointer_": "ptr:173",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0060_Player_Wrong_Pod_01",
+              "_RecordId_": "5a7cb89e-ce04-44aa-a43c-1b27c9094c51"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f3c7c3e2-9bde-4918-ad82-ff3b7c09a089",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_boards_gilly_ship_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:174"},
+          {
+            "_Pointer_": "ptr:174",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0060_Player_Wrong_Pod_02",
+              "_RecordId_": "303c01f6-5d72-4bf5-8d9e-064552a2e1cf"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e7b36f54-2bce-4fc9-bb8f-548f12d4481b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_causes_damage_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:175"},
+          {
+            "_Pointer_": "ptr:175",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0390_Flight_Player_Causes_Damage_01",
+              "_RecordId_": "1655ebf7-b407-4bbd-a03a-2027d31f9cef"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "eea09797-1807-4ab6-b42d-cfe8474ccad3",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_causes_damage_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:176"},
+          {
+            "_Pointer_": "ptr:176",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0390_Flight_Player_Causes_Damage_02",
+              "_RecordId_": "cf7a4527-8ef2-49b6-ba6d-38dbcaa3a058"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "b87cef38-6eb7-4e49-8a61-71a1c81cc486",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_causes_damage_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:177"},
+          {
+            "_Pointer_": "ptr:177",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0390_Flight_Player_Causes_Damage_03",
+              "_RecordId_": "a91bfb46-0046-42f4-89c0-d479b5e15928"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "afc61653-2b03-4301-86dc-18e6e5e12250",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_completes_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:178"},
+          {
+            "_Pointer_": "ptr:178",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1160_Race_Player_Completes_01",
+              "_RecordId_": "73a38f60-1caa-4e8c-8256-a5cd64215d14"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "193d4e38-86bb-441c-b680-ace039e4960b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_completes_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:179"},
+          {
+            "_Pointer_": "ptr:179",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1210_Race_Player_Completes_02",
+              "_RecordId_": "b6f04e10-4287-4153-9c85-e860f16db12a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "859751cf-327e-4976-ba04-11c305bce109",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:180"},
+          {
+            "_Pointer_": "ptr:180",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0020_Player_Dawdles_01",
+              "_RecordId_": "f7aceb1d-c075-499b-8bb7-4278a276e962"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "816ba8c7-c630-49d9-9a91-ba528bc34e2f",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_dawdles_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:181"},
+          {
+            "_Pointer_": "ptr:181",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0020_Player_Dawdles_02",
+              "_RecordId_": "d14ea296-42a7-4238-abe9-01e1e64ccc78"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "cc1b5286-93be-4db6-92ac-567908f00e28",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_dawdles_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:182"},
+          {
+            "_Pointer_": "ptr:182",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0020_Player_Dawdles_03",
+              "_RecordId_": "3a803170-9d38-43ba-a56a-6754bd4afa86"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d9e4dd5d-b6b8-4199-9aaf-e6491023084b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_fail_line_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:183"},
+          {
+            "_Pointer_": "ptr:183",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0360_Flight_Player_Fail_Line_01",
+              "_RecordId_": "d07bad76-6250-4dbf-a7c9-b5f8f9323271"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "3ccdb1d0-6ae0-41cc-9a82-d401bc9fe675",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_fail_line_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:184"},
+          {
+            "_Pointer_": "ptr:184",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0360_Flight_Player_Fail_Line_02",
+              "_RecordId_": "bfe4b2be-e66f-4201-9067-c8d48090ac00"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "5ca9a42d-9272-4bdd-804e-d15c8ba2698e",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_fail_line_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:185"},
+          {
+            "_Pointer_": "ptr:185",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0360_Flight_Player_Fail_Line_03",
+              "_RecordId_": "d9b46985-ce37-4a91-b875-7b65802b3b49"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "df649238-88d0-44a8-8c58-ef8bb29f8508",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_falls_behind_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:186"},
+          {
+            "_Pointer_": "ptr:186",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1150_Race_Player_Falls_Behind_01",
+              "_RecordId_": "8e1edd7f-10f6-4308-8801-4a8f41019022"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1bc02517-28d4-41eb-b0de-16d34a30cf36",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_falls_behind_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:187"},
+          {
+            "_Pointer_": "ptr:187",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1180_Race_Player_Falls_Behind_02",
+              "_RecordId_": "3f71965b-e243-48c4-8202-4c9b3d23ce2c"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "18c57040-a9f2-48fa-9c62-57cbb30a218c",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_falls_behind_warning_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:188"},
+          {
+            "_Pointer_": "ptr:188",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1190_Race_Player_Falls_Behind_Warning_01",
+              "_RecordId_": "6b2eef66-7174-431c-ac55-ed773d90e63a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "93c6832d-9efc-4972-9b11-b08468bda4da",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_falls_behind_warning_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:189"},
+          {
+            "_Pointer_": "ptr:189",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_1190_Race_Player_Falls_Behind_Warning_02",
+              "_RecordId_": "718056c6-735f-4d7b-ab65-081e045515f6"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "21e6f24a-59b1-4b3d-a2bb-9072d9201f6b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_final_warning",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:190"},
+          {
+            "_Pointer_": "ptr:190",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0380_Flight_Player_Final_Warning_01",
+              "_RecordId_": "2af6b435-047e-49cc-9282-47927be24be4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "a4d1cd8e-286b-45ca-9c61-ee67f8b73b7d",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_flies_away_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:191"},
+          {
+            "_Pointer_": "ptr:191",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0340_Flight_Player_Flies_Away_01",
+              "_RecordId_": "8ecbafd5-5002-4306-8711-c6a1ab9863b9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "0f53d8c5-5529-4c6a-9d4b-0f0397373707",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_flies_away_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:192"},
+          {
+            "_Pointer_": "ptr:192",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0340_Flight_Player_Flies_Away_02",
+              "_RecordId_": "6c8befd5-4385-49d4-b50e-7eef6a95b6e4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "c7fefce1-80b2-4ca0-b5d0-6803f9c70d3e",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_flies_away_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:193"},
+          {
+            "_Pointer_": "ptr:193",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0340_Flight_Player_Flies_Away_03",
+              "_RecordId_": "83fa3b3b-4a5f-4c6e-8212-101d3408022f"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "18f97319-610e-40a0-816a-af4f0efff9a5",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_flies_away_last_warning",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:194"},
+          {
+            "_Pointer_": "ptr:194",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0350_Flight_Player_Flies_Away_Last_Warning",
+              "_RecordId_": "3d4c69c1-34c2-49df-9a4d-f5d25b67d03b"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e0b989c1-899c-44e3-948f-5cdbcc7a5ae0",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_general_warning_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:195"},
+          {
+            "_Pointer_": "ptr:195",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0370_Flight_Player_General_Warning_01",
+              "_RecordId_": "b65528ad-1201-4f63-8d6c-d8dbff0916d7"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ed04b47c-3f39-4383-9c6a-7d5a93a9faf5",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_general_warning_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:196"},
+          {
+            "_Pointer_": "ptr:196",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0370_Flight_Player_General_Warning_02",
+              "_RecordId_": "bd384ec4-d673-4605-9f29-182c5154c3e4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9880e051-a9b4-476f-ad1a-96e81a8f0101",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_general_warning_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:197"},
+          {
+            "_Pointer_": "ptr:197",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0370_Flight_Player_General_Warning_03",
+              "_RecordId_": "fbbd1414-5e8b-4ba1-a3fa-f93daf9be0ab"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e6b8aa5b-b161-4c3b-9a12-0d545c7fb289",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_general_warning_4",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:198"},
+          {
+            "_Pointer_": "ptr:198",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0370_Flight_Player_General_Warning_04",
+              "_RecordId_": "3d62952c-5823-4f5a-b4d1-bbde9e048e83"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "d280e9aa-d919-455b-937a-68970e1e7f5b",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_general_warning_5",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:199"},
+          {
+            "_Pointer_": "ptr:199",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0370_Flight_Player_General_Warning_05",
+              "_RecordId_": "2e96e0ff-5609-4335-a2a4-37b00c4c55a1"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e1a72151-cd6b-4da6-b2eb-e053bfb7a132",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_lags_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:200"},
+          {
+            "_Pointer_": "ptr:200",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0330_Flight_Player_Lags_01",
+              "_RecordId_": "f4f21e89-efaf-4808-89cf-41b7e75a1074"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "c24283df-21a0-4077-8d30-ea0c47d4cd65",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_lags_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:201"},
+          {
+            "_Pointer_": "ptr:201",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0330_Flight_Player_Lags_02",
+              "_RecordId_": "c146ee82-9d2a-4479-8a09-17995efb61c4"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1d650aa7-ac0e-46dd-b6cd-3a53e741d2be",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_lags_3",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:202"},
+          {
+            "_Pointer_": "ptr:202",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0330_Flight_Player_Lags_03",
+              "_RecordId_": "bde10764-1cd6-4df0-aa62-793972e475a0"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "34dfb306-ba9b-4e85-a1c0-697d2a6a4ad9",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_lags_4",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:203"},
+          {
+            "_Pointer_": "ptr:203",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0330_Flight_Player_Lags_04",
+              "_RecordId_": "33d7330e-397d-4cc9-9099-be1749700b69"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "062d4e68-c66d-4525-9fb7-7389cde89889",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_lags_5",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:204"},
+          {
+            "_Pointer_": "ptr:204",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0330_Flight_Player_Lags_05",
+              "_RecordId_": "aee3aff1-4a0e-47b4-a358-c5a4dcca5ddb"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "1763a856-52e5-4713-b989-6217bbd8cc83",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_player_lags_6",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:205"},
+          {
+            "_Pointer_": "ptr:205",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0330_Flight_Player_Lags_06",
+              "_RecordId_": "da0339b8-4415-4e9a-8e1b-dd32d9933060"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "4903922c-ff64-41d7-b7d6-8f4f779ca12a",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_some_damage",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:206"},
+          {
+            "_Pointer_": "ptr:206",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0280_Take_Off_Some_Damage",
+              "_RecordId_": "6adbc2db-fe64-4cc7-b613-29c35e72a53a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "72fba8f2-6b8e-4161-923c-0c9cbe888ea5",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_target_player_dawdles_1",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:207"},
+          {
+            "_Pointer_": "ptr:207",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0500_Combat_Target_Player_Dawdles_01",
+              "_RecordId_": "e09ca1b4-4482-4682-a408-dfc872c94832"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "25e0d30e-709b-48ed-bad8-092853c9d4e2",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_target_player_dawdles_2",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:208"},
+          {
+            "_Pointer_": "ptr:208",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0500_Combat_Target_Player_Dawdles_02",
+              "_RecordId_": "1eb431b5-1199-4577-a57e-05f8f7bba7c9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f589763c-83a3-41f3-80fb-72641e4cbc95",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_target_player_fail",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:209"},
+          {
+            "_Pointer_": "ptr:209",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0510_Combat_Target_Player_Fail_01",
+              "_RecordId_": "ba49f8c8-ca47-4dd4-b74a-470429ff8ff2"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "324f5262-7688-428a-8f26-57021c64c9b1",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_too_much_damage",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:210"},
+          {
+            "_Pointer_": "ptr:210",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0310_Take_Off_Too_Much_Damage",
+              "_RecordId_": "95302b5f-b2fe-4dd8-ae99-bf5bb808f955"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f9579405-42d1-493f-be9a-1fec903d3251",
+        "_RecordName_": "Conversation.Dlg_SC_tut_variations_waiting",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:211"},
+          {
+            "_Pointer_": "ptr:211",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/dialoguecontextbank/arenacommander/tutorial/dialoguecontextbank.tutorial_baramsco_gilly_lucas.json",
+              "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Tutorial_Trainer_0020_Player_Dawdles_04",
+              "_RecordId_": "9eb0ec0c-644d-42d4-b63b-f4d234979267"},
+            "skipNodeInXSecs": -1.0}]}]}}

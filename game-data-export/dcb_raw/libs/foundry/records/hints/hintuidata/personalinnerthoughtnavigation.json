@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PersonalInnerThoughtNavigation",
+  "_RecordId_": "9c22982b-ab24-458a-838a-8ac1b218b243",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_PIT_Menu_Navigation_Title",
+    "BodyText": "@Hints_PIT_Menu_Navigation",
+    "BodyTextGamePad": "@Hints_PIT_Menu_Navigation",
+    "BodyTextJoystick": "@Hints_PIT_Menu_Navigation",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

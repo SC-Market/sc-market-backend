@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "PoolFilterRecord.V3PoolFilter_Generic",
+  "_RecordId_": "8ff04d56-527c-449a-9dd6-30f403caba46",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PoolFilterRecord",
+    "filter": {
+      "_Type_": "PoolFilter_Sequence",
+      "filters": [
+        {
+          "_Type_": "PoolFilterInstance",
+          "name": "No faction",
+          "mode": "Cumulative",
+          "filter": {
+            "_Type_": "PoolFilter_RecordRef",
+            "filterRecord": "file://./../../../../../libs/foundry/records/lootgeneration/filters/v3poolfilter_nofactions.json"}},
+        {
+          "_Type_": "PoolFilterInstance",
+          "name": "No special events",
+          "mode": "Cumulative",
+          "filter": {
+            "_Type_": "PoolFilter_RecordRef",
+            "filterRecord": "file://./../../../../../libs/foundry/records/lootgeneration/filters/v3poolfilter_nospecialevents.json"}}]}}}

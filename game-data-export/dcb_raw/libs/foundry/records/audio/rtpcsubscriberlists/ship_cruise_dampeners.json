@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Cruise_Dampeners",
+  "_RecordId_": "1f92bde3-aa4a-4cea-acb5-6708e1fd0acb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_CruiseDampener"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_CruiseDampener_Fast"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_CruiseDampener_SlowLerp"}]}}

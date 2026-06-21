@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Items01_Priming",
+  "_RecordId_": "af64d89c-51f7-4a5a-b08b-79522472c382",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Grenades_Priming_Title",
+    "BodyText": "@Hints_Items1_Priming",
+    "BodyTextGamePad": "@Hints_Items1_Priming",
+    "BodyTextJoystick": "@Hints_Items1_Priming",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "EntityClassDefinition.kegr_RoomHelper",
+  "_RecordId_": "b17afed7-68bc-46ba-a5fb-21059e893647",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EntityComponentRoomOccupantParams"}]}}

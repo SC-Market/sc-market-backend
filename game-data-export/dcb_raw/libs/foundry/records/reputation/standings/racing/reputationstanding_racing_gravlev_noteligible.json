@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Racing_GravLev_NotEligible",
+  "_RecordId_": "4cf9827b-4743-4687-8a7c-ff1d6bd60e2b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Racing_GravLev_NotEligible",
+    "description": "desc",
+    "displayName": "@RepStanding_NotEligible",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": -1000,
+    "driftReputation": 250,
+    "driftTimeHours": 1.0,
+    "gated": false}}

@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "mobiGlasApp.SCNotificationsApp",
+  "_RecordId_": "ff84f3c8-e533-4820-83bb-f12808ec4e4d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "mobiGlasApp",
+    "name": "NotificationManager",
+    "bindingsNamespace": "",
+    "appCanvas": null,
+    "homeCanvas": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_home/m_sc_home_notifications.json",
+    "displayIcon": "",
+    "displayIcon3d": "",
+    "displayName": "@Frontend_Notifications",
+    "appColor": {
+      "_Type_": "SRGBA8",
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 0},
+    "isHidden": true,
+    "defaultAppData": [],
+    "appParams": null,
+    "hostingApps": [
+      "file://./../../../../../../libs/foundry/records/ui/mobiglas/mobiglasapps/homescreen.json"],
+    "legacyApp": false}}

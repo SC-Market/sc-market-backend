@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "EntityClassDefinition.Boids_Birds",
+  "_RecordId_": "dbce18a8-6fcb-4932-a6f6-81be38802bb8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Creatures",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "BoidsComponentParams",
+        "boidsGroups": [
+          {
+            "_Type_": "BoidsGroupComposition",
+            "boidsEntityClasses": [
+              null],
+            "amountOfEntities": 300,
+            "amountOfEntitiesVariation": 0,
+            "sizeVariation": 0.5,
+            "name": "Koi",
+            "spawnOnNavmesh": false}],
+        "groupInfluenceRange": 5.0,
+        "boidStates": [],
+        "querySphereRadius": 150.0}]}}

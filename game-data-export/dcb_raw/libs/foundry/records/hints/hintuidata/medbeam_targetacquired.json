@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MedBeam_TargetAcquired",
+  "_RecordId_": "b997c78e-84bb-4c94-92f6-3c32f6877cb0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Medical_Device_Title",
+    "BodyText": "@Hints_MedBeam_ValidTargetAcquired",
+    "BodyTextGamePad": "@Hints_MedBeam_ValidTargetAcquired",
+    "BodyTextJoystick": "@Hints_MedBeam_ValidTargetAcquired",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

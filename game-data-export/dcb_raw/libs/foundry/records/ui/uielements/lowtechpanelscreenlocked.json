@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.LowtechPanelScreenLocked",
+  "_RecordId_": "e985e2e8-c3f4-48af-938b-9aaf1cf545fe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/DisplayPanels/Doors/Common/LowTech/assets/SWF/DoorExterior_Locked.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

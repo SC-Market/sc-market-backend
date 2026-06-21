@@ -1,0 +1,124 @@
+{
+  "_RecordName_": "PlayerChoiceMenuType.AdminChoiceMenu",
+  "_RecordId_": "15820d77-ebd9-498f-81b0-5e2c00459e3f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerChoiceMenuType",
+    "focusedConversation": true,
+    "menus": [
+      {
+        "_RecordId_": "e216bb30-d344-4e5b-b01f-e4d4cb76979d",
+        "_RecordName_": "PlayerChoiceMenu.GenericAdmin",
+        "_Type_": "PlayerChoiceMenu",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6091afc9-5f8d-4393-b8e6-fa24e8fbfb0a",
+            "_RecordId_": "6091afc9-5f8d-4393-b8e6-fa24e8fbfb0a"}],
+        "blockedSelectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+        "blockedUnselectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+        "options": [
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.0675f097-1c5c-4d57-8ac0-3ea72829d651",
+              "_RecordId_": "0675f097-1c5c-4d57-8ac0-3ea72829d651"},
+            "requiredVisibilityTag": null}]},
+      {
+        "_RecordId_": "120f5ca2-29ab-4d3f-92df-eb74d909951c",
+        "_RecordName_": "PlayerChoiceMenu.HabitationAdmin",
+        "_Type_": "PlayerChoiceMenu",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5bdb9027-d247-4f84-a2e1-e1e9e4fe7485",
+            "_RecordId_": "5bdb9027-d247-4f84-a2e1-e1e9e4fe7485"}],
+        "blockedSelectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+        "blockedUnselectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+        "options": [
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.f9978901-3a60-4243-9ffc-4e6444b27ae2",
+              "_RecordId_": "f9978901-3a60-4243-9ffc-4e6444b27ae2"},
+            "requiredVisibilityTag": null},
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.0675f097-1c5c-4d57-8ac0-3ea72829d651",
+              "_RecordId_": "0675f097-1c5c-4d57-8ac0-3ea72829d651"},
+            "requiredVisibilityTag": null}]},
+      {
+        "_RecordId_": "eaa8ad58-2e37-45ea-a689-bf7cde1b609f",
+        "_RecordName_": "PlayerChoiceMenu.Habitation_GreenCircle",
+        "_Type_": "PlayerChoiceMenu",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.fc9aeeb3-8218-4e8a-87ef-0ddef580fd82",
+            "_RecordId_": "fc9aeeb3-8218-4e8a-87ef-0ddef580fd82"}],
+        "blockedSelectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+        "blockedUnselectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+        "options": [
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.f9978901-3a60-4243-9ffc-4e6444b27ae2",
+              "_RecordId_": "f9978901-3a60-4243-9ffc-4e6444b27ae2"},
+            "requiredVisibilityTag": null},
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.0675f097-1c5c-4d57-8ac0-3ea72829d651",
+              "_RecordId_": "0675f097-1c5c-4d57-8ac0-3ea72829d651"},
+            "requiredVisibilityTag": null}]},
+      {
+        "_RecordId_": "31c22f00-1571-47e8-9ea2-d979d4efe615",
+        "_RecordName_": "PlayerChoiceMenu.Habitation_EzHab",
+        "_Type_": "PlayerChoiceMenu",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6f5da7b4-d030-4874-81c4-782346a1b842",
+            "_RecordId_": "6f5da7b4-d030-4874-81c4-782346a1b842"}],
+        "blockedSelectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+        "blockedUnselectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+        "options": [
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.f9978901-3a60-4243-9ffc-4e6444b27ae2",
+              "_RecordId_": "f9978901-3a60-4243-9ffc-4e6444b27ae2"},
+            "requiredVisibilityTag": null},
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.0675f097-1c5c-4d57-8ac0-3ea72829d651",
+              "_RecordId_": "0675f097-1c5c-4d57-8ac0-3ea72829d651"},
+            "requiredVisibilityTag": null}]},
+      {
+        "_RecordId_": "a366b54b-6a73-45b9-bcff-c25a5bf1102b",
+        "_RecordName_": "PlayerChoiceMenu.Admin_ShipBrand",
+        "_Type_": "PlayerChoiceMenu",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0915b3d-85fd-4034-8d0a-742005676645",
+            "_RecordId_": "d0915b3d-85fd-4034-8d0a-742005676645"}],
+        "blockedSelectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+        "blockedUnselectedColor": "file://./../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+        "options": [
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.0675f097-1c5c-4d57-8ac0-3ea72829d651",
+              "_RecordId_": "0675f097-1c5c-4d57-8ac0-3ea72829d651"},
+            "requiredVisibilityTag": null}]}]}}

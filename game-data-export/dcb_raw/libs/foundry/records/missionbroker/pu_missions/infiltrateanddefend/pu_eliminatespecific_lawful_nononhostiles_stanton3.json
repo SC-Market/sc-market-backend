@@ -1,0 +1,652 @@
+{
+  "_RecordName_": "MissionBrokerEntry.PU_EliminateSpecific_Lawful_NoNonHostiles_Stanton3",
+  "_RecordId_": "138a33a0-094f-4005-a978-fea9717a08b6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionBrokerEntry",
+    "notForRelease": false,
+    "owner": "file://./../../../../../../libs/foundry/records/devowners/developers/mft/jorritdelocht.json",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/InfiltrateAndDefend/PU_EliminateSpecific.xml",
+    "playerFacingDebugName": "",
+    "title": "@blacjac_bounty_fps_title_001",
+    "titleHUD": "@LOC_UNINITIALIZED",
+    "description": "@blacjac_bounty_fps_UGF_nocivs_desc_001",
+    "missionGiver": "@blacjac_from",
+    "commsChannelName": "@LOC_UNINITIALIZED",
+    "type": "file://./../../../../../../libs/foundry/records/missiontype/pu/bountyhunter.json",
+    "associatedMissions": [],
+    "missionDifficulty": -1,
+    "localityAvailable": null,
+    "locationMissionAvailable": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/starmapobject.stanton3.json",
+    "availableDateSchedule": [],
+    "onlyAvailableIfAllMissionsNotAvailable": [],
+    "missionReward": {
+      "_Type_": "MissionReward",
+      "reward": 14000,
+      "max": 0,
+      "plusBonuses": false,
+      "currencyType": "UEC",
+      "reputationBonus": null},
+    "partialRewardPayout": null,
+    "missionResultReputationRewards": [
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_positive_s.json"},
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_positive_xxs.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_positive_xs.json"},
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_negative_xxxs.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_zero.json"},
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_zero.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []}],
+    "journalEntriesToAddOnComplete": [],
+    "journalEntriesToRemoveOnComplete": [],
+    "initiallyActive": true,
+    "notifyOnAvailable": false,
+    "preShowObjectives": false,
+    "showAsOffer": false,
+    "missionBuyInAmount": 0,
+    "refundBuyInOnWithdraw": false,
+    "hasCompleteButton": false,
+    "onlyOwnerCanComplete": false,
+    "handlesAbandonRequest": false,
+    "missionModulePerPlayer": false,
+    "maxInstances": 2,
+    "maxPlayersPerInstance": 1,
+    "maxInstancesPerPlayer": 1,
+    "canBeShared": true,
+    "onceOnly": false,
+    "tutorial": false,
+    "missionDeadline": {
+      "_Type_": "MissionDeadline",
+      "missionCompletionTime": 0.0,
+      "missionAutoEnd": false,
+      "missionResultAfterTimerEnd": "Failed",
+      "remainingTimeToShowTimer": 0.0,
+      "missionEndReason": "@LOC_EMPTY"},
+    "displayAlliedMarkers": true,
+    "availableInPrison": false,
+    "failIfSentToPrison": true,
+    "failIfBecameCriminal": true,
+    "failIfLeavePrison": false,
+    "completionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "applyCompletionTagsOnFailed": false,
+    "applyCompletionTagsOnAbandoned": false,
+    "requestOnly": false,
+    "respawnTime": 0.0,
+    "respawnTimeVariation": 0.0,
+    "instanceHasLifeTime": true,
+    "showLifeTimeInMobiGlas": false,
+    "instanceLifeTime": 15.0,
+    "instanceLifeTimeVariation": 0.0,
+    "canReacceptAfterAbandoning": false,
+    "abandonedCooldownTime": 1.0,
+    "abandonedCooldownTimeVariation": 1.0,
+    "canReacceptAfterFailing": false,
+    "hasPersonalCooldown": true,
+    "personalCooldownTime": 5.0,
+    "personalCooldownTimeVariation": 5.0,
+    "moduleHandlesOwnShutdown": false,
+    "linkedMission": null,
+    "missionCompletePerk": null,
+    "modifiers": [],
+    "lawfulMission": false,
+    "missionGiverRecord": "file://./../../../../../../libs/foundry/records/missiongiver/bounty/blacjacbountydepartment.json",
+    "invitationMission": null,
+    "missionTags": [],
+    "missionGiverFragmentTags": "",
+    "reputationPrerequisites": {
+      "_Type_": "ReputationPrerequisites",
+      "wantedLevelJurisdictionOverride": null,
+      "wantedLevel": {
+        "_Type_": "ReputationPrerequisiteRange",
+        "minValue": 0.0,
+        "maxValue": 2.0}},
+    "reputationRequirements": {
+      "_Type_": "SReputationMissionRequirementsParams",
+      "expression": [
+        {
+          "_Type_": "SReputationMissionGiverRequirementParams",
+          "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+          "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+          "comparison": "GreaterThanOrEqualTo",
+          "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json"}]},
+    "minRequiredMissions": [],
+    "requiredMissions": [],
+    "requiredCompletedMissionTags": [],
+    "requiredJournalEntries": [],
+    "requiredAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "excludedAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_MissionLocation",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.1dcaf9e0-9b99-4c2d-83e3-faba4ef7673a",
+                      "_RecordId_": "1dcaf9e0-9b99-4c2d-83e3-faba4ef7673a"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.cb4d4877-645c-4450-a166-224a129c3d4c",
+                      "_RecordId_": "cb4d4877-645c-4450-a166-224a129c3d4c"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                      "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                  "negativeTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d5d68f8c-005a-439b-91ee-3ce637306d09",
+                      "_RecordId_": "d5d68f8c-005a-439b-91ee-3ce637306d09"}]}],
+              "tagType": "General"}],
+          "resourceTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.71ab54b9-727e-49e7-92a7-20f2812c1926",
+              "_RecordId_": "71ab54b9-727e-49e7-92a7-20f2812c1926"}],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_SpawnDescriptions",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_NPCSpawnDescriptions",
+          "spawnDescriptions": [
+            {
+              "_Type_": "SpawnDescription_NPC_Group",
+              "Name": "Defence Spawn",
+              "options": [
+                {
+                  "_Type_": "SpawnDescription_NPCOption",
+                  "autoSpawnSettings": {
+                    "_Type_": "AutoSpawnSettings",
+                    "name": "",
+                    "initialActivity": "",
+                    "positiveCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f",
+                          "_RecordId_": "ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.003c9fbf-0b12-4b01-9850-468d2cdd1a75",
+                          "_RecordId_": "003c9fbf-0b12-4b01-9850-468d2cdd1a75"}]},
+                    "negativeCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.016e2011-25c3-4a96-979d-8def1ab62003",
+                          "_RecordId_": "016e2011-25c3-4a96-979d-8def1ab62003"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.e3c67968-fe82-4edb-bf5b-48956e2cf4d5",
+                          "_RecordId_": "e3c67968-fe82-4edb-bf5b-48956e2cf4d5"}]},
+                    "excludeShipCrew": true,
+                    "excludeSpawnGender": "Female",
+                    "minGroupSize": 3,
+                    "maxGroupSize": 3,
+                    "maxConcurrentSpawns": 9,
+                    "maxSpawns": 9,
+                    "minSpawnDelay": -1.0,
+                    "maxSpawnDelay": -1.0,
+                    "inventoryItems": [],
+                    "closetPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "closetNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2b4ea772-80c3-4aa5-95c8-25f2f2147ed8",
+                          "_RecordId_": "2b4ea772-80c3-4aa5-95c8-25f2f2147ed8"}]},
+                    "roomPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "roomNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "entityTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "factionOverride": null,
+                    "missionAlliedMarker": false,
+                    "isCritical": false},
+                  "identifierTags": {
+                    "_Type_": "TagList",
+                    "tags": []},
+                  "priority": -1,
+                  "includeLocationAISpawnTags": false,
+                  "nameProperty": null,
+                  "embeddedName": null,
+                  "weight": 1.0}]},
+            {
+              "_Type_": "SpawnDescription_NPC_Group",
+              "Name": "Hostile",
+              "options": [
+                {
+                  "_Type_": "SpawnDescription_NPCOption",
+                  "autoSpawnSettings": {
+                    "_Type_": "AutoSpawnSettings",
+                    "name": "",
+                    "initialActivity": "",
+                    "positiveCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f",
+                          "_RecordId_": "ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.003c9fbf-0b12-4b01-9850-468d2cdd1a75",
+                          "_RecordId_": "003c9fbf-0b12-4b01-9850-468d2cdd1a75"}]},
+                    "negativeCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.016e2011-25c3-4a96-979d-8def1ab62003",
+                          "_RecordId_": "016e2011-25c3-4a96-979d-8def1ab62003"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.e3c67968-fe82-4edb-bf5b-48956e2cf4d5",
+                          "_RecordId_": "e3c67968-fe82-4edb-bf5b-48956e2cf4d5"}]},
+                    "excludeShipCrew": true,
+                    "excludeSpawnGender": "Female",
+                    "minGroupSize": -1,
+                    "maxGroupSize": -1,
+                    "maxConcurrentSpawns": 1,
+                    "maxSpawns": 1,
+                    "minSpawnDelay": -1.0,
+                    "maxSpawnDelay": -1.0,
+                    "inventoryItems": [],
+                    "closetPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "closetNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2b4ea772-80c3-4aa5-95c8-25f2f2147ed8",
+                          "_RecordId_": "2b4ea772-80c3-4aa5-95c8-25f2f2147ed8"}]},
+                    "roomPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "roomNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "entityTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "factionOverride": null,
+                    "missionAlliedMarker": false,
+                    "isCritical": false},
+                  "identifierTags": {
+                    "_Type_": "TagList",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6a7d46fa-68cc-4c1e-9e4d-73af17c3f3ea",
+                        "_RecordId_": "6a7d46fa-68cc-4c1e-9e4d-73af17c3f3ea"}]},
+                  "priority": -1,
+                  "includeLocationAISpawnTags": false,
+                  "nameProperty": null,
+                  "embeddedName": null,
+                  "weight": 1.0}]},
+            {
+              "_Type_": "SpawnDescription_NPC_Group",
+              "Name": "Exterior Defence Spawn",
+              "options": [
+                {
+                  "_Type_": "SpawnDescription_NPCOption",
+                  "autoSpawnSettings": {
+                    "_Type_": "AutoSpawnSettings",
+                    "name": "",
+                    "initialActivity": "",
+                    "positiveCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f",
+                          "_RecordId_": "ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.003c9fbf-0b12-4b01-9850-468d2cdd1a75",
+                          "_RecordId_": "003c9fbf-0b12-4b01-9850-468d2cdd1a75"}]},
+                    "negativeCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.016e2011-25c3-4a96-979d-8def1ab62003",
+                          "_RecordId_": "016e2011-25c3-4a96-979d-8def1ab62003"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.e3c67968-fe82-4edb-bf5b-48956e2cf4d5",
+                          "_RecordId_": "e3c67968-fe82-4edb-bf5b-48956e2cf4d5"}]},
+                    "excludeShipCrew": true,
+                    "excludeSpawnGender": "Female",
+                    "minGroupSize": 4,
+                    "maxGroupSize": 4,
+                    "maxConcurrentSpawns": 4,
+                    "maxSpawns": 4,
+                    "minSpawnDelay": -1.0,
+                    "maxSpawnDelay": -1.0,
+                    "inventoryItems": [],
+                    "closetPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2b4ea772-80c3-4aa5-95c8-25f2f2147ed8",
+                          "_RecordId_": "2b4ea772-80c3-4aa5-95c8-25f2f2147ed8"}]},
+                    "closetNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "roomPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "roomNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "entityTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "factionOverride": null,
+                    "missionAlliedMarker": false,
+                    "isCritical": false},
+                  "identifierTags": {
+                    "_Type_": "TagList",
+                    "tags": []},
+                  "priority": -1,
+                  "includeLocationAISpawnTags": false,
+                  "nameProperty": null,
+                  "embeddedName": null,
+                  "weight": 1.0}]},
+            {
+              "_Type_": "SpawnDescription_NPC_Group",
+              "Name": "Civ",
+              "options": [
+                {
+                  "_Type_": "SpawnDescription_NPCOption",
+                  "autoSpawnSettings": {
+                    "_Type_": "AutoSpawnSettings",
+                    "name": "",
+                    "initialActivity": "",
+                    "positiveCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.0b879772-f9e0-4976-9ad9-d2b4223e147e",
+                          "_RecordId_": "0b879772-f9e0-4976-9ad9-d2b4223e147e"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.9279f704-6eb3-4ffe-a186-19811f147b1d",
+                          "_RecordId_": "9279f704-6eb3-4ffe-a186-19811f147b1d"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f",
+                          "_RecordId_": "ecfb92fe-5d2d-4fef-aa8f-2f09fcf42b6f"}]},
+                    "negativeCharacterTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.e3c67968-fe82-4edb-bf5b-48956e2cf4d5",
+                          "_RecordId_": "e3c67968-fe82-4edb-bf5b-48956e2cf4d5"}]},
+                    "excludeShipCrew": true,
+                    "excludeSpawnGender": "Female",
+                    "minGroupSize": 2,
+                    "maxGroupSize": 4,
+                    "maxConcurrentSpawns": 4,
+                    "maxSpawns": 4,
+                    "minSpawnDelay": -1.0,
+                    "maxSpawnDelay": -1.0,
+                    "inventoryItems": [],
+                    "closetPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "closetNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "roomPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "roomNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "defendAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaPositiveTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "scheduleAreaNegativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "entityTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "factionOverride": null,
+                    "missionAlliedMarker": false,
+                    "isCritical": false},
+                  "identifierTags": {
+                    "_Type_": "TagList",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6a1e25c3-2a80-496f-9a9e-d8621cf54448",
+                        "_RecordId_": "6a1e25c3-2a80-496f-9a9e-d8621cf54448"}]},
+                  "priority": -1,
+                  "includeLocationAISpawnTags": false,
+                  "nameProperty": null,
+                  "embeddedName": null,
+                  "weight": 1.0}]}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "TargetName",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.25}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_SpawnTarget",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_TargetTags",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.d9846151-8bb6-4a18-970a-b6f1ea10c27f",
+                "_RecordId_": "d9846151-8bb6-4a18-970a-b6f1ea10c27f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.016e2011-25c3-4a96-979d-8def1ab62003",
+                "_RecordId_": "016e2011-25c3-4a96-979d-8def1ab62003"}]},
+          "options": []}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_AllowEmergentAI",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0,
+              "variation": 0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AdditionalSpawnClosetManagerSearchTerms_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_DontHarmAllies",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_DontHarmCivs",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": []}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_DontHarmCivs",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}}],
+    "objectiveTokens": [],
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []}}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Cordrys",
+  "_RecordId_": "28506eb7-aead-490e-b08e-436fa097911d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "cordrys",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/cordrys.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 255,
+      "g": 255,
+      "b": 255,
+      "a": 255}}}

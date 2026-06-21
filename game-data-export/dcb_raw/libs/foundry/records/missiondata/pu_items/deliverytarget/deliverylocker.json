@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionItem.DeliveryLocker",
+  "_RecordId_": "a5991fe3-e234-41e8-8163-a5f78e3a58fb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.984285ee-9b94-48c9-b11a-915fc11643a4",
+        "_RecordId_": "984285ee-9b94-48c9-b11a-915fc11643a4"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": null}}

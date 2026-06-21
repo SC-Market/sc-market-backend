@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial01_Hint03_HungerThirst",
+  "_RecordId_": "56c85d55-eed8-4a53-aaec-96c3db021a93",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut01_Hint03_HungerThirst_Title",
+    "BodyText": "@Tut01_Hint03_HungerThirst",
+    "BodyTextGamePad": "@Tut01_Hint03_HungerThirst",
+    "BodyTextJoystick": "@Tut01_Hint03_HungerThirst",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

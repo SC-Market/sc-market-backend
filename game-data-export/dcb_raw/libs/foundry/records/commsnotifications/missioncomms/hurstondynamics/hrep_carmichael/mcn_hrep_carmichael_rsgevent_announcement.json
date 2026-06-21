@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_HREP_Carmichael_RSGEvent_Announcement",
+  "_RecordId_": "67be2084-726b-4765-8662-36cf74cf572a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.43f14984-abd2-45d2-ab2b-4c9fa8bcfba1",
+          "_RecordId_": "43f14984-abd2-45d2-ab2b-4c9fa8bcfba1"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.69c74c38-acc5-43bb-aabd-28cddcfa274b",
+          "_RecordId_": "69c74c38-acc5-43bb-aabd-28cddcfa274b"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/gameevents/mission_gameevent_announcement.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_hurstondynamics_hrep_carmichael.json",
+    "stage": null}}

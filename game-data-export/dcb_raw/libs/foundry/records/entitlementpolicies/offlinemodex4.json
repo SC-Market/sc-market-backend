@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "DefaultEntitlementRecord.OfflineModex4",
+  "_RecordId_": "67f50be7-458e-4760-8df1-ad1a48abbd7a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DefaultEntitlementRecord",
+    "Entitlements": [
+      "Offline",
+      "Offline",
+      "Offline",
+      "Offline"],
+    "subscribersOnly": false}}

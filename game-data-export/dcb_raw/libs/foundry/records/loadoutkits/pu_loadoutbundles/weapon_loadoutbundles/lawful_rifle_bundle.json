@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "SLoadoutAssortment.lawful_Rifle_bundle",
+  "_RecordId_": "9fbe7615-3e38-44b5-b2c5-6a24967bad8d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRandomGeneratedParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "GenerationSeed": 0,
+            "LoadoutAssortments": [
+              "file://./../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/behr_rifle_loadoutbundle.json",
+              "file://./../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/behr_rifle_loadoutbundle.json",
+              "file://./../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/klwe_rifle_loadoutbundle.json",
+              "file://./../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/klwe_rifle_loadoutbundle.json"]}]}]}}

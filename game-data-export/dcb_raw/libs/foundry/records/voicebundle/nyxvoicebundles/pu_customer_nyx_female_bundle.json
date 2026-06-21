@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "VoiceBundle.PU_Customer_Nyx_Female_Bundle",
+  "_RecordId_": "cabfe1a8-6b88-481b-9c5a-601f6af29fb3",
+  "_RecordTag_": "Content",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_Customer_Nyx_Female_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_03.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_05.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_06.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_15.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_nyx_female_04.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_nyx_female_02.json"]}}

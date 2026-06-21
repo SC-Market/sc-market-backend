@@ -1,0 +1,212 @@
+{
+  "_RecordName_": "InteractionConditionPreset.EquipOrRemoveUndersuit",
+  "_RecordId_": "f28eeac1-076d-4d4d-9096-5f27e6b7877c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_equipUndersuit_wearingArmour"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Armor_Arms",
+          "Char_Armor_Feet",
+          "Char_Armor_Helmet",
+          "Char_Armor_Torso",
+          "Char_Armor_Legs"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": [
+          "weapon_attach_hand_left",
+          "weapon_attach_hand_right",
+          "magic_pocket",
+          "inventory_pocket",
+          "inventory_pocket_2"]},
+      {
+        "_Type_": "IneractionConditionUserNotInUsable",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": null,
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}},
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_equipUndersuit_wearingUndersuit"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Armor_Undersuit"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": [
+          "weapon_attach_hand_left",
+          "weapon_attach_hand_right",
+          "magic_pocket",
+          "inventory_pocket",
+          "inventory_pocket_2"]},
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_equipUndersuit_wearingClothing"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Clothing_Feet",
+          "Char_Clothing_Hands",
+          "Char_Clothing_Hat",
+          "Char_Clothing_Legs",
+          "Char_Clothing_Torso_0",
+          "Char_Clothing_Torso_1",
+          "Char_Clothing_Torso_2",
+          "Char_Clothing_Backpack"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": [
+          "weapon_attach_hand_left",
+          "weapon_attach_hand_right",
+          "magic_pocket",
+          "inventory_pocket",
+          "inventory_pocket_2"]},
+      {
+        "_Type_": "InteractionConditionLootableNotBeingViewedByAnyOtherInventory",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_InUseByAnother"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}},
+      {
+        "_Type_": "InteractionConditionNAND",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_equipUndersuit_wearingArmour"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "firstCondition": {
+          "_Type_": "InteractionConditionInteractableEntityOwnerHasArmorAttached",
+          "conditionDisplay": null},
+        "secondCondition": {
+          "_Type_": "InteractionConditionEntityIsAttachedToOtherActor",
+          "conditionDisplay": null}},
+      {
+        "_Type_": "InteractionConditionIsItemNotBricked",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_Bricked"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}}],
+    "conditionToHideParams": [
+      {
+        "_Type_": "InteractionConditionEntityTags",
+        "conditionDisplay": null,
+        "tags": {
+          "_Type_": "TagsDNFTerm",
+          "positiveTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.24b19932-58a9-467c-81e4-7955c1b73b24",
+              "_RecordId_": "24b19932-58a9-467c-81e4-7955c1b73b24"}],
+          "negativeTags": []},
+        "CheckParent": true},
+      {
+        "_Type_": "InteractionConditionSwapAvailable",
+        "conditionDisplay": null},
+      {
+        "_Type_": "InteractionConditionAND",
+        "conditionDisplay": null,
+        "firstCondition": {
+          "_Type_": "InteractionConditionGameMode",
+          "conditionDisplay": null,
+          "gameModes": [
+            "S42_Default"]},
+        "secondCondition": {
+          "_Type_": "InteractionConditionEntityIsAttachedToOtherActor",
+          "conditionDisplay": null}}]}}

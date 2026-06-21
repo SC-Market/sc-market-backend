@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.August_Dunlow_Spaceport",
+  "_RecordId_": "0d1d6cb3-bfeb-41d2-b124-3b9fe362a529",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_map_pu_orison_august_dunlow_spaceport",
+    "restrictViewBounds": false}}

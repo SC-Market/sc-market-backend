@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.BushFieldLarge",
+  "_RecordId_": "fe6811ff-35ad-4c26-a87a-3e88d06ef1cd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 25.0,
+    "clusterParamsArray": []}}

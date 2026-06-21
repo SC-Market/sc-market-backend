@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VoiceBundle.PU_Admin_Nyx_Female_Bundle",
+  "_RecordId_": "fd315809-9614-4ea6-ab24-93c507652c4f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_Admin_Nyx_Female_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/bureaucrat/bureaucrat_female02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/bureaucrat/bureaucrat_female04.json"]}}

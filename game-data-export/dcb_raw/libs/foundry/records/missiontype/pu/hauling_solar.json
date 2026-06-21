@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Hauling_Solar",
+  "_RecordId_": "67d6f865-1e95-4652-91ba-6cbdc720c7fe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "Delivery_ico",
+    "LocalisedTypeName": "@mobiGlas_ui_MissionType_Hauling_Solar",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_delivery.svg",
+    "DisplayTime": -1.0}}

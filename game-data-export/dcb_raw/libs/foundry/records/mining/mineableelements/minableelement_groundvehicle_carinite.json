@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_GroundVehicle_Carinite",
+  "_RecordId_": "c793af1c-7dab-457e-a74d-88c435c9708b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Carinite",
+      "_RecordId_": "d7d39082-ba27-470c-bc9a-d9e82ce838ae"},
+    "elementInstability": 300.0,
+    "elementResistance": 0.5,
+    "elementOptimalWindowMidpoint": 0.4,
+    "elementOptimalWindowMidpointRandomness": 0.2,
+    "elementOptimalWindowThinness": 10.0,
+    "elementExplosionMultiplier": 0.5,
+    "elementClusterFactor": 0.0}}

@@ -1,0 +1,63 @@
+{
+  "_RecordName_": "PlayerChoice_Library.PlayerChoiceLibrary",
+  "_RecordId_": "12846e06-24a1-4df2-996d-87ec907f0005",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerChoice_Library",
+    "optionLists": [
+      {
+        "_Type_": "PlayerChoice_OptionList",
+        "name": "primary default",
+        "options": [
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@ui_diag_yes",
+            "id": 0,
+            "isPrimary": true},
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@ui_diag_no",
+            "id": 1,
+            "isPrimary": true}]},
+      {
+        "_Type_": "PlayerChoice_OptionList",
+        "name": "secondary_test",
+        "options": [
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@ui_Apply",
+            "id": 0,
+            "isPrimary": true},
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@ui_Back",
+            "id": 1,
+            "isPrimary": false}]},
+      {
+        "_Type_": "PlayerChoice_OptionList",
+        "name": "gamescom_request_landing",
+        "options": [
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@innerthought_levski_requestlanding",
+            "id": 0,
+            "isPrimary": true},
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@innerthought_levski_requestlanding_cancel",
+            "id": 1,
+            "isPrimary": true}]},
+      {
+        "_Type_": "PlayerChoice_OptionList",
+        "name": "gamescom_request_takeoff",
+        "options": [
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@innerthought_levski_requesttakeoff",
+            "id": 0,
+            "isPrimary": true},
+          {
+            "_Type_": "PlayerChoice_Option",
+            "text": "@innerthought_levski_requesttakeoff_cancel",
+            "id": 1,
+            "isPrimary": true}]}]}}

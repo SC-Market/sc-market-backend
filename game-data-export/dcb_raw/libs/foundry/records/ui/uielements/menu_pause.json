@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.Menu_Pause",
+  "_RecordId_": "4b812222-25e2-4e28-a5ae-08e46d23f4f5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/PauseScreen/assets/SWF/PauseScreen_root.swf",
+    "soundsRecord": "file://./../../../../../libs/foundry/records/ui/elementsounds_deprecated/uielementsoundsrecord.pausemenu.json",
+    "fontFile": "UI/fonts/Shared/fonts_en.gfx",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": false,
+    "layer": 12,
+    "skipFirstFrameInit": true,
+    "keyEvents": true,
+    "eventsExclusive": true,
+    "noDepthTest": false,
+    "forceNoUnload": true,
+    "noPostProcessing": true}}

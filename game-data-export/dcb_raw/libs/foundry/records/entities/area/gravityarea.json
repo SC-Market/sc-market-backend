@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "EntityClassDefinition.GravityArea",
+  "_RecordId_": "409dabdf-e430-4356-98b8-5e708b999341",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Physics",
+    "Icon": "GravitySphere.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "GravityAreaParams",
+        "active": true,
+        "uniform": true,
+        "fallOffInner": 0.0,
+        "gravityMagnitude": 9.81,
+        "gravityDirection": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -1.0},
+        "roomBased": false},
+      {
+        "_Type_": "SGameVolumeComponentParams"},
+      {
+        "_Type_": "GravityShapeComponentParams"}]}}

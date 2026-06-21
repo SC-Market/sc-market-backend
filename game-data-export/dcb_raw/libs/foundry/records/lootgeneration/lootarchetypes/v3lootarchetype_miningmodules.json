@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_MiningModules",
+  "_RecordId_": "2139ae10-2b8e-4905-86a1-df96cdad27e4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Active mining modules",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8e76fabb-1f04-4e7e-a6a3-60bcf0ab1cb1",
+                  "_RecordId_": "8e76fabb-1f04-4e7e-a6a3-60bcf0ab1cb1"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Passive mining modules",
+          "weight": 0.5,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.2308d310-7ecf-43f3-93ac-aa7ca69babe9",
+                  "_RecordId_": "2308d310-7ecf-43f3-93ac-aa7ca69babe9"}],
+              "negativeTags": []}},
+          "optionalData": []}]}}}

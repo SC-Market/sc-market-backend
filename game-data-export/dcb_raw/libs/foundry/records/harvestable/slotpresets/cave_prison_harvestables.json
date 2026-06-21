@@ -1,0 +1,72 @@
+{
+  "_RecordName_": "SubHarvestableMultiConfigRecord.Cave_Prison_Harvestables",
+  "_RecordId_": "3d1b92e2-8eb9-464f-914e-a51bfd72be6a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableMultiConfigRecord",
+    "multiConfig": {
+      "_Type_": "SubHarvestableMultiConfig",
+      "defaultConfig": null,
+      "ignoreAttachableTagsForTaggedConfigs": true,
+      "taggedConfigs": [
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "Mineables",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4ae42675-8387-4f36-b697-eb888fa1a7e5",
+                "_RecordId_": "4ae42675-8387-4f36-b697-eb888fa1a7e5"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleRef",
+            "subConfigRef": "file://./../../../../../libs/foundry/records/harvestable/slotpresets/cave_prison.json"}},
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "Stash",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.e5c8141d-f6ca-4dfc-a164-b142cf0a8c6d",
+                "_RecordId_": "e5c8141d-f6ca-4dfc-a164-b142cf0a8c6d"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 0.1,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/stash_01.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 1.0,
+                  "relativeProbabilityDeepest": {
+                    "_Type_": "OptionalProbability",
+                    "probability": 1.0},
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": {
+                    "_Type_": "LootConfig",
+                    "lootConstraints": {
+                      "_Type_": "LootConstraints",
+                      "poolFilter": null,
+                      "secondaryChoices": null,
+                      "fullnessFactorRange": {
+                        "_Type_": "FloatFactorRange",
+                        "min": 0.1,
+                        "max": 0.1},
+                      "totalResultsLimit": 0,
+                      "chanceToGenerate": 1.0,
+                      "chanceToGenerateAdditionalAttachedInventories": 1.0,
+                      "advanced": {
+                        "_Type_": "AdvancedLootConstraints",
+                        "pruningLevel": "containerSize",
+                        "fullnessMode": "stopAfterExceed"}},
+                    "lootTable": "file://./../../../../../libs/foundry/records/lootgeneration/loottables/prison_stash.json",
+                    "lootTableV3": null}}]}}}]}}}

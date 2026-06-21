@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MeleeHaymaker",
+  "_RecordId_": "79017e78-ddff-4697-be23-11926a6ba13a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Melee_Combat_Title",
+    "BodyText": "@Hints_Melee_HeavyHaymaker",
+    "BodyTextGamePad": "@Hints_Melee_HeavyHaymaker",
+    "BodyTextJoystick": "@Hints_Melee_HeavyHaymaker",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

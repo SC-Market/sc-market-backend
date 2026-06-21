@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "EntityClassDefinition.InteriorMapSection",
+  "_RecordId_": "0e21bd90-eb40-4701-9f06-591a98e06117",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "InteriorMapSection.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "UIInteriorMapSectionParams",
+        "name": "@LOC_EMPTY",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 10.0,
+          "y": 10.0,
+          "z": 10.0},
+        "restrictViewBounds": false}]}}

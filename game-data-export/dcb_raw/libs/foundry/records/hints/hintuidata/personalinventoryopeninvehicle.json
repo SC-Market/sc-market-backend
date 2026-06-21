@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PersonalInventoryOpenInVehicle",
+  "_RecordId_": "7e07f4ab-ec63-4ccb-bc66-45cfb8f1f484",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Inventory_Title",
+    "BodyText": "@Hints_Inventory_OpenInVehicle",
+    "BodyTextGamePad": "@Hints_Inventory_OpenInVehicle",
+    "BodyTextJoystick": "@Hints_Inventory_OpenInVehicle",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

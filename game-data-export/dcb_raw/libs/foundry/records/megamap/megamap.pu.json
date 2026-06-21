@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "MegaMap.PU",
+  "_RecordId_": "16ea6405-8b1e-45cb-8f1a-14bbee146569",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../libs/foundry/records/gamemode/sc_default.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": "file://./../../../../libs/foundry/records/ssolarsystem/stanton.json",
+        "ObjectContainers": [
+          "objectcontainers/pu/system/stanton/stantonsystem.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": null,
+    "level": "file://./../../../../libs/foundry/records/level/pu/pu.json",
+    "trackViewIntro": "",
+    "rootLocation": "file://./../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json",
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

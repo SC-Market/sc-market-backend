@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "MissionItem.DeliveryContainer",
+  "_RecordId_": "06071f3c-5066-48f9-af4b-35bd1c5a2dad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2d7db31c-08a5-4157-9339-07458fc011bf",
+        "_RecordId_": "2d7db31c-08a5-4157-9339-07458fc011bf"},
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d",
+        "_RecordId_": "2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": null}}

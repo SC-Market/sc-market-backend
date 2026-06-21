@@ -1,0 +1,806 @@
+{
+  "_RecordName_": "EntityClassDefinition.AEGS_Retaliator_SCItem_Seat_Pilot",
+  "_RecordId_": "b7110da3-8fcb-4973-850c-d472ee3c6507",
+  "_RecordTag_": "Ship",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.d0d29c20-f5e2-46f7-9d53-cc90f6ac63f2",
+        "_RecordId_": "d0d29c20-f5e2-46f7-9d53-cc90f6ac63f2"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+        "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "ItemResourceComponentParams",
+        "isResourceNetworked": true,
+        "isRelay": false,
+        "filterParams": null,
+        "isConnectedToRoom": false,
+        "wirelessConnection": false,
+        "states": [
+          {
+            "_Type_": "ItemResourceState",
+            "name": "Online",
+            "deltas": [
+              {
+                "_Type_": "ItemResourceDeltaNetworkReflection",
+                "resource": "Power",
+                "binaryEvaluation": true}],
+            "linkedInteractionStates": [],
+            "signatureParams": {
+              "_Type_": "ItemResourceSignatureParams",
+              "EMSignature": {
+                "_Type_": "ItemResourceSignatureEntry",
+                "nominalSignature": 0.0,
+                "decayRate": 0.15,
+                "functionalityCurve": null},
+              "IRSignature": {
+                "_Type_": "ItemResourceSignatureEntry",
+                "nominalSignature": 0.0,
+                "decayRate": 0.15,
+                "functionalityCurve": null}},
+            "powerRanges": {
+              "_Type_": "PowerRangeParams",
+              "low": {
+                "_Type_": "ResourceRangeParams",
+                "start": 0,
+                "modifier": 1.0,
+                "registerRange": false},
+              "medium": {
+                "_Type_": "ResourceRangeParams",
+                "start": 0,
+                "modifier": 1.0,
+                "registerRange": false},
+              "high": {
+                "_Type_": "ResourceRangeParams",
+                "start": 0,
+                "modifier": 1.0,
+                "registerRange": false}}}],
+        "controlParameters": [],
+        "controlBlocks": [],
+        "defaultPriority": 50,
+        "functionalityModifiers": null,
+        "powerPlantOverride": null,
+        "selfRepair": {
+          "_Type_": "ItemResourceSelfRepairParams",
+          "maxRepairCount": 1,
+          "timeToRepair": 120.0,
+          "healthRatio": 0.2},
+        "repairRestoreRatio": 0.1},
+      {
+        "_Type_": "SAttachableComponentParams",
+        "AttachDef": {
+          "_Type_": "SItemDefinition",
+          "Type": "Seat",
+          "SubType": "UNDEFINED",
+          "Size": 1,
+          "Grade": 1,
+          "Manufacturer": "file://./../../../../../../../libs/foundry/records/scitemmanufacturer/scitemmanufacturer.aegs.json",
+          "inheritParentManufacturer": false,
+          "Tags": "",
+          "RequiredTags": "",
+          "DisplayType": "",
+          "Localization": {
+            "_Type_": "SCItemLocalization",
+            "Name": "@item_Name_TARG_Controller",
+            "ShortName": "@LOC_EMPTY",
+            "Description": "@LOC_EMPTY",
+            "displayFeatures": {
+              "_Type_": "SCExtendedLocalizationLevelParams",
+              "LogoSimplifiedWhite": "",
+              "FrontendBackground": "",
+              "History": "@LOC_EMPTY",
+              "Callout1": "@LOC_EMPTY",
+              "Callout2": "@LOC_EMPTY",
+              "Callout3": "@LOC_EMPTY",
+              "UIPriority": 0,
+              "locationAudioPlayTrigger": {
+                "_Type_": "GlobalResourceAudio",
+                "audioTrigger": ""},
+              "locationAudioStopTrigger": {
+                "_Type_": "GlobalResourceAudio",
+                "audioTrigger": ""}}},
+          "mannequinTags": {
+            "_Type_": "SCItemMannequinTags",
+            "mannequinClassTag": "AEGS_Retaliator_Seat",
+            "mannequinTypeTag": "",
+            "mannequinBaseTag": ""},
+          "inventoryOccupancyVolume": {
+            "_Type_": "SMicroCargoUnit",
+            "microSCU": 1},
+          "inventoryOccupancyDimensions": {
+            "_Type_": "Vec3",
+            "x": 0.15,
+            "y": 0.15,
+            "z": 0.15},
+          "inventoryOccupancyLocalBoundsMin": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "inventoryOccupancyLocalBoundsMax": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "inventoryOccupancyDimensionsUIOverride": null,
+          "inventoryOccupancyDimensionsUIOverrideV4": null,
+          "inventoryOccupancyFixedGridDimensionsUIV4": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "ignoredAttachAxis": "None",
+          "attachCheckCenterOfMass": false},
+        "attachToTileItemPort": "NoConnection",
+        "entityAttachParams": null,
+        "audioAttachParams": {
+          "_Type_": "SAudioAttachParams",
+          "onAttachedTrigger": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""},
+          "onDetachedTrigger": {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}}},
+      {
+        "_Type_": "SCItemSeatParams",
+        "availableOperatorModes": "file://./../../../../../../../libs/foundry/records/entities/scitem/operatormoderecords/operatormodeavailability_combatseat.json",
+        "ejection": null,
+        "seatType": "HOTAS_R_L",
+        "controlTemplate": "ctrl_HOTAS_R_L_pedals",
+        "transitionTemplate": "trans_RSI_constellation",
+        "minYaw": -70.0,
+        "maxYaw": 70.0,
+        "minPitch": -45.0,
+        "maxPitch": 65.0,
+        "setYawPitchLimits": false,
+        "userAnimationDatabase": "Animations/Mannequin/ADB/SCItems/Ships/SCItemSeat/AEGS_Retaliator_Seat/AEGS_Retaliator_SCItem_Pilot_HumanAnims.adb",
+        "userScopeContext": "SeatUser",
+        "userSyncedScopeContext": "SyncedEntity",
+        "dashboardAnimationDatabase": "animations/mannequin/adb/scitems/ships/scitemdashboard/aegs_retaliator_dashboard/aegs_retaliator_scitem_dashboard_anims.adb",
+        "dashboardScopeContext": "SeatDashboard",
+        "vehicleFragmentOverride": "",
+        "vehicleScopeContext": "",
+        "useSyncedEnslavement": true,
+        "useAnimationBasedTransition": true,
+        "supportPlayerAnimatedActions": false,
+        "allowRelaxedPose": false,
+        "allowDeadOrUnconscious": false,
+        "keepUserControlContextActive": false,
+        "actorAttachment": {
+          "_Type_": "SCSeatActorAttachmentParams",
+          "type": "Seat",
+          "boneName": "pilot_sit_pos",
+          "stance": "Seated"},
+        "views": [
+          "file://./../../../../../../../libs/foundry/records/cameras/vehicles/defaults/camera.default_cockpit.json",
+          "file://./../../../../../../../libs/foundry/records/cameras/vehicles/global/aegs_retaliator_thirdpersonflight.json",
+          "file://./../../../../../../../libs/foundry/records/cameras/vehicles/global/camera.global_orbitenterexit_24m.json"],
+        "QTViews": [],
+        "landingView": null,
+        "adsOverwriteRecord": null,
+        "adsCameraOverride": {
+          "_Type_": "AdsCameraParams",
+          "adsCamera": "file://./../../../../../../../libs/foundry/records/cameras/vehicles/defaults/camera.default_cockpit.json",
+          "adsCameraOffset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0}},
+        "seatFOV": "file://./../../../../../../../libs/foundry/records/cameras/suggestedfovsetup.fovvehiclesettings_global.json",
+        "usableInteraction": null,
+        "enterDefaultModeInteraction": null,
+        "enterScanModeInteraction": null,
+        "enterQuantumModeInteraction": null,
+        "fpHeadAdjustmentRecord": null,
+        "lookAheadOverwriteRecord": null,
+        "gforceHeadBobOverwriteRecord": null,
+        "gforceCameraEffectsOverwriteRecord": null,
+        "headTrackingPositionLimitOverwriteRecord": null,
+        "armorMoveViewRestrictions": null,
+        "userCDIKRecord": null,
+        "enterAdsAudioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "exitAdsAudioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "SEntityInteractableParams",
+        "Interactable": {
+          "_Type_": "SInteractableParams",
+          "SharedInteractions": [],
+          "InteractionPoints": [],
+          "interactionTasks": [],
+          "actionHandlerTasks": [],
+          "itemActionTasks": [],
+          "menuTitle": null}},
+      {
+        "_Type_": "SInteractionLinkParams",
+        "vehicleItemPortInteractionLinks": [],
+        "linkPlugs": []},
+      {
+        "_Type_": "SGeometryResourceParams",
+        "ModelTag": null,
+        "cacheResources": false,
+        "meshsetup": {
+          "_Type_": "SGeometryMeshsetupParams",
+          "visibilityTags": {
+            "_Type_": "TagList",
+            "tags": []}},
+        "Geometry": {
+          "_Type_": "SGeometryNodeParams",
+          "Tags": "",
+          "Geometry": {
+            "_Type_": "SGeometryDataParams",
+            "Geometry": {
+              "_Type_": "GlobalResourceGeometry",
+              "path": "objects/spaceships/seats/aegs/retaliator/aegs_retaliator_scitem_cockpit_seat.cga"},
+            "Material": {
+              "_Type_": "GlobalResourceMaterial",
+              "path": ""},
+            "SimulationGeometry": null,
+            "Palette": {
+              "_Type_": "TintPaletteRef",
+              "RootRecord": null,
+              "ChildPath": "",
+              "SwizzleOverride": null},
+            "Slot": "Main",
+            "MaterialAttachments": "",
+            "ProxyCDFPath": "",
+            "ModifiersPath": "",
+            "AttachFlags": 0,
+            "DeformerType": "Standard",
+            "ProtosBShapeExclude": 0,
+            "VisTP": true,
+            "VisFP": true,
+            "VisShadow": true,
+            "VisSecondaryViews": true,
+            "WrinkleMap": false,
+            "EnableDecalProjection": false,
+            "BBoxJoint": "",
+            "BBoxRadius": 0.0,
+            "Wear": 0.0,
+            "Dirt": 0.0,
+            "Interference": 0.0,
+            "Damage": 0.0,
+            "RenderLayer": "Default",
+            "VisAreaMode": "AABB_Center",
+            "SunShadowMode": "Upto_400m",
+            "viewDistRatio": null,
+            "LodRatio": 100},
+          "ScaleMultiplier": 1.0,
+          "SubGeometry": []},
+        "Material": {
+          "_Type_": "SMaterialNodeParams",
+          "Tags": "",
+          "Material": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": ""},
+          "Palette": {
+            "_Type_": "TintPaletteRef",
+            "RootRecord": null,
+            "ChildPath": "",
+            "SwizzleOverride": null},
+          "materialVariants": []},
+        "rootOverridePaint": false,
+        "inheritModelTagFromHost": true,
+        "inheritMaterialFromSpawnHost": false},
+      {
+        "_Type_": "SEntityPhysicsControllerParams",
+        "PhysType": {
+          "_Type_": "SEntityRigidPhysicsControllerParams",
+          "Mass": 10.0,
+          "compoundingAllowed": true,
+          "breakableParams": null,
+          "gameCollisionClass": null,
+          "spawnBoxScale": 0.5,
+          "PhysFlagsOverride": [],
+          "PhysFlagsColliderOverride": [],
+          "maxLoggedCollisions": 1,
+          "Damping": 0.01,
+          "DampingZeroG": 0.01,
+          "DampingFreefall": 0.05,
+          "PushableByPlayers": true,
+          "NeverAffectTriggers": false,
+          "UseManualGridTransition": false,
+          "grid": null,
+          "shieldSDFParams": null,
+          "aiNavigationType": "Included",
+          "Kinematic": false,
+          "EnableCrossGridChecks": false,
+          "Resting": false,
+          "physicalizeAllSlots": true,
+          "enableExteriorShadow": false,
+          "buoyancyParams": null,
+          "temperature": {
+            "_Type_": "EntityTemperature",
+            "enable": false,
+            "initialTemperature": -1.0,
+            "coolingEqualizationParams": {
+              "_Type_": "CoolingEqualizationMultiplier",
+              "coolingEqualizationMultiplier": 1.0},
+            "signatureParams": {
+              "_Type_": "EntityTemperatureSignature",
+              "enable": false,
+              "minimumTemperatureForIR": 250.0,
+              "temperatureToIR": 6.0},
+            "itemResourceParams": {
+              "_Type_": "EntityTemperatureItemResource",
+              "poweredAmbientCoolingMultiplier": 1.0,
+              "minOperatingTemperature": 0.0,
+              "minCoolingTemperature": 300.0,
+              "enableOverheat": false,
+              "overheatTemperature": 450.0,
+              "overheatWarningTemperature": 370.0,
+              "overheatRecoveryTemperature": 350.0,
+              "stateHeatGenerationValues": [],
+              "degradationTemperatureMultipliers": []},
+            "misfireTemperatureRange": {
+              "_Type_": "Range",
+              "minimum": 370.0,
+              "maximum": 600.0},
+            "internalTemperatureGeneration": 0.0,
+            "fireHazard": {
+              "_Type_": "EntityFireHazard",
+              "enable": true,
+              "dissolveOnBurn": false,
+              "dissolvePercentageRange": {
+                "_Type_": "Range",
+                "minimum": 0.0,
+                "maximum": 1.0}}}}},
+      {
+        "_Type_": "SAnimationControllerParams",
+        "AnimationDatabase": "scitems\\ships\\scitemseat\\aegs_retaliator_seat\\aegs_retaliator_scitem_pilot_anims.adb",
+        "AnimationController": "scitems\\ships\\scitemseat\\scitemseatcontrollerdefs.xml",
+        "Tags": [],
+        "ScopeContexts": [
+          {
+            "_Type_": "SAnimationScopeContext",
+            "scopeContext": "Seat",
+            "type": "Self"}],
+        "AnimationJointControls": {
+          "_Type_": "AnimationJointControl",
+          "variables": [
+            {
+              "_Pointer_": "ptr:3",
+              "_Type_": "AnimationPlayerInputVariable",
+              "name": "yaw",
+              "range": {
+                "_Type_": "Range",
+                "minimum": -1.0,
+                "maximum": 1.0},
+              "defaultValue": 0.0,
+              "defaultInterpolation": {
+                "_Type_": "AnimationVariableInterpolation",
+                "timeRange": 1.0,
+                "type": "Linear"}},
+            {
+              "_Pointer_": "ptr:2",
+              "_Type_": "AnimationPlayerInputVariable",
+              "name": "pitch",
+              "range": {
+                "_Type_": "Range",
+                "minimum": -1.0,
+                "maximum": 1.0},
+              "defaultValue": 0.0,
+              "defaultInterpolation": {
+                "_Type_": "AnimationVariableInterpolation",
+                "timeRange": 1.0,
+                "type": "Linear"}},
+            {
+              "_Pointer_": "ptr:4",
+              "_Type_": "AnimationPlayerInputVariable",
+              "name": "roll",
+              "range": {
+                "_Type_": "Range",
+                "minimum": -1.0,
+                "maximum": 1.0},
+              "defaultValue": 0.0,
+              "defaultInterpolation": {
+                "_Type_": "AnimationVariableInterpolation",
+                "timeRange": 1.0,
+                "type": "Linear"}},
+            {
+              "_Type_": "AnimationPlayerInputVariable",
+              "name": "StrafeUpDown",
+              "range": {
+                "_Type_": "Range",
+                "minimum": -1.0,
+                "maximum": 1.0},
+              "defaultValue": 0.0,
+              "defaultInterpolation": {
+                "_Type_": "AnimationVariableInterpolation",
+                "timeRange": 1.0,
+                "type": "Linear"}},
+            {
+              "_Pointer_": "ptr:1",
+              "_Type_": "AnimationPlayerInputVariable",
+              "name": "power",
+              "range": {
+                "_Type_": "Range",
+                "minimum": -1.0,
+                "maximum": 1.0},
+              "defaultValue": 0.0,
+              "defaultInterpolation": {
+                "_Type_": "AnimationVariableInterpolation",
+                "timeRange": 1.0,
+                "type": "Linear"}},
+            {
+              "_Pointer_": "ptr:5",
+              "_Type_": "AnimationPlayerInputVariable",
+              "name": "StrafeLeftRight",
+              "range": {
+                "_Type_": "Range",
+                "minimum": -1.0,
+                "maximum": 1.0},
+              "defaultValue": 0.0,
+              "defaultInterpolation": {
+                "_Type_": "AnimationVariableInterpolation",
+                "timeRange": 1.0,
+                "type": "Linear"}}],
+          "movements": [
+            {
+              "_Type_": "AnimationJointMovement",
+              "joint": "btn_throttle_12",
+              "rotations": [
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:1",
+                  "fromStartValus": 1.0,
+                  "fromEndValus": -1.0,
+                  "toStartAngle": -30.0,
+                  "toEndAngle": 30.0},
+                null,
+                null],
+              "translations": [
+                null,
+                null,
+                null]},
+            {
+              "_Type_": "AnimationJointMovement",
+              "joint": "btn_throttle_11",
+              "rotations": [
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:1",
+                  "fromStartValus": 1.0,
+                  "fromEndValus": -1.0,
+                  "toStartAngle": -30.0,
+                  "toEndAngle": 30.0},
+                null,
+                null],
+              "translations": [
+                null,
+                null,
+                null]},
+            {
+              "_Type_": "AnimationJointMovement",
+              "joint": "joystick",
+              "rotations": [
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:2",
+                  "fromStartValus": -1.0,
+                  "fromEndValus": 1.0,
+                  "toStartAngle": 30.0,
+                  "toEndAngle": -30.0},
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:3",
+                  "fromStartValus": -1.0,
+                  "fromEndValus": 1.0,
+                  "toStartAngle": -30.0,
+                  "toEndAngle": 30.0},
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:4",
+                  "fromStartValus": -1.0,
+                  "fromEndValus": 1.0,
+                  "toStartAngle": -15.0,
+                  "toEndAngle": 15.0}],
+              "translations": [
+                null,
+                null,
+                null]},
+            {
+              "_Type_": "AnimationJointMovement",
+              "joint": "animController_pedal_left",
+              "rotations": [
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:5",
+                  "fromStartValus": -1.0,
+                  "fromEndValus": 0.0,
+                  "toStartAngle": -30.0,
+                  "toEndAngle": 0.0},
+                null,
+                null],
+              "translations": [
+                null,
+                null,
+                null]},
+            {
+              "_Type_": "AnimationJointMovement",
+              "joint": "animcontroller_pedal_right",
+              "rotations": [
+                {
+                  "_Type_": "AnimationJointLinearRotation",
+                  "variable": "_PointsTo_:ptr:5",
+                  "fromStartValus": 0.0,
+                  "fromEndValus": 1.0,
+                  "toStartAngle": 0.0,
+                  "toEndAngle": -30.0},
+                null,
+                null],
+              "translations": [
+                null,
+                null,
+                null]}],
+          "animations": []},
+        "AnimationControlActorIKs": [
+          {
+            "_Type_": "AnimationControlActorIK",
+            "limb": "RgtArm05",
+            "bone": "IK_hand_right_pilot",
+            "blendTime": 0.0,
+            "alignEndEffector": true},
+          {
+            "_Type_": "AnimationControlActorIK",
+            "limb": "LftArm05",
+            "bone": "IK_hand_left_pilot",
+            "blendTime": 0.0,
+            "alignEndEffector": true},
+          {
+            "_Type_": "AnimationControlActorIK",
+            "limb": "LftLeg02",
+            "bone": "IK_foot_left_pilot",
+            "blendTime": 0.0,
+            "alignEndEffector": true},
+          {
+            "_Type_": "AnimationControlActorIK",
+            "limb": "RgtLeg02",
+            "bone": "IK_foot_right_pilot",
+            "blendTime": 0.0,
+            "alignEndEffector": true}],
+        "AnimationTasks": [],
+        "defaultAnimation": null},
+      {
+        "_Type_": "SEntityComponentSequencerParams",
+        "sequences": [],
+        "resetSequence": null},
+      {
+        "_Type_": "SSCItemTargetSelectorComponentParams",
+        "globalTargetingParams": "file://./../../../../../../../libs/foundry/records/targetselector/globaltargetselectortargetingparams.json",
+        "maxPinnedTargets": 3,
+        "outerAngle": 45.0,
+        "innerAngle": 5.0,
+        "autoSelectionTimer": 0.5,
+        "targetableItemTypesRecord": "file://./../../../../../../../libs/foundry/records/targetselector/targetableitemtypes/vehicle_combat.json",
+        "cycleFriendlyTargetInteraction": null,
+        "cycleHostileTargetInteraction": null,
+        "cycleAllTargetsInteraction": null,
+        "cyclePinnedTargetInteraction": null,
+        "cycleSubTargetInteraction": null,
+        "beginSubTargetingInteraction": null,
+        "endSubTargetingInteraction": null,
+        "pinTargetInteraction": null,
+        "unpinTargetInteraction": null,
+        "arMarkersParams": {
+          "_Type_": "SARMarkersParams",
+          "lockedRatioClose": 19.8},
+        "arTrailParams": {
+          "_Type_": "SARTrailParams",
+          "quatLifetime": 7.0,
+          "quatDistance": 10.0,
+          "maxFadeDistance": 50.0,
+          "minFadeDistance": 30.0,
+          "startDistance": 0.0},
+        "occlusionParams": {
+          "_Type_": "OcclusionBindingsParams",
+          "supportRayPushInAmount": 0.35,
+          "increasedPrecisionAngularSizeLimit": 10.0,
+          "maximumRayLength": 15000.0},
+        "hudParamsOverride": null},
+      {
+        "_Type_": "SCItemShipComputerParams",
+        "definition": "file://./../../../../../../../libs/foundry/records/audio/shipcomputers/manufacturerdefinitions/aegs.json"},
+      {
+        "_Type_": "SCRTTCameraParams",
+        "onFootCameraView": null,
+        "vehicleCameraView": "file://./../../../../../../../libs/foundry/records/cameras/rtt/aegs_retaliator_seat_pilot_rtt.json",
+        "defaultCamDistance": 0.4},
+      {
+        "_Type_": "SActorUsableParams",
+        "archetype": {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/entities/scitem/usables/usablearchetypes.json",
+          "_RecordName_": "UsableArchetype.OperatorSeat",
+          "_RecordId_": "5c06e726-90c3-47d8-a5e5-7293f3c7e6b5"},
+        "fragmentTag": "",
+        "useSlots": [
+          {
+            "_Type_": "UsableUseSlot",
+            "name": "",
+            "available": true,
+            "useChannelInstances": [
+              {
+                "_Type_": "UsableUseChannelInstance",
+                "useChannelArchetype": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/entities/scitem/usables/usablearchetypes.json",
+                  "_RecordName_": "UseChannelArchetype.Operate",
+                  "_RecordId_": "7ed6ccb6-0466-4817-8eaa-e054046e3ec9"},
+                "alignmentSlots": [
+                  "_PointsTo_:ptr:6"],
+                "conditionList": null,
+                "useChannelInstancesToEnable": [],
+                "useChannelInstancesToDisable": [],
+                "interaction": null,
+                "triggerInteractionOnSlottedUsables": false,
+                "stance": "Unset",
+                "isEnabled": true,
+                "isAvailableOnlyForRouting": false,
+                "isAvailableWhenHoldingTheUsable": true,
+                "shouldValidateExitAnimations": true,
+                "fragmentTag": "",
+                "preparationSequence": null,
+                "tagsToAddOnEnter": [],
+                "tagsToRemoveOnEnter": [],
+                "tagsToAddOnExit": [],
+                "tagsToRemoveOnExit": []}],
+            "usableItemPorts": [],
+            "useSlotsToDisable": [],
+            "useSlotReenablePoint": "UsableDelink",
+            "stance": "Unset",
+            "relativeTransform": {
+              "_Type_": "QuatT",
+              "Rotation": {
+                "_Type_": "Ang3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0},
+              "Position": {
+                "_Type_": "Vec3",
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0}},
+            "additionalFragmentTags": "",
+            "optionalGameTags": [],
+            "isScoochable": false,
+            "alignWithGravity": false,
+            "syncAnimationWithUser": false}],
+        "alignmentSlots": [
+          {
+            "_Pointer_": "ptr:6",
+            "_Type_": "OperatorSeatAlignmentSlot",
+            "id": "0aaf9cf7-4042-4822-8c55-b879b552ccf2",
+            "name": "",
+            "available": true,
+            "canPlayerUse": true,
+            "interactionPoints": [],
+            "fragmentTag": "",
+            "optionalGameTags": [],
+            "slottedFragmentTag": ""}],
+        "exclusivityGroups": [],
+        "freeItemPortsForDirectInteraction": [],
+        "slottingSetups": [],
+        "views": [],
+        "abilityLocks": [],
+        "usableSequencerTasks": [],
+        "specializedData": {
+          "_Type_": "SSpecializedData",
+          "specializedDataEntry": []},
+        "isExterior": false,
+        "allowDeadOrUnconscious": false,
+        "lowEnergyThreshold": 0.0,
+        "highEnergyThreshold": 2.0},
+      {
+        "_Type_": "ItemControlComponentParams",
+        "turnedOnByDefault": false,
+        "forceOn": false,
+        "asopSpawnState": "None",
+        "throttleParams": [],
+        "masterModeExclusionsOverride": null},
+      {
+        "_Type_": "ItemControllerComponentParams",
+        "allowTogglePowerObservedItems": false,
+        "operatorModeDefinitionsOverride": null,
+        "additionalItemControlPriorities": null},
+      {
+        "_Type_": "SDialogueComponentParams"},
+      {
+        "_Type_": "SAudioProxyParams",
+        "tagActions": []},
+      {
+        "_Type_": "SInteractionStateMachineParams",
+        "StateTypes": [
+          {
+            "_Type_": "SInteractionStateType",
+            "StateTypeName": "ShipPower",
+            "bindingsMethod": "None",
+            "DefaultState": null,
+            "asopReset": false,
+            "networkAuthority": "Server",
+            "States": [
+              {
+                "_Pointer_": "ptr:7",
+                "_Type_": "SInteractionState",
+                "StateName": "ShipPowerOff",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.1d093119-511b-4417-8ff0-81ba0386fd38",
+                      "_RecordId_": "1d093119-511b-4417-8ff0-81ba0386fd38"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}},
+              {
+                "_Pointer_": "ptr:8",
+                "_Type_": "SInteractionState",
+                "StateName": "ShipPowerOn",
+                "EnterStateEffectGroup": "",
+                "ExitStateEffectGroup": "",
+                "enterStateEffectTags": [],
+                "exitStateEffectTags": [],
+                "EnterEventDispatchers": [],
+                "ExitEventDispatchers": [],
+                "EnterStatePlaySequence": null,
+                "ExitStatePlaySequence": null,
+                "StateAutoChange": null,
+                "Interactions": [],
+                "interactionPoints": [],
+                "uiBindingsTag": null,
+                "stateTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.db58d3f6-0a41-408b-9b67-1938fa4b4491",
+                      "_RecordId_": "db58d3f6-0a41-408b-9b67-1938fa4b4491"}]},
+                "enterGeometryTags": "",
+                "entityTags": {
+                  "_Type_": "TagList",
+                  "tags": []}}],
+            "StateModifiers": [
+              {
+                "_Type_": "ItemResourceStateModifier",
+                "stateRanges": [
+                  {
+                    "_Type_": "SRangeStateLevel",
+                    "state": "_PointsTo_:ptr:7",
+                    "min": 0.0,
+                    "max": 0.1},
+                  {
+                    "_Type_": "SRangeStateLevel",
+                    "state": "_PointsTo_:ptr:8",
+                    "min": 0.1,
+                    "max": 1.0}],
+                "linkedRNetStates": []}]}]}]}}

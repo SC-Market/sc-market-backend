@@ -1,0 +1,3386 @@
+{
+  "_RecordName_": "ActorDefaultActionsConfig.PlayerDefaultActionsConfig",
+  "_RecordId_": "4e3e0440-d1ca-4942-b4e4-cf92e7f9b284",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorDefaultActionsConfig",
+    "versionID": 7,
+    "defaultActionsList": [
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Fire Extinguisher",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Small"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Medium"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Large"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Gadget"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.91a299c8-e138-401e-982e-c40ab880776d",
+                          "_RecordId_": "91a299c8-e138-401e-982e-c40ab880776d"},
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.07e73d85-54d1-46e9-9fb9-3b5aa72accad",
+                          "_RecordId_": "07e73d85-54d1-46e9-9fb9-3b5aa72accad"}]}}]}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:attack1"},
+                  "trigger": false},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Non customizable weapons",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Small"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Medium"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Large"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Gadget"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Customisable",
+                "isCustomisable": false}]},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": false,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.7d95a04d-b8ba-4fed-bb9f-805e1e963965",
+                  "_RecordId_": "7d95a04d-b8ba-4fed-bb9f-805e1e963965"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:zoom"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:attack1"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:zoom"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Customisable weapons",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Small"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Medium"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Large"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "WeaponPersonal",
+                    "subType": "Gadget"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Customisable",
+                "isCustomisable": true}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:zoom"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:attack1"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:zoom"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Knife",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+            "type": "WeaponPersonal",
+            "subType": "Knife"}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_AND",
+                  "states": [
+                    {
+                      "_Type_": "DefaultActionsEntityState_InTakedownRange"},
+                    {
+                      "_Type_": "DefaultActionsEntityState_OR",
+                      "states": [
+                        {
+                          "_Type_": "DefaultActionsEntityState_CarryableState",
+                          "state": "Carryable_CarriedAndEquipped"},
+                        {
+                          "_Type_": "DefaultActionsEntityState_CarryableState",
+                          "state": "Carryable_Carried"}]}]}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:weapon_melee"},
+                  "trigger": true},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:takedown_nonLethal"},
+                  "trigger": true}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:melee_AttackLightLeft"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:melee_AttackLightRight"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:melee_AttackLightLeft"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:melee_AttackLightRight"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Combat Throwable - Non primed",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "WeaponPersonal",
+                "subType": "Grenade"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Primed",
+                "isPrimed": false},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f306fdf9-03d0-4866-b66a-14ac9a7b1823",
+                      "_RecordId_": "f306fdf9-03d0-4866-b66a-14ac9a7b1823"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.70c5f147-4391-4f5c-91ec-e25e4b56662f",
+                      "_RecordId_": "70c5f147-4391-4f5c-91ec-e25e4b56662f"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_overhand"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_underhand"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Combat Throwable - PRIMED",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "WeaponPersonal",
+                "subType": "Grenade"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Primed",
+                "isPrimed": true},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                      "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_overhand"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_underhand"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_overhand"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_underhand"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_overhand"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_underhand"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                null]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "FPS Deployable Device - Primed On Place - UNPRIMED",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "FPS_Deployable",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7d95a04d-b8ba-4fed-bb9f-805e1e963965",
+                      "_RecordId_": "7d95a04d-b8ba-4fed-bb9f-805e1e963965"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Primed",
+                "isPrimed": false}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "FPS Deployable Device - Primed On Place - PRIMED",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "FPS_Deployable",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7d95a04d-b8ba-4fed-bb9f-805e1e963965",
+                      "_RecordId_": "7d95a04d-b8ba-4fed-bb9f-805e1e963965"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Primed",
+                "isPrimed": true}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Consumables - Not for self (e.g. Sedative)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "FPS_Consumable",
+                "subType": "Medical"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                      "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"},
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.97faa9b4-dd07-4baa-989f-48c6ef1e3a19",
+                      "_RecordId_": "97faa9b4-dd07-4baa-989f-48c6ef1e3a19"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                      "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:melee_AttackSyringeStab"},
+                  "trigger": true},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Consumables (e.g. MedPens)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "FPS_Consumable",
+                    "subType": "MedPack"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "FPS_Consumable",
+                    "subType": "OxygenCap"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "FPS_Consumable",
+                    "subType": "Medical"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                      "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:consume"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:melee_AttackSyringeStab"},
+                  "trigger": false}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "HoldReady"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Multitool Ammo Magazine - (Has ammo)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "WeaponAttachment",
+                "subType": "Magazine"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                      "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.86c9c1a9-3890-4933-b566-767481581251",
+                          "_RecordId_": "86c9c1a9-3890-4933-b566-767481581251"}]}},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ba9348fd-0baa-42ec-9664-b0917a347971",
+                          "_RecordId_": "ba9348fd-0baa-42ec-9664-b0917a347971"}]}}]}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Ammo Magazine - (Has ammo)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "WeaponAttachment",
+                "subType": "Magazine"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                      "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "FPS Attachment",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "WeaponAttachment",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                      "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_AND",
+                  "states": [
+                    {
+                      "_Type_": "DefaultActionsEntityState_CarryableState",
+                      "state": "Carryable_Settled"},
+                    {
+                      "_Type_": "DefaultActionsEntityState_CanAttachToHeldWeapon"}]}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "AttachToHeldItem"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_AND",
+                  "states": [
+                    {
+                      "_Type_": "DefaultActionsEntityState_CarryableState",
+                      "state": "Carryable_Carried"},
+                    {
+                      "_Type_": "DefaultActionsEntityState_CanAttachToHeldWeapon"}]}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "AttachToHeldItem"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_AND",
+                  "states": [
+                    {
+                      "_Type_": "DefaultActionsEntityState_CarryableState",
+                      "state": "Carryable_CarriedAndInspected"},
+                    {
+                      "_Type_": "DefaultActionsEntityState_CanAttachToHeldWeapon"}]}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "AttachToHeldItem"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Food",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_OR",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "Harvestable"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Junk"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Bar"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Box"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Plant"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Tin"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Sachet"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Consumable"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "Harvestable"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Food",
+                "subType": "UNDEFINED"}]},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": true,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dfd29606-8533-404a-b6c3-a8d46335ecdc",
+                  "_RecordId_": "dfd29606-8533-404a-b6c3-a8d46335ecdc"}]}},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": false,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                  "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Consume"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Consume"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Consume"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Drink",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_OR",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Drink",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Drink",
+                "subType": "Bottle"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Drink",
+                "subType": "Can"}]},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": false,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                  "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Consume"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Consume"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Consume"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Incapacitated Actor (Lootable)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_EntityTypes",
+                "type": "DraggableBody"}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_NOT",
+                  "state": {
+                    "_Type_": "DefaultActionsEntityState_CarryableState",
+                    "state": "Special_Gripped"}}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Sync_MobiGlas"},
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "BodyDrag"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_HasAvailableCommsTap"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "CommsTap"},
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "BodyDrag"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_NOT",
+                  "state": {
+                    "_Type_": "DefaultActionsEntityState_CarryableState",
+                    "state": "Special_Gripped"}}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Sync"},
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "BodyDrag"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_NOT",
+                  "state": {
+                    "_Type_": "DefaultActionsEntityState_CarryableState",
+                    "state": "Special_Gripped"}}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_LootingInteractionDef",
+                  "lootingInteraction": "OpenLootingUI"},
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "BodyDrag"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Special_Gripped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "BodyDrop"},
+                {
+                  "_Type_": "DefaultAction_LootingInteractionDef",
+                  "lootingInteraction": "OpenLootingUI"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Mounted Gun",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_EntityTypes",
+            "type": "MountedGun"}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Grip"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Special_Mounted"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:attack1"},
+                  "trigger": false},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:zoom"},
+                  "trigger": false}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Actor Movable (Trolley Push/Pull &amp; Pushblocks)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_EntityTypes",
+            "type": "ActorMovable"}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Grip"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Special_Gripped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Release"},
+                null]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Armour (not Helmet) - Has Inventory",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Arms",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Legs",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Torso",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Undersuit",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Backpack",
+                    "subType": "UNDEFINED"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.62827551-9b90-4e35-bc87-b4e81338c288",
+                      "_RecordId_": "62827551-9b90-4e35-bc87-b4e81338c288"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_EquippedWorn"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Armour (not Helmet) - No Inventory",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Arms",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Legs",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Torso",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Undersuit",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Armor_Backpack",
+                    "subType": "UNDEFINED"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.62827551-9b90-4e35-bc87-b4e81338c288",
+                      "_RecordId_": "62827551-9b90-4e35-bc87-b4e81338c288"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_EquippedWorn"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Helmet (Armour)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+            "type": "Char_Armor_Helmet",
+            "subType": "UNDEFINED"}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_EquippedWorn"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Stowed"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Clothing - (not eyewear) Has Inventory",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Feet",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Hands",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Hat",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Legs",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Torso_0",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Torso_1",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Torso_2",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Backpack",
+                    "subType": "UNDEFINED"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.62827551-9b90-4e35-bc87-b4e81338c288",
+                      "_RecordId_": "62827551-9b90-4e35-bc87-b4e81338c288"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_EquippedWorn"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Clothing - (not eyewear) No Inventory",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Feet",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Hands",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Hat",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Legs",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Torso_0",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Torso_1",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Torso_2",
+                    "subType": "UNDEFINED"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Char_Clothing_Backpack",
+                    "subType": "UNDEFINED"}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.62827551-9b90-4e35-bc87-b4e81338c288",
+                      "_RecordId_": "62827551-9b90-4e35-bc87-b4e81338c288"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_EquippedWorn"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Clothing - Eyewear",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+            "type": "Char_Accessory_Eyes",
+            "subType": "UNDEFINED"}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_EquippedWorn"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Loot"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipWearable"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Mineable (FPS scale)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_OR",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                    "type": "Misc",
+                    "subType": "Harvestable"},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+                              "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"}]}},
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.3d377b97-e113-4e87-a4b4-855c1a75e366",
+                              "_RecordId_": "3d377b97-e113-4e87-a4b4-855c1a75e366"}]}}]}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "Mineable"}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Harvestables, Keycards & Fuses",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_OR",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "Harvestable"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "RemovableChip",
+                "subType": "SystemAccess"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "Fuse"}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Flare (Primeable Throwable sparkler)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+            "type": "Misc",
+            "subType": "UNDEFINED"},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": true,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.f306fdf9-03d0-4866-b66a-14ac9a7b1823",
+                  "_RecordId_": "f306fdf9-03d0-4866-b66a-14ac9a7b1823"}]}},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": false,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                  "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Ignite"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Restraints - Cuffs",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": true,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.76953f17-92cc-4bbb-99da-c2b8eb552d3c",
+                  "_RecordId_": "76953f17-92cc-4bbb-99da-c2b8eb552d3c"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:restrain"},
+                  "trigger": true},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Glow stick",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+            "type": "WeaponPersonal",
+            "subType": "Grenade"},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": true,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.70c5f147-4391-4f5c-91ec-e25e4b56662f",
+                  "_RecordId_": "70c5f147-4391-4f5c-91ec-e25e4b56662f"}]}},
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": false,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                  "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Activate"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "EquipToItemport"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Tray - Food (Chowline)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d3a0797d-4b7f-4812-88f8-3a8d3b3df9e8",
+                      "_RecordId_": "d3a0797d-4b7f-4812-88f8-3a8d3b3df9e8"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Inspect on pickup (books / datapads / plushies etc.)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                "type": "Misc",
+                "subType": "UNDEFINED"},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.70dfb9ad-dbcd-4fc4-9cca-f7ddef6232b7",
+                          "_RecordId_": "70dfb9ad-dbcd-4fc4-9cca-f7ddef6232b7"}]}},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.4a975e8f-d4b6-46df-a4fc-2bc9e22cd6d5",
+                          "_RecordId_": "4a975e8f-d4b6-46df-a4fc-2bc9e22cd6d5"}]}},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.4def30aa-4ed2-404a-9439-6713f246f1e3",
+                          "_RecordId_": "4def30aa-4ed2-404a-9439-6713f246f1e3"}]}}]},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                          "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}]}},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                    "hasTags": true,
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.ba4646e0-69c3-42ee-816a-7a4b0d11ec57",
+                          "_RecordId_": "ba4646e0-69c3-42ee-816a-7a4b0d11ec57"}]}}]}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Junk - One Handed (1H)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.8dc4b0d9-ad63-49a6-9094-a5d53cf2e7d2",
+                      "_RecordId_": "8dc4b0d9-ad63-49a6-9094-a5d53cf2e7d2"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.dff6ec60-74a9-45fc-a58b-2f0bfd0e222e",
+                      "_RecordId_": "dff6ec60-74a9-45fc-a58b-2f0bfd0e222e"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_OR",
+                  "states": [
+                    {
+                      "_Type_": "DefaultActionsEntityState_CarryableState",
+                      "state": "Carryable_CarriedAndEquipped"}]}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_InteractionDef",
+                  "interactionName": "Place"},
+                {
+                  "_Type_": "DefaultAction_ActionDef",
+                  "name": {
+                    "_Type_": "InputAction",
+                    "actionName": "player:throw_underhand"},
+                  "trigger": false}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Carryables - One Handed (1H)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": true,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                  "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Carryables - Two Handed (2H)",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+            "hasTags": true,
+            "tags": {
+              "_Type_": "TagList",
+              "tags": [
+                {
+                  "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+                  "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}]}}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Drop"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Storage OR Lootable Container - Large External Inventories",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.94b8e3ee-4692-4fe3-a73d-ebc73b9bb4f3",
+                      "_RecordId_": "94b8e3ee-4692-4fe3-a73d-ebc73b9bb4f3"},
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.039eb697-7307-409b-a176-a778de49a613",
+                      "_RecordId_": "039eb697-7307-409b-a176-a778de49a613"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryConditionDef_InventoryContainerCapacity",
+                "minCapacity": {
+                  "_Type_": "SMicroCargoUnit",
+                  "microSCU": 150000},
+                "maxCapacity": null},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                        "type": "SeatAccess",
+                        "subType": "UNDEFINED"},
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.02af2eee-b979-40e5-b999-68b976c05bbf",
+                              "_RecordId_": "02af2eee-b979-40e5-b999-68b976c05bbf"}]}}]},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                        "type": "Cargo",
+                        "subType": "UNDEFINED"},
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.02af2eee-b979-40e5-b999-68b976c05bbf",
+                              "_RecordId_": "02af2eee-b979-40e5-b999-68b976c05bbf"}]}}]},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d",
+                              "_RecordId_": "2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d"}]}}]}]}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_InteractionStateMachineStateTag",
+                  "interactionStateMachineStateTag": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.a77dbb65-c5fa-4664-996a-a90bdc1985c3",
+                    "_RecordId_": "a77dbb65-c5fa-4664-996a-a90bdc1985c3"}}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_LootingInteractionDef",
+                  "lootingInteraction": "OpenInventoryUI"},
+                null]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Storage OR Lootable Container - External Inventories",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.94b8e3ee-4692-4fe3-a73d-ebc73b9bb4f3",
+                      "_RecordId_": "94b8e3ee-4692-4fe3-a73d-ebc73b9bb4f3"},
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.039eb697-7307-409b-a176-a778de49a613",
+                      "_RecordId_": "039eb697-7307-409b-a176-a778de49a613"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_OR",
+                "conditions": [
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                        "type": "SeatAccess",
+                        "subType": "UNDEFINED"},
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.02af2eee-b979-40e5-b999-68b976c05bbf",
+                              "_RecordId_": "02af2eee-b979-40e5-b999-68b976c05bbf"}]}}]},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+                        "type": "Cargo",
+                        "subType": "UNDEFINED"},
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.02af2eee-b979-40e5-b999-68b976c05bbf",
+                              "_RecordId_": "02af2eee-b979-40e5-b999-68b976c05bbf"}]}}]},
+                  {
+                    "_Type_": "DefaultActionsEntityEntryCondition_AND",
+                    "conditions": [
+                      {
+                        "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                        "hasTags": true,
+                        "tags": {
+                          "_Type_": "TagList",
+                          "tags": [
+                            {
+                              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d",
+                              "_RecordId_": "2fcefd2d-f5d3-4c6a-b62f-3cc48d517e7d"}]}}]}]}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_InteractionStateMachineStateTag",
+                  "interactionStateMachineStateTag": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.a77dbb65-c5fa-4664-996a-a90bdc1985c3",
+                    "_RecordId_": "a77dbb65-c5fa-4664-996a-a90bdc1985c3"}}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_LootingInteractionDef",
+                  "lootingInteraction": "OpenLootingUI"},
+                null]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Mining gadget",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AttachableItems",
+            "type": "Gadget",
+            "subType": "Gadget"}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                null]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndEquipped"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                null]}]}},
+      {
+        "_Type_": "DefaultActionsEntry",
+        "description": "Base (catch all) - Any Carryable",
+        "conditions": [
+          {
+            "_Type_": "DefaultActionsEntityEntryCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": true,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.8dc4b0d9-ad63-49a6-9094-a5d53cf2e7d2",
+                      "_RecordId_": "8dc4b0d9-ad63-49a6-9094-a5d53cf2e7d2"}]}},
+              {
+                "_Type_": "DefaultActionsEntityEntryCondition_Tags",
+                "hasTags": false,
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7d95a04d-b8ba-4fed-bb9f-805e1e963965",
+                      "_RecordId_": "7d95a04d-b8ba-4fed-bb9f-805e1e963965"}]}}]}],
+        "defaultActions": {
+          "_Type_": "DefaultActions",
+          "defaultActionsPerState": [
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Settled"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Inspect"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_Carried"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Place"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]},
+            {
+              "_Type_": "DefaultActionsParams",
+              "states": [
+                {
+                  "_Type_": "DefaultActionsEntityState_CarryableState",
+                  "state": "Carryable_CarriedAndInspected"}],
+              "defaultActions": [
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Carry"},
+                {
+                  "_Type_": "DefaultAction_CarryableInteractionDef",
+                  "carryableInteraction": "Store"}]}]}}],
+    "defaultActionsDescriptions": [
+      {
+        "_Type_": "DefaultActionDescriptionOverride",
+        "action": "player:attack1",
+        "actionsDescription": "@ui_controlhint_fire"},
+      {
+        "_Type_": "DefaultActionDescriptionOverride",
+        "action": "player:zoom",
+        "actionsDescription": "@ui_controlhint_ads"},
+      {
+        "_Type_": "DefaultActionDescriptionOverride",
+        "action": "player:throw_overhand",
+        "actionsDescription": "@ui_controlhint_throw"},
+      {
+        "_Type_": "DefaultActionDescriptionOverride",
+        "action": "player:throw_underhand",
+        "actionsDescription": "@ui_CIThrowUnder"},
+      {
+        "_Type_": "DefaultActionDescriptionOverride",
+        "action": "player_choice:pc_interaction_select",
+        "actionsDescription": "@ui_controlhint_pis_wheel_heldItem_defaultAction"},
+      {
+        "_Type_": "DefaultActionDescriptionOverride",
+        "action": "player:restrain",
+        "actionsDescription": "@ui_controlhint_restrain"}]}}

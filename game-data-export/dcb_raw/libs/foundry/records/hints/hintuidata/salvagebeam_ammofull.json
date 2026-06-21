@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.SalvageBeam_AmmoFull",
+  "_RecordId_": "c4f729df-77d0-43c5-9d83-2d90cf18979a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_SalvageBeam_Salvaging_Title",
+    "BodyText": "@Hints_SalvageBeam_AmmoFull",
+    "BodyTextGamePad": "@Hints_SalvageBeam_AmmoFull",
+    "BodyTextJoystick": "@Hints_SalvageBeam_AmmoFull",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

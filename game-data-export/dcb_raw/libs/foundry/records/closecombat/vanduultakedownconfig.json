@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "TakeDownConfig.VanduulTakeDownConfig",
+  "_RecordId_": "8a57beaf-2aa5-4c49-883f-5eeff69dad69",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TakeDownConfig",
+    "takeDownParams": [],
+    "isTakedownImmune": false,
+    "takedownStimulusRange": 20.0,
+    "QTEConfig_Knife": null,
+    "QTEConfig_Unarmed": null,
+    "QTEConfig_AI": null}}

@@ -1,0 +1,77 @@
+{
+  "_RecordName_": "ProceduralAnimation.LightLandingIdle",
+  "_RecordId_": "b135ba0b-4081-4ed7-a496-e6e4bc871bed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralAnimation",
+    "sequences": [
+      {
+        "_Type_": "ProceduralAnimationSequence",
+        "duration": 0.7,
+        "animationCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.08351833,
+              "y": -0.2066455},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.08351833,
+              "y": 0.2066455},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1625105,
+              "y": 0.4737553},
+            {
+              "_Type_": "Vec2",
+              "x": 0.3424353,
+              "y": 0.4836162},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5223601,
+              "y": 0.4934771},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6557526,
+              "y": -0.04229748},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.344247,
+              "y": 0.04229748}],
+          "useLUT": false},
+        "boneAnimations": [
+          {
+            "_Type_": "ProceduralAnimationBone",
+            "bone": "Hips",
+            "chainLength": 0,
+            "layer": 1,
+            "operation": "Offset",
+            "relativeTo": "ParentBone",
+            "values": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": -0.18,
+              "z": -0.25},
+            "delay": 0.0},
+          {
+            "_Type_": "ProceduralAnimationBone",
+            "bone": "Spine3",
+            "chainLength": 4,
+            "layer": 9,
+            "operation": "Rotation",
+            "relativeTo": "Character",
+            "values": {
+              "_Type_": "Vec3",
+              "x": -40.0,
+              "y": 0.0,
+              "z": 0.0},
+            "delay": 0.05}]}]}}

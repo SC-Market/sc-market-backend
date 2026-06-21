@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ModuleDeclaration.Location_ComponentManager",
+  "_RecordId_": "e94611a9-05b5-42a6-9150-964c778631a4",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "ModuleDeclaration",
+    "module": "Libs/Subsumption/Missions/PU/PU_MissionModules/LocationManager/ComponentManger/ComponentManager.xml",
+    "moduleType": {
+      "_Type_": "ModuleDeclarationType_Location",
+      "isPersistent": false},
+    "locationEntities": [],
+    "properties": [],
+    "spawnedEntities": [],
+    "declaredVariables": []}}

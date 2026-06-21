@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.VNCL_Stinger",
+  "_RecordId_": "9337e0dd-82fc-46ec-b81a-d7a02bce9077",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 32.0,
+      "y": 36.0,
+      "z": 11.0},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "vncl_stinger",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.66,
+          "y": -9.72,
+          "z": -1.53},
+        "shipState": "Both"}]}}

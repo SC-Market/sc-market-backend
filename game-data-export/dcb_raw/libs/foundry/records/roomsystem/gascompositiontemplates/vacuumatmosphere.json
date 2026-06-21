@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "AtmosphericCompositionTemplate.VacuumAtmosphere",
+  "_RecordId_": "5fdc614d-05c7-4d99-b2ad-ecdafe406dcb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphericCompositionTemplate",
+    "composition": {
+      "_Type_": "SAtmosphericCompositionParams",
+      "gases": []}}}

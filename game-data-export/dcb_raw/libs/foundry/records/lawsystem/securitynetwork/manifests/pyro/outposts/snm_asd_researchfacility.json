@@ -1,0 +1,64 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_ASD_ResearchFacility",
+  "_RecordId_": "1f700e39-dc20-445b-99bd-ee1f635e53b0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/asd_researchfacility_clearance.json"]},
+      "ownerFaction": "file://./../../../../../../../../libs/foundry/records/factions/faction_unlawful_asd.json"},
+    "roomProtocols": [
+      {
+        "_Type_": "SecurityNetworkProtocolOverride",
+        "roomIdentifiers": {
+          "_Type_": "TagList",
+          "tags": [
+            {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.ac63eef3-bc1d-4849-8049-99ed06e206cf",
+              "_RecordId_": "ac63eef3-bc1d-4849-8049-99ed06e206cf"}]},
+        "protocol": {
+          "_Type_": "SecurityNetworkProtocol",
+          "permissionsWithClearance": {
+            "_Type_": "SecurityNetworkPermissions",
+            "access": "No",
+            "trespass": "Yes"},
+          "permissionsWithoutClearance": {
+            "_Type_": "SecurityNetworkPermissions",
+            "access": "No",
+            "trespass": "Yes"},
+          "acceptedClearance": {
+            "_Type_": "SecurityClearanceConditions",
+            "tokens": []},
+          "ownerFaction": "file://./../../../../../../../../libs/foundry/records/factions/faction_unlawful_asd.json"}}],
+    "variables": [],
+    "hostilityRules": [
+      {
+        "_Type_": "SHostilityRules",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.489c08ec-1af3-422a-a938-48cd6a253f51",
+          "_RecordId_": "489c08ec-1af3-422a-a938-48cd6a253f51"},
+        "useReputationHostility": true,
+        "usePersonalHostility": true,
+        "useFactionHostility": true,
+        "policesLawfulTrespass": true,
+        "hostileToCriminals": true,
+        "hostileToStolenVehicles": true,
+        "factionOverride": null,
+        "factionToOverride": "file://./../../../../../../../../libs/foundry/records/factions/faction_unlawful_asd.json"}],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

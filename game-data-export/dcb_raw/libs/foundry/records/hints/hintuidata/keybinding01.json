@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Keybinding01",
+  "_RecordId_": "6cba9783-4268-48ea-9cb5-132c6fae60f5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Keybinding_Title",
+    "BodyText": "@Hints_Keybinding1",
+    "BodyTextGamePad": "@Hints_Keybinding1",
+    "BodyTextJoystick": "@Hints_Keybinding1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

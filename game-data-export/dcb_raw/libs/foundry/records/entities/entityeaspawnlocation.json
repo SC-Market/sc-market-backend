@@ -1,0 +1,110 @@
+{
+  "_RecordName_": "EntityClassDefinition.EntityEASpawnLocation",
+  "_RecordId_": "ab2bd520-0314-4e16-a204-c13724dd8558",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEASpawnLocationParamsDef",
+        "locationName": "@LOC_PLACEHOLDER",
+        "locationTextIcon": "@LOC_PLACEHOLDER",
+        "locationImageIcon": "",
+        "team": "file://./../../../../libs/foundry/records/factions_legacy/uee.json",
+        "vehicleSeatSlots": [
+          {
+            "_Type_": "SEASpawnLocationVehicleSeatSlot",
+            "icon": "UI/Textures/EA/VehicleIcons/VehicleIcon_Driver.tif",
+            "name": "@ui_ac_ShipDetails_Pilot",
+            "tagsDNF": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+                      "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+                  "negativeTags": []}]}},
+          {
+            "_Type_": "SEASpawnLocationVehicleSeatSlot",
+            "icon": "UI/Textures/EA/VehicleIcons/VehicleIcon_Turret.tif",
+            "name": "@ea_ui_spawning_Turret",
+            "tagsDNF": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.edee469a-a334-4c12-91e9-c69d1213b843",
+                      "_RecordId_": "edee469a-a334-4c12-91e9-c69d1213b843"}],
+                  "negativeTags": []}]}},
+          {
+            "_Type_": "SEASpawnLocationVehicleSeatSlot",
+            "icon": "UI/Textures/EA/VehicleIcons/VehicleIcon_Seat.tif",
+            "name": "@ShipSelector_Crew",
+            "tagsDNF": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ffea63ba-9234-426f-a9c6-125162309401",
+                      "_RecordId_": "ffea63ba-9234-426f-a9c6-125162309401"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.81fe2b3c-ec28-423c-a4f0-a21af95aec68",
+                      "_RecordId_": "81fe2b3c-ec28-423c-a4f0-a21af95aec68"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.748d56dc-c100-49be-a448-33a132f55a2d",
+                      "_RecordId_": "748d56dc-c100-49be-a448-33a132f55a2d"}],
+                  "negativeTags": []}]}}],
+        "vehicleEntitlementFilter": null,
+        "phase": 0,
+        "defaultLocation": false,
+        "autoActivate": true,
+        "abandonedVehicleCheck": true,
+        "abandonedRange": 15.0,
+        "abandonedTime": 20.0,
+        "delaySpawnsTime": 0.5,
+        "invisibleLocation": false,
+        "unlockReminderTime": 300.0,
+        "allowUserRequestSpawn": false,
+        "allowOnFoot": true},
+      {
+        "_Type_": "EAUIMarkerBaseComponent",
+        "ARMarkerConfig": "file://./../../../../libs/foundry/records/ui/marker config/markerar_configdef.default.json",
+        "distanceUnits": "@LOC_EMPTY",
+        "ARMarkerAlpha": 1.0,
+        "scaleMarkerByDistance": false,
+        "minScaleDistance": 10.0,
+        "maxScaleDistance": 50.0,
+        "minSize": 1.0,
+        "maxSize": 10.0,
+        "allowClipping": true}]}}

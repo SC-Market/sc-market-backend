@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Charlie_Mission_Husband_Guilty",
+  "_RecordId_": "352e0561-8a29-4e30-9b92-36fe1acc5eae",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_eward_covalex_conclusion1_husbandguilty_001.json",
+        "skipNodeInXSecs": -1.0}]}}

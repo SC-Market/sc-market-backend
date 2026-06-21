@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "MegaMap.EA_MagdaArena_TonkRoyale_TeamBattle",
+  "_RecordId_": "48aae301-ef8b-4e18-9f08-dce247ed34e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_tonkroyale_teambattle.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/MagdaArena/global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton1c/starmapobject.stanton1c.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/MagdaArena/tonkroyale.socpak"]},
+      "planetOverrideParams": {
+        "_Type_": "ArenaCommanderPlanetOverrideParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton1c/starmapobject.stanton1c.json",
+        "fixedRotation": 0.0}},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_magdagroundarena.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

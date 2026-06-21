@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Assassination_Rookie",
+  "_RecordId_": "1702e6d9-6ed0-47d1-afeb-1e5917012711",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Assassination_Rookie",
+    "description": "desc",
+    "displayName": "@RepStanding_Assassination_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_3.svg",
+    "minReputation": 1,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

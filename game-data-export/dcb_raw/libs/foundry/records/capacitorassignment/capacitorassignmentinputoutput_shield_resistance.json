@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "CapacitorAssignmentInputOutputDef.CapacitorAssignmentInputOutput_Shield_Resistance",
+  "_RecordId_": "31bcecca-c88c-447f-b800-1333a6206dfe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CapacitorAssignmentInputOutputDef",
+    "inputOutputMapping": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.33333,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.33333,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.33333,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0}],
+      "useLUT": true}}}

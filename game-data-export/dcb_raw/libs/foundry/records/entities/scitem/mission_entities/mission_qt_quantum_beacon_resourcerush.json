@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "EntityClassDefinition.MISSION_QT_Quantum_Beacon_ResourceRush",
+  "_RecordId_": "2910e28c-4b0b-4fc6-9381-d9e7220338ed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@BeaconDropoff_ObjectiveMarker",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": [
+          {
+            "_Type_": "SNavPointObjectMetadataParams",
+            "starmapRecord": "file://./../../../../../../libs/foundry/records/starmap/pu/mission_item/mission_qt_quantum_beacon_resourcerush.json",
+            "locationActionArea": "",
+            "permanent": false,
+            "showInAllZones": false,
+            "allowHierarchyDuplicates": true,
+            "saveToLocalPlayerObjectDataBank": true,
+            "moveable": false,
+            "showInRouteOnly": false}]}]}}

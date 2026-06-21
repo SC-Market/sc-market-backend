@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Bounty_Agent",
+  "_RecordId_": "cc7c3ec9-0cdb-4d9b-9f12-9edc701f6269",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "BountyHunter_MidLevel",
+    "description": "desc",
+    "displayName": "@RepStanding_Bounty_Rank3",
+    "perkDescription": "@RepStanding_Perk_Bonus_05",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_bountyhunter_5.svg",
+    "minReputation": 30000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Orison_General_Hospital_Floor",
+  "_RecordId_": "d3cb4745-6802-4d8f-81cb-119f83842791",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@interiormap_common_floor_dynamic",
+    "restrictViewBounds": true}}

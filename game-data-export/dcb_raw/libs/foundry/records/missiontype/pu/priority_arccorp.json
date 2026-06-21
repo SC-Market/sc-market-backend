@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Priority_ArcCorp",
+  "_RecordId_": "5e727c38-d43e-445f-95b2-a971428dd06d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "",
+    "LocalisedTypeName": "@mobiglas_ui_Priority_ArcCorp",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_priority.svg",
+    "DisplayTime": -1.0}}

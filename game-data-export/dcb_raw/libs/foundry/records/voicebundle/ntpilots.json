@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "VoiceBundle.NTPILOTS",
+  "_RecordId_": "0f96ee0a-9790-4f31-a5f3-7c246e7d09e9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "NTPILOTS",
+    "voices": [
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_female/ntpilot01.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_female/ntpilot02.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_male/ntpilot03.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_male/ntpilot04.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/ntpilot_male/ntpilot05.json"]}}

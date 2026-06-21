@@ -1,0 +1,109 @@
+{
+  "_RecordName_": "TQSOptionContentRecord.DefaultGroundTurretContent",
+  "_RecordId_": "693aaaab-9910-476c-b836-13f273616a96",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TQSOptionContentRecord",
+    "content": {
+      "_Type_": "TQSOptionContent",
+      "parameters": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "maximumDistance",
+          "value": 50.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "maximumRecentDamage",
+          "value": 500.0,
+          "overrides": []}],
+      "generation": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "perceivedHostileTargets_around_host",
+          "value": 1000.0,
+          "overrides": []}],
+      "conditions": [
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isAlive",
+          "value": true,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "visible_from_puppet",
+          "value": true,
+          "overrides": []}],
+      "weights": [
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "distance_to_host",
+          "weight": -15.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "attackerScoreToCapacityRatioExcluding_the_entity",
+          "weight": -2.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "damageDealtAsAPortionOfHealth_to_host",
+          "weight": 2.0,
+          "overrides": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.7cf30b03-333e-4ad0-927d-c80d095139f8",
+                        "_RecordId_": "7cf30b03-333e-4ad0-927d-c80d095139f8"}],
+                    "negativeTags": []}]},
+              "condition": "recentDamageDealt_to_host",
+              "weight": 5.0,
+              "overrides": []}]},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isInSeatWeaponRange",
+          "weight": 10.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "max_attackerScoreToCapacityRatioExcluding_the_entity",
+          "weight": 5.0,
+          "value": 0.01,
+          "overrides": []}]}}}

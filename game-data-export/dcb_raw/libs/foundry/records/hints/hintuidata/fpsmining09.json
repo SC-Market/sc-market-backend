@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSMining09",
+  "_RecordId_": "ba588aac-9135-4ccb-979c-a3ed89f3cc1d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_FPSMining_Fracturing_Title",
+    "BodyText": "@Hints_FPSMining_OnRockEnterDangerZone",
+    "BodyTextGamePad": "@Hints_FPSMining_OnRockEnterDangerZone",
+    "BodyTextJoystick": "@Hints_FPSMining_OnRockEnterDangerZone",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

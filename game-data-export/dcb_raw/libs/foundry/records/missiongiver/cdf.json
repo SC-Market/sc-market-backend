@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MissionGiver.CDF",
+  "_RecordId_": "e1c74485-d70f-45c5-be0f-f116011aab91",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../libs/foundry/records/factions/legacy/cdf.json",
+    "reputation": "file://./../../../../libs/foundry/records/factions/factionreputation/factionreputation_cdf.json",
+    "displayName": "@CDF_RepUI_Name",
+    "description": "@CDF_RepUI_Description",
+    "headquarters": "@CDF_RepUI_Headquarters",
+    "invitationTimeout": 5.0,
+    "visitTimeout": 20.0,
+    "shortCooldown": 10.0,
+    "mediumCooldown": 20.0,
+    "longCooldown": 30.0,
+    "Allies": [],
+    "Enemies": [],
+    "propertiesBB": []}}

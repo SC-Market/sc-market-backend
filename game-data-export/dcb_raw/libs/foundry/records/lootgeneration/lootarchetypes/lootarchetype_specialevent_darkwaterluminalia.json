@@ -1,0 +1,82 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_SpecialEvent_DarkwaterLuminalia",
+  "_RecordId_": "c75566a8-8fbe-41ee-9dc8-ae85ab24c47e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Darkwater Gold",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c00d4688-386e-41bb-89f7-1ea99452fb76",
+            "_RecordId_": "c00d4688-386e-41bb-89f7-1ea99452fb76"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 46.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "HolidayBox",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.33343636-46c2-4b37-8a19-3fdb1e396efc",
+            "_RecordId_": "33343636-46c2-4b37-8a19-3fdb1e396efc"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 27.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "LuminaliaSMG01",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.35d6ddff-9d39-4f37-8587-8623e00296b8",
+            "_RecordId_": "35d6ddff-9d39-4f37-8587-8623e00296b8"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 15.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "LuminaliaBanu_Melee_01",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.18fac7a4-2dd2-4461-8c8a-a7449c021fed",
+            "_RecordId_": "18fac7a4-2dd2-4461-8c8a-a7449c021fed"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 7.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "LuminaliaBanuJacket01",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a930eb47-52bb-4cc4-a575-c0f4f3a07410",
+            "_RecordId_": "a930eb47-52bb-4cc4-a575-c0f4f3a07410"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 5.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": []}}

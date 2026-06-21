@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus36",
+  "_RecordId_": "bf276497-f67c-4e83-929a-2fa7336f7920",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusHospital_Title",
+    "BodyText": "@Hints_ActorStatusHospitalRoomReserved",
+    "BodyTextGamePad": "@Hints_ActorStatusHospitalRoomReserved",
+    "BodyTextJoystick": "@Hints_ActorStatusHospitalRoomReserved",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

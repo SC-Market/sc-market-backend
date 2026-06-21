@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "ScreenEffects_Debug.ScreenEffectsDebug",
+  "_RecordId_": "710e092a-a68f-4df8-a6ee-d89a725f90c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScreenEffects_Debug",
+    "effectList": [
+      {
+        "_Type_": "ScreenEffects_DebugEffect",
+        "name": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9b1c2f90-f5b9-411b-93d2-26279d807e3c",
+          "_RecordId_": "9b1c2f90-f5b9-411b-93d2-26279d807e3c"},
+        "enable": true,
+        "parameters": [
+          {
+            "_Type_": "ScreenEffects_DebugParam",
+            "strengthTag": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.cababc80-fcb4-4fd1-a39d-2acd1c26a276",
+              "_RecordId_": "cababc80-fcb4-4fd1-a39d-2acd1c26a276"},
+            "strength": 0.0}]}]}}

@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "EntityClassDefinition.NavPoint_InterdictedEntity",
+  "_RecordId_": "62670ad5-61b6-4d47-816d-473d2fef3551",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": "file://./../../../../libs/foundry/records/densityclasses/quantumsnareevent_markerentitydensityclass.json",
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "EntityUIDisplayParams",
+        "displayName": "@LOC_UNINITIALIZED",
+        "displayDescription": "@LOC_UNINITIALIZED",
+        "displayThumbnail": "",
+        "displayImage": "",
+        "displayIcon": "",
+        "sortString": "",
+        "trackerProperties": {
+          "_Type_": "SNavPointEntryTrackerParams"}}],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": [
+          {
+            "_Type_": "SNavPointObjectMetadataParams",
+            "starmapRecord": "file://./../../../../libs/foundry/records/starmap/quantumtracepointstarmaprecord.json",
+            "locationActionArea": "",
+            "permanent": true,
+            "showInAllZones": true,
+            "allowHierarchyDuplicates": true,
+            "saveToLocalPlayerObjectDataBank": false,
+            "moveable": false,
+            "showInRouteOnly": false}]},
+      {
+        "_Type_": "SQuantumTracePointParams",
+        "markerConfig": "file://./../../../../libs/foundry/records/ui/armarkerconfiguration/mk_config_tracepoint.json",
+        "lifeTime": 300.0}]}}

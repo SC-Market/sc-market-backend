@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_JumpDrive_S01",
+  "_RecordId_": "dedf25b0-d491-4a68-98dc-b94b0ec5b0b5",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/jumpdrive/jdrv_tars_s01_explorer_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Jump_Drive_S1_Name"}}

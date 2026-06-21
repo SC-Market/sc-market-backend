@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_QuantumDrive_S02_Industrial",
+  "_RecordId_": "56eba51b-5f36-47af-82d6-b7f6689e392f",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_just_s02_bolon_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_just_s02_huracan_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_just_s02_yaluk_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Quantum_Drive_S2_Name"}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_ShipBattleMissionComms",
+  "_RecordId_": "24565c51-252b-475b-a1b5-ee9eee7b2bbc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_ShipBattleMissionComms",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_basedmissionstriggers.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_defendtarget_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_hostiles_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_searchanddestroy_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_enemycallouts.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_friendlycallouts.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_ambush_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_emptyobjective_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_patrol_set.json"]}}

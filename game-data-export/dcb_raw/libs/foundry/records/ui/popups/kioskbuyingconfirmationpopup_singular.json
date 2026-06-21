@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "PopupDef.KioskBuyingConfirmationPopup_Singular",
+  "_RecordId_": "657e3bb3-b46f-4421-a621-dfed2bed2638",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PopupDef",
+    "title": "@shop_ui_BuyingConfirmationMessage_Singular",
+    "message1": "@shop_ui_AreYouSure",
+    "message2": "@shop_ui_TotalTransactionCost",
+    "message3": "@shop_ui_CostMessage",
+    "hasCancelButton": true,
+    "hasConfirmButton": true,
+    "cancelOverrideString": "@LOC_EMPTY",
+    "confirmOverrideString": "@LOC_EMPTY",
+    "popupFrame": "confirm",
+    "popupHeaderFrame": ""}}

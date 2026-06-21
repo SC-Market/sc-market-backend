@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Hurston_VeteranAgent_Promotion",
+  "_RecordId_": "05a152dd-b6cd-449a-96e3-95e8377ec1a3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Hurston_ReputationJournal_VeteranAgent_Promotion_Title",
+    "ShortTitle": "@Hurston_ReputationJournal_Promotion_ShortTitle",
+    "SubHeading": "@hurston_from",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Hurston_ReputationJournal_VeteranAgent_Promotion_BodyText"},
+    "tutorialEntry": false}}

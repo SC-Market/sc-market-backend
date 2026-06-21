@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "DialogueContextBank.PU_DATASCIENTIST1",
+  "_RecordId_": "486b838b-4497-8fda-f77a-f7c7a5600db0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContextBank",
+    "realm": "file://./../../../../../libs/foundry/records/dialoguerealm/dialoguerealm.pu.json",
+    "character": "file://./../../../../../libs/foundry/records/character/pu/civilian/datascientist1.json",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "contexts": [
+      {
+        "_RecordId_": "4ef9fc86-7ea3-bf53-bba3-a84897a2c6a8",
+        "_RecordName_": "DialogueContext.PU_DATASCIENTIST1_BNA_DataFacilityLog_GP_001",
+        "_Type_": "DialogueContext",
+        "speaker": "file://./../../../../../libs/foundry/records/character/pu/civilian/datascientist1.json",
+        "localizedSubtitleText": "@PU_DATASCIENTIST1_BNA_DataFacilityLog_GP_001",
+        "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+        "subtitleShowDelay": 0.0,
+        "subtitleDisplayDurationOverride": 0.0,
+        "tempText": "",
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_DATASCIENTIST1_BNA_DataFacilityLog_GP_001"},
+        "femaleAudioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "forceSubtitles": false,
+        "contents": [],
+        "tags": []}]}}

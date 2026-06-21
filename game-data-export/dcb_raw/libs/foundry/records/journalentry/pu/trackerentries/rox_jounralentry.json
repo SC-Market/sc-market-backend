@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "JournalEntry.RoX_JounralEntry",
+  "_RecordId_": "9ef21c6b-864e-4a01-a3b7-100fb6a6ce1a",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@X2_JournalTracker_Title",
+    "ShortTitle": "@X2_JournalTracker_Title",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryLeaderboard",
+      "description": "@LOC_EMPTY",
+      "activeScenario": "file://./../../../../../../libs/foundry/records/missionscenarios/rox_missionscenario.json",
+      "scenarioProgressRecord": "file://./../../../../../../libs/foundry/records/contracts/contractscenarios/rox_scenarioprogress.json",
+      "factions": [
+        {
+          "_Type_": "FactionInfo",
+          "faction": "file://./../../../../../../libs/foundry/records/factions/faction_reputation_lawful_foxwellenforcement.json",
+          "factionDescription": "@X2_JournalTracker_Content",
+          "factioncolor": "#24c4ea",
+          "leaderboardImage": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_logo_foxwellenforcement.tif"}],
+      "leaderboardCanvas": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_journal/m_sc_journal_contributiontracker_solofaction.json"},
+    "tutorialEntry": false}}

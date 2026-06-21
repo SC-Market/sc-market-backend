@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Kopion",
+  "_RecordId_": "c9d81a4f-1ea4-4c7a-81a6-cac3cd4cbd67",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "KopionMeat",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.95f853cb-44d2-4634-ba24-66991ebb6eb0",
+            "_RecordId_": "95f853cb-44d2-4634-ba24-66991ebb6eb0"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.3a810e0a-e07f-4f24-91e1-541ff6ca1d3e",
+                "_RecordId_": "3a810e0a-e07f-4f24-91e1-541ff6ca1d3e"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": []}}

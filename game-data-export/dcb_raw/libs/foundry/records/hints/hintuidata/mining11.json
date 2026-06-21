@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Mining11",
+  "_RecordId_": "2ce31415-55b5-4153-b07d-0b7262a57a33",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Mining_Cargo_Title",
+    "BodyText": "@Hints_OnProspectorRockExtracted",
+    "BodyTextGamePad": "@Hints_OnProspectorRockExtracted",
+    "BodyTextJoystick": "@Hints_OnProspectorRockExtracted",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_Recoil_Smoothness",
+  "_RecordId_": "1156716c-b01e-4228-8136-7430be5bb9b8",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Weapon_Recoil_Smoothness",
+    "displayTransformation": {
+      "_Type_": "CraftingDisplayTransformation_ConvertFactorToNegatedPercentChange"},
+    "unitFormat": "@StatUnits_Percent",
+    "nameOverrides": []}}

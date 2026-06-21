@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.DestroyItemsPercent_MMH",
+  "_RecordId_": "f720d84e-17b1-4744-a8a2-53c4664d7cfc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/destroyitems_mmh.json"}]}}

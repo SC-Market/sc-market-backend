@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "Formation.SimpleArrow_two_members",
+  "_RecordId_": "8bd4510f-e0c6-42a9-b7cf-052010d75906",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Formation",
+    "name": "",
+    "offsets": [
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": 80.0,
+          "y": -120.0,
+          "z": 20.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": -80.0,
+          "y": -120.0,
+          "z": 20.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}}],
+    "playerFormationParams": {
+      "_Type_": "PlayerFormationParams",
+      "targetRadius": 50.0,
+      "breakRadius": 500.0,
+      "abandonFormationAtBreakRadius": false,
+      "targetVelocityTolerance": 5.0},
+    "formationTag": null}}

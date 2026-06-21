@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PersonalInventoryContainerFull",
+  "_RecordId_": "8ff268c8-92be-4bc2-918b-5db40a5e3002",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Inventory_ContainerSizeLimits_Title",
+    "BodyText": "@Hints_Inventory_ContainerFull",
+    "BodyTextGamePad": "@Hints_Inventory_ContainerFull",
+    "BodyTextJoystick": "@Hints_Inventory_ContainerFull",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

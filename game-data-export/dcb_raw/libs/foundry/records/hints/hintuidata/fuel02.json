@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Fuel02",
+  "_RecordId_": "44ebede7-4b2b-4cf6-84a3-13fd6bd92092",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Fuel_Title",
+    "BodyText": "@Hints_Fuel2",
+    "BodyTextGamePad": "@Hints_Fuel2",
+    "BodyTextJoystick": "@Hints_Fuel2",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

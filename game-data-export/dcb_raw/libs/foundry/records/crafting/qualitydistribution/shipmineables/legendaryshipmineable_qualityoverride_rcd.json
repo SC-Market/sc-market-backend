@@ -1,0 +1,567 @@
+{
+  "_RecordName_": "CraftingQualityLocationOverrideRecord.LegendaryShipMineable_QualityOverride_RCD",
+  "_RecordId_": "c2bace55-b544-49f2-a0e6-a7f78e56d6be",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityLocationOverrideRecord",
+    "locationOverride": {
+      "_Type_": "CraftingQualityLocationOverride",
+      "locationOverrideList": [
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/pyrosolarsystem.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 501,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_001.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_002.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_003.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_004.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_005.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_006.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_007.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_008.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_009.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_010.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_011.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_012.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_013.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_014.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_015.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_016.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_017.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_018.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_019.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_020.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_021.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_022.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_023.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_024.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_025.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_026.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_027.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_028.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_029.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_030.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_031.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_032.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_034.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_035.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_033.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_036.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_037.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_038.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_039.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_040.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_041.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_042.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_043.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_044.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_045.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_046.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_047.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_048.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_049.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_050.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_051.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_052.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_053.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_054.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_055.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_056.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_057.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_058.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_059.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}},
+        {
+          "_Type_": "CraftingQualityLocationOverrideEntry",
+          "location": "file://./../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_rockcracker_060.json",
+          "qualityDistribution": {
+            "_Type_": "CraftingQualityDistributionNormal",
+            "min": 651,
+            "max": 1000,
+            "mean": 500.0,
+            "stddev": 225.0}}]}}}

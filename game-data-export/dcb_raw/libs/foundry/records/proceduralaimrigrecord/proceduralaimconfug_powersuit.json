@@ -1,0 +1,158 @@
+{
+  "_RecordName_": "ProceduralAimRigRecord.ProceduralAimConfug_PowerSuit",
+  "_RecordId_": "59cb7421-7a12-4fb4-a93e-4486c2fd68be",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralAimRigRecord",
+    "aimLayer": -1,
+    "aimRigs": [
+      {
+        "_Type_": "ProcAimRigConfig",
+        "rigName": "RightArm",
+        "aimJointName": "R_Hand_Weapon_term",
+        "aimJointDirection": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 1.0,
+          "z": 0.0},
+        "aimTargetSmoothDuration": 0.0,
+        "aimTargetClampAngleDeg": 120.0,
+        "aimAngleBlendRange": {
+          "_Type_": "Range",
+          "minimum": 120.0,
+          "maximum": 140.0},
+        "rotationJoints": [
+          {
+            "_Type_": "ProcAimBallJointTypeConfig",
+            "jointName": "R_Shoulder",
+            "rotationRange": 45.0,
+            "rotationRangeOffset": {
+              "_Type_": "AngYPR",
+              "yaw": -22.5,
+              "pitch": 0.0,
+              "roll": 0.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "R_Elbow",
+            "rotationRange": 30.0,
+            "rotationRangeOffset": 0.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 1.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "R_Hinge_01",
+            "rotationRange": 180.0,
+            "rotationRangeOffset": 0.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 1.0,
+              "y": 0.0,
+              "z": 0.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "R_Hinge_02",
+            "rotationRange": 135.0,
+            "rotationRangeOffset": 45.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 1.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "R_Hand_Weapon",
+            "rotationRange": 135.0,
+            "rotationRangeOffset": -45.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 1.0,
+              "y": 0.0,
+              "z": 0.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "R_Hand_Weapon",
+            "rotationRange": 90.0,
+            "rotationRangeOffset": 0.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 1.0}}]},
+      {
+        "_Type_": "ProcAimRigConfig",
+        "rigName": "LeftArm",
+        "aimJointName": "L_Hand_Weapon_term",
+        "aimJointDirection": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 1.0,
+          "z": 0.0},
+        "aimTargetSmoothDuration": 1.0,
+        "aimTargetClampAngleDeg": 120.0,
+        "aimAngleBlendRange": {
+          "_Type_": "Range",
+          "minimum": 120.0,
+          "maximum": 140.0},
+        "rotationJoints": [
+          {
+            "_Type_": "ProcAimBallJointTypeConfig",
+            "jointName": "L_Shoulder",
+            "rotationRange": 45.0,
+            "rotationRangeOffset": {
+              "_Type_": "AngYPR",
+              "yaw": -22.5,
+              "pitch": 0.0,
+              "roll": 0.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "L_Elbow",
+            "rotationRange": 30.0,
+            "rotationRangeOffset": 0.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 1.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "L_Hinge_01",
+            "rotationRange": 180.0,
+            "rotationRangeOffset": 0.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 1.0,
+              "y": 0.0,
+              "z": 0.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "L_Hinge_02",
+            "rotationRange": 135.0,
+            "rotationRangeOffset": 45.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 1.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "L_Hand_Weapon",
+            "rotationRange": 135.0,
+            "rotationRangeOffset": -45.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 1.0,
+              "y": 0.0,
+              "z": 0.0}},
+          {
+            "_Type_": "ProcAimHingeJointTypeConfig",
+            "jointName": "L_Hand_Weapon",
+            "rotationRange": 90.0,
+            "rotationRangeOffset": 0.0,
+            "rotationAxis": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": 1.0}}]}]}}

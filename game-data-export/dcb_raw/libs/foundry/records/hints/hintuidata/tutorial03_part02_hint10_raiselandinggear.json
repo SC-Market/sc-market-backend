@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial03_Part02_Hint10_RaiseLandingGear",
+  "_RecordId_": "53018bf9-6a38-464d-952f-98664faa4fbc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut03_Part02_Hint10_RaiseLandingGear_Title",
+    "BodyText": "@Tut03_Part02_Hint10_RaiseLandingGear",
+    "BodyTextGamePad": "@Tut03_Part02_Hint10_RaiseLandingGear",
+    "BodyTextJoystick": "@Tut03_Part02_Hint10_RaiseLandingGear",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

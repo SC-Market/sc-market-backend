@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_Container_Clothing_Rare",
+  "_RecordId_": "c2a2f7d3-fdcc-4fed-8452-2b4a3c5d2b67",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_light_armour_common.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Racing_Ship_Rank2",
+  "_RecordId_": "9d755411-93e9-437a-aa06-5ae5724f563e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Racing_Ship_Rank2",
+    "description": "desc",
+    "displayName": "@RacingRep_Ship_Rank2",
+    "perkDescription": "@RepStanding_Perk_NewTracks",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_spaceshipracing_02.svg",
+    "minReputation": 1000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "SActorLocomotionFidgetStateFilteredDef.LocoFidgetStateConfig_Default",
+  "_RecordId_": "27e3ac44-f580-4dda-bace-7f42c6294ecc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SActorLocomotionFidgetStateFilteredDef",
+    "stateFilter": {
+      "_Type_": "SLocomotionPersonalityStateFilter",
+      "filterName": "Default",
+      "filterByState": "Any",
+      "filterByMotionSpeed": "Any",
+      "filterByPoseState": "Any",
+      "filterByStanceState": "Any",
+      "filterByAimStanceState": "Any",
+      "filterByLeanState": "Any",
+      "filterByHeldItemType": "Any",
+      "filterBySkeleton": "Any",
+      "filterByCharacterType": "Any",
+      "filterByRestrainedState": "Any",
+      "filterByPlayerCamera": "Any",
+      "filterByAimingRestriction": "Any",
+      "filterByLocomotionSet": "Any",
+      "filterByMannequinGlobalTags": ""},
+    "enable": true,
+    "cooldownMin": 1.0,
+    "cooldownMax": 1.0,
+    "severities": [
+      {
+        "_Type_": "SActorLocomotionFidgetSeverityParams",
+        "fragmentTags": "FidgetSeverity01",
+        "severityWeight": 0.45},
+      {
+        "_Type_": "SActorLocomotionFidgetSeverityParams",
+        "fragmentTags": "FidgetSeverity02",
+        "severityWeight": 0.35},
+      {
+        "_Type_": "SActorLocomotionFidgetSeverityParams",
+        "fragmentTags": "FidgetSeverity03",
+        "severityWeight": 0.1},
+      {
+        "_Type_": "SActorLocomotionFidgetSeverityParams",
+        "fragmentTags": "FidgetSeverity03+FidgetWithFace",
+        "severityWeight": 0.1}]}}

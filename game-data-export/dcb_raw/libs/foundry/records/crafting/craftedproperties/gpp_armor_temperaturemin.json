@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Armor_TemperatureMin",
+  "_RecordId_": "69143912-ee80-43e9-8862-e1745f0f0b9f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Armor_TemperatureMin",
+    "displayTransformation": null,
+    "unitFormat": "@StatUnits_Temperature",
+    "nameOverrides": []}}

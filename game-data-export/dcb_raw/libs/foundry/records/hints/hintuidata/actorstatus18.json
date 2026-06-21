@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus18",
+  "_RecordId_": "56e3a68e-167d-4d63-9500-38cb95ada7e2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusTemperature_Title",
+    "BodyText": "@Hints_ActorStatusWeatherLocomotionEntered",
+    "BodyTextGamePad": "@Hints_ActorStatusWeatherLocomotionEntered",
+    "BodyTextJoystick": "@Hints_ActorStatusWeatherLocomotionEntered",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

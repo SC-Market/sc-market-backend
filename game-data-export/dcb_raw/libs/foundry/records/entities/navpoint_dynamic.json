@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "EntityClassDefinition.NavPoint_Dynamic",
+  "_RecordId_": "017c3d69-65f2-4ea1-be76-e289c0114c92",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.0eb649a2-d4cd-4ec7-8390-69d007d09d88",
+        "_RecordId_": "0eb649a2-d4cd-4ec7-8390-69d007d09d88"}],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "EntityUIDisplayParams",
+        "displayName": "@LOC_UNINITIALIZED",
+        "displayDescription": "@LOC_UNINITIALIZED",
+        "displayThumbnail": "",
+        "displayImage": "",
+        "displayIcon": "",
+        "sortString": "",
+        "trackerProperties": {
+          "_Type_": "SObjectDataBankEntryTrackerParams"}}],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": true,
+        "isDynamic": true,
+        "metadata": [
+          null]}]}}

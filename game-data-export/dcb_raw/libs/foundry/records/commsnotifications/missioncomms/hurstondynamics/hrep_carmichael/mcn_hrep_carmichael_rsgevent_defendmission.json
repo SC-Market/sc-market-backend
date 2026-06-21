@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_HREP_Carmichael_RSGEvent_DefendMission",
+  "_RecordId_": "03a1240a-ddc9-460f-9820-baef29ed6b54",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.43f14984-abd2-45d2-ab2b-4c9fa8bcfba1",
+          "_RecordId_": "43f14984-abd2-45d2-ab2b-4c9fa8bcfba1"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4d04f555-f7f8-4518-b004-27426a047e79",
+          "_RecordId_": "4d04f555-f7f8-4518-b004-27426a047e79"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/missionaccept_defendship.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_hurstondynamics_hrep_carmichael.json",
+    "stage": null}}

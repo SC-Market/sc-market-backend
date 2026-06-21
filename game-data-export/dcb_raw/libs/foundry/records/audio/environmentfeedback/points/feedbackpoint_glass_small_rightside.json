@@ -1,0 +1,346 @@
+{
+  "_RecordName_": "AudioEnvironmentFeedbackPointDef.FeedbackPoint_Glass_Small_RightSide",
+  "_RecordId_": "2696be77-beda-45cf-967b-9508003a165b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioEnvironmentFeedbackPointDef",
+    "tagAndEvents": [
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.41fa2c64-02ee-4831-93db-b238f8d2a21b",
+          "_RecordId_": "41fa2c64-02ee-4831-93db-b238f8d2a21b"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSEF_Shared_Ship_Debris_Cloud_01"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSEF_Shared_Ship_Debris_Cloud_01"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Velocity_In_Debris_Field_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Velocity_In_Debris_Field_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Velocity_In_Debris_Field_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Velocity_In_Debris_Field_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ae7b18a2-0478-4ff4-8e86-9799af4759b6",
+          "_RecordId_": "ae7b18a2-0478-4ff4-8e86-9799af4759b6"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Atmosphere_Velocity_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Atmosphere_Velocity_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Atmosphere_Velocity_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Atmosphere_Velocity_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}},
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Atmosphere_Velocity_Magnitude_VerySlowAttack"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.732fce87-e902-4146-a8a5-2c9dd4a0b61e",
+          "_RecordId_": "732fce87-e902-4146-a8a5-2c9dd4a0b61e"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSEF_EnvironmentFeedback_Snow_01"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSEF_EnvironmentFeedback_Snow_01"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_X"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_Y"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_Z"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_Magnitude"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.44dcada1-254d-4f20-a8ff-06f0060bcc76",
+          "_RecordId_": "44dcada1-254d-4f20-a8ff-06f0060bcc76"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSEF_EnvironmentFeedback_Sand_01"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSEF_EnvironmentFeedback_Sand_01"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9fcb697d-e199-442a-9647-524decdf6bb2",
+          "_RecordId_": "9fcb697d-e199-442a-9647-524decdf6bb2"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSEF_EnvironmentFeedback_DefaultDust_01"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSEF_EnvironmentFeedback_DefaultDust_01"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c7e827a8-6ede-4f0f-9c5b-8dcedaa462d3",
+          "_RecordId_": "c7e827a8-6ede-4f0f-9c5b-8dcedaa462d3"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSEF_EnvironmentFeedback_GasCloud_Metal_Body_01"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSEF_EnvironmentFeedback_GasCloud_Metal_Body_01"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}},
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Magnitude_VerySlowAttack"},
+                "behavior": {
+                  "_Type_": "SSmoothingTimeBased",
+                  "attackSlew": 5.0,
+                  "releaseSlew": 2.0,
+                  "clampedBelow": 0.001}}]}]}]}}

@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "AIVisualFieldProfile.DefaultVisualFieldProfile_Juvenile",
+  "_RecordId_": "3e43cb1d-6e50-4c87-9b5f-0d84e8280dba",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldProfile",
+    "profile": [
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/creature/defaultfov_creature.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]},
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/creature/defaultfov_creature.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]}]}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Assassination_Captain",
+  "_RecordId_": "297073db-e223-474d-9173-6e35da4ab237",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Assassination_Captain",
+    "description": "desc",
+    "displayName": "@RepStanding_Assassination_Rank4",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_6.svg",
+    "minReputation": 24000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

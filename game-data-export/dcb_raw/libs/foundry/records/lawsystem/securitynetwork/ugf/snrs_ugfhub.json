@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_UGFHub",
+  "_RecordId_": "0677a1d2-08b4-4e70-91bf-18d814ab21c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json"]},
+      "ownerFaction": null},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.acf1589a-0a73-4862-9d33-84ed48a10e58",
+      "_RecordId_": "acf1589a-0a73-4862-9d33-84ed48a10e58"},
+    "trespassWarningSeconds": 30.0,
+    "trespassRevokeWarningSeconds": 900.0}}

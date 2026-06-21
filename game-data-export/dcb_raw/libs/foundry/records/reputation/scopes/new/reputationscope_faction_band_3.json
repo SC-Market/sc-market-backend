@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Faction_Band_3",
+  "_RecordId_": "067bba66-ba02-4e18-9e8f-d1fa9e1741fe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Faction_Band_3",
+    "displayName": "@LOC_PLACEHOLDER",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 0,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_10.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_09.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_08.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_07.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_06.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_05.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_04.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_03.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_02.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_01.json",
+        "file://./../../../../../../libs/foundry/records/reputation/standings/faction/band_3/reputationstanding_faction_b3_00.json"]}}}

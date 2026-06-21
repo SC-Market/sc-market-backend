@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Courier_Rank1",
+  "_RecordId_": "03da1e49-fdd8-4718-9125-3ea6cc1b0e40",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Courier_Rank1",
+    "description": "desc",
+    "displayName": "@RepStanding_Courier_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_2.svg",
+    "minReputation": 1,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": true}}

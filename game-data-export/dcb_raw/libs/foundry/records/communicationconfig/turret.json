@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "CommunicationConfig.Turret",
+  "_RecordId_": "f9c1c5b1-64be-4b2d-889d-e0e052eccf1e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "Turret",
+    "communications": [],
+    "subConfigs": []}}

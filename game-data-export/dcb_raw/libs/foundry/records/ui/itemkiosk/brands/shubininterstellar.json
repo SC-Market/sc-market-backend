@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.ShubinInterstellar",
+  "_RecordId_": "47f6720f-2896-40d8-9ba3-dc53763eea74",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "ShubinInterstellar",
+    "logoPath": "UI/Kiosk/assets/TIF/backgrounds/shubin.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 238,
+      "g": 176,
+      "b": 23,
+      "a": 255}}}

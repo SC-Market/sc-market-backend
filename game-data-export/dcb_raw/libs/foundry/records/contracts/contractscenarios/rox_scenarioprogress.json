@@ -1,0 +1,92 @@
+{
+  "_RecordName_": "ScenarioProgress.RoX_ScenarioProgress",
+  "_RecordId_": "197edd18-dfd6-4ad4-b061-88cf56632e3c",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "ScenarioProgress",
+    "multiplierRewards": [],
+    "factionRewardTiers": [
+      {
+        "_Type_": "SScenarioProgressRewardsTiers",
+        "faction": "file://./../../../../../libs/foundry/records/factions/faction_reputation_lawful_foxwellenforcement.json",
+        "convertTiersPointsToPercent": false,
+        "tierProgressions": [
+          {
+            "_Type_": "STierProgressions",
+            "progressionText": "@ClearAir_Journal_Total_Personal",
+            "minMultiplierThreshold": 1.0,
+            "showAsEqualPartsOnProgression": false,
+            "lastTierDisplayOnProgression": false,
+            "progressionColor": "",
+            "completionType": {
+              "_Type_": "CompletionType_GlobalProgression"},
+            "periodMissionScenario": null,
+            "tierRewards": [
+              {
+                "_Type_": "STierReward",
+                "minPoints": 18000,
+                "badgeToAward": "None",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": [
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_15_01.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_15_02.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_15_03.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_15_04.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_15_05.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_15_06.json"]},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 30000,
+                "badgeToAward": "None",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": [
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_25_01.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_25_02.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_25_03.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_25_04.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_25_05.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_25_06.json"]},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 60000,
+                "badgeToAward": "None",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": [
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_50_01.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_50_02.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_50_03.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_50_04.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_50_05.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_50_06.json"]},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 72000,
+                "badgeToAward": "None",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": [
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_60_01.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_60_02.json"]},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 102000,
+                "badgeToAward": "None",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": [
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_85_01.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_85_02.json"]},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 120000,
+                "badgeToAward": "None",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": [
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_100_01.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_100_02.json",
+                  "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/xenothreat2rewards/bp_rewards_xenothreat2_100_03.json"]}]}],
+        "rewardPeriodical": []}]}}

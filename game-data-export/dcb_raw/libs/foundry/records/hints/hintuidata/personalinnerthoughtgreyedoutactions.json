@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PersonalInnerThoughtGreyedOutActions",
+  "_RecordId_": "6a9bb32c-1742-4378-81d3-8101f2267414",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_PIT_Menu_Inactive_Title",
+    "BodyText": "@Hints_PIT_Menu_Inactive",
+    "BodyTextGamePad": "@Hints_PIT_Menu_Inactive",
+    "BodyTextJoystick": "@Hints_PIT_Menu_Inactive",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

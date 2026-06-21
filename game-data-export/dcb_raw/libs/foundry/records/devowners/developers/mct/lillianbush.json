@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.LillianBush",
+  "_RecordId_": "af0b5640-9253-4f63-b2ba-f43ef9281d17",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Lillian Bush",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mct.json"}}}

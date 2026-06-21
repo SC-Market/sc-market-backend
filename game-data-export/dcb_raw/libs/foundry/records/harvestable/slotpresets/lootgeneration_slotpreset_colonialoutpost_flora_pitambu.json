@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.LootGeneration_SlotPreset_ColonialOutpost_Flora_Pitambu",
+  "_RecordId_": "1c9bbdeb-ee04-4044-b478-5162e33c0322",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 0.95,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/plant_pitambu.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [
+            {
+              "_Type_": "HarvestableGeometry",
+              "tag": {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.3c25f668-1689-4397-b259-0423fc41f5e6",
+                "_RecordId_": "3c25f668-1689-4397-b259-0423fc41f5e6"}}],
+          "lootConfig": null}]}}}

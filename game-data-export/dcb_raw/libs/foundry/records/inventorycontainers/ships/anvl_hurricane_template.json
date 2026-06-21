@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ANVL_Hurricane_Template",
+  "_RecordId_": "f2204ac8-b422-4def-9f0c-6a40540c3064",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 1.29}}}}

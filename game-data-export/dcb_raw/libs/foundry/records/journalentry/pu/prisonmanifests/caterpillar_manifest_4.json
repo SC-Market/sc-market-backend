@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Caterpillar_Manifest_4",
+  "_RecordId_": "2065a3e1-b881-4860-a488-c4a52132f2df",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@prisonermanifest_title",
+    "ShortTitle": "@prisonermanifest_from",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": true,
+    "showNotification": true,
+    "missionSpecificContent": true,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.dialoguelog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@prisonermanifest_body_005"},
+    "tutorialEntry": false}}

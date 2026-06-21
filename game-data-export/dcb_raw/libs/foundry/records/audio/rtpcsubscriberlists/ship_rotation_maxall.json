@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Rotation_MaxAll",
+  "_RecordId_": "0d9415e9-704d-4d47-976f-5aefb2db2143",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_MaxAll"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_MaxAll_SlowLerp"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_MaxAll_VerySlowLerp"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Speed_MaxPitchYaw"}]}}

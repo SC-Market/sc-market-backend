@@ -1,0 +1,742 @@
+{
+  "_RecordName_": "EntityClassDefinition.Frontend",
+  "_RecordId_": "61fc6132-24f4-4ce3-b1db-dcc5e66249c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "UIOwnerEntityComponentParams",
+        "startOpen": true,
+        "areScreens3D": true,
+        "areSounds3D": false,
+        "hasActions": false,
+        "element": "file://./../../../../../libs/foundry/records/ui/uielements/frontend.json",
+        "domainName": "Frontend",
+        "loadDistance": 100000.0,
+        "moviePath": "",
+        "variantName": "",
+        "invariantName": "",
+        "movieAutoPlay": false,
+        "loopMovie": false,
+        "forceFlashColourCorrection": false,
+        "ignoreTrackviewUnloadRequests": false,
+        "reflectLocalStateMachine": false,
+        "reflectLinkedStateMachines": false,
+        "visibiltyTags": [],
+        "graph": "file://./../../../../../libs/foundry/records/ui/graphs/frontend.json"},
+      {
+        "_Type_": "FrontendControllerProviderParams"},
+      {
+        "_Type_": "LoadoutProviderEntityComponentParams"},
+      {
+        "_Type_": "ShipListEntityComponentParams",
+        "allowSpaceships": true,
+        "allowGroundVehicles": true,
+        "allowGravLevVehicles": true,
+        "allowREC_RentedShips": true,
+        "allowUEC_RentedShips": false,
+        "setPlayerProfile": true,
+        "filterByLocation": false},
+      {
+        "_Type_": "UIBindingsConsumerEntityComponentParams",
+        "linkToPort": false},
+      {
+        "_Type_": "RttPreviewManagerEntityComponentParams",
+        "mipSelectionBias": 1.5},
+      {
+        "_Type_": "UIRenderToTextureEntityComponentParams",
+        "directRenderStage": "AfterPostProcessing",
+        "compositeMaterialName": "",
+        "hideRenderNodeOnUnload": false,
+        "aspectRatioOverride": 0.0,
+        "interactionDistance": 0.0,
+        "transparentListDepthBias": 0.0,
+        "renderFlashBeforeCamera": true,
+        "fieldOfView": 90.0,
+        "nearClip": 0.02,
+        "farClip": 65536.0,
+        "renderType": "FORWARD",
+        "fallbackTextureOnOnload": "",
+        "secondaryTarget": null,
+        "grabCameraControlParams": null,
+        "pickableCollision": "Opaque",
+        "pickableTag": null,
+        "runtimeImageSource": "UserInterface",
+        "runtimeImageToAggregate": false},
+      {
+        "_Type_": "RttLoadoutPreviewEntityComponentParams",
+        "entityClipName": "ItemPreview",
+        "starMarineEntityClipName": "SMItemPreview",
+        "transform": {
+          "_Type_": "QuatTS",
+          "Rotation": {
+            "_Type_": "Ang3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "Position": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "Scale": 2.0},
+        "geometryRecord": "file://./../../../../../libs/foundry/records/entities/ui/rttpreviewwindow_5x2.json",
+        "starMarineGeometryRecord": "file://./../../../../../libs/foundry/records/entities/ui/rttpreviewwindow_3x4.json",
+        "previewWindowDimensions": {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0}},
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""},
+      {
+        "_Type_": "UIBuildingBlocksEntityComponentParams",
+        "layers": [
+          {
+            "_Type_": "BuildingBlocksLayer",
+            "layerName": "S42",
+            "renderTarget": "All",
+            "defaultView": null,
+            "views": [
+              {
+                "_Type_": "BuildingBlocksView",
+                "name": "FE_Splash",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": null,
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}},
+              {
+                "_Type_": "BuildingBlocksView",
+                "name": "Level_Select",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": null,
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}},
+              {
+                "_Type_": "BuildingBlocksView",
+                "name": "Options",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": null,
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}}]}],
+        "enableFullScreenMouse": true,
+        "defaultStyle": null,
+        "defaultPreviewScene": null},
+      {
+        "_Type_": "UIAudioComponentEntityComponentParams",
+        "UIAudioDef": "file://./../../../../../libs/foundry/records/audio/ui/frontend.json",
+        "UIAudioManufacturers": [],
+        "useEntityClass": null,
+        "offset": null,
+        "videoAudioPlayTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "videoAudioStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "videoAudioPauseTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "videoAudioResumeTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "dialogueContext": null,
+        "bypassRealisticMode": false},
+      {
+        "_Type_": "UserVariablesComponentParams",
+        "AlwaysUseDefaultValues": false,
+        "floats": [
+          {
+            "_Type_": "FloatUserVariable",
+            "name": "AudioOutput",
+            "defaultValue": 0.0,
+            "tasks": []}],
+        "ints": [
+          {
+            "_Type_": "IntUserVariable",
+            "name": "SelectedMicrophone",
+            "defaultValue": 0,
+            "tasks": []},
+          {
+            "_Type_": "IntUserVariable",
+            "name": "SelectedCamera",
+            "defaultValue": 0,
+            "tasks": []}],
+        "bools": [
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "MicrophoneSelected",
+            "defaultValue": false,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "Calibrate",
+            "defaultValue": false,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "Recording",
+            "defaultValue": false,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "FeedUnavailable",
+            "defaultValue": false,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "ContactListPendingInvitationsTab",
+            "defaultValue": true,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "SavingEnabled",
+            "defaultValue": false,
+            "tasks": []}],
+        "strings": [],
+        "locStrings": []},
+      {
+        "_Type_": "EntityComponentCommLinkProviderParams",
+        "accountSearchDelayInMilliSeconds": 300,
+        "ableToJoinPartyServerPopUpMenuOptionText": "@Frontend_Context_AbleJoinParty",
+        "notAbleToJoinPartyServerPopUpMenuOptionText": "@Frontend_Context_NotAbleJoinParty",
+        "notAbleToJoinPartyStowedOnServerPopUpMenuOptionText": "@Frontend_Context_JoinUnavailable",
+        "leavePartyPopUpMenuOptionText": "@group_leave_party",
+        "disbandPartyPopUpMenuOptionText": "@group_disband_party",
+        "transferLeadershipToPartyMemberPopUpMenuOptionText": "@mobiGlas_ui_widget_Contact_Promote_Leader",
+        "kickPartyMemberPopUpMenuOptionText": "@chat_context_menu_member_kick",
+        "sendFriendRequestToPartyMemberPopUpMenuOptionText": "@group_add_to_contacts",
+        "inviteToPartyPopUpMenuOptionText": "@group_add_to_party",
+        "ableToJoinFriendServerPopUpMenuOptionText": "@Frontend_Context_AbleJoinContact",
+        "notAbleToJoinFriendServerPopUpMenuOptionText": "@Frontend_Context_NotAbleJoinContact",
+        "removeFriendPopUpMenuOptionText": "@group_remove_from_contacts",
+        "inviteToLobbyPopUpMenuOptionText": "@ea_ui_frontend_InviteToLobby"},
+      {
+        "_Type_": "EntityComponentChatProviderParams",
+        "allChannelText": "@LOC_PLACEHOLDER",
+        "settings": {
+          "_Type_": "AutoSubscribeChatProviderSettings",
+          "autoSubscribeChannelTypes": {
+            "_Type_": "SChatChannelWhiteList",
+            "chatChannelType": [
+              {
+                "_Type_": "SGroupChannel",
+                "groupType": [
+                  "Party"]}]}}},
+      {
+        "_Type_": "EntityComponentFrontendUIProviderParams",
+        "overrideFrontendParam": null,
+        "frontendGameModeButtons": [
+          {
+            "_Type_": "SFrontendGameModeButton",
+            "buttonEnum": "PU",
+            "buttonTitle": "@ui_pregame_persistentuniverse",
+            "buttonDescription": "@ui_pregame_persistentuniverse_desc",
+            "imagePath": "UI/Frontend/assets/TIF/Buttons/Frontend_Button_PU_background.tif",
+            "moviePath": "UI/Video/Frontend/Main/PU.bk2",
+            "isActive": true},
+          {
+            "_Type_": "SFrontendGameModeButton",
+            "buttonEnum": "EA",
+            "buttonTitle": "@ea_ui_frontend_ButtonTitle",
+            "buttonDescription": "@ea_ui_frontend_ButtonDescription",
+            "imagePath": "UI/Frontend/assets/TIF/Buttons/Frontend_Button_AC_background.tif",
+            "moviePath": "UI/Video/Frontend/Main/TW.bk2",
+            "isActive": true}]},
+      {
+        "_Type_": "EntityComponentFrontendPUUIProviderParams",
+        "introTitleLocId": "@ui_pregame_persistentuniverse",
+        "introDescriptionLocId": "@ui_pregame_persistentuniverse_desc",
+        "hangarLocId": "@ui_pregame_Hangars",
+        "hangarDescriptionLocId": "@ui_pregame_Hangars_desc",
+        "hangarSystemImagePath": "UI/GlobalGameUI/assets/TIF/LoadingScreen/Hangar-Selfland.tif",
+        "regionLocalizationIdentifiers": [
+          "@ui_Region_BEST",
+          "@ui_Region_USA",
+          "@ui_Region_EU",
+          "@ui_Region_AUS",
+          "@ui_Region_ASIA"],
+        "soloplayWarningLocId": "@Frontend_SoloPlay_Warning",
+        "soloplayWarningConfirmLocId": "@frontend_Confirm",
+        "soloplayWarningCancelLocId": "@frontend_Cancel",
+        "firstSpawnWarningLocId": "@Frontend_FirstSpawn_Warning",
+        "firstSpawnWarningConfirmLocId": "@Frontend_FirstSpawn_Confirm",
+        "firstSpawnWarningCancelLocId": "@Frontend_FirstSpawn_Cancel"},
+      {
+        "_Type_": "SEntityAudioControllerParams",
+        "audioControllerEntityType": "None",
+        "randomSeedCount": 0,
+        "fullLODDistance": 9000.0,
+        "fullToLowLODDistance": 9050.0,
+        "offToLowLODDistance": 10000.0,
+        "offLODDistance": 10050.0,
+        "occlusionAttenuationScaler": 0.5,
+        "tags": {
+          "_Type_": "TagList",
+          "tags": []},
+        "tagTriggers": []},
+      {
+        "_Type_": "SEntityComponentFrontendEAUIProviderParams",
+        "matchNetworkTypeNames": [
+          {
+            "_Type_": "SMatchNetworkTypeParams",
+            "name": "@ea_ui_frontend_networktype_offline",
+            "description": "@ea_ui_frontend_networktypedesc_offline",
+            "matchNetworkType": "Offline"},
+          {
+            "_Type_": "SMatchNetworkTypeParams",
+            "name": "@ea_ui_frontend_networktype_online",
+            "description": "@ea_ui_frontend_networktypedesc_online",
+            "matchNetworkType": "Online"},
+          {
+            "_Type_": "SMatchNetworkTypeParams",
+            "name": "@ea_ui_frontend_networktype_custom",
+            "description": "@ea_ui_frontend_networktypedesc_custom",
+            "matchNetworkType": "Custom"}],
+        "anyMapOptionName": "@ea_ui_frontend_AnyMap",
+        "anyMapOptionDescription": "@ea_ui_frontend_AnyMapDesc",
+        "anyMapOptionThumbnail": "",
+        "anyTeamOptionName": "@ea_ui_frontend_AnyTeam",
+        "anyTeamOptionDescription": "@ea_ui_frontend_AnyTeamDesc",
+        "locReadyCount": "@ea_ui_frontend_ReadyNumbers",
+        "locErrorReadyCheck": "@ea_ui_frontend_error_ReadyCheck",
+        "locErrorPlayerLimit": "@ea_ui_frontend_error_PlayerLimit",
+        "locErrorMissingBadge": "@ea_ui_frontend_error_MissingBadge",
+        "locErrorMinPlayers": "@ea_ui_frontend_error_MinPlayerLimit",
+        "featuredGameMode": "EA_FPSGunGame",
+        "popupParams": [
+          {
+            "_Type_": "PopupParams",
+            "locTitle": "@ea_popup_title_ModeDisclaimer",
+            "locBody": "@ea_popup_body_ModeDisclaimer",
+            "locConfirm": "@ea_popup_confirm_ModeDisclaimer",
+            "locDecline": "@ea_popup_decline_ModeDisclaimer"},
+          {
+            "_Type_": "PopupParams",
+            "locTitle": "@ea_popup_title_Reconnect",
+            "locBody": "@ea_popup_body_Reconnect",
+            "locConfirm": "@ea_popup_confirm_Reconnect",
+            "locDecline": "@ea_popup_decline_Reconnect"},
+          {
+            "_Type_": "PopupParams",
+            "locTitle": "@ea_popup_title_ForceLaunch",
+            "locBody": "@ea_popup_body_ForceLaunch",
+            "locConfirm": "@ea_popup_confirm_ForceLaunch",
+            "locDecline": "@ea_popup_decline_ForceLaunch"}],
+        "patchNoteCategories": [
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_0",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_0_Note0",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_1",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_1_Note0",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_2",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_2_Note0",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_3",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_3_Note0",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_4",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_4_Note0",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_SystemBalance",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_systembalance_Note_0",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_systembalance_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_systembalance_Note_2",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_systembalance_Note_3",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_systembalance_Note_4",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_Maps",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_maps_Note_0",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_maps_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_maps_Note_2",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_maps_Note_0",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_Modes",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_modes_Note_0",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_modes_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_modes_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_modes_Note_1",
+                "bold": true,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_modes_Note_1",
+                "bold": false,
+                "underlined": true,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_modes_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": true}]},
+          {
+            "_Type_": "EAPatchNoteCategoryParams",
+            "name": "@ea_ui_patchnotes_category_BugFixes",
+            "notes": [
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_bugfixes_Note_0",
+                "bold": false,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_bugfixes_Note_1",
+                "bold": true,
+                "underlined": false,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_bugfixes_Note_1",
+                "bold": false,
+                "underlined": true,
+                "italic": false},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_bugfixes_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": true},
+              {
+                "_Type_": "EAPatchNoteParams",
+                "note": "@ea_ui_patchnotes_bugfixes_Note_1",
+                "bold": false,
+                "underlined": false,
+                "italic": false}]}],
+        "socialTabs": [
+          {
+            "_Type_": "SocialTab",
+            "name": "@ea_ui_frontend_lobby",
+            "activeNetworkTypes": [
+              "Online"]},
+          {
+            "_Type_": "SocialTab",
+            "name": "@ea_ui_frontend_customsettings",
+            "activeNetworkTypes": [
+              "Custom"]},
+          {
+            "_Type_": "SocialTab",
+            "name": "@ui_Friends",
+            "activeNetworkTypes": [
+              "Offline",
+              "Online",
+              "Custom"]},
+          {
+            "_Type_": "SocialTab",
+            "name": "@mobiGlas_ui_social_Party",
+            "activeNetworkTypes": [
+              "Offline",
+              "Online",
+              "Custom"]}],
+        "experimentalModeResetTime": {
+          "_Type_": "EAExperimentalModeResetTimeParams",
+          "weekday": "Sunday",
+          "hour": 16,
+          "minute": 0,
+          "showSecondsInTimer": true,
+          "locRestartRequired": "@ea_ui_frontend_RestartRequired"},
+        "specialEventInformation": [
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2032,
+            "eventTitle": "@ea_ui_frontend_specialevent_Generic",
+            "eventDescription": "@ea_ui_frontend_specialevent_LunarNewYear_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "UI/GlobalGameUI/assets/TIF/LoadingScreen/AC/AC_BG_KillConfirmedFPS_LNY.tif",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [
+              "EA_ExperimentalMode_5",
+              "EA_ExperimentalMode_12"],
+            "style": "file://./../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/lny/eastyle_lunar.json"},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2033,
+            "eventTitle": "@ea_ui_frontend_specialevent_Generic",
+            "eventDescription": "@ea_ui_frontend_specialevent_ValentinesDay_Description",
+            "bannerImage": "UI/Frontend/assets/TIF/GameTypesMaps/Coramor.tif",
+            "loadscreenOverride": "UI/GlobalGameUI/assets/TIF/LoadingScreen/AC/AC_BG_DuoShowdown_Coramor.tif",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [
+              "EA_ExperimentalMode_5"],
+            "style": "file://./../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/coramor/eastyle_coramor.json"},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2034,
+            "eventTitle": "@ea_ui_frontend_specialevent_StPatricks_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_StPatricks_Description",
+            "bannerImage": "UI/Frontend/assets/TIF/GameTypesMaps/Stella_Fortuna.tif",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": "file://./../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/stella_fortuna/eastyle_stella_fortuna.json"},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2035,
+            "eventTitle": "@ea_ui_frontend_specialevent_AprilFools_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_AprilFools_Description",
+            "bannerImage": "UI/Frontend/assets/TIF/GameTypesMaps/Triggerfish.tif",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": "file://./../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/triggerfish/eastyle_triggerfish.json"},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2036,
+            "eventTitle": "@ea_ui_frontend_specialevent_Invictus_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_Invictus_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2037,
+            "eventTitle": "@ea_ui_frontend_specialevent_AlienWeek_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_AlienWeek_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2038,
+            "eventTitle": "@ea_ui_frontend_specialevent_FoundationFestival_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_FoundationFestival_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2039,
+            "eventTitle": "@ea_ui_frontend_specialevent_PirateWeek_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_PirateWeek_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2040,
+            "eventTitle": "@ea_ui_frontend_specialevent_CitizenCon_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_CitizenCon_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2041,
+            "eventTitle": "@ea_ui_frontend_specialevent_Halloween_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_Halloween_Description",
+            "bannerImage": "UI/Frontend/assets/TIF/GameTypesMaps/Halloween.tif",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [
+              "EA_FPSGunGame"],
+            "style": "file://./../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/halloween/eastyle_halloween.json"},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2042,
+            "eventTitle": "@ea_ui_frontend_specialevent_IAE_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_IAE_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2043,
+            "eventTitle": "@ea_ui_frontend_specialevent_Generic",
+            "eventDescription": "@ea_ui_frontend_specialevent_Xmas_Description",
+            "bannerImage": "UI/Frontend/assets/TIF/GameTypesMaps/GunRush_Luminalia.tif",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": "file://./../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/luminalia/eastyle_luminalia.json"},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2044,
+            "eventTitle": "@ea_ui_frontend_specialevent_FightOrFlight_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_FightOrFlight_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2045,
+            "eventTitle": "@ea_ui_frontend_specialevent_MurrayCup_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_MurrayCup_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null},
+          {
+            "_Type_": "EASpecialEventInformationParams",
+            "badgeId": 2046,
+            "eventTitle": "@ea_ui_frontend_specialevent_PlayerBirthday_Title",
+            "eventDescription": "@ea_ui_frontend_specialevent_PlayerBirthday_Description",
+            "bannerImage": "",
+            "loadscreenOverride": "",
+            "backgroundVideoOverride": "",
+            "modesActiveWithEvent": [],
+            "style": null}]},
+      {
+        "_Type_": "UIEntityServiceEntityComponentParams",
+        "immediateTransforms": false},
+      {
+        "_Type_": "UISimpleRenderNodeEntityComponentParams",
+        "minimumBounds": 1.0,
+        "materialName": "materials/default_ui.mtl",
+        "sortDistance": 0.0,
+        "fixedScaleMin": 0.0,
+        "fixedScaleMax": 0.0,
+        "cardStageRadius": 2.0,
+        "flattenBehavior": "None",
+        "interference": 0.0},
+      {
+        "_Type_": "SCItemMobiGlasProviderParams",
+        "defaultInstalledApps": [
+          {
+            "_Type_": "mobiGlasDefaultAppEntry",
+            "defaultMobiGlasApp": null,
+            "defaultAppData": []}],
+        "appTransitionTime": 0.5,
+        "onlyAllowUserInteractions": false,
+        "startOpen": false,
+        "closeTime": 1.0},
+      {
+        "_Type_": "SAudioProxyParams",
+        "tagActions": []}]}}

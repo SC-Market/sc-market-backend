@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "CraftingQualityDistributionRecord.Gatherable_QualityDistribution_Default",
+  "_RecordId_": "cd52582a-f568-4ca0-95d4-fa5421856436",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityDistributionRecord",
+    "qualityDistribution": {
+      "_Type_": "CraftingQualityDistributionNormal",
+      "min": 1,
+      "max": 1000,
+      "mean": 269.0,
+      "stddev": 254.0}}}

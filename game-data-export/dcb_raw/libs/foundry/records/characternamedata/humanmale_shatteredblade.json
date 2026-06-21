@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_ShatteredBlade",
+  "_RecordId_": "d321bbd7-23c7-4b3a-b826-59cfda50d36f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "BountyHuntersGuild_RepUI_Name",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 2110,
+    "numNickNames": 410,
+    "numLastNames": 5100,
+    "nicknameChance": 0.05}}

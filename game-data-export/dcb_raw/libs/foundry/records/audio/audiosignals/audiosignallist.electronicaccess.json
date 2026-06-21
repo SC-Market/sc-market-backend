@@ -1,0 +1,325 @@
+{
+  "_RecordName_": "AudioSignalList.ElectronicAccess",
+  "_RecordId_": "e5252643-179f-4853-8a70-41b35b4bcf88",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioSignalList",
+    "Signals": [
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_PreGame_Countdown",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_star_marine_UI_countdown"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_PreGame_Countdown_Zero",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_star_marine_UI_countdown_zero"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_InGame_Countdown",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_star_marine_UI_countdown"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_InGame_Countdown_Zero",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_star_marine_UI_countdown_zero"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Control_Terminal_Captured",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Control_Terminal_Lost",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Control_Terminal_Start_Capture",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Control_Terminal_Contested",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": ""}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Control_Terminal_Lost_Neutral",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Control_Terminal_Lost_Neutral"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Spawn_Protection_Activated",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_Star_Marine_spawn_protection_activated"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Spawn_Protection_Deactivated",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_Star_Marine_spawn_protection_deactivated"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Spawn_Protection_Hit",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_SC_Game_Do_Nothing"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Despawn",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Player_State_Dematerialize"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Spawn",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Player_State_Rematerialize"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_MatchWon",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_MatchDraw",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Match_End_Draw"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_MatchLost",
+        "audioTriggers": [],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Timer_Tick",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Countdown_InGame"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Timer_Tick_End",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Countdown_InGame_Final"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_FirstBlood",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_First_Blood"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_FirstBlood_Enemy",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_First_Blood"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Ace",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_MCCS_OSYS_UI_Score_Ace"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Ace_Enemy",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_MCCS_OSYS_UI_Score_Ace_Enemy"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Ship_Respawn",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_MCCS_OSYS_Simulation_Respawn"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Ship_Death",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_MCCS_OSYS_Simulation_Death"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_RoundWon",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Match_End_Win"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_RoundLost",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Match_End_Lose"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_RoundDraw",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Match_End_Draw"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Post_Game_Scoreboard_Logo_AC",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_Silence"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Post_Game_Scoreboard_Logo_SM",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Logo"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_KillingSpree",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Killing_Spree"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_KillingSpree_Enemy",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Killing_Spree"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Player_Killed_HeadShot",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Weapon_Impact_Player_Head"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_Player_Killed_Bodyshot",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Weapon_Impact_Player_Kill"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_NLPC_Killed_HeadShot",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Weapon_Impact_NLPC_Head"}],
+        "switches": [],
+        "rtpcs": []},
+      {
+        "_Type_": "AudioSignal",
+        "Name": "EA_NLPC_Killed_Bodyshot",
+        "audioTriggers": [
+          {
+            "_Type_": "GlobalResourceAudio",
+            "audioTrigger": "Play_UI_Game_StarMarine_Weapon_Impact_NLPC_Kill"}],
+        "switches": [],
+        "rtpcs": []}]}}

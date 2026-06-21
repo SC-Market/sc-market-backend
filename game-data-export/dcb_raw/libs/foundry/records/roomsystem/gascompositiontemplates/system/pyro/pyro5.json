@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "AtmosphericCompositionTemplate.Pyro5",
+  "_RecordId_": "ff9ffd85-9278-4928-92c5-b52fa7f94436",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphericCompositionTemplate",
+    "composition": {
+      "_Type_": "SAtmosphericCompositionParams",
+      "gases": [
+        {
+          "_Type_": "SGasAtmosphereEntryParams",
+          "gasParams": "file://./../../../../../../../libs/foundry/records/roomsystem/gasparams/gasparams.hydrogen.json",
+          "parts": 73.0},
+        {
+          "_Type_": "SGasAtmosphereEntryParams",
+          "gasParams": "file://./../../../../../../../libs/foundry/records/roomsystem/gasparams/helium.json",
+          "parts": 26.0}]}}}

@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.CovalexTerminal",
+  "_RecordId_": "7ab0592c-662c-4a5b-ae44-0cd587235daa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/DisplayPanels/Terminal/Covalex/assets/SWF/CovalexTerminal.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

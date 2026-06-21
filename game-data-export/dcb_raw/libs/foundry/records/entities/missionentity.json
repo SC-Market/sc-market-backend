@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "EntityClassDefinition.MissionEntity",
+  "_RecordId_": "970aa28f-7133-47f9-b102-b3282910a13f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SSubsumptionMissionComponentParams"},
+      {
+        "_Type_": "SMissionEntityParams"},
+      {
+        "_Type_": "MissionDataBankManagementComponentParams"},
+      {
+        "_Type_": "SubsumptionEventReceiverComponentParams"}]}}

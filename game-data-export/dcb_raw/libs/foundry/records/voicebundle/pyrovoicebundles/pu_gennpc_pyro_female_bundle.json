@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "VoiceBundle.PU_GenNPC_Pyro_Female_Bundle",
+  "_RecordId_": "9f7523f8-92eb-420e-b029-9f0a7506745b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_GenNPC_Pyro_Female_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_03.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_06.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_05.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_15.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_npcvp_female_21.json"]}}

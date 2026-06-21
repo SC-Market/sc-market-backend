@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MedBeam_MT_BDLCrit",
+  "_RecordId_": "bb52fcf6-702b-4164-b485-ebac46481840",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_MedBeam_MT_Title",
+    "BodyText": "@Hints_MedBeam_MT_BDLCrit",
+    "BodyTextGamePad": "@Hints_MedBeam_MT_BDLCrit",
+    "BodyTextJoystick": "@Hints_MedBeam_MT_BDLCrit",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

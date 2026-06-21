@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.ARGO_MPUV_Transport",
+  "_RecordId_": "aa081ce6-f61f-4e9b-b8a3-067e687f4c30",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "ARGO_MPUV_Transport",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -1.09,
+          "y": 4.193,
+          "z": -0.69},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "ARGO_MPUV_Transport",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 1.09,
+          "y": 4.193,
+          "z": -0.69},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "ARGO_MPUV_Transport",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -3.677,
+          "z": -0.955},
+        "shipState": "Both"}]}}

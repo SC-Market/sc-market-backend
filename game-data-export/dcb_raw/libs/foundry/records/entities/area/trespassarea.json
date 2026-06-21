@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "EntityClassDefinition.TrespassArea",
+  "_RecordId_": "60beabaf-f735-4d57-84a7-d16d3610ffcb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "TrespassAreaComponentParams",
+        "securityClearanceConditions": {
+          "_Type_": "SecurityClearanceConditions",
+          "tokens": []},
+        "isFelony": true,
+        "filterOnFootOrEVA": true,
+        "filterInShip": true,
+        "filterInDockedShip": true,
+        "filterInGroundVehicle": true}]}}

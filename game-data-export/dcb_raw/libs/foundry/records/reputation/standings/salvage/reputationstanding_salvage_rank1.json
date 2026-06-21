@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Salvage_Rank1",
+  "_RecordId_": "0521a485-6bf3-44ca-97f5-2bd8824b3b8f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Apprentice Salvager",
+    "description": "The first rank in the salvaging reputation scope",
+    "displayName": "@RepStanding_Salvaging_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 1,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MusicLogicParameter.criticalityScore",
+  "_RecordId_": "0672e73e-7851-4f0b-9a7b-ee3d138662ff",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "criticalityScore",
+    "min": 0.0,
+    "max": 25.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 500.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [
+      null],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

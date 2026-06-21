@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_Wikelo",
+  "_RecordId_": "e2ce8c96-98c6-45ec-adf0-939406dfadd8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_Wikelo",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_career/human_holographic_greeter.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/airtrafficcontroller_collector.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_career/human_vendor.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_basedmissionstriggers.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_craft_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_trade_set.json",
+      "file://./../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_food_set.json"]}}

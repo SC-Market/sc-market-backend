@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "MegaMap.EA_AstorsClearing_FreeFlight",
+  "_RecordId_": "8d789a1e-7a6a-4b76-b283-038e5e3175bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_freeflight.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/AstorsClearing/global.socpak",
+          "objectcontainers/sm/fps_loadout.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton4/starmapobject.stanton4.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/AstorsClearing/freeflight.socpak"]},
+      "planetOverrideParams": {
+        "_Type_": "ArenaCommanderPlanetOverrideParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton4/starmapobject.stanton4.json",
+        "fixedRotation": 90.0}},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_astorsclearing.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

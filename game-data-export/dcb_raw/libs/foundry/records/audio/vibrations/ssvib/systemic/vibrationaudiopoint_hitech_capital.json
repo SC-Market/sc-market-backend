@@ -1,0 +1,64 @@
+{
+  "_RecordName_": "VibrationAudioPointDef.VibrationAudioPoint_HiTech_Capital",
+  "_RecordId_": "0af5ea69-2c96-4293-a49e-2461b0173450",
+  "_RecordTag_": "Audio",
+  "_RecordValue_": {
+    "_Type_": "VibrationAudioPointDef",
+    "vibrationAudioEntries": [
+      {
+        "_Type_": "VibrationAudioEntry",
+        "debugName": "SSVIB_Movement",
+        "vibrationRtpcs": [
+          {
+            "_Type_": "AudioRtpcWithBehaviour",
+            "rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Vibration_MovementDriven"},
+            "behavior": {
+              "_Type_": "SSmoothingTimeBased",
+              "attackSlew": 1.0,
+              "releaseSlew": 1.0,
+              "clampedBelow": 0.001}}],
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSVIB_Movement_Pad_HiTech_Capital"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSVIB_Movement_Pad_HiTech_Capital"},
+        "jostleEvent": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSVIB_Movement_Jostle_HiTech_Capital"},
+        "jostleCooldown": 2.0,
+        "jostleThreshold": 5.0,
+        "jostleRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "Vibration_Jostle"},
+        "usedVibrationTypes": [
+          "Thruster",
+          "Quantum",
+          "ThrusterAfterburner",
+          "ThrustersAcceleration"],
+        "vibrationInputModifiers": [
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.25,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0],
+        "calculationType": "Additive"}],
+    "customFalloff": 0.0}}

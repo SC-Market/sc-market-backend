@@ -1,0 +1,127 @@
+{
+  "_RecordName_": "MusicLogicEventList.Flight",
+  "_RecordId_": "b2a16561-edc6-4a7d-88fa-445b2a2f7c37",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicEventList",
+    "events": [
+      {
+        "_RecordId_": "45626855-8b36-4544-a9f9-563c619fdde0",
+        "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Locked_On_By_Enemy_Missile",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Player_Ship_Locked_On_By_Enemy_Missile",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "a83a70b4-6448-4a5e-824f-3177bf5f9e3c",
+        "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Shield_Hit_By_Enemy",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Player_Ship_Shield_Hit_By_Enemy",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "59706884-5193-42ee-810e-549ec8b3a39c",
+        "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Hull_Hit_By_Enemy",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Player_Ship_Hull_Hit_By_Enemy",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "ccd6bd1d-15f2-4480-ad8a-e6c2f665417e",
+        "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Shield_Hit_By_Player",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Enemy_Ship_Shield_Hit_By_Player",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "dd458ee1-0adb-4d2f-a886-7f9b6cf147ef",
+        "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Hull_Hit_By_Player",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Enemy_Ship_Hull_Hit_By_Player",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "635521d5-a288-48ed-bde2-388fe71aab59",
+        "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Destroyed_By_Enemy",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Player_Ship_Destroyed_By_Enemy",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "63b23a44-dca7-4a3e-8cc3-747c655c7c91",
+        "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Destroyed_By_Player",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Enemy_Ship_Destroyed_By_Player",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "f810cf7e-aa6f-48d3-8932-84906cfb344a",
+        "_RecordName_": "MusicLogicEvent.MX_Hostile_Ship_Contact",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Hostile_Ship_Contact",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "dcdfb8fb-7601-44bd-87e9-a773e0d8452e",
+        "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Item_Destroyed",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Player_Ship_Item_Destroyed",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "346de930-05a7-438a-a99d-49c89235d87b",
+        "_RecordName_": "MusicLogicEvent.MX_Ship_Pass_By_Listener",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Ship_Pass_By_Listener",
+        "retriggerDelay": 2.0},
+      {
+        "_RecordId_": "566b8846-a1ab-499b-8d9b-e50e7f16536f",
+        "_RecordName_": "MusicLogicEvent.MX_Projectile_Whiz_By_Player",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_Projectile_Whiz_By_Player",
+        "retriggerDelay": 0.2},
+      {
+        "_RecordId_": "92b65f4b-6dda-4f47-94e5-b83ed202b7c2",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_LandingAreaGranted",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_LandingAreaGranted",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "58332951-4448-4788-b15e-edce7ef852d4",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_NoPermission",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_NoPermission",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "9084385a-73a8-43da-ac89-378dcd840489",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_TakingOffAreaGranted",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_TakingOffAreaGranted",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "ae87cdcf-1c40-4048-9a72-4bd62f0cf399",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_SuccessfulLanding",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_SuccessfulLanding",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "232c9c1c-2340-4f5e-a784-e73380ab36ea",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_SuccessfulTakingOff",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_SuccessfulTakingOff",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "64790638-53c9-4d71-a733-c1cbbf7ddcd7",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_TakingOffApproved",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_TakingOffApproved",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "48909bd0-c0fc-4c28-87e7-9e933bb2aaf4",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_LandingOutOfTime",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_LandingOutOfTime",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "32f91c7f-72ce-4e77-be04-3a12c3aef1f1",
+        "_RecordName_": "MusicLogicEvent.MX_ATC_TakingOffOutOfTime",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_ATC_TakingOffOutOfTime",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "b751bf8b-d2c8-444a-9dd5-eead0cdc1908",
+        "_RecordName_": "MusicLogicEvent.MX_QT_PreArrival",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_QT_PreArrival",
+        "retriggerDelay": 0.0}]}}

@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "EntityClassDefinition.ParkingRoute",
+  "_RecordId_": "c38c247d-31c0-4656-a42e-26b0eddc4bd7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "AI",
+    "Icon": "AIPath.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.e08d34fb-cb56-4b3f-9e8b-60fa8f80a7f4",
+        "_RecordId_": "e08d34fb-cb56-4b3f-9e8b-60fa8f80a7f4"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a9f39407-0bf2-4c6f-b819-4b250653ad1d",
+        "_RecordId_": "a9f39407-0bf2-4c6f-b819-4b250653ad1d"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AIPathComponentParams"}]}}

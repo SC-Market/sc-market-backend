@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_000",
+  "_RecordId_": "cf6f6a08-b8a0-4b13-9e20-2b74cd783059",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Affinity_000_Neutral",
+    "description": "desc",
+    "displayName": "@RepStanding_MissionGiver_Default_Neutral_Name",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": true}}

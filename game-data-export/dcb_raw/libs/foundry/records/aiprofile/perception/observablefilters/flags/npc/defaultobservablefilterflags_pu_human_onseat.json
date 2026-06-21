@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "AIObservableFilterFlags.DefaultObservableFilterFlags_PU_Human_OnSeat",
+  "_RecordId_": "94f3f6ea-0d3d-48d2-9e54-3a9f1efa6efd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIObservableFilterFlags",
+    "typeFlags": [
+      "Agent",
+      "Player",
+      "Vehicle",
+      "Spaceship",
+      "ExplosiveDestructible"],
+    "statusFlags": []}}

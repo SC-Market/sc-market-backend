@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Locker_External_Inventory_0375_0625_2000",
+  "_RecordId_": "106d7955-0291-4ae4-b76e-38da8fc4db90",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.375,
+      "y": 0.625,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.46875}}}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_FPS_Jaclium",
+  "_RecordId_": "f5b8c10a-521b-40f6-8761-1863e71fb8d4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Ore_Jaclium",
+      "_RecordId_": "2c1e1693-4d19-446c-8224-ebad36feb618"},
+    "elementInstability": 100.0,
+    "elementResistance": 0.5,
+    "elementOptimalWindowMidpoint": 0.5,
+    "elementOptimalWindowMidpointRandomness": 0.2,
+    "elementOptimalWindowThinness": 3.0,
+    "elementExplosionMultiplier": 1.0,
+    "elementClusterFactor": 0.0}}

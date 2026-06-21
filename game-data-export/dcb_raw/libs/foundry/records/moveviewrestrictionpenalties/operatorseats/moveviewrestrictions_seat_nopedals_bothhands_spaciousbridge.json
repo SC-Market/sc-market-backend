@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "ArmorMoveViewRestrictions.MoveViewRestrictions_Seat_NoPedals_BothHands_SpaciousBridge",
+  "_RecordId_": "45594b77-e738-48c8-84c1-58c9c840086f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ArmorMoveViewRestrictions",
+    "ViewRestriction": {
+      "_Type_": "MoveViewRestrictionWeighting",
+      "HelmetWeighting": 3.0,
+      "CoreWeighting": 2.0,
+      "LegsWeighting": 0.5,
+      "ArmsWeighting": 1.0},
+    "MoveRestriction": {
+      "_Type_": "MoveViewRestrictionWeighting",
+      "HelmetWeighting": 0.5,
+      "CoreWeighting": 3.0,
+      "LegsWeighting": 0.0,
+      "ArmsWeighting": 2.0}}}

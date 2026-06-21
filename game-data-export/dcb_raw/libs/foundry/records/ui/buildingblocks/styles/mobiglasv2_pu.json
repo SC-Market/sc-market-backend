@@ -1,0 +1,2224 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.MobiglasV2_PU",
+  "_RecordId_": "70c20ac1-b9d1-4804-8a81-64eaa789c75c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "PanelBGIntro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.5fcff0c4-60c0-434b-8799-c1efb200ff29",
+                  "_RecordId_": "5fcff0c4-60c0-434b-8799-c1efb200ff29"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e253ff0f-bba9-4b92-be01-d9ff6f1be2af",
+                      "_RecordId_": "e253ff0f-bba9-4b92-be01-d9ff6f1be2af"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 3.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.4,
+              "delay": 0.0,
+              "delayRandomRange": 0.2,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderStrokeIntro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "CustomShape"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.578756e3-ff7b-4681-8f5a-de33c8ce8686",
+                  "_RecordId_": "578756e3-ff7b-4681-8f5a-de33c8ce8686"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e253ff0f-bba9-4b92-be01-d9ff6f1be2af",
+                      "_RecordId_": "e253ff0f-bba9-4b92-be01-d9ff6f1be2af"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "StrokeExtent",
+                          "value": 0.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.05,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.05,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.1,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.1,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.15,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.15,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.2,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.2,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.25,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.25,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.45,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.45,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.5,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.5,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "StrokeExtent",
+                          "value": 1.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.8,
+              "delay": 0.1,
+              "delayRandomRange": 0.4,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "CardIntro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8966be78-580e-47a8-8369-944805bb5da5",
+                  "_RecordId_": "8966be78-580e-47a8-8369-944805bb5da5"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e253ff0f-bba9-4b92-be01-d9ff6f1be2af",
+                      "_RecordId_": "e253ff0f-bba9-4b92-be01-d9ff6f1be2af"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.687261d9-6448-4ec7-b043-ecb6cbe9deb3",
+                      "_RecordId_": "687261d9-6448-4ec7-b043-ecb6cbe9deb3"}}]},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.f3b02fe4-3892-4d74-a220-9ae34490aeba",
+                  "_RecordId_": "f3b02fe4-3892-4d74-a220-9ae34490aeba"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.935d0490-5c00-4184-95d5-3d129639ec8d",
+                  "_RecordId_": "935d0490-5c00-4184-95d5-3d129639ec8d"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZOffset",
+                          "value": 0.5}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.001}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.05,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.05,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.1,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.1,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.15,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.15,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.2,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.2,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.25,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.25,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.45,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.45,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.5,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.5,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.9,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZOffset",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.8,
+              "delay": 0.0,
+              "delayRandomRange": 0.4,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BGPanelPrimIntro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.0a7b45cb-91e9-4ec5-8239-37754b479856",
+                  "_RecordId_": "0a7b45cb-91e9-4ec5-8239-37754b479856"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e253ff0f-bba9-4b92-be01-d9ff6f1be2af",
+                      "_RecordId_": "e253ff0f-bba9-4b92-be01-d9ff6f1be2af"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierColor",
+                          "field": "BackgroundColor",
+                          "color": {
+                            "_Type_": "BuildingBlocks_ColorStyle",
+                            "color": "Background",
+                            "alpha": 0.01}}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "SizeY",
+                          "value": 0.01}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.5}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierColor",
+                          "field": "BackgroundColor",
+                          "color": {
+                            "_Type_": "BuildingBlocks_ColorStyle",
+                            "color": "Base",
+                            "alpha": 1.0}}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierColor",
+                          "field": "BackgroundColor",
+                          "color": {
+                            "_Type_": "BuildingBlocks_ColorStyle",
+                            "color": "Base",
+                            "alpha": 0.02}}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "SizeY",
+                          "value": 1.0}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.8,
+              "delay": 0.1,
+              "delayRandomRange": 0.2,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HomeTransitionToState1",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.e494ea58-121d-4de4-8fbd-07f82599ba42",
+                  "_RecordId_": "e494ea58-121d-4de4-8fbd-07f82599ba42"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.42343029-a23e-4ed1-a9b6-369335023987",
+                  "_RecordId_": "42343029-a23e-4ed1-a9b6-369335023987"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5640ee8b-a4ce-4573-8daf-51e0705cd257",
+                      "_RecordId_": "5640ee8b-a4ce-4573-8daf-51e0705cd257"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.2}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.6,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "Forward",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "MissionManagerTransitionToState1",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.e494ea58-121d-4de4-8fbd-07f82599ba42",
+                  "_RecordId_": "e494ea58-121d-4de4-8fbd-07f82599ba42"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.af19f911-394d-404f-bcc7-15fdb031f0c9",
+                  "_RecordId_": "af19f911-394d-404f-bcc7-15fdb031f0c9"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5640ee8b-a4ce-4573-8daf-51e0705cd257",
+                      "_RecordId_": "5640ee8b-a4ce-4573-8daf-51e0705cd257"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosX",
+                          "value": 0.4}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": -0.1}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                          "field": "Instantiated",
+                          "value": true}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.3,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosX",
+                          "value": 0.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.5,
+              "delay": 0.5,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "MissionManagerTransitionToState2",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.e494ea58-121d-4de4-8fbd-07f82599ba42",
+                  "_RecordId_": "e494ea58-121d-4de4-8fbd-07f82599ba42"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.af19f911-394d-404f-bcc7-15fdb031f0c9",
+                  "_RecordId_": "af19f911-394d-404f-bcc7-15fdb031f0c9"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d0e1b258-d704-4bc3-bb56-e046e7298b5b",
+                      "_RecordId_": "d0e1b258-d704-4bc3-bb56-e046e7298b5b"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.2}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.6,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "Forward",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "StarmapTransitionToState2",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.e494ea58-121d-4de4-8fbd-07f82599ba42",
+                  "_RecordId_": "e494ea58-121d-4de4-8fbd-07f82599ba42"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8da0b79d-4faf-4283-b282-4f81bff58d98",
+                  "_RecordId_": "8da0b79d-4faf-4283-b282-4f81bff58d98"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d0e1b258-d704-4bc3-bb56-e046e7298b5b",
+                      "_RecordId_": "d0e1b258-d704-4bc3-bb56-e046e7298b5b"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosX",
+                          "value": 0.4}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": -0.1}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                          "field": "Instantiated",
+                          "value": true}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.3,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosX",
+                          "value": 0.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.5,
+              "delay": 0.5,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Root3D",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Base"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fb5b0d4f-16e5-42b1-8720-0a0603bde3ce",
+                      "_RecordId_": "fb5b0d4f-16e5-42b1-8720-0a0603bde3ce"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.8bba140b-a630-4893-ad4b-8908696914a7",
+                      "_RecordId_": "8bba140b-a630-4893-ad4b-8908696914a7"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosX",
+            "value": -0.005},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosY",
+            "value": 0.28},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosZ",
+            "value": -0.09},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "OrientationX",
+            "value": 197.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "OrientationY",
+            "value": -3.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeX",
+            "value": 0.542},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeY",
+            "value": 0.314875},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PivotX",
+            "value": 0.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PivotY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "RadialTransformMultiplier",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierInteger",
+            "field": "CurvatureAxis",
+            "value": 1}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Root3DIn2DContext",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Base"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fb5b0d4f-16e5-42b1-8720-0a0603bde3ce",
+                      "_RecordId_": "fb5b0d4f-16e5-42b1-8720-0a0603bde3ce"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.8bba140b-a630-4893-ad4b-8908696914a7",
+                      "_RecordId_": "8bba140b-a630-4893-ad4b-8908696914a7"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5d226636-a315-458d-8969-70ae1d1833d2",
+                      "_RecordId_": "5d226636-a315-458d-8969-70ae1d1833d2"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeX",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosX",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosY",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PosZ",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "OrientationX",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "OrientationY",
+            "value": 0.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeWidthBehavior",
+              "value": "Percent"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeHeightBehavior",
+              "value": "Percent"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Root2D",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Base"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fb5b0d4f-16e5-42b1-8720-0a0603bde3ce",
+                      "_RecordId_": "fb5b0d4f-16e5-42b1-8720-0a0603bde3ce"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.75aed851-e2cb-4d28-bb17-9d232b2a72ba",
+                      "_RecordId_": "75aed851-e2cb-4d28-bb17-9d232b2a72ba"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeX",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeWidthBehavior",
+              "value": "Percent"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeHeightBehavior",
+              "value": "Percent"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "AppContainer3D",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.87689f97-ab0e-4da2-ac1f-374208652b80",
+                  "_RecordId_": "87689f97-ab0e-4da2-ac1f-374208652b80"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.8bba140b-a630-4893-ad4b-8908696914a7",
+                      "_RecordId_": "8bba140b-a630-4893-ad4b-8908696914a7"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "RadialTransformMultiplier",
+            "value": 0.07},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierInteger",
+            "field": "CurvatureAxis",
+            "value": 0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Card",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8ac9cfe9-981a-4a9d-b561-bcd56665ae7f",
+                  "_RecordId_": "8ac9cfe9-981a-4a9d-b561-bcd56665ae7f"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "PrimitiveMaterialPath",
+            "value": "Materials/UI/mobiGlas/mobiglas_ar_card_in_world.mtl"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierInteger",
+            "field": "GhostPrimCount",
+            "value": 1},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "GhostPrimAlphaFactor",
+            "value": 0.1},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "GhostPrimAlphaClamp",
+            "value": 0.02},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeZ",
+            "value": 0.001}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Card_NoGhosts",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAnyOfTag",
+                "tags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.9fb92f44-f769-497f-b2d9-72da7ba77be9",
+                    "_RecordId_": "9fb92f44-f769-497f-b2d9-72da7ba77be9"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.c4049d0d-e88e-4498-abad-68f27ae729a4",
+                    "_RecordId_": "c4049d0d-e88e-4498-abad-68f27ae729a4"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierInteger",
+            "field": "GhostPrimCount",
+            "value": 0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Entity nodes",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "ActorEntity"}]},
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "GeneralEntity"}]},
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "VehicleEntity"}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "PrimitiveMaterialPath",
+            "value": "materials/UI/ui_general_holo_geometry.mtl"}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "PangelBGOutro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.5fcff0c4-60c0-434b-8799-c1efb200ff29",
+                  "_RecordId_": "5fcff0c4-60c0-434b-8799-c1efb200ff29"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7eb5ad07-ad11-4a6a-a53b-60cc915b672c",
+                      "_RecordId_": "7eb5ad07-ad11-4a6a-a53b-60cc915b672c"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 3.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.4,
+              "delay": 0.0,
+              "delayRandomRange": 0.2,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "CardOutro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8966be78-580e-47a8-8369-944805bb5da5",
+                  "_RecordId_": "8966be78-580e-47a8-8369-944805bb5da5"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7eb5ad07-ad11-4a6a-a53b-60cc915b672c",
+                      "_RecordId_": "7eb5ad07-ad11-4a6a-a53b-60cc915b672c"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.687261d9-6448-4ec7-b043-ecb6cbe9deb3",
+                      "_RecordId_": "687261d9-6448-4ec7-b043-ecb6cbe9deb3"}}]},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.f3b02fe4-3892-4d74-a220-9ae34490aeba",
+                  "_RecordId_": "f3b02fe4-3892-4d74-a220-9ae34490aeba"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZOffset",
+                          "value": 0.0}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.05,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.05,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.1,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.1,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.15,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.15,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.2,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.2,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.25,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.25,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.45,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.45,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.5,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.01}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.5,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.9,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZOffset",
+                          "value": 0.5}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.8,
+              "delay": 0.0,
+              "delayRandomRange": 0.4,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BGPanelPrimOutro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.0a7b45cb-91e9-4ec5-8239-37754b479856",
+                  "_RecordId_": "0a7b45cb-91e9-4ec5-8239-37754b479856"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7eb5ad07-ad11-4a6a-a53b-60cc915b672c",
+                      "_RecordId_": "7eb5ad07-ad11-4a6a-a53b-60cc915b672c"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierColor",
+                          "field": "BackgroundColor",
+                          "color": {
+                            "_Type_": "BuildingBlocks_ColorStyle",
+                            "color": "Background",
+                            "alpha": 0.05}}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "SizeY",
+                          "value": 1.0}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierColor",
+                          "field": "BackgroundColor",
+                          "color": {
+                            "_Type_": "BuildingBlocks_ColorStyle",
+                            "color": "Background",
+                            "alpha": 0.0}}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "SizeY",
+                          "value": 0.01}},
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInOutExpo"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "PosZ",
+                          "value": 0.5}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.8,
+              "delay": 0.2,
+              "delayRandomRange": 0.2,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "CardIntro2",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8966be78-580e-47a8-8369-944805bb5da5",
+                  "_RecordId_": "8966be78-580e-47a8-8369-944805bb5da5"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e253ff0f-bba9-4b92-be01-d9ff6f1be2af",
+                      "_RecordId_": "e253ff0f-bba9-4b92-be01-d9ff6f1be2af"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.687261d9-6448-4ec7-b043-ecb6cbe9deb3",
+                      "_RecordId_": "687261d9-6448-4ec7-b043-ecb6cbe9deb3"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.edf77e91-eef0-4483-8238-df1cb13b2682",
+                      "_RecordId_": "edf77e91-eef0-4483-8238-df1cb13b2682"}}]},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.f3b02fe4-3892-4d74-a220-9ae34490aeba",
+                  "_RecordId_": "f3b02fe4-3892-4d74-a220-9ae34490aeba"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.001}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "EaseInCubic"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 2.0,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "CardNoIntro",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8966be78-580e-47a8-8369-944805bb5da5",
+                  "_RecordId_": "8966be78-580e-47a8-8369-944805bb5da5"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                "breakConditions": [],
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e253ff0f-bba9-4b92-be01-d9ff6f1be2af",
+                      "_RecordId_": "e253ff0f-bba9-4b92-be01-d9ff6f1be2af"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.687261d9-6448-4ec7-b043-ecb6cbe9deb3",
+                      "_RecordId_": "687261d9-6448-4ec7-b043-ecb6cbe9deb3"}}]},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.935d0490-5c00-4184-95d5-3d129639ec8d",
+                  "_RecordId_": "935d0490-5c00-4184-95d5-3d129639ec8d"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 1.0}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 141,
+          "g": 204,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 50,
+          "g": 255,
+          "b": 182,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 213,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 216,
+          "g": 41,
+          "b": 76,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 112,
+          "g": 130,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 100,
+          "b": 21,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 235,
+          "g": 244,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 15,
+          "g": 71,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 52,
+          "g": 64,
+          "b": 66,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 141,
+          "g": 204,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 225,
+          "g": 225,
+          "b": 225,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 90,
+          "g": 176,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 4,
+          "g": 184,
+          "b": 15,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 115,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 178,
+          "g": 0,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 225,
+          "g": 225,
+          "b": 225,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 243,
+          "g": 220,
+          "b": 110,
+          "a": 255}}],
+    "textFieldModifiers": [
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": []},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_BooleanTextFormatModifier",
+            "field": "TextBold",
+            "value": true}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_BooleanTextFormatModifier",
+            "field": "TextItalic",
+            "value": true}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_BooleanTextFormatModifier",
+            "field": "TextUnderline",
+            "value": true}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 141,
+                "g": 204,
+                "b": 255,
+                "a": 255}}}]}]}}

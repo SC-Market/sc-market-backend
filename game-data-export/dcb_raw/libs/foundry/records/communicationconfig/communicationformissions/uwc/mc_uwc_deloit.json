@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_UWC_Deloit",
+  "_RecordId_": "ad7b130b-bb29-4967-ac03-66dc0add7651",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_UWC_Deloit",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_basedmissionstriggers.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_refuelling_set.json"]}}

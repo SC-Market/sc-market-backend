@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.GoToPointEntity",
+  "_RecordId_": "8652090c-47df-404c-84a8-369899e914ff",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "SpawnPoint.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "GoToPointComponentParams",
+        "pointName": "",
+        "description": ""}]}}

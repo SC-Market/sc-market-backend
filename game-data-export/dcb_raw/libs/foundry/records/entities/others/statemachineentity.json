@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "EntityClassDefinition.StateMachineEntity",
+  "_RecordId_": "66c58358-39a7-4b43-9c26-49273e756653",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityInteractableParams",
+        "Interactable": {
+          "_Type_": "SInteractableParams",
+          "SharedInteractions": [],
+          "InteractionPoints": [],
+          "interactionTasks": [],
+          "actionHandlerTasks": [],
+          "itemActionTasks": [],
+          "menuTitle": null}},
+      {
+        "_Type_": "SInteractionStateMachineParams",
+        "StateTypes": []}]}}

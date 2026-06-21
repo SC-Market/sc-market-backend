@@ -1,0 +1,69 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_SpecialEvent_DarkwaterVara",
+  "_RecordId_": "e6b96251-1c12-4fbd-9606-065c0e9f7181",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Darkwater Gold",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c00d4688-386e-41bb-89f7-1ea99452fb76",
+            "_RecordId_": "c00d4688-386e-41bb-89f7-1ea99452fb76"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 28.57,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "BearHelmets",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b69b196e-5792-49fe-9bb8-e95c75e0fe99",
+            "_RecordId_": "b69b196e-5792-49fe-9bb8-e95c75e0fe99"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 60.72,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "ScarecrowHelmets",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.93479e1f-bd3d-4116-8b05-585256fcfc55",
+            "_RecordId_": "93479e1f-bd3d-4116-8b05-585256fcfc55"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 10.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "VanduulHelmets",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.337084e5-694e-4d95-a757-c51322f5dd9f",
+            "_RecordId_": "337084e5-694e-4d95-a757-c51322f5dd9f"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 0.71,
+          "optionalData": []}]},
+    "secondaryOrGroups": []}}

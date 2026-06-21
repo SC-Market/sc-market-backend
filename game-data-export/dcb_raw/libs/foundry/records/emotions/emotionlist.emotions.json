@@ -1,0 +1,67 @@
+{
+  "_RecordName_": "EmotionList.Emotions",
+  "_RecordId_": "93fab2e6-3b21-4339-b206-1a18e2f6d9a3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EmotionList",
+    "emotions": [
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Neutral",
+        "facialEmotionTag": "Neutral"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Happy",
+        "facialEmotionTag": "Happy"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Sad",
+        "facialEmotionTag": "Sad"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Idle",
+        "facialEmotionTag": "Idle"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Angry",
+        "facialEmotionTag": "Angry"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Sleeping",
+        "facialEmotionTag": "Sleeping"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "BeingHit",
+        "facialEmotionTag": "beingHit"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Dying",
+        "facialEmotionTag": "dying"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "HurtBad",
+        "facialEmotionTag": "hurtBad"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "HurtMild",
+        "facialEmotionTag": "hurtMild"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Combat",
+        "facialEmotionTag": "combat"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "KillSatisfy",
+        "facialEmotionTag": "killSatisfy"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "FiringWeapon",
+        "facialEmotionTag": "firingWeapon"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Unconscious",
+        "facialEmotionTag": "unconscious"},
+      {
+        "_Type_": "EmotionDescription",
+        "emotionName": "Dead",
+        "facialEmotionTag": "dead"}]}}

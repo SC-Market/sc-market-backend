@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Crusader_Bounty_Reward",
+  "_RecordId_": "b1fb3c9e-42fe-4b86-8399-5b4819c84fb7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CrusaderBountyReward_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_CrusaderBountyReward_Sub_Title",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@mobiglas_CrusaderBountyReward_Text"},
+    "tutorialEntry": false}}

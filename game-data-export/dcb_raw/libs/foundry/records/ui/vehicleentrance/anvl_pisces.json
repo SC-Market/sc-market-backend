@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.ANVL_Pisces",
+  "_RecordId_": "8a0c67a8-b049-4970-acc9-1d2b0a5ce99d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.3,
+      "y": 1.3,
+      "z": 1.3},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "ANVL_Pisces",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 1.808,
+          "y": -4.768,
+          "z": -0.01},
+        "shipState": "Both"}]}}

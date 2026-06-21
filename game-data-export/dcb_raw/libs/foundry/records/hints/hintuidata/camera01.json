@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Camera01",
+  "_RecordId_": "dbf802ec-6572-4e3d-8d38-4afac5ea348f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Camera1_Title",
+    "BodyText": "@Hints_Camera1",
+    "BodyTextGamePad": "@Hints_Camera1",
+    "BodyTextJoystick": "@Hints_Camera1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

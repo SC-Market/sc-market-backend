@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Foxwell_Walton_AcePilotDestroyed",
+  "_RecordId_": "5b646076-203c-4873-80ab-48e5b34d9661",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+          "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+          "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e243f71d-7c5c-4521-9a48-6333e83d5264",
+          "_RecordId_": "e243f71d-7c5c-4521-9a48-6333e83d5264"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9c132978-099a-46bc-9b19-9d77bcef8b9b",
+          "_RecordId_": "9c132978-099a-46bc-9b19-9d77bcef8b9b"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/enemycallouts/acepilot/acepilot_destroyed.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-walton.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_foxwell_walton.json",
+    "stage": null}}

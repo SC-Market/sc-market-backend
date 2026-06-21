@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.CIGDrake",
+  "_RecordId_": "4e895770-0ef3-4fa8-910e-9aa7eb22e01e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$CIGDrake",
+    "paintFile": "UI/fonts/Install/CIG_DrakeFont.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.92,
+    "leadingModifier": 0.1,
+    "topMarginModifier": -0.26,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 5}}

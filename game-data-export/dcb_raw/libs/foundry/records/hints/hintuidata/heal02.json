@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Heal02",
+  "_RecordId_": "06dcc950-bd9a-425e-a57f-c0e078a90e9b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Heal_Title",
+    "BodyText": "@Hints_Heal2",
+    "BodyTextGamePad": "@Hints_Heal2",
+    "BodyTextJoystick": "@Hints_Heal2",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

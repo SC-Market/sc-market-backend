@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "PopupDef.KioskTransactionFail_InsufficientFunds",
+  "_RecordId_": "b596475b-fc17-4cbe-93cb-75a792c9d16e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PopupDef",
+    "title": "@shop_ui_TransactionFailed",
+    "message1": "@shop_ui_InsufficientFundsMsg",
+    "message2": "@LOC_EMPTY",
+    "message3": "@shop_ui_CostMessage",
+    "hasCancelButton": true,
+    "hasConfirmButton": true,
+    "cancelOverrideString": "@LOC_EMPTY",
+    "confirmOverrideString": "@LOC_EMPTY",
+    "popupFrame": "orderComplete",
+    "popupHeaderFrame": "neg"}}

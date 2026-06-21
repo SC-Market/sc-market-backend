@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Foxwell_Walton_SnDMoveToNext",
+  "_RecordId_": "6ff636dd-8deb-48de-af51-449b3d7557a6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+          "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+          "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e6a13cf1-526b-4949-ae2d-d21c2315b5c4",
+          "_RecordId_": "e6a13cf1-526b-4949-ae2d-d21c2315b5c4"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.cb86e04a-0e08-4e0e-906b-1ac5a475d9d0",
+          "_RecordId_": "cb86e04a-0e08-4e0e-906b-1ac5a475d9d0"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/searchanddestroy/snd_nextscan.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-walton.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_foxwell_walton.json",
+    "stage": null}}

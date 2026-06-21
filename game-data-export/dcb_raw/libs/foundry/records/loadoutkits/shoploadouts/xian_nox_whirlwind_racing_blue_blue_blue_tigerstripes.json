@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.XIAN_Nox_Whirlwind_Racing_Blue_Blue_Blue_TigerStripes",
+  "_RecordId_": "eb002548-d513-4443-af13-3d895f390930",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameNox_Paint_Racing_Blue_Blue_Blue_TigerStripes",
+    "description": "@item_DescNox_Paint_Racing_Blue_Blue_Blue_TigerStripes",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_nox_racing_blue_blue_blue_tigerstripes.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

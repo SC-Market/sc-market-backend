@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "AIVisualFieldProfile.DefaultVisualFieldProfile_PU",
+  "_RecordId_": "c663bd8e-3b87-44c8-aa2d-568b14a9f8a7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldProfile",
+    "profile": [
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/npc/defaultfov_pu.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]},
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/npc/defaultfov_pu_onseat.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]}]}}

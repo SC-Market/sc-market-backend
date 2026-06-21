@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.medium_legs_combat",
+  "_RecordId_": "80861382-f855-498b-94f2-2568b20a371b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.2,
+      "y": 0.27,
+      "z": 0.2},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 4500}}}}

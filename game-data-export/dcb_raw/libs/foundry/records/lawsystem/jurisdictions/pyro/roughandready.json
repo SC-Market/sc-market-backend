@@ -1,0 +1,58 @@
+{
+  "_RecordName_": "Jurisdiction.RoughAndReady",
+  "_RecordId_": "5b5e4ff5-f153-4b56-9f07-987520d3ce62",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Jurisdiction",
+    "subsumptionJurisdiction": "",
+    "name": "@RoughAndReady_RepUI_Name",
+    "logoPath": "UI/Textures/Vector/General/BrandLogos/logo_rough_and_ready.svg",
+    "parentJurisdiction": null,
+    "respectsParentJurisdictionLaws": false,
+    "infractions": [],
+    "infractionSets": [],
+    "journalEntry": null,
+    "maxStolenGoodsPossessionSCU": 1.0,
+    "prohibitedGoods": [],
+    "prohibitedResources": [],
+    "controlledSubstanceClasses": [
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125},
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125},
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125}],
+    "baseFine": 0,
+    "earlyPaymentPeriod": -1.0,
+    "isPrison": false,
+    "impoundingDefinitions": [
+      {
+        "_Type_": "ImpoundingDefinition",
+        "name": "@Infractions_Name_038",
+        "trigger": "PadRamming",
+        "impoundingTimeSeconds": 3600.0,
+        "impoundingFineUEC": 50000,
+        "ignoreIfAgainstPartyMember": true},
+      {
+        "_Type_": "ImpoundingDefinition",
+        "name": "@Infractions_Name_004",
+        "trigger": "IllegalParking",
+        "impoundingTimeSeconds": 900.0,
+        "impoundingFineUEC": 5000,
+        "ignoreIfAgainstPartyMember": false},
+      {
+        "_Type_": "ImpoundingDefinition",
+        "name": "@Infractions_Name_008",
+        "trigger": "TrespassImpound",
+        "impoundingTimeSeconds": 900.0,
+        "impoundingFineUEC": 5000,
+        "ignoreIfAgainstPartyMember": false}]}}

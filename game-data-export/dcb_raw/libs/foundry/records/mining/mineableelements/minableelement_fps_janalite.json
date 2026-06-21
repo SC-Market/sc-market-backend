@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_FPS_Janalite",
+  "_RecordId_": "7e324c5c-1b28-400a-ab66-290188ef282c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Janalite",
+      "_RecordId_": "f3379bda-0520-4c75-920a-c29a50eb6b50"},
+    "elementInstability": 300.0,
+    "elementResistance": 0.3,
+    "elementOptimalWindowMidpoint": 0.3,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 10.0,
+    "elementExplosionMultiplier": 1.0,
+    "elementClusterFactor": 0.0}}

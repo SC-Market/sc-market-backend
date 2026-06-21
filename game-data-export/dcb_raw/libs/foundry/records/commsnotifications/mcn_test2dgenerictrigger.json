@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Test2DGenericTrigger",
+  "_RecordId_": "ef5ed454-b050-4b6f-82f0-460d19d7e07a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "communicationName": "file://./../../../../libs/foundry/records/communicationname/missioncommunications/basedmissiontriggers/missionaccept.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../libs/foundry/records/entities/audio/fakecommsaudioentity.json",
+    "stage": null}}

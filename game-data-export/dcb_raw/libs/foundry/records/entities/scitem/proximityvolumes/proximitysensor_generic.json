@@ -1,0 +1,146 @@
+{
+  "_RecordName_": "EntityClassDefinition.ProximitySensor_Generic",
+  "_RecordId_": "240d6209-a058-4646-9ffa-cf59a6577ee3",
+  "_RecordTag_": "TechDesign",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityInteractableParams",
+        "Interactable": {
+          "_Type_": "SInteractableParams",
+          "SharedInteractions": [
+            {
+              "_Pointer_": "ptr:1",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "OnEnter",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Hide",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null},
+            {
+              "_Pointer_": "ptr:2",
+              "_Type_": "SSharedInteractionParams",
+              "Name": "OnExit",
+              "QueryTags": [],
+              "RoomTag": null,
+              "UsableTag": null,
+              "LinkingTag": null,
+              "DisplayName": "@usable_use",
+              "DisplayType": "Hide",
+              "GenericCursor": "SingleAction",
+              "FocusModeOnly": false,
+              "Sendable": true,
+              "Linkable": false,
+              "LockedByLinks": false,
+              "RequiresAuthorizedUser": false,
+              "available": true,
+              "InheritsConditionDisplaysThroughLinks": false,
+              "conditionList": null,
+              "playerAnimatedInteractionBase": null}],
+          "InteractionPoints": [],
+          "interactionTasks": [],
+          "actionHandlerTasks": [],
+          "itemActionTasks": [],
+          "menuTitle": null}},
+      {
+        "_Type_": "SCInteractionStateGameplayTriggerComponentParams",
+        "targetPresets": [],
+        "onInteractionStateChangeTriggers": [],
+        "onInteractionSuccessTriggers": [
+          {
+            "_Type_": "SOnInteractionTriggers",
+            "targetInteraction": "_PointsTo_:ptr:1",
+            "gameplayTriggers": [
+              {
+                "_Type_": "TargetGameplayTrigger",
+                "targets": [
+                  {
+                    "_Type_": "GameplayTrigger_TargetType_EntityLinks",
+                    "optionalTarget": true,
+                    "nextTarget": null}],
+                "gameplayTriggers": [
+                  {
+                    "_Type_": "ActivateInteractionGameplayTrigger",
+                    "interactionToActivate": {
+                      "_Type_": "GameplayTrigger_Executor_ActivateInteraction_ByTag",
+                      "interactionLinkingTag": {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.c07b3e4d-bbbf-46c9-80f4-5b1eb4446283",
+                        "_RecordId_": "c07b3e4d-bbbf-46c9-80f4-5b1eb4446283"},
+                      "ignoreLinkableFlag": true}}]}]},
+          {
+            "_Type_": "SOnInteractionTriggers",
+            "targetInteraction": "_PointsTo_:ptr:2",
+            "gameplayTriggers": [
+              {
+                "_Type_": "TargetGameplayTrigger",
+                "targets": [
+                  {
+                    "_Type_": "GameplayTrigger_TargetType_EntityLinks",
+                    "optionalTarget": true,
+                    "nextTarget": null}],
+                "gameplayTriggers": [
+                  {
+                    "_Type_": "ActivateInteractionGameplayTrigger",
+                    "interactionToActivate": {
+                      "_Type_": "GameplayTrigger_Executor_ActivateInteraction_ByTag",
+                      "interactionLinkingTag": {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.a62acab2-8ef9-44b3-a4c4-19e97688ca62",
+                        "_RecordId_": "a62acab2-8ef9-44b3-a4c4-19e97688ca62"},
+                      "ignoreLinkableFlag": true}}]}]}],
+        "onInteractionFailedTriggers": []},
+      {
+        "_Type_": "SCItemProximitySensorParams",
+        "considerActorVelocity": false,
+        "exitDelay": 0.0,
+        "activeOnEnterTag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6021d779-64a2-4cc8-b968-cf88bf03d37e",
+          "_RecordId_": "6021d779-64a2-4cc8-b968-cf88bf03d37e"},
+        "EnteredInteraction": "_PointsTo_:ptr:1",
+        "ExitedInteraction": "_PointsTo_:ptr:2",
+        "SensorShape": {
+          "_Type_": "SCItemProximitySensorBoxParams",
+          "Extent": {
+            "_Type_": "Vec3",
+            "x": 10.0,
+            "y": 10.0,
+            "z": 10.0},
+          "Offset": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0}},
+        "allowCloseWithStationaryActors": false,
+        "stationaryActorCloseMinDist": 2.0,
+        "isHelper": false},
+      {
+        "_Type_": "SInteractionLinkParams",
+        "vehicleItemPortInteractionLinks": [],
+        "linkPlugs": []}]}}

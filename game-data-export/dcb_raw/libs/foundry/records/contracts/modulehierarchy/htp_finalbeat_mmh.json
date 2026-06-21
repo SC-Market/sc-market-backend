@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.HTP_FinalBeat_MMH",
+  "_RecordId_": "b1380bd5-13a9-4499-9bf9-160518d63c68",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/HuntThePolaris/HTP_FinalBeat.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/killship_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/ShipAmbush/ShipAmbush.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/shipambush_mmh.json"}]}}

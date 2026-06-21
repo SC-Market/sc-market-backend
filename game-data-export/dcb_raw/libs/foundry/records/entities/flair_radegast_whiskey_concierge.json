@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "EntityClassDefinition.Flair_Radegast_Whiskey_Concierge",
+  "_RecordId_": "ce3c5893-f1d1-4551-9a57-dfffc3b91f49",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": "file://./../../../../libs/foundry/records/densityclasses/flairdensityclass.json",
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": []}}

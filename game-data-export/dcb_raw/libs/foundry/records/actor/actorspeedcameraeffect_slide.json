@@ -1,0 +1,74 @@
+{
+  "_RecordName_": "ActorSpeedCameraEffects.ActorSpeedCameraEffect_Slide",
+  "_RecordId_": "2ee75ac4-c3fc-4c59-932b-bf1a30d3825e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorSpeedCameraEffects",
+    "speedBoostMin": 5.0,
+    "speedBoostMax": 15.0,
+    "speedBoostFOV": 1.2,
+    "focusDistance": 100.0,
+    "genericModifiers": {
+      "_Type_": "CameraEffectsModifiers",
+      "smoothing": 0.8,
+      "chromaticAbberation": 70.0,
+      "fStopMin": 4.0,
+      "fStopMax": 64.0,
+      "fovMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.5938839,
+            "y": -0.3324036},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.5938839,
+            "y": 0.3324036},
+          {
+            "_Type_": "Vec2",
+            "x": 0.5059756,
+            "y": 0.6490977},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.494024,
+            "y": 1.350902}],
+        "useLUT": false},
+      "suggestedFOVMode": "SuggestedFOVMode_ForceAlways",
+      "cameraEffectsMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.4965462,
+            "y": -0.005957447},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.4965462,
+            "y": 0.005957447},
+          {
+            "_Type_": "Vec2",
+            "x": 0.368755,
+            "y": 1.001362},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.631245,
+            "y": 0.9986383}],
+        "useLUT": false},
+      "opticsLensPreset": null}}}

@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "EntityAudioControllerManagerParams.Main",
+  "_RecordId_": "4bdfd237-56d2-4a53-aba9-14a1bf9ca15b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerManagerParams",
+    "params": [
+      {
+        "_Type_": "EntityAudioControllerTypeManagementParams",
+        "audioControllerEntityType": "Actor",
+        "maxFullLODs": 20,
+        "maxLowLODs": 0},
+      {
+        "_Type_": "EntityAudioControllerTypeManagementParams",
+        "audioControllerEntityType": "Vehicle",
+        "maxFullLODs": 6,
+        "maxLowLODs": 4},
+      {
+        "_Type_": "EntityAudioControllerTypeManagementParams",
+        "audioControllerEntityType": "None",
+        "maxFullLODs": 500,
+        "maxLowLODs": 500},
+      {
+        "_Type_": "EntityAudioControllerTypeManagementParams",
+        "audioControllerEntityType": "Communication",
+        "maxFullLODs": 500,
+        "maxLowLODs": 500}]}}

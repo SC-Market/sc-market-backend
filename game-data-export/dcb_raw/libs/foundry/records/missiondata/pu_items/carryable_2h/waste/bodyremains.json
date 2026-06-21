@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "MissionItem.BodyRemains",
+  "_RecordId_": "8b0cd8d7-8037-4671-8d9e-17b6efd595c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.bf250450-c0a3-49ba-b229-877a61f4d5ad",
+        "_RecordId_": "bf250450-c0a3-49ba-b229-877a61f4d5ad"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.1e742ac6-c070-4b1d-afc7-6a8fafe11c58",
+        "_RecordId_": "1e742ac6-c070-4b1d-afc7-6a8fafe11c58"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.162cf95e-943d-478b-a13f-8dace4a0677e",
+        "_RecordId_": "162cf95e-943d-478b-a13f-8dace4a0677e"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_Item_0134"}]},
+    "weighting": 0.1,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_missionitem_waste_bloody_a.json"}}

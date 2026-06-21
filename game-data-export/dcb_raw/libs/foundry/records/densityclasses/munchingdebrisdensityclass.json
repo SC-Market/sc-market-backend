@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.MunchingDebrisDensityClass",
+  "_RecordId_": "abb9f1c7-1e75-457c-88b0-c6e8821831e8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 100.0,
+    "clusterUpperObjectCountDGS": 1000,
+    "clusterUpperObjectCountPersistence": 500,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

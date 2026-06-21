@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.Player_Under_Attack",
+  "_RecordId_": "9b0d7da8-ba81-49ef-9e43-7031fa5137bf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "Player_Under_Attack",
+    "min": -1.0,
+    "max": 0.0,
+    "defaultValue": -1.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 301.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

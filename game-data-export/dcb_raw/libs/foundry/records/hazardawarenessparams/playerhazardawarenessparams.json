@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "HazardAwarenessParams.PlayerHazardAwarenessParams",
+  "_RecordId_": "e7407804-71e7-49d4-975b-897f724e0d9e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HazardAwarenessParams",
+    "windHazardMinSpeed": 12.0,
+    "fireHandRaiseDistance": 6.0,
+    "handRaiseYawMin": -80.0,
+    "handRaiseYawMax": 100.0,
+    "handRaiseYawHysteresis": 10.0,
+    "handFollowYawMin": -15.0,
+    "handFollowYawMax": 90.0,
+    "handFollowYawSmoothing": 0.5,
+    "handPitchOffset": 0.0,
+    "handIKDistanceOffset": 0.0,
+    "handIKStrength": 0.5,
+    "handResumeDelay": 2.0,
+    "handRaiseDelay": 0.5,
+    "handSwitchDelay": 0.5,
+    "handLowerDelay": 1.0,
+    "handHazardStopDelay": 2.0}}

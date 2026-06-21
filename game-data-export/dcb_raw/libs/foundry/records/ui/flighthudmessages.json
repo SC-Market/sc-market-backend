@@ -1,0 +1,159 @@
+{
+  "_RecordName_": "FlightHUDUIView_Config.FlightHUDMessages",
+  "_RecordId_": "dee8da15-c6b2-46b9-b20e-dadabf617f2a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FlightHUDUIView_Config",
+    "messages": [
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@LOC_EMPTY",
+        "priority": 0},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_Eject",
+        "priority": 8},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningAlertShieldsCritical",
+        "priority": 3},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_AlertShieldsDown",
+        "priority": 5},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningAlertShieldsCritical",
+        "priority": 3},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningCollisionAlert",
+        "priority": 5},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningFuel0",
+        "priority": 4},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningFuelLow",
+        "priority": 3},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningFuel25",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningFuel50",
+        "priority": 1},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningFuel75",
+        "priority": 0},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningLowPowerWeapons",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningLowPowerShields",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningLowPowerThrusters",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningLowPowerGeneric",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatingWeapons",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatingShields",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatingThrusters",
+        "priority": 5},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatingGeneric",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatedWeapons",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatedShields",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatedThrusters",
+        "priority": 5},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningOverheatedGeneric",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningVehicleBricking",
+        "priority": 4},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_WarningVehicleBricked",
+        "priority": 6},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_QuantumInterdictionAlert",
+        "priority": 6},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_EmpWarning",
+        "priority": 5},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_PlanetProximityWarning",
+        "priority": 2},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_SelfDestruct",
+        "priority": 7},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@hud_Repair",
+        "priority": 1},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@hud_RepairFinished",
+        "priority": 1},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_QtAlignNotification",
+        "priority": 0},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_ObstructingLandingArea",
+        "priority": 1},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_EMPOffline",
+        "priority": 4},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_AlertPingDetected",
+        "priority": 3},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_AlertScanDetected",
+        "priority": 4},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@dfm_ui_PortsUnlocked",
+        "priority": 4},
+      {
+        "_Type_": "FlightHUDUIMessage",
+        "message": "@RN_Warning_ExplosionImminent",
+        "priority": 10}]}}

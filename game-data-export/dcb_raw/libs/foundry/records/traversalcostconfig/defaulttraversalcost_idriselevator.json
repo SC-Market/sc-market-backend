@@ -1,0 +1,45 @@
+{
+  "_RecordName_": "TraversalCostConfig.DefaultTraversalCost_IdrisElevator",
+  "_RecordId_": "7d70796a-6c21-40db-823d-bbd0da1cad59",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TraversalCostConfig",
+    "tag": null,
+    "costs": [
+      {
+        "_Type_": "CostModifierPerAgentType",
+        "agentType": "MediumSizedCharacters",
+        "traversalCostVariants": [
+          {
+            "_Type_": "TraversalCostConditionTags",
+            "tags": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.222db315-a93f-4f45-b36e-a7f6314e8363",
+                      "_RecordId_": "222db315-a93f-4f45-b36e-a7f6314e8363"}],
+                  "negativeTags": []}]},
+            "costMultiplier": 1.0,
+            "blocksTraversability": false,
+            "blocksStopping": false}],
+        "defaultCostMultiplier": 100000.0,
+        "blocksTraversability": false,
+        "blocksStopping": false},
+      {
+        "_Type_": "CostModifierPerAgentType",
+        "agentType": "LargeSizedCharacters",
+        "traversalCostVariants": [],
+        "defaultCostMultiplier": 1.0,
+        "blocksTraversability": false,
+        "blocksStopping": false},
+      {
+        "_Type_": "CostModifierPerAgentType",
+        "agentType": "VehicleMedium",
+        "traversalCostVariants": [],
+        "defaultCostMultiplier": 1.0,
+        "blocksTraversability": false,
+        "blocksStopping": false}]}}

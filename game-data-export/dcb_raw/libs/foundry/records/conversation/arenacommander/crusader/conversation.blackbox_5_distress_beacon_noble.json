@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.BlackBox_5_Distress_Beacon_Noble",
+  "_RecordId_": "0470fd9c-13de-43cf-a8fc-9e6da0886f08",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_blackbox5_recording_001.json",
+        "skipNodeInXSecs": -1.0}]}}

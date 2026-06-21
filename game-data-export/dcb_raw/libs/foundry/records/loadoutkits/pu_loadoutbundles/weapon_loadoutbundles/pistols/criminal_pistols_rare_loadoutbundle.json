@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "SLoadoutAssortment.criminal_pistols_rare_Loadoutbundle",
+  "_RecordId_": "66b74863-9c83-4da2-8c0c-3f838a1409d4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "SecondaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRandomGeneratedParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "GenerationSeed": 0,
+            "LoadoutAssortments": [
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/pistols/ksar_pistol_loadoutbundle.json",
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/pistols/lbco_pistol_loadoutbundle.json"]}]}]}}

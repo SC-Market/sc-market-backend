@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "SActorHitReactionsDef.StandardExternalForceResponseDef",
+  "_RecordId_": "e39c3bf0-821f-42ca-8b29-402bf83e5973",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SActorHitReactionsDef",
+    "impactAccumulationTime": 0.1,
+    "impactReductionFromMass": 0.0,
+    "physicsImpactScalePlayer": 0.5,
+    "physicsImpactScaleAI": 2.0,
+    "deathAnimationInterruptionDelay": 1.0,
+    "enableHitReactionsLight": true,
+    "enableHitReactionsMedium": false,
+    "enableHitReactionsHeavy": true,
+    "hitThresholdLight": 1.0,
+    "hitThresholdMedium": 3.0,
+    "hitThresholdHeavy": 60.0}}

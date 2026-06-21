@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_FPS_Aphorite",
+  "_RecordId_": "2ee59447-83e0-4f26-899e-df66780008e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Aphorite",
+      "_RecordId_": "9b47bacf-8efa-42e2-8d84-dee64983a00a"},
+    "elementInstability": 0.0,
+    "elementResistance": 0.0,
+    "elementOptimalWindowMidpoint": 0.7,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 0.0,
+    "elementExplosionMultiplier": 0.0,
+    "elementClusterFactor": 0.0}}

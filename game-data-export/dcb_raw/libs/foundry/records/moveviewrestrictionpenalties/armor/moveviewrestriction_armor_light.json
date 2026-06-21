@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "MoveViewRestrictionPenalty.MoveViewRestriction_Armor_Light",
+  "_RecordId_": "7bc7bbc3-64fc-437e-bf6c-3c261f8978ce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MoveViewRestrictionPenalty",
+    "restrictedMotionPenalty": 0.0,
+    "restrictedViewPenalty": 0.0}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.BarlowCondensed-Bold",
+  "_RecordId_": "02eada3c-653a-4e88-ba79-c4050097a80b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Billboard",
+    "paintFile": "UI/fonts/Install/BarlowCondensed-SemiBold.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.86,
+    "leadingModifier": -0.17,
+    "topMarginModifier": 0.04,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 7}}

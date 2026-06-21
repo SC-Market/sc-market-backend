@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ActorStanceConfig.ActorStanceConfig_Transport_PowerSuit_ARGO_ATLS",
+  "_RecordId_": "5ca461ae-8b9c-4ec0-9038-b28f388b1605",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorStanceConfig",
+    "stanceSpeeds": [
+      "file://./../../../../libs/foundry/records/actor/stanceinfo/transporters/powersuit/speeds/argo_atls_powersuit_stand.json"],
+    "stanceDimensions": [
+      "file://./../../../../libs/foundry/records/actor/stanceinfo/transporters/powersuit/dimensions/argo_atls_powersuit_stand.json"]}}

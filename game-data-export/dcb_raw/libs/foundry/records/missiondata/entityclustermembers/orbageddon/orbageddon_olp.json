@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "EntityClusterMember.Orbageddon_OLP",
+  "_RecordId_": "2cdb2b19-27c1-4534-900c-82bbc2cd2f32",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClusterMember",
+    "variables": [
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "BeamCharged",
+        "description": "Boolean for if the Beam charge has been activated",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "ResetOLP",
+        "description": "Boolean for if to reset OLP",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "LootRoom1Opened",
+        "description": "Variable for if the loot room has been opened on this cycle",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "LootRoom2Opened",
+        "description": "Variable for if the loot room has been opened on this cycle",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "LootRoom3Opened",
+        "description": "Variable for if the loot room has been opened on this cycle",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "LootRoom4Opened",
+        "description": "Variable for if the loot room has been opened on this cycle",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "RareLootRoomCycleDone",
+        "description": "Variable for if the flow of unlocking the rare loot room has been done this cycle",
+        "value": false},
+      {
+        "_Type_": "MissionVariableBoolean",
+        "name": "RareLootRoomOpened",
+        "description": "",
+        "value": false}]}}

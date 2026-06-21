@@ -1,0 +1,67 @@
+{
+  "_RecordName_": "SPerkReputationListParams.PerkReputationList_Wikelo",
+  "_RecordId_": "3d1543be-bfb7-471e-b985-ef34a7a711b0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SPerkReputationListParams",
+    "perks": [
+      {
+        "_Type_": "SPerkReputationParams",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_wikelo.json",
+        "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_001.json",
+        "perk": {
+          "_Type_": "SPerkParamsItem",
+          "name": "Helmet",
+          "description": "desc",
+          "displayName": "@2019_Ann_Sale_Day1",
+          "displayDescription": "@LOC_PLACEHOLDER",
+          "icon": "",
+          "rewardItem": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/heavy/qrt_specialist_heavy_helmet_01_03_01.json"}},
+      {
+        "_Type_": "SPerkReputationParams",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_wikelo.json",
+        "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_001.json",
+        "perk": {
+          "_Type_": "SPerkParamsItem",
+          "name": "Core",
+          "description": "desc",
+          "displayName": "@2019_Ann_Sale_Day2",
+          "displayDescription": "@LOC_PLACEHOLDER",
+          "icon": "",
+          "rewardItem": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/core/qrt_specialist_heavy_core_01_03_01.json"}},
+      {
+        "_Type_": "SPerkReputationParams",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_wikelo.json",
+        "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_001.json",
+        "perk": {
+          "_Type_": "SPerkParamsItem",
+          "name": "Arms",
+          "description": "desc",
+          "displayName": "@2019_Ann_Sale_Day3",
+          "displayDescription": "@LOC_PLACEHOLDER",
+          "icon": "",
+          "rewardItem": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/arms/qrt_specialist_heavy_arms_01_03_01.json"}},
+      {
+        "_Type_": "SPerkReputationParams",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_wikelo.json",
+        "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_001.json",
+        "perk": {
+          "_Type_": "SPerkParamsItem",
+          "name": "Legs",
+          "description": "desc",
+          "displayName": "@2019_Ann_Sale_Day4",
+          "displayDescription": "@LOC_PLACEHOLDER",
+          "icon": "",
+          "rewardItem": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/legs/qrt_specialist_heavy_legs_01_03_01.json"}},
+      {
+        "_Type_": "SPerkReputationParams",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_wikelo.json",
+        "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_001.json",
+        "perk": {
+          "_Type_": "SPerkParamsItem",
+          "name": "VOLT LMG",
+          "description": "desc",
+          "displayName": "@2019_Ann_Sale_Day5",
+          "displayDescription": "@LOC_PLACEHOLDER",
+          "icon": "",
+          "rewardItem": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/volt_lmg_energy_01_collector01.json"}}]}}

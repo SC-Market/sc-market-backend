@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "EntityClassDefinition.AudioEnvironmentFeedbackPoint",
+  "_RecordId_": "7a2fdfb2-ebf9-4e5b-8c1e-95f3c9f88914",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Audio",
+    "Icon": "Sound.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EntityComponentAudioEnvironmentFeedbackPointParams",
+        "feedbackPointDef": "file://./../../../../../libs/foundry/records/audio/environmentfeedback/points/feedbackpointdefault.json"},
+      {
+        "_Type_": "EntityAudioControllerRtpcSubscriberParams",
+        "rtpcs": [
+          {
+            "_Type_": "AudioRtpc",
+            "rtpc": "Ship_Translation_Speed_NonNormalised"},
+          {
+            "_Type_": "AudioRtpc",
+            "rtpc": "Ship_Rotation_Speed_MaxAll_SlowLerp"},
+          {
+            "_Type_": "AudioRtpc",
+            "rtpc": "Ship_Rotation_Speed_MaxAll"}],
+        "rtpcLists": []}]}}

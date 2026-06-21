@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionItem.TimeTrials_RaceClass_Championship",
+  "_RecordId_": "90e80f0f-f226-410b-9497-ef8a8dfb0334",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.12c40c2e-ed51-493c-9432-c017c53c44bd",
+        "_RecordId_": "12c40c2e-ed51-493c-9432-c017c53c44bd"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": null}}

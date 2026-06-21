@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "RadiationStateTemplate.GasCloud_EM_Low_IR_Med_CS_Low",
+  "_RecordId_": "39d00f6b-4372-4d86-a737-17987c3c834c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RadiationStateTemplate",
+    "state": {
+      "_Type_": "RadiationStateTemplateInternal",
+      "distortionMod": "Override",
+      "distortion": 0.0,
+      "IR": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 0.0},
+      "EM": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 9200.0},
+      "CS": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 0.0},
+      "hazardousRadiationMod": "Override",
+      "hazardousRadiationRate": 0.0}}}

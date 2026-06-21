@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "GlobalGasParams.GlobalGasParams",
+  "_RecordId_": "c1779919-2cd1-4404-9914-c4a27badbe10",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "GlobalGasParams",
+    "transferRatePerAtmosphereSquareMetre": 20.0,
+    "minimumTransferRate": 10.0,
+    "mixRatePerSquareMetre": 50.0,
+    "mixAbsPressureDifferenceThreshold": 1.0,
+    "massAdditionRatePerCubicMetre_MatchingGases": 0.05,
+    "massSubtractionRatePerCubicMetre_MatchingGases": 0.05,
+    "massSubtractionRatePerCubicMetre_ForeignGases": 0.05,
+    "resourceCostPerKilogramCorrected": 100.0,
+    "thermalEnergyCorrectionRatePerCubicMetre": 100.0,
+    "resourceCostPerJoule": 100.0,
+    "humidityCorrectionRate": 0.05,
+    "resourceCostPerHumidity": 0.01,
+    "apparentTemperatureParams": {
+      "_Type_": "ApparentTemperatureParams",
+      "heatIndexBlendThreshold": 60.0,
+      "heatIndexHardThreshold": 90.0,
+      "windChillBlendThreshold": -60.0,
+      "windChillHardThreshold": -90.0,
+      "maxPressureForScaling": 1.0,
+      "defaultTemperatureForPressureScaling": 0.0}}}

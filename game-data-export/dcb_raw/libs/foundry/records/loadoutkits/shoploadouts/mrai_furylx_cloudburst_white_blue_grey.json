@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.MRAI_FuryLX_Cloudburst_White_Blue_Grey",
+  "_RecordId_": "295e8468-7404-4b18-adc2-71936cac2434",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameFuryLX_Paint_White_Blue_Grey",
+    "description": "@item_DescFuryLX_Paint_White_Blue_Grey",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_furylx_white_blue_grey.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

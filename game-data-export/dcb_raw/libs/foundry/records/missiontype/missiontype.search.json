@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Search",
+  "_RecordId_": "730479ef-64de-42e5-9869-87bfb9a15c3e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "search_ico",
+    "LocalisedTypeName": "@mobiGlas_ui_MissionType_Search",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/ContractsMgr_SearchIcon.svg",
+    "DisplayTime": -1.0}}

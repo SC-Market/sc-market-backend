@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Security_Single_Weak",
+  "_RecordId_": "8772e370-a4c6-43d1-8471-4480e0875235",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": null,
+            "name": "@Factions_CrusaderSecurity_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../../libs/foundry/records/crewmanifest/pu/crusadersecurity/pu_human_crusadersecurity_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot80.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

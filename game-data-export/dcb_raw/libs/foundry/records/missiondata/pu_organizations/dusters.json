@@ -1,0 +1,120 @@
+{
+  "_RecordName_": "MissionOrganization.Dusters",
+  "_RecordId_": "a8cb1117-22b6-4246-8607-6884be641d30",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4409529a-cac3-4ff4-8304-8af37ddb3336",
+            "_RecordId_": "4409529a-cac3-4ff4-8304-8af37ddb3336"},
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+            "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@dusters_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5ac81a6f-2d19-4cb4-a8bb-666014eab9d9",
+            "_RecordId_": "5ac81a6f-2d19-4cb4-a8bb-666014eab9d9"},
+          "string": "@dusters_claimsweep_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5ac81a6f-2d19-4cb4-a8bb-666014eab9d9",
+            "_RecordId_": "5ac81a6f-2d19-4cb4-a8bb-666014eab9d9"},
+          "string": "@dusters_claimsweep_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5ac81a6f-2d19-4cb4-a8bb-666014eab9d9",
+            "_RecordId_": "5ac81a6f-2d19-4cb4-a8bb-666014eab9d9"},
+          "string": "@dusters_claimsweep_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.dc42b5f9-4382-4bf2-9684-8571f46dda50",
+            "_RecordId_": "dc42b5f9-4382-4bf2-9684-8571f46dda50"},
+          "string": "@dusters_basesweep_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.dc42b5f9-4382-4bf2-9684-8571f46dda50",
+            "_RecordId_": "dc42b5f9-4382-4bf2-9684-8571f46dda50"},
+          "string": "@dusters_basesweep_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.dc42b5f9-4382-4bf2-9684-8571f46dda50",
+            "_RecordId_": "dc42b5f9-4382-4bf2-9684-8571f46dda50"},
+          "string": "@dusters_basesweep_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@dusters_basesweep_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@dusters_basesweep_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2922b211-8112-4f97-a914-4ea33481b5fa",
+            "_RecordId_": "2922b211-8112-4f97-a914-4ea33481b5fa"},
+          "string": "@dusters_basesweep_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@dusters_basesweep_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@dusters_basesweep_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1f5b690a-654f-42a4-b1b6-8aeba700f33d",
+            "_RecordId_": "1f5b690a-654f-42a4-b1b6-8aeba700f33d"},
+          "string": "@dusters_basesweep_desc_003"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "SIFCSGameModeParams.IFCSGameModeParams_Default",
+  "_RecordId_": "68532bca-111c-4dff-92e3-39e43f51b0ed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SIFCSGameModeParams",
+    "enableNewModel": false,
+    "enforceLegacyEspForNewModel": false,
+    "enableDecoupledGlidingDefault": false,
+    "enableDecoupledGlidingCoreOff": true,
+    "allowDisablingIFCSCore": true,
+    "cruiseModeOnByDefault": false,
+    "physicsDamping": [
+      {
+        "_Type_": "SIFCSGameModePhysicsDamping",
+        "dampingValue": 0.154321,
+        "transitionTime": 4.0},
+      {
+        "_Type_": "SIFCSGameModePhysicsDamping",
+        "dampingValue": 0.0,
+        "transitionTime": 4.0},
+      {
+        "_Type_": "SIFCSGameModePhysicsDamping",
+        "dampingValue": 0.0,
+        "transitionTime": 4.0},
+      {
+        "_Type_": "SIFCSGameModePhysicsDamping",
+        "dampingValue": 0.154321,
+        "transitionTime": 4.0}],
+    "legacyIncludeWindInAerodynamics": true,
+    "legacyMaxAcceptedWindSpeed": -1.0}}

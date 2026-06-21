@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Covalex_Tieno_Hauling_MissionAccept_Interstellar_Pyro",
+  "_RecordId_": "862aa49a-e9b9-4a52-abff-9b1badebbce9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9ac73429-980d-44d8-8598-cb71bd60d8a7",
+          "_RecordId_": "9ac73429-980d-44d8-8598-cb71bd60d8a7"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b18bcd2a-ce0e-4ee9-9f31-f6922caa1e2c",
+          "_RecordId_": "b18bcd2a-ce0e-4ee9-9f31-f6922caa1e2c"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+          "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6b2b71c1-0ad0-4aaf-8984-6b3918ef601c",
+          "_RecordId_": "6b2b71c1-0ad0-4aaf-8984-6b3918ef601c"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.dbd582bd-d4af-43de-b34d-7969063355a1",
+          "_RecordId_": "dbd582bd-d4af-43de-b34d-7969063355a1"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/haulingmission/missionaccept_hauling_interstellar_pyro.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-female-human-missiongivers-ellaeltieno.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.ANVL_Centurion",
+  "_RecordId_": "896d9954-346a-408f-8110-b612ecaeec2b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.5,
+      "y": 1.5,
+      "z": 1.5},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_entrance_door",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.09,
+          "y": -0.93,
+          "z": 0.99},
+        "shipState": "Both"}]}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "RadiationStateTemplate.Stanton2",
+  "_RecordId_": "78a6fb81-54fa-4374-8b7f-048ef3b9c009",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RadiationStateTemplate",
+    "state": {
+      "_Type_": "RadiationStateTemplateInternal",
+      "distortionMod": "Override",
+      "distortion": 0.0,
+      "IR": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 0.0},
+      "EM": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 0.0},
+      "CS": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 0.0},
+      "hazardousRadiationMod": "Override",
+      "hazardousRadiationRate": 0.0}}}

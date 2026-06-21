@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.TMBL_Cyclone_MT_Template",
+  "_RecordId_": "2bc70f6a-6121-44c5-894d-51cd8c710021",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 1.72}}}}

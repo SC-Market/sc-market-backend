@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "SeatReticleArchetype.SeatReticleArchetypeDefault",
+  "_RecordId_": "c426f00d-1bf5-4cd4-9416-213f180819f0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SeatReticleArchetype",
+    "fixed": true,
+    "look": true,
+    "velocity": true,
+    "control": false,
+    "atmospheric": true}}

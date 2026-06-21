@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.FlairDensityClass",
+  "_RecordId_": "2b63baf4-9e57-49a9-8b0c-c47ccdacda9a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 10.0,
+    "clusterUpperObjectCountDGS": 30,
+    "clusterUpperObjectCountPersistence": 15,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

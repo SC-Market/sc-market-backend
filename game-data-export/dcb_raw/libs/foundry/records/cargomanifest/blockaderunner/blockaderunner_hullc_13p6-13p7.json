@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "CargoManifest.BlockadeRunner_HullC_13p6-13p7",
+  "_RecordId_": "315e0ac3-5f77-4f94-858b-1fa334b85f05",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.3caecd63-f692-403e-afc2-855cfa3e9e4d",
+          "_RecordId_": "3caecd63-f692-403e-afc2-855cfa3e9e4d"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Even",
+      "resources": [
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ProcyonCanister_Time",
+            "_RecordId_": "1396faad-eb0c-4ed1-be34-571ca7ca159e"},
+          "probability": 1.0}],
+      "minCapacityRange": 0.136,
+      "maxCapacityRange": 0.137},
+    "cargoSpawnRules": [],
+    "tags": []}}

@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VehicleCareer.Support",
+  "_RecordId_": "90be8892-b27f-49e6-a2e1-b13801bf4bd5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VehicleCareer",
+    "displayName": "@vehicle_focus_support",
+    "roleList": [
+      "file://./../../../../../libs/foundry/records/vehicle/roles/heavyrefuelling.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/pathfinder.json"]}}

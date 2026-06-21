@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_ShieldGenerator_S01",
+  "_RecordId_": "98675536-a564-4257-8962-7acf7970cdd0",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_asas_s01_cloak_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_asas_s01_mirage_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_asas_s01_shimmer_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_asas_s01_veil_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_banu_s01_placeholder_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_basl_s01_bulwark_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_basl_s01_guardian_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_basl_s01_palisade_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_basl_s01_steward_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_behr_s01_5sa_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_behr_s01_6sa_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_behr_s01_7sa_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_godi_s01_allstop_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_godi_s01_allstop_scitem_resistgasclouds.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_godi_s01_forcewall_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_godi_s01_fr66_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_godi_s01_securehyde_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_seco_s01_hex_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_seco_s01_ink_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_seco_s01_web_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_yorm_s01_falco_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_yorm_s01_jaghte_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_yorm_s01_targa_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Shield_Generator_S1_Name"}}

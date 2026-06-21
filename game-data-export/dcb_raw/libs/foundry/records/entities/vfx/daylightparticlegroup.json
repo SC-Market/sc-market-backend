@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.DaylightParticleGroup",
+  "_RecordId_": "57ebf457-0216-4d39-89a9-5a632b8f4684",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "VFX",
+    "Icon": "Linked.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "DaylightParticleGroupComponentParams",
+        "activationBehavior": "AlwaysActive"}]}}

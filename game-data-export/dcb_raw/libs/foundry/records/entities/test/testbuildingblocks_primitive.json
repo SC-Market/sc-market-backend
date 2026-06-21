@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "EntityClassDefinition.TestBuildingBlocks_Primitive",
+  "_RecordId_": "c1f39614-c8df-448d-8c46-b0b22b39b64e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""},
+      {
+        "_Type_": "UIBindingsConsumerEntityComponentParams",
+        "linkToPort": false},
+      {
+        "_Type_": "UIBuildingBlocksEntityComponentParams",
+        "layers": [
+          {
+            "_Type_": "BuildingBlocksLayer",
+            "layerName": "layer_0",
+            "renderTarget": "All",
+            "defaultView": "_PointsTo_:ptr:1",
+            "views": [
+              {
+                "_Pointer_": "ptr:1",
+                "_Type_": "BuildingBlocksView",
+                "name": "view_0",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/dev/tests/bb3d_primitives.json",
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}}]}],
+        "enableFullScreenMouse": false,
+        "defaultStyle": null,
+        "defaultPreviewScene": null},
+      {
+        "_Type_": "UISimpleRenderNodeEntityComponentParams",
+        "minimumBounds": 1.0,
+        "materialName": "materials/default_ui.mtl",
+        "sortDistance": 0.0,
+        "fixedScaleMin": 0.0,
+        "fixedScaleMax": 0.0,
+        "cardStageRadius": 2.0,
+        "flattenBehavior": "None",
+        "interference": 0.0}]}}

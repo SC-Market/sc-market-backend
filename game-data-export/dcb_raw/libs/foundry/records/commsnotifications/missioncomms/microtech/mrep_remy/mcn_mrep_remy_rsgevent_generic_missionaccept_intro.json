@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_MREP_Remy_RSGEvent_Generic_MissionAccept_Intro",
+  "_RecordId_": "eb62c96a-66a0-4eb6-9f62-00b33071780c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e50da79d-8393-45b7-9bfe-d6854ed45a4b",
+          "_RecordId_": "e50da79d-8393-45b7-9bfe-d6854ed45a4b"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+          "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.75e3a7c7-996f-4420-bd15-5620595a7e70",
+          "_RecordId_": "75e3a7c7-996f-4420-bd15-5620595a7e70"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/basedmissiontriggers/missionaccept_intro.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_microtech_mrep_remy.json",
+    "stage": null}}

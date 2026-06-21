@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.QuantumDriveCooldown01",
+  "_RecordId_": "1af697a6-c617-4c96-8525-7b9dca14f512",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Quantum_Drive_CoolDown_Title",
+    "BodyText": "@Hints_Quantum_Drive_Cooldown1",
+    "BodyTextGamePad": "@Hints_Quantum_Drive_Cooldown1",
+    "BodyTextJoystick": "@Hints_Quantum_Drive_Cooldown1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

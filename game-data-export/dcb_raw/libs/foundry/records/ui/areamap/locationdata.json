@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.LocationData",
+  "_RecordId_": "fdc8b108-0726-444a-8664-7ff414c064cb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Room",
+    "Icon": "prefabbuilding.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentLocationDataParams",
+        "DisplayMesh": ""}]}}

@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "MissionItem.DistilledSpirits_1SCU",
+  "_RecordId_": "13d87acd-ff6f-4636-83e4-36066c1d7cdb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a6cc5c2c-64e2-4e9c-a22b-6e33235b77df",
+        "_RecordId_": "a6cc5c2c-64e2-4e9c-a22b-6e33235b77df"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.7c1b9056-b2be-4b12-ba93-f656cf3ea6a0",
+        "_RecordId_": "7c1b9056-b2be-4b12-ba93-f656cf3ea6a0"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.11f894bb-e1b1-40ae-b250-455ccfc78b5c",
+        "_RecordId_": "11f894bb-e1b1-40ae-b250-455ccfc78b5c"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@Mission_Item_0198"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_processedgoods_distilledspirits.json"}}

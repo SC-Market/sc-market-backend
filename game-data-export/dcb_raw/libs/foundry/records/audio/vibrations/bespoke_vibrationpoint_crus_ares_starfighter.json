@@ -1,0 +1,62 @@
+{
+  "_RecordName_": "VibrationAudioPointDef.Bespoke_VibrationPoint_CRUS_Ares_Starfighter",
+  "_RecordId_": "c7a1608c-8481-41c7-852f-5a81e20a8d21",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VibrationAudioPointDef",
+    "vibrationAudioEntries": [
+      {
+        "_Type_": "VibrationAudioEntry",
+        "debugName": "Weapon-Fire-driven",
+        "vibrationRtpcs": [
+          {
+            "_Type_": "AudioRtpcWithBehaviour",
+            "rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Vibration_WeaponFireDriven"},
+            "behavior": {
+              "_Type_": "SSmoothingTimeBased",
+              "attackSlew": 1.0,
+              "releaseSlew": 1.0,
+              "clampedBelow": 0.001}}],
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSVI_Looping_Movement_Driven_CompositeMaterials_Medium_01"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSVI_Looping_Movement_Driven_CompositeMaterials_Medium_01"},
+        "jostleEvent": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleCooldown": 0.3,
+        "jostleThreshold": 15.0,
+        "jostleRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "Vibration_Jostle"},
+        "usedVibrationTypes": [
+          "WeaponFire",
+          "WeaponFirePlayer"],
+        "vibrationInputModifiers": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0],
+        "calculationType": "Additive"}],
+    "customFalloff": 0.0}}

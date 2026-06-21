@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Ross_Datapad",
+  "_RecordId_": "1d22dd41-12ff-4771-a5e2-a681895f2612",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CharlieStation_Ross_Datapad_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_CharlieStation_Ross_Datapad_subtitle",
+    "autoOpenMobiGlas": true,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@mobiglas_CharlieStation_Ross_Datapad_text"},
+    "tutorialEntry": false}}

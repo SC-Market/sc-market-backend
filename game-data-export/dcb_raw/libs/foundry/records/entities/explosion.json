@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "EntityClassDefinition.Explosion",
+  "_RecordId_": "98cd2e5e-b076-43b4-9010-a1eef43adadc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "explosion.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SExplosionComponentParams",
+        "explosion": null,
+        "damage": 50.0,
+        "damageType": "Physical",
+        "minRadius": 0.0,
+        "maxRadius": 2.0}]}}

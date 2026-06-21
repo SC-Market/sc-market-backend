@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "StatusWidgetDisplayPreset.BloodDrugLevel",
+  "_RecordId_": "ad67f866-2b7d-4521-a9b5-6e24c0d1a085",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StatusWidgetDisplayPreset",
+    "ranges": [
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 75.0,
+        "maximumValue": 200.0,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 50.0,
+        "maximumValue": 75.0,
+        "displayDuration": 5.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 25.0,
+        "maximumValue": 50.0,
+        "displayDuration": 2.0,
+        "activeRange": "InteriorRange",
+        "enabled": false},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.0,
+        "maximumValue": 25.0,
+        "displayDuration": 2.0,
+        "activeRange": "InteriorRange",
+        "enabled": false}],
+    "incrementDisplayDuration": 3.0,
+    "incrementStep": 10.0,
+    "maximumChangePerSecond": 15.0,
+    "historySeconds": 1,
+    "historySamplesPerSecond": 1,
+    "shownOnLens": true,
+    "shownOnVisor": true}}

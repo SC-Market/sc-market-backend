@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CommunicationConfig.Human_Exerts",
+  "_RecordId_": "65ca4711-e64a-40be-ace8-14975bf1a496",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "Human_Exerts",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_exerts/human_cnc_exerts.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_exerts/human_soc_exerts.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_exerts/human_fps_exerts.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_exerts/human_df_exerts.json"]}}

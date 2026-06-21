@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_ShubinInterstellar",
+  "_RecordId_": "5d46ea09-889d-4a21-ac49-b3841e22cf1f",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+        "propertiesBB": []}]}}

@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_HurstonSecurity",
+  "_RecordId_": "216a8a6a-d1ef-4508-b45c-cc9d887732cc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "propertiesBB": []},
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_security.json",
+        "propertiesBB": []}]}}

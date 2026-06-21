@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_B_Armor_Firerat_001",
+  "_RecordId_": "90486860-07a3-4d09-80a4-8367ad757057",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_cz_armor_firerat.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

@@ -1,0 +1,80 @@
+{
+  "_RecordName_": "Faction_LEGACY.Advocacy",
+  "_RecordId_": "8d2e0e7f-3ca7-447a-aff8-086a60653b6a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction_LEGACY",
+    "displayName": "@ea_ui_faction_UEE_Advocacy",
+    "description": "@LOC_EMPTY",
+    "factionIcon": "UI/Textures/EA/SpawningScreen/uee_spawnicon.tif",
+    "gameToken": "uee_advocacy",
+    "defaultReaction": "Neutral",
+    "friendlyFireBehaviorOverrides": [
+      {
+        "_Type_": "FriendlyFireReactionOverride",
+        "reactionType": "Neutral",
+        "shouldAllowFriendlyFire": false}],
+    "factionRelationships": [
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/hostile.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/neutral.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/ea_friendtoall.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/xenothreat.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/vanduul.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/pirates.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/slaves.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/outcasts.json",
+        "reactionType": "Neutral"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/prisonguard.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/screaminggalsons.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/slavers.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/supreme.json",
+        "reactionType": "Hostile"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/uee.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/uee_navy.json",
+        "reactionType": "Friendly"},
+      {
+        "_Type_": "FactionRelationship",
+        "faction": "file://./../../../../libs/foundry/records/factions_legacy/criminal.json",
+        "reactionType": "Hostile"}],
+    "disguiseManufacturerTags": {
+      "_Type_": "TagsDNF",
+      "terms": []}}}

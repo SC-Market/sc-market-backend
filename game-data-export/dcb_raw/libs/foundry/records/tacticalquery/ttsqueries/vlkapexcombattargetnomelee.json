@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "TacticalQuery.VLKApexCombatTargetNoMelee",
+  "_RecordId_": "d629bef0-8385-48bf-857a-9de1622db7c0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "VLKApexCombatTargetNoMelee",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/apexvlkcombatcontentnomelee.json",
+        "optionOverrides": []}]}}

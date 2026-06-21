@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "SActorHitReactionsDef.VlkApexExternalForceResponseDef",
+  "_RecordId_": "3401010e-ec7e-464f-8e31-992293ecacfa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SActorHitReactionsDef",
+    "impactAccumulationTime": 0.1,
+    "impactReductionFromMass": 0.0,
+    "physicsImpactScalePlayer": 0.5,
+    "physicsImpactScaleAI": 2.0,
+    "deathAnimationInterruptionDelay": 999999.0,
+    "enableHitReactionsLight": false,
+    "enableHitReactionsMedium": false,
+    "enableHitReactionsHeavy": false,
+    "hitThresholdLight": 1.0,
+    "hitThresholdMedium": 3.0,
+    "hitThresholdHeavy": 60.0}}

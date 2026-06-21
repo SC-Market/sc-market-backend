@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VoiceBundle.PU_Admin_Bureaucrat_Female_Bundle",
+  "_RecordId_": "e817163e-fc10-4234-9890-38360bd589b2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_Admin_Bureaucrat_Female_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/bureaucrat/bureaucrat_female02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/bureaucrat/bureaucrat_female04.json"]}}

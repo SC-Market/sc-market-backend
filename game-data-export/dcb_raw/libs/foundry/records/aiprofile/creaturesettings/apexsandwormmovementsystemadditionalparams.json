@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "MovementSystemAdditionalParamsRecord.ApexSandwormMovementSystemAdditionalParams",
+  "_RecordId_": "8a1767de-743e-4779-ac5e-1df7f96e1780",
+  "_RecordTag_": "CoreAI",
+  "_RecordValue_": {
+    "_Type_": "MovementSystemAdditionalParamsRecord",
+    "params": {
+      "_Type_": "MovementSystemAdditionalParamsSubmergedCreature",
+      "maxAcceleration": 50.0,
+      "maxDeceleration": 50.0,
+      "minSpeed": 20.0}}}

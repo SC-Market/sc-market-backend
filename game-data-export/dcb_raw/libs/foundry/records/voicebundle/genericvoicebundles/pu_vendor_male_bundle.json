@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VoiceBundle.PU_Vendor_Male_Bundle",
+  "_RecordId_": "ec169552-e650-4a7c-bee0-b88e4dbd4415",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_Vendor_Male_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_male_03.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_male_01.json"]}}

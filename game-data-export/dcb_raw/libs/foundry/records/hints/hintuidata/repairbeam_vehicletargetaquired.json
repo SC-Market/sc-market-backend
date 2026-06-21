@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.RepairBeam_VehicleTargetAquired",
+  "_RecordId_": "e275bf38-dcbd-4b96-95f9-a326ad74eba3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_RepairBeam_Title",
+    "BodyText": "@Hints_RepairBeam_VehicleTargetAquired",
+    "BodyTextGamePad": "@Hints_RepairBeam_VehicleTargetAquired",
+    "BodyTextJoystick": "@Hints_RepairBeam_VehicleTargetAquired",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

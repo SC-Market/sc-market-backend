@@ -1,0 +1,95 @@
+{
+  "_RecordName_": "EntityClassDefinition.Supreme",
+  "_RecordId_": "9bb53f48-0ae8-43b8-aa0b-56e9ed31a271",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "SOrganizationProperties",
+        "Name": "Supreme",
+        "DisplayName": "@Supreme_RepUI_Name",
+        "Description": "@Supreme_RepUI_Description",
+        "Headquarters": "@Supreme_RepUI_Headquarters",
+        "GEID": 199998949547,
+        "Logo": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_logo_blacjac.tif",
+        "ReputationContextPropertiesUI": null,
+        "MemberCount": 154,
+        "Lawful": true,
+        "DisableReputationTracking": false,
+        "Allies": [
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/crusaderindustries.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_ally_100.json"}],
+        "Enemies": [
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/ninetails.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-100.json"}],
+        "hostilityParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-005.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "alliedParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_ally_025.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "propertiesBB": [
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFounded",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@Supreme_RepUI_Founded"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityLeadership",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@Supreme_RepUI_Leadership"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityArea",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@Supreme_RepUI_Area"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFocus",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@Supreme_RepUI_Focus"}}],
+        "perkReputationRewardList": [],
+        "sandboxTriggers": [
+          {
+            "_Type_": "SandboxTriggerRecordParams",
+            "triggerRecord": "file://./../../../../../libs/foundry/records/reputation/sandboxtriggers/grievousharm_ai.json"}]},
+      {
+        "_Type_": "SUniqueEntityClass",
+        "fixed_geid": 199998000919},
+      {
+        "_Type_": "SReputationContextPropertiesUI",
+        "context": null}],
+    "Components": []}}

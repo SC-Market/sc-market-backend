@@ -1,0 +1,173 @@
+{
+  "_RecordName_": "CameraLensParams.FlareSciFi",
+  "_RecordId_": "5fbfe1b5-788c-4cf2-a70d-2ca818e87df1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CameraLensParams",
+    "BloomIntensity": 2.0,
+    "FlareIntensity": 1.6,
+    "Streak": {
+      "_Type_": "CameraLensStreak",
+      "Intensity": 6.0,
+      "Width": 1.2,
+      "Tint": {
+        "_Type_": "RGB",
+        "r": 1.0,
+        "g": 1.0,
+        "b": 1.0}},
+    "GhostSets": [
+      {
+        "_Type_": "CameraLensGhostSet",
+        "SetName": "Stretchy",
+        "Radius": 1.2,
+        "Distortion": {
+          "_Type_": "CameraLensDistortion",
+          "Radial": 1.0,
+          "Spherical": 0.0,
+          "Coma": 0.0,
+          "Curvature": 1.4},
+        "ChromaticAberration": {
+          "_Type_": "CameraLensChromaticAberration",
+          "Transverse": -0.7,
+          "Axial": 0.0},
+        "Instances": [
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 1.7,
+            "Intensity": 3.3,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.7,
+              "g": 0.7,
+              "b": 1.0}},
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 1.2,
+            "Intensity": 1.0,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 1.0,
+              "g": 1.0,
+              "b": 1.0}}]},
+      {
+        "_Type_": "CameraLensGhostSet",
+        "SetName": "Curvy",
+        "Radius": 1.4,
+        "Distortion": {
+          "_Type_": "CameraLensDistortion",
+          "Radial": -3.0,
+          "Spherical": 3.0,
+          "Coma": 0.5,
+          "Curvature": 3.0},
+        "ChromaticAberration": {
+          "_Type_": "CameraLensChromaticAberration",
+          "Transverse": -0.9,
+          "Axial": -2.4},
+        "Instances": [
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 1.6,
+            "Intensity": 1.9,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.8,
+              "g": 0.9,
+              "b": 1.0}},
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 0.65,
+            "Intensity": 5.5,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.7,
+              "g": 0.8,
+              "b": 0.9}},
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": -0.8,
+            "Intensity": 4.65,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.7,
+              "g": 0.7,
+              "b": 1.0}}]},
+      {
+        "_Type_": "CameraLensGhostSet",
+        "SetName": "Chroma Only",
+        "Radius": 0.0,
+        "Distortion": null,
+        "ChromaticAberration": {
+          "_Type_": "CameraLensChromaticAberration",
+          "Transverse": 0.0,
+          "Axial": 0.5},
+        "Instances": [
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": -0.3,
+            "Intensity": 1.0,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.7,
+              "g": 1.0,
+              "b": 0.9}},
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": -1.5,
+            "Intensity": 2.5,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.8,
+              "g": 0.6,
+              "b": 1.0}}]},
+      {
+        "_Type_": "CameraLensGhostSet",
+        "SetName": "Round",
+        "Radius": 3.0,
+        "Distortion": {
+          "_Type_": "CameraLensDistortion",
+          "Radial": 0.0,
+          "Spherical": 0.9,
+          "Coma": 3.0,
+          "Curvature": 0.0},
+        "ChromaticAberration": {
+          "_Type_": "CameraLensChromaticAberration",
+          "Transverse": -1.8,
+          "Axial": 0.0},
+        "Instances": [
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 0.2,
+            "Intensity": 8.0,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.4,
+              "g": 0.5,
+              "b": 1.0}},
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 0.5,
+            "Intensity": 8.0,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.7,
+              "g": 0.9,
+              "b": 1.0}},
+          {
+            "_Type_": "CameraLensGhostInstance",
+            "Name": "",
+            "Position": 1.0,
+            "Intensity": 8.0,
+            "Tint": {
+              "_Type_": "RGB",
+              "r": 0.7,
+              "g": 0.8,
+              "b": 1.0}}]}]}}

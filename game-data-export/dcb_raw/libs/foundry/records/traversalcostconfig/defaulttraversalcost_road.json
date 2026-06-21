@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "TraversalCostConfig.DefaultTraversalCost_Road",
+  "_RecordId_": "cdcd0254-8a20-4627-837e-04b6ac47fc8b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TraversalCostConfig",
+    "tag": null,
+    "costs": [
+      {
+        "_Type_": "CostModifierPerAgentType",
+        "agentType": "MediumSizedCharacters",
+        "traversalCostVariants": [
+          {
+            "_Type_": "TraversalCostConditionTags",
+            "tags": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7021995b-c84f-43f9-a035-3dfe8521ebbd",
+                      "_RecordId_": "7021995b-c84f-43f9-a035-3dfe8521ebbd"}],
+                  "negativeTags": []}]},
+            "costMultiplier": 3.0,
+            "blocksTraversability": false,
+            "blocksStopping": false}],
+        "defaultCostMultiplier": 1.0,
+        "blocksTraversability": false,
+        "blocksStopping": false},
+      {
+        "_Type_": "CostModifierPerAgentType",
+        "agentType": "LargeSizedCharacters",
+        "traversalCostVariants": [
+          {
+            "_Type_": "TraversalCostConditionTags",
+            "tags": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7021995b-c84f-43f9-a035-3dfe8521ebbd",
+                      "_RecordId_": "7021995b-c84f-43f9-a035-3dfe8521ebbd"}],
+                  "negativeTags": []}]},
+            "costMultiplier": 3.0,
+            "blocksTraversability": false,
+            "blocksStopping": false}],
+        "defaultCostMultiplier": 1.0,
+        "blocksTraversability": false,
+        "blocksStopping": false},
+      {
+        "_Type_": "CostModifierPerAgentType",
+        "agentType": "VehicleMedium",
+        "traversalCostVariants": [],
+        "defaultCostMultiplier": 1.0,
+        "blocksTraversability": false,
+        "blocksStopping": false}]}}

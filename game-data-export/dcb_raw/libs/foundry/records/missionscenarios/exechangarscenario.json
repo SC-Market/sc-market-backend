@@ -1,0 +1,78 @@
+{
+  "_RecordName_": "MissionScenario.ExecHangarScenario",
+  "_RecordId_": "0f6d4fd3-5664-49c9-aeb1-3e27f1bc810e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "Executive Hangar Powering Scenario",
+    "description": "Event to control access to Executive Hangars in Pyro: Contested Zone Event",
+    "variables": [],
+    "cycles": [
+      {
+        "_Type_": "MissionScenarioCycle",
+        "name": "PowerCycle",
+        "description": "The powering up and down of the exec hangar server shard room",
+        "phases": [
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Charged_0",
+            "description": "Scenario Start",
+            "duration_seconds": 1440},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Charged_1",
+            "description": "Charged 1st light",
+            "duration_seconds": 1440},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Charged_2",
+            "description": "Charged 2nd light",
+            "duration_seconds": 1440},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Charged_3",
+            "description": "Charged 3rd light",
+            "duration_seconds": 1440},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Charged_4",
+            "description": "Charged 4th light",
+            "duration_seconds": 1440},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Charged_5",
+            "description": "Charged 5th light",
+            "duration_seconds": 720},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Drained_1",
+            "description": "Drained 1st light",
+            "duration_seconds": 720},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Drained_2",
+            "description": "Drained 2nd light",
+            "duration_seconds": 720},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Drained_3",
+            "description": "Drained 3rd light",
+            "duration_seconds": 720},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Drained_4",
+            "description": "Drained 4th light",
+            "duration_seconds": 720},
+          {
+            "_Type_": "MissionScenarioCyclePhase",
+            "name": "Drained_5",
+            "description": "Turning on Alarm states and Drained 5th light",
+            "duration_seconds": 300}]}],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": true,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": false}}

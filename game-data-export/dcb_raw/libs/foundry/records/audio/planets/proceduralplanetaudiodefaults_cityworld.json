@@ -1,0 +1,545 @@
+{
+  "_RecordName_": "ProceduralPlanetAudioData.ProceduralPlanetAudioDefaults_CityWorld",
+  "_RecordId_": "39ef2875-f8b0-41dc-815e-a8fcea210ba2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralPlanetAudioData",
+    "entries": [
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "GeologyObject_Standard",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_GeologyObject_Standard_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/geologyobject_standard.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "SmallFoliage_Succulent",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_SmallFoliageObject_Succulent_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/smallfoliage_succulent.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "LargeFoliage_DeadTree",
+        "listenerMovementThreshold": 0.5,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_LargeFoliageObject_DeadTree_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/largefoliage_deadtree.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "LargeFoliage_LushTree",
+        "listenerMovementThreshold": 0.5,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_LargeFoliageObject_LushTree_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/largefoliage_lushtree.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "LargeFoliage_StandardTree",
+        "listenerMovementThreshold": 0.5,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_LargeFoliageObject_StandardTree_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/largefoliage_standardtree.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": [
+          null]},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "VolcanicObject_Acidic",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_VolcanicObject_Acidic_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/volcanicobject_acidic.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "VolcanicObject_Cryo",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_VolcanicObject_Cryo_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/volcanicobject_cryo.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "VolcanicObject_Thermal",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_VolcanicObject_Thermal_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/volcanicobject_thermal.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "CrystalObject_Blue",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Blue_Count"},
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/crystalobject_blue.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "CrystalObject_Dark",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Dark_Count"},
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/crystalobject_dark.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "CrystalObject_Dark_Huge",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Dark_Count"},
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/crystalobject_dark_huge.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "CrystalObject_Pink",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Pink_Count"},
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/crystalobject_pink.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "CrystalObject_Red",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Red_Count"},
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/crystalobject_red.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "CrystalObject_Standard",
+        "listenerMovementThreshold": 2.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Standard_Count"},
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_CrystalObject_Count"}],
+          "maxInstances": 7,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/crystalobject_standard.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "ManMade_Buildings_CityBlocks_CommercialZone_Small",
+        "listenerMovementThreshold": 20.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_ManMade_Buildings_CityBlocks_Count"}],
+          "maxInstances": 4,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/manmade_buildings_cityblocks_commercialzone_small.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "ManMade_Buildings_CityBlocks_CommercialZone_Large",
+        "listenerMovementThreshold": 20.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_ManMade_Buildings_CityBlocks_Count"}],
+          "maxInstances": 4,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/manmade_buildings_cityblocks_commercialzone_large.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "ManMade_Buildings_CityBlocks_Industrial_Small",
+        "listenerMovementThreshold": 20.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_ManMade_Buildings_CityBlocks_Count"}],
+          "maxInstances": 4,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/manmade_buildings_cityblocks_industrial_small.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "ManMade_Buildings_CityBlocks_Industrial_Large",
+        "listenerMovementThreshold": 20.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_ManMade_Buildings_CityBlocks_Count"}],
+          "maxInstances": 4,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/manmade_buildings_cityblocks_industrial_large.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "ManMade_Buildings_CityBlocks_Residential_Small",
+        "listenerMovementThreshold": 20.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_ManMade_Buildings_CityBlocks_Count"}],
+          "maxInstances": 4,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/manmade_buildings_cityblocks_residential_small.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []},
+      {
+        "_Type_": "ProceduralPlanetAudioEntry",
+        "audioName": "ManMade_Buildings_CityBlocks_Residential_Large",
+        "listenerMovementThreshold": 20.0,
+        "algorithm": {
+          "_Type_": "ProceduralPlanetAudioAlgorithmClosestObjects",
+          "countRtpcs": [
+            {
+              "_Type_": "AudioRtpc",
+              "rtpc": "ProcPlanetAudio_ManMade_Buildings_CityBlocks_Count"}],
+          "maxInstances": 4,
+          "scaleRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Instance_Scale"},
+          "definitionSingle": "file://./../../../../../libs/foundry/records/audio/planets/planettagandevents/manmade_buildings_cityblocks_residential_large.json",
+          "definitionCrowd": null,
+          "countCrowdRtpc": {
+            "_Type_": "AudioRtpc",
+            "rtpc": "ProceduralPlanetAudio_Crowd_Count"},
+          "crowdIsMultipoint": false},
+        "disturbances": []}],
+    "pressureRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_AtmosphericPressure"},
+    "temperatureRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_Temperature"},
+    "humidityRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_Humidity"},
+    "breathabilityRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "firstRoomIsPlanetRoomRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "firstRoomIsPlanetRoom"},
+    "effectTagMovementRtpcs": [
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ae7b18a2-0478-4ff4-8e86-9799af4759b6",
+          "_RecordId_": "ae7b18a2-0478-4ff4-8e86-9799af4759b6"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "ProceduralPlanetAudio_Wind_Speed"}},
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.732fce87-e902-4146-a8a5-2c9dd4a0b61e",
+          "_RecordId_": "732fce87-e902-4146-a8a5-2c9dd4a0b61e"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "ProceduralPlanetAudio_Snow_Speed"}},
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.44dcada1-254d-4f20-a8ff-06f0060bcc76",
+          "_RecordId_": "44dcada1-254d-4f20-a8ff-06f0060bcc76"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "ProceduralPlanetAudio_Sand_Speed"}},
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ef5d3fe7-2352-48c2-bac2-c6754e3dce0e",
+          "_RecordId_": "ef5d3fe7-2352-48c2-bac2-c6754e3dce0e"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": ""}},
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9fcb697d-e199-442a-9647-524decdf6bb2",
+          "_RecordId_": "9fcb697d-e199-442a-9647-524decdf6bb2"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "ProceduralPlanetAudio_DefaultDust_Speed"}},
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.573c284c-3842-4818-be1f-3ccb9a532cc1",
+          "_RecordId_": "573c284c-3842-4818-be1f-3ccb9a532cc1"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "ProceduralPlanetAudio_Soil_Speed"}}],
+    "disturbanceLists": [
+      {
+        "_Type_": "ProceduralPlanetAudioDisturbanceList",
+        "disturbances": [
+          {
+            "_Type_": "ProceduralPlanetAudioDisturbanceDef",
+            "byActor": true,
+            "byWheeledVehicle": true,
+            "bySpaceship": true,
+            "byOther": true,
+            "idleTimeThreshold": 0.2,
+            "enterSound": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": "Play_ENVT_TouchBending_SmallFoliage_Bush_Disturbance_Oneshot_Enter_01"},
+            "disturbedLoopStart": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": "Play_ENVT_TouchBending_SmallFoliage_Bush_Disturbance_Loop_01"},
+            "disturbedLoopStop": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": "Stop_ENVT_TouchBending_SmallFoliage_Bush_Disturbance_Loop_01"},
+            "redisturbSound": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": "Play_ENVT_TouchBending_SmallFoliage_Bush_Redisturbance_Oneshot_01"},
+            "exitSound": {
+              "_Type_": "GlobalResourceAudio",
+              "audioTrigger": "Play_ENVT_TouchBending_SmallFoliage_Bush_Disturbance_Oneshot_Exit_01"}}]}],
+    "disturbanceVelocityRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_TouchBending_Disturbance_Velocity"}}}

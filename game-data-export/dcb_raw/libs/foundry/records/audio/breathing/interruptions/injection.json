@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "AudioBreathInterrupt.Injection",
+  "_RecordId_": "ff873557-5b17-4d74-ac14-b099c3ebc676",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathInterrupt",
+    "description": "Breathing interrupt for MedPen injections.",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.05361943,
+          "y": 2.7},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 2.7},
+        {
+          "_Type_": "Vec2",
+          "x": 1.943891,
+          "y": 2.7},
+        {
+          "_Type_": "Vec2",
+          "x": 1.732775,
+          "y": 2.7},
+        {
+          "_Type_": "Vec2",
+          "x": 3.0,
+          "y": 2.7},
+        {
+          "_Type_": "Vec2",
+          "x": 4.267225,
+          "y": 2.7}],
+      "useLUT": true},
+    "breathEvent": "BreathCustom",
+    "customEvent": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "triggerCustomEventOnly": true}}

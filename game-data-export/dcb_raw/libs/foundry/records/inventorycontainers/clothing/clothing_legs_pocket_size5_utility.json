@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.clothing_legs_pocket_size5_utility",
+  "_RecordId_": "f8def396-d72b-4c87-aca7-dd19b60c9401",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.365,
+      "y": 0.365,
+      "z": 0.1825},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 4000}}}}

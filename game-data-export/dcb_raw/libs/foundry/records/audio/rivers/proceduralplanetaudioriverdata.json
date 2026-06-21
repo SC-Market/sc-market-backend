@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "ProceduralPlanetAudioRiverData.ProceduralPlanetAudioRiverData",
+  "_RecordId_": "de3609cb-2095-4cb7-a1a6-4418e9b9b83f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralPlanetAudioRiverData",
+    "riverLoopStart": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_ENVO_ProcPlanetAudio_LiquidBodies_RiverProxy"},
+    "riverFlowSpeedRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_River_Speed"},
+    "riverWidthRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_River_Width"},
+    "distanceFromRiverEdgeRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_River_DistanceFromEdge"}}}

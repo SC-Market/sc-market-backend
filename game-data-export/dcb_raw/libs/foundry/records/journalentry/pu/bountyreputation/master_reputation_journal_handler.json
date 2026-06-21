@@ -1,0 +1,297 @@
+{
+  "_RecordName_": "SReputationJournalEntryHandlerParams.Master_Reputation_Journal_Handler",
+  "_RecordId_": "53939a05-3c1c-4426-9160-0a8615e73161",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationJournalEntryHandlerParams",
+    "reputationTypes": [
+      {
+        "_Type_": "SReputationJournalEntriesParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "journalGroups": [
+          {
+            "_Type_": "SReputationJournalGroupParams",
+            "standingEntries": [
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_applicant.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_probation_termination.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_applicant_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_junioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_probation_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_agent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_junioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_senioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_agent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_veteranagent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_senioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_masteragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/blackjacbountydepartment/blacjac_veteranagent_promotion.json"}]}]},
+      {
+        "_Type_": "SReputationJournalEntriesParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_crusaderindustries.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "journalGroups": [
+          {
+            "_Type_": "SReputationJournalGroupParams",
+            "standingEntries": [
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_applicant.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_probation_termination.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_applicant_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_junioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_probation_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_agent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_junioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_senioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_agent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_veteranagent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_senioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_masteragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/crusaderbountydepartment/crusader_veteranagent_promotion.json"}]}]},
+      {
+        "_Type_": "SReputationJournalEntriesParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_hurstondynamics.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "journalGroups": [
+          {
+            "_Type_": "SReputationJournalGroupParams",
+            "standingEntries": [
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_applicant.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_probation_termination.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_applicant_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_junioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_probation_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_agent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_junioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_senioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_agent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_veteranagent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_senioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_masteragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/hurstonbountydepartment/hurston_veteranagent_promotion.json"}]}]},
+      {
+        "_Type_": "SReputationJournalEntriesParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_northrockservicegroup.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "journalGroups": [
+          {
+            "_Type_": "SReputationJournalGroupParams",
+            "standingEntries": [
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_applicant.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_probation_termination.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_applicant_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_probation.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_junioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_probation_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_junior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_agent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_junioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_senioragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_agent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_veteranagent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_senioragent_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_masteragent_demotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/northrock/northrock_veteranagent_promotion.json"}]}]},
+      {
+        "_Type_": "SReputationJournalEntriesParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_vaughn.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_assassination.json",
+        "journalGroups": [
+          {
+            "_Type_": "SReputationJournalGroupParams",
+            "standingEntries": [
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "INCREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/assassination/reputationstanding_assassination_rookie.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/vaughn_outsider_promotion.json"},
+              {
+                "_Type_": "SReputationStandingJournalEntryParams",
+                "changeDirection": "DECREASED",
+                "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/assassination/reputationstanding_assassination_outsider.json",
+                "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/bountyreputation/vaughn_termination.json"}]}]}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MedBeam_MT_TargetRequired",
+  "_RecordId_": "3bfcf4bf-7070-4320-a7f9-bfc88735d035",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_MedBeam_MT_Title",
+    "BodyText": "@Hints_MedBeam_MT_TargetRequired",
+    "BodyTextGamePad": "@Hints_MedBeam_MT_TargetRequired",
+    "BodyTextJoystick": "@Hints_MedBeam_MT_TargetRequired",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

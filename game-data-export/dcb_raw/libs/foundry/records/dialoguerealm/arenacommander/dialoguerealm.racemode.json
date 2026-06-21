@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "DialogueRealm.RaceMode",
+  "_RecordId_": "df8837f8-1c5a-410a-8c90-97546abc8d87",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueRealm",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""}}}

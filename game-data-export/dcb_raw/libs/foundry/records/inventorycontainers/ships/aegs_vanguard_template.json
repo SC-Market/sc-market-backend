@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.AEGS_Vanguard_Template",
+  "_RecordId_": "85876834-649b-44a6-a3bb-84f26fff6dcc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.0}}}}

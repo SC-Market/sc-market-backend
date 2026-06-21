@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.c_default_missionobjectives",
+  "_RecordId_": "07b7771a-8112-407a-9bd3-aab9a393d4f2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 243,
+        "g": 220,
+        "b": 110,
+        "a": 255}}}}

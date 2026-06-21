@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ContractDifficultyProfile.Discovery",
+  "_RecordId_": "7a44a118-f6dc-41bd-baeb-da0764002cc8",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "ContractDifficultyProfile",
+    "mechanicalSkillWeight": 0.153,
+    "mentalLoadWeight": 0.459,
+    "riskOfLossWeight": 0.306,
+    "gameKnowledgeWeight": 0.473}}

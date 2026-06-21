@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Mining03",
+  "_RecordId_": "5969d4e8-a45a-4c26-bb5d-71d4a8d0eb54",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Mining_Scanning_Title",
+    "BodyText": "@Hints_OnProspectorRadarBlobFound",
+    "BodyTextGamePad": "@Hints_OnProspectorRadarBlobFound",
+    "BodyTextJoystick": "@Hints_OnProspectorRadarBlobFound",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

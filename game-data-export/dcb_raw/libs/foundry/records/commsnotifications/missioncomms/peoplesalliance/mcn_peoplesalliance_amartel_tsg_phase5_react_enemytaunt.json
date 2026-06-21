@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "CommsNotification.MCN_PeoplesAlliance_AMartel_TSG_Phase5_React_EnemyTaunt",
+  "_RecordId_": "e3af911e-7406-4257-be1d-93df6ec178b2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b9675fd9-e22e-45de-a58d-e4990aa92c32",
+          "_RecordId_": "b9675fd9-e22e-45de-a58d-e4990aa92c32"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.263275f9-9db9-44f0-bb08-a874e7602185",
+          "_RecordId_": "263275f9-9db9-44f0-bb08-a874e7602185"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a668b61-da01-43ad-9639-e552027e0768",
+          "_RecordId_": "7a668b61-da01-43ad-9639-e552027e0768"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7e0bad5f-40b0-4f3c-a3b9-06db473eb042",
+          "_RecordId_": "7e0bad5f-40b0-4f3c-a3b9-06db473eb042"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa675898-bc28-4fe1-adb9-9d97a01edccd",
+          "_RecordId_": "fa675898-bc28-4fe1-adb9-9d97a01edccd"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.baa1a7de-a6c9-4162-8b67-1906f649f120",
+          "_RecordId_": "baa1a7de-a6c9-4162-8b67-1906f649f120"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/tsgspecific/tsg_phase5_react_enemytaunt.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-male-human-missiongivers-anissmartel.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

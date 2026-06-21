@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "AIWaveCollection.NTLockdown_Cruisers",
+  "_RecordId_": "e68b9ad4-d282-46ab-bb24-a6f0f8213668",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 0,
+        "textId": "",
+        "staggerTime": 0.1,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/aegs_hammerhead_pu_ai_nt_qig.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 3,
+            "minAmount": 2,
+            "midAmount": -1,
+            "maxAmount": 3,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/ninetails/pu_human_ninetails_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot50.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_01_low_001.json",
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_10_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

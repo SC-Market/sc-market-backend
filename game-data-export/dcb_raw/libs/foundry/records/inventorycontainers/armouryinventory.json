@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ArmouryInventory",
+  "_RecordId_": "95b7973b-77ab-43e5-9c06-6922ef1e9161",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 35.0,
+      "y": 35.0,
+      "z": 35.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 500.0}}}}

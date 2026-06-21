@@ -1,0 +1,508 @@
+{
+  "_RecordName_": "MissionOrganization.MilesEckhart",
+  "_RecordId_": "09991122-4477-45e9-8706-33af5f62508d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d98e876d-219b-468c-bfe3-c27d26911c94",
+            "_RecordId_": "d98e876d-219b-468c-bfe3-c27d26911c94"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@meet_miles_lg_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_miles_assassin_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_miles_assassin_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_miles_assassin_title_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_miles_assassin_title_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@mg_miles_assassin_title_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@mg_miles_assassin_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@mg_miles_assassin_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@mg_miles_assassin_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@mg_miles_assassin_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.05983efa-be4c-4e27-ba8b-08449934800c",
+            "_RecordId_": "05983efa-be4c-4e27-ba8b-08449934800c"},
+          "string": "@mg_miles_assassin_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_miles_assassin_danger_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_miles_assassin_danger_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_miles_assassin_danger_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_miles_assassin_danger_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b44678a-d4a5-4bac-b223-076e72bf203d",
+            "_RecordId_": "0b44678a-d4a5-4bac-b223-076e72bf203d"},
+          "string": "@mg_miles_assassin_danger_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@mg_miles_assassin_timed_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@mg_miles_assassin_timed_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@mg_miles_assassin_timed_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@mg_miles_assassin_timed_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec66ea01-4504-4fa3-996b-350b481e42cd",
+            "_RecordId_": "ec66ea01-4504-4fa3-996b-350b481e42cd"},
+          "string": "@mg_miles_assassin_timed_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8d6852c8-f712-4526-93b8-465558ef5b10",
+            "_RecordId_": "8d6852c8-f712-4526-93b8-465558ef5b10"},
+          "string": "@mg_miles_recoverStolen_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8d6852c8-f712-4526-93b8-465558ef5b10",
+            "_RecordId_": "8d6852c8-f712-4526-93b8-465558ef5b10"},
+          "string": "@mg_miles_recoverStolen_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ef0184ed-41fb-4172-8fa4-e655753d6e3e",
+            "_RecordId_": "ef0184ed-41fb-4172-8fa4-e655753d6e3e"},
+          "string": "@mg_miles_recoverStolen_danger_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ef0184ed-41fb-4172-8fa4-e655753d6e3e",
+            "_RecordId_": "ef0184ed-41fb-4172-8fa4-e655753d6e3e"},
+          "string": "@mg_miles_recoverStolen_danger_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ef0184ed-41fb-4172-8fa4-e655753d6e3e",
+            "_RecordId_": "ef0184ed-41fb-4172-8fa4-e655753d6e3e"},
+          "string": "@mg_miles_recoverStolen_danger_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ef0184ed-41fb-4172-8fa4-e655753d6e3e",
+            "_RecordId_": "ef0184ed-41fb-4172-8fa4-e655753d6e3e"},
+          "string": "@mg_miles_recoverStolen_danger_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.19888818-690d-412b-932e-66e4c3a4c4b0",
+            "_RecordId_": "19888818-690d-412b-932e-66e4c3a4c4b0"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.19888818-690d-412b-932e-66e4c3a4c4b0",
+            "_RecordId_": "19888818-690d-412b-932e-66e4c3a4c4b0"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.19888818-690d-412b-932e-66e4c3a4c4b0",
+            "_RecordId_": "19888818-690d-412b-932e-66e4c3a4c4b0"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.19888818-690d-412b-932e-66e4c3a4c4b0",
+            "_RecordId_": "19888818-690d-412b-932e-66e4c3a4c4b0"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0007"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.436183ef-cc0d-4620-b611-b46679c069a3",
+            "_RecordId_": "436183ef-cc0d-4620-b611-b46679c069a3"},
+          "string": "@mg_miles_recoverStolen_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bc5e5014-d510-4d83-9e08-d5b7a7fd1b5a",
+            "_RecordId_": "bc5e5014-d510-4d83-9e08-d5b7a7fd1b5a"},
+          "string": "@mg_miles_bounty_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bc5e5014-d510-4d83-9e08-d5b7a7fd1b5a",
+            "_RecordId_": "bc5e5014-d510-4d83-9e08-d5b7a7fd1b5a"},
+          "string": "@mg_miles_bounty_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aba6ce89-e58c-4b57-ab2d-aff5d77c7f85",
+            "_RecordId_": "aba6ce89-e58c-4b57-ab2d-aff5d77c7f85"},
+          "string": "@mg_miles_bounty_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aba6ce89-e58c-4b57-ab2d-aff5d77c7f85",
+            "_RecordId_": "aba6ce89-e58c-4b57-ab2d-aff5d77c7f85"},
+          "string": "@mg_miles_bounty_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aba6ce89-e58c-4b57-ab2d-aff5d77c7f85",
+            "_RecordId_": "aba6ce89-e58c-4b57-ab2d-aff5d77c7f85"},
+          "string": "@mg_miles_bounty_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.aba6ce89-e58c-4b57-ab2d-aff5d77c7f85",
+            "_RecordId_": "aba6ce89-e58c-4b57-ab2d-aff5d77c7f85"},
+          "string": "@mg_miles_bounty_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b99e277f-eca0-4f81-be92-af44265d7dab",
+            "_RecordId_": "b99e277f-eca0-4f81-be92-af44265d7dab"},
+          "string": "@mg_miles_mission_app_0007"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_miles_assassin_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_miles_assassin_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_miles_assassin_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_miles_assassin_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@mg_miles_assassin_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.765ac92b-234c-4a7f-b1c9-73911649abe8",
+            "_RecordId_": "765ac92b-234c-4a7f-b1c9-73911649abe8"},
+          "string": "@mg_miles_groupbounty_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.28c09037-c2cd-4535-a653-1480f27aa00a",
+            "_RecordId_": "28c09037-c2cd-4535-a653-1480f27aa00a"},
+          "string": "@mg_miles_groupbounty_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6afdb039-d2af-4017-b58f-dfe0517da4d8",
+            "_RecordId_": "6afdb039-d2af-4017-b58f-dfe0517da4d8"},
+          "string": "@MissionGivers_MilesEckhart"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

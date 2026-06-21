@@ -1,0 +1,288 @@
+{
+  "_RecordName_": "MissionOrganization.RedWindLinehaul",
+  "_RecordId_": "c38a5f63-cbc5-4933-a12c-ff6cd42cc126",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.69dfded2-6ade-4ba6-a777-4eccde8eef63",
+            "_RecordId_": "69dfded2-6ade-4ba6-a777-4eccde8eef63"},
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c187c41d-8675-4868-a4e1-ab5599075ab0",
+            "_RecordId_": "c187c41d-8675-4868-a4e1-ab5599075ab0"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.113f1694-d25a-42de-a9ef-b7015de67f49",
+            "_RecordId_": "113f1694-d25a-42de-a9ef-b7015de67f49"},
+          "string": "@redwind_delivery_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87247789-b819-427f-8d6d-883cd6290348",
+            "_RecordId_": "87247789-b819-427f-8d6d-883cd6290348"},
+          "string": "@mission_contractor_0012"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@redwind_delivery_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@redwind_delivery_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@redwind_delivery_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@redwind_delivery_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@redwind_delivery_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8584233-bfc4-4b9d-9fc4-8689ce18c496",
+            "_RecordId_": "f8584233-bfc4-4b9d-9fc4-8689ce18c496"},
+          "string": "@redwind_SignOff_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8584233-bfc4-4b9d-9fc4-8689ce18c496",
+            "_RecordId_": "f8584233-bfc4-4b9d-9fc4-8689ce18c496"},
+          "string": "@redwind_SignOff_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8584233-bfc4-4b9d-9fc4-8689ce18c496",
+            "_RecordId_": "f8584233-bfc4-4b9d-9fc4-8689ce18c496"},
+          "string": "@redwind_SignOff_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8584233-bfc4-4b9d-9fc4-8689ce18c496",
+            "_RecordId_": "f8584233-bfc4-4b9d-9fc4-8689ce18c496"},
+          "string": "@redwind_SignOff_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8584233-bfc4-4b9d-9fc4-8689ce18c496",
+            "_RecordId_": "f8584233-bfc4-4b9d-9fc4-8689ce18c496"},
+          "string": "@redwind_SignOff_005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8584233-bfc4-4b9d-9fc4-8689ce18c496",
+            "_RecordId_": "f8584233-bfc4-4b9d-9fc4-8689ce18c496"},
+          "string": "@redwind_SignOff_006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.97ace4d5-64b9-46b7-8089-236d141ecd61",
+            "_RecordId_": "97ace4d5-64b9-46b7-8089-236d141ecd61"},
+          "string": "@redwind_Danger_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.97ace4d5-64b9-46b7-8089-236d141ecd61",
+            "_RecordId_": "97ace4d5-64b9-46b7-8089-236d141ecd61"},
+          "string": "@redwind_Danger_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.97ace4d5-64b9-46b7-8089-236d141ecd61",
+            "_RecordId_": "97ace4d5-64b9-46b7-8089-236d141ecd61"},
+          "string": "@redwind_Danger_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.97ace4d5-64b9-46b7-8089-236d141ecd61",
+            "_RecordId_": "97ace4d5-64b9-46b7-8089-236d141ecd61"},
+          "string": "@redwind_Danger_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.97ace4d5-64b9-46b7-8089-236d141ecd61",
+            "_RecordId_": "97ace4d5-64b9-46b7-8089-236d141ecd61"},
+          "string": "@redwind_Danger_005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2c1842ee-cba3-4a29-9a3e-86bb88050ca4",
+            "_RecordId_": "2c1842ee-cba3-4a29-9a3e-86bb88050ca4"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a16e2ab2-49e7-41c0-b958-f0cdb33abec9",
+            "_RecordId_": "a16e2ab2-49e7-41c0-b958-f0cdb33abec9"},
+          "string": "@RedWind_LocalDelivery_title_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f",
+            "_RecordId_": "e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f"},
+          "string": "@RedWind_LocalDelivery_desc_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f",
+            "_RecordId_": "e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f"},
+          "string": "@RedWind_LocalDelivery_desc_02"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f",
+            "_RecordId_": "e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f"},
+          "string": "@RedWind_LocalDelivery_desc_03"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f",
+            "_RecordId_": "e0a5d8f7-f51c-4699-b46e-f51ca0b2fb9f"},
+          "string": "@RedWind_LocalDelivery_desc_04"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a2a702f2-0481-4eac-b52a-66733be0be84",
+            "_RecordId_": "a2a702f2-0481-4eac-b52a-66733be0be84"},
+          "string": "@mission_contractor_0012"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b98b44d6-dd5e-42cc-b333-45f6f69a5fa9",
+            "_RecordId_": "b98b44d6-dd5e-42cc-b333-45f6f69a5fa9"},
+          "string": "@RedWind_RecoverItem_Intro_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b835bde8-2df7-4dd1-8b18-c8b78cf55507",
+            "_RecordId_": "b835bde8-2df7-4dd1-8b18-c8b78cf55507"},
+          "string": "@RedWind_RecoverItem_VE_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.42391bee-831c-4704-94d3-5ddd5d531327",
+            "_RecordId_": "42391bee-831c-4704-94d3-5ddd5d531327"},
+          "string": "@RedWind_RecoverItem_E_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b84078bb-fecf-4eb0-b853-5c49631ee3a5",
+            "_RecordId_": "b84078bb-fecf-4eb0-b853-5c49631ee3a5"},
+          "string": "@RedWind_RecoverItem_M_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d68376fb-202a-488f-aea8-54c505876604",
+            "_RecordId_": "d68376fb-202a-488f-aea8-54c505876604"},
+          "string": "@RedWind_RecoverItem_H_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.669158f6-86d6-4602-97d5-d93deaa9127c",
+            "_RecordId_": "669158f6-86d6-4602-97d5-d93deaa9127c"},
+          "string": "@RedWind_RecoverItem_VH_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9a61e97e-f5d3-438c-8927-809e8b3b0639",
+            "_RecordId_": "9a61e97e-f5d3-438c-8927-809e8b3b0639"},
+          "string": "@RedWind_RecoverItem_Intro_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1c507a9f-c82f-4b38-b4c2-9184502dd3b6",
+            "_RecordId_": "1c507a9f-c82f-4b38-b4c2-9184502dd3b6"},
+          "string": "@RedWind_RecoverItem_VE_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8fe567a0-b24d-4d7b-a632-dc65d01882d2",
+            "_RecordId_": "8fe567a0-b24d-4d7b-a632-dc65d01882d2"},
+          "string": "@RedWind_RecoverItem_E_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.06be831f-9aca-418e-ab4f-0a5d9b37e687",
+            "_RecordId_": "06be831f-9aca-418e-ab4f-0a5d9b37e687"},
+          "string": "@RedWind_RecoverItem_M_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b6c2dbd3-3e07-473d-9e48-c9f24e95910b",
+            "_RecordId_": "b6c2dbd3-3e07-473d-9e48-c9f24e95910b"},
+          "string": "@RedWind_RecoverItem_H_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.18ac5c00-4c03-4ee6-b117-58af2b701894",
+            "_RecordId_": "18ac5c00-4c03-4ee6-b117-58af2b701894"},
+          "string": "@RedWind_RecoverItem_VH_Desc_001"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_redwindlinehaul.json"}}

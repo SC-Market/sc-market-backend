@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Priority_Crusader",
+  "_RecordId_": "01566d0c-a3f8-4c4e-a084-5438ea676b28",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "",
+    "LocalisedTypeName": "@mobiglas_ui_Priority_Crusader",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_priority.svg",
+    "DisplayTime": -1.0}}

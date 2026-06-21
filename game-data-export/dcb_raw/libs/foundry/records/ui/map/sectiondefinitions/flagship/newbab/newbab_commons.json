@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Newbab_Commons",
+  "_RecordId_": "b5597048-025f-4056-a4df-bc29e27eb424",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_map_pu_newbab_common",
+    "restrictViewBounds": false}}

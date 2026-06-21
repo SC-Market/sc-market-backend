@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Delivery_RoughAndReady",
+  "_RecordId_": "11950509-f2bd-48f6-aab7-8ec29de77de6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Delivery_RoughAndReady",
+    "displayName": "@RepScope_Courier_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 367601,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_delivery_noteligible_roughandready.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_delivery_rank0_roughandready.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_delivery_rank1_roughandready.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_hauling_rank2.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_hauling_rank3.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_hauling_rank4.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_hauling_rank5.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_hauling_rank6.json"]}}}

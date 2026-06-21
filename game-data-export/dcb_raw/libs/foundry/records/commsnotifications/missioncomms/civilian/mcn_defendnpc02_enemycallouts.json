@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "CommsNotification.MCN_DefendNPC02_EnemyCallouts",
+  "_RecordId_": "ad5e8285-9b78-460e-8cb7-ee835c2d692f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a98767d8-464c-495a-bc11-ea905b79380b",
+          "_RecordId_": "a98767d8-464c-495a-bc11-ea905b79380b"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d83a79b6-aac8-44ce-b37c-010bebe1d487",
+          "_RecordId_": "d83a79b6-aac8-44ce-b37c-010bebe1d487"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/missionaccept_defendship.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-defendnpc02.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_civilian_defendnpc02.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

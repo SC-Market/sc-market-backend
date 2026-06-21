@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "AudioGameContextGlobals.ActorDefault",
+  "_RecordId_": "05e12a89-4791-424c-9e3a-cd970a714f96",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioGameContextGlobals",
+    "globalStates": [
+      {
+        "_Type_": "AudioSwitch",
+        "switch": "SC_AudioGameContext_Master:Player_Default"}],
+    "globalRTPCs": [
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "Player_Default",
+        "defaultValue": 1.0},
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "Player_Dead",
+        "defaultValue": 0.0},
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "Player_EVA",
+        "defaultValue": 0.0},
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "Player_Remote_Turret",
+        "defaultValue": 0.0},
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "Player_VehicleCrew",
+        "defaultValue": 0.0},
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "Player_VehicleDriver",
+        "defaultValue": 0.0},
+      {
+        "_Type_": "AudioRtpcWithDefault",
+        "rtpc": "InCutscene",
+        "defaultValue": 0.0}]}}

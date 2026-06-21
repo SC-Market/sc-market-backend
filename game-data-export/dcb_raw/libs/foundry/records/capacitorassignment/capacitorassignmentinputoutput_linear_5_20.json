@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "CapacitorAssignmentInputOutputDef.CapacitorAssignmentInputOutput_Linear_5_20",
+  "_RecordId_": "35a73c92-bcb9-42f0-9521-8ae7a4874c20",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CapacitorAssignmentInputOutputDef",
+    "inputOutputMapping": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.05},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.05},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0}],
+      "useLUT": true}}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.BlackBox_06",
+  "_RecordId_": "7bc7826f-eeda-4534-8635-23e1e7289450",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_Blackbox_06_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_Blackbox_06_sub_title",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.audiolog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@mobiglas_Blackbox_06_text"},
+    "tutorialEntry": false}}

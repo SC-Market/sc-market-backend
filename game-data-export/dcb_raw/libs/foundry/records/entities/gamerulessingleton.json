@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "EntityClassDefinition.GameRulesSingleton",
+  "_RecordId_": "2fc6e803-de79-4556-ae25-34275e6f5a51",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SGameRulesComponentParams"}]}}

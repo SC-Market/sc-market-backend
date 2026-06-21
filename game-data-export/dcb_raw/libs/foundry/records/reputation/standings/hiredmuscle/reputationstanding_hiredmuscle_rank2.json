@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_HiredMuscle_Rank2",
+  "_RecordId_": "0767639e-14dd-4336-b80f-273ab858b38f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "HiredMuscle_Rank2",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank2",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_hiredmuscle_2.svg",
+    "minReputation": 5000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

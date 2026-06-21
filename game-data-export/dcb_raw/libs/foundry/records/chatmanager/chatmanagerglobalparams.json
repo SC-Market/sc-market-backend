@@ -1,0 +1,151 @@
+{
+  "_RecordName_": "ChatManagerGlobalParams.ChatManagerGlobalParams",
+  "_RecordId_": "cfe011e4-65d3-41d0-873a-2b9779ee3faf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ChatManagerGlobalParams",
+    "defaultChannelColor": {
+      "_Type_": "ChatManagerDefaultChannelColor",
+      "global": "White",
+      "party": "Green",
+      "gameEntity": "Yellow",
+      "whisper": "Purple",
+      "team": "Blue",
+      "squad": "Green"},
+    "colorOptions": [
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Blue",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 77,
+          "g": 207,
+          "b": 218}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "White",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 255,
+          "g": 255,
+          "b": 255}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Silver",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 160,
+          "g": 160,
+          "b": 160}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Grey",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 81,
+          "g": 81,
+          "b": 81}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Charcoal",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 44,
+          "g": 44,
+          "b": 44}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Red",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 255,
+          "g": 0,
+          "b": 0}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Orange",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 255,
+          "g": 90,
+          "b": 0}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Yellow",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 255,
+          "g": 198,
+          "b": 9}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Chartreuse",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 168,
+          "g": 255,
+          "b": 0}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Green",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 0,
+          "g": 255,
+          "b": 78}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Mint",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 0,
+          "g": 255,
+          "b": 204}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Cyan",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 0,
+          "g": 246,
+          "b": 255}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Azure",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 0,
+          "g": 114,
+          "b": 255}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Indigo",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 56,
+          "g": 65,
+          "b": 255}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Purple",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 126,
+          "g": 62,
+          "b": 255}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Pink",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 255,
+          "g": 58,
+          "b": 253}},
+      {
+        "_Type_": "ChatManagerColor",
+        "colorType": "Hotpink",
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 255,
+          "g": 48,
+          "b": 145}}]}}

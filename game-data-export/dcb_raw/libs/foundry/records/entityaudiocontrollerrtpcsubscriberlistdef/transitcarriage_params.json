@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.TransitCarriage_Params",
+  "_RecordId_": "1a38809a-b3be-452f-996c-866002de6818",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "localPlayerInThisOc"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Transit_Carriage_Velocity"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Transit_Carriage_Turn"}]}}

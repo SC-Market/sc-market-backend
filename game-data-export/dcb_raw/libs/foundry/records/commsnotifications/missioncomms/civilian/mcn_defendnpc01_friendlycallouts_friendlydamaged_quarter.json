@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_DefendNPC01_FriendlyCallouts_FriendlyDamaged_Quarter",
+  "_RecordId_": "6b05b344-98d0-4b65-b3f6-b5fa3cedb4c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9a183432-31de-4185-9fda-f4c283f30019",
+          "_RecordId_": "9a183432-31de-4185-9fda-f4c283f30019"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f97d014a-083e-4e7a-8aad-aa9ca0e8ae10",
+          "_RecordId_": "f97d014a-083e-4e7a-8aad-aa9ca0e8ae10"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8ebfab4c-a42c-45fe-bddc-c4eb117d93ba",
+          "_RecordId_": "8ebfab4c-a42c-45fe-bddc-c4eb117d93ba"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.3bbd6eda-1226-4832-b6b0-e4473279a959",
+          "_RecordId_": "3bbd6eda-1226-4832-b6b0-e4473279a959"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/friendlycallouts/mission_friendly_damaged_quarter.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-defendnpc01.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_civilian_defendnpc01.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.GRIN_MXC_Baracas_Grey_Black_Red_Solid",
+  "_RecordId_": "70f63138-35cf-495d-88fa-d806f0e5fb1f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameMTC_Paint_Grey_Black_Red_Solid",
+    "description": "@item_DescMTC_Paint_Grey_Black_Red_Solid",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_mtc_grey_black_red_solid.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

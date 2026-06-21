@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.RSI_Constellation_Aquila_Template",
+  "_RecordId_": "f18d5c98-2353-4ea8-b1ec-20b1d410f851",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 5.6}}}}

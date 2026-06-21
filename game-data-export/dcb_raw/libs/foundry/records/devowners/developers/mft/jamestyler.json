@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.JamesTyler",
+  "_RecordId_": "0c81dda1-619f-4743-b6e0-175ab0d53f67",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "James Tyler",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mdt.json"}}}

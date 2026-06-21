@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Escapee04_Text_PopUp_JournalEntry",
+  "_RecordId_": "3d8c2b6a-c2ef-4045-9b3e-8e3b3da6b74b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Prison_Escapee_Corpses_Journal_004_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": true,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Prison_Escapee_Corpses_Journal_004_Body"},
+    "tutorialEntry": false}}

@@ -1,0 +1,138 @@
+{
+  "_RecordName_": "AudioBudgetDefinition.VehicleDriverBudget",
+  "_RecordId_": "d490016a-ac2c-45ae-87ac-d65f65fc37fb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBudgetDefinition",
+    "oneshotBudget": [
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1d01cd4c-e913-47a3-a4fb-041420e5baf4",
+          "_RecordId_": "1d01cd4c-e913-47a3-a4fb-041420e5baf4"},
+        "maxAudioObjects": 5,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.0348652f-0e53-4c31-ad64-6f0619939cd6",
+          "_RecordId_": "0348652f-0e53-4c31-ad64-6f0619939cd6"},
+        "maxAudioObjects": 7,
+        "priorityFalloffPerSecond": 3.0},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9351cb82-5cc1-4acd-963c-f534ef55dbe9",
+          "_RecordId_": "9351cb82-5cc1-4acd-963c-f534ef55dbe9"},
+        "maxAudioObjects": 2,
+        "priorityFalloffPerSecond": 2.0},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.34d82dd5-5422-42b2-ae9d-58cca2f503de",
+          "_RecordId_": "34d82dd5-5422-42b2-ae9d-58cca2f503de"},
+        "maxAudioObjects": 8,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.23ceaffa-20c1-4f6f-8cba-53f9f9a94d1e",
+          "_RecordId_": "23ceaffa-20c1-4f6f-8cba-53f9f9a94d1e"},
+        "maxAudioObjects": 6,
+        "priorityFalloffPerSecond": 3.0},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.37b0d6d5-a70f-4f7f-9ab2-ab57a3c332f3",
+          "_RecordId_": "37b0d6d5-a70f-4f7f-9ab2-ab57a3c332f3"},
+        "maxAudioObjects": 5,
+        "priorityFalloffPerSecond": 3.0},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa672bfa-68ab-425a-9824-1173dcb7c5a0",
+          "_RecordId_": "fa672bfa-68ab-425a-9824-1173dcb7c5a0"},
+        "maxAudioObjects": 2,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.90d82481-95dc-4122-b28e-03bcea9b593b",
+          "_RecordId_": "90d82481-95dc-4122-b28e-03bcea9b593b"},
+        "maxAudioObjects": 4,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7f3a1138-ec2c-4dac-9c5a-2598090c79ec",
+          "_RecordId_": "7f3a1138-ec2c-4dac-9c5a-2598090c79ec"},
+        "maxAudioObjects": 4,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a1f4205f-5e7f-4996-b06e-560e132ed197",
+          "_RecordId_": "a1f4205f-5e7f-4996-b06e-560e132ed197"},
+        "maxAudioObjects": 5,
+        "priorityFalloffPerSecond": 1.0},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.0d401f6c-38a4-4c52-bb02-26059dd8d98a",
+          "_RecordId_": "0d401f6c-38a4-4c52-bb02-26059dd8d98a"},
+        "maxAudioObjects": 6,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.01580479-c8a5-4bb8-85df-56b5edc32c14",
+          "_RecordId_": "01580479-c8a5-4bb8-85df-56b5edc32c14"},
+        "maxAudioObjects": 2,
+        "priorityFalloffPerSecond": 1.5},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.685a47e2-b0a4-46dc-bad2-c595127f87ea",
+          "_RecordId_": "685a47e2-b0a4-46dc-bad2-c595127f87ea"},
+        "maxAudioObjects": 15,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.17754dbf-31bf-4499-9950-009bd639050e",
+          "_RecordId_": "17754dbf-31bf-4499-9950-009bd639050e"},
+        "maxAudioObjects": 15,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c4ca95a5-e303-44f9-85ad-bdcb75e575e7",
+          "_RecordId_": "c4ca95a5-e303-44f9-85ad-bdcb75e575e7"},
+        "maxAudioObjects": 6,
+        "priorityFalloffPerSecond": 1.2},
+      {
+        "_Type_": "AudioOneShotManagerBudgetEntry",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.3c8e267b-f360-4c09-8674-3e59bde3e294",
+          "_RecordId_": "3c8e267b-f360-4c09-8674-3e59bde3e294"},
+        "maxAudioObjects": 4,
+        "priorityFalloffPerSecond": 2.0}],
+    "shipAudioLimit": 5,
+    "shipThrusterLimit": 7,
+    "actorFoleyLimit": 3}}

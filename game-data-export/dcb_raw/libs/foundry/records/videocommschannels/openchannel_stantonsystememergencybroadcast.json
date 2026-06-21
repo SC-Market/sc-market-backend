@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_StantonSystemEmergencyBroadcast",
+  "_RecordId_": "837e8c7c-b13f-4a73-8ae3-31ceed738a0c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_StantonSystemEmergencyBroadcast",
+    "displayName": "@StantonStar",
+    "canHaveMultipleInstances": true,
+    "useAreaOfEffect": false}}

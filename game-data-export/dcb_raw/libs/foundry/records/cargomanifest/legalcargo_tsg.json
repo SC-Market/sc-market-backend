@@ -1,0 +1,87 @@
+{
+  "_RecordName_": "CargoManifest.LegalCargo_TSG",
+  "_RecordId_": "3810af8b-fb74-4d6d-a30e-9f0da5caa016",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b9a647c-91f4-4732-b572-912ac03e73f2",
+          "_RecordId_": "4b9a647c-91f4-4732-b572-912ac03e73f2"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d2fc0fec-a08e-47ed-a89f-7b1b8741af4c",
+          "_RecordId_": "d2fc0fec-a08e-47ed-a89f-7b1b8741af4c"}]},
+    "lockCargoGridsOnSpawn": true,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Custom",
+      "resources": []},
+    "cargoSpawnRules": [
+      {
+        "_Type_": "CargoSpawnEntityDef",
+        "probability": 0.0,
+        "entities": [
+          "file://./../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/misl_s02_ir_fski_ignite.json",
+          "file://./../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/misl_s03_cs_fski_arrester.json"],
+        "quantityAlgorithmType": {
+          "_Type_": "CargoManifestFixedQuantityDef",
+          "quantity": 30}},
+      {
+        "_Type_": "CargoSpawnResourceDef",
+        "probability": 1.0,
+        "resources": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize1",
+            "_RecordId_": "1fdb2e84-1622-4685-8194-2d108498d90f"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize2",
+            "_RecordId_": "12b3419e-8300-4a4e-9dc9-4c2d4469fc11"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize3",
+            "_RecordId_": "393c2115-5ba5-4748-9664-3f5a7998a816"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize4",
+            "_RecordId_": "42a961ba-0039-41d3-a020-989410a2958c"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize5",
+            "_RecordId_": "313b4437-fde2-4eab-af35-aae4421b9d2e"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize6",
+            "_RecordId_": "a6e40cd4-c10e-403c-aaa0-79a8f112cf6c"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipAmmoSize7",
+            "_RecordId_": "a790133a-b77b-4699-9ae5-264b61fe9ffc"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipCountermeasuresDecoy",
+            "_RecordId_": "b2f14f8c-3780-4706-8bc3-7792fc0b00de"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ShipCountermeasuresNoise",
+            "_RecordId_": "c473310f-6284-4ab8-a6f7-1604ac5d634a"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.PlasmaFuel",
+            "_RecordId_": "de9f4d03-6b60-429d-9b26-9f2308bae973"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.QuantumFuel",
+            "_RecordId_": "f4846780-182f-49d1-a711-f08c0172735e"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.RMC",
+            "_RecordId_": "a0e6c4cf-face-4f52-a020-dfa869607901"}],
+        "quantityAlgorithmType": {
+          "_Type_": "CargoManifestProportionQuantityDef",
+          "proportion": 0.035}}],
+    "tags": []}}

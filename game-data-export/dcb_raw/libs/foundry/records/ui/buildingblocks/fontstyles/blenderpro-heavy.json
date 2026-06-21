@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.BlenderPro-Heavy",
+  "_RecordId_": "22f83de9-2ade-4e0b-8000-634fc6409a04",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Med-Heavy",
+    "paintFile": "UI/fonts/Install/BlenderPro-Heavy.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 1.0,
+    "leadingModifier": 0.0,
+    "topMarginModifier": 0.0,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 5}}

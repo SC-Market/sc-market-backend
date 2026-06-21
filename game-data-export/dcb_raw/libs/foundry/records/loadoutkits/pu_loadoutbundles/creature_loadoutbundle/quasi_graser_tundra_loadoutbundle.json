@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Quasi_Graser_Tundra_Loadoutbundle",
+  "_RecordId_": "474ae4e8-cca7-4981-80c7-99fe83a53246",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Body",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Qausi_Tundra/quasigrazer_tundra.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Qausi_Tundra/quasigrazer_tundra_m.xml"}]}]}}

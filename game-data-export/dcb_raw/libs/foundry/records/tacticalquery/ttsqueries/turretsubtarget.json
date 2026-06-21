@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "TacticalQuery.TurretSubTarget",
+  "_RecordId_": "683481b5-5e23-45e3-b4fc-46e95170507a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "TurretSubTarget",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defaultturretsubtargetcontent.json",
+        "optionOverrides": []}]}}

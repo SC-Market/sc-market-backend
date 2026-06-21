@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "VehicleCareer.GroundCombat",
+  "_RecordId_": "7e0ae04c-b425-4705-ab25-8ff17dd8660f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VehicleCareer",
+    "displayName": "@vehicle_focus_groundcombat",
+    "roleList": [
+      "file://./../../../../../libs/foundry/records/vehicle/roles/lighttank.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/mediumtank.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/heavytank.json"]}}

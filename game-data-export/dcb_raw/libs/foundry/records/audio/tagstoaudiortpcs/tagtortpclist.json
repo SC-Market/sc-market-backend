@@ -1,0 +1,159 @@
+{
+  "_RecordName_": "TagToAudioRtpcList.TagToRtpcList",
+  "_RecordId_": "6c68c363-5e7e-4a6f-92a5-3f16a0285350",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TagToAudioRtpcList",
+    "TagsToRtpcs": [
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5b81d676-eb81-4416-8253-0a898a7583d0",
+          "_RecordId_": "5b81d676-eb81-4416-8253-0a898a7583d0"},
+        "rtpcName": "Ship_Derelict",
+        "rtpcValue": 1.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.849ebbce-1558-4b50-8745-6f7bbcbfa19a",
+          "_RecordId_": "849ebbce-1558-4b50-8745-6f7bbcbfa19a"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 0.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d624ebfc-6ec1-40d9-b506-04051fc6ea2a",
+          "_RecordId_": "d624ebfc-6ec1-40d9-b506-04051fc6ea2a"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 1.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.959d7903-99d3-4950-a0b3-2f4dd307a61f",
+          "_RecordId_": "959d7903-99d3-4950-a0b3-2f4dd307a61f"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 2.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.cf147c76-a201-41bf-8d27-9741b80dd037",
+          "_RecordId_": "cf147c76-a201-41bf-8d27-9741b80dd037"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 3.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d842ee13-cdf3-45d5-a093-a5db8493c8b9",
+          "_RecordId_": "d842ee13-cdf3-45d5-a093-a5db8493c8b9"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 4.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.61c846cb-9b2d-4eed-b2bb-54ca31ee724d",
+          "_RecordId_": "61c846cb-9b2d-4eed-b2bb-54ca31ee724d"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 5.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.96f38d2b-8754-4378-923a-bddcb1b80a86",
+          "_RecordId_": "96f38d2b-8754-4378-923a-bddcb1b80a86"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 6.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a2b38ac1-3b27-432f-bd4c-23ee5ecd19fd",
+          "_RecordId_": "a2b38ac1-3b27-432f-bd4c-23ee5ecd19fd"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 7.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a1ee7af-e797-4f8e-809c-adaece583faa",
+          "_RecordId_": "7a1ee7af-e797-4f8e-809c-adaece583faa"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 8.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4171381b-8b37-4de2-a345-d24d7884f3a7",
+          "_RecordId_": "4171381b-8b37-4de2-a345-d24d7884f3a7"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 9.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.99b3e317-ea7d-4782-94ce-b746e89d3c8e",
+          "_RecordId_": "99b3e317-ea7d-4782-94ce-b746e89d3c8e"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 10.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5fffa254-69cf-4e37-ad5a-1de90179ea37",
+          "_RecordId_": "5fffa254-69cf-4e37-ad5a-1de90179ea37"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 11.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.3f787110-d7b1-4aee-93a4-a46c0ba84643",
+          "_RecordId_": "3f787110-d7b1-4aee-93a4-a46c0ba84643"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 12.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e24a80b7-0773-4860-ba70-6919a5c11f6c",
+          "_RecordId_": "e24a80b7-0773-4860-ba70-6919a5c11f6c"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 13.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1b7384bd-bb1a-43d3-a13e-15af97bd440a",
+          "_RecordId_": "1b7384bd-bb1a-43d3-a13e-15af97bd440a"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 14.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.538c26ac-eda7-4c2b-9e6e-0b917c1bf6af",
+          "_RecordId_": "538c26ac-eda7-4c2b-9e6e-0b917c1bf6af"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 15.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.51eae1d3-1ce1-4c51-b7cc-e2c831440330",
+          "_RecordId_": "51eae1d3-1ce1-4c51-b7cc-e2c831440330"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 16.0},
+      {
+        "_Type_": "TagToAudioRtpc",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.bc5c8d30-2538-4e0c-bb8e-70f8f43240bd",
+          "_RecordId_": "bc5c8d30-2538-4e0c-bb8e-70f8f43240bd"},
+        "rtpcName": "GP_Ship_Brand_Listener_In",
+        "rtpcValue": 17.0}]}}

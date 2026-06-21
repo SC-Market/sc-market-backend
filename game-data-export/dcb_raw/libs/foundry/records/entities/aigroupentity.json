@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityClassDefinition.AIGroupEntity",
+  "_RecordId_": "7478ee1f-bfba-4d3c-8748-1b868d2f4626",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "AI",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.9e9b64b1-cc96-4a9a-bee0-ec2bd823a219",
+        "_RecordId_": "9e9b64b1-cc96-4a9a-bee0-ec2bd823a219"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AIGroupEntityParams"}]}}

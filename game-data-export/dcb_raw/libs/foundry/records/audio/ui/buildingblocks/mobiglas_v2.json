@@ -1,0 +1,576 @@
+{
+  "_RecordName_": "UIAudioDefinition.mobiGlas_V2",
+  "_RecordId_": "0e377322-8825-46af-97e2-0cf7281e24d1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIAudioDefinition",
+    "events": [
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9e3c4f32-90f7-45e2-a0fb-424357c14bc5",
+          "_RecordId_": "9e3c4f32-90f7-45e2-a0fb-424357c14bc5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9f9a7a5-b990-4580-9373-d269e90675aa",
+          "_RecordId_": "c9f9a7a5-b990-4580-9373-d269e90675aa"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ab28dfa6-967c-4e9e-b347-e54a68970dbd",
+          "_RecordId_": "ab28dfa6-967c-4e9e-b347-e54a68970dbd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a80f99b-ed43-4ed1-8b75-4c71fef13fb1",
+          "_RecordId_": "7a80f99b-ed43-4ed1-8b75-4c71fef13fb1"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.373b8356-d62e-4cf3-922a-9ae3121f465c",
+          "_RecordId_": "373b8356-d62e-4cf3-922a-9ae3121f465c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_SubRollOver_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0",
+          "_RecordId_": "beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e70c3aae-5428-4c21-ba27-dd4daf1bf416",
+          "_RecordId_": "e70c3aae-5428-4c21-ba27-dd4daf1bf416"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.736500da-30ce-4f93-9718-f13e77c06ecd",
+          "_RecordId_": "736500da-30ce-4f93-9718-f13e77c06ecd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6ae02293-fa21-4e3d-880f-6942b63f383e",
+          "_RecordId_": "6ae02293-fa21-4e3d-880f-6942b63f383e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.80a9a0a7-2ec1-48ae-b651-2088d7a98b84",
+          "_RecordId_": "80a9a0a7-2ec1-48ae-b651-2088d7a98b84"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.cdaa22ce-eb08-42dd-b914-87afb14932ce",
+          "_RecordId_": "cdaa22ce-eb08-42dd-b914-87afb14932ce"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_ButtonUp"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.19be4e28-0dc0-48d9-acc3-437c7859050e",
+          "_RecordId_": "19be4e28-0dc0-48d9-acc3-437c7859050e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Close_01"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d0202dda-24be-4961-8c48-2b5174270db2",
+          "_RecordId_": "d0202dda-24be-4961-8c48-2b5174270db2"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Close_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2c892549-2480-4ab5-ba33-7369d22f7821",
+          "_RecordId_": "2c892549-2480-4ab5-ba33-7369d22f7821"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Completion"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.011de9a9-560c-486c-9359-16196fa4d6b4",
+          "_RecordId_": "011de9a9-560c-486c-9359-16196fa4d6b4"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Error"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6b39f7e1-26f0-4ed1-8475-392d81887752",
+          "_RecordId_": "6b39f7e1-26f0-4ed1-8475-392d81887752"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Execution"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ca625476-e3c1-40ff-b863-d276990a15c1",
+          "_RecordId_": "ca625476-e3c1-40ff-b863-d276990a15c1"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_LoadUp_01"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a52ae7f5-f294-48f1-90a0-6a5ef62125ae",
+          "_RecordId_": "a52ae7f5-f294-48f1-90a0-6a5ef62125ae"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_LoadUp_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4c982a21-2425-47fe-8344-96367caaec8c",
+          "_RecordId_": "4c982a21-2425-47fe-8344-96367caaec8c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Loading_01"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1b4fc18a-209f-405c-9265-c8ab0e821e71",
+          "_RecordId_": "1b4fc18a-209f-405c-9265-c8ab0e821e71"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_Loading_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7f74b6a3-eb1e-4d3b-8b5a-80f1882943cc",
+          "_RecordId_": "7f74b6a3-eb1e-4d3b-8b5a-80f1882943cc"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Global_RollOver"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a74c98bd-d241-471a-b4ad-e4f4fbd95a7a",
+          "_RecordId_": "a74c98bd-d241-471a-b4ad-e4f4fbd95a7a"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_SubRollOver"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.bd03fbbf-597b-48ce-9ce5-84137fa44794",
+          "_RecordId_": "bd03fbbf-597b-48ce-9ce5-84137fa44794"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_SubButton"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d060dd47-70de-41ce-b153-e0e618d778e2",
+          "_RecordId_": "d060dd47-70de-41ce-b153-e0e618d778e2"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Home_HeartBeat_Stable"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8a66ea88-55a7-4732-a80a-e5e488e2247f",
+          "_RecordId_": "8a66ea88-55a7-4732-a80a-e5e488e2247f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Home_HeartBeat_Vital"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a307ccf9-b9d3-4d3a-8fda-4144b5687131",
+          "_RecordId_": "a307ccf9-b9d3-4d3a-8fda-4144b5687131"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Logs_Search_Cancel"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.0e58d887-d506-4e4f-a209-39a6ba320a4f",
+          "_RecordId_": "0e58d887-d506-4e4f-a209-39a6ba320a4f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Logs_Search_Confirm"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2db8edb0-0436-4268-9577-2b908ef4d1d8",
+          "_RecordId_": "2db8edb0-0436-4268-9577-2b908ef4d1d8"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Logs_SubButtonUp"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8ee95a37-0746-43bf-9abd-475e6e7e268f",
+          "_RecordId_": "8ee95a37-0746-43bf-9abd-475e6e7e268f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Messages_MarkAsRead"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8c978a0d-8211-4e69-b4aa-d3161ecf6833",
+          "_RecordId_": "8c978a0d-8211-4e69-b4aa-d3161ecf6833"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Messages_SubButtonUp"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ca8fa796-defc-46bc-b7fa-cd6434ca909b",
+          "_RecordId_": "ca8fa796-defc-46bc-b7fa-cd6434ca909b"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "UI_MGV2_MobiGlas_V2_MissionManager_SubButtonUp"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.0b7d5fd9-07d9-43a8-8561-d8c4153e858a",
+          "_RecordId_": "0b7d5fd9-07d9-43a8-8561-d8c4153e858a"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Messages_SwitchMessage"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4ab4965f-644f-485c-9426-e8b10e04c24e",
+          "_RecordId_": "4ab4965f-644f-485c-9426-e8b10e04c24e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_PersonalStatus_HeartBeat_Stable"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9bf3e318-e041-4e00-970d-2f979ec142c5",
+          "_RecordId_": "9bf3e318-e041-4e00-970d-2f979ec142c5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_PersonalStatus_HeartBeat_Vital"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1ad99890-2530-4428-a218-2244af57f15e",
+          "_RecordId_": "1ad99890-2530-4428-a218-2244af57f15e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_PersonalStatus_SubButtonUp"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.30c69491-7c2d-4ff5-83e3-dea7194225e4",
+          "_RecordId_": "30c69491-7c2d-4ff5-83e3-dea7194225e4"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6cc049b8-9580-4080-8f6c-6d903821593d",
+          "_RecordId_": "6cc049b8-9580-4080-8f6c-6d903821593d"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_AutoPan_01"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d40ba9f8-2b09-4508-a748-9fe494d2317c",
+          "_RecordId_": "d40ba9f8-2b09-4508-a748-9fe494d2317c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_AutoPan_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1a67c231-3a69-4cdf-911e-20bc63189b54",
+          "_RecordId_": "1a67c231-3a69-4cdf-911e-20bc63189b54"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_AutoPan_03"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.50d2c369-762e-42fc-9006-c16b41be0bf0",
+          "_RecordId_": "50d2c369-762e-42fc-9006-c16b41be0bf0"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Button_01"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.3acdba5e-3949-4499-bd7f-93e91aa7c84f",
+          "_RecordId_": "3acdba5e-3949-4499-bd7f-93e91aa7c84f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Button_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.28affc22-8454-4429-a842-ea4cd6769c63",
+          "_RecordId_": "28affc22-8454-4429-a842-ea4cd6769c63"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Button_03"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.79ea3850-870b-459e-b535-293b04904e90",
+          "_RecordId_": "79ea3850-870b-459e-b535-293b04904e90"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Cancel"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d338bc5c-9aa7-4241-aff4-1ae1e601b092",
+          "_RecordId_": "d338bc5c-9aa7-4241-aff4-1ae1e601b092"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Confirm"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa087c6f-f441-47d8-a73f-ac24013c5376",
+          "_RecordId_": "fa087c6f-f441-47d8-a73f-ac24013c5376"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_MM"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.58542665-9e40-49bd-96fb-22c44d3a8942",
+          "_RecordId_": "58542665-9e40-49bd-96fb-22c44d3a8942"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_SelectPlanet"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.53281072-44ac-4623-8fca-fafde46364ff",
+          "_RecordId_": "53281072-44ac-4623-8fca-fafde46364ff"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_RadialPulse"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.724e6695-5341-4cc2-b80b-ce20d1722744",
+          "_RecordId_": "724e6695-5341-4cc2-b80b-ce20d1722744"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Home_Notfication_Delete"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.724e6695-5341-4cc2-b80b-ce20d1722744",
+          "_RecordId_": "724e6695-5341-4cc2-b80b-ce20d1722744"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_Home_Notfication_GoToApp"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4764afa8-c19c-458d-83ea-dfcf7084e1f4",
+          "_RecordId_": "4764afa8-c19c-458d-83ea-dfcf7084e1f4"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.976c80e4-4df2-4c0f-9938-b5ff7ff53c6f",
+          "_RecordId_": "976c80e4-4df2-4c0f-9938-b5ff7ff53c6f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Zoom_ZoomVelocity"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.eda6db81-582c-49e6-b8ed-bb580230b4c7",
+          "_RecordId_": "eda6db81-582c-49e6-b8ed-bb580230b4c7"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Zoom_VerticalPanVelocity"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d9760432-840c-4857-b4c7-1d4e6bd015ec",
+          "_RecordId_": "d9760432-840c-4857-b4c7-1d4e6bd015ec"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.030c893f-0d8c-4d76-9c5f-ef5ceb9b6c2a",
+          "_RecordId_": "030c893f-0d8c-4d76-9c5f-ef5ceb9b6c2a"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_Search_Zoom_PitchVelocity"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.79947554-129f-499b-9d1f-fce6e9c7821a",
+          "_RecordId_": "79947554-129f-499b-9d1f-fce6e9c7821a"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.362da2a6-ce20-407e-977b-3b80f58ff5d9",
+          "_RecordId_": "362da2a6-ce20-407e-977b-3b80f58ff5d9"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_UI_MGV2_MobiGlas_V2_StarMap_Search_Zoom_ZoomVelocity"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c1fbb4f9-da31-42ea-b062-228568d69289",
+          "_RecordId_": "c1fbb4f9-da31-42ea-b062-228568d69289"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_UI_MGV2_MobiGlas_V2_StarMap_Search_Zoom_VerticalPanVelocity"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a00e4799-da91-493c-b501-6fc69290f6e8",
+          "_RecordId_": "a00e4799-da91-493c-b501-6fc69290f6e8"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.13dfe99e-0a0d-47cf-b702-92b990c00387",
+          "_RecordId_": "13dfe99e-0a0d-47cf-b702-92b990c00387"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_UI_MGV2_MobiGlas_V2_StarMap_Search_Zoom_PitchVelocity"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7f44a7e2-cab7-491a-bf2e-720a2078ab90",
+          "_RecordId_": "7f44a7e2-cab7-491a-bf2e-720a2078ab90"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MGV2_MobiGlas_V2_StarMap_InteriorMap_Route_Planning"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ef7a87dd-26a1-46e4-b8e9-299b30817d44",
+          "_RecordId_": "ef7a87dd-26a1-46e4-b8e9-299b30817d44"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_UI_MGV2_MobiGlas_V2_StarMap_InteriorMap_Route_Planning"}}],
+    "parameters": [
+      {
+        "_Type_": "UIAudioParameter",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.20fad3f5-3a1f-42cc-ac7d-3cd99718cae9",
+          "_RecordId_": "20fad3f5-3a1f-42cc-ac7d-3cd99718cae9"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "UI_MGV2_Starmap_Velocity"}},
+      {
+        "_Type_": "UIAudioParameter",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c81f5abd-e55e-48dd-8c67-0039ea7055a9",
+          "_RecordId_": "c81f5abd-e55e-48dd-8c67-0039ea7055a9"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "UI_MGV2_Starmap_Pitch"}}],
+    "dialogueEvents": []}}

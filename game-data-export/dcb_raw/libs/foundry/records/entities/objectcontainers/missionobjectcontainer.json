@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "EntityClassDefinition.MissionObjectContainer",
+  "_RecordId_": "d3551558-ecf9-4c39-8785-0e019a90aaec",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "ObjectContainer.bmp",
+    "Invisible": false,
+    "BBoxSelection": true,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": ""},
+      {
+        "_Type_": "SSuperGUIDComponentParams"},
+      {
+        "_Type_": "EntityComponentSpawnClosetManagerParams"},
+      {
+        "_Type_": "SMissionLocationComponentParams"},
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": []}]}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.RSI_Lynx_Moonshadow_White_Blue_Blue",
+  "_RecordId_": "f6535334-274b-45ff-9d35-5bfb9923bb45",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameLynx_Paint_White_Blue_Blue",
+    "description": "@item_DescLynx_Paint_White_Blue_Blue",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_lynx_white_blue_blue.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}
