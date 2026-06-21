@@ -361,6 +361,7 @@ const models: TsoaRoute.Models = {
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
             "banner_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "can_manage": {"dataType":"boolean"},
             "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
