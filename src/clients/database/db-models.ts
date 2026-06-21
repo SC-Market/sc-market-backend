@@ -296,6 +296,7 @@ export interface DBOrder {
   assigned_id: string | null
   customer_id: string
   contractor_id: string | null
+  shop_id?: string | null
   timestamp: Date
   status: string
   collateral?: string | number | null

@@ -59,6 +59,18 @@ export async function createOrder(
   data: Partial<DBOrder>,
   trx?: any,
 ): Promise<DBOrder[]> {
+  // Resolve shop_id if not provided (for V1 compat)
+  if (!data.shop_id) {
+    const db = trx || knex()
+    if (data.contractor_id) {
+      const shop = await db("shops").where("owner_contractor_id", data.contractor_id).first("shop_id")
+      if (shop) data.shop_id = shop.shop_id
+    } else if (data.assigned_id) {
+      const shop = await db("shops").where("owner_user_id", data.assigned_id).first("shop_id")
+      if (shop) data.shop_id = shop.shop_id
+    }
+  }
+
   if (trx) {
     return trx("orders").insert(data).returning("*")
   }
