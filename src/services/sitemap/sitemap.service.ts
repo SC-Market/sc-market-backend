@@ -31,6 +31,13 @@ function getSitemapHostname(): string {
   return new URL(base).origin + "/"
 }
 
+function getSitemapIndexHostname(): string {
+  const frontend = env.FRONTEND_URL || "https://sc-market.space"
+  const url = new URL(frontend)
+  url.hostname = `api.${url.hostname}`
+  return url.origin + "/"
+}
+
 export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
   const contractors = await contractorDb.getContractorListings({})
   const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
@@ -285,7 +292,7 @@ export async function generateSitemapsFromPages(
 
     sitemapStream.pipe(createGzip()).pipe(collector)
 
-    const publicUrl = new URL(`sitemap-${i}.xml`, hostname).toString()
+    const publicUrl = new URL(`sitemap-${i}.xml`, getSitemapIndexHostname()).toString()
     return [publicUrl, sitemapStream, collector]
   }
 
