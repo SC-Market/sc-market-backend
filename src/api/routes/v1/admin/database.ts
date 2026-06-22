@@ -444,14 +444,19 @@ export async function deleteContentReport(
  * Get offer analytics (mirrors getOrderAnalytics for offer_sessions).
  */
 export async function getOfferAnalytics() {
+  // The offer_sessions.status is only 'active' or 'closed'.
+  // The real resolved status (accepted/rejected) comes from get_offer_status(),
+  // which checks the most recent order_offers row when session is closed.
+  const resolvedStatus = `get_offer_status(offer_sessions.id, offer_sessions.customer_id, offer_sessions.status)`
+
   // Daily totals (last 30 days)
   const dailyTotals = await knex()("offer_sessions")
     .select(
       knex().raw("DATE(timestamp) as date"),
       knex().raw("COUNT(*) as total"),
-      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active"),
-      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted"),
-      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected"),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected`),
     )
     .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '30 days'"))
     .groupBy(knex().raw("DATE(timestamp)"))
@@ -462,9 +467,9 @@ export async function getOfferAnalytics() {
     .select(
       knex().raw("DATE_TRUNC('week', timestamp) as date"),
       knex().raw("COUNT(*) as total"),
-      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active"),
-      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted"),
-      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected"),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected`),
     )
     .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '12 weeks'"))
     .groupBy(knex().raw("DATE_TRUNC('week', timestamp)"))
@@ -475,11 +480,11 @@ export async function getOfferAnalytics() {
     .select(
       knex().raw("DATE_TRUNC('month', timestamp) as date"),
       knex().raw("COUNT(*) as total"),
-      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active"),
-      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted"),
-      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected"),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected`),
       knex().raw(
-        `COALESCE(AVG(CASE WHEN status = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) END), 0) as average_accepted_value`,
+        `COALESCE(AVG(CASE WHEN ${resolvedStatus} = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) END), 0) as average_accepted_value`,
       ),
     )
     .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '12 months'"))
@@ -487,12 +492,13 @@ export async function getOfferAnalytics() {
     .orderBy("date", "asc")
 
   // Top contractors
+  const contractorResolvedStatus = `get_offer_status(os.id, os.customer_id, os.status)`
   const topContractors = await knex()("offer_sessions as os")
     .join("contractors as c", "os.contractor_id", "c.contractor_id")
     .whereNotNull("os.contractor_id")
     .select(
       "c.name",
-      knex().raw("COUNT(CASE WHEN os.status = 'accepted' THEN 1 END) as accepted_offers"),
+      knex().raw(`COUNT(CASE WHEN ${contractorResolvedStatus} = 'accepted' THEN 1 END) as accepted_offers`),
       knex().raw("COUNT(*) as total_offers"),
     )
     .groupBy("c.contractor_id", "c.name")
@@ -501,11 +507,12 @@ export async function getOfferAnalytics() {
     .limit(10)
 
   // Top users
+  const userResolvedStatus = `get_offer_status(os.id, os.customer_id, os.status)`
   const topUsers = await knex()("offer_sessions as os")
     .join("accounts as a", "os.customer_id", "a.user_id")
     .select(
       "a.username",
-      knex().raw("COUNT(CASE WHEN os.status = 'accepted' THEN 1 END) as accepted_offers"),
+      knex().raw(`COUNT(CASE WHEN ${userResolvedStatus} = 'accepted' THEN 1 END) as accepted_offers`),
       knex().raw("COUNT(*) as total_offers"),
     )
     .groupBy("a.user_id", "a.username")
@@ -517,11 +524,11 @@ export async function getOfferAnalytics() {
   const summary = await knex()("offer_sessions")
     .select(
       knex().raw("COUNT(*) as total_offers"),
-      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active_offers"),
-      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted_offers"),
-      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected_offers"),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active_offers`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted_offers`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected_offers`),
       knex().raw(
-        `COALESCE(SUM(CASE WHEN status = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) ELSE 0 END), 0) as total_value`,
+        `COALESCE(SUM(CASE WHEN ${resolvedStatus} = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) ELSE 0 END), 0) as total_value`,
       ),
     )
     .first()
