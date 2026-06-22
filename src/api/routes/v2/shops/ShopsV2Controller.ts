@@ -356,8 +356,18 @@ export class ShopsV2Controller extends BaseController {
     const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
     const sortBy = sort_by || "rating"
     const sortOrder = sort_order || "desc"
+    const direction = sortOrder === "asc" ? "ASC" : "DESC"
 
+    // Base query with aggregated stats via subqueries (avoids N+1)
     let query = db("shops as s")
+      .select(
+        "s.*",
+        db.raw("COALESCE((SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as avg_rating"),
+        db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
+        db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
+        db.raw("COALESCE((SELECT COUNT(*)::integer FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active'), 0) as listing_count"),
+        db.raw("COALESCE((SELECT COUNT(*)::integer FROM orders o WHERE o.shop_id = s.shop_id AND o.status = 'fulfilled'), 0) as total_sales"),
+      )
       .where("s.status", "active")
 
     if (tag) {
@@ -371,49 +381,49 @@ export class ShopsV2Controller extends BaseController {
       })
     }
 
-    const countQuery = query.clone().count("* as count")
-    const [{ count }] = await countQuery
+    const countQuery = db("shops as s").where("s.status", "active")
+    if (tag) countQuery.whereRaw("? = ANY(s.tags)", [tag])
+    if (search && search.trim()) {
+      countQuery.where(function () {
+        this.where("s.name", "ilike", `%${search.trim()}%`)
+          .orWhere("s.slug", "ilike", `%${search.trim()}%`)
+      })
+    }
+    const [{ count }] = await countQuery.count("* as count")
     const total = parseInt(String(count), 10)
 
-    const direction = sortOrder === "asc" ? "ASC" : "DESC"
+    // Sort: "rating" uses total_rating (SUM) so shops with many reviews rank higher
     if (sortBy === "rating") {
-      query = query.orderByRaw(
-        `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id) ${direction}`,
-      )
+      query = query.orderByRaw(`total_rating ${direction}`)
+    } else if (sortBy === "total_sales") {
+      query = query.orderByRaw(`total_sales ${direction}`)
     } else {
-      const columnMap: Record<string, string> = { name: "s.name", created_at: "s.created_at", total_sales: "s.created_at" }
+      const columnMap: Record<string, string> = { name: "s.name", created_at: "s.created_at" }
       query = query.orderBy(columnMap[sortBy] || "s.created_at", direction)
     }
 
     const offset = (validatedPage - 1) * validatedPageSize
-    const shops = await query.select("s.*").limit(validatedPageSize).offset(offset)
+    const rows = await query.limit(validatedPageSize).offset(offset)
 
+    // Resolve image URLs (2 queries max per shop for images — could be optimized further with a JOIN)
     const results: ShopPublicResponse[] = await Promise.all(
-      shops.map(async (shop: Shop) => {
-        const ratingResult = await db("shop_ratings")
-          .where("shop_id", shop.shop_id)
-          .select(
-            db.raw("COALESCE(AVG(rating)::numeric(3,2), 0) as rating"),
-            db.raw("COUNT(*)::integer as rating_count"),
-          )
-          .first()
-
-        return {
-          shop_id: shop.shop_id,
-          slug: shop.slug,
-          name: shop.name,
-          description: shop.description,
-          banner_url: await resolveImageUrl(db, shop.banner),
-          logo_url: await resolveImageUrl(db, shop.logo),
-          supported_languages: shop.supported_languages,
-          tags: shop.tags || [],
-          accepts_custom_orders: shop.accepts_custom_orders || false,
-          status: shop.status,
-          created_at: shop.created_at,
-          rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
-          rating_count: ratingResult?.rating_count || 0,
-        }
-      }),
+      rows.map(async (row: Record<string, unknown>) => ({
+        shop_id: row.shop_id as string,
+        slug: row.slug as string,
+        name: row.name as string,
+        description: (row.description as string) || "",
+        banner_url: await resolveImageUrl(db, row.banner as string | null),
+        logo_url: await resolveImageUrl(db, row.logo as string | null),
+        supported_languages: (row.supported_languages as string[]) || [],
+        tags: (row.tags as string[]) || [],
+        accepts_custom_orders: (row.accepts_custom_orders as boolean) || false,
+        status: row.status as string,
+        created_at: row.created_at as string,
+        rating: row.avg_rating ? parseFloat(row.avg_rating as string) : null,
+        rating_count: (row.rating_count as number) || 0,
+        listing_count: (row.listing_count as number) || 0,
+        total_sales: (row.total_sales as number) || 0,
+      })),
     )
 
     return { shops: results, total, page: validatedPage, page_size: validatedPageSize }
