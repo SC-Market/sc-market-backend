@@ -18,6 +18,7 @@ describe("BuyOrdersV2Controller", () => {
   let controller: BuyOrdersV2Controller
   let testBuyerId: string
   let testSellerId: string
+  let testShopId: string
   let testListingId: string
   let testItemId: string
   let testVariantId: string
@@ -47,6 +48,18 @@ describe("BuyOrdersV2Controller", () => {
       created_at: new Date(),
     })
 
+    // Create test shop
+    testShopId = uuidv4()
+    await knex("shops").insert({
+      shop_id: testShopId,
+      slug: `test-shop-${testShopId.substring(0, 8)}`,
+      name: "Test Shop",
+      owner_user_id: testSellerId,
+      status: "active",
+      created_at: new Date(),
+      updated_at: new Date(),
+    })
+
     // Create test game item
     testGameItemId = uuidv4()
     await knex("game_items").insert({
@@ -60,6 +73,7 @@ describe("BuyOrdersV2Controller", () => {
     testListingId = uuidv4()
     await knex("listings").insert({
       listing_id: testListingId,
+      shop_id: testShopId,
       seller_id: testSellerId,
       seller_type: "user",
       title: "Test Listing for Buy Now",
@@ -137,7 +151,7 @@ describe("BuyOrdersV2Controller", () => {
       expect(result).toBeDefined()
       expect(result.order_id).toBeDefined()
       expect(result.buyer_id).toBe(testBuyerId)
-      expect(result.seller_id).toBe(testSellerId)
+      expect(result.shop_id).toBe(testShopId)
       expect(result.total_price).toBe(15000) // 3 * 5000
       expect(result.status).toBe("pending")
       expect(result.item).toBeDefined()

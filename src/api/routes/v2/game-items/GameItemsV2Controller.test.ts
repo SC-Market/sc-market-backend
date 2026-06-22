@@ -27,6 +27,7 @@ describe("GameItemsV2Controller", () => {
   let knex: ReturnType<typeof getKnex>
   let testGameItemId: string
   let testSellerId: string
+  let testShopId: string
   let createdListingIds: string[] = []
 
   beforeEach(async () => {
@@ -74,6 +75,18 @@ describe("GameItemsV2Controller", () => {
       username: "testseller",
       email: "testseller@example.com",
       password_hash: "hash",
+    })
+
+    // Create test shop
+    testShopId = uuidv4()
+    await knex("shops").insert({
+      shop_id: testShopId,
+      slug: `test-shop-${testShopId.substring(0, 8)}`,
+      name: "Test Shop",
+      owner_user_id: testSellerId,
+      status: "active",
+      created_at: new Date(),
+      updated_at: new Date(),
     })
   })
 
@@ -128,8 +141,8 @@ describe("GameItemsV2Controller", () => {
       const listingId = uuidv4()
       await knex("listings").insert({
         listing_id: listingId,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Test Listing",
         description: "Test description",
         status: "active",
@@ -225,8 +238,8 @@ describe("GameItemsV2Controller", () => {
       const listing1Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing1Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Tier 3 Listing",
         status: "active",
       })
@@ -260,8 +273,8 @@ describe("GameItemsV2Controller", () => {
       const listing2Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing2Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Tier 5 Listing",
         status: "active",
       })
@@ -317,8 +330,8 @@ describe("GameItemsV2Controller", () => {
       const listing1Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing1Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Expensive Listing",
         status: "active",
       })
@@ -344,8 +357,8 @@ describe("GameItemsV2Controller", () => {
       const listing2Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing2Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Cheap Listing",
         status: "active",
       })
@@ -397,8 +410,8 @@ describe("GameItemsV2Controller", () => {
         const listingId = uuidv4()
         await knex("listings").insert({
           listing_id: listingId,
-          seller_id: testSellerId,
-          seller_type: "user",
+          shop_id: testShopId,
+          ,
           title: `Listing ${i}`,
           status: "active",
         })
@@ -476,8 +489,8 @@ describe("GameItemsV2Controller", () => {
         const listingId = uuidv4()
         await knex("listings").insert({
           listing_id: listingId,
-          seller_id: testSellerId,
-          seller_type: "user",
+          shop_id: testShopId,
+          ,
           title: `Tier ${tier} Listing`,
           status: "active",
         })
@@ -538,8 +551,8 @@ describe("GameItemsV2Controller", () => {
       const listingId = uuidv4()
       await knex("listings").insert({
         listing_id: listingId,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Per Variant Pricing Listing",
         status: "active",
       })
@@ -640,8 +653,8 @@ describe("GameItemsV2Controller", () => {
       const activeListing = uuidv4()
       await knex("listings").insert({
         listing_id: activeListing,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Active Listing",
         status: "active",
       })
@@ -667,8 +680,8 @@ describe("GameItemsV2Controller", () => {
       const soldListing = uuidv4()
       await knex("listings").insert({
         listing_id: soldListing,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Sold Listing",
         status: "sold",
       })
@@ -713,8 +726,8 @@ describe("GameItemsV2Controller", () => {
         const listingId = uuidv4()
         await knex("listings").insert({
           listing_id: listingId,
-          seller_id: testSellerId,
-          seller_type: "user",
+          shop_id: testShopId,
+          ,
           title: `Listing ${i}`,
           status: "active",
         })
@@ -767,8 +780,8 @@ describe("GameItemsV2Controller", () => {
         const listingId = uuidv4()
         await knex("listings").insert({
           listing_id: listingId,
-          seller_id: testSellerId,
-          seller_type: "user",
+          shop_id: testShopId,
+          ,
           title: `Seller1 Listing ${i}`,
           status: "active",
         })
@@ -796,7 +809,7 @@ describe("GameItemsV2Controller", () => {
       await knex("listings").insert({
         listing_id: listing3Id,
         seller_id: seller2Id,
-        seller_type: "user",
+        ,
         title: "Seller2 Listing",
         status: "active",
       })
@@ -843,8 +856,8 @@ describe("GameItemsV2Controller", () => {
         const listingId = uuidv4()
         await knex("listings").insert({
           listing_id: listingId,
-          seller_id: testSellerId,
-          seller_type: "user",
+          shop_id: testShopId,
+          ,
           title: `Tier ${tier} Listing`,
           status: "active",
         })
@@ -899,8 +912,8 @@ describe("GameItemsV2Controller", () => {
       const listing1Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing1Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Unified Listing",
         status: "active",
       })
@@ -926,8 +939,8 @@ describe("GameItemsV2Controller", () => {
       const listing2Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing2Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Per Variant Listing",
         status: "active",
       })
@@ -1006,8 +1019,8 @@ describe("GameItemsV2Controller", () => {
       const listing1Id = uuidv4()
       await knex("listings").insert({
         listing_id: listing1Id,
-        seller_id: testSellerId,
-        seller_type: "user",
+        shop_id: testShopId,
+        ,
         title: "Low Rated Seller",
         status: "active",
       })
@@ -1034,7 +1047,7 @@ describe("GameItemsV2Controller", () => {
       await knex("listings").insert({
         listing_id: listing2Id,
         seller_id: seller2Id,
-        seller_type: "user",
+        ,
         title: "High Rated Seller",
         status: "active",
       })
@@ -1079,7 +1092,7 @@ describe("GameItemsV2Controller", () => {
       await knex("listings").insert({
         listing_id: listingId,
         seller_id: sellerId,
-        seller_type: "user",
+        ,
         title: "Test Listing",
         status: "active",
       })
