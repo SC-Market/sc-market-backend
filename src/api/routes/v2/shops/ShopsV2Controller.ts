@@ -370,12 +370,14 @@ export class ShopsV2Controller extends BaseController {
     const [{ count }] = await countQuery
     const total = parseInt(String(count), 10)
 
+    const direction = sortOrder === "asc" ? "ASC" : "DESC"
     if (sortBy === "rating") {
       query = query.orderByRaw(
-        `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id) ${sortOrder}`,
+        `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id) ${direction}`,
       )
     } else {
-      query = query.orderBy(`s.${sortBy}`, sortOrder)
+      const columnMap: Record<string, string> = { name: "s.name", created_at: "s.created_at", total_sales: "s.created_at" }
+      query = query.orderBy(columnMap[sortBy] || "s.created_at", direction)
     }
 
     const offset = (validatedPage - 1) * validatedPageSize
