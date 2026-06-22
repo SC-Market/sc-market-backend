@@ -361,7 +361,7 @@ const models: TsoaRoute.Models = {
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
             "banner_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "can_manage": {"dataType":"boolean"},
+            "permissions": {"dataType":"nestedObjectLiteral","nestedProperties":{"manage_orders":{"dataType":"boolean","required":true},"manage_stock":{"dataType":"boolean","required":true},"manage_market":{"dataType":"boolean","required":true},"can_manage":{"dataType":"boolean","required":true}}},
             "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,

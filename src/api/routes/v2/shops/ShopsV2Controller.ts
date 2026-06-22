@@ -72,8 +72,13 @@ export interface ShopResponse {
   created_at: string
   updated_at: string
   banner_url: string | null
-  /** Whether the current user can manage this shop (edit settings, create listings) */
-  can_manage?: boolean
+  /** Granular permissions for the current user on this shop (only in /shops/mine) */
+  permissions?: {
+    can_manage: boolean
+    manage_market: boolean
+    manage_stock: boolean
+    manage_orders: boolean
+  }
   logo_url: string | null
 }
 
@@ -143,7 +148,7 @@ export class ShopsV2Controller extends BaseController {
     const shops = await getShopsForUser(userId)
     return Promise.all(shops.map(async (shop) => {
       const response = await shopToResponse(shop)
-      return { ...response, can_manage: shop.can_manage }
+      return { ...response, permissions: shop.permissions }
     }))
   }
 
