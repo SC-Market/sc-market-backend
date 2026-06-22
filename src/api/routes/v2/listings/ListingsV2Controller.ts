@@ -769,11 +769,13 @@ export class ListingsV2Controller extends BaseController {
         case "quality":
           query = query.orderBy("ls.quality_tier_max", validatedSortOrder)
           break
-        case "shop_rating":
+        case "shop_rating": {
+          const ratingDir = validatedSortOrder === "asc" ? "ASC" : "DESC"
           query = query.orderByRaw(
-            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${validatedSortOrder}`,
+            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${ratingDir}`,
           )
           break
+        }
         case "updated_at":
           query = query.orderBy("ls.updated_at", validatedSortOrder)
           break
