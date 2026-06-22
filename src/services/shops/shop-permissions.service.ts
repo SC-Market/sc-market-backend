@@ -85,7 +85,14 @@ export async function getShopBySlug(slug: string): Promise<Shop | null> {
  * Get all shops associated with a user (their own + orgs they're a member of).
  * Includes a `can_manage` flag indicating whether the user has manage_market permission.
  */
-export async function getShopsForUser(userId: string): Promise<(Shop & { can_manage: boolean })[]> {
+export interface ShopPermissions {
+  can_manage: boolean
+  manage_market: boolean
+  manage_stock: boolean
+  manage_orders: boolean
+}
+
+export async function getShopsForUser(userId: string): Promise<(Shop & { permissions: ShopPermissions })[]> {
   const db = getKnex()
 
   const shops = await db("shops")
@@ -101,17 +108,25 @@ export async function getShopsForUser(userId: string): Promise<(Shop & { can_man
     .where("status", "active")
     .orderBy("created_at", "asc")
 
-  const result: (Shop & { can_manage: boolean })[] = []
+  const result: (Shop & { permissions: ShopPermissions })[] = []
   for (const shop of shops) {
     if (shop.owner_user_id === userId) {
-      result.push({ ...shop, can_manage: true })
+      result.push({ ...shop, permissions: { can_manage: true, manage_market: true, manage_stock: true, manage_orders: true } })
     } else if (shop.owner_contractor_id) {
-      const hasPerm = await has_permission(
-        shop.owner_contractor_id,
-        userId,
-        "manage_market",
-      )
-      result.push({ ...shop, can_manage: hasPerm })
+      const [manageMarket, manageStock, manageOrders] = await Promise.all([
+        has_permission(shop.owner_contractor_id, userId, "manage_market"),
+        has_permission(shop.owner_contractor_id, userId, "manage_stock"),
+        has_permission(shop.owner_contractor_id, userId, "manage_orders"),
+      ])
+      result.push({
+        ...shop,
+        permissions: {
+          can_manage: manageMarket,
+          manage_market: manageMarket,
+          manage_stock: manageStock,
+          manage_orders: manageOrders,
+        },
+      })
     }
   }
 

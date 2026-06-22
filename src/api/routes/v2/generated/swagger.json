@@ -810,9 +810,29 @@
 						"type": "string",
 						"nullable": true
 					},
-					"can_manage": {
-						"type": "boolean",
-						"description": "Whether the current user can manage this shop (edit settings, create listings)"
+					"permissions": {
+						"properties": {
+							"manage_orders": {
+								"type": "boolean"
+							},
+							"manage_stock": {
+								"type": "boolean"
+							},
+							"manage_market": {
+								"type": "boolean"
+							},
+							"can_manage": {
+								"type": "boolean"
+							}
+						},
+						"required": [
+							"manage_orders",
+							"manage_stock",
+							"manage_market",
+							"can_manage"
+						],
+						"type": "object",
+						"description": "Granular permissions for the current user on this shop (only in /shops/mine)"
 					},
 					"logo_url": {
 						"type": "string",
