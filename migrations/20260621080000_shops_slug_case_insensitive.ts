@@ -2,7 +2,7 @@ import type { Knex } from "knex"
 
 export async function up(knex: Knex): Promise<void> {
   // Find and resolve slug collisions before lowercasing
-  // If two shops have the same slug when lowercased, append -N to the newer one
+  // If two shops have the same slug when lowercased, append UUID suffix to all but the oldest
   await knex.raw(`
     UPDATE shops s1
     SET slug = LOWER(s1.slug) || '-' || substr(s1.shop_id::text, 1, 8)
@@ -13,7 +13,10 @@ export async function up(knex: Knex): Promise<void> {
         SELECT LOWER(slug) FROM shops GROUP BY LOWER(slug) HAVING COUNT(*) > 1
       )
       AND s2.shop_id != (
-        SELECT MIN(s3.shop_id) FROM shops s3 WHERE LOWER(s3.slug) = LOWER(s2.slug)
+        SELECT s3.shop_id FROM shops s3
+        WHERE LOWER(s3.slug) = LOWER(s2.slug)
+        ORDER BY s3.created_at ASC
+        LIMIT 1
       )
     )
   `)
