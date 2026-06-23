@@ -961,6 +961,14 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
       }
 
       await orderDb.updateOrder(order.order_id, { status: status })
+
+      // Refresh shop metrics after fulfillment
+      if (order.shop_id) {
+        const { refreshShopMetrics } = await import("../../../../services/shops/shop-metrics.service.js")
+        refreshShopMetrics(order.shop_id).catch((e) =>
+          logger.error("Failed to refresh shop metrics", { shop_id: order.shop_id, error: e })
+        )
+      }
     } else {
       await orderDb.updateOrder(order.order_id, { status: status })
     }

@@ -390,5 +390,21 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
 
   await notificationService.createOrderReviewNotification(review[0])
 
+  // Dual-write to shop_ratings and refresh metrics
+  if (order.shop_id && role === "customer") {
+    const { getKnex } = await import("../../../../clients/database/knex-db.js")
+    const db = getKnex()
+    await db("shop_ratings").insert({
+      shop_id: order.shop_id,
+      order_id: order.order_id,
+      reviewer_id: user.user_id,
+      rating: Math.round(rating),
+      comment: content || null,
+    }).onConflict(["order_id", "reviewer_id"]).ignore()
+
+    const { refreshShopMetrics } = await import("../../../../services/shops/shop-metrics.service.js")
+    refreshShopMetrics(order.shop_id).catch(() => {})
+  }
+
   res.status(200).json(createResponse({ result: "Success" }))
 }
