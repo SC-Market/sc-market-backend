@@ -1,25 +1,16 @@
-import type { Application, Request, Response } from "express"
+import type { Application } from "express"
 import { gunzipSync } from "node:zlib"
 
 import logger from "../../logger/logger.js"
 import { getSitemapCache } from "./sitemap.service.js"
 
-function sendSitemapXml(req: Request, res: Response, body: Buffer): void {
-  res.set("Content-Type", "application/xml; charset=utf-8")
-  const acceptsGzip = req.headers["accept-encoding"]?.includes("gzip")
-  if (acceptsGzip) {
-    res.set("Content-Encoding", "gzip")
-    res.send(body)
-  } else {
-    res.send(gunzipSync(body))
-  }
-}
-
 export function setupSitemapRoutes(app: Application): void {
-  app.get("/sitemap.xml", async function (req, res) {
+  app.get("/sitemap.xml", async function (_req, res) {
     try {
       const { index } = await getSitemapCache()
-      sendSitemapXml(req, res, index)
+      const xml = gunzipSync(index)
+      res.set("Content-Type", "application/xml; charset=utf-8")
+      res.send(xml)
     } catch (error) {
       logger.error("Error generating sitemap index", { error })
       res.status(500).json({ error: "Failed to generate sitemap index" }).end()
@@ -41,7 +32,9 @@ export function setupSitemapRoutes(app: Application): void {
         return
       }
 
-      sendSitemapXml(req, res, sitemap)
+      const xml = gunzipSync(sitemap)
+      res.set("Content-Type", "application/xml; charset=utf-8")
+      res.send(xml)
     } catch (error) {
       logger.error("Error generating sitemap file", {
         error,
