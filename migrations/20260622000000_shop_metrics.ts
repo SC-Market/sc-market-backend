@@ -1,14 +1,12 @@
 import type { Knex } from "knex"
 
 export async function up(knex: Knex): Promise<void> {
-  // Add metrics columns to shops table
-  await knex.schema.alterTable("shops", (table) => {
-    table.integer("total_orders").notNullable().defaultTo(0)
-    table.integer("total_completed").notNullable().defaultTo(0)
-    table.decimal("avg_completion_hours", 8, 2).nullable().defaultTo(null)
-    table.integer("streak").notNullable().defaultTo(0)
-    table.decimal("response_rate", 5, 2).nullable().defaultTo(null)
-  })
+  // Add metrics columns to shops table (idempotent — may have partially run before)
+  await knex.raw(`ALTER TABLE shops ADD COLUMN IF NOT EXISTS total_orders INTEGER NOT NULL DEFAULT 0`)
+  await knex.raw(`ALTER TABLE shops ADD COLUMN IF NOT EXISTS total_completed INTEGER NOT NULL DEFAULT 0`)
+  await knex.raw(`ALTER TABLE shops ADD COLUMN IF NOT EXISTS avg_completion_hours NUMERIC(8,2) DEFAULT NULL`)
+  await knex.raw(`ALTER TABLE shops ADD COLUMN IF NOT EXISTS streak INTEGER NOT NULL DEFAULT 0`)
+  await knex.raw(`ALTER TABLE shops ADD COLUMN IF NOT EXISTS response_rate NUMERIC(5,2) DEFAULT NULL`)
 
   // Backfill total_orders (orders table uses "timestamp" not "created_at")
   await knex.raw(`
@@ -25,9 +23,7 @@ export async function up(knex: Knex): Promise<void> {
   `)
 
   // Add fulfilled_at column to orders for tracking completion time
-  await knex.schema.alterTable("orders", (table) => {
-    table.timestamp("fulfilled_at", { useTz: true }).nullable()
-  })
+  await knex.raw(`ALTER TABLE orders ADD COLUMN IF NOT EXISTS fulfilled_at TIMESTAMPTZ DEFAULT NULL`)
 
   // Backfill fulfilled_at from order_comments (status change messages contain "fulfilled")
   // If no comment exists, leave NULL — metric will be computed going forward
