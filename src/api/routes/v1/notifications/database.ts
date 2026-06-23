@@ -296,6 +296,7 @@ export async function getUnreadNotificationCount(
   entityIdFilter?: string,
   scopeFilter?: "individual" | "organization" | "all",
   contractorIdFilter?: string,
+  shopIdFilter?: string,
 ): Promise<number> {
   // Build base query for filtering unread notifications
   let baseQuery = knex()<DBNotification>("notification").where({
@@ -502,6 +503,7 @@ export async function getCompleteNotificationsByUserPaginated(
   entityIdFilter?: string,
   scopeFilter?: "individual" | "organization" | "all",
   contractorIdFilter?: string,
+  shopIdFilter?: string,
 ): Promise<{
   notifications: any[]
   pagination: {
@@ -681,6 +683,13 @@ export async function getCompleteNotificationsByUserPaginated(
     }
     if (contractorIdFilter && contractor_id !== contractorIdFilter) {
       continue
+    }
+    // Filter by shop_id if provided
+    if (shopIdFilter && orderIdToCheck) {
+      const orderForShop = await orderDb.getOrder({ order_id: orderIdToCheck })
+      if (orderForShop?.shop_id !== shopIdFilter) {
+        continue
+      }
     }
 
     complete_notifs.push({
