@@ -29,13 +29,14 @@ export async function refreshShopMetrics(shopId: string): Promise<void> {
     .where("status", "fulfilled")
     .count("* as count")
 
-  // avg_completion_hours (time from creation to last update for fulfilled orders)
+  // avg_completion_hours from fulfilled_at - timestamp
   const avgResult = await db("orders")
     .where("shop_id", shopId)
     .where("status", "fulfilled")
+    .whereNotNull("fulfilled_at")
     .select(
       db.raw(
-        "AVG(EXTRACT(EPOCH FROM (updated_at - created_at)) / 3600)::numeric(8,2) as avg_hours",
+        `AVG(EXTRACT(EPOCH FROM (fulfilled_at - "timestamp")) / 3600)::numeric(8,2) as avg_hours`,
       ),
     )
     .first()
@@ -59,16 +60,16 @@ export async function refreshShopMetrics(shopId: string): Promise<void> {
     }
   }
 
-  // response_rate: percentage of orders responded to within 24 hours
-  // "Responded" = order moved from 'assigned' status within 24h of creation
+  // response_rate: percentage of fulfilled orders completed within 24 hours
   const responseResult = await db.raw(
     `
     SELECT
-      COUNT(*) FILTER (WHERE updated_at - created_at <= INTERVAL '24 hours')::integer as responded,
+      COUNT(*) FILTER (WHERE fulfilled_at - "timestamp" <= INTERVAL '24 hours')::integer as responded,
       COUNT(*)::integer as total
     FROM orders
     WHERE shop_id = ?
-      AND status != 'assigned'
+      AND status = 'fulfilled'
+      AND fulfilled_at IS NOT NULL
     `,
     [shopId],
   )

@@ -298,6 +298,7 @@ export interface DBOrder {
   contractor_id: string | null
   shop_id?: string | null
   timestamp: Date
+  fulfilled_at?: Date | null
   status: string
   collateral?: string | number | null
   departure?: string | null
