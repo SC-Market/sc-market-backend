@@ -273,6 +273,7 @@ export async function generateSitemapsFromPages(
   pages: SitemapItemLoose[],
   hostname: string = getSitemapHostname(),
   limit: number = SITEMAP_URL_LIMIT,
+  indexHostname: string = getSitemapIndexHostname(),
 ): Promise<SitemapCache> {
   const sitemaps = new Map<number, Buffer>()
 
@@ -292,7 +293,7 @@ export async function generateSitemapsFromPages(
 
     sitemapStream.pipe(createGzip()).pipe(collector)
 
-    const publicUrl = new URL(`sitemap-${i}.xml`, getSitemapIndexHostname()).toString()
+    const publicUrl = new URL(`sitemap-${i}.xml`, indexHostname).toString()
     return [publicUrl, sitemapStream, collector]
   }
 
