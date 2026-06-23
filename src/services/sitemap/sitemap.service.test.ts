@@ -30,6 +30,7 @@ describe("generateSitemapsFromPages", () => {
       pages,
       "https://example.com/",
       SITEMAP_URL_LIMIT,
+      "https://example.com/",
     )
 
     expect(sitemaps.size).toBe(1)
@@ -48,6 +49,7 @@ describe("generateSitemapsFromPages", () => {
       pages,
       "https://example.com/",
       limit,
+      "https://example.com/",
     )
 
     expect(sitemaps.size).toBe(2)
