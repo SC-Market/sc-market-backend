@@ -308,25 +308,19 @@ export async function search_offer_sessions_optimized(
     "offer_sessions.status",
   )
 
-  // Calculate totals from filtered sessions
+  // Calculate totals from ALL sessions matching base filters (not status/unassigned)
+  // This ensures tab counts always show correct totals regardless of active tab
   let item_counts: { [k: string]: number }
-  if (filteredSessions.length === 0) {
-    item_counts = {
-      "to-seller": 0,
-      "to-customer": 0,
-      accepted: 0,
-      rejected: 0,
-    }
-  } else {
-    const filteredIds = filteredSessions.map((s: any) => s.id)
-    const totals: { offer_status: string; count: number }[] = await database
-      .knex("offer_sessions")
-      .whereIn("id", filteredIds)
+  {
+    let countQuery = database.knex("offer_sessions")
+    if (args.customer_id) countQuery = countQuery.where("customer_id", args.customer_id)
+    if (args.assigned_id) countQuery = countQuery.where("assigned_id", args.assigned_id)
+    if (args.contractor_id) countQuery = countQuery.where("contractor_id", args.contractor_id)
+
+    const totals: { offer_status: string; count: number }[] = await countQuery
       .groupByRaw("get_offer_status(id, customer_id, status)")
       .select(
-        database.knex.raw(
-          "get_offer_status(id, customer_id, status) as offer_status",
-        ),
+        database.knex.raw("get_offer_status(id, customer_id, status) as offer_status"),
         database.knex.raw("COUNT(*) as count"),
       )
 
