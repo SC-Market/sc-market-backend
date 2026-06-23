@@ -400,6 +400,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopMetricsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "total_orders": {"dataType":"double","required":true},
+            "total_completed": {"dataType":"double","required":true},
+            "avg_completion_hours": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "streak": {"dataType":"double","required":true},
+            "response_rate": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ShopPublicResponse": {
         "dataType": "refObject",
         "properties": {
@@ -419,6 +431,7 @@ const models: TsoaRoute.Models = {
             "owner": {"ref":"ShopOwnerInfo"},
             "listing_count": {"dataType":"double"},
             "total_sales": {"dataType":"double"},
+            "metrics": {"ref":"ShopMetricsResponse"},
         },
         "additionalProperties": false,
     },

@@ -940,6 +940,41 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShopMetricsResponse": {
+				"properties": {
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_completed": {
+						"type": "number",
+						"format": "double"
+					},
+					"avg_completion_hours": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"streak": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					}
+				},
+				"required": [
+					"total_orders",
+					"total_completed",
+					"avg_completion_hours",
+					"streak",
+					"response_rate"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ShopPublicResponse": {
 				"properties": {
 					"shop_id": {
@@ -1005,6 +1040,10 @@
 						"type": "number",
 						"format": "double",
 						"description": "Total completed orders (included in detail view)"
+					},
+					"metrics": {
+						"$ref": "#/components/schemas/ShopMetricsResponse",
+						"description": "Metrics for reputation/badges (included in detail view)"
 					}
 				},
 				"required": [
