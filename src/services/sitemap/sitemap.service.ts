@@ -18,7 +18,7 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
 
-export const SITEMAP_URL_LIMIT = 50_000
+export const SITEMAP_URL_LIMIT = 10_000
 export const SITEMAP_TTL_MS = 6 * 60 * 60 * 1000
 
 export interface SitemapCache {
