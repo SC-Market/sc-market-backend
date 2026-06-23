@@ -277,6 +277,7 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
     | "all"
     | undefined
   const contractorIdFilter = req.query.contractorId as string | undefined
+  const shopIdFilter = req.query.shopId as string | undefined
 
   // Validate page parameter
   if (page < 0 || isNaN(page)) {
@@ -326,6 +327,7 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
       entityIdFilter,
       scopeFilter || "all",
       contractorIdFilter,
+      shopIdFilter,
     )
 
     // Get unread count with the same filters
@@ -335,6 +337,7 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
       entityIdFilter,
       scopeFilter || "all",
       contractorIdFilter,
+      shopIdFilter,
     )
 
     // Add unread count to the response
