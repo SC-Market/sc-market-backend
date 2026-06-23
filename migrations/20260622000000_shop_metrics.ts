@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal("response_rate", 5, 2).nullable().defaultTo(null)
   })
 
-  // Backfill total_orders
+  // Backfill total_orders (orders table uses "timestamp" not "created_at")
   await knex.raw(`
     UPDATE shops s SET total_orders = (
       SELECT COUNT(*)::integer FROM orders o WHERE o.shop_id = s.shop_id
@@ -24,17 +24,34 @@ export async function up(knex: Knex): Promise<void> {
     )
   `)
 
-  // Backfill avg_completion_hours (time from order creation to fulfilled status)
-  // Using order_comments with the status change to 'fulfilled' as the completion timestamp
+  // Add fulfilled_at column to orders for tracking completion time
+  await knex.schema.alterTable("orders", (table) => {
+    table.timestamp("fulfilled_at", { useTz: true }).nullable()
+  })
+
+  // Backfill fulfilled_at from order_comments (status change messages contain "fulfilled")
+  // If no comment exists, leave NULL — metric will be computed going forward
+  await knex.raw(`
+    UPDATE orders o SET fulfilled_at = (
+      SELECT MIN(oc."timestamp")
+      FROM order_comments oc
+      WHERE oc.order_id = o.order_id
+        AND oc.content ILIKE '%fulfilled%'
+    )
+    WHERE o.status = 'fulfilled' AND o.fulfilled_at IS NULL
+  `)
+
+  // Backfill avg_completion_hours from fulfilled_at - timestamp
   await knex.raw(`
     UPDATE shops s SET avg_completion_hours = sub.avg_hours
     FROM (
       SELECT
         o.shop_id,
-        AVG(EXTRACT(EPOCH FROM (o.updated_at - o.created_at)) / 3600)::numeric(8,2) as avg_hours
+        AVG(EXTRACT(EPOCH FROM (o.fulfilled_at - o."timestamp")) / 3600)::numeric(8,2) as avg_hours
       FROM orders o
       WHERE o.status = 'fulfilled'
         AND o.shop_id IS NOT NULL
+        AND o.fulfilled_at IS NOT NULL
       GROUP BY o.shop_id
     ) sub
     WHERE s.shop_id = sub.shop_id

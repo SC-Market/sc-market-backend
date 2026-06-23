@@ -960,7 +960,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         )
       }
 
-      await orderDb.updateOrder(order.order_id, { status: status })
+      await orderDb.updateOrder(order.order_id, { status: status, fulfilled_at: new Date() })
 
       // Refresh shop metrics after fulfillment
       if (order.shop_id) {
