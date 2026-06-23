@@ -16,6 +16,7 @@ import {
   getShopsForUser,
   type Shop,
 } from "../../../../services/shops/shop-permissions.service.js"
+import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { has_permission } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 
@@ -90,6 +91,14 @@ export interface ShopOwnerInfo {
   avatar_url: string | null
 }
 
+export interface ShopMetricsResponse {
+  total_orders: number
+  total_completed: number
+  avg_completion_hours: number | null
+  streak: number
+  response_rate: number | null
+}
+
 export interface ShopPublicResponse {
   shop_id: string
   slug: string
@@ -110,6 +119,8 @@ export interface ShopPublicResponse {
   listing_count?: number
   /** Total completed orders (included in detail view) */
   total_sales?: number
+  /** Metrics for reputation/badges (included in detail view) */
+  metrics?: ShopMetricsResponse
 }
 
 export interface ShopReviewResponse {
@@ -358,7 +369,7 @@ export class ShopsV2Controller extends BaseController {
     const sortOrder = sort_order || "desc"
     const direction = sortOrder === "asc" ? "ASC" : "DESC"
 
-    // Base query with aggregated stats via subqueries (avoids N+1)
+    // Base query with aggregated stats — total_sales read from denormalized column
     let query = db("shops as s")
       .select(
         "s.*",
@@ -366,7 +377,7 @@ export class ShopsV2Controller extends BaseController {
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
         db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active'), 0) as listing_count"),
-        db.raw("COALESCE((SELECT COUNT(*)::integer FROM orders o WHERE o.shop_id = s.shop_id AND o.status = 'fulfilled'), 0) as total_sales"),
+        db.raw("s.total_completed as total_sales"),
       )
       .where("s.status", "active")
 
@@ -472,18 +483,15 @@ export class ShopsV2Controller extends BaseController {
       }
     }
 
-    // Listing count and total sales
+    // Listing count
     const listingCount = await db("listings")
       .where("shop_id", shop.shop_id)
       .where("status", "active")
       .count("* as count")
       .first()
 
-    const salesCount = await db("orders")
-      .where("shop_id", shop.shop_id)
-      .where("status", "fulfilled")
-      .count("* as count")
-      .first()
+    // Read metrics from denormalized columns
+    const metrics = await getShopMetrics(shop.shop_id)
 
     return {
       shop_id: shop.shop_id,
@@ -501,7 +509,8 @@ export class ShopsV2Controller extends BaseController {
       rating_count: ratingResult?.rating_count || 0,
       owner,
       listing_count: parseInt(String(listingCount?.count || 0), 10),
-      total_sales: parseInt(String(salesCount?.count || 0), 10),
+      total_sales: metrics.total_completed,
+      metrics,
     }
   }
 
