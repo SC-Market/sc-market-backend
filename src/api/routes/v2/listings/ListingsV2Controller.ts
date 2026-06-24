@@ -1121,8 +1121,11 @@ export class ListingsV2Controller extends BaseController {
     logger.info("Fetching listing detail", { listingId: id })
 
     try {
+      // Resolve short-slug or full UUID
+      const { prefix, isFullUuid } = parseShortSlug(id)
+
       // Query listing with shop information
-      const listing = await db("listings as l")
+      let query = db("listings as l")
         .join("shops as s", "l.shop_id", "s.shop_id")
         .select(
           "l.listing_id",
@@ -1148,16 +1151,15 @@ export class ListingsV2Controller extends BaseController {
           "s.supported_languages as shop_languages",
           "s.owner_contractor_id as shop_owner_contractor_id",
         )
-        .modify((qb) => {
-          const { prefix, isFullUuid } = parseShortSlug(id)
-          if (isFullUuid) {
-            qb.where("l.listing_id", id)
-          } else {
-            const range = buildUuidRangeQuery(prefix, "l.listing_id")
-            qb.whereRaw(range.sql, range.bindings)
-          }
-        })
-        .first()
+
+      if (isFullUuid) {
+        query = query.where("l.listing_id", id)
+      } else {
+        const range = buildUuidRangeQuery(prefix, "l.listing_id")
+        query = query.whereRaw(range.sql, range.bindings)
+      }
+
+      const listing = await query.first()
 
       if (!listing) {
         this.throwNotFound("Listing", id)
@@ -1178,6 +1180,8 @@ export class ListingsV2Controller extends BaseController {
         }
       }
 
+      const resolvedListingId = listing.listing_id
+
       // Query listing items with game item details (Requirement 16.3)
       const listingItems = await db("listing_items as li")
         .leftJoin("game_items as gi", "li.game_item_id", "gi.id")
@@ -1191,12 +1195,12 @@ export class ListingsV2Controller extends BaseController {
           "gi.type as game_item_type",
           "gi.image_url as game_item_image_url",
         )
-        .where("li.listing_id", id)
+        .where("li.listing_id", resolvedListingId)
 
       // Query listing photos (Requirement 16.12)
       const photos = await db('listing_photos_v2 as lp')
         .join('image_resources as ir', 'lp.resource_id', 'ir.resource_id')
-        .where('lp.listing_id', id)
+        .where('lp.listing_id', resolvedListingId)
         .orderBy('lp.display_order', 'asc')
         .select(db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"));
 
