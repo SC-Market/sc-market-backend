@@ -23,6 +23,14 @@ export function parseShortSlug(param: string): {
   if (match) {
     return { prefix: match[1], isFullUuid: false }
   }
+  // 8 hex chars without double-dash (e.g. just a prefix)
+  if (/^[0-9a-f]{8}$/i.test(param)) {
+    return { prefix: param, isFullUuid: false }
+  }
+  // Not a valid UUID or short-slug — treat as short-slug if starts with 8 hex
+  if (/^[0-9a-f]{8}/i.test(param)) {
+    return { prefix: param.slice(0, 8), isFullUuid: false }
+  }
   return { prefix: param, isFullUuid: true }
 }
 
