@@ -10,8 +10,8 @@ import {
 import type { WriteStream } from "node:fs"
 
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
-import { formatListingSlug } from "../../api/routes/v1/market/helpers.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
+import { formatShortSlug } from "../../api/routes/v2/util/short-slug.js"
 import * as recruitingDb from "../../api/routes/v1/recruiting/database.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
@@ -89,14 +89,14 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
   const market_routes: SitemapItemLoose[] = []
   for (const listing of market_listings) {
     market_routes.push({
-      url: `/market/${listing.listing_id}#/${formatListingSlug(listing.title)}`,
+      url: `/market/${formatShortSlug(listing.listing_id, listing.title)}`,
       changefreq: EnumChangefreq.WEEKLY,
       priority: 0.8,
     })
   }
   for (const item of aggregateItems) {
     market_routes.push({
-      url: `/market/aggregate/${item.game_item_id}#/${formatListingSlug(item.game_item_name || "")}`,
+      url: `/market/aggregate/${formatShortSlug(item.game_item_id, item.game_item_name || "")}`,
       changefreq: EnumChangefreq.WEEKLY,
       priority: 0.7,
     })
@@ -147,7 +147,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     const missions = await db("missions").select("mission_code", "title").limit(5000)
     for (const m of missions) {
       game_data_routes.push({
-        url: `/missions/${m.mission_code}#/${formatListingSlug(m.title || "")}`,
+        url: `/missions/${m.mission_code}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.6,
       })
@@ -155,7 +155,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     const blueprints = await db("blueprints").select("blueprint_code", "name").limit(5000)
     for (const b of blueprints) {
       game_data_routes.push({
-        url: `/blueprints/${b.blueprint_code}#/${formatListingSlug(b.name || "")}`,
+        url: `/blueprints/${b.blueprint_code}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.6,
       })
@@ -163,7 +163,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     const resources = await db("resources").select("resource_id", "name").limit(5000)
     for (const r of resources) {
       game_data_routes.push({
-        url: `/resources/${r.resource_id}#/${formatListingSlug(r.name || "")}`,
+        url: `/resources/${r.resource_id}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.5,
       })
@@ -171,7 +171,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     const wikiItems = await db("game_items").select("id", "name").limit(10000)
     for (const i of wikiItems) {
       game_data_routes.push({
-        url: `/wiki/items/${i.id}#/${formatListingSlug(i.name || "")}`,
+        url: `/wiki/items/${formatShortSlug(i.id, i.name || "")}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.6,
       })
@@ -179,7 +179,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     const ships = await db("game_items").where("type", "Ship").select("id", "name").limit(2000)
     for (const s of ships) {
       game_data_routes.push({
-        url: `/wiki/ships/${s.id}#/${formatListingSlug(s.name || "")}`,
+        url: `/wiki/ships/${formatShortSlug(s.id, s.name || "")}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.6,
       })
@@ -187,7 +187,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     const manufacturers = await db("wiki_manufacturers").select("code", "name").limit(500)
     for (const m of manufacturers) {
       game_data_routes.push({
-        url: `/wiki/manufacturers/${m.code}#/${formatListingSlug(m.name || "")}`,
+        url: `/wiki/manufacturers/${m.code}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.5,
       })
@@ -204,7 +204,7 @@ export async function collectSitemapPages(): Promise<SitemapItemLoose[]> {
     // Wiki commodities (same as resources but different route)
     for (const r of resources) {
       game_data_routes.push({
-        url: `/wiki/commodities/${r.resource_id}#/${formatListingSlug(r.name || "")}`,
+        url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.name || "")}`,
         changefreq: EnumChangefreq.MONTHLY,
         priority: 0.5,
       })

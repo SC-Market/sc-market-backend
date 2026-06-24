@@ -25,6 +25,7 @@ import {
   GetMyListingsResponse,
   InventorySummaryResponse,
 } from "../types/listings.types.js"
+import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
@@ -1147,18 +1148,29 @@ export class ListingsV2Controller extends BaseController {
           "s.supported_languages as shop_languages",
           "s.owner_contractor_id as shop_owner_contractor_id",
         )
-        .where("l.listing_id", id)
+        .modify((qb) => {
+          const { prefix, isFullUuid } = parseShortSlug(id)
+          if (isFullUuid) {
+            qb.where("l.listing_id", id)
+          } else {
+            const range = buildUuidRangeQuery(prefix, "l.listing_id")
+            qb.whereRaw(range.sql, range.bindings)
+          }
+        })
         .first()
 
       // Return 404 if listing not found (Requirement 16.9)
       // If not found, check if this is a V1 listing ID and redirect to the V2 equivalent
       if (!listing) {
-        const mapped = await db("v1_v2_listing_map")
-          .where("v1_listing_id", id)
-          .select("v2_listing_id")
-          .first()
-        if (mapped) {
-          return this.getListingDetail(mapped.v2_listing_id)
+        const { isFullUuid } = parseShortSlug(id)
+        if (isFullUuid) {
+          const mapped = await db("v1_v2_listing_map")
+            .where("v1_listing_id", id)
+            .select("v2_listing_id")
+            .first()
+          if (mapped) {
+            return this.getListingDetail(mapped.v2_listing_id)
+          }
         }
         this.throwNotFound("Listing", id)
       }
