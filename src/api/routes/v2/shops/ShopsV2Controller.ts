@@ -419,9 +419,9 @@ export class ShopsV2Controller extends BaseController {
     // Sort: "rating" uses total_rating (SUM) — shops with active listings ranked first,
     // then by total rating score (so shops with many reviews outrank single 5-star shops)
     if (sortBy === "rating") {
-      query = query.orderByRaw(`CASE WHEN listing_count > 0 THEN 0 ELSE 1 END ASC, total_rating ${direction}`)
+      query = query.orderByRaw(`CASE WHEN (SELECT COUNT(*) FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active') > 0 THEN 0 ELSE 1 END ASC, COALESCE((SELECT SUM(rating) FROM shop_ratings WHERE shop_id = s.shop_id), 0) ${direction}`)
     } else if (sortBy === "total_sales") {
-      query = query.orderByRaw(`total_sales ${direction}`)
+      query = query.orderByRaw(`s.total_completed ${direction}`)
     } else {
       const columnMap: Record<string, string> = { name: "s.name", created_at: "s.created_at" }
       query = query.orderBy(columnMap[sortBy] || "s.created_at", direction)
