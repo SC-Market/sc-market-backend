@@ -1,7 +1,0 @@
-{
-  "_RecordName_": "AtmosphereStateHumidityTemplate.GasCloud_Humidity_Low",
-  "_RecordId_": "48bc5f1b-e73a-4456-8339-1b25accab96b",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "AtmosphereStateHumidityTemplate",
-    "humidity": 0.1}}

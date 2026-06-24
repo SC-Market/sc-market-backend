@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Clinic",
-  "_RecordId_": "75b43b5a-1cef-4f08-83a6-df809cf4f6e5",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_clinic",
-    "restrictViewBounds": false}}

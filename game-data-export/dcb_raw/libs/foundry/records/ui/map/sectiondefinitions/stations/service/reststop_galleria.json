@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Galleria",
-  "_RecordId_": "97b61d24-315a-4e5f-833f-23b1560b1a81",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_galleria",
-    "restrictViewBounds": false}}

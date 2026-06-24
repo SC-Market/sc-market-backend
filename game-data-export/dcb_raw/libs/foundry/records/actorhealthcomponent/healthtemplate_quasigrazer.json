@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "HealthTemplate.HealthTemplate_Quasigrazer",
-  "_RecordId_": "7b3e44ab-aa32-40e8-bf11-01ec61947b34",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "HealthTemplate",
-    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodymapping_quasigrazer.json",
-    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_webhound.json"}}

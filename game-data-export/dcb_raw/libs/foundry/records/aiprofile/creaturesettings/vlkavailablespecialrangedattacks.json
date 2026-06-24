@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "AIAvailableSpecialRangedAttacksConfig.VlkAvailableSpecialRangedAttacks",
-  "_RecordId_": "887f851d-d9f5-41ba-a255-90dec404539b",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "AIAvailableSpecialRangedAttacksConfig",
-    "availableSpecialRangedAttacks": [
-      "file://./../../../../../libs/foundry/records/aiprofile/creaturesettings/specialrangedattacks/vlkspitattack.json"]}}

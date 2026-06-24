@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Prsnl_Wpn_Sml_C",
-  "_RecordId_": "d2e4dbc7-c4d7-4ace-ab40-cd0e50a0dd86",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_shop_prsnl_wpn_sml_c",
-    "restrictViewBounds": false}}

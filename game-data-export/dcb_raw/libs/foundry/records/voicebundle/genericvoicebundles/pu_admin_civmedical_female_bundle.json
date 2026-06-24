@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "VoiceBundle.PU_Admin_CivMedical_Female_Bundle",
-  "_RecordId_": "39aa624f-98b0-49fc-9cdd-955747b98cde",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "VoiceBundle",
-    "name": "PU_Admin_CivMedical_Female_Bundle",
-    "voices": [
-      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilianmedical/pu_civilianmedical_female02.json"]}}

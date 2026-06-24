@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Admin",
-  "_RecordId_": "d172d1d6-3cb9-49b5-a90f-d0d17298b719",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_shop_admin",
-    "restrictViewBounds": false}}

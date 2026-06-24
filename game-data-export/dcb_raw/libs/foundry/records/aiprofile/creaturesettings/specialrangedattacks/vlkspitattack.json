@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "AISpecialRangedAttackConfig.VlkSpitAttack",
-  "_RecordId_": "33654a16-d04a-4d89-858a-578d90050c11",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "AISpecialRangedAttackConfig",
-    "attackName": "VlkSpitAttack",
-    "maxElevationDeg": 75.0,
-    "verticalAttackFragmentTag": "above"}}

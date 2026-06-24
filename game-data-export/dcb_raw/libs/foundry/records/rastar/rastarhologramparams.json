@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "HologramParams.RastarHologramParams",
-  "_RecordId_": "954a467d-e0f7-44d1-a877-e7c44a58fcc4",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "HologramParams",
-    "ValidMaterial": "Materials/item_selection/material_hologram_pit_equippable.mtl",
-    "InvalidMaterial": "Materials/item_selection/material_hologram_pit_unequippable.mtl"}}

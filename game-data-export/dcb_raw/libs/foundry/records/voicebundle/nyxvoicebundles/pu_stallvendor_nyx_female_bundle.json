@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "VoiceBundle.PU_StallVendor_Nyx_Female_Bundle",
-  "_RecordId_": "c16855c6-3528-4e79-8dbe-ea0dd38c0ede",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "VoiceBundle",
-    "name": "PU_StallVendor_Nyx_Female_Bundle",
-    "voices": [
-      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_female_04.json"]}}

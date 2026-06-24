@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "LootV3SecondaryChoicesMultiLayerRecord.V3MultiChoice_Generic_Common",
-  "_RecordId_": "55d3b508-bad2-4723-abc9-5bedc3ee8249",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "LootV3SecondaryChoicesMultiLayerRecord",
-    "layers": [
-      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3secondarychoices_faction.json",
-      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3secondarychoices_rarity_common.json"]}}

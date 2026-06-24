@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "RefiningProcess.ProcessingType-FastCareful",
-  "_RecordId_": "a437e897-f8a6-4a98-bd7a-8a92a9ead5cd",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "RefiningProcess",
-    "refiningSpeed": "Fast",
-    "refiningQuality": "Careful",
-    "processName": "@refinery_ui_ProcessingType_FastCareful"}}

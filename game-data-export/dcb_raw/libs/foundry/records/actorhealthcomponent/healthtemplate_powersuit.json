@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "HealthTemplate.HealthTemplate_PowerSuit",
-  "_RecordId_": "19398856-08d8-45de-9c73-a43a0f035f78",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "HealthTemplate",
-    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodymapping_powersuit.json",
-    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_powersuit.json"}}

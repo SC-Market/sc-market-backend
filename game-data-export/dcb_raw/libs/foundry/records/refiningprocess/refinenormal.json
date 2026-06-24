@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "RefiningProcess.RefineNormal",
-  "_RecordId_": "4e582f8e-331d-433c-94ad-1eb51837e746",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "RefiningProcess",
-    "refiningSpeed": "Normal",
-    "refiningQuality": "Wasteful",
-    "processName": "@refinery_ui_ProcessingType_NormalWasteful"}}

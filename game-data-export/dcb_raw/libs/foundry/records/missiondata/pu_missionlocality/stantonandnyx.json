@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "MissionLocality.StantonAndNyx",
-  "_RecordId_": "b499a159-5e50-4a70-b865-58a44784a76a",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "MissionLocality",
-    "availableLocations": [
-      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json",
-      "file://./../../../../../libs/foundry/records/starmap/pu/system/nyx/nyxstar.json"]}}

@@ -40,4 +40,5 @@ docker-compose.override.yml
 /backups
 *.sql.gz
 
-src/api/generated/
+src/api/generated/game-data-export/
+game-data-export/

@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "HealthTemplate.HealthTemplate_Yormandi",
-  "_RecordId_": "83c3248b-d65b-47e1-9f47-2888f5c65604",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "HealthTemplate",
-    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodymapping_yormandi.json",
-    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_yormandi.json"}}

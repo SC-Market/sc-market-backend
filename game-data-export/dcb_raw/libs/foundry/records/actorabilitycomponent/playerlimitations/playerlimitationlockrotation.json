@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "PlayerLimitationsProfile.PlayerLimitationLockRotation",
-  "_RecordId_": "ba62558e-1f1e-43ae-8033-1fbfcbd3a684",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "PlayerLimitationsProfile",
-    "abilitiesToBlock": [
-      "Rotation",
-      "FreeLook"]}}

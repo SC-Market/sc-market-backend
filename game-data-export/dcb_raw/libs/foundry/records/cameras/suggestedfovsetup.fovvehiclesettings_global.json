@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "SuggestedFOVSetup.FOVVehicleSettings_Global",
-  "_RecordId_": "70a3b7ac-a87b-474f-88bc-51acbb660c40",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "SuggestedFOVSetup",
-    "suggestedFOV": 60.0,
-    "mode": "SuggestedFOVMode_ApplyIfBigger"}}

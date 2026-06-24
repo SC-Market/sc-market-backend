@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "VoiceBundle.PU_Hawker_Female_Bundle",
-  "_RecordId_": "97853ed5-4ac5-44dc-b29b-6b870211e718",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "VoiceBundle",
-    "name": "PU_Hawker_Female_Bundle",
-    "voices": [
-      "file://./../../../../../libs/foundry/records/voicesingle/pu/hawker/pu_hawker_female04.json"]}}

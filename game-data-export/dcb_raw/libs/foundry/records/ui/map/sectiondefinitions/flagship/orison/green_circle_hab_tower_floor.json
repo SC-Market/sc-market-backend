@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Green_Circle_Hab_Tower_Floor",
-  "_RecordId_": "1eeae3cb-202a-4ba9-9c9b-4736fb8b254d",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@interiormap_common_floor_dynamic",
-    "restrictViewBounds": true}}

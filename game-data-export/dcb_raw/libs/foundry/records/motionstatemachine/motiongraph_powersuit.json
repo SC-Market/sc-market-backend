@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "SMannequinActionDefRecord.MotionGraph_PowerSuit",
-  "_RecordId_": "5036ea65-ae25-4a80-8dee-fbd7b8f5f0fe",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "SMannequinActionDefRecord",
-    "actionDef": {
-      "_Type_": "SMannequinActionDef_PowerSuit",
-      "turnOnSpotTriggerAimYaw": 30.0}}}

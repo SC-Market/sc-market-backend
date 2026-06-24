@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Hab_Flr_011",
-  "_RecordId_": "7726ddc5-3083-4cb4-b726-35449e6d0b0c",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_hab_flr_011",
-    "restrictViewBounds": false}}

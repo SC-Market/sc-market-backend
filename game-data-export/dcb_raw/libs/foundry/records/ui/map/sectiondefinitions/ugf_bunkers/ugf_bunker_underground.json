@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.UGF_Bunker_Underground",
-  "_RecordId_": "550a9009-5f67-4c7e-9b16-20ebff8ac449",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_underground",
-    "restrictViewBounds": false}}

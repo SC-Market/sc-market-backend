@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Lorville_L19_Floor",
-  "_RecordId_": "8091c8ed-0e34-45ff-b121-cec035777451",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@interiormap_common_floor_dynamic",
-    "restrictViewBounds": true}}

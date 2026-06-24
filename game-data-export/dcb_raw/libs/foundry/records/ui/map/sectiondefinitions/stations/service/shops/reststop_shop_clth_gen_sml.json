@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Clth_Gen_Sml",
-  "_RecordId_": "d660e3c9-6eb9-4040-aac4-40284d202a02",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_shop_clth_gen_sml",
-    "restrictViewBounds": false}}

@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Ser_Pltnm_Bay_Sml_C",
-  "_RecordId_": "f37e9f26-fdc0-478c-a3cd-973727084067",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_ser_pltnm_bay_sml_c",
-    "restrictViewBounds": false}}

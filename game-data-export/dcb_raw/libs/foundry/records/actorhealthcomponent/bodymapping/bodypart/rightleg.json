@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "BodyPart.rightLeg",
-  "_RecordId_": "b8507c75-47b0-4119-9657-2e516f6959cb",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "BodyPart",
-    "partHealthStat": "HealthRightLeg",
-    "partWearStat": "WearRightLeg",
-    "jointName": "RightLeg"}}

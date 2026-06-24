@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "JournalEntryType.TextLog",
-  "_RecordId_": "19929f34-821c-47b7-a86a-c50a27defda8",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "JournalEntryType",
-    "DisplayName": "@mobiGlas_ui_JournalEntryType_TextLog",
-    "NotificationName": "@mobiGlas_ui_JournalEntry_Added",
-    "IconName": "Text_ico"}}

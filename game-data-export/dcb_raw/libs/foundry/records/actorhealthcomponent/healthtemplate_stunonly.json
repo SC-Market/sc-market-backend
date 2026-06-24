@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "HealthTemplate.HealthTemplate_StunOnly",
-  "_RecordId_": "54b6d59a-8a20-46e9-92cb-5e2427a58db4",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "HealthTemplate",
-    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/male_v7.json",
-    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_stunonly.json"}}

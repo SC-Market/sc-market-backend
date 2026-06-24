@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "JumpFallLandParams.ActorJumpFallLandDefaultParams",
-  "_RecordId_": "0422cee6-80ad-452f-b31b-beecb101e800",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "JumpFallLandParams",
-    "useJump": true,
-    "jumpHeight": 1.5,
-    "jumpDistance": 0.0}}

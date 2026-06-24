@@ -1,7 +1,0 @@
-{
-  "_RecordName_": "AtmosphereStateTemperatureTemplate.GasCloud_Temperature_Low",
-  "_RecordId_": "afc2ac38-2e4c-481f-a845-157797ae1414",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "AtmosphereStateTemperatureTemplate",
-    "temperature": 173.15}}

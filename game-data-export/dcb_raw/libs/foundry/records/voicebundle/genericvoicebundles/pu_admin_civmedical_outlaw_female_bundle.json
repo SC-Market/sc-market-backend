@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "VoiceBundle.PU_Admin_CivMedical_Outlaw_Female_Bundle",
-  "_RecordId_": "fc272eef-6801-4243-9ed9-842fd4f4e8ae",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "VoiceBundle",
-    "name": "PU_Admin_CivMedical_Outlaw_Female_Bundle",
-    "voices": [
-      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilianmedical/pu_civilianmedical_outlaw_female02.json"]}}

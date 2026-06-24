@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "AtmosphericCompositionTemplate.Delamar",
-  "_RecordId_": "501f439a-fcf5-47a3-9c6d-e22bf5b83c92",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "AtmosphericCompositionTemplate",
-    "composition": {
-      "_Type_": "SAtmosphericCompositionParams",
-      "gases": []}}}

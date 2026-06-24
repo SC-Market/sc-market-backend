@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Orison_General_Hospital",
-  "_RecordId_": "5941827a-4471-4d12-a069-f6b39addec49",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_map_pu_orison_orison_general_hospital",
-    "restrictViewBounds": false}}

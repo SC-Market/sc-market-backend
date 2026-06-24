@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Green_Circle_Hab_Tower",
-  "_RecordId_": "e546eeb2-ef0b-45b2-986f-6488a3812314",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_map_pu_orison_green_circle_apartments",
-    "restrictViewBounds": false}}

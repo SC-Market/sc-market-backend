@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "SCItemDisplayScreenPreset.16_9_hightech",
-  "_RecordId_": "611eb984-483a-43ed-ba5f-d7504d5308bc",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "SCItemDisplayScreenPreset",
-    "material": "Materials/UI/rtt_comms_opaque_hightech.mtl",
-    "geometryPath": "objects/buildingsets/human/lowtech/prop/utilitarian/sign/sign_advert_2_16x9_screen_c.cgf"}}

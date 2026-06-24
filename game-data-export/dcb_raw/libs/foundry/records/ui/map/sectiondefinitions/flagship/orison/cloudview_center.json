@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.CloudView_Center",
-  "_RecordId_": "8515cfb5-76ae-444c-917b-ce0fe8a269f9",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_map_pu_orison_cloudview_center",
-    "restrictViewBounds": false}}

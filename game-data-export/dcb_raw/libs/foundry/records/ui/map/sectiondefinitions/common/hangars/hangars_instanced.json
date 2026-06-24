@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Hangars_Instanced",
-  "_RecordId_": "d03f8e99-31cd-4229-a1c7-9c0ebd135ff4",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_map_pu_hangar",
-    "restrictViewBounds": false}}

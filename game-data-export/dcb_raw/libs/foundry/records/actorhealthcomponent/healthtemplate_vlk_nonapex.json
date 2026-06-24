@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "HealthTemplate.HealthTemplate_Vlk_NonApex",
-  "_RecordId_": "f1af0b77-ce89-40fe-ab79-c4582a001cda",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "HealthTemplate",
-    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodymapping_vlk.json",
-    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_vlk_nonapex.json"}}

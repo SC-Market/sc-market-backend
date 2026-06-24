@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.A18_Bevic_Convention_Center",
-  "_RecordId_": "371fb20b-7120-4ea9-a657-bfab66e3a9ab",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_map_pu_a18_bevic_convention_center",
-    "restrictViewBounds": true}}
