@@ -240,9 +240,11 @@ export class WikiController extends BaseController {
         attributes[row.attribute_name] = row.attribute_value
       }
 
+      const resolvedItemId = itemRow.id
+
       // Get blueprints that output this item
       const blueprintsRows = await knex("blueprints as b")
-        .where("b.output_game_item_id", id)
+        .where("b.output_game_item_id", resolvedItemId)
         .where("b.is_active", true)
         .select(
           "b.blueprint_id",
@@ -265,7 +267,7 @@ export class WikiController extends BaseController {
       const missionsRows = await knex("missions as m")
         .join("mission_blueprint_rewards as mbr", "m.mission_id", "mbr.mission_id")
         .join("blueprints as b", "mbr.blueprint_id", "b.blueprint_id")
-        .where("b.output_game_item_id", id)
+        .where("b.output_game_item_id", resolvedItemId)
         .where("b.is_active", true)
         .select(
           "m.mission_id",
@@ -290,7 +292,7 @@ export class WikiController extends BaseController {
       // Get market listing statistics
       const marketStatsRow = await knex("listings as l")
         .join("listing_items as li", "l.listing_id", "li.listing_id")
-        .where("li.game_item_id", id)
+        .where("li.game_item_id", resolvedItemId)
         .where("l.status", "active")
         .select(
           knex.raw("COUNT(DISTINCT l.listing_id) as listing_count"),
