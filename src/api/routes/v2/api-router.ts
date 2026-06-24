@@ -186,6 +186,10 @@ apiV2Router.get("/game-data/missions/by-code/:mission_code", async (req, res, ne
   try { const c = new MissionsController(req); res.json(await c.getMissionDetailByCode(req.params.mission_code, req)) } catch (e) { next(e) }
 })
 
+// Resolve short-slug URLs to full UUIDs before TSOA routes handle them
+import { resolveShortSlug } from "./middleware/resolve-short-slug.js"
+apiV2Router.use(resolveShortSlug)
+
 RegisterRoutes(apiV2Router)
 
 // Apply TSOA error handler middleware
