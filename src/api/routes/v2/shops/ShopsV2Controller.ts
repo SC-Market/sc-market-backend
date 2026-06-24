@@ -369,8 +369,12 @@ export class ShopsV2Controller extends BaseController {
     const sortOrder = sort_order || "desc"
     const direction = sortOrder === "asc" ? "ASC" : "DESC"
 
-    // Base query with aggregated stats — total_sales read from denormalized column
+    // Base query with aggregated stats + owner info via JOINs
     let query = db("shops as s")
+      .leftJoin("accounts as a", "s.owner_user_id", "a.user_id")
+      .leftJoin("contractors as c", "s.owner_contractor_id", "c.contractor_id")
+      .leftJoin("image_resources as user_avatar_ir", "a.avatar", "user_avatar_ir.resource_id")
+      .leftJoin("image_resources as org_avatar_ir", "c.avatar", "org_avatar_ir.resource_id")
       .select(
         "s.*",
         db.raw("COALESCE((SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as avg_rating"),
@@ -378,6 +382,14 @@ export class ShopsV2Controller extends BaseController {
         db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active'), 0) as listing_count"),
         db.raw("s.total_completed as total_sales"),
+        // Owner info
+        db.raw("CASE WHEN s.owner_user_id IS NOT NULL THEN 'user' ELSE 'contractor' END as owner_type"),
+        db.raw("COALESCE(a.display_name, c.name) as owner_name"),
+        db.raw("COALESCE(a.username, c.spectrum_id) as owner_slug"),
+        db.raw(`COALESCE(
+          COALESCE(user_avatar_ir.external_url, 'https://cdn.sc-market.space/' || user_avatar_ir.filename),
+          COALESCE(org_avatar_ir.external_url, 'https://cdn.sc-market.space/' || org_avatar_ir.filename)
+        ) as owner_avatar_url`),
       )
       .where("s.status", "active")
 
@@ -416,7 +428,6 @@ export class ShopsV2Controller extends BaseController {
     const offset = (validatedPage - 1) * validatedPageSize
     const rows = await query.limit(validatedPageSize).offset(offset)
 
-    // Resolve image URLs (2 queries max per shop for images — could be optimized further with a JOIN)
     const results: ShopPublicResponse[] = await Promise.all(
       rows.map(async (row: Record<string, unknown>) => ({
         shop_id: row.shop_id as string,
@@ -434,6 +445,12 @@ export class ShopsV2Controller extends BaseController {
         rating_count: (row.rating_count as number) || 0,
         listing_count: (row.listing_count as number) || 0,
         total_sales: (row.total_sales as number) || 0,
+        owner: row.owner_name ? {
+          type: row.owner_type as "user" | "contractor",
+          slug: row.owner_slug as string,
+          name: row.owner_name as string,
+          avatar_url: (row.owner_avatar_url as string | null) || null,
+        } : undefined,
       })),
     )
 
