@@ -145,38 +145,59 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
 
   // ── Wiki & Game Data ──
   const wikiPages: SitemapItemLoose[] = []
-  try {
-    const missions = await db("missions").select("mission_code", "title").limit(5000)
-    for (const m of missions) {
-      wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+
+  const wikiQueries = [
+    async () => {
+      const missions = await db("missions").select("mission_code", "title").limit(5000)
+      for (const m of missions) {
+        wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+      }
+    },
+    async () => {
+      const blueprints = await db("blueprints").select("blueprint_code", "name").limit(5000)
+      for (const b of blueprints) {
+        wikiPages.push({ url: `/blueprints/${b.blueprint_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+      }
+    },
+    async () => {
+      const resources = await db("resources").select("resource_id", "name").limit(5000)
+      for (const r of resources) {
+        wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+        wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+      }
+    },
+    async () => {
+      const items = await db("game_items").select("id", "name").limit(10000)
+      for (const i of items) {
+        wikiPages.push({ url: `/wiki/items/${formatShortSlug(i.id, i.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+      }
+    },
+    async () => {
+      const ships = await db("game_items").where("type", "Ship").select("id", "name").limit(2000)
+      for (const s of ships) {
+        wikiPages.push({ url: `/wiki/ships/${formatShortSlug(s.id, s.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+      }
+    },
+    async () => {
+      const manufacturers = await db("wiki_manufacturers").select("code", "name").limit(500)
+      for (const m of manufacturers) {
+        wikiPages.push({ url: `/wiki/manufacturers/${m.code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+      }
+    },
+    async () => {
+      const ores = await db("resources").select("name").whereNotNull("name").where("is_mineable", true).limit(500)
+      for (const o of ores) {
+        wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+      }
+    },
+  ]
+
+  for (const query of wikiQueries) {
+    try {
+      await query()
+    } catch (error) {
+      logger.warn("Failed to fetch game data section for sitemap", { error })
     }
-    const blueprints = await db("blueprints").select("blueprint_code", "name").limit(5000)
-    for (const b of blueprints) {
-      wikiPages.push({ url: `/blueprints/${b.blueprint_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
-    }
-    const resources = await db("resources").select("resource_id", "name").limit(5000)
-    for (const r of resources) {
-      wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
-      wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
-    }
-    const wikiItems = await db("game_items").select("id", "name").limit(10000)
-    for (const i of wikiItems) {
-      wikiPages.push({ url: `/wiki/items/${formatShortSlug(i.id, i.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
-    }
-    const ships = await db("game_items").where("type", "Ship").select("id", "name").limit(2000)
-    for (const s of ships) {
-      wikiPages.push({ url: `/wiki/ships/${formatShortSlug(s.id, s.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
-    }
-    const manufacturers = await db("wiki_manufacturers").select("code", "name").limit(500)
-    for (const m of manufacturers) {
-      wikiPages.push({ url: `/wiki/manufacturers/${m.code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
-    }
-    const ores = await db("resources").select("name").whereNotNull("name").where("is_mineable", true).limit(500)
-    for (const o of ores) {
-      wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
-    }
-  } catch (error) {
-    logger.warn("Failed to fetch game data for sitemap", { error })
   }
   sections.push({ name: "wiki", pages: wikiPages })
 
