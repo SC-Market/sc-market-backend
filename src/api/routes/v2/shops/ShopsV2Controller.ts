@@ -390,6 +390,14 @@ export class ShopsV2Controller extends BaseController {
           THEN (SELECT username FROM accounts WHERE user_id = s.owner_user_id)
           ELSE (SELECT spectrum_id FROM contractors WHERE contractor_id = s.owner_contractor_id)
         END) as owner_slug`),
+        db.raw(`(CASE WHEN s.owner_user_id IS NOT NULL
+          THEN (SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
+                FROM accounts a JOIN image_resources ir ON ir.resource_id = a.avatar
+                WHERE a.user_id = s.owner_user_id)
+          ELSE (SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
+                FROM contractors c JOIN image_resources ir ON ir.resource_id = c.avatar
+                WHERE c.contractor_id = s.owner_contractor_id)
+        END) as owner_avatar_url`),
       )
       .where("s.status", "active")
 
@@ -450,7 +458,7 @@ export class ShopsV2Controller extends BaseController {
           type: row.owner_type as "user" | "contractor",
           slug: row.owner_slug as string,
           name: row.owner_name as string,
-          avatar_url: null,
+          avatar_url: (row.owner_avatar_url as string | null) || null,
         } : undefined,
       })),
     )
