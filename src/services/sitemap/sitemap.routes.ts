@@ -17,16 +17,16 @@ export function setupSitemapRoutes(app: Application): void {
     }
   })
 
-  app.get("/sitemap-:index.xml", async function (req, res) {
-    const sitemapIndex = Number.parseInt(req.params.index, 10)
-    if (!Number.isInteger(sitemapIndex) || sitemapIndex < 0) {
+  app.get("/sitemap-:key.xml", async function (req, res) {
+    const key = req.params.key
+    if (!key) {
       res.status(404).json({ error: "Sitemap not found" }).end()
       return
     }
 
     try {
       const { sitemaps } = await getSitemapCache()
-      const sitemap = sitemaps.get(sitemapIndex)
+      const sitemap = sitemaps.get(key)
       if (!sitemap) {
         res.status(404).json({ error: "Sitemap not found" }).end()
         return
@@ -38,7 +38,7 @@ export function setupSitemapRoutes(app: Application): void {
     } catch (error) {
       logger.error("Error generating sitemap file", {
         error,
-        sitemapIndex,
+        key,
       })
       res.status(500).json({ error: "Failed to generate sitemap file" }).end()
     }
