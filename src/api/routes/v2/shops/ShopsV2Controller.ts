@@ -369,35 +369,28 @@ export class ShopsV2Controller extends BaseController {
     const sortOrder = sort_order || "desc"
     const direction = sortOrder === "asc" ? "ASC" : "DESC"
 
-    // Base query with aggregated stats + owner info via correlated subqueries
+    // Base query with JOINs for owner info — explicit aliases avoid column collision
     let query = db("shops as s")
+      .leftJoin("accounts as a", "s.owner_user_id", "a.user_id")
+      .leftJoin("contractors as c", "s.owner_contractor_id", "c.contractor_id")
+      .leftJoin("image_resources as uir", "a.avatar", "uir.resource_id")
+      .leftJoin("image_resources as cir", "c.avatar", "cir.resource_id")
       .select(
+        // All shop columns explicitly to avoid collision with joined tables
         "s.shop_id", "s.slug", "s.name", "s.description", "s.banner", "s.logo",
-        "s.supported_languages", "s.tags", "s.accepts_custom_orders", "s.status", "s.created_at",
-        "s.owner_user_id", "s.owner_contractor_id", "s.total_completed",
+        "s.supported_languages", "s.tags", "s.accepts_custom_orders", "s.status",
+        "s.created_at", "s.owner_user_id", "s.owner_contractor_id", "s.total_completed",
+        // Aggregated stats
         db.raw("COALESCE((SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as avg_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
         db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active'), 0) as listing_count"),
         db.raw("s.total_completed as total_sales"),
-        // Owner info via correlated subqueries (avoids column name collisions from JOINs)
+        // Owner info — aliased to avoid clashing with shop columns
         db.raw("CASE WHEN s.owner_user_id IS NOT NULL THEN 'user' ELSE 'contractor' END as owner_type"),
-        db.raw(`(CASE WHEN s.owner_user_id IS NOT NULL
-          THEN (SELECT display_name FROM accounts WHERE user_id = s.owner_user_id)
-          ELSE (SELECT name FROM contractors WHERE contractor_id = s.owner_contractor_id)
-        END) as owner_name`),
-        db.raw(`(CASE WHEN s.owner_user_id IS NOT NULL
-          THEN (SELECT username FROM accounts WHERE user_id = s.owner_user_id)
-          ELSE (SELECT spectrum_id FROM contractors WHERE contractor_id = s.owner_contractor_id)
-        END) as owner_slug`),
-        db.raw(`(CASE WHEN s.owner_user_id IS NOT NULL
-          THEN (SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
-                FROM accounts a JOIN image_resources ir ON ir.resource_id = a.avatar
-                WHERE a.user_id = s.owner_user_id)
-          ELSE (SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
-                FROM contractors c JOIN image_resources ir ON ir.resource_id = c.avatar
-                WHERE c.contractor_id = s.owner_contractor_id)
-        END) as owner_avatar_url`),
+        db.raw("COALESCE(a.display_name, c.name) as owner_name"),
+        db.raw("COALESCE(a.username, c.spectrum_id) as owner_slug"),
+        db.raw("COALESCE(uir.external_url, CASE WHEN uir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || uir.filename END, cir.external_url, CASE WHEN cir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || cir.filename END) as owner_avatar_url"),
       )
       .where("s.status", "active")
 
