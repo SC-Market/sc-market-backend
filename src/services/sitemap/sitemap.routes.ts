@@ -10,6 +10,7 @@ export function setupSitemapRoutes(app: Application): void {
       const { index } = await getSitemapCache()
       const xml = gunzipSync(index)
       res.set("Content-Type", "application/xml; charset=utf-8")
+      res.set("Cross-Origin-Resource-Policy", "cross-origin")
       res.send(xml)
     } catch (error) {
       logger.error("Error generating sitemap index", { error })
@@ -34,6 +35,7 @@ export function setupSitemapRoutes(app: Application): void {
 
       const xml = gunzipSync(sitemap)
       res.set("Content-Type", "application/xml; charset=utf-8")
+      res.set("Cross-Origin-Resource-Policy", "cross-origin")
       res.send(xml)
     } catch (error) {
       logger.error("Error generating sitemap file", {
