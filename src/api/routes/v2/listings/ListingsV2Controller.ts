@@ -1346,7 +1346,7 @@ export class ListingsV2Controller extends BaseController {
           max_order_quantity: listing.max_order_quantity ?? null,
           min_order_value: listing.min_order_value ? Number(listing.min_order_value) : null,
           max_order_value: listing.max_order_value ? Number(listing.max_order_value) : null,
-          view_count: await this.getViewCount(db, id),
+          view_count: await this.getViewCount(db, resolvedListingId),
         },
         seller: {
           shop_id: listing.shop_id,
