@@ -419,7 +419,7 @@ export class ShopsV2Controller extends BaseController {
     // Sort: "rating" uses total_rating (SUM) — shops with active listings ranked first,
     // then by total rating score (so shops with many reviews outrank single 5-star shops)
     if (sortBy === "rating") {
-      query = query.orderByRaw(`CASE WHEN (SELECT COUNT(*) FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active') > 0 THEN 0 ELSE 1 END ASC, COALESCE((SELECT SUM(rating) FROM shop_ratings WHERE shop_id = s.shop_id), 0) ${direction}`)
+      query = query.orderByRaw(`(listing_count = 0) ASC, total_rating ${direction}`)
     } else if (sortBy === "total_sales") {
       query = query.orderByRaw(`s.total_completed ${direction}`)
     } else {
