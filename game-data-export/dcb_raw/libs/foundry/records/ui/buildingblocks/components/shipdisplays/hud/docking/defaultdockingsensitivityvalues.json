@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "DockingSensitivity.DefaultDockingSensitivityValues",
-  "_RecordId_": "3d068613-4faa-4cd7-a0b1-69b391797216",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "DockingSensitivity",
-    "DockingUIRotationalSensitivity": 1.0,
-    "DockingUILinearSensitivity": 1.0}}

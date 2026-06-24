@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "MineableComposition.RareShipMineables_TEMPLATE",
-  "_RecordId_": "d7833008-a8cd-4816-baec-0e0ab2449442",
-  "_RecordTag_": "SystemsDesign",
-  "_RecordValue_": {
-    "_Type_": "MineableComposition",
-    "depositName": "@LOC_EMPTY",
-    "minimumDistinctElements": 1,
-    "compositionArray": []}}

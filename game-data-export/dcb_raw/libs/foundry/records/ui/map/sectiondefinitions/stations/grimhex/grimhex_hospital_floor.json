@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.GrimHex_Hospital_Floor",
-  "_RecordId_": "1ce43b1f-cea4-4ea3-81d5-2f3f660c66d9",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@interiormap_common_floor_dynamic",
-    "restrictViewBounds": true}}

@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Med_A",
-  "_RecordId_": "f7757766-0e13-44b0-a38e-6814726885de",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_shop_med_a",
-    "restrictViewBounds": false}}

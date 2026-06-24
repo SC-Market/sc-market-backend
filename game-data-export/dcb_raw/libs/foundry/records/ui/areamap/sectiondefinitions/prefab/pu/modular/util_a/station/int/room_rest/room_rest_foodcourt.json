@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.room_rest_foodcourt",
-  "_RecordId_": "10c81095-8147-4b2e-bc67-fdd03c74adc1",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_foodcourt",
-    "restrictViewBounds": false}}

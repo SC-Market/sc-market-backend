@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "DefaultEntitlementRecord.StarMarineDefault",
-  "_RecordId_": "0e9a49e0-29d9-47b8-a6d2-64fbdd10469c",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "DefaultEntitlementRecord",
-    "Entitlements": [
-      "StarMarine"],
-    "subscribersOnly": false}}

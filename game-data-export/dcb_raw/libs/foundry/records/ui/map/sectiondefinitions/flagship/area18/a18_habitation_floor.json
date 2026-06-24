@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.A18_Habitation_Floor",
-  "_RecordId_": "1edc27ae-1e50-4372-8481-159ff9986658",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@interiormap_common_floor_dynamic",
-    "restrictViewBounds": true}}

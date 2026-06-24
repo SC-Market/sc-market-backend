@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Habitation",
-  "_RecordId_": "61262858-c3d5-4450-ab7e-acbe6fc0af5e",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@vehicle_room_habitation",
-    "restrictViewBounds": false}}

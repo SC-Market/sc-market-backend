@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "CommsAudioEffect.VehicleMFD",
-  "_RecordId_": "e753504a-4d9c-442c-8692-9f34a296a6b0",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "CommsAudioEffect",
-    "busName": "DVL_MFD",
-    "locationId": "VehicleMFD"}}

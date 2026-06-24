@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Newbab_Brentworth_Care_Center_Floor",
-  "_RecordId_": "d4640087-f75e-41cb-a1fc-e83fee5938ea",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@interiormap_common_floor_dynamic",
-    "restrictViewBounds": true}}

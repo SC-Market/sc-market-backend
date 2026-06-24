@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "VoiceBundle.GSECRPILOT",
-  "_RecordId_": "9ed9f8fb-0217-43a4-8f5a-1152daa59e28",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "VoiceBundle",
-    "name": "GSECRPILOT",
-    "voices": [
-      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/gsecrpilot01.json"]}}

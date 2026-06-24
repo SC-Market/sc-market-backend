@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.room_rest_int_transit",
-  "_RecordId_": "8d8b22cc-fe11-45f3-8d9f-8783ed8baa10",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_int_transit",
-    "restrictViewBounds": false}}

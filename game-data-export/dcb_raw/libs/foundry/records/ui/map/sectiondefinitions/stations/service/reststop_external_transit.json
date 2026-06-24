@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_External_Transit",
-  "_RecordId_": "c207111e-3106-4e90-a3f8-7ab076c06a4e",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_ext_transit",
-    "restrictViewBounds": false}}

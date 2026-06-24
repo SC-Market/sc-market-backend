@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "STargetingMethodRecord.Vehicle_TargetByLineIntersection",
-  "_RecordId_": "9a5364fb-0f7f-410f-9689-2d0d3eac31f8",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "STargetingMethodRecord",
-    "targetingMethod": {
-      "_Type_": "STargetByLineIntersection",
-      "angle": 15.0}}}

@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "CommunicationConfig.blank_comms_config",
-  "_RecordId_": "3937a1dd-1014-4a7e-817d-04a2e0de1bee",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "CommunicationConfig",
-    "name": "AI_BroadcastToOpenChannel",
-    "communications": [],
-    "subConfigs": []}}

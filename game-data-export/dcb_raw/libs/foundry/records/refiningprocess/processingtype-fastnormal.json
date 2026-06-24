@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "RefiningProcess.ProcessingType-FastNormal",
-  "_RecordId_": "d04e8318-c5a1-474a-98d3-2665494cd972",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "RefiningProcess",
-    "refiningSpeed": "Fast",
-    "refiningQuality": "Normal",
-    "processName": "@refinery_ui_ProcessingType_FastNormal"}}

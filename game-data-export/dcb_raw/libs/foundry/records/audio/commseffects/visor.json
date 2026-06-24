@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "CommsAudioEffect.Visor",
-  "_RecordId_": "83888ff4-da65-4bd6-be41-822dfaf30154",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "CommsAudioEffect",
-    "busName": "DVL_VISOR",
-    "locationId": "Visor"}}

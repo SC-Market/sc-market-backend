@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "CameraFOVChangeData.SocialFOVChangeData",
-  "_RecordId_": "1cbdca5f-c1e3-43d5-809a-9c52a268c83c",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "CameraFOVChangeData",
-    "fovLerpSpeed": 0.5,
-    "resetFOVLerpSpeed": 0.5}}

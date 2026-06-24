@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "MissionLocality.StantonAndPyro",
-  "_RecordId_": "a90b76e0-edff-4999-9760-9dd703208318",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "MissionLocality",
-    "availableLocations": [
-      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json",
-      "file://./../../../../../libs/foundry/records/starmap/pu/system/pyro/pyrostar/pyrostar.json"]}}

@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Redeemer_Upper_Deck",
-  "_RecordId_": "eed7bcf0-6eb5-4b53-9b72-1cff4ae858f4",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@vehicle_deck_lower",
-    "restrictViewBounds": false}}

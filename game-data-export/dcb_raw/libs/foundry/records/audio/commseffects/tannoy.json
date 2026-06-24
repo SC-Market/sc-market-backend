@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "CommsAudioEffect.Tannoy",
-  "_RecordId_": "0fdd581b-f32b-421b-a1bd-f76aa6ea281c",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "CommsAudioEffect",
-    "busName": "DVL_PA",
-    "locationId": "Tannoy"}}

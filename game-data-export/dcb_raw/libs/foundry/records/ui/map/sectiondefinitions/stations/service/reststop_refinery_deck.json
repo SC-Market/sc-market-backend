@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Refinery_Deck",
-  "_RecordId_": "b923969a-4dd2-4474-92e2-22d226cdedd8",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_refinery",
-    "restrictViewBounds": false}}

@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "CommunicationConfig.AI_BroadcastToOpenChannel",
-  "_RecordId_": "cd3ceacb-2d56-4055-854f-8cf2b50f5c85",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "CommunicationConfig",
-    "name": "AI_BroadcastToOpenChannel",
-    "communications": [],
-    "subConfigs": []}}

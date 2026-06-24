@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "VoiceBundle.PU_Tourist_Female_Bundle",
-  "_RecordId_": "e6363e65-cb63-4c90-94da-a9649d9e27f9",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "VoiceBundle",
-    "name": "PU_Tourist_Female_Bundle",
-    "voices": [
-      "file://./../../../../../libs/foundry/records/voicesingle/pu/tourist/pu_tourist_female01.json"]}}

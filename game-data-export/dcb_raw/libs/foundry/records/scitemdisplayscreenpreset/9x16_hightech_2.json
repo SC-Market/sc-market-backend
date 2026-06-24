@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "SCItemDisplayScreenPreset.9x16_hightech_2",
-  "_RecordId_": "e2c8809a-693a-4dfb-aaad-cb268cd16baa",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "SCItemDisplayScreenPreset",
-    "material": "Materials/UI/rtt_comms_opaque_hightech.mtl",
-    "geometryPath": "Objects/Spaceships/Ships/AEGS/Idris_Frigate/interior/ui/ui_screen_9x16_a.cgf"}}

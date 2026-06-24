@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "SCItemDisplayScreenPreset.MFD_4x3",
-  "_RecordId_": "7e0f1c45-a79a-45ba-846b-b7b9adefbf75",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "SCItemDisplayScreenPreset",
-    "material": "Materials/UI/ui_screen_mfd_master.mtl",
-    "geometryPath": "Objects/Squadron42/universal/ui/ui_screen_4x3_a.cgf"}}

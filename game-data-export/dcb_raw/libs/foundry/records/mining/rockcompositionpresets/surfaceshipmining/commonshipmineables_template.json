@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "MineableComposition.CommonShipMineables_TEMPLATE",
-  "_RecordId_": "9a79e8a7-a6fa-4a19-855e-f610ad697405",
-  "_RecordTag_": "SystemsDesign",
-  "_RecordValue_": {
-    "_Type_": "MineableComposition",
-    "depositName": "@LOC_EMPTY",
-    "minimumDistinctElements": 1,
-    "compositionArray": []}}

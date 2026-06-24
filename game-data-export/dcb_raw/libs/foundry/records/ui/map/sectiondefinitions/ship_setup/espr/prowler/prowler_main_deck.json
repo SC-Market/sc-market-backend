@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.Prowler_Main_Deck",
-  "_RecordId_": "4beb9977-bded-404c-8a6a-bb9e498f2705",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@vehicle_deck_main",
-    "restrictViewBounds": false}}

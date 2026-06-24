@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Fdcrt_Gen_Util_Bar_Med_a",
-  "_RecordId_": "c3b5daff-5a6c-4069-83c6-58feab6654af",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_fdcrt_bar",
-    "restrictViewBounds": false}}

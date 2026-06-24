@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.A18_Space_Port",
-  "_RecordId_": "b7dbde8b-5c5f-4bd1-9d21-96aeeeed8a89",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@interiormap_common_space_port",
-    "restrictViewBounds": false}}

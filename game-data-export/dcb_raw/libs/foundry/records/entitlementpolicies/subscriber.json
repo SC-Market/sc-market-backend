@@ -1,9 +1,0 @@
-{
-  "_RecordName_": "DefaultEntitlementRecord.Subscriber",
-  "_RecordId_": "5540560f-dcb6-475e-94e2-bc08da0e8834",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "DefaultEntitlementRecord",
-    "Entitlements": [
-      "AllModes"],
-    "subscribersOnly": true}}

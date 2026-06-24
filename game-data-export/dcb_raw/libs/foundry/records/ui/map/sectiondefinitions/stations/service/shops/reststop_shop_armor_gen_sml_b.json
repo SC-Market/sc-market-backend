@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Armor_Gen_Sml_B",
-  "_RecordId_": "e9298093-7e0c-4708-b780-1ffbebe3319e",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "InteriorMapSectionDefinition",
-    "name": "@area_name_shop_armor_gen_sml_b",
-    "restrictViewBounds": false}}

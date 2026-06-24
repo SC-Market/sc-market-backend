@@ -1,7 +1,0 @@
-{
-  "_RecordName_": "AtmosphereStatePressureTemplate.GasCloud_Pressure",
-  "_RecordId_": "97e3f2e9-a325-4db9-b6c2-243f26001034",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "AtmosphereStatePressureTemplate",
-    "pressure": 0.003}}

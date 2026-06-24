@@ -1,8 +1,0 @@
-{
-  "_RecordName_": "MoveViewRestrictionPenalty.MoveViewRestriction_Armor_Novelty_Helmet",
-  "_RecordId_": "305c65f3-43f9-4f04-8ce9-9e60195be8cf",
-  "_RecordTag_": "Unknown",
-  "_RecordValue_": {
-    "_Type_": "MoveViewRestrictionPenalty",
-    "restrictedMotionPenalty": 1.0,
-    "restrictedViewPenalty": 1.0}}
