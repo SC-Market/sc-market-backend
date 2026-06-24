@@ -415,9 +415,10 @@ export class ShopsV2Controller extends BaseController {
     const [{ count }] = await countQuery.count("* as count")
     const total = parseInt(String(count), 10)
 
-    // Sort: "rating" uses total_rating (SUM) so shops with many reviews rank higher
+    // Sort: "rating" uses total_rating (SUM) — shops with active listings ranked first,
+    // then by total rating score (so shops with many reviews outrank single 5-star shops)
     if (sortBy === "rating") {
-      query = query.orderByRaw(`total_rating ${direction}`)
+      query = query.orderByRaw(`CASE WHEN listing_count > 0 THEN 0 ELSE 1 END ASC, total_rating ${direction}`)
     } else if (sortBy === "total_sales") {
       query = query.orderByRaw(`total_sales ${direction}`)
     } else {
