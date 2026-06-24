@@ -4,7 +4,19 @@ import { gunzipSync } from "node:zlib"
 import logger from "../../logger/logger.js"
 import { getSitemapCache } from "./sitemap.service.js"
 
+const ROBOTS_TXT = `User-agent: *
+Allow: /sitemap
+Disallow: /api/
+
+Sitemap: https://api.sc-market.space/sitemap.xml
+`
+
 export function setupSitemapRoutes(app: Application): void {
+  app.get("/robots.txt", function (_req, res) {
+    res.set("Content-Type", "text/plain; charset=utf-8")
+    res.set("Cross-Origin-Resource-Policy", "cross-origin")
+    res.send(ROBOTS_TXT)
+  })
   app.get("/sitemap.xml", async function (_req, res) {
     try {
       const { index } = await getSitemapCache()
