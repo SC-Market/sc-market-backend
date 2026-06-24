@@ -18,6 +18,7 @@ import {
   SearchGameItemAggregatesResponse,
   GameItemAggregate,
 } from "../types/game-items.types.js"
+import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
 import logger from "../../../../logger/logger.js"
 
 /** Search result for a game item */
@@ -175,14 +176,21 @@ export class GameItemsV2Controller extends BaseController {
       // ========================================================================
       // Part 1: Get game item metadata (Requirement 38.12)
       // ========================================================================
-      const gameItem = await knex("game_items")
-        .select("id", "name", "type", "image_url")
-        .where("id", id)
-        .first()
+      const { prefix, isFullUuid } = parseShortSlug(id)
+      let gameItem: any
+      if (isFullUuid) {
+        gameItem = await knex("game_items").select("id", "name", "type", "image_url").where("id", id).first()
+      } else {
+        const range = buildUuidRangeQuery(prefix, "id")
+        gameItem = await knex("game_items").select("id", "name", "type", "image_url").whereRaw(range.sql, range.bindings).first()
+      }
 
       if (!gameItem) {
         this.throwNotFound("Game item", id)
       }
+
+      // Use resolved ID for all subsequent queries
+      const gameItemId = gameItem.id
 
       const gameItemMetadata: GameItemMetadata = {
         id: gameItem.id,
@@ -219,7 +227,7 @@ export class GameItemsV2Controller extends BaseController {
           knex.raw(`MIN(COALESCE(vp.price, li.base_price)) as price_min`),
           knex.raw(`MAX(COALESCE(vp.price, li.base_price)) as price_max`),
         )
-        .where("li.game_item_id", id)
+        .where("li.game_item_id", gameItemId)
         .where("l.status", "active")
         .where("lil.listed", true)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
@@ -229,7 +237,7 @@ export class GameItemsV2Controller extends BaseController {
       const qualityDistributionResults = await qualityDistributionQuery
 
       logger.info("Quality distribution computed", {
-        game_item_id: id,
+        game_item_id: gameItemId,
         tier_count: qualityDistributionResults.length,
       })
 
@@ -265,7 +273,7 @@ export class GameItemsV2Controller extends BaseController {
           "ls.created_at",
           knex.raw(`(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) AS shop_rating`),
         )
-        .where("ls.game_item_id", id)
+        .where("ls.game_item_id", gameItemId)
         .where("ls.status", "active")
 
       // Apply quality tier filter if provided (Requirement 38.7)
@@ -328,7 +336,7 @@ export class GameItemsV2Controller extends BaseController {
       const listingsResults = await listingsQuery
 
       logger.info("Listings fetched successfully", {
-        game_item_id: id,
+        game_item_id: gameItemId,
         listing_count: listingsResults.length,
         total,
       })

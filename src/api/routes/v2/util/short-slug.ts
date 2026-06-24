@@ -31,10 +31,9 @@ export function buildUuidRangeQuery(
   column: string,
 ): { sql: string; bindings: string[] } {
   const low = `${prefix}-0000-0000-0000-000000000000`
-  const highPrefix = (parseInt(prefix, 16) + 1).toString(16).padStart(8, "0")
-  const high = `${highPrefix}-0000-0000-0000-000000000000`
+  const high = `${prefix}-ffff-ffff-ffff-ffffffffffff`
   return {
-    sql: `${column} >= ?::uuid AND ${column} < ?::uuid`,
+    sql: `${column} BETWEEN ?::uuid AND ?::uuid`,
     bindings: [low, high],
   }
 }
