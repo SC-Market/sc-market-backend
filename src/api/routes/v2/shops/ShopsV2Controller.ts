@@ -419,9 +419,14 @@ export class ShopsV2Controller extends BaseController {
     // Sort: "rating" uses total_rating (SUM) — shops with active listings ranked first,
     // then by total rating score (so shops with many reviews outrank single 5-star shops)
     if (sortBy === "rating") {
-      query = query.orderByRaw(`(listing_count = 0) ASC, total_rating ${direction}`)
+      // Can't use correlated subquery aliases in ORDER BY — repeat expressions
+      const direction2 = direction === "ASC" ? "ASC" : "DESC"
+      query = query.orderByRaw(
+        `(CASE WHEN EXISTS(SELECT 1 FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active') THEN 0 ELSE 1 END) ASC, ` +
+        `COALESCE((SELECT SUM(sr.rating) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) ${direction2}`,
+      )
     } else if (sortBy === "total_sales") {
-      query = query.orderByRaw(`s.total_completed ${direction}`)
+      query = query.orderBy("s.total_completed", direction)
     } else {
       const columnMap: Record<string, string> = { name: "s.name", created_at: "s.created_at" }
       query = query.orderBy(columnMap[sortBy] || "s.created_at", direction)
