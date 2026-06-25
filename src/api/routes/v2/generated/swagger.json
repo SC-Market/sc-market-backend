@@ -1039,7 +1039,12 @@
 					"listing_count": {
 						"type": "number",
 						"format": "double",
-						"description": "Number of active listings in this shop (included in detail view)"
+						"description": "Number of active listings in this shop"
+					},
+					"service_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of active services in this shop"
 					},
 					"total_sales": {
 						"type": "number",
