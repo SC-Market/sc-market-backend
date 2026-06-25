@@ -88,7 +88,7 @@ export class CartV2Controller extends BaseController {
         .join("listings as l", "ci.listing_id", "l.listing_id")
         .join("listing_items as li", "ci.item_id", "li.item_id")
         .join("item_variants as iv", "ci.variant_id", "iv.variant_id")
-        .join("shops as s", "l.shop_id", "s.shop_id")
+        .leftJoin("shops as s", "l.shop_id", "s.shop_id")
         .where("ci.user_id", userId)
         .select(
           "ci.cart_item_id",
@@ -177,6 +177,13 @@ export class CartV2Controller extends BaseController {
           // Calculate subtotal (Requirement 29.6)
           const subtotal = item.price_per_unit * item.quantity
 
+          // Count other users with this listing in their cart
+          const [{ count: othersCount }] = await knex("cart_items_v2")
+            .where("listing_id", item.listing_id)
+            .whereNot("user_id", userId)
+            .countDistinct("user_id as count")
+          const othersInCart = parseInt(String(othersCount), 10)
+
           return {
             cart_item_id: item.cart_item_id,
             listing: listingInfo,
@@ -188,6 +195,7 @@ export class CartV2Controller extends BaseController {
             quantity_available: availableQuantity,
             price_changed: priceChanged,
             current_price: priceChanged ? currentPrice : undefined,
+            others_in_cart: othersInCart,
           }
         }),
       )

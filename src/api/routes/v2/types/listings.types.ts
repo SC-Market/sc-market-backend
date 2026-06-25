@@ -343,6 +343,9 @@ export interface ListingDetail {
 
   /** Number of views this listing has received */
   view_count?: number;
+
+  /** Number of users who have this listing in their cart */
+  in_carts?: number;
 }
 
 /**
