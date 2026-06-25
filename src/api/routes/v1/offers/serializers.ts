@@ -141,8 +141,21 @@ export async function serializeOfferSessionStubOptimized(
     ? await cdn.getFileLinkResource(row.contractor_avatar)
     : null
 
+  // Resolve shop slug for display
+  const { getKnex } = await import("../../../../clients/database/knex-db.js")
+  const db = getKnex()
+  let shopSlug: string | null = null
+  if (row.contractor_id) {
+    const shop = await db("shops").where("owner_contractor_id", row.contractor_id).first("slug")
+    shopSlug = shop?.slug || null
+  } else if (row.assigned_id) {
+    const shop = await db("shops").where("owner_user_id", row.assigned_id).first("slug")
+    shopSlug = shop?.slug || null
+  }
+
   return {
     id: row.id,
+    shop_slug: shopSlug,
     contractor: row.contractor_id
       ? {
           spectrum_id: row.contractor_spectrum_id,
