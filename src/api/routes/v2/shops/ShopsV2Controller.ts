@@ -117,8 +117,10 @@ export interface ShopPublicResponse {
   rating_count: number
   /** Owner information — link to user profile or org page (included in detail view) */
   owner?: ShopOwnerInfo
-  /** Number of active listings in this shop (included in detail view) */
+  /** Number of active listings in this shop */
   listing_count?: number
+  /** Number of active services in this shop */
+  service_count?: number
   /** Total completed orders (included in detail view) */
   total_sales?: number
   /** Metrics for reputation/badges (included in detail view) */
@@ -387,6 +389,7 @@ export class ShopsV2Controller extends BaseController {
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
         db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active'), 0) as listing_count"),
+        db.raw("COALESCE((SELECT COUNT(*)::integer FROM services sv WHERE sv.shop_id = s.shop_id AND sv.status = 'active'), 0) as service_count"),
         db.raw("s.total_completed as total_sales"),
         // Owner info — aliased to avoid clashing with shop columns
         db.raw("CASE WHEN s.owner_user_id IS NOT NULL THEN 'user' ELSE 'contractor' END as owner_type"),
@@ -424,7 +427,9 @@ export class ShopsV2Controller extends BaseController {
       // Can't use correlated subquery aliases in ORDER BY — repeat expressions
       const direction2 = direction === "ASC" ? "ASC" : "DESC"
       query = query.orderByRaw(
-        `(CASE WHEN EXISTS(SELECT 1 FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active') THEN 0 ELSE 1 END) ASC, ` +
+        `(CASE WHEN EXISTS(SELECT 1 FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active')
+               OR EXISTS(SELECT 1 FROM services sv WHERE sv.shop_id = s.shop_id AND sv.status = 'active')
+               THEN 0 ELSE 1 END) ASC, ` +
         `COALESCE((SELECT SUM(sr.rating) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) ${direction2}`,
       )
     } else if (sortBy === "total_sales") {
@@ -453,6 +458,7 @@ export class ShopsV2Controller extends BaseController {
         rating: row.avg_rating ? parseFloat(row.avg_rating as string) : null,
         rating_count: (row.rating_count as number) || 0,
         listing_count: (row.listing_count as number) || 0,
+        service_count: (row.service_count as number) || 0,
         total_sales: (row.total_sales as number) || 0,
         owner: row.owner_name ? {
           type: row.owner_type as "user" | "contractor",

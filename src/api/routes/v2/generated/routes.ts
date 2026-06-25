@@ -431,6 +431,7 @@ const models: TsoaRoute.Models = {
             "rating_count": {"dataType":"double","required":true},
             "owner": {"ref":"ShopOwnerInfo"},
             "listing_count": {"dataType":"double"},
+            "service_count": {"dataType":"double"},
             "total_sales": {"dataType":"double"},
             "metrics": {"ref":"ShopMetricsResponse"},
         },
