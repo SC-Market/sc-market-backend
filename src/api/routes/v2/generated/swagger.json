@@ -3626,6 +3626,11 @@
 						"type": "number",
 						"format": "double",
 						"description": "Number of views this listing has received"
+					},
+					"in_carts": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of users who have this listing in their cart"
 					}
 				},
 				"required": [
@@ -9346,6 +9351,11 @@
 						"type": "number",
 						"format": "double",
 						"description": "Current price if price_changed is true"
+					},
+					"others_in_cart": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of other users who also have this listing in their cart"
 					}
 				},
 				"required": [
