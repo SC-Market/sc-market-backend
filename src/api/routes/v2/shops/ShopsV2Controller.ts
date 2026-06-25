@@ -64,6 +64,8 @@ export interface ShopResponse {
   logo: string | null
   owner_user_id: string | null
   owner_contractor_id: string | null
+  /** Spectrum ID of the owning contractor (for use with V1 APIs that need spectrum_id not UUID) */
+  owner_contractor_spectrum_id?: string | null
   supported_languages: string[]
   tags: string[]
   accepts_custom_orders: boolean
@@ -725,6 +727,16 @@ export class ShopsV2Controller extends BaseController {
 
 async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_orders?: boolean }): Promise<ShopResponse> {
   const db = getKnex()
+
+  // Resolve contractor spectrum_id for V1 API compatibility
+  let ownerContractorSpectrumId: string | null = null
+  if (shop.owner_contractor_id) {
+    const contractor = await db("contractors")
+      .where("contractor_id", shop.owner_contractor_id)
+      .first("spectrum_id")
+    ownerContractorSpectrumId = contractor?.spectrum_id || null
+  }
+
   return {
     shop_id: shop.shop_id,
     slug: shop.slug,
@@ -734,6 +746,7 @@ async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_ord
     logo: shop.logo,
     owner_user_id: shop.owner_user_id,
     owner_contractor_id: shop.owner_contractor_id,
+    owner_contractor_spectrum_id: ownerContractorSpectrumId,
     supported_languages: shop.supported_languages,
     tags: shop.tags || [],
     accepts_custom_orders: shop.accepts_custom_orders || false,

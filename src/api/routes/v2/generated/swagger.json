@@ -775,6 +775,11 @@
 						"type": "string",
 						"nullable": true
 					},
+					"owner_contractor_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Spectrum ID of the owning contractor (for use with V1 APIs that need spectrum_id not UUID)"
+					},
 					"supported_languages": {
 						"items": {
 							"type": "string"
