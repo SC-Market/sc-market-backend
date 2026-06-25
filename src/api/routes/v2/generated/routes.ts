@@ -352,6 +352,7 @@ const models: TsoaRoute.Models = {
             "logo": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "owner_user_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "owner_contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "owner_contractor_spectrum_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "supported_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "accepts_custom_orders": {"dataType":"boolean","required":true},
