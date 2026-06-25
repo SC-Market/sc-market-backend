@@ -128,6 +128,9 @@ export interface CartItemDetail {
   
   /** Current price if price_changed is true */
   current_price?: number;
+
+  /** Number of other users who also have this listing in their cart */
+  others_in_cart?: number;
 }
 
 /**

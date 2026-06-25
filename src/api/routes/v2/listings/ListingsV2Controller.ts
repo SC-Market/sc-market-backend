@@ -1347,6 +1347,7 @@ export class ListingsV2Controller extends BaseController {
           min_order_value: listing.min_order_value ? Number(listing.min_order_value) : null,
           max_order_value: listing.max_order_value ? Number(listing.max_order_value) : null,
           view_count: await this.getViewCount(db, resolvedListingId),
+          in_carts: await this.getCartCount(db, resolvedListingId),
         },
         seller: {
           shop_id: listing.shop_id,
@@ -2281,11 +2282,22 @@ export class ListingsV2Controller extends BaseController {
     }
   }
 
-  private async getViewCount(db: any, listingId: string): Promise<number> {
+  private async getViewCount(db: ReturnType<typeof getKnex>, listingId: string): Promise<number> {
     try {
       const hasTable = await db.schema.hasTable("listing_views_v2")
       if (!hasTable) return 0
       const [{ count }] = await db("listing_views_v2").where("listing_id", listingId).count("* as count")
+      return parseInt(String(count), 10)
+    } catch {
+      return 0
+    }
+  }
+
+  private async getCartCount(db: ReturnType<typeof getKnex>, listingId: string): Promise<number> {
+    try {
+      const [{ count }] = await db("cart_items_v2")
+        .where("listing_id", listingId)
+        .countDistinct("user_id as count")
       return parseInt(String(count), 10)
     } catch {
       return 0
