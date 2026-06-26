@@ -14,7 +14,6 @@ import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { getNextAvailableTime } from "../util/next-available.js"
-import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
 import * as profileDb from "../../v1/profiles/database.js"
 import {
   AddToCartRequest,
@@ -284,15 +283,10 @@ export class CartV2Controller extends BaseController {
       // Use database transaction for atomicity
       const result = await withTransaction(async (trx) => {
         // Step 1: Validate listing exists and is active (Requirement 30.3)
-        // Support both UUID and short-slug format listing IDs
-        const { prefix, isFullUuid } = parseShortSlug(requestBody.listing_id)
-        let listing
-        if (isFullUuid) {
-          listing = await trx("listings").where({ listing_id: requestBody.listing_id }).first()
-        } else {
-          const range = buildUuidRangeQuery(prefix, "listing_id")
-          listing = await trx("listings").whereRaw(range.sql, range.bindings).first()
-        }
+        // Short-slug listing_id is resolved to UUID by the middleware
+        const listing = await trx("listings")
+          .where({ listing_id: requestBody.listing_id })
+          .first()
 
         if (!listing) {
           this.throwNotFound("Listing", requestBody.listing_id)

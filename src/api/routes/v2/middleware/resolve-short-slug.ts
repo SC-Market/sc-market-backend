@@ -14,6 +14,11 @@ const SLUG_QUERY_PARAMS: Record<string, { table: string; column: string }> = {
   listing_id: { table: "listings", column: "listing_id" },
 }
 
+const SLUG_BODY_FIELDS: Record<string, { table: string; column: string }> = {
+  listing_id: { table: "listings", column: "listing_id" },
+  game_item_id: { table: "game_items", column: "id" },
+}
+
 async function resolveToUuid(
   hexPrefix: string,
   table: string,
@@ -67,6 +72,20 @@ export async function resolveShortSlug(
     const resolved = await resolveToUuid(hexPrefix, table, column)
     if (resolved) {
       ;(req.query as Record<string, string>)[param] = resolved
+    }
+  }
+
+  // Resolve body fields
+  if (req.body && typeof req.body === "object") {
+    for (const [field, { table, column }] of Object.entries(SLUG_BODY_FIELDS)) {
+      const value = req.body[field]
+      if (typeof value !== "string") continue
+      const { prefix: hexPrefix, isFullUuid } = parseShortSlug(value)
+      if (isFullUuid) continue
+      const resolved = await resolveToUuid(hexPrefix, table, column)
+      if (resolved) {
+        req.body[field] = resolved
+      }
     }
   }
 
