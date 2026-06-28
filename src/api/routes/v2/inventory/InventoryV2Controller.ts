@@ -9,6 +9,7 @@ import { Post, Get, Put, Delete, Route, Tags, Body, Request, Path, Query, Securi
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 
@@ -155,10 +156,22 @@ export class InventoryV2Controller extends BaseController {
       ])
     }
 
+    // Resolve variant_id — required by DB constraint. Auto-create default if not provided.
+    let variantId = requestBody.variant_id
+    if (!variantId && requestBody.game_item_id) {
+      // Get or create a default variant (empty attributes = generic/unspecified)
+      variantId = await getOrCreateVariant(requestBody.game_item_id, {})
+    }
+    if (!variantId) {
+      throw this.throwValidationError("variant_id is required when game_item_id is not provided", [
+        { field: "variant_id", message: "Provide a variant_id or a game_item_id to auto-create one" },
+      ])
+    }
+
     const [lot] = await knex("listing_item_lots").insert({
       owner_id: userId,
       game_item_id: requestBody.game_item_id || null,
-      variant_id: requestBody.variant_id || null,
+      variant_id: variantId,
       listing_id: null,
       item_id: null,
       quantity_total: requestBody.quantity,
