@@ -25,7 +25,6 @@ import {
   GetMyListingsResponse,
   InventorySummaryResponse,
 } from "../types/listings.types.js"
-import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
@@ -1121,11 +1120,8 @@ export class ListingsV2Controller extends BaseController {
     logger.info("Fetching listing detail", { listingId: id })
 
     try {
-      // Resolve short-slug or full UUID
-      const { prefix, isFullUuid } = parseShortSlug(id)
-
-      // Query listing with shop information
-      let query = db("listings as l")
+      // Short-slug is resolved to UUID by the middleware
+      const listing = await db("listings as l")
         .join("shops as s", "l.shop_id", "s.shop_id")
         .select(
           "l.listing_id",
@@ -1151,15 +1147,8 @@ export class ListingsV2Controller extends BaseController {
           "s.supported_languages as shop_languages",
           "s.owner_contractor_id as shop_owner_contractor_id",
         )
-
-      if (isFullUuid) {
-        query = query.where("l.listing_id", id)
-      } else {
-        const range = buildUuidRangeQuery(prefix, "l.listing_id")
-        query = query.whereRaw(range.sql, range.bindings)
-      }
-
-      const listing = await query.first()
+        .where("l.listing_id", id)
+        .first()
 
       if (!listing) {
         this.throwNotFound("Listing", id)
