@@ -78,7 +78,6 @@ offersRouter.get(
   requireOffersRead,
   get_search_spec,
   readRateLimit,
-  userAuthorized,
   validate_optional_username("customer"),
   validate_optional_username("assigned"),
   validate_optional_spectrum_id("contractor"),
