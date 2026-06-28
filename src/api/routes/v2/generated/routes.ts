@@ -467,6 +467,27 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopWebhookResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "webhook_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "webhook_url": {"dataType":"string","required":true},
+            "shop_id": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateShopWebhookRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "webhook_url": {"dataType":"string","required":true},
+            "actions": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "TransferShopRequest": {
         "dataType": "refObject",
         "properties": {
@@ -4139,6 +4160,104 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getShopReviews',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getShopWebhooks: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+        };
+        app.get('/shops/:shopId/webhooks',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getShopWebhooks)),
+
+            async function ShopsV2Controller_getShopWebhooks(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getShopWebhooks, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getShopWebhooks',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_createShopWebhook: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"CreateShopWebhookRequest"},
+        };
+        app.post('/shops/:shopId/webhooks',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.createShopWebhook)),
+
+            async function ShopsV2Controller_createShopWebhook(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_createShopWebhook, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'createShopWebhook',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_deleteShopWebhook: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                webhookId: {"in":"path","name":"webhookId","required":true,"dataType":"string"},
+        };
+        app.delete('/shops/:shopId/webhooks/:webhookId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.deleteShopWebhook)),
+
+            async function ShopsV2Controller_deleteShopWebhook(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_deleteShopWebhook, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'deleteShopWebhook',
                 controller,
                 response,
                 next,
