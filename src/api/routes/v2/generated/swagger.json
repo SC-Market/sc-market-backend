@@ -1167,6 +1167,53 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShopWebhookResponse": {
+				"properties": {
+					"webhook_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"webhook_url": {
+						"type": "string"
+					},
+					"shop_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"webhook_id",
+					"name",
+					"webhook_url",
+					"shop_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateShopWebhookRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"webhook_url": {
+						"type": "string"
+					},
+					"actions": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"webhook_url",
+					"actions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"TransferShopRequest": {
 				"properties": {
 					"target_contractor_id": {
@@ -11898,6 +11945,144 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/webhooks": {
+			"get": {
+				"operationId": "GetShopWebhooks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ShopWebhookResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "List webhooks for a shop.\nRequires manage_market permission.",
+				"summary": "List shop webhooks",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateShopWebhook",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopWebhookResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a webhook for a shop.\nRequires manage_market permission.",
+				"summary": "Create shop webhook",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateShopWebhookRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shops/{shopId}/webhooks/{webhookId}": {
+			"delete": {
+				"operationId": "DeleteShopWebhook",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete a webhook for a shop.\nRequires manage_market permission.",
+				"summary": "Delete shop webhook",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "webhookId",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

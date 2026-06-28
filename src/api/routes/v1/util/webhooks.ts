@@ -33,9 +33,16 @@ export async function createNotificationWebhook(
   actions: string[],
   contractor_id?: string,
   user_id?: string,
+  shop_id?: string,
 ) {
   let webhooks
-  if (contractor_id && !user_id) {
+  if (shop_id && !contractor_id && !user_id) {
+    webhooks = await notificationDb.createNotificationWebhook({
+      webhook_url,
+      name,
+      shop_id,
+    })
+  } else if (contractor_id && !user_id) {
     webhooks = await notificationDb.createNotificationWebhook({
       webhook_url,
       name,
@@ -48,7 +55,7 @@ export async function createNotificationWebhook(
       user_id,
     })
   } else {
-    throw Error("Must specify either contractor or user")
+    throw Error("Must specify either contractor, user, or shop")
   }
 
   const webhook = webhooks[0]
@@ -768,17 +775,35 @@ export async function sendBidWebhooksV2(
   const shop = await getKnex()("shops").where("shop_id", listing.shop_id).first()
   if (!shop) return
 
-  let webhooks: DBNotificationWebhook[]
-  if (shop.owner_contractor_id) {
-    webhooks = await notificationDb.getNotificationWebhooksByAction(
-      { "notification_webhooks.contractor_id": shop.owner_contractor_id },
+  // Collect webhooks from both shop-level and owner-level (org or user)
+  const webhookSets = await Promise.all([
+    // Shop-level webhooks
+    notificationDb.getNotificationWebhooksByAction(
+      { "notification_webhooks.shop_id": listing.shop_id },
       "market_item_bid",
-    )
-  } else {
-    webhooks = await notificationDb.getNotificationWebhooksByAction(
-      { "notification_webhooks.user_id": shop.owner_user_id },
-      "market_item_bid",
-    )
+    ),
+    // Owner-level webhooks (org or user)
+    shop.owner_contractor_id
+      ? notificationDb.getNotificationWebhooksByAction(
+          { "notification_webhooks.contractor_id": shop.owner_contractor_id },
+          "market_item_bid",
+        )
+      : notificationDb.getNotificationWebhooksByAction(
+          { "notification_webhooks.user_id": shop.owner_user_id },
+          "market_item_bid",
+        ),
+  ])
+
+  // Deduplicate by webhook_id
+  const seen = new Set<string>()
+  const webhooks: DBNotificationWebhook[] = []
+  for (const set of webhookSets) {
+    for (const w of set) {
+      if (!seen.has(w.webhook_id)) {
+        seen.add(w.webhook_id)
+        webhooks.push(w)
+      }
+    }
   }
 
   const bidder = await profileDb.getMinimalUser({ user_id: bidderId })

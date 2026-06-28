@@ -19,6 +19,8 @@ import {
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { has_permission } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
+import { createNotificationWebhook } from "../../v1/util/webhooks.js"
+import * as notificationDb from "../../v1/notifications/database.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -53,6 +55,19 @@ export interface UpdateShopRequest {
 
 export interface TransferShopRequest {
   target_contractor_id: string
+}
+
+export interface CreateShopWebhookRequest {
+  name: string
+  webhook_url: string
+  actions: string[]
+}
+
+export interface ShopWebhookResponse {
+  webhook_id: string
+  name: string
+  webhook_url: string
+  shop_id: string
 }
 
 export interface ShopResponse {
@@ -671,6 +686,110 @@ export class ShopsV2Controller extends BaseController {
     }))
 
     return { reviews, total, page: validatedPage, page_size: validatedPageSize }
+  }
+
+  /**
+   * List webhooks for a shop.
+   * Requires manage_market permission.
+   *
+   * @summary List shop webhooks
+   */
+  @Get("{shopId}/webhooks")
+  @Security("loggedin")
+  public async getShopWebhooks(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+  ): Promise<ShopWebhookResponse[]> {
+    this.request = request
+    const userId = this.getUserId()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden()
+    }
+
+    const webhooks = await notificationDb.getNotificationWebhooks({ shop_id: shopId })
+    return webhooks.map((w) => ({
+      webhook_id: w.webhook_id,
+      name: w.name,
+      webhook_url: w.webhook_url,
+      shop_id: shopId,
+    }))
+  }
+
+  /**
+   * Create a webhook for a shop.
+   * Requires manage_market permission.
+   *
+   * @summary Create shop webhook
+   */
+  @Post("{shopId}/webhooks")
+  @Security("loggedin")
+  public async createShopWebhook(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Body() body: CreateShopWebhookRequest,
+  ): Promise<ShopWebhookResponse> {
+    this.request = request
+    const userId = this.getUserId()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden()
+    }
+
+    const webhook = await createNotificationWebhook(
+      body.name,
+      body.webhook_url,
+      body.actions,
+      undefined,
+      undefined,
+      shopId,
+    )
+
+    return {
+      webhook_id: webhook.webhook_id,
+      name: webhook.name,
+      webhook_url: webhook.webhook_url,
+      shop_id: shopId,
+    }
+  }
+
+  /**
+   * Delete a webhook for a shop.
+   * Requires manage_market permission.
+   *
+   * @summary Delete shop webhook
+   */
+  @Delete("{shopId}/webhooks/{webhookId}")
+  @Security("loggedin")
+  public async deleteShopWebhook(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Path() webhookId: string,
+  ): Promise<{ success: boolean }> {
+    this.request = request
+    const userId = this.getUserId()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden()
+    }
+
+    const deleted = await notificationDb.deleteNotificationWebhook({
+      webhook_id: webhookId,
+      shop_id: shopId,
+    })
+
+    if (!deleted.length) this.throwNotFound("Webhook", webhookId)
+
+    return { success: true }
   }
 
   /**
