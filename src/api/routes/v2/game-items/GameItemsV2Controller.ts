@@ -18,7 +18,6 @@ import {
   SearchGameItemAggregatesResponse,
   GameItemAggregate,
 } from "../types/game-items.types.js"
-import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
 import logger from "../../../../logger/logger.js"
 
 /** Search result for a game item */
@@ -175,21 +174,17 @@ export class GameItemsV2Controller extends BaseController {
     try {
       // ========================================================================
       // Part 1: Get game item metadata (Requirement 38.12)
+      // Short-slug is resolved to UUID by the middleware
       // ========================================================================
-      const { prefix, isFullUuid } = parseShortSlug(id)
-      let gameItem: any
-      if (isFullUuid) {
-        gameItem = await knex("game_items").select("id", "name", "type", "image_url").where("id", id).first()
-      } else {
-        const range = buildUuidRangeQuery(prefix, "id")
-        gameItem = await knex("game_items").select("id", "name", "type", "image_url").whereRaw(range.sql, range.bindings).first()
-      }
+      const gameItem = await knex("game_items")
+        .select("id", "name", "type", "image_url")
+        .where("id", id)
+        .first()
 
       if (!gameItem) {
         this.throwNotFound("Game item", id)
       }
 
-      // Use resolved ID for all subsequent queries
       const gameItemId = gameItem.id
 
       const gameItemMetadata: GameItemMetadata = {

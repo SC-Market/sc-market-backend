@@ -21,7 +21,6 @@ import {
   WikiManufacturerSearchResult,
   WikiManufacturerDetail,
 } from "./wiki.types.js"
-import { parseShortSlug, buildUuidRangeQuery } from "../../util/short-slug.js"
 import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/wiki")
@@ -216,15 +215,8 @@ export class WikiController extends BaseController {
     logger.info("Fetching wiki item detail", { id })
 
     try {
-      // Get item data (supports full UUID or short-slug)
-      const { prefix, isFullUuid } = parseShortSlug(id)
-      let itemRow: any
-      if (isFullUuid) {
-        itemRow = await knex("game_items").where("id", id).first()
-      } else {
-        const range = buildUuidRangeQuery(prefix, "id")
-        itemRow = await knex("game_items").whereRaw(range.sql, range.bindings).first()
-      }
+      // Short-slug is resolved to UUID by the middleware
+      const itemRow = await knex("game_items").where("id", id).first()
 
       if (!itemRow) {
         this.throwNotFound("Item", id)
@@ -525,23 +517,14 @@ export class WikiController extends BaseController {
         .orderBy("created_at", "desc")
         .first()
 
-      // Support lookup by UUID, short-slug, or ship_code
-      const { prefix, isFullUuid } = parseShortSlug(id)
-      const isShortSlug = !isFullUuid && /^[0-9a-f]{8}$/i.test(prefix)
+      // Short-slug is resolved to UUID by the middleware.
+      // id is either a full UUID or a ship_code.
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
       let shipRow: any
       let wikiShip: any = null
 
-      if (isFullUuid) {
+      if (isUuid) {
         shipRow = await knex("game_items").where("id", id).first()
-        if (shipRow && latestVersion) {
-          wikiShip = await knex("wiki_ships")
-            .where("name", shipRow.name)
-            .where("version_id", latestVersion.version_id)
-            .first()
-        }
-      } else if (isShortSlug) {
-        const range = buildUuidRangeQuery(prefix, "id")
-        shipRow = await knex("game_items").whereRaw(range.sql, range.bindings).first()
         if (shipRow && latestVersion) {
           wikiShip = await knex("wiki_ships")
             .where("name", shipRow.name)
