@@ -141,21 +141,28 @@ export async function serializeOfferSessionStubOptimized(
     ? await cdn.getFileLinkResource(row.contractor_avatar)
     : null
 
-  // Resolve shop slug for display
+  // Resolve shop for display
   const { getKnex } = await import("../../../../clients/database/knex-db.js")
   const db = getKnex()
-  let shopSlug: string | null = null
+  let shop: { slug: string; name: string; avatar: string | null } | null = null
+  let shopRow: { slug: string; name: string; logo: string | null } | null = null
   if (row.contractor_id) {
-    const shop = await db("shops").where("owner_contractor_id", row.contractor_id).first("slug")
-    shopSlug = shop?.slug || null
+    shopRow = await db("shops").where("owner_contractor_id", row.contractor_id).first("slug", "name", "logo")
   } else if (row.assigned_id) {
-    const shop = await db("shops").where("owner_user_id", row.assigned_id).first("slug")
-    shopSlug = shop?.slug || null
+    shopRow = await db("shops").where("owner_user_id", row.assigned_id).first("slug", "name", "logo")
+  }
+  if (shopRow) {
+    shop = {
+      slug: shopRow.slug,
+      name: shopRow.name,
+      avatar: shopRow.logo ? await cdn.getFileLinkResource(shopRow.logo) : null,
+    }
   }
 
   return {
     id: row.id,
-    shop_slug: shopSlug,
+    shop_slug: shop?.slug || null,
+    shop,
     contractor: row.contractor_id
       ? {
           spectrum_id: row.contractor_spectrum_id,
