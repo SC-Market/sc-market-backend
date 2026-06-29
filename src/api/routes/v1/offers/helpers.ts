@@ -115,6 +115,7 @@ export async function convert_offer_search_query(
     unassigned: query.unassigned === "true" ? true : undefined,
     contractor_id: contractor?.contractor_id || undefined,
     customer_id: customer?.user_id || undefined,
+    shop_id: query.shop_id || undefined,
     index: +(query.index || 0),
     page_size: +((query.page_size as string) || 5),
     sort_method: (query.sort_method as OfferSearchSortMethod) || "timestamp",
@@ -227,6 +228,8 @@ export async function search_offer_sessions_optimized(
         qd = qd.whereNull("offer_sessions.assigned_id").where("offer_sessions.status", "active")
       if (args.contractor_id)
         qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
+      if (args.shop_id)
+        qd = qd.where("offer_sessions.shop_id", args.shop_id)
 
       // Buyer username filter (partial match)
       if (args.buyer_username) {
