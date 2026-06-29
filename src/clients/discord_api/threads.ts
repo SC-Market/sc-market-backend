@@ -21,6 +21,37 @@ import { checkWatchlistMatches } from "../../services/watchlist/watchlist.servic
 
 const stockLotService = new StockLotService()
 
+async function resolveShopForUser(userId: string, contractorId?: string): Promise<string> {
+  const db = getKnex()
+  if (contractorId) {
+    const existing = await db("shops").where("owner_contractor_id", contractorId).where("status", "active").first("shop_id")
+    if (existing) return existing.shop_id
+  }
+  const personal = await db("shops").where("owner_user_id", userId).where("status", "active").first("shop_id")
+  if (personal) return personal.shop_id
+  const user = await db("accounts").where("user_id", userId).first("username")
+  const slug = (user?.username || userId).toLowerCase().replace(/[^a-z0-9-]/g, "-")
+  const [shop] = await db("shops").insert({
+    slug, name: user?.username || "My Shop", description: "", owner_user_id: userId,
+  }).returning("shop_id")
+  return shop.shop_id
+}
+
+async function userOwnsListing(userId: string, listing: { shop_id: string | null; seller_id: string | null; seller_type: string | null }): Promise<boolean> {
+  const db = getKnex()
+  if (listing.shop_id) {
+    const shop = await db("shops").where("shop_id", listing.shop_id).first()
+    if (!shop) return false
+    if (shop.owner_user_id === userId) return true
+    if (shop.owner_contractor_id) {
+      const member = await db("contractor_members").where({ contractor_id: shop.owner_contractor_id, user_id: userId }).first()
+      return !!member
+    }
+    return false
+  }
+  return listing.seller_id === userId
+}
+
 export const threadRouter = express.Router()
 
 threadRouter.get("/all", async (req, res) => {
@@ -252,12 +283,14 @@ threadRouter.get("/user/:discord_id/listings", async (req, res) => {
     return
   }
 
+  const userShops = await getKnex()("shops").where("owner_user_id", user.user_id).where("status", "active").select("shop_id")
+  const shopIds = userShops.map((s: { shop_id: string }) => s.shop_id)
   const listings = await marketDb.searchMarket(
     await convertQuery({ page_size: "100" }),
     (qb: any) =>
-      qb
-        .where("user_seller_id", "=", user.user_id)
-        .andWhere("status", "!=", "archived"),
+      shopIds.length > 0
+        ? qb.whereIn("shop_id", shopIds).andWhere("status", "!=", "archived")
+        : qb.where("user_seller_id", "=", user.user_id).andWhere("status", "!=", "archived"),
   )
 
   res.json({
@@ -306,12 +339,14 @@ threadRouter.get(
       return
     }
 
+    const orgShops = await getKnex()("shops").where("owner_contractor_id", contractor.contractor_id).where("status", "active").select("shop_id")
+    const orgShopIds = orgShops.map((s: { shop_id: string }) => s.shop_id)
     const listings = await marketDb.searchMarket(
       await convertQuery({ page_size: "100" }),
       (qb: any) =>
-        qb
-          .where("contractor_seller_id", "=", contractor.contractor_id)
-          .andWhere("status", "!=", "archived"),
+        orgShopIds.length > 0
+          ? qb.whereIn("shop_id", orgShopIds).andWhere("status", "!=", "archived")
+          : qb.where("contractor_seller_id", "=", contractor.contractor_id).andWhere("status", "!=", "archived"),
     )
 
     res.json({
@@ -365,7 +400,7 @@ threadRouter.post("/market/price", async (req, res) => {
     return
   }
 
-  if (listing.seller_id !== user.user_id && listing.seller_type === "user") {
+  if (!(await userOwnsListing(user.user_id, listing))) {
     res.status(403).json({ error: "You don't own this listing" })
     return
   }
@@ -409,22 +444,18 @@ threadRouter.post("/market/create", async (req, res) => {
   try {
     const db = getKnex()
 
-    let seller_id = user.user_id
-    let seller_type: "user" | "contractor" = "user"
-
+    let contractorId: string | undefined
     if (contractor_spectrum_id) {
       const contractor = await db("contractors").where("spectrum_id", contractor_spectrum_id).first()
-      if (contractor) {
-        seller_id = contractor.contractor_id
-        seller_type = "contractor"
-      }
+      if (contractor) contractorId = contractor.contractor_id
     }
+
+    const shopId = await resolveShopForUser(user.user_id, contractorId)
 
     const result = await withTransaction(async (trx) => {
       const [listing] = await trx("listings")
         .insert({
-          seller_id,
-          seller_type,
+          shop_id: shopId,
           title,
           description: description || title,
           status: "active",
@@ -505,23 +536,21 @@ threadRouter.post("/market/buy", async (req, res) => {
       return
     }
 
-    if (listing.seller_id === user.user_id) {
+    if (await userOwnsListing(user.user_id, listing)) {
       res.status(400).json({ error: "You can't buy your own listing" })
       return
     }
 
-    // Create an order
+    // Create an order via the existing offer flow
     const [order] = await db("orders")
       .insert({
-        buyer_id: user.user_id,
-        seller_id: listing.seller_id,
-        seller_type: listing.seller_type,
-        listing_id: listing.listing_id,
-        quantity,
-        status: "placed",
-        note: note || null,
-        created_at: new Date(),
-        updated_at: new Date(),
+        customer_id: user.user_id,
+        shop_id: listing.shop_id,
+        title: listing.title || "Discord Order",
+        kind: "aggregate",
+        cost: 0,
+        status: "not-started",
+        payment_type: "one-time",
       })
       .returning("*")
 
@@ -557,7 +586,7 @@ threadRouter.post("/market/offer", async (req, res) => {
       return
     }
 
-    if (listing.seller_id === user.user_id) {
+    if (await userOwnsListing(user.user_id, listing)) {
       res.status(400).json({ error: "You can't make an offer on your own listing" })
       return
     }
@@ -565,10 +594,8 @@ threadRouter.post("/market/offer", async (req, res) => {
     // Create an offer session
     const [session] = await db("offer_sessions")
       .insert({
-        buyer_id: user.user_id,
-        seller_id: listing.seller_id,
-        seller_type: listing.seller_type,
-        listing_id: listing.listing_id,
+        customer_id: user.user_id,
+        shop_id: listing.shop_id,
         status: "pending",
         created_at: new Date(),
         updated_at: new Date(),
@@ -616,6 +643,7 @@ threadRouter.post("/market/import-uex", async (req, res) => {
   }
 
   try {
+    const shopId = await resolveShopForUser(user.user_id)
     let imported = 0
 
     for (const item of listings) {
@@ -623,8 +651,7 @@ threadRouter.post("/market/import-uex", async (req, res) => {
         await withTransaction(async (trx) => {
           const [listing] = await trx("listings")
             .insert({
-              seller_id: user.user_id,
-              seller_type: "user",
+              shop_id: shopId,
               title: item.title,
               description: item.description || item.title,
               status: "active",
