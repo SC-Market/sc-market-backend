@@ -1621,7 +1621,7 @@ export async function search_orders_optimized(
       "contractors.avatar as contractor_avatar",
       "shops.name as shop_name",
       "shops.slug as shop_slug",
-      "shops.avatar as shop_avatar",
+      "shops.logo as shop_avatar",
     )
     .groupBy(
       "orders.order_id",
