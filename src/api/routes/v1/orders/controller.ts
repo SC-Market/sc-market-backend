@@ -82,6 +82,7 @@ export const search_orders: RequestHandler = async (req, res) => {
 
 export const get_order_metrics: RequestHandler = async (req, res) => {
   const spectrum_id = req.params["spectrum_id"]
+  const shop_id = req.query.shop_id as string | undefined
   const contractor = await contractorDb.getContractor({
     spectrum_id: spectrum_id,
   })
@@ -107,14 +108,13 @@ export const get_order_metrics: RequestHandler = async (req, res) => {
     return
   }
 
-  // Get contractor order metrics using optimized query
-  const metrics = await getContractorOrderMetrics(contractor.contractor_id)
+  const metrics = await getContractorOrderMetrics(contractor.contractor_id, shop_id)
 
   res.json(createResponse(metrics))
 }
 
 export const get_contractor_order_data: RequestHandler = async (req, res) => {
-  const { include_trends, assigned_only } = req.query
+  const { include_trends, assigned_only, shop_id } = req.query
   const contractor = req.contractor!
 
   // Parse query parameters
@@ -126,6 +126,7 @@ export const get_contractor_order_data: RequestHandler = async (req, res) => {
   const data = await getContractorOrderData(contractor.contractor_id, {
     include_trends: includeTrends,
     assigned_only: assignedOnly,
+    shop_id: shop_id as string | undefined,
   })
 
   res.json(createResponse(data))

@@ -1678,11 +1678,14 @@ interface ContractorOrderMetrics {
 // Get contractor order metrics using optimized queries
 export async function getContractorOrderMetrics(
   contractor_id: string,
+  shop_id?: string,
 ): Promise<ContractorOrderMetrics> {
+  const whereClause: Record<string, string> = shop_id ? { shop_id } : { contractor_id }
+
   // Get basic counts and totals
   const basicStats = await database
     .knex("orders")
-    .where({ contractor_id })
+    .where(whereClause)
     .select(
       database.knex.raw("COUNT(*) as total_orders"),
       database.knex.raw("COALESCE(SUM(cost), 0) as total_value"),
@@ -1698,7 +1701,7 @@ export async function getContractorOrderMetrics(
   // Get status counts
   const statusCounts = await database
     .knex("orders")
-    .where({ contractor_id })
+    .where(whereClause)
     .groupBy("status")
     .select("status", database.knex.raw("COUNT(*) as count"))
 
@@ -1721,7 +1724,7 @@ export async function getContractorOrderMetrics(
 
   const recentActivity = await database
     .knex("orders")
-    .where({ contractor_id })
+    .where(whereClause)
     .select(
       database.knex.raw(
         "COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_7_days",
@@ -1746,7 +1749,7 @@ export async function getContractorOrderMetrics(
   const topCustomers = await database
     .knex("orders")
     .join("accounts", "orders.customer_id", "=", "accounts.user_id")
-    .where({ contractor_id })
+    .where(whereClause)
     .groupBy("orders.customer_id", "accounts.username")
     .select(
       "accounts.username",
@@ -1802,12 +1805,13 @@ interface ContractorOrderData {
 // Get comprehensive contractor order data including metrics and trend data
 export async function getContractorOrderData(
   contractor_id: string,
-  options: { include_trends?: boolean; assigned_only?: boolean } = {},
+  options: { include_trends?: boolean; assigned_only?: boolean; shop_id?: string } = {},
 ): Promise<ContractorOrderData> {
-  const { include_trends = true, assigned_only = false } = options
+  const { include_trends = true, assigned_only = false, shop_id } = options
+  const whereClause: Record<string, string> = shop_id ? { shop_id } : { contractor_id }
 
   // Get basic metrics
-  const metrics = await getContractorOrderMetrics(contractor_id)
+  const metrics = await getContractorOrderMetrics(contractor_id, shop_id)
 
   let trend_data: ContractorOrderData["metrics"]["trend_data"] = undefined
   let recent_orders: ContractorOrderData["recent_orders"] = undefined
@@ -1819,7 +1823,7 @@ export async function getContractorOrderData(
     // Get daily order counts
     const dailyOrders = await database
       .knex("orders")
-      .where({ contractor_id })
+      .where(whereClause)
       .where("timestamp", ">=", thirtyDaysAgo)
       .select(
         database.knex.raw("DATE(timestamp) as date"),
@@ -1831,7 +1835,7 @@ export async function getContractorOrderData(
     // Get daily order values
     const dailyValue = await database
       .knex("orders")
-      .where({ contractor_id })
+      .where(whereClause)
       .where("timestamp", ">=", thirtyDaysAgo)
       .select(
         database.knex.raw("DATE(timestamp) as date"),
@@ -1843,7 +1847,7 @@ export async function getContractorOrderData(
     // Get status trends
     const statusTrends = await database
       .knex("orders")
-      .where({ contractor_id })
+      .where(whereClause)
       .where("timestamp", ">=", thirtyDaysAgo)
       .select(
         "status",
@@ -1894,10 +1898,10 @@ export async function getContractorOrderData(
     }
   }
 
-  // Get recent orders for fallback
+  // Get recent orders
   const recentOrdersQuery = database
     .knex("orders")
-    .where({ contractor_id })
+    .where(whereClause)
     .select("order_id", "timestamp", "status", "cost", "title")
     .orderBy("timestamp", "desc")
     .limit(50)
