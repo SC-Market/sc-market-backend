@@ -14,6 +14,7 @@ import {
   formatReview,
 } from "../util/formatting.js"
 import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
 
 export async function serializeAssignedOrder(
@@ -206,6 +207,21 @@ export async function serializeOrderDetails(
     allocation_summary = null
   }
 
+  let shop: { name: string; slug: string; avatar: string | null } | null = null
+  if (order.shop_id) {
+    const shopRow = await database.knex("shops")
+      .where("shop_id", order.shop_id)
+      .select("name", "slug", "avatar")
+      .first()
+    if (shopRow) {
+      shop = {
+        name: shopRow.name,
+        slug: shopRow.slug,
+        avatar: shopRow.avatar ? await cdn.getFileLinkResource(shopRow.avatar) : null,
+      }
+    }
+  }
+
   return {
     order_id: order.order_id,
     status: order.status,
@@ -219,6 +235,7 @@ export async function serializeOrderDetails(
             contractor_id: order.contractor_id,
           })
         ).spectrum_id),
+    shop,
     cost: +order.cost,
     title: order.title,
     assigned_to: assigned_to_minimal?.username,
@@ -226,7 +243,6 @@ export async function serializeOrderDetails(
     customer: customer.username,
     customer_minimal: customer,
     timestamp: +order.timestamp,
-    // comments: !comments ? [] : await fetchOrderComments(order.order_id), // TODO: Get order comments, but not for public orders / orders w/o perms
     applicants: !applicants
       ? []
       : await orderDb.getOrderApplicantsPublicIds({
