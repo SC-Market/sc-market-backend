@@ -389,18 +389,19 @@ export async function getOrderAnalytics(options?: {
   }
   const monthlyTotals = await monthlyQuery
 
-  // Get top contractors by fulfilled orders
-  const topContractors = await knex()("orders as o")
-    .join("contractors as c", "o.contractor_id", "c.contractor_id")
-    .whereNotNull("o.contractor_id")
+  // Get top shops by fulfilled orders
+  const topShops = await knex()("orders as o")
+    .join("shops as s", "o.shop_id", "s.shop_id")
+    .whereNotNull("o.shop_id")
     .select(
-      "c.name",
+      "s.name",
+      "s.slug",
       knex().raw(
         "COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders",
       ),
       knex().raw("COUNT(*) as total_orders"),
     )
-    .groupBy("c.contractor_id", "c.name")
+    .groupBy("s.shop_id", "s.name", "s.slug")
     .orderBy("fulfilled_orders", "desc")
     .orderBy("total_orders", "desc")
     .limit(10)
@@ -462,8 +463,9 @@ export async function getOrderAnalytics(options?: {
       not_started: parseInt(row.not_started),
       average_fulfilled_value: parseFloat(row.average_fulfilled_value) || 0,
     })),
-    top_contractors: topContractors.map((row: any) => ({
+    top_shops: topShops.map((row: any) => ({
       name: row.name,
+      slug: row.slug,
       fulfilled_orders: parseInt(row.fulfilled_orders),
       total_orders: parseInt(row.total_orders),
     })),
