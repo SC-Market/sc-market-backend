@@ -1855,20 +1855,27 @@ export async function getContractorOrderData(
       }
     })
 
+    // Generate full 30-day range so charts show 0s for empty days
+    const allDates: string[] = []
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+      allDates.push(d.toISOString().split("T")[0])
+    }
+    const orderCountMap = new Map(dailyOrders.map(({ date, count }: { date: Date; count: number }) => [date.toISOString().split("T")[0], +count]))
+    const orderValueMap = new Map(dailyValue.map(({ date, value }: { date: Date; value: number }) => [date.toISOString().split("T")[0], +value]))
+    const sMap = { "not-started": new Map<string, number>(), "in-progress": new Map<string, number>(), fulfilled: new Map<string, number>(), cancelled: new Map<string, number>() }
+    statusTrends.forEach(({ status, date, count }: { status: string; date: Date; count: number }) => {
+      if (status in sMap) sMap[status as keyof typeof sMap].set(date.toISOString().split("T")[0], +count)
+    })
     trend_data = {
-      daily_orders: dailyOrders.map(
-        ({ date, count }: { date: Date; count: number }) => ({
-          date: date.toISOString().split("T")[0],
-          count: +count,
-        }),
-      ),
-      daily_value: dailyValue.map(
-        ({ date, value }: { date: Date; value: number }) => ({
-          date: date.toISOString().split("T")[0],
-          value: +value,
-        }),
-      ),
-      status_trends,
+      daily_orders: allDates.map(date => ({ date, count: orderCountMap.get(date) ?? 0 })),
+      daily_value: allDates.map(date => ({ date, value: orderValueMap.get(date) ?? 0 })),
+      status_trends: {
+        "not-started": allDates.map(date => ({ date, count: sMap["not-started"].get(date) ?? 0 })),
+        "in-progress": allDates.map(date => ({ date, count: sMap["in-progress"].get(date) ?? 0 })),
+        fulfilled: allDates.map(date => ({ date, count: sMap.fulfilled.get(date) ?? 0 })),
+        cancelled: allDates.map(date => ({ date, count: sMap.cancelled.get(date) ?? 0 })),
+      },
     }
   }
 
@@ -2073,20 +2080,27 @@ export async function getUserOrderData(
       }
     })
 
+    // Generate full 30-day range so charts show 0s for empty days
+    const allDates: string[] = []
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+      allDates.push(d.toISOString().split("T")[0])
+    }
+    const orderCountMap = new Map(dailyOrders.map(({ date, count }: { date: Date; count: number }) => [date.toISOString().split("T")[0], +count]))
+    const orderValueMap = new Map(dailyValue.map(({ date, value }: { date: Date; value: number }) => [date.toISOString().split("T")[0], +value]))
+    const sMap = { "not-started": new Map<string, number>(), "in-progress": new Map<string, number>(), fulfilled: new Map<string, number>(), cancelled: new Map<string, number>() }
+    statusTrends.forEach(({ status, date, count }: { status: string; date: Date; count: number }) => {
+      if (status in sMap) sMap[status as keyof typeof sMap].set(date.toISOString().split("T")[0], +count)
+    })
     trend_data = {
-      daily_orders: dailyOrders.map(
-        ({ date, count }: { date: Date; count: number }) => ({
-          date: date.toISOString().split("T")[0],
-          count: +count,
-        }),
-      ),
-      daily_value: dailyValue.map(
-        ({ date, value }: { date: Date; value: number }) => ({
-          date: date.toISOString().split("T")[0],
-          value: +value,
-        }),
-      ),
-      status_trends,
+      daily_orders: allDates.map(date => ({ date, count: orderCountMap.get(date) ?? 0 })),
+      daily_value: allDates.map(date => ({ date, value: orderValueMap.get(date) ?? 0 })),
+      status_trends: {
+        "not-started": allDates.map(date => ({ date, count: sMap["not-started"].get(date) ?? 0 })),
+        "in-progress": allDates.map(date => ({ date, count: sMap["in-progress"].get(date) ?? 0 })),
+        fulfilled: allDates.map(date => ({ date, count: sMap.fulfilled.get(date) ?? 0 })),
+        cancelled: allDates.map(date => ({ date, count: sMap.cancelled.get(date) ?? 0 })),
+      },
     }
   }
 
