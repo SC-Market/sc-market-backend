@@ -319,6 +319,7 @@ export async function search_offer_sessions_optimized(
     if (args.customer_id) countQuery = countQuery.where("customer_id", args.customer_id)
     if (args.assigned_id) countQuery = countQuery.where("assigned_id", args.assigned_id)
     if (args.contractor_id) countQuery = countQuery.where("contractor_id", args.contractor_id)
+    if (args.shop_id) countQuery = countQuery.where("shop_id", args.shop_id)
 
     const totals: { offer_status: string; count: number }[] = await countQuery
       .groupByRaw("get_offer_status(id, customer_id, status)")
@@ -332,14 +333,14 @@ export async function search_offer_sessions_optimized(
     ) as { [k: string]: number }
   }
 
-  // Compute unclaimed count (active + unassigned for this contractor)
-  if (args.contractor_id) {
-    const unclaimedResult = await database.knex("offer_sessions")
-      .where("contractor_id", args.contractor_id)
+  // Compute unclaimed count (active + unassigned for this shop/contractor)
+  if (args.shop_id || args.contractor_id) {
+    let unclaimedQuery = database.knex("offer_sessions")
       .whereNull("assigned_id")
       .where("status", "active")
-      .count("* as count")
-      .first()
+    if (args.shop_id) unclaimedQuery = unclaimedQuery.where("shop_id", args.shop_id)
+    else if (args.contractor_id) unclaimedQuery = unclaimedQuery.where("contractor_id", args.contractor_id)
+    const unclaimedResult = await unclaimedQuery.count("* as count").first()
     item_counts.unclaimed = +(unclaimedResult?.count || 0)
   }
 
