@@ -50,6 +50,7 @@ export interface OfferSearchQueryArguments {
   unassigned?: boolean
   contractor_id?: string
   customer_id?: string
+  shop_id?: string
   index: number
   page_size: number
   reverse_sort: boolean
@@ -70,6 +71,7 @@ export interface OfferSearchQuery {
   unassigned?: string
   contractor?: string
   customer?: string
+  shop_id?: string
   index?: string
   page_size?: string
   reverse_sort?: string
