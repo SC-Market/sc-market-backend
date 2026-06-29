@@ -211,13 +211,13 @@ export async function serializeOrderDetails(
   if (order.shop_id) {
     const shopRow = await database.knex("shops")
       .where("shop_id", order.shop_id)
-      .select("name", "slug", "avatar")
+      .select("name", "slug", "logo")
       .first()
     if (shopRow) {
       shop = {
         name: shopRow.name,
         slug: shopRow.slug,
-        avatar: shopRow.avatar ? await cdn.getFileLinkResource(shopRow.avatar) : null,
+        avatar: shopRow.logo ? await cdn.getFileLinkResource(shopRow.logo) : null,
       }
     }
   }
