@@ -11,10 +11,8 @@ export function validate_optional_username(path: string) {
       return
     }
 
-    let user
-    try {
-      user = await profileDb.getUser({ username })
-    } catch {
+    const user = await profileDb.findUser({ username })
+    if (!user) {
       res
         .status(404)
         .json(createErrorResponse({ error: "User not found", username }))
