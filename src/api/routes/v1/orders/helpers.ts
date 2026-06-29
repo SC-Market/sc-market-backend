@@ -1798,8 +1798,8 @@ export async function getContractorOrderData(
   // Get basic metrics
   const metrics = await getContractorOrderMetrics(contractor_id)
 
-  let trend_data = undefined
-  let recent_orders = undefined
+  let trend_data: ContractorOrderData["metrics"]["trend_data"] = undefined
+  let recent_orders: ContractorOrderData["recent_orders"] = undefined
 
   // Get trend data if requested
   if (include_trends) {
@@ -1865,8 +1865,8 @@ export async function getContractorOrderData(
       const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
       allDates.push(d.toISOString().split("T")[0])
     }
-    const orderCountMap = new Map(dailyOrders.map(({ date, count }: { date: Date; count: number }) => [date.toISOString().split("T")[0], +count]))
-    const orderValueMap = new Map(dailyValue.map(({ date, value }: { date: Date; value: number }) => [date.toISOString().split("T")[0], +value]))
+    const orderCountMap = new Map<string, number>(dailyOrders.map(({ date, count }: { date: Date; count: number }) => [date.toISOString().split("T")[0], +count]))
+    const orderValueMap = new Map<string, number>(dailyValue.map(({ date, value }: { date: Date; value: number }) => [date.toISOString().split("T")[0], +value]))
     const sMap = { "not-started": new Map<string, number>(), "in-progress": new Map<string, number>(), fulfilled: new Map<string, number>(), cancelled: new Map<string, number>() }
     statusTrends.forEach(({ status, date, count }: { status: string; date: Date; count: number }) => {
       if (status in sMap) sMap[status as keyof typeof sMap].set(date.toISOString().split("T")[0], +count)
@@ -2023,8 +2023,8 @@ export async function getUserOrderData(
   // Get basic metrics for user's assigned orders
   const metrics = await getUserOrderMetrics(user_id)
 
-  let trend_data = undefined
-  let recent_orders = undefined
+  let trend_data: ContractorOrderData["metrics"]["trend_data"] = undefined
+  let recent_orders: ContractorOrderData["recent_orders"] = undefined
 
   // Get trend data if requested
   if (include_trends) {
@@ -2090,8 +2090,8 @@ export async function getUserOrderData(
       const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
       allDates.push(d.toISOString().split("T")[0])
     }
-    const orderCountMap = new Map(dailyOrders.map(({ date, count }: { date: Date; count: number }) => [date.toISOString().split("T")[0], +count]))
-    const orderValueMap = new Map(dailyValue.map(({ date, value }: { date: Date; value: number }) => [date.toISOString().split("T")[0], +value]))
+    const orderCountMap = new Map<string, number>(dailyOrders.map(({ date, count }: { date: Date; count: number }) => [date.toISOString().split("T")[0], +count]))
+    const orderValueMap = new Map<string, number>(dailyValue.map(({ date, value }: { date: Date; value: number }) => [date.toISOString().split("T")[0], +value]))
     const sMap = { "not-started": new Map<string, number>(), "in-progress": new Map<string, number>(), fulfilled: new Map<string, number>(), cancelled: new Map<string, number>() }
     statusTrends.forEach(({ status, date, count }: { status: string; date: Date; count: number }) => {
       if (status in sMap) sMap[status as keyof typeof sMap].set(date.toISOString().split("T")[0], +count)
