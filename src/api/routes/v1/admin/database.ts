@@ -493,15 +493,18 @@ export async function getOfferAnalytics() {
 
   // Top contractors
   const contractorResolvedStatus = `get_offer_status(os.id, os.customer_id, os.status)`
-  const topContractors = await knex()("offer_sessions as os")
-    .join("contractors as c", "os.contractor_id", "c.contractor_id")
-    .whereNotNull("os.contractor_id")
+  // Top shops (join through orders to get the shop)
+  const topShops = await knex()("offer_sessions as os")
+    .join("orders as o", "os.id", "o.offer_session_id")
+    .join("shops as s", "o.shop_id", "s.shop_id")
+    .whereNotNull("o.shop_id")
     .select(
-      "c.name",
+      "s.name",
+      "s.slug",
       knex().raw(`COUNT(CASE WHEN ${contractorResolvedStatus} = 'accepted' THEN 1 END) as accepted_offers`),
       knex().raw("COUNT(*) as total_offers"),
     )
-    .groupBy("c.contractor_id", "c.name")
+    .groupBy("s.shop_id", "s.name", "s.slug")
     .orderBy("accepted_offers", "desc")
     .orderBy("total_offers", "desc")
     .limit(10)
@@ -525,6 +528,8 @@ export async function getOfferAnalytics() {
     .select(
       knex().raw("COUNT(*) as total_offers"),
       knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active_offers`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'to-customer' THEN 1 END) as waiting_for_buyer`),
+      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'to-seller' THEN 1 END) as waiting_for_seller`),
       knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted_offers`),
       knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected_offers`),
       knex().raw(
@@ -548,8 +553,9 @@ export async function getOfferAnalytics() {
       ...fmt(row),
       average_accepted_value: parseFloat(row.average_accepted_value) || 0,
     })),
-    top_contractors: topContractors.map((row: any) => ({
+    top_shops: topShops.map((row: any) => ({
       name: row.name,
+      slug: row.slug,
       accepted_offers: parseInt(row.accepted_offers),
       total_offers: parseInt(row.total_offers),
     })),
@@ -561,6 +567,8 @@ export async function getOfferAnalytics() {
     summary: {
       total_offers: parseInt(summary.total_offers),
       active_offers: parseInt(summary.active_offers),
+      waiting_for_buyer: parseInt(summary.waiting_for_buyer),
+      waiting_for_seller: parseInt(summary.waiting_for_seller),
       accepted_offers: parseInt(summary.accepted_offers),
       rejected_offers: parseInt(summary.rejected_offers),
       total_value: parseInt(summary.total_value),
