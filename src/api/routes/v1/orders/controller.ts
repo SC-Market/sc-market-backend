@@ -33,14 +33,31 @@ import { discordService } from "../../../../services/discord/discord.service.js"
 export const search_orders: RequestHandler = async (req, res) => {
   const user = req.user as User
   const args = await convert_order_search_query(req)
-  if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
+  if (!(args.contractor_id || args.assigned_id || args.customer_id || args.shop_id)) {
     if (user.role !== "admin") {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
     }
   }
 
-  if (args.contractor_id) {
+  if (args.shop_id) {
+    const shop = await database.knex("shops").where("shop_id", args.shop_id).first()
+    if (!shop) {
+      res.status(404).json(createErrorResponse("Shop not found."))
+      return
+    }
+    if (shop.owner_contractor_id) {
+      if (!(await is_member(shop.owner_contractor_id, user.user_id))) {
+        res.status(400).json(createErrorResponse("Missing permissions."))
+        return
+      }
+    } else if (shop.owner_user_id !== user.user_id && user.role !== "admin") {
+      res.status(400).json(createErrorResponse("Missing permissions."))
+      return
+    }
+  }
+
+  if (args.contractor_id && !args.shop_id) {
     if (!(await is_member(args.contractor_id, user.user_id))) {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
@@ -48,7 +65,7 @@ export const search_orders: RequestHandler = async (req, res) => {
   }
 
   if (args.assigned_id && args.assigned_id !== user.user_id) {
-    if (!args.contractor_id) {
+    if (!args.contractor_id && !args.shop_id) {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
     }

@@ -517,6 +517,16 @@ export const get_search_spec = oapi.validPath({
       },
     },
     {
+      name: "shop_id",
+      in: "query",
+      description: "The shop UUID to filter orders by",
+      required: false,
+      schema: {
+        type: "string",
+        format: "uuid",
+      },
+    },
+    {
       name: "assigned",
       in: "query",
       description: "The assigned user's username",

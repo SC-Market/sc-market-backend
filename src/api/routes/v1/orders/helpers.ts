@@ -1230,6 +1230,7 @@ export async function convert_order_search_query(
     unassigned: query.unassigned === "true" ? true : undefined,
     contractor_id: contractor?.contractor_id || undefined,
     customer_id: customer?.user_id || undefined,
+    shop_id: query.shop_id || undefined,
     index: +(query.index || 0),
     page_size: +((query.page_size as string) || 5),
     sort_method: (query.sort_method as OrderSearchSortMethod) || "timestamp",
@@ -1254,6 +1255,7 @@ export async function search_orders(
     if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
     if (args.unassigned) qd = qd.whereNull("assigned_id").whereIn("status", ["not-started", "in-progress"])
     if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
+    if (args.shop_id) qd = qd.where("shop_id", args.shop_id)
     return qd
   })
 
@@ -1402,6 +1404,8 @@ export async function search_orders_optimized(
         qd = qd.whereNull("orders.assigned_id").whereIn("orders.status", ["not-started", "in-progress"])
       if (args.contractor_id)
         qd = qd.where("orders.contractor_id", args.contractor_id)
+      if (args.shop_id)
+        qd = qd.where("orders.shop_id", args.shop_id)
 
       // Buyer username filter (partial match)
       if (args.buyer_username) {
