@@ -315,6 +315,7 @@ export interface OrderStub {
   contractor: MinimalContractor | null
   assigned_to: MinimalUser | null
   customer: MinimalUser
+  shop: { name: string; slug: string; avatar: string | null } | null
   status: OrderStatus
   timestamp: string
   service_name: string | null

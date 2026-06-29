@@ -720,6 +720,21 @@ export async function formatOrderStub(order: DBOrder): Promise<OrderStub> {
     service_name = service!.title
   }
 
+  let shop: OrderStub["shop"] = null
+  if (order.shop_id) {
+    const shopRow = await database.knex("shops")
+      .where("shop_id", order.shop_id)
+      .select("name", "slug", "avatar")
+      .first()
+    if (shopRow) {
+      shop = {
+        name: shopRow.name,
+        slug: shopRow.slug,
+        avatar: shopRow.avatar ? await cdn.getFileLinkResource(shopRow.avatar) : null,
+      }
+    }
+  }
+
   return {
     order_id: order.order_id,
     contractor: order.contractor_id
@@ -731,6 +746,7 @@ export async function formatOrderStub(order: DBOrder): Promise<OrderStub> {
       ? await profileDb.getMinimalUser({ user_id: order.assigned_id })
       : null,
     customer: await profileDb.getMinimalUser({ user_id: order.customer_id }),
+    shop,
     status: order.status as OrderStatus,
     timestamp: order.timestamp.toISOString(),
     cost: order.cost.toString(),
@@ -748,6 +764,7 @@ interface OptimizedOrderRow {
   customer_id: string
   assigned_id: string | null
   contractor_id: string | null
+  shop_id: string | null
   status: string
   timestamp: Date
   title: string
@@ -776,6 +793,11 @@ interface OptimizedOrderRow {
   contractor_spectrum_id: string | null
   contractor_name: string | null
   contractor_avatar: string | null
+
+  // Shop fields
+  shop_name: string | null
+  shop_slug: string | null
+  shop_avatar: string | null
 }
 
 // Optimized serializer for pre-joined data
@@ -798,6 +820,10 @@ export async function formatOrderStubOptimized(
     : null
   const contractorAvatar = row.contractor_avatar
     ? await cdn.getFileLinkResource(row.contractor_avatar)
+    : null
+
+  const shopAvatar = row.shop_avatar
+    ? await cdn.getFileLinkResource(row.shop_avatar)
     : null
 
   return {
@@ -826,6 +852,10 @@ export async function formatOrderStubOptimized(
       display_name: row.customer_display_name,
       rating: customerRating,
     },
+    shop:
+      row.shop_id && row.shop_name && row.shop_slug
+        ? { name: row.shop_name, slug: row.shop_slug, avatar: shopAvatar }
+        : null,
     status: row.status as OrderStatus,
     timestamp: row.timestamp.toISOString(),
     cost: row.cost.toString(),

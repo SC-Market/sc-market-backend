@@ -1332,6 +1332,7 @@ interface OptimizedOrderRow {
   customer_id: string
   assigned_id: string | null
   contractor_id: string | null
+  shop_id: string | null
   status: string
   timestamp: Date
   title: string
@@ -1360,6 +1361,11 @@ interface OptimizedOrderRow {
   contractor_spectrum_id: string | null
   contractor_name: string | null
   contractor_avatar: string | null
+
+  // Shop fields
+  shop_name: string | null
+  shop_slug: string | null
+  shop_avatar: string | null
 }
 
 // Optimized version that includes all related data in a single query
@@ -1542,6 +1548,7 @@ export async function search_orders_optimized(
       "=",
       "contractors.contractor_id",
     )
+    .leftJoin("shops", "orders.shop_id", "=", "shops.shop_id")
     .where((qd) => {
       // Only include filtered order IDs
       if (filteredOrderIds.length > 0) {
@@ -1612,6 +1619,9 @@ export async function search_orders_optimized(
       "contractors.spectrum_id as contractor_spectrum_id",
       "contractors.name as contractor_name",
       "contractors.avatar as contractor_avatar",
+      "shops.name as shop_name",
+      "shops.slug as shop_slug",
+      "shops.avatar as shop_avatar",
     )
     .groupBy(
       "orders.order_id",
@@ -1619,6 +1629,7 @@ export async function search_orders_optimized(
       "customer_account.user_id",
       "assigned_account.user_id",
       "contractors.contractor_id",
+      "shops.shop_id",
     )
 
   // Apply market listings filter (must be after GROUP BY for HAVING)
