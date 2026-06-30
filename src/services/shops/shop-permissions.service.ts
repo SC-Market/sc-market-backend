@@ -132,3 +132,11 @@ export async function getShopsForUser(userId: string): Promise<(Shop & { permiss
 
   return result
 }
+
+export async function isBlockedFromShop(shopId: string, userId: string): Promise<boolean> {
+  const db = getKnex()
+  const entry = await db("shop_blocklist")
+    .where({ shop_id: shopId, blocked_user_id: userId })
+    .first("id")
+  return !!entry
+}

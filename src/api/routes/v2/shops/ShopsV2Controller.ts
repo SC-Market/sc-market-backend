@@ -155,6 +155,39 @@ export interface ShopReviewResponse {
   }
 }
 
+export interface BlockUserRequest {
+  username: string
+  reason?: string
+}
+
+export interface ShopBlocklistEntry {
+  id: string
+  user_id: string
+  username: string
+  display_name: string
+  avatar: string | null
+  reason: string
+  created_at: string
+}
+
+export interface ShopCustomerEntry {
+  user_id: string
+  username: string
+  display_name: string
+  avatar: string | null
+  order_count: number
+  fulfilled_count: number
+  total_spent: number
+  last_order_at: string | null
+}
+
+export interface ShopCustomersResponse {
+  items: ShopCustomerEntry[]
+  total: number
+  page: number
+  page_size: number
+}
+
 // ─── Controller ──────────────────────────────────────────────────────────────
 
 @Route("shops")
@@ -845,6 +878,183 @@ export class ShopsV2Controller extends BaseController {
       .returning("*")
 
     return await shopToResponse(updated)
+  }
+
+  // ─── Blocklist ──────────────────────────────────────────────────────────────
+
+  /**
+   * Get users blocked from this shop.
+   * @summary Get shop blocklist
+   */
+  @Get("{shopId}/blocklist")
+  @Security("loggedin")
+  public async getShopBlocklist(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+  ): Promise<ShopBlocklistEntry[]> {
+    this.request = request
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden("Missing permissions")
+    }
+
+    const entries = await db("shop_blocklist")
+      .join("accounts", "shop_blocklist.blocked_user_id", "accounts.user_id")
+      .where("shop_blocklist.shop_id", shopId)
+      .select(
+        "shop_blocklist.id",
+        "shop_blocklist.blocked_user_id",
+        "accounts.username",
+        "accounts.display_name",
+        "accounts.avatar",
+        "shop_blocklist.reason",
+        "shop_blocklist.created_at",
+      )
+      .orderBy("shop_blocklist.created_at", "desc")
+
+    return entries.map((e) => ({
+      id: e.id,
+      user_id: e.blocked_user_id,
+      username: e.username,
+      display_name: e.display_name,
+      avatar: e.avatar,
+      reason: e.reason,
+      created_at: e.created_at.toISOString(),
+    }))
+  }
+
+  /**
+   * Block a user from this shop.
+   * @summary Block user from shop
+   */
+  @Post("{shopId}/blocklist")
+  @Security("loggedin")
+  public async blockUserFromShop(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Body() body: BlockUserRequest,
+  ): Promise<{ success: boolean }> {
+    this.request = request
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden("Missing permissions")
+    }
+
+    const targetUser = await db("accounts").where("username", body.username).first("user_id")
+    if (!targetUser) this.throwNotFound("User", body.username)
+
+    await db("shop_blocklist")
+      .insert({
+        shop_id: shopId,
+        blocked_user_id: targetUser.user_id,
+        reason: body.reason || "",
+      })
+      .onConflict(["shop_id", "blocked_user_id"])
+      .ignore()
+
+    return { success: true }
+  }
+
+  /**
+   * Unblock a user from this shop.
+   * @summary Unblock user from shop
+   */
+  @Delete("{shopId}/blocklist/{blockedUserId}")
+  @Security("loggedin")
+  public async unblockUserFromShop(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Path() blockedUserId: string,
+  ): Promise<{ success: boolean }> {
+    this.request = request
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden("Missing permissions")
+    }
+
+    await db("shop_blocklist")
+      .where({ shop_id: shopId, blocked_user_id: blockedUserId })
+      .delete()
+
+    return { success: true }
+  }
+
+  // ─── Customers ──────────────────────────────────────────────────────────────
+
+  /**
+   * Get customers who have placed orders at this shop.
+   * @summary Get shop customers
+   */
+  @Get("{shopId}/customers")
+  @Security("loggedin")
+  public async getShopCustomers(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Query() page?: number,
+    @Query() page_size?: number,
+  ): Promise<ShopCustomersResponse> {
+    this.request = request
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden("Missing permissions")
+    }
+
+    const limit = page_size || 20
+    const offset = (page || 0) * limit
+
+    const customers = await db("orders")
+      .join("accounts", "orders.customer_id", "accounts.user_id")
+      .where("orders.shop_id", shopId)
+      .groupBy("accounts.user_id", "accounts.username", "accounts.display_name", "accounts.avatar")
+      .select(
+        "accounts.user_id",
+        "accounts.username",
+        "accounts.display_name",
+        "accounts.avatar",
+        db.raw("COUNT(*) as order_count"),
+        db.raw("COUNT(CASE WHEN orders.status = 'fulfilled' THEN 1 END) as fulfilled_count"),
+        db.raw("COALESCE(SUM(orders.cost), 0) as total_spent"),
+        db.raw("MAX(orders.timestamp) as last_order_at"),
+      )
+      .orderBy("order_count", "desc")
+      .limit(limit)
+      .offset(offset)
+
+    const [{ count: totalCount }] = await db("orders")
+      .where("shop_id", shopId)
+      .countDistinct("customer_id as count")
+
+    return {
+      items: customers.map((c) => ({
+        user_id: c.user_id,
+        username: c.username,
+        display_name: c.display_name,
+        avatar: c.avatar,
+        order_count: +c.order_count,
+        fulfilled_count: +c.fulfilled_count,
+        total_spent: +c.total_spent,
+        last_order_at: c.last_order_at?.toISOString() || null,
+      })),
+      total: +totalCount,
+      page: page || 0,
+      page_size: limit,
+    }
   }
 }
 
