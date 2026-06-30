@@ -78,9 +78,9 @@ export interface ShopResponse {
   banner: string | null
   logo: string | null
   owner_user_id: string | null
-  owner_contractor_id: string | null
-  /** Spectrum ID of the owning contractor (for use with V1 APIs that need spectrum_id not UUID) */
-  owner_contractor_spectrum_id?: string | null
+  is_org_owned: boolean
+  /** Spectrum ID of the owning contractor (for V1 APIs that need it) */
+  owner_contractor_spectrum_id: string | null
   supported_languages: string[]
   tags: string[]
   accepts_custom_orders: boolean
@@ -1080,7 +1080,7 @@ async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_ord
     banner: shop.banner,
     logo: shop.logo,
     owner_user_id: shop.owner_user_id,
-    owner_contractor_id: shop.owner_contractor_id,
+    is_org_owned: !!shop.owner_contractor_id,
     owner_contractor_spectrum_id: ownerContractorSpectrumId,
     supported_languages: shop.supported_languages,
     tags: shop.tags || [],
