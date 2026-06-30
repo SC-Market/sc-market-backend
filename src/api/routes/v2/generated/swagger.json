@@ -1226,6 +1226,133 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShopBlocklistEntry": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					},
+					"reason": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"user_id",
+					"username",
+					"display_name",
+					"avatar",
+					"reason",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlockUserRequest": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"reason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShopCustomerEntry": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					},
+					"order_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"fulfilled_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_spent": {
+						"type": "number",
+						"format": "double"
+					},
+					"last_order_at": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"avatar",
+					"order_count",
+					"fulfilled_count",
+					"total_spent",
+					"last_order_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShopCustomersResponse": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ShopCustomerEntry"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RequisitionLineItem": {
 				"description": "Requisition Order Types\n\nTypes for supplier requisition orders — orders where line items are anchored\nto game items (not listings). Suppliers decide which listing to fulfil from.\n\nA requisition order has orders.kind = 'requisition' and its line items live in\nrequisition_items instead of market_orders / order_market_items_v2.",
 				"properties": {
@@ -12133,6 +12260,207 @@
 						}
 					}
 				}
+			}
+		},
+		"/shops/{shopId}/blocklist": {
+			"get": {
+				"operationId": "GetShopBlocklist",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ShopBlocklistEntry"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get users blocked from this shop.",
+				"summary": "Get shop blocklist",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "BlockUserFromShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Block a user from this shop.",
+				"summary": "Block user from shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BlockUserRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shops/{shopId}/blocklist/{blockedUserId}": {
+			"delete": {
+				"operationId": "UnblockUserFromShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Unblock a user from this shop.",
+				"summary": "Unblock user from shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "blockedUserId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/customers": {
+			"get": {
+				"operationId": "GetShopCustomers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopCustomersResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get customers who have placed orders at this shop.",
+				"summary": "Get shop customers",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/requisitions": {
