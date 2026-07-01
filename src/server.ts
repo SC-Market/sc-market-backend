@@ -204,6 +204,7 @@ app.use(sessionMiddleware)
 app.use(cookieParser())
 
 app.use(express.json({ limit: "2.5mb" }))
+app.use(express.text({ type: "text/plain", limit: "128kb" }))
 app.use(
   express.urlencoded({
     extended: true,

@@ -4338,6 +4338,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ScmdbIngestResponse": {
+				"properties": {
+					"ok": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"ok"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ScmdbStatusResponse": {
+				"properties": {
+					"is_connected": {
+						"type": "boolean"
+					},
+					"ingest_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"last_event_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"is_connected",
+					"ingest_url",
+					"last_event_at",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ScmdbConnectResponse": {
+				"properties": {
+					"ingest_url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ingest_url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ImportSource": {
 				"type": "string",
 				"enum": [
@@ -14121,6 +14172,160 @@
 						}
 					}
 				]
+			}
+		},
+		"/integrations/scmdb/ingest/{token}": {
+			"post": {
+				"operationId": "IngestWebhook",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ScmdbIngestResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Receive SCMDB sync events.\nPublic endpoint — authentication is via the token in the URL path.\nContent-Type from SCMDB is text/plain but body is JSON.",
+				"summary": "Ingest SCMDB webhook",
+				"tags": [
+					"Integrations - SCMDB"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Sync token identifying the user",
+						"in": "path",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/integrations/scmdb/status": {
+			"get": {
+				"operationId": "GetConnectionStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ScmdbStatusResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get SCMDB sync connection status for the authenticated user.",
+				"summary": "Get SCMDB status",
+				"tags": [
+					"Integrations - SCMDB"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/integrations/scmdb/connect": {
+			"post": {
+				"operationId": "Connect",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ScmdbConnectResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Generate a new SCMDB sync token and return the ingest URL.",
+				"summary": "Connect SCMDB",
+				"tags": [
+					"Integrations - SCMDB"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/integrations/scmdb/regenerate": {
+			"post": {
+				"operationId": "Regenerate",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ScmdbConnectResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Regenerate the SCMDB sync token. Old URL stops working immediately.",
+				"summary": "Regenerate SCMDB token",
+				"tags": [
+					"Integrations - SCMDB"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/integrations/scmdb/disconnect": {
+			"delete": {
+				"operationId": "Disconnect",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"ok": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"ok"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Disconnect SCMDB sync. Deactivates the token.",
+				"summary": "Disconnect SCMDB",
+				"tags": [
+					"Integrations - SCMDB"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/imports/{source}": {
