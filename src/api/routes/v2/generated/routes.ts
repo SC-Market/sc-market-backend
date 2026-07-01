@@ -24,6 +24,8 @@ import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { InventoryV2Controller } from './../inventory/InventoryV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ScmdbSyncController } from './../integrations/scmdb/ScmdbSyncController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImportJobsV2Controller } from './../import-jobs/ImportJobsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImagesV2Controller } from './../images/ImagesV2Controller.js';
@@ -1402,6 +1404,33 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "listing_id": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ScmdbIngestResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "ok": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ScmdbStatusResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "is_connected": {"dataType":"boolean","required":true},
+            "ingest_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "last_event_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ScmdbConnectResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "ingest_url": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -5433,6 +5462,161 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'deleteInventoryLot',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsScmdbSyncController_ingestWebhook: Record<string, TsoaRoute.ParameterSchema> = {
+                token: {"in":"path","name":"token","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/integrations/scmdb/ingest/:token',
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController)),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController.prototype.ingestWebhook)),
+
+            async function ScmdbSyncController_ingestWebhook(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsScmdbSyncController_ingestWebhook, request, response });
+
+                const controller = new ScmdbSyncController();
+
+              await templateService.apiHandler({
+                methodName: 'ingestWebhook',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsScmdbSyncController_getConnectionStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/integrations/scmdb/status',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController)),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController.prototype.getConnectionStatus)),
+
+            async function ScmdbSyncController_getConnectionStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsScmdbSyncController_getConnectionStatus, request, response });
+
+                const controller = new ScmdbSyncController();
+
+              await templateService.apiHandler({
+                methodName: 'getConnectionStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsScmdbSyncController_connect: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/integrations/scmdb/connect',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController)),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController.prototype.connect)),
+
+            async function ScmdbSyncController_connect(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsScmdbSyncController_connect, request, response });
+
+                const controller = new ScmdbSyncController();
+
+              await templateService.apiHandler({
+                methodName: 'connect',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsScmdbSyncController_regenerate: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/integrations/scmdb/regenerate',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController)),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController.prototype.regenerate)),
+
+            async function ScmdbSyncController_regenerate(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsScmdbSyncController_regenerate, request, response });
+
+                const controller = new ScmdbSyncController();
+
+              await templateService.apiHandler({
+                methodName: 'regenerate',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsScmdbSyncController_disconnect: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.delete('/integrations/scmdb/disconnect',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController)),
+            ...(fetchMiddlewares<RequestHandler>(ScmdbSyncController.prototype.disconnect)),
+
+            async function ScmdbSyncController_disconnect(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsScmdbSyncController_disconnect, request, response });
+
+                const controller = new ScmdbSyncController();
+
+              await templateService.apiHandler({
+                methodName: 'disconnect',
                 controller,
                 response,
                 next,
