@@ -301,6 +301,7 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
         assigned_id: session.assigned_id,
         customer_id: session.customer_id,
         contractor_id: session.contractor_id,
+        shop_id: session.shop_id,
         collateral: most_recent.collateral,
         service_id: most_recent.service_id,
         rush: false,
