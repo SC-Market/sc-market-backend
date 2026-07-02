@@ -704,6 +704,7 @@ export async function mergeOfferSessions(
       customer_id: customer_id,
       contractor_id: contractor_id,
       assigned_id: contractor_id ? null : sessions[0]!.assigned_id,
+      shop_id: sessions[0]!.shop_id || null,
       status: "active",
       timestamp: oldestSessionTimestamp.toUTCString(),
     },

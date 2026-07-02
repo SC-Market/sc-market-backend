@@ -142,11 +142,16 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     return
   }
 
+  const contractShop = contractor
+    ? await database.knex("shops").where("owner_contractor_id", contractor.contractor_id).where("status", "active").first("shop_id")
+    : await database.knex("shops").where("owner_user_id", user.user_id).where("status", "active").first("shop_id")
+
   const { session, discord_invite } = await createOffer(
     {
       assigned_id: contractor ? null : user?.user_id,
       contractor_id: contractor?.contractor_id,
       customer_id: req.contract!.customer_id,
+      shop_id: contractShop?.shop_id || null,
     },
     {
       actor_id: user.user_id,

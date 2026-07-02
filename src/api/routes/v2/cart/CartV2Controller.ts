@@ -1012,12 +1012,13 @@ export class CartV2Controller extends BaseController {
 
       const message = requestBody.note || ""
 
-      // Step 7: Create offer session (mirrors V1 purchase_listings exactly)
+      // Step 7: Create offer session
       const { offer, session, discord_invite } = await createOffer(
         {
           customer_id: userId,
           assigned_id: sellerUserId,
           contractor_id: sellerContractorId,
+          shop_id: firstItem.shop_id,
         },
         {
           actor_id: userId,
