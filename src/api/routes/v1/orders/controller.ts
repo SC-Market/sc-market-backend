@@ -454,12 +454,18 @@ export const post_root: RequestHandler = async (req, res, next) => {
     return
   }
 
-  // TODO: Allow for public contracts again
+  const orderShop = contractor_id
+    ? await database.knex("shops").where("owner_contractor_id", contractor_id).where("status", "active").first("shop_id")
+    : assigned_user
+      ? await database.knex("shops").where("owner_user_id", assigned_user.user_id).where("status", "active").first("shop_id")
+      : null
+
   const { session, discord_invite } = await createOffer(
     {
       assigned_id: assigned_user?.user_id,
       contractor_id: contractor_id,
       customer_id: user.user_id,
+      shop_id: orderShop?.shop_id || null,
     },
     {
       actor_id: user.user_id,

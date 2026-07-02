@@ -330,6 +330,7 @@ export interface DBOfferSession {
   assigned_id: string | null
   customer_id: string
   contractor_id: string | null
+  shop_id: string | null
   thread_id: string | null
   timestamp: Date
   status: string
@@ -472,6 +473,7 @@ export interface DBMarketListing {
   internal: boolean
   user_seller_id?: string | null
   contractor_seller_id?: string | null
+  shop_id?: string | null
   timestamp: Date
   expiration: Date
   stock_locations?: string[]

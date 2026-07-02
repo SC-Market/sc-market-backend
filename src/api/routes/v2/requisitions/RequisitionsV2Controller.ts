@@ -97,11 +97,19 @@ export class RequisitionsV2Controller extends BaseController {
 
     try {
       const result = await withTransaction(async (trx) => {
-        // 1. Create offer_session (establishes the communication thread)
+        // 1. Resolve shop from supplier
+        const supplierShop = supplierContractorId
+          ? await trx("shops").where("owner_contractor_id", supplierContractorId).where("status", "active").first("shop_id")
+          : supplierId
+            ? await trx("shops").where("owner_user_id", supplierId).where("status", "active").first("shop_id")
+            : null
+
+        // 2. Create offer_session (establishes the communication thread)
         const [session] = await trx("offer_sessions").insert({
           customer_id: userId,
           assigned_id: supplierId,
           contractor_id: supplierContractorId,
+          shop_id: supplierShop?.shop_id || null,
           status: "active",
         }).returning("*")
 

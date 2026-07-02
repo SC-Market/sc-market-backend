@@ -1184,6 +1184,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
         customer_id: user.user_id,
         assigned_id: listings[0].listing.listing.user_seller_id,
         contractor_id: listings[0].listing.listing.contractor_seller_id,
+        shop_id: listings[0].listing.listing.shop_id,
       },
       {
         actor_id: user.user_id,
@@ -2435,11 +2436,16 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
     )} aUEC x${buy_order.quantity.toLocaleString("en-us")})\n`
     message += `- Total: ${total.toLocaleString("en-us")} aUEC\n`
 
+    const sellerShop = contractor
+      ? await database.knex("shops").where("owner_contractor_id", contractor.contractor_id).where("status", "active").first("shop_id")
+      : await database.knex("shops").where("owner_user_id", user.user_id).where("status", "active").first("shop_id")
+
     const { offer, session, discord_invite } = await createOffer(
       {
         customer_id: buy_order.buyer_id,
         assigned_id: contractor ? null : user.user_id,
         contractor_id: contractor ? contractor.contractor_id : null,
+        shop_id: sellerShop?.shop_id || null,
       },
       {
         actor_id: user.user_id,

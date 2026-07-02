@@ -32,6 +32,7 @@ export async function process_auction(auction: DBAuctionDetails) {
         assigned_id: complete.listing.user_seller_id,
         contractor_id: complete.listing.contractor_seller_id,
         customer_id: winner.user_id,
+        shop_id: complete.listing.shop_id || null,
       },
       {
         actor_id: winner.user_id,
@@ -166,6 +167,7 @@ export async function process_auction_v2(auctionListingId: string) {
           assigned_id: listing.seller_type === "user" ? listing.seller_id : null,
           contractor_id: listing.seller_type === "contractor" ? listing.seller_id : null,
           customer_id: winner.user_id,
+          shop_id: listing.shop_id || null,
         },
         {
           actor_id: winner.user_id,
