@@ -84,8 +84,14 @@ export async function createNotificationWebhook(
 }
 
 export async function sendOrderWebhooks(order: DBOrder) {
-  let webhooks
-  if (order.contractor_id) {
+  let webhooks: DBNotificationWebhook[] = []
+
+  if (order.shop_id) {
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
+      { shop_id: order.shop_id },
+      "order_create",
+    )
+  } else if (order.contractor_id) {
     webhooks = await notificationDb.getNotificationWebhooksByAction(
       { contractor_id: order.contractor_id },
       "order_create",
@@ -118,8 +124,14 @@ export async function sendOfferWebhooks(
   type: "offer_create" | "counter_offer_create" = "offer_create",
 ) {
   logger.debug("Sending offer webhooks!")
-  let webhooks
-  if (offer.contractor_id) {
+  let webhooks: DBNotificationWebhook[] = []
+
+  if (offer.shop_id) {
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
+      { shop_id: offer.shop_id },
+      "order_create",
+    )
+  } else if (offer.contractor_id) {
     webhooks = await notificationDb.getNotificationWebhooksByAction(
       { contractor_id: offer.contractor_id },
       "order_create",
@@ -129,8 +141,6 @@ export async function sendOfferWebhooks(
       { user_id: offer.assigned_id },
       "order_create",
     )
-  } else {
-    webhooks = [] as DBNotificationWebhook[]
   }
 
   for (const webhook of webhooks) {
@@ -847,8 +857,16 @@ export async function sendOrderCommentWebhooks(
   order: DBOrder,
   comment: DBOrderComment,
 ) {
-  const webhooks = []
-  if (order.contractor_id) {
+  const webhooks: DBNotificationWebhook[] = []
+
+  if (order.shop_id) {
+    webhooks.push(
+      ...(await notificationDb.getNotificationWebhooksByAction(
+        { "notification_webhooks.shop_id": order.shop_id },
+        "order_comment",
+      )),
+    )
+  } else if (order.contractor_id) {
     webhooks.push(
       ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.contractor_id": order.contractor_id },
@@ -946,12 +964,21 @@ export async function sendOrderStatusWebhooks(
   new_status: string,
   actor_id: string,
 ) {
-  const webhooks = []
-  if (order.contractor_id) {
+  const webhooks: DBNotificationWebhook[] = []
+  const action = status_actions.get(new_status) || "order_status_not_started"
+
+  if (order.shop_id) {
+    webhooks.push(
+      ...(await notificationDb.getNotificationWebhooksByAction(
+        { "notification_webhooks.shop_id": order.shop_id },
+        action,
+      )),
+    )
+  } else if (order.contractor_id) {
     webhooks.push(
       ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.contractor_id": order.contractor_id },
-        status_actions.get(new_status) || "order_status_not_started",
+        action,
       )),
     )
   }
@@ -960,7 +987,7 @@ export async function sendOrderStatusWebhooks(
     webhooks.push(
       ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.user_id": order.assigned_id },
-        status_actions.get(new_status) || "order_status_not_started",
+        action,
       )),
     )
   }
@@ -969,7 +996,7 @@ export async function sendOrderStatusWebhooks(
     webhooks.push(
       ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.user_id": order.customer_id },
-        status_actions.get(new_status) || "order_status_not_started",
+        action,
       )),
     )
   }
