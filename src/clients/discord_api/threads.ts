@@ -21,7 +21,7 @@ import { checkWatchlistMatches } from "../../services/watchlist/watchlist.servic
 
 const stockLotService = new StockLotService()
 
-async function resolveShopForUser(userId: string, contractorId?: string): Promise<string> {
+export async function resolveShopForUser(userId: string, contractorId?: string): Promise<string> {
   const db = getKnex()
   if (contractorId) {
     const existing = await db("shops").where("owner_contractor_id", contractorId).where("status", "active").first("shop_id")
