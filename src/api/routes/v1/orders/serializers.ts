@@ -229,12 +229,14 @@ export async function serializeOrderDetails(
     description: order.description,
     contractor:
       contractor ||
-      (order.contractor_id &&
-        (
-          await contractorDb.getContractor({
-            contractor_id: order.contractor_id,
-          })
-        ).spectrum_id),
+      (order.contractor_id
+        ? (await contractorDb.getContractor({ contractor_id: order.contractor_id }))?.spectrum_id || null
+        : order.shop_id
+          ? (await database.knex("shops").where("shop_id", order.shop_id).first("owner_contractor_id")
+              .then(async (s) => s?.owner_contractor_id
+                ? (await database.knex("contractors").where("contractor_id", s.owner_contractor_id).first("spectrum_id"))?.spectrum_id || null
+                : null))
+          : null),
     shop,
     cost: +order.cost,
     title: order.title,
