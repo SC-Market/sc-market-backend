@@ -589,9 +589,8 @@ function truncate(val: string | null, maxLen: number): string | null {
  */
 function isCoreItem(name: string): boolean {
   const normalized = name.toLowerCase()
-  return (
-    normalized.includes(" core ") && !normalized.match(/\b(life|thermal|power|reactor)core\b/)
-  )
+  const hasCore = normalized.includes(" core ") || normalized.endsWith(" core")
+  return hasCore && !normalized.match(/\b(life|thermal|power|reactor)core\b/)
 }
 
 // --- Main Import Service ---
@@ -947,7 +946,7 @@ export class GameDataImportService {
 
         const cores = await trx("game_items")
           .select("id", "name", "image_url")
-          .whereRaw("lower(name) LIKE '% core %'")
+          .whereRaw("(lower(name) LIKE '% core %' OR lower(name) LIKE '% core')")
           .andWhereNot("type", "Full Set")
 
         let fullSetsCreated = 0
@@ -956,7 +955,7 @@ export class GameDataImportService {
             continue
           }
 
-          const baseName = core.name.replace(/\s+Core\s+/i, " ").trim()
+          const baseName = core.name.replace(/\s+Core(\s+|$)/i, " ").trim()
           const fullSetName = `${baseName} - Full Set`
 
           const exists = await trx("game_items").where("name", fullSetName).first()
