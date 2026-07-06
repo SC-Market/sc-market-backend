@@ -23,6 +23,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateRequisitionRequest,
   CreateRequisitionResponse,
@@ -401,11 +402,11 @@ export class RequisitionsV2Controller extends BaseController {
 
     if (order.assigned_id) {
       const u = await knex("accounts").where({ user_id: order.assigned_id }).first()
-      if (u) supplier = { user_id: u.user_id, username: u.username, display_name: u.display_name || u.username, avatar: u.avatar || null }
+      if (u) supplier = { user_id: u.user_id, username: u.username, display_name: u.display_name || u.username, avatar: u.avatar ? await cdn.getFileLinkResource(u.avatar) : null }
     }
     if (order.contractor_id) {
       const c = await knex("contractors").where({ contractor_id: order.contractor_id }).first()
-      if (c) supplierContractor = { contractor_id: c.contractor_id, spectrum_id: c.spectrum_id, name: c.name, avatar: c.avatar || null }
+      if (c) supplierContractor = { contractor_id: c.contractor_id, spectrum_id: c.spectrum_id, name: c.name, avatar: c.avatar ? await cdn.getFileLinkResource(c.avatar) : null }
     }
 
     const itemRows = await knex("requisition_items").where({ order_id: order.order_id })
@@ -424,7 +425,7 @@ export class RequisitionsV2Controller extends BaseController {
         user_id: buyer?.user_id || order.customer_id,
         username: buyer?.username || "unknown",
         display_name: buyer?.display_name || buyer?.username || "Unknown",
-        avatar: buyer?.avatar || null,
+        avatar: buyer?.avatar ? await cdn.getFileLinkResource(buyer.avatar) : null,
       },
       supplier,
       supplier_contractor: supplierContractor,

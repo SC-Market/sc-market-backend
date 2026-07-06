@@ -13,6 +13,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   CreateOrderRequest,
@@ -461,7 +462,7 @@ export class OrdersV2Controller extends BaseController {
 
       return {
         order_id: order.order_id,
-        buyer: { user_id: buyer.user_id, username: buyer.username, display_name: buyer.display_name, avatar: buyer.avatar },
+        buyer: { user_id: buyer.user_id, username: buyer.username, display_name: buyer.display_name, avatar: buyer.avatar ? await cdn.getFileLinkResource(buyer.avatar) : null },
         seller: orderShop
           ? { shop_id: orderShop.shop_id, name: orderShop.shop_name, slug: orderShop.shop_slug }
           : { shop_id: "", name: "Unknown", slug: "" },
@@ -690,7 +691,7 @@ export class OrdersV2Controller extends BaseController {
             item_count: orderItems.length,
             quality_tier_min: qualityTierMin,
             quality_tier_max: qualityTierMax,
-            buyer_avatar: order.buyer_avatar,
+            buyer_avatar: order.buyer_avatar ? await cdn.getFileLinkResource(order.buyer_avatar) : null,
             shop_logo: sellerShop?.shop_logo || null,
           }
         }),
