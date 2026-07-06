@@ -916,15 +916,15 @@ export class ShopsV2Controller extends BaseController {
       )
       .orderBy("shop_blocklist.created_at", "desc")
 
-    return entries.map((e) => ({
+    return Promise.all(entries.map(async (e) => ({
       id: e.id,
       user_id: e.blocked_user_id,
       username: e.username,
       display_name: e.display_name,
-      avatar: e.avatar,
+      avatar: await resolveImageUrl(db, e.avatar),
       reason: e.reason,
       created_at: e.created_at.toISOString(),
-    }))
+    })))
   }
 
   /**
@@ -1041,16 +1041,16 @@ export class ShopsV2Controller extends BaseController {
       .countDistinct("customer_id as count")
 
     return {
-      items: customers.map((c) => ({
+      items: await Promise.all(customers.map(async (c) => ({
         user_id: c.user_id,
         username: c.username,
         display_name: c.display_name,
-        avatar: c.avatar,
+        avatar: await resolveImageUrl(db, c.avatar),
         order_count: +c.order_count,
         fulfilled_count: +c.fulfilled_count,
         total_spent: +c.total_spent,
         last_order_at: c.last_order_at?.toISOString() || null,
-      })),
+      }))),
       total: +totalCount,
       page: page || 0,
       page_size: limit,
