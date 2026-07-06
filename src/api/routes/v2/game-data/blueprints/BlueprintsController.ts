@@ -11,6 +11,7 @@ import { Controller, Get, Post, Delete, Route, Tags, Query, Path, Body, Security
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../../clients/cdn/cdn.js"
 import {
   SearchBlueprintsRequest,
   SearchBlueprintsResponse,
@@ -1361,13 +1362,13 @@ export class BlueprintsController extends BaseController {
       .orderBy("a.display_name")
 
     return {
-      members: rows.map((r: any) => ({
+      members: await Promise.all(rows.map(async (r: any) => ({
         user_id: r.user_id,
         username: r.username,
         display_name: r.display_name || r.username,
-        avatar: r.avatar || undefined,
+        avatar: r.avatar ? (await cdn.getFileLinkResource(r.avatar)) || undefined : undefined,
         acquisition_date: r.acquisition_date?.toISOString() || undefined,
-      })),
+      }))),
     }
   }
 

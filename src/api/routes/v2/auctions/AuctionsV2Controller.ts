@@ -9,6 +9,7 @@ import { Post, Get, Route, Tags, Body, Request, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
@@ -83,13 +84,13 @@ export class AuctionsV2Controller extends BaseController {
       status: auction.status,
       current_highest_bid: highest ? parseInt(String(highest)) : null,
       total_bids: bids.length,
-      bids: bids.map((b: any) => ({
+      bids: await Promise.all(bids.map(async (b: any) => ({
         bid_id: b.bid_id,
-        bidder: { username: b.username, display_name: b.display_name, avatar: b.avatar },
+        bidder: { username: b.username, display_name: b.display_name, avatar: b.avatar ? await cdn.getFileLinkResource(b.avatar) : null },
         amount: parseInt(b.amount),
         is_active: b.is_active,
         created_at: b.created_at.toISOString(),
-      })),
+      }))),
     }
   }
 

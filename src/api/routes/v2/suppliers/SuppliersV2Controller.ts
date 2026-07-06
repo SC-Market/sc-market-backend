@@ -16,6 +16,7 @@ import { Get, Post, Patch, Delete, Route, Tags, Body, Request, Path, Query, Secu
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   AddSupplierRequest,
   AddSupplierResponse,
@@ -251,7 +252,7 @@ export class SuppliersV2Controller extends BaseController {
         id: row.aggregator_id,
         username: u?.username || "unknown",
         display_name: u?.display_name || u?.username || "Unknown",
-        avatar: u?.avatar || null,
+        avatar: u?.avatar ? await cdn.getFileLinkResource(u.avatar) : null,
         kind: "user",
       }
     } else {
@@ -260,7 +261,7 @@ export class SuppliersV2Controller extends BaseController {
         id: row.aggregator_contractor_id,
         username: c?.spectrum_id || "unknown",
         display_name: c?.name || "Unknown Org",
-        avatar: c?.avatar || null,
+        avatar: c?.avatar ? await cdn.getFileLinkResource(c.avatar) : null,
         kind: "contractor",
         spectrum_id: c?.spectrum_id,
       }
@@ -274,7 +275,7 @@ export class SuppliersV2Controller extends BaseController {
         id: row.supplier_id,
         username: u?.username || "unknown",
         display_name: u?.display_name || u?.username || "Unknown",
-        avatar: u?.avatar || null,
+        avatar: u?.avatar ? await cdn.getFileLinkResource(u.avatar) : null,
         kind: "user",
       }
     } else {
@@ -283,7 +284,7 @@ export class SuppliersV2Controller extends BaseController {
         id: row.supplier_contractor_id,
         username: c?.spectrum_id || "unknown",
         display_name: c?.name || "Unknown Org",
-        avatar: c?.avatar || null,
+        avatar: c?.avatar ? await cdn.getFileLinkResource(c.avatar) : null,
         kind: "contractor",
         spectrum_id: c?.spectrum_id,
       }

@@ -705,18 +705,20 @@ export class ShopsV2Controller extends BaseController {
       .limit(validatedPageSize)
       .offset(offset)
 
-    const reviews: ShopReviewResponse[] = rows.map((row: Record<string, unknown>) => ({
-      review_id: row.rating_id as string,
-      rating: row.rating as number,
-      comment: (row.comment as string) || "",
-      created_at: (row.created_at as Date).toISOString(),
-      author: {
-        user_id: row.user_id as string,
-        username: row.username as string,
-        display_name: row.display_name as string,
-        avatar: row.avatar as string | null,
-      },
-    }))
+    const reviews: ShopReviewResponse[] = await Promise.all(
+      rows.map(async (row: Record<string, unknown>) => ({
+        review_id: row.rating_id as string,
+        rating: row.rating as number,
+        comment: (row.comment as string) || "",
+        created_at: (row.created_at as Date).toISOString(),
+        author: {
+          user_id: row.user_id as string,
+          username: row.username as string,
+          display_name: row.display_name as string,
+          avatar: await resolveImageUrl(db, row.avatar as string | null),
+        },
+      })),
+    )
 
     return { reviews, total, page: validatedPage, page_size: validatedPageSize }
   }
