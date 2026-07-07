@@ -142,9 +142,18 @@ export const game_shops_get_items: RequestHandler = async function (req, res) {
  * List which shops sell/buy a specific item.
  * Accepts either a game_item_id (UUID from game_items table) or an item_uuid (p4k UUID).
  */
-export const game_shops_for_item: RequestHandler = async function (req, res) {
+export const game_shops_for_item: RequestHandler = async function (req, res, next) {
   try {
     const { itemId } = req.params
+
+    // Validate UUID format — reject short-slug or other non-UUID formats
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(itemId)) {
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid item ID format"),
+      )
+      return
+    }
 
     // Try to find by game_item_id first, then by item_uuid
     let query = knex()("game_shop_items")
@@ -197,13 +206,7 @@ export const game_shops_for_item: RequestHandler = async function (req, res) {
       }),
     )
   } catch (error) {
-    logger.error("Error in game_shops_for_item", { error })
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to fetch shops for item",
-      ),
-    )
+    next(error)
   }
 }
 
