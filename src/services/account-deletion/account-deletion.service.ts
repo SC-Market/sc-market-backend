@@ -307,12 +307,11 @@ async function convertToTombstone(userId: string): Promise<void> {
       .update({ status: "expired" })
 
     // Wipe PII on the account row (keep the row for FK integrity)
+    const tombstoneUsername = `[deleted_${userId.replace(/-/g, "").slice(0, 8)}]`
     await trx("accounts")
       .where("user_id", userId)
       .update({
-        username: knex.raw(
-          "'[deleted_' || substr(user_id::text, 1, 8) || ']'",
-        ),
+        username: tombstoneUsername,
         display_name: "Deleted User",
         profile_description: "",
         avatar: "",
