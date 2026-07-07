@@ -314,11 +314,11 @@ async function convertToTombstone(userId: string): Promise<void> {
         username: tombstoneUsername,
         display_name: "Deleted User",
         profile_description: "",
-        avatar: "",
-        banner: "",
-        discord_id: null,
-        discord_access_token: null,
-        discord_refresh_token: null,
+        avatar: "5226c767-0599-419b-ae71-a7303c441db0", // default avatar resource
+        banner: "0008300c-fc6a-4e4e-9488-7d696f00e8b2", // default banner resource
+        discord_id: 0,
+        discord_access_token: "",
+        discord_refresh_token: "",
         spectrum_user_id: null,
         official_server_id: null,
         discord_thread_channel_id: null,
