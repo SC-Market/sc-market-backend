@@ -25,7 +25,7 @@ interface ScmdbEnvelope {
 }
 
 function buildIngestUrl(token: string): string {
-  const base = process.env.FRONTEND_URL || "https://sc-market.space"
+  const base = process.env.BACKEND_URL || "https://api.sc-market.space"
   return `${base}/api/v2/integrations/scmdb/ingest/${token}`
 }
 
