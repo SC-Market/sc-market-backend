@@ -21,6 +21,7 @@ import {
   WikiManufacturerSearchResult,
   WikiManufacturerDetail,
 } from "./wiki.types.js"
+import { parseShortSlug, buildUuidRangeQuery } from "../../util/short-slug.js"
 import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/wiki")
@@ -215,8 +216,15 @@ export class WikiController extends BaseController {
     logger.info("Fetching wiki item detail", { id })
 
     try {
-      // Short-slug is resolved to UUID by the middleware
-      const itemRow = await knex("game_items").where("id", id).first()
+      const { prefix, isFullUuid } = parseShortSlug(id)
+
+      let itemRow
+      if (isFullUuid) {
+        itemRow = await knex("game_items").where("id", prefix).first()
+      } else {
+        const range = buildUuidRangeQuery(prefix, "id")
+        itemRow = await knex("game_items").whereRaw(range.sql, range.bindings).first()
+      }
 
       if (!itemRow) {
         this.throwNotFound("Item", id)

@@ -1,5 +1,6 @@
 import { RequestHandler } from "express"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { parseShortSlug, buildUuidRangeQuery } from "../../v2/util/short-slug.js"
 import logger from "../../../../logger/logger.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
@@ -145,14 +146,15 @@ export const game_shops_get_items: RequestHandler = async function (req, res) {
 export const game_shops_for_item: RequestHandler = async function (req, res, next) {
   try {
     const { itemId } = req.params
+    const { prefix, isFullUuid } = parseShortSlug(itemId)
 
-    // Validate UUID format — reject short-slug or other non-UUID formats
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-    if (!uuidRegex.test(itemId)) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid item ID format"),
-      )
-      return
+    // Resolve the game item (supports full UUID and short-slug format)
+    let gameItem
+    if (isFullUuid) {
+      gameItem = await knex()("game_items").where("id", prefix).first()
+    } else {
+      const range = buildUuidRangeQuery(prefix, "id")
+      gameItem = await knex()("game_items").whereRaw(range.sql, range.bindings).first()
     }
 
     // Try to find by game_item_id first, then by item_uuid
@@ -168,14 +170,15 @@ export const game_shops_for_item: RequestHandler = async function (req, res, nex
         "game_shop_items.sell_price",
       )
 
-    // Check if it's a game_item_id or item_uuid
-    const gameItem = await knex()("game_items").where("id", itemId).first()
     if (gameItem) {
-      // Find by game_item_id link
-      query = query.where("game_shop_items.game_item_id", itemId)
+      query = query.where("game_shop_items.game_item_id", gameItem.id)
+    } else if (isFullUuid) {
+      query = query.where("game_shop_items.item_uuid", prefix)
     } else {
-      // Try as item_uuid (p4k UUID)
-      query = query.where("game_shop_items.item_uuid", itemId)
+      res.status(404).json(
+        createErrorResponse(ErrorCode.NOT_FOUND, "Item not found"),
+      )
+      return
     }
 
     query = query.orderBy("game_shop_items.buy_price", "asc")
