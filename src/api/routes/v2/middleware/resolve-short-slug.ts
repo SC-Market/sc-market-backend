@@ -2,8 +2,12 @@ import { Request, Response, NextFunction } from "express"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
 
-const SLUG_PATH_TABLES: Record<string, { table: string; column: string }> = {
+const SLUG_PATH_TABLES: Record<
+  string,
+  { table: string; column: string; paramName?: string }
+> = {
   "/listings/": { table: "listings", column: "listing_id" },
+  "/auctions/": { table: "listings", column: "listing_id", paramName: "listingId" },
   "/game-items/": { table: "game_items", column: "id" },
   "/game-data/wiki/items/": { table: "game_items", column: "id" },
   "/game-data/wiki/ships/": { table: "game_items", column: "id" },
@@ -11,6 +15,7 @@ const SLUG_PATH_TABLES: Record<string, { table: string; column: string }> = {
 
 const SLUG_QUERY_PARAMS: Record<string, { table: string; column: string }> = {
   game_item_id: { table: "game_items", column: "id" },
+  output_game_item_id: { table: "game_items", column: "id" },
   listing_id: { table: "listings", column: "listing_id" },
 }
 
@@ -49,7 +54,7 @@ export async function resolveShortSlug(
   )
 
   if (pathMatch) {
-    const [prefix, { table, column }] = pathMatch
+    const [prefix, { table, column, paramName }] = pathMatch
     const idSegment = path.slice(prefix.length).split("/")[0]
     if (idSegment) {
       const { prefix: hexPrefix, isFullUuid } = parseShortSlug(idSegment)
@@ -57,7 +62,8 @@ export async function resolveShortSlug(
         const resolved = await resolveToUuid(hexPrefix, table, column)
         if (resolved) {
           req.url = req.url.replace(idSegment, resolved)
-          if (req.params.id) req.params.id = resolved
+          const pName = paramName || "id"
+          if (req.params[pName]) req.params[pName] = resolved
         }
       }
     }
