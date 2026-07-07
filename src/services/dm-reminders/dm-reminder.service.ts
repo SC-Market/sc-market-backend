@@ -91,12 +91,12 @@ export async function processDmReminders(): Promise<void> {
       }
 
       const html = await renderEmailTemplate(
-        "notifications/dm-reminder",
+        "dm-reminder",
         templateData,
         "html",
       )
       const text = await renderEmailTemplate(
-        "notifications/dm-reminder",
+        "dm-reminder",
         templateData,
         "txt",
       )
