@@ -252,6 +252,10 @@ export async function processExpiredDeletions(): Promise<number> {
 }
 
 async function convertToTombstone(userId: string): Promise<void> {
+  if (!userId || typeof userId !== "string" || userId.length < 36) {
+    throw new Error(`Invalid userId for tombstone conversion: "${userId}"`)
+  }
+
   const knex = getKnex()
 
   await knex.transaction(async (trx) => {
@@ -271,6 +275,8 @@ async function convertToTombstone(userId: string): Promise<void> {
       trx("watchlist_items").where("user_id", userId).delete(),
       trx("push_subscriptions").where("user_id", userId).delete(),
       trx("push_notification_preferences").where("user_id", userId).delete(),
+      trx("email_notification_preferences").where("user_id", userId).delete(),
+      trx("user_emails").where("user_id", userId).delete(),
       trx("notification_webhooks").where("user_id", userId).delete(),
       trx("notification").where("notifier_id", userId).delete(),
       trx("notification_change").where("actor_id", userId).delete(),
@@ -279,8 +285,9 @@ async function convertToTombstone(userId: string): Promise<void> {
       trx("services").where("user_id", userId).delete(),
       trx("market_buy_orders").where("buyer_id", userId).delete(),
       trx("blocklist")
-        .where("blocker_user_id", userId)
-        .orWhere("blocked_id", userId)
+        .where(function () {
+          this.where("blocker_user_id", userId).orWhere("blocked_id", userId)
+        })
         .delete(),
       trx("chat_participants").where("user_id", userId).delete(),
       trx("listing_views").where("viewer_id", userId).delete(),
