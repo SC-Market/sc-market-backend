@@ -252,49 +252,52 @@ export async function processExpiredDeletions(): Promise<number> {
 }
 
 async function convertToTombstone(userId: string): Promise<void> {
-  if (!userId || typeof userId !== "string" || userId.length < 36) {
-    throw new Error(`Invalid userId for tombstone conversion: "${userId}"`)
-  }
-
   const knex = getKnex()
 
   await knex.transaction(async (trx) => {
     // Delete private data from all related tables
-    await Promise.all([
-      trx("refresh_tokens").where("user_id", userId).delete(),
-      trx("api_tokens").where("user_id", userId).delete(),
-      trx("account_providers").where("user_id", userId).delete(),
-      trx("account_integrations").where("user_id", userId).delete(),
-      trx("user_preferences").where("user_id", userId).delete(),
-      trx("user_blueprint_inventory").where("user_id", userId).delete(),
-      trx("wishlists").where("user_id", userId).delete(),
-      trx("mission_completions").where("user_id", userId).delete(),
-      trx("mission_ratings").where("user_id", userId).delete(),
-      trx("crafting_history").where("user_id", userId).delete(),
-      trx("cart_items_v2").where("user_id", userId).delete(),
-      trx("watchlist_items").where("user_id", userId).delete(),
-      trx("push_subscriptions").where("user_id", userId).delete(),
-      trx("push_notification_preferences").where("user_id", userId).delete(),
-      trx("email_notification_preferences").where("user_id", userId).delete(),
-      trx("user_emails").where("user_id", userId).delete(),
-      trx("notification_webhooks").where("user_id", userId).delete(),
-      trx("notification").where("notifier_id", userId).delete(),
-      trx("notification_change").where("actor_id", userId).delete(),
-      trx("ships").where("owner", userId).delete(),
-      trx("user_contractor_settings").where("user_id", userId).delete(),
-      trx("services").where("user_id", userId).delete(),
-      trx("market_buy_orders").where("buyer_id", userId).delete(),
-      trx("blocklist")
-        .where(function () {
-          this.where("blocker_user_id", userId).orWhere("blocked_id", userId)
-        })
-        .delete(),
-      trx("chat_participants").where("user_id", userId).delete(),
-      trx("listing_views").where("viewer_id", userId).delete(),
-      trx("listing_views_v2").where("viewer_id", userId).delete(),
-      trx("contractor_members").where("user_id", userId).delete(),
-      trx("contractor_member_roles").where("user_id", userId).delete(),
-    ])
+    // Each wrapped individually — some tables may not exist in all environments
+    const deletes: [string, () => Promise<unknown>][] = [
+      ["refresh_tokens", () => trx("refresh_tokens").where("user_id", userId).delete()],
+      ["api_tokens", () => trx("api_tokens").where("user_id", userId).delete()],
+      ["account_providers", () => trx("account_providers").where("user_id", userId).delete()],
+      ["account_integrations", () => trx("account_integrations").where("user_id", userId).delete()],
+      ["user_preferences", () => trx("user_preferences").where("user_id", userId).delete()],
+      ["user_blueprint_inventory", () => trx("user_blueprint_inventory").where("user_id", userId).delete()],
+      ["wishlists", () => trx("wishlists").where("user_id", userId).delete()],
+      ["mission_completions", () => trx("mission_completions").where("user_id", userId).delete()],
+      ["mission_ratings", () => trx("mission_ratings").where("user_id", userId).delete()],
+      ["crafting_history", () => trx("crafting_history").where("user_id", userId).delete()],
+      ["cart_items_v2", () => trx("cart_items_v2").where("user_id", userId).delete()],
+      ["watchlist_items", () => trx("watchlist_items").where("user_id", userId).delete()],
+      ["push_subscriptions", () => trx("push_subscriptions").where("user_id", userId).delete()],
+      ["push_notification_preferences", () => trx("push_notification_preferences").where("user_id", userId).delete()],
+      ["email_notification_preferences", () => trx("email_notification_preferences").where("user_id", userId).delete()],
+      ["user_emails", () => trx("user_emails").where("user_id", userId).delete()],
+      ["notification_webhooks", () => trx("notification_webhooks").where("user_id", userId).delete()],
+      ["notification", () => trx("notification").where("notifier_id", userId).delete()],
+      ["notification_change", () => trx("notification_change").where("actor_id", userId).delete()],
+      ["ships", () => trx("ships").where("owner", userId).delete()],
+      ["user_contractor_settings", () => trx("user_contractor_settings").where("user_id", userId).delete()],
+      ["services", () => trx("services").where("user_id", userId).delete()],
+      ["market_buy_orders", () => trx("market_buy_orders").where("buyer_id", userId).delete()],
+      ["blocklist", () => trx("blocklist").where(function () { this.where("blocker_user_id", userId).orWhere("blocked_id", userId) }).delete()],
+      ["chat_participants", () => trx("chat_participants").where("user_id", userId).delete()],
+      ["listing_views", () => trx("listing_views").where("viewer_id", userId).delete()],
+      ["listing_views_v2", () => trx("listing_views_v2").where("viewer_id", userId).delete()],
+      ["contractor_members", () => trx("contractor_members").where("user_id", userId).delete()],
+      ["contractor_member_roles", () => trx("contractor_member_roles").where("user_id", userId).delete()],
+      ["user_availability", () => trx("user_availability").where("user_id", userId).delete()],
+      ["account_settings", () => trx("account_settings").where("user_id", userId).delete()],
+    ]
+
+    for (const [table, fn] of deletes) {
+      try {
+        await fn()
+      } catch (err) {
+        logger.warn(`Tombstone cleanup: failed to delete from ${table}`, { user_id: userId, error: err instanceof Error ? err.message : String(err) })
+      }
+    }
 
     // Expire any remaining V2 listings
     await trx("listings")
