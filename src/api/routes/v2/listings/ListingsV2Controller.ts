@@ -1158,14 +1158,22 @@ export class ListingsV2Controller extends BaseController {
       if (listing.visibility === "private" && listing.shop_owner_contractor_id) {
         const currentUserId = this.tryGetUserId()
         if (!currentUserId) {
-          this.throwForbidden("This listing is only visible to organization members")
+          this.throwForbidden("This listing is only visible to organization members. Please log in.")
         }
-        const membership = await db("contractor_members")
-          .where("contractor_id", listing.shop_owner_contractor_id)
-          .where("user_id", currentUserId)
-          .first()
-        if (!membership) {
-          this.throwForbidden("This listing is only visible to organization members")
+        const isAdmin = this.isAdmin()
+        if (!isAdmin) {
+          const membership = await db("contractor_members")
+            .where("contractor_id", listing.shop_owner_contractor_id)
+            .where("user_id", currentUserId)
+            .first()
+          if (!membership) {
+            logger.warn("Private listing access denied", {
+              listing_id: id,
+              user_id: currentUserId,
+              shop_owner_contractor_id: listing.shop_owner_contractor_id,
+            })
+            this.throwForbidden("This listing is only visible to organization members")
+          }
         }
       }
 
