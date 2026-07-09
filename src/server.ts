@@ -212,6 +212,10 @@ app.use(
   }),
 )
 
+// SCMDB ingest endpoint — token-authenticated, no cookies needed, allow any origin
+app.options("/api/v2/integrations/scmdb/ingest/*", cors({ origin: true }))
+app.post("/api/v2/integrations/scmdb/ingest/*", cors({ origin: true }))
+
 app.use(cors(corsOptions))
 app.use(track500Responses)
 app.use(i18nMiddleware)
