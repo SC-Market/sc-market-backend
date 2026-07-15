@@ -42,7 +42,6 @@ interface Environment {
   FRONTEND_URL?: string
 
   // API Keys
-  SCAPI_KEY?: string
   NYDOO_KEY?: string
   NYDOO_EMAIL?: string
 
