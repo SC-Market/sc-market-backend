@@ -32,7 +32,7 @@ import {
 } from "../util/permissions.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
-import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
+import { fetchRSIOrgDirect } from "../../../../clients/rsi/scraper.js"
 import { authorizeProfile } from "../profiles/helpers.js"
 import { convertQuery } from "../recruiting/controller.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
@@ -2109,14 +2109,21 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
   try {
     const spectrum_id = req.params["spectrum_id"]
 
-    let contractor, data
+    let contractor
     try {
       contractor = await contractorDb.getContractor({ spectrum_id })
-      data = await fetchRSIOrgSCAPI(spectrum_id)
     } catch (e) {
       res
         .status(400)
         .json(createErrorResponse({ message: "Invalid contractor" }))
+      return
+    }
+
+    const data = await fetchRSIOrgDirect(spectrum_id)
+    if (!data) {
+      res
+        .status(502)
+        .json(createErrorResponse({ message: "Failed to fetch org from RSI" }))
       return
     }
 
@@ -2126,17 +2133,17 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
     if (banner_resource.filename === "default_profile_banner.png") {
       const old_banner = contractor.banner
 
-      let banner_resource = undefined
-      if (data.data.banner) {
-        banner_resource = await cdn.createExternalResource(
-          data.data.banner,
+      let new_banner_resource = undefined
+      if (data.banner) {
+        new_banner_resource = await cdn.createExternalResource(
+          data.banner,
           contractor.contractor_id + "_org_banner",
         )
 
         await contractorDb.updateContractor(
           { contractor_id: contractor.contractor_id },
           {
-            banner: banner_resource ? banner_resource.resource_id : undefined,
+            banner: new_banner_resource ? new_banner_resource.resource_id : undefined,
           },
         )
 
@@ -2146,7 +2153,7 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
 
     await contractorDb.updateContractor(
       { contractor_id: contractor.contractor_id },
-      { size: data.data.members },
+      { size: data.members },
     )
 
     res.json(createResponse({ result: "Success" }))

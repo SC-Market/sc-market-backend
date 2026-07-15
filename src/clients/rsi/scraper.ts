@@ -38,15 +38,54 @@ export async function fetchRSIProfileDirect(username: string) {
 const thumb_pattern = /<div class="thumb">\s*<img src="(.*?)">/
 const thumb_regex = new RegExp(thumb_pattern)
 
-export async function fetchRSIOrg(spectrum_id: string) {
+export interface RSIOrgData {
+  name: string
+  sid: string
+  headline: string
+  manifesto: string
+  charter: string
+  history: string
+  logo: string
+  banner: string
+  members: number
+}
+
+export async function fetchRSIOrgDirect(spectrum_id: string): Promise<RSIOrgData | null> {
   const result = await fetch(
-    `https://robertsspaceindustries.com/orgs/${encodeURIComponent(
-      spectrum_id,
-    )}`,
+    `https://robertsspaceindustries.com/orgs/${encodeURIComponent(spectrum_id)}`,
   )
 
-  result.text()
-  return
+  if (!result.ok) {
+    logger.error(`Failed to fetch RSI org page: ${result.status}`)
+    return null
+  }
+
+  const text = await result.text()
+  const doc = cheerio.load(text)
+
+  try {
+    const headline = doc(".body.markitup-text").first().text().trim()
+    const history = doc("#tab-history .markitup-text").text().trim()
+    const manifesto = doc("#tab-manifesto .markitup-text").text().trim()
+    const charter = doc("#tab-charter .markitup-text").text().trim()
+
+    const nameMatch = text.match(/<h1>\s*(.*?)\s*\/\s*<span/)
+    const name = nameMatch ? nameMatch[1].replace(/<[^>]*>/g, "").trim() : spectrum_id
+
+    const membersMatch = text.match(/<span class="count">(\d+)\s*members?<\/span>/)
+    const members = membersMatch ? parseInt(membersMatch[1], 10) : 1
+
+    const logoEl = doc(".logo img").attr("src") || ""
+    const logo = logoEl.startsWith("http") ? logoEl : logoEl ? `https://robertsspaceindustries.com${logoEl}` : ""
+
+    const bannerEl = doc(".banner img").attr("src") || ""
+    const banner = bannerEl.startsWith("http") ? bannerEl : bannerEl ? `https://robertsspaceindustries.com${bannerEl}` : ""
+
+    return { name, sid: spectrum_id.toUpperCase(), headline, manifesto, charter, history, logo, banner, members }
+  } catch (e) {
+    logger.error(`Failed to parse org page for ${spectrum_id}: ${e}`)
+    return null
+  }
 }
 
 const size_pattern = /<span class="count">(\d+) members<\/span>/

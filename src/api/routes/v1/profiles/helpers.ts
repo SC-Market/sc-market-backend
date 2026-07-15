@@ -2,7 +2,6 @@ import * as profileDb from "./database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { fetchRSIProfileDirect } from "../../../../clients/rsi/scraper.js"
 import { fetchRSIProfileCommunityHub } from "../../../../clients/rsi/community_hub.js"
-import { fetchRSIProfileSCAPI } from "../../../../clients/scapi/scapi.js"
 import logger from "../../../../logger/logger.js"
 import { getSpectrumUserIdByHandle } from "../util/spectrum.js"
 import { spectrumAPI } from "../../../../clients/spectrum/index.js"
@@ -34,49 +33,7 @@ async function fetchProfile(spectrum_id: string) {
     }
   }
 
-  // Fallback to SCAPI if community hub fails
-  let scapi
-  try {
-    scapi = await fetchRSIProfileSCAPI(spectrum_id)
-  } catch (e) {
-    logger.debug("Failed to fetch SCAPI", e)
-    scapi = undefined
-  }
-
-  try {
-    if (scapi && scapi.data) {
-      return {
-        handle: scapi.data.profile.handle,
-        display_name: scapi.data.profile.display,
-        biography: scapi.data.profile.bio || "",
-        profile_image: scapi.data.profile.image,
-      }
-    }
-  } catch (e) {
-    logger.debug("Malformed SCAPI data", scapi, e)
-  }
-
-  // let nydoo
-  // try {
-  //   nydoo = await fetchRSIProfileNydoo(spectrum_id)
-  // } catch (e) {
-  //   console.log("Failed to fetch Nydoo", e)
-  //   nydoo = undefined
-  // }
-  //
-  // if (nydoo) {
-  //   try {
-  //     return {
-  //       handle: nydoo.data[0].user_handle,
-  //       display_name: nydoo.data[0].user_displayname,
-  //       biography: nydoo.data[0].user_biography || "",
-  //       profile_image: nydoo.data[0].user_profile_image,
-  //     }
-  //   } catch (e) {}
-  // }
-  // logger.error("Malformed Nydoo data", nydoo)
-
-  // Final fallback to direct profile fetch
+  // Fallback to direct profile scrape
   try {
     return await fetchRSIProfileDirect(spectrum_id)
   } catch (e) {

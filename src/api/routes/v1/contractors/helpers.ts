@@ -1,7 +1,7 @@
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import * as contractorDb from "./database.js"
 import { get_sentinel } from "../profiles/helpers.js"
-import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
+import { fetchRSIOrgDirect } from "../../../../clients/rsi/scraper.js"
 import { User } from "../api-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { validateLanguageCodes } from "../../../../constants/languages.js"
@@ -175,26 +175,30 @@ export async function authorizeContractor(
   user: User,
   override = false,
 ) {
-  const orgDetails = await fetchRSIOrgSCAPI(spectrum_id)
+  const orgDetails = await fetchRSIOrgDirect(spectrum_id)
+
+  if (!orgDetails && !override) {
+    return false
+  }
 
   const choices = [
-    orgDetails.data?.headline?.plaintext || "",
-    orgDetails.data?.manifesto?.plaintext || "",
-    orgDetails.data?.charter?.plaintext || "",
-    orgDetails.data?.history?.plaintext || "",
+    orgDetails?.headline || "",
+    orgDetails?.manifesto || "",
+    orgDetails?.charter || "",
+    orgDetails?.history || "",
   ]
 
-  const sentinel = get_sentinel(user.user_id)
+  const sentinel = get_sentinel(user.user_id).toUpperCase()
 
-  if (override || choices.find((c) => c.includes(sentinel))) {
+  if (override || choices.find((c) => c.toUpperCase().includes(sentinel))) {
     await createContractor({
       owner_id: user.user_id,
       spectrum_id,
       description: choices[0].trim(),
-      name: orgDetails?.data?.name || spectrum_id,
-      banner: orgDetails?.data?.banner,
-      logo: orgDetails?.data?.logo,
-      member_count: orgDetails?.data?.members || 1,
+      name: orgDetails?.name || spectrum_id,
+      banner: orgDetails?.banner || "",
+      logo: orgDetails?.logo || "",
+      member_count: orgDetails?.members || 1,
       locale: user.locale,
     })
     return true
