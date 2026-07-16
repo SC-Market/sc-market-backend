@@ -244,10 +244,26 @@ export class ShopsV2Controller extends BaseController {
       ownerUserId = userId
     }
 
-    let slug = body.slug || await generateSlug(db, body.name)
-    if (!slug) slug = await generateSlug(db, body.name)
+    let slug = body.slug?.trim() || await generateSlug(db, body.name)
+    if (!slug || slug.length < 3) slug = await generateSlug(db, body.name)
 
-    const existing = await db("shops").where("slug", slug).first()
+    if (slug.length < 3) {
+      this.throwValidationError("Slug must be at least 3 characters", [
+        { field: "slug", message: "Slug must be at least 3 characters" },
+      ])
+    }
+    if (slug.length > 50) {
+      this.throwValidationError("Slug must be 50 characters or less", [
+        { field: "slug", message: "Slug must be 50 characters or less" },
+      ])
+    }
+    if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(slug) && slug.length >= 3) {
+      this.throwValidationError("Slug must contain only lowercase letters, numbers, and hyphens", [
+        { field: "slug", message: "Slug must start and end with a letter or number, and contain only lowercase letters, numbers, and hyphens" },
+      ])
+    }
+
+    const existing = await db("shops").whereRaw("LOWER(slug) = ?", [slug.toLowerCase()]).first()
     if (existing) {
       this.throwConflict("A shop with this slug already exists")
     }
@@ -618,16 +634,34 @@ export class ShopsV2Controller extends BaseController {
       this.throwForbidden()
     }
 
-    if (body.slug && body.slug !== shop.slug) {
-      const existing = await db("shops").where("slug", body.slug).whereNot("shop_id", shopId).first()
-      if (existing) {
-        this.throwConflict("A shop with this slug already exists")
+    if (body.slug !== undefined) {
+      const newSlug = body.slug.trim()
+      if (newSlug.length < 3) {
+        this.throwValidationError("Slug must be at least 3 characters", [
+          { field: "slug", message: "Slug must be at least 3 characters" },
+        ])
+      }
+      if (newSlug.length > 50) {
+        this.throwValidationError("Slug must be 50 characters or less", [
+          { field: "slug", message: "Slug must be 50 characters or less" },
+        ])
+      }
+      if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(newSlug)) {
+        this.throwValidationError("Invalid slug format", [
+          { field: "slug", message: "Slug must start and end with a letter or number, and contain only lowercase letters, numbers, and hyphens" },
+        ])
+      }
+      if (newSlug !== shop.slug) {
+        const existing = await db("shops").whereRaw("LOWER(slug) = ?", [newSlug.toLowerCase()]).whereNot("shop_id", shopId).first()
+        if (existing) {
+          this.throwConflict("A shop with this slug already exists")
+        }
       }
     }
 
     const updates: Partial<Record<string, string | boolean | string[] | null | ReturnType<typeof db.fn.now>>> = { updated_at: db.fn.now() }
     if (body.name !== undefined) updates.name = body.name
-    if (body.slug !== undefined) updates.slug = body.slug
+    if (body.slug !== undefined) updates.slug = body.slug.trim()
     if (body.description !== undefined) updates.description = body.description
     if (body.banner !== undefined) updates.banner = body.banner
     if (body.logo !== undefined) updates.logo = body.logo
