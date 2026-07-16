@@ -244,7 +244,8 @@ export class ShopsV2Controller extends BaseController {
       ownerUserId = userId
     }
 
-    const slug = body.slug || await generateSlug(db, body.name)
+    let slug = body.slug || await generateSlug(db, body.name)
+    if (!slug) slug = await generateSlug(db, body.name)
 
     const existing = await db("shops").where("slug", slug).first()
     if (existing) {
@@ -1105,12 +1106,14 @@ async function resolveImageUrl(db: ReturnType<typeof getKnex>, resourceId: strin
 }
 
 async function generateSlug(db: ReturnType<typeof getKnex>, base: string): Promise<string> {
-  const slug = base
+  let slug = base
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 45)
+
+  if (!slug) slug = `shop-${crypto.randomUUID().slice(0, 8)}`
 
   const existing = await db("shops").whereRaw("LOWER(slug) = ?", [slug]).first()
   if (!existing) return slug
