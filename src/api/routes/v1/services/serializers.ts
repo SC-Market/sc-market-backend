@@ -1,5 +1,5 @@
 import { DBService } from "../../../../clients/database/db-models.js"
-import { database } from "../../../../clients/database/knex-db.js"
+import { database, getKnex } from "../../../../clients/database/knex-db.js"
 import * as serviceDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
@@ -21,6 +21,16 @@ export async function serializeService(service: DBService) {
     code,
     name: getLanguageName(code) || code,
   }))
+
+  // Resolve shop
+  let shop: { name: string; slug: string } | null = null
+  if (service.shop_id) {
+    const shopRow = await getKnex()("shops")
+      .where("shop_id", service.shop_id)
+      .select("name", "slug")
+      .first()
+    if (shopRow) shop = { name: shopRow.name, slug: shopRow.slug }
+  }
 
   return {
     service_id: service.service_id,
@@ -46,6 +56,7 @@ export async function serializeService(service: DBService) {
           contractor_id: service.contractor_id,
         })
       : null,
+    shop,
     photos,
     languages,
   }

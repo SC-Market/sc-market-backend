@@ -398,6 +398,7 @@ export interface DBService {
   offer: number
   contractor_id?: string | null
   user_id?: string | null
+  shop_id?: string | null
   assigned_to?: string | null
   status: string
 }

@@ -56,6 +56,7 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
       { url: "/bulk", changefreq: EnumChangefreq.ALWAYS, priority: 0.8 },
       { url: "/buyorders", changefreq: EnumChangefreq.ALWAYS, priority: 0.8 },
       { url: "/market/services", changefreq: EnumChangefreq.ALWAYS, priority: 0.8 },
+      { url: "/shops", changefreq: EnumChangefreq.ALWAYS, priority: 0.9 },
       { url: "/missions", changefreq: EnumChangefreq.WEEKLY, priority: 0.8 },
       { url: "/blueprints", changefreq: EnumChangefreq.WEEKLY, priority: 0.8 },
       { url: "/crafting/calculator", changefreq: EnumChangefreq.MONTHLY, priority: 0.7 },
@@ -105,31 +106,31 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
   }
   sections.push({ name: "market", pages: marketPages })
 
-  // ── Users ──
-  const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
-  const userPages: SitemapItemLoose[] = []
-  for (const user of users) {
-    userPages.push(
-      { url: `/user/${user.username}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
-      { url: `/user/${user.username}/services`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-      { url: `/user/${user.username}/market`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-      { url: `/user/${user.username}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
-    )
-  }
-  sections.push({ name: "users", pages: userPages })
-
   // ── Contractors ──
   const contractors = await contractorDb.getContractorListings({})
   const contractorPages: SitemapItemLoose[] = []
   for (const contractor of contractors) {
     contractorPages.push(
       { url: `/contractor/${contractor.spectrum_id}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
-      { url: `/contractor/${contractor.spectrum_id}/services`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-      { url: `/contractor/${contractor.spectrum_id}/market`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
       { url: `/contractor/${contractor.spectrum_id}/members`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
     )
   }
   sections.push({ name: "contractors", pages: contractorPages })
+
+  // ── Shops ──
+  const shops: { slug: string }[] = await db("shops")
+    .select("slug")
+    .where("status", "active")
+    .whereNot("slug", "")
+  const shopPages: SitemapItemLoose[] = []
+  for (const shop of shops) {
+    shopPages.push(
+      { url: `/shops/${shop.slug}`, changefreq: EnumChangefreq.WEEKLY, priority: 0.7 },
+      { url: `/shops/${shop.slug}/services`, changefreq: EnumChangefreq.WEEKLY, priority: 0.5 },
+      { url: `/shops/${shop.slug}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
+    )
+  }
+  sections.push({ name: "shops", pages: shopPages })
 
   // ── Recruiting ──
   const recruit_posts = await recruitingDb.getAllRecruitingPosts()
@@ -200,6 +201,19 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
     }
   }
   sections.push({ name: "wiki", pages: wikiPages })
+
+  // ── Users (last — lowest priority) ──
+  const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
+  const userPages: SitemapItemLoose[] = []
+  for (const user of users) {
+    userPages.push(
+      { url: `/user/${user.username}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
+      { url: `/user/${user.username}/services`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
+      { url: `/user/${user.username}/market`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
+      { url: `/user/${user.username}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
+    )
+  }
+  sections.push({ name: "users", pages: userPages })
 
   return sections
 }
