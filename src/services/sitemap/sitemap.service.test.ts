@@ -47,5 +47,6 @@ describe("generateSitemapCache", () => {
     const staticXml = gunzipSync(sitemaps.get("static-0")!).toString("utf8")
     expect(staticXml).toContain("<url>")
     expect(staticXml).toContain("/market</loc>")
+    expect(staticXml).toContain("/shops</loc>")
   })
 })
