@@ -1146,6 +1146,7 @@ const models: TsoaRoute.Models = {
             "variant_count": {"dataType":"double","required":true},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"string","required":true},
             "game_item_name": {"dataType":"string","required":true},
             "game_item_type": {"dataType":"string","required":true},
             "photo": {"dataType":"string"},

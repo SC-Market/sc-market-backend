@@ -3408,6 +3408,10 @@
 						"type": "string",
 						"description": "ISO 8601 timestamp when listing was last updated"
 					},
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item catalog UUID — used by clients to fetch item-level aggregate\ndata (e.g. buy orders for this item) from a search result."
+					},
 					"game_item_name": {
 						"type": "string",
 						"description": "Game item name"
@@ -3468,6 +3472,7 @@
 					"variant_count",
 					"created_at",
 					"updated_at",
+					"game_item_id",
 					"game_item_name",
 					"game_item_type",
 					"quantity_unit"
