@@ -287,107 +287,103 @@ export async function getOrderAnalytics(options?: {
     return query
   }
 
-  // Get daily totals
-  // If no time range provided, default to last 30 days for backward compatibility
-  let dailyQuery = knex()("orders")
-    .select(
-      knex().raw("DATE(timestamp) as date"),
-      knex().raw("COUNT(*) as total"),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
-      ),
-    )
-    .groupBy(knex().raw("DATE(timestamp)"))
-    .orderBy("date", "asc")
+  // Get daily totals with zero-filled gaps
+  const dailyStart = options?.startTime
+    ? `'${new Date(options.startTime * 1000).toISOString()}'::date`
+    : `(NOW() - INTERVAL '30 days')::date`
+  const dailyEnd = options?.endTime
+    ? `'${new Date(options.endTime * 1000).toISOString()}'::date`
+    : `NOW()::date`
 
-  if (!options?.startTime && !options?.endTime) {
-    dailyQuery = dailyQuery.where(
-      "timestamp",
-      ">=",
-      knex().raw("NOW() - INTERVAL '30 days'"),
-    )
-  } else {
-    dailyQuery = buildTimeFilter(dailyQuery)
-  }
-  const dailyTotals = await dailyQuery
+  const dailyTotals = await knex().raw(`
+    SELECT
+      d.date,
+      COALESCE(o.total, 0) as total,
+      COALESCE(o.in_progress, 0) as in_progress,
+      COALESCE(o.fulfilled, 0) as fulfilled,
+      COALESCE(o.cancelled, 0) as cancelled,
+      COALESCE(o.not_started, 0) as not_started
+    FROM generate_series(${dailyStart}, ${dailyEnd}, '1 day'::interval) AS d(date)
+    LEFT JOIN (
+      SELECT
+        DATE(timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
+        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
+        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
+      FROM orders
+      WHERE timestamp >= ${dailyStart} AND timestamp <= ${dailyEnd} + INTERVAL '1 day'
+      GROUP BY DATE(timestamp)
+    ) o ON d.date = o.date
+    ORDER BY d.date ASC
+  `).then((r: any) => r.rows)
 
-  // Get weekly totals
-  // If no time range provided, default to last 12 weeks for backward compatibility
-  let weeklyQuery = knex()("orders")
-    .select(
-      knex().raw("DATE_TRUNC('week', timestamp) as date"),
-      knex().raw("COUNT(*) as total"),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
-      ),
-    )
-    .groupBy(knex().raw("DATE_TRUNC('week', timestamp)"))
-    .orderBy("date", "asc")
+  // Get weekly totals with zero-filled gaps
+  const weeklyStart = options?.startTime
+    ? `DATE_TRUNC('week', '${new Date(options.startTime * 1000).toISOString()}'::date)`
+    : `DATE_TRUNC('week', NOW() - INTERVAL '12 weeks')`
+  const weeklyEnd = options?.endTime
+    ? `DATE_TRUNC('week', '${new Date(options.endTime * 1000).toISOString()}'::date)`
+    : `DATE_TRUNC('week', NOW())`
 
-  if (!options?.startTime && !options?.endTime) {
-    weeklyQuery = weeklyQuery.where(
-      "timestamp",
-      ">=",
-      knex().raw("NOW() - INTERVAL '12 weeks'"),
-    )
-  } else {
-    weeklyQuery = buildTimeFilter(weeklyQuery)
-  }
-  const weeklyTotals = await weeklyQuery
+  const weeklyTotals = await knex().raw(`
+    SELECT
+      d.date,
+      COALESCE(o.total, 0) as total,
+      COALESCE(o.in_progress, 0) as in_progress,
+      COALESCE(o.fulfilled, 0) as fulfilled,
+      COALESCE(o.cancelled, 0) as cancelled,
+      COALESCE(o.not_started, 0) as not_started
+    FROM generate_series(${weeklyStart}, ${weeklyEnd}, '1 week'::interval) AS d(date)
+    LEFT JOIN (
+      SELECT
+        DATE_TRUNC('week', timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
+        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
+        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
+      FROM orders
+      WHERE timestamp >= ${weeklyStart} AND timestamp <= ${weeklyEnd} + INTERVAL '1 week'
+      GROUP BY DATE_TRUNC('week', timestamp)
+    ) o ON d.date = o.date
+    ORDER BY d.date ASC
+  `).then((r: any) => r.rows)
 
-  // Get monthly totals
-  // If no time range provided, default to last 12 months for backward compatibility
-  let monthlyQuery = knex()("orders")
-    .select(
-      knex().raw("DATE_TRUNC('month', timestamp) as date"),
-      knex().raw("COUNT(*) as total"),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled",
-      ),
-      knex().raw(
-        "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
-      ),
-      knex().raw(
-        "COALESCE(AVG(CASE WHEN status = 'fulfilled' THEN cost END), 0) as average_fulfilled_value",
-      ),
-    )
-    .groupBy(knex().raw("DATE_TRUNC('month', timestamp)"))
-    .orderBy("date", "asc")
+  // Get monthly totals with zero-filled gaps
+  const monthlyStart = options?.startTime
+    ? `DATE_TRUNC('month', '${new Date(options.startTime * 1000).toISOString()}'::date)`
+    : `DATE_TRUNC('month', NOW() - INTERVAL '12 months')`
+  const monthlyEnd = options?.endTime
+    ? `DATE_TRUNC('month', '${new Date(options.endTime * 1000).toISOString()}'::date)`
+    : `DATE_TRUNC('month', NOW())`
 
-  if (!options?.startTime && !options?.endTime) {
-    monthlyQuery = monthlyQuery.where(
-      "timestamp",
-      ">=",
-      knex().raw("NOW() - INTERVAL '12 months'"),
-    )
-  } else {
-    monthlyQuery = buildTimeFilter(monthlyQuery)
-  }
-  const monthlyTotals = await monthlyQuery
+  const monthlyTotals = await knex().raw(`
+    SELECT
+      d.date,
+      COALESCE(o.total, 0) as total,
+      COALESCE(o.in_progress, 0) as in_progress,
+      COALESCE(o.fulfilled, 0) as fulfilled,
+      COALESCE(o.cancelled, 0) as cancelled,
+      COALESCE(o.not_started, 0) as not_started,
+      COALESCE(o.average_fulfilled_value, 0) as average_fulfilled_value
+    FROM generate_series(${monthlyStart}, ${monthlyEnd}, '1 month'::interval) AS d(date)
+    LEFT JOIN (
+      SELECT
+        DATE_TRUNC('month', timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
+        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
+        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started,
+        COALESCE(AVG(CASE WHEN status = 'fulfilled' THEN cost END), 0) as average_fulfilled_value
+      FROM orders
+      WHERE timestamp >= ${monthlyStart} AND timestamp <= ${monthlyEnd} + INTERVAL '1 month'
+      GROUP BY DATE_TRUNC('month', timestamp)
+    ) o ON d.date = o.date
+    ORDER BY d.date ASC
+  `).then((r: any) => r.rows)
 
   // Get top shops by fulfilled orders
   const topShops = await knex()("orders as o")
