@@ -246,6 +246,10 @@ export interface ListingSearchResult {
   /** ISO 8601 timestamp when listing was last updated */
   updated_at: string;
 
+  /** Game item catalog UUID — used by clients to fetch item-level aggregate
+   * data (e.g. buy orders for this item) from a search result. */
+  game_item_id: string;
+
   /** Game item name */
   game_item_name: string;
 
