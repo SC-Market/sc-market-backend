@@ -425,6 +425,7 @@ export class BuyOrdersV2Controller extends BaseController {
   @Get('search')
   public async searchBuyOrders(
     @Request() request: ExpressRequest,
+    @Query() text?: string,
     @Query() game_item_id?: string,
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,
@@ -471,6 +472,9 @@ export class BuyOrdersV2Controller extends BaseController {
       query = query.where('bo.visibility', 'public')
     }
 
+    if (text && text.trim().length > 0) {
+      query = query.whereRaw("gi.name ILIKE ?", [`%${text.trim()}%`])
+    }
     if (game_item_id) query = query.where('bo.game_item_id', game_item_id);
     if (quality_tier_min) query = query.where('bo.quality_tier_max', '>=', quality_tier_min);
     if (quality_tier_max) query = query.where('bo.quality_tier_min', '<=', quality_tier_max);
