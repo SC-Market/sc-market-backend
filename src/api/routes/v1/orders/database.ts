@@ -483,7 +483,7 @@ export async function getOrderAnalytics(options?: {
  * Get order settings for an entity (user or contractor).
  */
 export async function getOrderSettings(
-  entityType: "user" | "contractor",
+  entityType: "user" | "contractor" | "shop",
   entityId: string,
 ): Promise<DBOrderSetting[]> {
   return knex()<DBOrderSetting>("order_settings")
@@ -495,7 +495,7 @@ export async function getOrderSettings(
  * Get a specific order setting.
  */
 export async function getOrderSetting(
-  entityType: "user" | "contractor",
+  entityType: "user" | "contractor" | "shop",
   entityId: string,
   settingType:
     | "offer_message"

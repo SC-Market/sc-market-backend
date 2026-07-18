@@ -1353,6 +1353,80 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OrderSettingType": {
+				"type": "string",
+				"enum": [
+					"offer_message",
+					"order_message",
+					"require_availability",
+					"stock_subtraction_timing",
+					"min_order_size",
+					"max_order_size",
+					"min_order_value",
+					"max_order_value",
+					"allocation_mode"
+				]
+			},
+			"ShopOrderSettingResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"entity_type": {
+						"type": "string",
+						"enum": [
+							"shop"
+						],
+						"nullable": false
+					},
+					"entity_id": {
+						"type": "string"
+					},
+					"setting_type": {
+						"$ref": "#/components/schemas/OrderSettingType"
+					},
+					"message_content": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"entity_type",
+					"entity_id",
+					"setting_type",
+					"message_content",
+					"enabled",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpsertShopOrderSettingRequest": {
+				"properties": {
+					"message_content": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"message_content",
+					"enabled"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RequisitionLineItem": {
 				"description": "Requisition Order Types\n\nTypes for supplier requisition orders — orders where line items are anchored\nto game items (not listings). Suppliers decide which listing to fulfil from.\n\nA requisition order has orders.kind = 'requisition' and its line items live in\nrequisition_items instead of market_orders / order_market_items_v2.",
 				"properties": {
@@ -12514,6 +12588,152 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/order-settings": {
+			"get": {
+				"operationId": "GetShopOrderSettings",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ShopOrderSettingResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all order settings for this shop.",
+				"summary": "Get shop order settings",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/order-settings/{settingType}": {
+			"put": {
+				"operationId": "UpsertShopOrderSetting",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopOrderSettingResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create or update an order setting for this shop.",
+				"summary": "Upsert shop order setting",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "settingType",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpsertShopOrderSettingRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteShopOrderSetting",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete an order setting for this shop.",
+				"summary": "Delete shop order setting",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "path",
+						"name": "settingType",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

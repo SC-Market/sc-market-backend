@@ -75,7 +75,7 @@ export interface ShipsFileEntry {
 
 export interface OrderSetting {
   id: string
-  entity_type: "user" | "contractor"
+  entity_type: "user" | "contractor" | "shop"
   entity_id: string
   setting_type:
     | "offer_message"

@@ -21,6 +21,7 @@ import { has_permission } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { createNotificationWebhook } from "../../v1/util/webhooks.js"
 import * as notificationDb from "../../v1/notifications/database.js"
+import * as orderDb from "../../v1/orders/database.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -186,6 +187,33 @@ export interface ShopCustomersResponse {
   total: number
   page: number
   page_size: number
+}
+
+export type OrderSettingType =
+  | "offer_message"
+  | "order_message"
+  | "require_availability"
+  | "stock_subtraction_timing"
+  | "min_order_size"
+  | "max_order_size"
+  | "min_order_value"
+  | "max_order_value"
+  | "allocation_mode"
+
+export interface ShopOrderSettingResponse {
+  id: string
+  entity_type: "shop"
+  entity_id: string
+  setting_type: OrderSettingType
+  message_content: string
+  enabled: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface UpsertShopOrderSettingRequest {
+  message_content: string
+  enabled: boolean
 }
 
 // ─── Controller ──────────────────────────────────────────────────────────────
@@ -1092,6 +1120,154 @@ export class ShopsV2Controller extends BaseController {
       page: page || 0,
       page_size: limit,
     }
+  }
+
+  // ─── Order Settings ─────────────────────────────────────────────────────────
+
+  /**
+   * List all order settings for this shop.
+   * @summary Get shop order settings
+   */
+  @Get("{shopId}/order-settings")
+  @Security("loggedin")
+  public async getShopOrderSettings(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+  ): Promise<ShopOrderSettingResponse[]> {
+    this.request = request
+    const userId = this.getUserId()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden()
+    }
+
+    const settings = await orderDb.getOrderSettings("shop", shopId)
+    return settings.map((s) => ({
+      id: s.id,
+      entity_type: "shop" as const,
+      entity_id: s.entity_id,
+      setting_type: s.setting_type as OrderSettingType,
+      message_content: s.message_content,
+      enabled: s.enabled,
+      created_at: s.created_at instanceof Date ? s.created_at.toISOString() : String(s.created_at),
+      updated_at: s.updated_at instanceof Date ? s.updated_at.toISOString() : String(s.updated_at),
+    }))
+  }
+
+  /**
+   * Create or update an order setting for this shop.
+   * @summary Upsert shop order setting
+   */
+  @Put("{shopId}/order-settings/{settingType}")
+  @Security("loggedin")
+  public async upsertShopOrderSetting(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Path() settingType: string,
+    @Body() body: UpsertShopOrderSettingRequest,
+  ): Promise<ShopOrderSettingResponse> {
+    this.request = request
+    const userId = this.getUserId()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden()
+    }
+
+    const validTypes: OrderSettingType[] = [
+      "offer_message", "order_message", "require_availability",
+      "stock_subtraction_timing", "min_order_size", "max_order_size",
+      "min_order_value", "max_order_value", "allocation_mode",
+    ]
+    if (!validTypes.includes(settingType as OrderSettingType)) {
+      this.throwValidationError("Invalid setting type", [
+        { field: "settingType", message: `Must be one of: ${validTypes.join(", ")}` },
+      ])
+    }
+
+    const existing = await orderDb.getOrderSetting(
+      "shop",
+      shopId,
+      settingType as OrderSettingType,
+    )
+
+    let setting
+    if (existing) {
+      setting = await orderDb.updateOrderSetting(existing.id, {
+        message_content: body.message_content,
+        enabled: body.enabled,
+      })
+    } else {
+      setting = await orderDb.createOrderSetting({
+        entity_type: "shop",
+        entity_id: shopId,
+        setting_type: settingType as OrderSettingType,
+        message_content: body.message_content,
+        enabled: body.enabled,
+      })
+    }
+
+    return {
+      id: setting.id,
+      entity_type: "shop",
+      entity_id: setting.entity_id,
+      setting_type: setting.setting_type as OrderSettingType,
+      message_content: setting.message_content,
+      enabled: setting.enabled,
+      created_at: setting.created_at instanceof Date ? setting.created_at.toISOString() : String(setting.created_at),
+      updated_at: setting.updated_at instanceof Date ? setting.updated_at.toISOString() : String(setting.updated_at),
+    }
+  }
+
+  /**
+   * Delete an order setting for this shop.
+   * @summary Delete shop order setting
+   */
+  @Delete("{shopId}/order-settings/{settingType}")
+  @Security("loggedin")
+  public async deleteShopOrderSetting(
+    @Request() request: ExpressRequest,
+    @Path() shopId: string,
+    @Path() settingType: string,
+  ): Promise<{ success: boolean }> {
+    this.request = request
+    const userId = this.getUserId()
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+      this.throwForbidden()
+    }
+
+    const validTypes: OrderSettingType[] = [
+      "offer_message", "order_message", "require_availability",
+      "stock_subtraction_timing", "min_order_size", "max_order_size",
+      "min_order_value", "max_order_value", "allocation_mode",
+    ]
+    if (!validTypes.includes(settingType as OrderSettingType)) {
+      this.throwValidationError("Invalid setting type", [
+        { field: "settingType", message: `Must be one of: ${validTypes.join(", ")}` },
+      ])
+    }
+
+    const existing = await orderDb.getOrderSetting(
+      "shop",
+      shopId,
+      settingType as OrderSettingType,
+    )
+
+    if (!existing) {
+      this.throwNotFound("Order setting", settingType)
+    }
+
+    await orderDb.deleteOrderSetting(existing.id)
+    return { success: true }
   }
 }
 

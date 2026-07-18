@@ -20,7 +20,7 @@ const DEFAULT_ALLOCATION_MODE: AllocationMode = "auto"
  * Returns 'auto' if no setting exists.
  */
 export async function getAllocationMode(
-  entityType: "user" | "contractor",
+  entityType: "user" | "contractor" | "shop",
   entityId: string,
 ): Promise<AllocationMode> {
   const setting = await orderDb.getOrderSetting(
@@ -45,7 +45,7 @@ export async function getAllocationMode(
  * Set allocation mode for an entity (user or contractor).
  */
 export async function setAllocationMode(
-  entityType: "user" | "contractor",
+  entityType: "user" | "contractor" | "shop",
   entityId: string,
   mode: AllocationMode,
 ): Promise<DBOrderSetting> {

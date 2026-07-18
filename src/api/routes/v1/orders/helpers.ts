@@ -2173,11 +2173,40 @@ export async function getRelevantOrderSetting(
   logger.debug("Looking for relevant order setting", {
     sessionId: session.id,
     settingType,
+    shopId: session.shop_id,
     contractorId: session.contractor_id,
     assignedId: session.assigned_id,
   })
 
-  // If there's a contractor, use contractor settings only
+  // Priority 1: If session has shop_id, use shop-level settings
+  if (session.shop_id) {
+    logger.debug("Checking shop order setting", {
+      shopId: session.shop_id,
+      settingType,
+    })
+
+    const shopSetting = await orderDb.getOrderSetting(
+      "shop",
+      session.shop_id,
+      settingType,
+    )
+    if (shopSetting && shopSetting.enabled) {
+      logger.debug("Found enabled shop setting", {
+        settingId: shopSetting.id,
+        entityType: shopSetting.entity_type,
+        enabled: shopSetting.enabled,
+      })
+      return shopSetting
+    } else {
+      logger.debug("No enabled shop setting found", {
+        shopId: session.shop_id,
+        hasSetting: !!shopSetting,
+        enabled: shopSetting?.enabled,
+      })
+    }
+  }
+
+  // Priority 2: Fallback to contractor settings
   if (session.contractor_id) {
     logger.debug("Checking contractor order setting", {
       contractorId: session.contractor_id,
@@ -2203,11 +2232,9 @@ export async function getRelevantOrderSetting(
         enabled: contractorSetting?.enabled,
       })
     }
-    // Don't check assigned user if there's a contractor
-    return null
   }
 
-  // If no contractor, use assignee (assigned user) settings
+  // Priority 3: Fallback to assigned user settings
   if (session.assigned_id) {
     logger.debug("Checking assigned user order setting", {
       assignedId: session.assigned_id,
