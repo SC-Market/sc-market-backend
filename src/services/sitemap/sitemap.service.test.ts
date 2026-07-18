@@ -13,7 +13,7 @@ vi.mock("../../api/routes/v1/recruiting/database.js", () => ({
 
 function createChainMock(resolveValue: any = []) {
   const chain: any = {}
-  const methods = ["select", "where", "whereNotNull", "groupBy", "limit", "orderBy"]
+  const methods = ["select", "where", "whereNot", "whereNotNull", "groupBy", "limit", "orderBy"]
   for (const m of methods) {
     chain[m] = vi.fn(() => chain)
   }

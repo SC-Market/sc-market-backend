@@ -449,47 +449,76 @@ export async function getOfferAnalytics() {
   // which checks the most recent order_offers row when session is closed.
   const resolvedStatus = `get_offer_status(offer_sessions.id, offer_sessions.customer_id, offer_sessions.status)`
 
-  // Daily totals (last 30 days)
-  const dailyTotals = await knex()("offer_sessions")
-    .select(
-      knex().raw("DATE(timestamp) as date"),
-      knex().raw("COUNT(*) as total"),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active`),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted`),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected`),
-    )
-    .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '30 days'"))
-    .groupBy(knex().raw("DATE(timestamp)"))
-    .orderBy("date", "asc")
+  // Daily totals (last 30 days) with zero-filled gaps
+  const dailyTotals = await knex().raw(`
+    SELECT
+      d.date,
+      COALESCE(o.total, 0) as total,
+      COALESCE(o.active, 0) as active,
+      COALESCE(o.accepted, 0) as accepted,
+      COALESCE(o.rejected, 0) as rejected
+    FROM generate_series((NOW() - INTERVAL '30 days')::date, NOW()::date, '1 day'::interval) AS d(date)
+    LEFT JOIN (
+      SELECT
+        DATE(timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active,
+        COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted,
+        COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected
+      FROM offer_sessions
+      WHERE timestamp >= NOW() - INTERVAL '30 days'
+      GROUP BY DATE(timestamp)
+    ) o ON d.date = o.date
+    ORDER BY d.date ASC
+  `).then((r: any) => r.rows)
 
-  // Weekly totals (last 12 weeks)
-  const weeklyTotals = await knex()("offer_sessions")
-    .select(
-      knex().raw("DATE_TRUNC('week', timestamp) as date"),
-      knex().raw("COUNT(*) as total"),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active`),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted`),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected`),
-    )
-    .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '12 weeks'"))
-    .groupBy(knex().raw("DATE_TRUNC('week', timestamp)"))
-    .orderBy("date", "asc")
+  // Weekly totals (last 12 weeks) with zero-filled gaps
+  const weeklyTotals = await knex().raw(`
+    SELECT
+      d.date,
+      COALESCE(o.total, 0) as total,
+      COALESCE(o.active, 0) as active,
+      COALESCE(o.accepted, 0) as accepted,
+      COALESCE(o.rejected, 0) as rejected
+    FROM generate_series(DATE_TRUNC('week', NOW() - INTERVAL '12 weeks'), DATE_TRUNC('week', NOW()), '1 week'::interval) AS d(date)
+    LEFT JOIN (
+      SELECT
+        DATE_TRUNC('week', timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active,
+        COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted,
+        COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected
+      FROM offer_sessions
+      WHERE timestamp >= DATE_TRUNC('week', NOW() - INTERVAL '12 weeks')
+      GROUP BY DATE_TRUNC('week', timestamp)
+    ) o ON d.date = o.date
+    ORDER BY d.date ASC
+  `).then((r: any) => r.rows)
 
-  // Monthly totals (last 12 months)
-  const monthlyTotals = await knex()("offer_sessions")
-    .select(
-      knex().raw("DATE_TRUNC('month', timestamp) as date"),
-      knex().raw("COUNT(*) as total"),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active`),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted`),
-      knex().raw(`COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected`),
-      knex().raw(
-        `COALESCE(AVG(CASE WHEN ${resolvedStatus} = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) END), 0) as average_accepted_value`,
-      ),
-    )
-    .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '12 months'"))
-    .groupBy(knex().raw("DATE_TRUNC('month', timestamp)"))
-    .orderBy("date", "asc")
+  // Monthly totals (last 12 months) with zero-filled gaps
+  const monthlyTotals = await knex().raw(`
+    SELECT
+      d.date,
+      COALESCE(o.total, 0) as total,
+      COALESCE(o.active, 0) as active,
+      COALESCE(o.accepted, 0) as accepted,
+      COALESCE(o.rejected, 0) as rejected,
+      COALESCE(o.average_accepted_value, 0) as average_accepted_value
+    FROM generate_series(DATE_TRUNC('month', NOW() - INTERVAL '12 months'), DATE_TRUNC('month', NOW()), '1 month'::interval) AS d(date)
+    LEFT JOIN (
+      SELECT
+        DATE_TRUNC('month', timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active,
+        COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted,
+        COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected,
+        COALESCE(AVG(CASE WHEN ${resolvedStatus} = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) END), 0) as average_accepted_value
+      FROM offer_sessions
+      WHERE timestamp >= DATE_TRUNC('month', NOW() - INTERVAL '12 months')
+      GROUP BY DATE_TRUNC('month', timestamp)
+    ) o ON d.date = o.date
+    ORDER BY d.date ASC
+  `).then((r: any) => r.rows)
 
   // Top contractors
   const contractorResolvedStatus = `get_offer_status(os.id, os.customer_id, os.status)`
