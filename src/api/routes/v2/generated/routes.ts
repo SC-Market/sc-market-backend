@@ -547,6 +547,35 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderSettingType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["offer_message"]},{"dataType":"enum","enums":["order_message"]},{"dataType":"enum","enums":["require_availability"]},{"dataType":"enum","enums":["stock_subtraction_timing"]},{"dataType":"enum","enums":["min_order_size"]},{"dataType":"enum","enums":["max_order_size"]},{"dataType":"enum","enums":["min_order_value"]},{"dataType":"enum","enums":["max_order_value"]},{"dataType":"enum","enums":["allocation_mode"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopOrderSettingResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "entity_type": {"dataType":"enum","enums":["shop"],"required":true},
+            "entity_id": {"dataType":"string","required":true},
+            "setting_type": {"ref":"OrderSettingType","required":true},
+            "message_content": {"dataType":"string","required":true},
+            "enabled": {"dataType":"boolean","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpsertShopOrderSettingRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "message_content": {"dataType":"string","required":true},
+            "enabled": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RequisitionLineItem": {
         "dataType": "refObject",
         "properties": {
@@ -4502,6 +4531,105 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getShopCustomers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getShopOrderSettings: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+        };
+        app.get('/shops/:shopId/order-settings',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getShopOrderSettings)),
+
+            async function ShopsV2Controller_getShopOrderSettings(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getShopOrderSettings, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getShopOrderSettings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_upsertShopOrderSetting: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                settingType: {"in":"path","name":"settingType","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpsertShopOrderSettingRequest"},
+        };
+        app.put('/shops/:shopId/order-settings/:settingType',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.upsertShopOrderSetting)),
+
+            async function ShopsV2Controller_upsertShopOrderSetting(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_upsertShopOrderSetting, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'upsertShopOrderSetting',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_deleteShopOrderSetting: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                settingType: {"in":"path","name":"settingType","required":true,"dataType":"string"},
+        };
+        app.delete('/shops/:shopId/order-settings/:settingType',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.deleteShopOrderSetting)),
+
+            async function ShopsV2Controller_deleteShopOrderSetting(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_deleteShopOrderSetting, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'deleteShopOrderSetting',
                 controller,
                 response,
                 next,
