@@ -232,10 +232,8 @@ export class BlueprintsController extends BaseController {
       }
 
       // Apply user ownership filter — includes default-source blueprints (everyone has them)
-      if (user_owned_only) {
-        if (!user_id) {
-          this.throwUnauthorized("User must be authenticated to filter by ownership")
-        }
+      // Silently skip if not logged in (graceful degradation for shared URLs)
+      if (user_owned_only && user_id) {
 
         blueprintsQuery = blueprintsQuery
           .leftJoin("user_blueprint_inventory as ubi", function () {
