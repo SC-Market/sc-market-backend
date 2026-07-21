@@ -4692,11 +4692,15 @@
 				"additionalProperties": false
 			},
 			"GameItemListingResult": {
-				"description": "Listing result for game item listings endpoint",
+				"description": "Per-variant listing result for game item listings endpoint.\n\nEach row represents a single (listing × quality variant) — a cart-ready\ncomparable. A listing that offers multiple quality tiers produces one row\nper variant.",
 				"properties": {
 					"listing_id": {
 						"type": "string",
 						"description": "Listing UUID"
+					},
+					"variant_id": {
+						"type": "string",
+						"description": "Variant UUID (the item_variants.variant_id for this row)"
 					},
 					"title": {
 						"type": "string",
@@ -4719,35 +4723,33 @@
 						"type": "string",
 						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
-					"price_min": {
+					"price": {
 						"type": "number",
 						"format": "double",
-						"description": "Minimum price across all variants in this listing"
-					},
-					"price_max": {
-						"type": "number",
-						"format": "double",
-						"description": "Maximum price across all variants in this listing"
+						"description": "Price for this variant"
 					},
 					"quantity_available": {
 						"type": "number",
 						"format": "double",
-						"description": "Total quantity available in this listing"
+						"description": "Quantity available for this variant (summed across its lots)"
 					},
-					"quality_tier_min": {
+					"quality_tier": {
 						"type": "number",
 						"format": "double",
-						"description": "Minimum quality tier in this listing"
+						"description": "Quality tier for this variant (1-5), if defined"
 					},
-					"quality_tier_max": {
+					"quality_value": {
 						"type": "number",
 						"format": "double",
-						"description": "Maximum quality tier in this listing"
+						"description": "Numeric quality value for this variant, if defined"
 					},
-					"variant_count": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of variants in this listing"
+					"variant_display_name": {
+						"type": "string",
+						"description": "Variant display name (from item_variants.display_name)"
+					},
+					"variant_short_name": {
+						"type": "string",
+						"description": "Variant short name (from item_variants.short_name)"
 					},
 					"created_at": {
 						"type": "string",
@@ -4756,15 +4758,14 @@
 				},
 				"required": [
 					"listing_id",
+					"variant_id",
 					"title",
 					"shop_id",
 					"shop_name",
 					"shop_rating",
 					"shop_slug",
-					"price_min",
-					"price_max",
+					"price",
 					"quantity_available",
-					"variant_count",
 					"created_at"
 				],
 				"type": "object",
@@ -4789,12 +4790,12 @@
 							"$ref": "#/components/schemas/GameItemListingResult"
 						},
 						"type": "array",
-						"description": "Individual listings for this game item"
+						"description": "Per-variant listing rows for this game item (one row per listing × variant)"
 					},
 					"total": {
 						"type": "number",
 						"format": "double",
-						"description": "Total number of listings (for pagination)"
+						"description": "Total number of variant rows (for pagination)"
 					},
 					"page": {
 						"type": "number",
@@ -18526,6 +18527,14 @@
 				],
 				"security": [],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "query",
 						"name": "game_item_id",
