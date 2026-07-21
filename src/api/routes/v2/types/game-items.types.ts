@@ -61,11 +61,18 @@ export interface GameItemQualityDistribution {
 }
 
 /**
- * Listing result for game item listings endpoint
+ * Per-variant listing result for game item listings endpoint.
+ *
+ * Each row represents a single (listing × quality variant) — a cart-ready
+ * comparable. A listing that offers multiple quality tiers produces one row
+ * per variant.
  */
 export interface GameItemListingResult {
   /** Listing UUID */
   listing_id: string
+
+  /** Variant UUID (the item_variants.variant_id for this row) */
+  variant_id: string
 
   /** Listing title */
   title: string
@@ -82,23 +89,23 @@ export interface GameItemListingResult {
   /** Shop slug — use for profile links: /shops/:slug */
   shop_slug: string
 
-  /** Minimum price across all variants in this listing */
-  price_min: number
+  /** Price for this variant */
+  price: number
 
-  /** Maximum price across all variants in this listing */
-  price_max: number
-
-  /** Total quantity available in this listing */
+  /** Quantity available for this variant (summed across its lots) */
   quantity_available: number
 
-  /** Minimum quality tier in this listing */
-  quality_tier_min?: number
+  /** Quality tier for this variant (1-5), if defined */
+  quality_tier?: number
 
-  /** Maximum quality tier in this listing */
-  quality_tier_max?: number
+  /** Numeric quality value for this variant, if defined */
+  quality_value?: number
 
-  /** Number of variants in this listing */
-  variant_count: number
+  /** Variant display name (from item_variants.display_name) */
+  variant_display_name?: string
+
+  /** Variant short name (from item_variants.short_name) */
+  variant_short_name?: string
 
   /** Listing created timestamp */
   created_at: string
@@ -131,10 +138,10 @@ export interface GetGameItemListingsResponse {
   /** Quality distribution across all listings */
   quality_distribution: GameItemQualityDistribution[]
 
-  /** Individual listings for this game item */
+  /** Per-variant listing rows for this game item (one row per listing × variant) */
   listings: GameItemListingResult[]
 
-  /** Total number of listings (for pagination) */
+  /** Total number of variant rows (for pagination) */
   total: number
 
   /** Current page number */

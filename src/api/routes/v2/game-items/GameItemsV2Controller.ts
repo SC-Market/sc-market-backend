@@ -249,77 +249,112 @@ export class GameItemsV2Controller extends BaseController {
         }))
 
       // ========================================================================
-      // Part 3: Get individual listings (Requirements 38.2, 38.7, 38.8)
+      // Part 3: Get per-variant listing rows (Requirements 38.2, 38.7, 38.8)
       // ========================================================================
-      // Build query for individual listings using listing_search view (shop-based)
-      let listingsQuery = knex("listing_search as ls")
-        .select(
-          "ls.listing_id",
-          "ls.title",
-          "ls.shop_id",
-          "ls.shop_name",
-          "ls.shop_slug",
-          "ls.quantity_available",
-          "ls.variant_count",
-          "ls.price_min",
-          "ls.price_max",
-          "ls.quality_tier_min",
-          "ls.quality_tier_max",
-          "ls.created_at",
-          knex.raw(`(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) AS shop_rating`),
-        )
-        .where("ls.game_item_id", gameItemId)
-        .where("ls.status", "active")
+      // One row per (listing_item × quality variant). Prices resolve unified vs
+      // per_variant the same way as ListingsV2Controller.getListingDetail:
+      //   unified     -> li.base_price
+      //   per_variant -> COALESCE(vp.price, li.base_price)
+      // Quantity is summed across that variant's listed lots; only variants with
+      // listed stock (SUM > 0) are returned.
+      const priceExpr = `CASE WHEN li.pricing_mode = 'unified' THEN li.base_price ELSE COALESCE(vp.price, li.base_price) END`
 
-      // Apply quality tier filter if provided (Requirement 38.7)
-      if (quality_tier !== undefined) {
-        listingsQuery = listingsQuery.where(function () {
-          this.whereNull("ls.quality_tier_min")
-            .orWhere("ls.quality_tier_min", "<=", quality_tier)
-        }).where(function () {
-          this.whereNull("ls.quality_tier_max")
-            .orWhere("ls.quality_tier_max", ">=", quality_tier)
+      let listingsQuery = knex("listing_item_lots as lil")
+        .join("item_variants as iv", "lil.variant_id", "iv.variant_id")
+        .join("listing_items as li", "lil.item_id", "li.item_id")
+        .join("listings as l", "li.listing_id", "l.listing_id")
+        .join("shops as s", "l.shop_id", "s.shop_id")
+        .leftJoin("variant_pricing as vp", function () {
+          this.on("vp.item_id", "=", "li.item_id").andOn(
+            "vp.variant_id",
+            "=",
+            "lil.variant_id",
+          )
         })
+        .select(
+          "l.listing_id",
+          "lil.variant_id",
+          "l.title",
+          "l.shop_id",
+          "s.name as shop_name",
+          "s.slug as shop_slug",
+          "l.created_at",
+          "iv.display_name as variant_display_name",
+          "iv.short_name as variant_short_name",
+          knex.raw(
+            "(iv.attributes->>'quality_tier')::integer as quality_tier",
+          ),
+          knex.raw(
+            "(iv.attributes->>'quality_value')::numeric as quality_value",
+          ),
+          knex.raw("SUM(lil.quantity_total)::integer as quantity_available"),
+          knex.raw(`${priceExpr} as price`),
+          knex.raw(
+            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = l.shop_id) AS shop_rating`,
+          ),
+        )
+        .where("li.game_item_id", gameItemId)
+        .where("l.status", "active")
+        .where("lil.listed", true)
+        .groupBy(
+          "l.listing_id",
+          "lil.variant_id",
+          "l.title",
+          "l.shop_id",
+          "s.name",
+          "s.slug",
+          "l.created_at",
+          "iv.display_name",
+          "iv.short_name",
+          "iv.attributes",
+          "li.pricing_mode",
+          "li.base_price",
+          "vp.price",
+        )
+        .having(knex.raw("SUM(lil.quantity_total)"), ">", 0)
+
+      // Apply quality tier filter at the variant level (Requirement 38.7)
+      if (quality_tier !== undefined) {
+        listingsQuery = listingsQuery.whereRaw(
+          "(iv.attributes->>'quality_tier')::integer = ?",
+          [quality_tier],
+        )
       }
 
-      // Get total count for pagination
-      const countQuery = listingsQuery
-        .clone()
-        .clearSelect()
-        .clearOrder()
-        .count("* as count")
-      const [{ count: totalCount }] = await countQuery
-      const total = parseInt(String(totalCount), 10)
+      // Get total count of variant rows for pagination (Requirement 38.9)
+      const countResult = await knex.raw(
+        `SELECT COUNT(*)::integer as count FROM (${listingsQuery
+          .clone()
+          .clearOrder()
+          .toQuery()}) as sub`,
+      )
+      const total = parseInt(String(countResult.rows[0].count), 10)
 
-      // Apply sorting (Requirement 38.8)
+      // Apply sorting at the variant level (Requirement 38.8)
       switch (validatedSortBy) {
         case "price":
-          listingsQuery = listingsQuery.orderBy(
-            "ls.price_min",
-            validatedSortOrder,
+          listingsQuery = listingsQuery.orderByRaw(
+            `${priceExpr} ${validatedSortOrder}`,
           )
           break
         case "quality":
-          listingsQuery = listingsQuery.orderBy(
-            "ls.quality_tier_max",
-            validatedSortOrder,
+          listingsQuery = listingsQuery.orderByRaw(
+            `(iv.attributes->>'quality_tier')::integer ${validatedSortOrder}`,
           )
           break
         case "quantity":
-          listingsQuery = listingsQuery.orderBy(
-            "ls.quantity_available",
-            validatedSortOrder,
+          listingsQuery = listingsQuery.orderByRaw(
+            `SUM(lil.quantity_total) ${validatedSortOrder}`,
           )
           break
         case "shop_rating":
           listingsQuery = listingsQuery.orderByRaw(
-            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${validatedSortOrder}`,
+            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = l.shop_id) ${validatedSortOrder}`,
           )
           break
         default:
-          listingsQuery = listingsQuery.orderBy(
-            "ls.price_min",
-            validatedSortOrder,
+          listingsQuery = listingsQuery.orderByRaw(
+            `${priceExpr} ${validatedSortOrder}`,
           )
       }
 
@@ -330,27 +365,35 @@ export class GameItemsV2Controller extends BaseController {
       // Execute query
       const listingsResults = await listingsQuery
 
-      logger.info("Listings fetched successfully", {
+      logger.info("Variant listings fetched successfully", {
         game_item_id: gameItemId,
-        listing_count: listingsResults.length,
+        variant_row_count: listingsResults.length,
         total,
       })
 
-      // Transform results to listing format (Requirement 38.2)
+      // Transform results to per-variant listing format (Requirement 38.2)
       const listings: GameItemListingResult[] = listingsResults.map(
         (row: Record<string, unknown>) => ({
           listing_id: row.listing_id as string,
+          variant_id: row.variant_id as string,
           title: row.title as string,
           shop_id: row.shop_id as string,
           shop_name: (row.shop_name as string) || "Unknown",
           shop_rating: parseFloat(row.shop_rating as string) || 0,
           shop_slug: (row.shop_slug as string) || "",
-          price_min: parseInt(row.price_min as string, 10) || 0,
-          price_max: parseInt(row.price_max as string, 10) || 0,
+          price: parseInt(row.price as string, 10) || 0,
           quantity_available: (row.quantity_available as number) || 0,
-          quality_tier_min: (row.quality_tier_min as number) || undefined,
-          quality_tier_max: (row.quality_tier_max as number) || undefined,
-          variant_count: (row.variant_count as number) || 0,
+          quality_tier:
+            row.quality_tier != null
+              ? (row.quality_tier as number)
+              : undefined,
+          quality_value:
+            row.quality_value != null
+              ? parseFloat(row.quality_value as string)
+              : undefined,
+          variant_display_name:
+            (row.variant_display_name as string) || undefined,
+          variant_short_name: (row.variant_short_name as string) || undefined,
           created_at: (row.created_at as Date).toISOString(),
         }),
       )
