@@ -16,6 +16,7 @@ import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
 import { formatMarketUrl } from "./urls.js"
 import { env } from "../../../../config/env.js"
+import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 
 /**
  * Get the SC Market logo URL based on environment
@@ -501,20 +502,16 @@ export async function sendUserOfferWebhook(order: DBOfferSession) {
 }
 
 async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
-  // Validate webhook URL format (webhook_url is guaranteed to exist by type)
-  let url: URL
-  try {
-    url = new URL(webhook.webhook_url)
-    if (url.protocol !== "https:" && url.protocol !== "http:") {
-      throw new Error(`Invalid webhook URL protocol: ${url.protocol}`)
-    }
-  } catch (e) {
-    if (e instanceof Error) {
-      throw new Error(
-        `Invalid webhook URL format: ${webhook.webhook_url} - ${e.message}`,
-      )
-    }
-    throw new Error(`Invalid webhook URL format: ${webhook.webhook_url}`)
+  // SSRF defense: only send to allowlisted Discord webhook hosts. This guards
+  // pre-existing bad rows created before creation-time validation existed. On
+  // failure we skip sending and log rather than throwing, so a single bad row
+  // never breaks the surrounding event flow.
+  const validation = validateWebhookUrl(webhook.webhook_url)
+  if (!validation.valid) {
+    logger.warn(
+      `Skipping webhook ${webhook.webhook_id}: disallowed webhook URL (${validation.reason})`,
+    )
+    return
   }
 
   // Create AbortController for timeout

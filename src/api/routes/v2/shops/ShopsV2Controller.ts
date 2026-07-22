@@ -21,6 +21,7 @@ import { computeShopBadges } from "../../../../services/shops/shop-badges.servic
 import { has_permission, is_member } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { createNotificationWebhook } from "../../v1/util/webhooks.js"
+import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 import * as notificationDb from "../../v1/notifications/database.js"
 import * as orderDb from "../../v1/orders/database.js"
 
@@ -864,6 +865,13 @@ export class ShopsV2Controller extends BaseController {
 
     if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
       this.throwForbidden()
+    }
+
+    const webhookValidation = validateWebhookUrl(body.webhook_url)
+    if (!webhookValidation.valid) {
+      this.throwValidationError("Invalid webhook URL", [
+        { field: "webhook_url", message: webhookValidation.reason! },
+      ])
     }
 
     const webhook = await createNotificationWebhook(

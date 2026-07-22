@@ -11,6 +11,7 @@ import { cdn as cdn } from "../../../../clients/cdn/cdn.js"
 import { AvailabilityBody as AvailabilityBody } from "../../../../clients/database/db-models.js"
 import { getUserRating as getUserRating } from "../util/formatting.js"
 import { createNotificationWebhook as createNotificationWebhook } from "../util/webhooks.js"
+import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { authorizeProfile as authorizeProfile } from "./helpers.js"
 import { get_sentinel as get_sentinel } from "./helpers.js"
@@ -582,9 +583,14 @@ export const profile_post_webhook_create: RequestHandler = async (req, res) => {
     actions: string[]
   } = req.body
 
-  // TODO: Check for actual URL
   if (!webhook_url || !name) {
     res.status(400).json({ error: "Invalid arguments" })
+    return
+  }
+
+  const webhookValidation = validateWebhookUrl(webhook_url)
+  if (!webhookValidation.valid) {
+    res.status(400).json({ error: webhookValidation.reason })
     return
   }
 
