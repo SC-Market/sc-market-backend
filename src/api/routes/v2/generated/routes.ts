@@ -3076,21 +3076,63 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["shop"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string.unknown_": {
+    "WidgetScope": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"any"},"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"kind":{"dataType":"enum","enums":["me"],"required":true}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"kind":{"dataType":"enum","enums":["current_context"],"required":true}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"kind":{"dataType":"enum","enums":["all_orgs"],"required":true}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"kind":{"dataType":"enum","enums":["all_shops"],"required":true}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"spectrumId":{"dataType":"string","required":true},"kind":{"dataType":"enum","enums":["specific_org"],"required":true}}},{"dataType":"nestedObjectLiteral","nestedProperties":{"shopId":{"dataType":"string","required":true},"kind":{"dataType":"enum","enums":["specific_shop"],"required":true}}}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DashboardLayoutResponse": {
+    "WidgetLayout": {
+        "dataType": "refObject",
+        "properties": {
+            "x": {"dataType":"double","required":true},
+            "y": {"dataType":"double","required":true},
+            "w": {"dataType":"double","required":true},
+            "h": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.string-or-number-or-boolean_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"},{"dataType":"boolean"}]},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DashboardWidget": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "scope": {"ref":"WidgetScope","required":true},
+            "layout": {"ref":"WidgetLayout","required":true},
+            "settings": {"ref":"Record_string.string-or-number-or-boolean_"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DashboardConfig": {
+        "dataType": "refObject",
+        "properties": {
+            "version": {"dataType":"double","required":true},
+            "widgets": {"dataType":"array","array":{"dataType":"refObject","ref":"DashboardWidget"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DashboardLayout": {
         "dataType": "refObject",
         "properties": {
             "owner_type": {"ref":"DashboardOwnerType","required":true},
             "owner_id": {"dataType":"string","required":true},
-            "config": {"ref":"Record_string.unknown_","required":true},
+            "config": {"ref":"DashboardConfig","required":true},
             "updated_by": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DashboardLayoutResponse": {
+        "dataType": "refAlias",
+        "type": {"ref":"DashboardLayout","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateDashboardLayoutRequest": {
@@ -3098,7 +3140,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "owner_type": {"ref":"DashboardOwnerType","required":true},
             "owner_id": {"dataType":"string","required":true},
-            "config": {"ref":"Record_string.unknown_","required":true},
+            "config": {"ref":"DashboardConfig","required":true},
         },
         "additionalProperties": false,
     },

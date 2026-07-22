@@ -2,22 +2,18 @@ import { Get, Put, Route, Tags, Request, Body, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import * as dashboardService from "../../../../services/dashboard/dashboard.service.js"
+import type {
+  DashboardConfig,
+  DashboardLayout,
+  DashboardOwnerType,
+} from "./dashboard.types.js"
 
-type DashboardOwnerType = "user" | "org" | "shop"
-
-interface DashboardLayoutResponse {
-  owner_type: DashboardOwnerType
-  owner_id: string
-  /** Opaque DashboardConfig blob (widgets, scopes, grid layout). Validated client-side. */
-  config: Record<string, unknown>
-  updated_by: string
-  updated_at: string
-}
+type DashboardLayoutResponse = DashboardLayout
 
 interface UpdateDashboardLayoutRequest {
   owner_type: DashboardOwnerType
   owner_id: string
-  config: Record<string, unknown>
+  config: DashboardConfig
 }
 
 @Route("dashboard")

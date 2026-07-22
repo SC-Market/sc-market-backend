@@ -11,22 +11,17 @@ import {
   NotFoundError,
 } from "../../api/routes/v1/util/errors.js"
 import { ErrorCode } from "../../api/routes/v1/util/error-codes.js"
+import type {
+  DashboardConfig,
+  DashboardLayout,
+  DashboardOwnerType,
+} from "../../api/routes/v2/dashboard/dashboard.types.js"
 
-export type DashboardOwnerType = "user" | "org" | "shop"
-
-/**
- * A DashboardConfig is stored/returned as an opaque JSON blob. Shape is validated
- * and versioned on the frontend; the backend only persists and size-guards it.
- */
-export type DashboardConfig = Record<string, unknown>
-
-export interface DashboardLayout {
-  owner_type: DashboardOwnerType
-  owner_id: string
-  config: DashboardConfig
-  updated_by: string
-  updated_at: string
-}
+export type {
+  DashboardConfig,
+  DashboardLayout,
+  DashboardOwnerType,
+} from "../../api/routes/v2/dashboard/dashboard.types.js"
 
 // Mirror of the DB CHECK constraint so we return a clean 400 instead of a
 // constraint violation. 256 KB is far above any realistic dashboard.
