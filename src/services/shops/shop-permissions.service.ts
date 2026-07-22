@@ -19,6 +19,8 @@ export interface Shop {
   created_at: string
   updated_at: string
   badge_ids: string[]
+  official_server_id: string | null
+  discord_thread_channel_id: string | null
 }
 
 /**

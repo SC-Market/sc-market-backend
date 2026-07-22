@@ -52,6 +52,10 @@ export interface UpdateShopRequest {
   default_pickup_method?: string | null
   tags?: string[]
   accepts_custom_orders?: boolean
+  /** Discord server (guild) ID where order/offer threads are created for this shop */
+  official_server_id?: string | null
+  /** Discord channel ID under which order/offer threads are created for this shop */
+  discord_thread_channel_id?: string | null
 }
 
 export interface TransferShopRequest {
@@ -91,6 +95,10 @@ export interface ShopResponse {
   created_at: string
   updated_at: string
   banner_url: string | null
+  /** Discord server (guild) ID where order/offer threads are created for this shop */
+  official_server_id: string | null
+  /** Discord channel ID under which order/offer threads are created for this shop */
+  discord_thread_channel_id: string | null
   /** Seller reputation badges, computed server-side from shop metrics + owner data */
   badge_ids: string[]
   /** Granular permissions for the current user on this shop (only in /shops/mine) */
@@ -706,6 +714,8 @@ export class ShopsV2Controller extends BaseController {
     if (body.default_pickup_method !== undefined) updates.default_pickup_method = body.default_pickup_method
     if (body.tags !== undefined) updates.tags = body.tags
     if (body.accepts_custom_orders !== undefined) updates.accepts_custom_orders = body.accepts_custom_orders
+    if (body.official_server_id !== undefined) updates.official_server_id = body.official_server_id
+    if (body.discord_thread_channel_id !== undefined) updates.discord_thread_channel_id = body.discord_thread_channel_id
 
     const [updated] = await db("shops").where("shop_id", shopId).update(updates).returning("*")
     return await shopToResponse(updated)
@@ -1313,6 +1323,8 @@ async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_ord
     updated_at: shop.updated_at,
     banner_url: await resolveImageUrl(db, shop.banner),
     logo_url: await resolveImageUrl(db, shop.logo),
+    official_server_id: shop.official_server_id ?? null,
+    discord_thread_channel_id: shop.discord_thread_channel_id ?? null,
     badge_ids: shop.badge_ids || [],
   }
 }

@@ -814,6 +814,16 @@
 						"type": "string",
 						"nullable": true
 					},
+					"official_server_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Discord server (guild) ID where order/offer threads are created for this shop"
+					},
+					"discord_thread_channel_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Discord channel ID under which order/offer threads are created for this shop"
+					},
 					"badge_ids": {
 						"items": {
 							"type": "string"
@@ -869,6 +879,8 @@
 					"created_at",
 					"updated_at",
 					"banner_url",
+					"official_server_id",
+					"discord_thread_channel_id",
 					"badge_ids",
 					"logo_url"
 				],
@@ -1128,6 +1140,16 @@
 					},
 					"accepts_custom_orders": {
 						"type": "boolean"
+					},
+					"official_server_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Discord server (guild) ID where order/offer threads are created for this shop"
+					},
+					"discord_thread_channel_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Discord channel ID under which order/offer threads are created for this shop"
 					}
 				},
 				"type": "object",
