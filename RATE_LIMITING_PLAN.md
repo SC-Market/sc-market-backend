@@ -10,6 +10,34 @@ owned by other agents — this plan defines *what* they should do.
 
 ---
 
+## 0. Prerequisites (frontend fixes that must land first)
+
+A frontend request-pattern audit found two client behaviours that, if enforcement
+ships before they are fixed, will cause false-positive 429s and force us to set the
+limits far too high. **These are Phase 0 — they must land before server-side
+enforcement is enabled (or the limits calibrated to their true intended values).**
+
+1. **Retry amplification — 429 must be made non-retryable (blocking prerequisite).**
+   The RTK Query slices (`generatedApiV2.ts`, `generatedApi.ts`) retried on 429 up to
+   3×, so every rate-limited request became **4 requests** against the same bucket. A
+   separate change makes 429 non-retryable. **Rate limiting depends on this fix landing
+   first**: until it does, any limit we set is effectively breached at ¼ of its nominal
+   value and any 429 triggers a retry storm that deepens the breach. Only once retries
+   no longer 4× a breach can the limits below be set at their true intended values
+   (the floors in §3/§4 assume 1× — post-fix — behaviour).
+
+2. **Market/command search debounce (co-requisite).** `ListingSearchV2.tsx`'s main
+   search box was **undebounced — 1 request per keystroke**; `CommandPalette` used only
+   a 200 ms throttle. A separate change adds ~400 ms true debounce. This is a
+   co-requisite for the search-endpoint classification in §4: even with the debounce,
+   search is classified as a read tier (not "expensive"), and without the debounce even
+   a generous read tier would be tripped by fast typists.
+
+**Sequencing:** do not enable V2/auth enforcement (Phases 1-3) until fix #1 is
+deployed. Fix #2 should land together with, or before, the search-endpoint limits.
+
+---
+
 ## 1. Current-state summary
 
 ### What already exists
@@ -177,13 +205,21 @@ Recommended dedicated limiters (new configs in `enhanced-ratelimiting.ts`, or re
 
 | Route | Method | Limiter (per IP) | Rationale |
 |---|---|---|---|
-| `/api/auth/refresh` + `/auth/refresh` | POST | **authRefreshLimit** ~30/min/IP | Called routinely by the SPA on token expiry; must not lock out a legit tab, but throttle refresh-token brute force / rotation abuse. |
-| `/auth/discord`, `/auth/citizenid` (init) | GET | **authInitLimit** ~20/min/IP | OAuth kickoff; low legitimate rate, cap redirect-loop / state-flooding. |
-| `/auth/discord/callback`, `/auth/citizenid/callback`, `/auth/citizenid/link/callback` | GET | **authCallbackLimit** ~20/min/IP | Attacker-controllable `state`/`code`; each hit does crypto verify + DB work. |
+| `/api/auth/refresh` + `/auth/refresh` | POST | **authRefreshLimit** ~60-120/min/IP | Called routinely by the SPA on token expiry. For a single user this is ~0.08/min (single-flight mutex + 30 s circuit breaker), so 30/min would be ample — **but the key is per-IP, and behind CGNAT / corporate NAT many distinct users share one IP.** Floor raised to **60-120/min/IP** so a shared egress IP for a modest cluster of users doesn't lock everyone out. Still throttles refresh-token brute force / rotation abuse. Where feasible, prefer keying partly on session/user rather than IP alone. |
+| `/auth/discord`, `/auth/citizenid` (init) | GET | **authInitLimit** ~20/min/IP | OAuth kickoff; low legitimate rate, cap redirect-loop / state-flooding. Low enough NAT concern (init is rare per user), but revisit if NAT'd users report lockouts. |
+| `/auth/discord/callback`, `/auth/citizenid/callback`, `/auth/citizenid/link/callback` | GET | **authCallbackLimit** ~60/min/IP | Attacker-controllable `state`/`code`; each hit does crypto verify + DB work. Raised from ~20 to **~60/min/IP** because callbacks aggregate across all users behind a shared NAT egress IP during concurrent logins; 20 would false-positive a busy office/campus. |
 | `/auth/citizenid/link` | GET | authInitLimit ~20/min/IP | Authenticated but cheap; IP key fine. |
 | `POST /logout`, `POST /auth/jwt-logout` | POST | **authLogoutLimit** ~30/min/IP | Cheap but revokes tokens + DB writes; cap abuse. |
 | `GET /auth/sessions` | GET | readRateLimit / ~60/min | Read of own sessions. |
 | `DELETE /auth/sessions/:tokenId` | DELETE | writeRateLimit / ~60/min per user | Session revocation; keyed by user when authenticated. |
+
+**NAT rationale (audit finding #5):** per-IP keying aggregates every user sharing an
+egress IP. Under CGNAT (mobile carriers) or corporate/campus NAT, dozens-to-hundreds of
+legitimate users appear as one IP. Limits that are comfortable for one user become
+false-positive lockouts for a shared IP. The raised floors above account for this; the
+strongest mitigation is to key refresh (and any authenticated auth route) on
+session/user identity where the request carries one, falling back to IP only for the
+truly unauthenticated init/callback legs.
 
 Because these routes sit outside `/api/v2`, they use the *plain* `enhanced-ratelimiting`
 middleware (not the `tsoa*` wrappers).
@@ -201,6 +237,19 @@ and the `points` that yield them.
 - Target: authenticated ~500/min, anonymous ~120/min ⇒ `tsoaReadRateLimit`
   (`{ points: 1 }` all tiers). Use as the class-level baseline and the blanket floor.
 
+> **Burst capacity note (audit finding #6).** `rate-limiter-flexible` is a token
+> bucket: the tier bucket size *is* the burst allowance, refilled over the window. The
+> frontend audit found app **startup fires ~15 reads in 1-2 s**, and
+> `refetchOnReconnect` **re-fires every mounted query on any network flap** (easily
+> 20-40 simultaneous reads). The reads limiter must therefore have a **burst capacity
+> ≥ ~40** so a first-load or reconnect doesn't trip on the leading edge. The
+> authenticated 500 pts/min bucket already permits a 500-request instantaneous burst,
+> which is fine; the concern is real only if a tighter per-endpoint read limit is
+> introduced (e.g. a ~60/min read cap must still allow a ≥40 burst — do **not** shape
+> it as a 1-per-second smooth limiter). Anonymous 120/min likewise clears the ~40
+> burst floor. When adding any narrower read config, size the bucket for burst, not
+> just steady-state rate.
+
 ### V2 — standard writes (POST/PUT/PATCH/DELETE, cheap mutations)
 - Target: authenticated ~500/min, anonymous ~40/min ⇒ `tsoaWriteRateLimit`
   (`anonymous 3`, `authenticated 1`, `admin 1`). Note current authenticated cost of 1
@@ -208,8 +257,42 @@ and the `points` that yield them.
 
 ### V2 — expensive / bulk / abuse-sensitive
 - Target: ~33/min (auth+anon) ⇒ `tsoaCriticalRateLimit` / `tsoaBulkRateLimit`
-  (`points: 15`). Apply to: bulk-update, imports (UEX/game-data), image upload,
-  auction bid, order/offer/buy-order creation, account deletion.
+  (`points: 15`). Apply to: imports (UEX/game-data), image upload, auction bid,
+  order/offer/buy-order creation, account deletion.
+- **Do NOT put SEARCH endpoints in this tier** (see below) and **do NOT put
+  infinite-scroll list pagination or client-side bulk write fan-out here** — the
+  frontend audit shows those legitimately produce request rates well above 33/min.
+
+### V2 — SEARCH endpoints (audit finding #2) — READ tier, not expensive
+- **Classification correction:** market/listing/blueprint/mission/ship/commodity
+  **search** endpoints (e.g. `useSearchListingsQuery`) must be classified in the
+  **read tier**, *not* "expensive ~33/min". The audit found `ListingSearchV2.tsx`'s
+  main search box was undebounced (1 request/keystroke) and `CommandPalette` used a
+  200 ms throttle; a ~400 ms debounce fix is a co-requisite (§0). Even fully debounced,
+  a user refining a search produces bursts far above 33/min.
+- Recommendation: use `tsoaReadRateLimit` (auth ~500/min, anon ~120/min), or if a
+  dedicated search bucket is wanted, **floor it at ~150-200/min** with burst headroom.
+  This supersedes the earlier "search → `tsoaCriticalRateLimit`" suggestions scattered
+  in the per-domain table below.
+
+### V2 — client-side bulk writes (audit finding #3) — writes floor must survive bulk fan-out
+- `StockManagerV2.tsx` performs `Promise.all(ids.map(updateListing))` — **N parallel
+  PUTs in one burst**, 100+ for a large shop, all against the writes bucket at once.
+- **Preferred fix: a server-side batch endpoint** (e.g. `PUT /listings/bulk`) so a bulk
+  operation is **1 request** regardless of selection size; then normal write limits
+  apply trivially.
+- **If no batch endpoint:** the writes limit **must survive the largest plausible bulk
+  selection**. Set the writes floor high enough (~**1000/min**) that a 100-item bulk op
+  — now 1× after the retry fix (§0), previously 4× — does not breach. (At 1× a
+  100-item burst is 100 requests; ~1000/min leaves ample headroom and burst capacity.)
+  `tsoaCommonWriteRateLimit` (~1000/min) is the appropriate config for bulk-write
+  endpoints until a batch endpoint exists.
+
+### V2 — infinite-scroll lists (audit finding #4) — normal read tier
+- Blueprint and mission lists paginate at **40/page** and aggressive scrolling produces
+  bursty ~40/min request rates. **Do NOT classify as expensive/33min.** Use the normal
+  read tier, or if a dedicated bucket is wanted, **floor at ~60-80/min** with burst
+  headroom for a fast scroll.
 
 ### Per-domain endpoint classification (high-risk focus)
 
@@ -217,17 +300,20 @@ and the `points` that yield them.
 |---|---|---|---|
 | Orders `orders/OrdersV2Controller.ts:77` | `POST /orders` (create) | expensive write | `tsoaCriticalRateLimit` (~15-30/min) |
 | Orders `:327,514,932` | GETs | read | `tsoaReadRateLimit` |
-| Offers `offers/OffersV2Controller.ts` | only `@Get` (`{sessionId}`, `search`) today; offer *mutations* live in V1/orders flow | read | `tsoaReadRateLimit` (search is DB-heavy → consider `tsoaCriticalRateLimit`) |
+| Offers `offers/OffersV2Controller.ts` | only `@Get` (`{sessionId}`, `search`) today; offer *mutations* live in V1/orders flow | read | `tsoaReadRateLimit` (search stays read tier per audit #2 — do NOT downgrade to critical) |
 | BuyOrders `buy-orders/BuyOrdersV2Controller.ts:91,367` | `POST /buy-orders`, `POST /buy-orders/standing` | expensive write (triggers matching) | `tsoaCriticalRateLimit` |
 | BuyOrders `:638,688,712,906` | `PUT/DELETE {id}`, `POST {id}/fulfill`, `POST decline` | write | `tsoaWriteRateLimit` |
-| BuyOrders `:425,511,575,612` | search / matches-for-seller / mine / get | read (search+matches heavy) | `tsoaReadRateLimit`; search+matches → `tsoaCriticalRateLimit` |
+| BuyOrders `:425,511,575,612` | search / matches-for-seller / mine / get | read | `tsoaReadRateLimit` (search stays read tier per audit #2; matches-for-seller may stay read — only move to critical if profiling proves it, never search) |
 | Cart `cart/CartV2Controller.ts:261,512,702` | `POST add`, `PUT {id}`, `DELETE {id}` | frequent write | `tsoaWriteRateLimit` |
 | Cart `:777` | `POST checkout` | expensive write (creates orders/offers) | `tsoaCriticalRateLimit` |
 | Cart `:73` | `GET /cart` | read | `tsoaReadRateLimit` |
-| Listings `listings/ListingsV2Controller.ts:81,1408,1951` | `POST`, `PUT {id}`, `DELETE {id}` | write | `tsoaWriteRateLimit`; consider `tsoaListingUpdateRateLimit` (hour-based, 600/hr) on `PUT` |
+| Listings `listings/ListingsV2Controller.ts:81,1408,1951` | `POST`, `PUT {id}`, `DELETE {id}` | write | `tsoaWriteRateLimit`. **Bulk-write caveat (audit #3):** `StockManagerV2.tsx` fans out `Promise.all(ids.map(updateListing))` → 100+ parallel `PUT {id}` in one burst. Do NOT use hour-based `tsoaListingUpdateRateLimit` (600/hr) on `PUT` — a single 100-item bulk save would consume 1/6 of the hourly budget. Prefer a server-side batch endpoint; otherwise use a ~1000/min config (`tsoaCommonWriteRateLimit`) on `PUT {id}` so bulk selection doesn't breach. |
+| Listings — bulk save | `PUT /listings/bulk` (**recommended new batch endpoint**) or the fan-out over `PUT {id}` | bulk write | Batch endpoint → `tsoaWriteRateLimit` (1 request). If no batch endpoint, per-item PUT must sit at ~1000/min floor (audit #3). |
 | Listings `:1839,2014,2109` | `POST {id}/refresh`, `POST {id}/photos`, `POST import-uex` | expensive/bulk (upload, external fetch) | `tsoaCriticalRateLimit` / `tsoaBulkRateLimit` |
 | Listings `:1982` | `POST {id}/views` | high-frequency counter | `tsoaCommonWriteRateLimit` (cheap, ~1000/min) |
-| Listings `:515,912,1094,1116` | search / mine / inventory-summary / get | read (search heavy) | `tsoaReadRateLimit`; search → `tsoaCriticalRateLimit` |
+| Listings `:515,912,1094,1116` | search / mine / inventory-summary / get | read | `tsoaReadRateLimit` — **search stays read tier (audit #2), NOT critical**; floor ~150-200/min if a dedicated search bucket is used. |
+| Blueprints / Missions | infinite-scroll list pagination (40/page) | read (bursty ~40/min) | `tsoaReadRateLimit` — **NOT expensive (audit #4)**; floor ~60-80/min with burst headroom if a dedicated bucket is used. |
+| Search (all: listing/market/blueprint/mission/ship/commodity) | `GET .../search` | **read tier (audit #2)** | `tsoaReadRateLimit` (or dedicated search bucket floored ~150-200/min); never `tsoaCriticalRateLimit`. Co-requisite: ~400 ms debounce fix (§0). |
 | Auctions `auctions/AuctionsV2Controller.ts:100` | `POST {listingId}/bids` | expensive write (concurrency-sensitive) | `tsoaCriticalRateLimit` |
 | Auctions `:59` | `GET {listingId}` | read | `tsoaReadRateLimit` |
 | Images `images/ImagesV2Controller.ts:44` | `POST upload` | expensive (S3 + Rekognition) | `tsoaBulkRateLimit` (~15-30/min) |
@@ -238,20 +324,34 @@ Admin controllers (`admin/*`, import-jobs, scmdb sync): admin tier has its own 3
 bucket; apply `tsoaCriticalRateLimit` to imports/bulk and `tsoaReadRateLimit` to reads.
 
 ### Auth (per IP) — proposed new configs
-- `authRefreshLimit`: ~30/min/IP
-- `authInitLimit` / `authCallbackLimit`: ~20/min/IP
+- `authRefreshLimit`: **~60-120/min/IP** (raised from ~30 for NAT aggregation — audit #5)
+- `authInitLimit`: ~20/min/IP
+- `authCallbackLimit`: **~60/min/IP** (raised from ~20 for NAT aggregation — audit #5)
 - `authLogoutLimit`: ~30/min/IP
 
 These are deliberately tighter than the general anonymous bucket (120/min) because
-credential/token endpoints are the highest-value brute-force targets. Implement as
-dedicated `createRateLimit` configs (or a small dedicated `RateLimiterPostgres` bucket
-with `blockDuration` to slow repeat offenders).
+credential/token endpoints are the highest-value brute-force targets — but the per-IP
+floors for `refresh` and `callback` are **raised to absorb CGNAT / corporate-NAT
+aggregation** (audit finding #5): many legitimate users share one egress IP, so a
+single-user-comfortable limit would lock out a whole shared IP. Where the request
+carries a session/user identity (refresh), prefer keying on that rather than IP alone.
+Implement as dedicated `createRateLimit` configs (or a small dedicated
+`RateLimiterPostgres` bucket with `blockDuration` to slow repeat offenders).
 
 ---
 
 ## 5. Phased rollout checklist
 
-**Phase 0 — recover source (prerequisite)**
+**Phase 0 — prerequisites (must land before enforcement is enabled)**
+
+*0a — frontend fixes (blocking, owned by frontend agents; see §0):*
+- [ ] **429 made non-retryable** in `generatedApiV2.ts` / `generatedApi.ts` (removes the
+      4× retry amplification). **Enforcement (Phases 1-3) must not be enabled until this
+      is deployed**, and limits are calibrated to true 1× values only after it lands.
+- [ ] **Search debounce (~400 ms)** added to `ListingSearchV2.tsx` / `CommandPalette`
+      (co-requisite for the §4 search-endpoint read-tier classification).
+
+*0b — recover backend source:*
 - [ ] Recreate `src/api/middleware/tsoa-ratelimit.ts` from
       `dist/api/middleware/tsoa-ratelimit.js` (TS types re-added; import from
       `./enhanced-ratelimiting.js`).
@@ -337,3 +437,27 @@ with `blockDuration` to slow repeat offenders).
    carefully relative to these so upload endpoints are still limited but not
    double-counted; the per-controller decorators (Option A) are cleaner for the upload
    endpoints (`ImagesV2Controller`, listing photos).
+
+---
+
+## 7. Calibration summary
+
+Consolidated recommended limits after folding in the frontend request-pattern audit.
+All floors assume the **429-non-retryable fix (§0) has landed** (1× behaviour, not 4×).
+
+| Endpoint class | Recommended limit | Rationale / source audit finding |
+|---|---|---|
+| **Prerequisite: 429 retries** | Make 429 non-retryable before enabling limits | Retry amplification turned each 429 into 4 requests; limits meaningless until fixed. **Audit #1 (Phase 0).** |
+| V2 reads (general GET) | `tsoaReadRateLimit` — auth ~500/min, anon ~120/min | Baseline read tier; bucket burst ≥40 covers startup/reconnect fan-out. |
+| Reads burst capacity | Any read bucket sized for **≥~40 burst**, not just steady rate | Startup fires ~15 reads in 1-2 s; `refetchOnReconnect` re-fires all mounted queries on network flap. **Audit #6.** |
+| Search (listing/market/blueprint/mission/ship/commodity) | **Read tier**, or dedicated bucket floored **~150-200/min** — NOT expensive/33min | Search was undebounced (1 req/keystroke); even with ~400 ms debounce, refining a query bursts well above 33/min. **Audit #2** (co-requisite: debounce fix). |
+| Infinite-scroll lists (blueprints, missions) | Read tier, or floor **~60-80/min** with burst headroom — NOT expensive | 40/page + aggressive scroll ≈ bursty ~40/min. **Audit #4.** |
+| Standard V2 writes (cheap mutations) | `tsoaWriteRateLimit` — auth ~500/min | Unchanged; generous floor for single-item mutations. |
+| Bulk listing writes | **Preferred:** server-side batch endpoint (1 request). **Else:** ~1000/min floor (`tsoaCommonWriteRateLimit`) on per-item `PUT` | `StockManagerV2.tsx` fans out `Promise.all` → 100+ parallel PUTs in one burst. Limit must survive largest bulk selection. **Audit #3.** |
+| Expensive/bulk (imports, image upload, auction bid, order/buy-order/checkout create, account deletion) | `tsoaCriticalRateLimit` / `tsoaBulkRateLimit` — ~15-33/min | Genuinely heavy or abuse-sensitive; unchanged from original analysis. |
+| High-frequency counter (`POST {id}/views`) | `tsoaCommonWriteRateLimit` ~1000/min | Cheap, high-volume. |
+| Auth refresh (`POST /auth/refresh`, `/api/auth/refresh`) | **~60-120/min/IP** (raised from 30) | Single user ~0.08/min, but per-IP aggregates NAT/CGNAT users. Prefer session/user keying. **Audit #5.** |
+| Auth callback (`/auth/*/callback`) | **~60/min/IP** (raised from 20) | Concurrent logins behind shared NAT egress. **Audit #5.** |
+| Auth init (`/auth/discord`, `/auth/citizenid`) | ~20/min/IP | Rare per user; low NAT concern. |
+| Auth logout (`POST /logout`, `/auth/jwt-logout`) | ~30/min/IP | Cheap; caps abuse. |
+| Auth sessions read/revoke | read ~60/min ; revoke ~60/min per user | Own-session ops; user-keyed when authenticated. |
