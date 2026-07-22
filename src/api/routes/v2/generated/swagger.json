@@ -11080,6 +11080,138 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ListingConversionStat": {
+				"description": "View → conversion metrics for a single listing.\n\nNote: `unique_viewers` counts distinct logged-in viewers only; anonymous\nviews are recorded with a null viewer and are included in `views` but not in\n`unique_viewers`.",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"views": {
+						"type": "number",
+						"format": "double",
+						"description": "Total recorded views (including anonymous)"
+					},
+					"unique_viewers": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct logged-in viewers"
+					},
+					"cart_adds": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct users who added this listing to a cart"
+					},
+					"orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct orders that include this listing"
+					},
+					"sales": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct fulfilled (sold) orders that include this listing"
+					},
+					"conversion_rate": {
+						"type": "number",
+						"format": "double",
+						"description": "Sales as a percentage of views (0 when there are no views)"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when the listing was created"
+					}
+				},
+				"required": [
+					"listing_id",
+					"title",
+					"views",
+					"unique_viewers",
+					"cart_adds",
+					"orders",
+					"sales",
+					"conversion_rate",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListingStatsTotals": {
+				"description": "Shop-level totals across all returned listings.",
+				"properties": {
+					"views": {
+						"type": "number",
+						"format": "double",
+						"description": "Total views across listings"
+					},
+					"unique_viewers": {
+						"type": "number",
+						"format": "double",
+						"description": "Total distinct logged-in viewers across listings"
+					},
+					"cart_adds": {
+						"type": "number",
+						"format": "double",
+						"description": "Total distinct cart adds across listings"
+					},
+					"orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Total distinct orders across listings"
+					},
+					"sales": {
+						"type": "number",
+						"format": "double",
+						"description": "Total distinct fulfilled orders across listings"
+					},
+					"conversion_rate": {
+						"type": "number",
+						"format": "double",
+						"description": "Aggregate sales as a percentage of aggregate views"
+					}
+				},
+				"required": [
+					"views",
+					"unique_viewers",
+					"cart_adds",
+					"orders",
+					"sales",
+					"conversion_rate"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetListingStatsResponse": {
+				"description": "Response for the listing-stats endpoint",
+				"properties": {
+					"shop_id": {
+						"type": "string",
+						"description": "Shop ID"
+					},
+					"listings": {
+						"items": {
+							"$ref": "#/components/schemas/ListingConversionStat"
+						},
+						"type": "array",
+						"description": "Per-listing view → conversion metrics, ordered by views descending"
+					},
+					"totals": {
+						"$ref": "#/components/schemas/ListingStatsTotals",
+						"description": "Aggregate totals across the returned listings"
+					}
+				},
+				"required": [
+					"shop_id",
+					"listings",
+					"totals"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"FeatureFlagConfig": {
 				"properties": {
 					"flag_name": {
@@ -19626,6 +19758,50 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/analytics/listing-stats": {
+			"get": {
+				"operationId": "GetListingStats",
+				"responses": {
+					"200": {
+						"description": "Per-listing view/conversion metrics with shop-level totals",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetListingStatsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get per-listing view → conversion analytics for a shop.\n\nCombines view tracking (listing_views_v2), cart adds (cart_items_v2), and\norder linkage (order_market_items_v2 → orders) to produce a funnel per\nlisting: views → unique viewers → cart adds → orders → sales, plus a\nconversion rate (sales ÷ views). Listings are ranked by views descending.\n\nViews are counted from when frontend view tracking began; anonymous views\nare included in `views` but not `unique_viewers`. \"Sales\" are orders with\nstatus 'fulfilled'.",
+				"summary": "Get listing view/conversion analytics",
+				"tags": [
+					"Analytics V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Shop ID to get per-listing stats for",
+						"in": "query",
+						"name": "shop_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Maximum number of listings to return (default 20, max 100)",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]
