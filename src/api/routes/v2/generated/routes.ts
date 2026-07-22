@@ -52,6 +52,8 @@ import { BlueprintsController } from './../game-data/blueprints/BlueprintsContro
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DashboardV2Controller } from './../dashboard/DashboardV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CartV2Controller } from './../cart/CartV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BuyOrdersV2Controller } from './../buy-orders/BuyOrdersV2Controller.js';
@@ -3065,6 +3067,38 @@ const models: TsoaRoute.Models = {
             "market_version": {"ref":"MarketVersion"},
             "flag_name": {"dataType":"string"},
             "enabled": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DashboardOwnerType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["shop"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.unknown_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"any"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DashboardLayoutResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "owner_type": {"ref":"DashboardOwnerType","required":true},
+            "owner_id": {"dataType":"string","required":true},
+            "config": {"ref":"Record_string.unknown_","required":true},
+            "updated_by": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateDashboardLayoutRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "owner_type": {"ref":"DashboardOwnerType","required":true},
+            "owner_id": {"dataType":"string","required":true},
+            "config": {"ref":"Record_string.unknown_","required":true},
         },
         "additionalProperties": false,
     },
@@ -7823,6 +7857,71 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'setFeatureFlag',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDashboardV2Controller_getLayout: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                owner_type: {"in":"query","name":"owner_type","ref":"DashboardOwnerType"},
+                owner_id: {"in":"query","name":"owner_id","dataType":"string"},
+        };
+        app.get('/dashboard/layout',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(DashboardV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(DashboardV2Controller.prototype.getLayout)),
+
+            async function DashboardV2Controller_getLayout(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDashboardV2Controller_getLayout, request, response });
+
+                const controller = new DashboardV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getLayout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDashboardV2Controller_saveLayout: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateDashboardLayoutRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.put('/dashboard/layout',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(DashboardV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(DashboardV2Controller.prototype.saveLayout)),
+
+            async function DashboardV2Controller_saveLayout(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDashboardV2Controller_saveLayout, request, response });
+
+                const controller = new DashboardV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'saveLayout',
                 controller,
                 response,
                 next,
