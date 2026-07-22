@@ -21,6 +21,8 @@ import {
   GetSellerStatsResponse,
   QualityTierSales,
   QualityTierPremium,
+  GetListingStatsResponse,
+  ListingConversionStat,
 } from "../types/analytics.types.js"
 import logger from "../../../../logger/logger.js"
 
@@ -557,6 +559,176 @@ export class AnalyticsV2Controller extends BaseController {
       }
     } catch (error) {
       logger.error("Failed to fetch seller stats", {
+        shop_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Get per-listing view → conversion analytics for a shop.
+   *
+   * Combines view tracking (listing_views_v2), cart adds (cart_items_v2), and
+   * order linkage (order_market_items_v2 → orders) to produce a funnel per
+   * listing: views → unique viewers → cart adds → orders → sales, plus a
+   * conversion rate (sales ÷ views). Listings are ranked by views descending.
+   *
+   * Views are counted from when frontend view tracking began; anonymous views
+   * are included in `views` but not `unique_viewers`. "Sales" are orders with
+   * status 'fulfilled'.
+   *
+   * @summary Get listing view/conversion analytics
+   * @param shop_id Shop ID to get per-listing stats for
+   * @param limit Maximum number of listings to return (default 20, max 100)
+   * @returns Per-listing view/conversion metrics with shop-level totals
+   */
+  @Get("listing-stats")
+  public async getListingStats(
+    @Query() shop_id?: string,
+    @Query() limit?: number,
+  ): Promise<GetListingStatsResponse> {
+    const knex = getKnex()
+
+    if (!shop_id) {
+      this.throwValidationError("shop_id is required", [
+        { field: "shop_id", message: "Shop ID is required" },
+      ])
+    }
+
+    const pageSize = Math.min(Math.max(limit ?? 20, 1), 100)
+
+    logger.info("Fetching listing stats", { shop_id, limit: pageSize })
+
+    try {
+      // Views + unique viewers per listing for this shop.
+      const viewRows = await knex("listing_views_v2 as lv")
+        .join("listings as l", "lv.listing_id", "l.listing_id")
+        .where("l.shop_id", shop_id)
+        .groupBy("lv.listing_id")
+        .select(
+          "lv.listing_id as listing_id",
+          knex.raw("COUNT(*)::integer as views"),
+          knex.raw("COUNT(DISTINCT lv.viewer_id)::integer as unique_viewers"),
+        )
+
+      // Distinct cart adds per listing for this shop.
+      const cartRows = await knex("cart_items_v2 as ci")
+        .join("listings as l", "ci.listing_id", "l.listing_id")
+        .where("l.shop_id", shop_id)
+        .groupBy("ci.listing_id")
+        .select(
+          "ci.listing_id as listing_id",
+          knex.raw("COUNT(DISTINCT ci.user_id)::integer as cart_adds"),
+        )
+
+      // Orders + fulfilled sales per listing for this shop.
+      const orderRows = await knex("order_market_items_v2 as omi")
+        .join("listings as l", "omi.listing_id", "l.listing_id")
+        .join("orders as o", "omi.order_id", "o.order_id")
+        .where("l.shop_id", shop_id)
+        .groupBy("omi.listing_id")
+        .select(
+          "omi.listing_id as listing_id",
+          knex.raw("COUNT(DISTINCT o.order_id)::integer as orders"),
+          knex.raw(
+            "COUNT(DISTINCT o.order_id) FILTER (WHERE o.status = 'fulfilled')::integer as sales",
+          ),
+        )
+
+      // Index the funnel stages by listing id so they can be merged per listing.
+      const viewByListing = new Map(viewRows.map((r: any) => [r.listing_id, r]))
+      const cartByListing = new Map(cartRows.map((r: any) => [r.listing_id, r]))
+      const orderByListing = new Map(
+        orderRows.map((r: any) => [r.listing_id, r]),
+      )
+
+      // A listing appears in the report if it has any activity in any stage.
+      const listingIds = new Set<string>([
+        ...viewRows.map((r: any) => r.listing_id),
+        ...cartRows.map((r: any) => r.listing_id),
+        ...orderRows.map((r: any) => r.listing_id),
+      ])
+
+      if (listingIds.size === 0) {
+        return {
+          shop_id: shop_id as string,
+          listings: [],
+          totals: {
+            views: 0,
+            unique_viewers: 0,
+            cart_adds: 0,
+            orders: 0,
+            sales: 0,
+            conversion_rate: 0,
+          },
+        }
+      }
+
+      // Fetch titles/created_at for the listings we're reporting on.
+      const listingMeta = await knex("listings")
+        .whereIn("listing_id", Array.from(listingIds))
+        .where("shop_id", shop_id)
+        .select("listing_id", "title", "created_at")
+
+      const stats: ListingConversionStat[] = listingMeta.map((meta: any) => {
+        const v = viewByListing.get(meta.listing_id)
+        const c = cartByListing.get(meta.listing_id)
+        const o = orderByListing.get(meta.listing_id)
+        const views = v?.views ?? 0
+        const sales = o?.sales ?? 0
+        return {
+          listing_id: meta.listing_id,
+          title: meta.title,
+          views,
+          unique_viewers: v?.unique_viewers ?? 0,
+          cart_adds: c?.cart_adds ?? 0,
+          orders: o?.orders ?? 0,
+          sales,
+          conversion_rate:
+            views > 0 ? parseFloat(((sales / views) * 100).toFixed(2)) : 0,
+          created_at: new Date(meta.created_at).toISOString(),
+        }
+      })
+
+      // Rank by views (then sales) descending and cap to the page size.
+      stats.sort((a, b) => b.views - a.views || b.sales - a.sales)
+      const listings = stats.slice(0, pageSize)
+
+      // Totals are computed across the returned listings.
+      const totals = listings.reduce(
+        (acc, s) => {
+          acc.views += s.views
+          acc.unique_viewers += s.unique_viewers
+          acc.cart_adds += s.cart_adds
+          acc.orders += s.orders
+          acc.sales += s.sales
+          return acc
+        },
+        {
+          views: 0,
+          unique_viewers: 0,
+          cart_adds: 0,
+          orders: 0,
+          sales: 0,
+          conversion_rate: 0,
+        },
+      )
+      totals.conversion_rate =
+        totals.views > 0
+          ? parseFloat(((totals.sales / totals.views) * 100).toFixed(2))
+          : 0
+
+      logger.info("Listing stats fetched successfully", {
+        shop_id,
+        listing_count: listings.length,
+      })
+
+      return { shop_id: shop_id as string, listings, totals }
+    } catch (error) {
+      logger.error("Failed to fetch listing stats", {
         shop_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,

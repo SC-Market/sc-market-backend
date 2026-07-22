@@ -190,13 +190,101 @@ export interface QualityTierPremium {
 export interface GetSellerStatsResponse {
   /** Shop ID */
   shop_id: string;
-  
+
   /** Sales data grouped by quality tier */
   sales_by_quality: QualityTierSales[];
-  
+
   /** Current inventory distribution by quality tier */
   inventory_distribution: QualityTierDistribution[];
-  
+
   /** Price premium percentages by quality tier */
   price_premiums: QualityTierPremium[];
+}
+
+// ============================================================================
+// Listing Stats (views → conversion) Types
+// ============================================================================
+
+/**
+ * Query parameters for the listing-stats endpoint
+ */
+export interface GetListingStatsRequest {
+  /** Shop ID to get per-listing view/conversion stats for */
+  shop_id?: string;
+
+  /** Maximum number of listings to return (default 20, max 100) */
+  limit?: number;
+}
+
+/**
+ * View → conversion metrics for a single listing.
+ *
+ * Note: `unique_viewers` counts distinct logged-in viewers only; anonymous
+ * views are recorded with a null viewer and are included in `views` but not in
+ * `unique_viewers`.
+ */
+export interface ListingConversionStat {
+  /** Listing UUID */
+  listing_id: string;
+
+  /** Listing title */
+  title: string;
+
+  /** Total recorded views (including anonymous) */
+  views: number;
+
+  /** Distinct logged-in viewers */
+  unique_viewers: number;
+
+  /** Distinct users who added this listing to a cart */
+  cart_adds: number;
+
+  /** Distinct orders that include this listing */
+  orders: number;
+
+  /** Distinct fulfilled (sold) orders that include this listing */
+  sales: number;
+
+  /** Sales as a percentage of views (0 when there are no views) */
+  conversion_rate: number;
+
+  /** ISO 8601 timestamp when the listing was created */
+  created_at: string;
+}
+
+/**
+ * Shop-level totals across all returned listings.
+ */
+export interface ListingStatsTotals {
+  /** Total views across listings */
+  views: number;
+
+  /** Total distinct logged-in viewers across listings */
+  unique_viewers: number;
+
+  /** Total distinct cart adds across listings */
+  cart_adds: number;
+
+  /** Total distinct orders across listings */
+  orders: number;
+
+  /** Total distinct fulfilled orders across listings */
+  sales: number;
+
+  /** Aggregate sales as a percentage of aggregate views */
+  conversion_rate: number;
+}
+
+/**
+ * Response for the listing-stats endpoint
+ */
+export interface GetListingStatsResponse {
+  /** Shop ID */
+  shop_id: string;
+
+  /** Per-listing view → conversion metrics, ordered by views descending */
+  listings: ListingConversionStat[];
+
+  /** Aggregate totals across the returned listings */
+  totals: ListingStatsTotals;
 }

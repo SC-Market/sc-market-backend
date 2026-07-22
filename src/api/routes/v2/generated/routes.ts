@@ -3557,6 +3557,45 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ListingConversionStat": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "views": {"dataType":"double","required":true},
+            "unique_viewers": {"dataType":"double","required":true},
+            "cart_adds": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+            "conversion_rate": {"dataType":"double","required":true},
+            "created_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ListingStatsTotals": {
+        "dataType": "refObject",
+        "properties": {
+            "views": {"dataType":"double","required":true},
+            "unique_viewers": {"dataType":"double","required":true},
+            "cart_adds": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+            "conversion_rate": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetListingStatsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "shop_id": {"dataType":"string","required":true},
+            "listings": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingConversionStat"},"required":true},
+            "totals": {"ref":"ListingStatsTotals","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "FeatureFlagConfig": {
         "dataType": "refObject",
         "properties": {
@@ -8648,6 +8687,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getSellerStats',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAnalyticsV2Controller_getListingStats: Record<string, TsoaRoute.ParameterSchema> = {
+                shop_id: {"in":"query","name":"shop_id","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+        };
+        app.get('/analytics/listing-stats',
+            ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller.prototype.getListingStats)),
+
+            async function AnalyticsV2Controller_getListingStats(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAnalyticsV2Controller_getListingStats, request, response });
+
+                const controller = new AnalyticsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getListingStats',
                 controller,
                 response,
                 next,
