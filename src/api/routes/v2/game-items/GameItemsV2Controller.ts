@@ -295,6 +295,9 @@ export class GameItemsV2Controller extends BaseController {
           knex.raw(
             `(SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = l.shop_id) AS shop_rating_count`,
           ),
+          knex.raw(
+            `(SELECT COALESCE(sh.badge_ids, '{}') FROM shops sh WHERE sh.shop_id = l.shop_id) AS shop_badge_ids`,
+          ),
         )
         .where("li.game_item_id", gameItemId)
         .where("l.status", "active")
@@ -384,6 +387,7 @@ export class GameItemsV2Controller extends BaseController {
           shop_name: (row.shop_name as string) || "Unknown",
           shop_rating: parseFloat(row.shop_rating as string) || 0,
           shop_rating_count: (row.shop_rating_count as number) || 0,
+          shop_badge_ids: (row.shop_badge_ids as string[]) || [],
           shop_slug: (row.shop_slug as string) || "",
           price: parseInt(row.price as string, 10) || 0,
           quantity_available: (row.quantity_available as number) || 0,
