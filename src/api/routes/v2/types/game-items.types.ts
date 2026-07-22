@@ -90,6 +90,9 @@ export interface GameItemListingResult {
    * shop doesn't outrank a 4.9★/300-review one. */
   shop_rating_count: number
 
+  /** Shop seller reputation badges, computed server-side (mirrors search DTO) */
+  shop_badge_ids: string[]
+
   /** Shop slug — use for profile links: /shops/:slug */
   shop_slug: string
 
