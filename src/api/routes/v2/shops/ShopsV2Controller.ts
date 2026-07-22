@@ -91,6 +91,8 @@ export interface ShopResponse {
   created_at: string
   updated_at: string
   banner_url: string | null
+  /** Seller reputation badges, computed server-side from shop metrics + owner data */
+  badge_ids: string[]
   /** Granular permissions for the current user on this shop (only in /shops/mine) */
   permissions?: {
     can_manage: boolean
@@ -131,6 +133,8 @@ export interface ShopPublicResponse {
   created_at: string
   rating: number | null
   rating_count: number
+  /** Seller reputation badges, computed server-side from shop metrics + owner data */
+  badge_ids: string[]
   /** Owner information — link to user profile or org page (included in detail view) */
   owner?: ShopOwnerInfo
   /** Number of active listings in this shop */
@@ -440,6 +444,7 @@ export class ShopsV2Controller extends BaseController {
           created_at: shop.created_at,
           rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
           rating_count: ratingResult?.rating_count || 0,
+          badge_ids: shop.badge_ids || [],
         }
       }),
     )
@@ -477,6 +482,7 @@ export class ShopsV2Controller extends BaseController {
         "s.shop_id", "s.slug", "s.name", "s.description", "s.banner", "s.logo",
         "s.supported_languages", "s.tags", "s.accepts_custom_orders", "s.status",
         "s.created_at", "s.owner_user_id", "s.owner_contractor_id", "s.total_completed",
+        "s.badge_ids",
         // Aggregated stats
         db.raw("COALESCE((SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as avg_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
@@ -550,6 +556,7 @@ export class ShopsV2Controller extends BaseController {
         created_at: row.created_at as string,
         rating: row.avg_rating ? parseFloat(row.avg_rating as string) : null,
         rating_count: (row.rating_count as number) || 0,
+        badge_ids: (row.badge_ids as string[]) || [],
         listing_count: (row.listing_count as number) || 0,
         service_count: (row.service_count as number) || 0,
         total_sales: (row.total_sales as number) || 0,
@@ -632,6 +639,7 @@ export class ShopsV2Controller extends BaseController {
       created_at: shop.created_at,
       rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
       rating_count: ratingResult?.rating_count || 0,
+      badge_ids: shop.badge_ids || [],
       owner,
       listing_count: parseInt(String(listingCount?.count || 0), 10),
       total_sales: metrics.total_completed,
@@ -1305,6 +1313,7 @@ async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_ord
     updated_at: shop.updated_at,
     banner_url: await resolveImageUrl(db, shop.banner),
     logo_url: await resolveImageUrl(db, shop.logo),
+    badge_ids: shop.badge_ids || [],
   }
 }
 

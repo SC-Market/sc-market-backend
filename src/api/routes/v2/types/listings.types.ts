@@ -213,6 +213,9 @@ export interface ListingSearchResult {
   /** Shop rating count */
   shop_rating_count: number;
 
+  /** Shop seller reputation badges, computed server-side */
+  shop_badge_ids: string[];
+
   /** Shop supported languages (ISO 639-1 codes) */
   shop_languages: string[];
 

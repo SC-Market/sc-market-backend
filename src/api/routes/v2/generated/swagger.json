@@ -814,6 +814,13 @@
 						"type": "string",
 						"nullable": true
 					},
+					"badge_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Seller reputation badges, computed server-side from shop metrics + owner data"
+					},
 					"permissions": {
 						"properties": {
 							"manage_orders": {
@@ -862,6 +869,7 @@
 					"created_at",
 					"updated_at",
 					"banner_url",
+					"badge_ids",
 					"logo_url"
 				],
 				"type": "object",
@@ -1032,6 +1040,13 @@
 						"type": "number",
 						"format": "double"
 					},
+					"badge_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Seller reputation badges, computed server-side from shop metrics + owner data"
+					},
 					"owner": {
 						"$ref": "#/components/schemas/ShopOwnerInfo",
 						"description": "Owner information — link to user profile or org page (included in detail view)"
@@ -1069,7 +1084,8 @@
 					"status",
 					"created_at",
 					"rating",
-					"rating_count"
+					"rating_count",
+					"badge_ids"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -3427,6 +3443,13 @@
 						"format": "double",
 						"description": "Shop rating count"
 					},
+					"shop_badge_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Shop seller reputation badges, computed server-side"
+					},
 					"shop_languages": {
 						"items": {
 							"type": "string"
@@ -3539,6 +3562,7 @@
 					"shop_slug",
 					"shop_rating",
 					"shop_rating_count",
+					"shop_badge_ids",
 					"shop_languages",
 					"price_min",
 					"price_max",

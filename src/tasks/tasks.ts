@@ -6,6 +6,7 @@ import {
   snapshot_price_history_v2,
   rebuild_search_view,
   refresh_badge_view,
+  recompute_shop_badges,
   update_price_history,
   clear_uploads_folder,
   cleanup_push_subscriptions,
@@ -122,4 +123,11 @@ export function start_tasks() {
     safe(processDmReminders, "processDmReminders")
     setInterval(() => safe(processDmReminders, "processDmReminders"), 6 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 80_000)
+
+  // Recompute shop badges daily to pick up time-based badges (early adopter,
+  // consistency tiers, donor duration) that aren't triggered by order events
+  setTimeout(() => {
+    safe(recompute_shop_badges, "recompute_shop_badges")
+    setInterval(() => safe(recompute_shop_badges, "recompute_shop_badges"), 24 * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 90_000)
 }
