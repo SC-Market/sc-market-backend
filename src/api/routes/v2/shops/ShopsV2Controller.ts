@@ -17,7 +17,8 @@ import {
   type Shop,
 } from "../../../../services/shops/shop-permissions.service.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
-import { has_permission } from "../../v1/util/permissions.js"
+import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
+import { has_permission, is_member } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { createNotificationWebhook } from "../../v1/util/webhooks.js"
 import * as notificationDb from "../../v1/notifications/database.js"
@@ -59,7 +60,14 @@ export interface UpdateShopRequest {
 }
 
 export interface TransferShopRequest {
-  target_contractor_id: string
+  /** Whether ownership transfers to a user account or an org. */
+  target_type: "user" | "contractor"
+  /**
+   * Identifier of the new owner.
+   * - When target_type is "user": the target user's user_id or username.
+   * - When target_type is "contractor": the target org's contractor_id (UUID) or spectrum_id.
+   */
+  target_id: string
 }
 
 export interface CreateShopWebhookRequest {
@@ -909,10 +917,17 @@ export class ShopsV2Controller extends BaseController {
   }
 
   /**
-   * Transfer shop ownership to an org. Auto-accepts if the requesting user
-   * has manage_market in the target org.
+   * Transfer shop ownership to a user or an org.
    *
-   * @summary Transfer shop to org
+   * Supports all directions (user↔user, user↔org, org↔org). The requester must
+   * currently be able to manage the shop. When transferring to an org, the
+   * requester must also have manage_market in the target org (auto-accept).
+   *
+   * After transfer, active order/offer assignments held by people no longer
+   * associated with the new owner are cleared so the new owner can reclaim them,
+   * and shop badges are recomputed (owner-derived badges may change).
+   *
+   * @summary Transfer shop ownership
    */
   @Post("{shopId}/transfer")
   @Security("loggedin")
@@ -928,37 +943,62 @@ export class ShopsV2Controller extends BaseController {
     const shop = await getShopById(shopId)
     if (!shop) this.throwNotFound("Shop", shopId)
 
-    // Only current owner can transfer
+    // Requester must currently be able to manage the shop
     if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
       this.throwForbidden("Only the shop owner can transfer ownership")
     }
 
-    // Verify target org exists
-    const targetOrg = await db("contractors")
-      .where("contractor_id", body.target_contractor_id)
-      .first()
-    if (!targetOrg) this.throwNotFound("Contractor", body.target_contractor_id)
+    let newOwnerUserId: string | null = null
+    let newOwnerContractorId: string | null = null
 
-    // Auto-accept if user has manage_market in target org
-    const hasTargetPerm = await has_permission(
-      body.target_contractor_id,
-      userId,
-      "manage_market",
-    )
-    if (!hasTargetPerm) {
-      this.throwForbidden(
-        "You must have manage_market permission in the target org to transfer",
+    if (body.target_type === "contractor") {
+      // Resolve target org by contractor_id (UUID) or spectrum_id
+      const targetOrg = await db("contractors")
+        .where("contractor_id", body.target_id)
+        .orWhere("spectrum_id", body.target_id)
+        .first()
+      if (!targetOrg) this.throwNotFound("Contractor", body.target_id)
+
+      // Auto-accept if requester has manage_market in target org
+      const hasTargetPerm = await has_permission(
+        targetOrg.contractor_id,
+        userId,
+        "manage_market",
       )
+      if (!hasTargetPerm) {
+        this.throwForbidden(
+          "You must have manage_market permission in the target org to transfer",
+        )
+      }
+
+      newOwnerContractorId = targetOrg.contractor_id
+    } else if (body.target_type === "user") {
+      // Resolve target user by user_id or username
+      const targetUser = await db("accounts")
+        .where("user_id", body.target_id)
+        .orWhere("username", body.target_id)
+        .first("user_id")
+      if (!targetUser) this.throwNotFound("User", body.target_id)
+
+      newOwnerUserId = targetUser.user_id
+    } else {
+      this.throwValidationError("Invalid target_type", [
+        { field: "target_type", message: 'target_type must be "user" or "contractor"' },
+      ])
     }
 
     const [updated] = await db("shops")
       .where("shop_id", shopId)
       .update({
-        owner_user_id: null,
-        owner_contractor_id: body.target_contractor_id,
+        owner_user_id: newOwnerUserId,
+        owner_contractor_id: newOwnerContractorId,
         updated_at: db.fn.now(),
       })
       .returning("*")
+
+    // Reassign orphaned data + recompute owner-derived badges
+    await reassignShopDataAfterTransfer(db, shopId, newOwnerUserId, newOwnerContractorId)
+    await computeShopBadges(shopId)
 
     return await shopToResponse(updated)
   }
@@ -1290,6 +1330,70 @@ export class ShopsV2Controller extends BaseController {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/**
+ * After a shop changes owner, keep its active orders/offers consistent with the
+ * new owner:
+ * - Set contractor_id to the new org (or null for a personal shop) so records
+ *   line up with the owning entity.
+ * - Clear assigned_id when the previous assignee is no longer associated with
+ *   the new owner (not a member of the new org / not the new user owner), so the
+ *   new owner can reclaim the work.
+ *
+ * Only active records are touched — completed (fulfilled) and cancelled orders
+ * are left untouched as a historical record.
+ */
+async function reassignShopDataAfterTransfer(
+  db: ReturnType<typeof getKnex>,
+  shopId: string,
+  newOwnerUserId: string | null,
+  newOwnerContractorId: string | null,
+): Promise<void> {
+  const ACTIVE_ORDER_STATUSES = ["not-started", "in-progress"]
+  const ACTIVE_OFFER_STATUSES = ["active", "counteroffered", "to-customer", "to-seller"]
+
+  // Determine whether a given assignee is still associated with the new owner.
+  const isAssigneeAssociated = async (assignedId: string | null): Promise<boolean> => {
+    if (!assignedId) return true // nothing assigned, nothing to clear
+    if (newOwnerContractorId) {
+      return is_member(newOwnerContractorId, assignedId)
+    }
+    // Personal shop: only the new owner should remain assigned
+    return assignedId === newOwnerUserId
+  }
+
+  // ── Orders ──────────────────────────────────────────────────────────────
+  const orders = await db("orders")
+    .where("shop_id", shopId)
+    .whereIn("status", ACTIVE_ORDER_STATUSES)
+    .select("order_id", "assigned_id")
+
+  for (const order of orders) {
+    const keepAssignee = await isAssigneeAssociated(order.assigned_id)
+    await db("orders")
+      .where("order_id", order.order_id)
+      .update({
+        contractor_id: newOwnerContractorId,
+        ...(keepAssignee ? {} : { assigned_id: null }),
+      })
+  }
+
+  // ── Offer sessions ──────────────────────────────────────────────────────
+  const sessions = await db("offer_sessions")
+    .where("shop_id", shopId)
+    .whereIn("status", ACTIVE_OFFER_STATUSES)
+    .select("id", "assigned_id")
+
+  for (const session of sessions) {
+    const keepAssignee = await isAssigneeAssociated(session.assigned_id)
+    await db("offer_sessions")
+      .where("id", session.id)
+      .update({
+        contractor_id: newOwnerContractorId,
+        ...(keepAssignee ? {} : { assigned_id: null }),
+      })
+  }
+}
 
 async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_orders?: boolean }): Promise<ShopResponse> {
   const db = getKnex()

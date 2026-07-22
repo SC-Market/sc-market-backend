@@ -499,7 +499,8 @@ const models: TsoaRoute.Models = {
     "TransferShopRequest": {
         "dataType": "refObject",
         "properties": {
-            "target_contractor_id": {"dataType":"string","required":true},
+            "target_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
+            "target_id": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
