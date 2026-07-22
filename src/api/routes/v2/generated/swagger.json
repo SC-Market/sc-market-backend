@@ -9606,15 +9606,211 @@
 					"user",
 					"org",
 					"shop"
-				]
+				],
+				"description": "Wire types for the customizable dashboard. These are the single source of truth\nfor the DashboardConfig shape: TSOA emits them into the OpenAPI spec, and the\nfrontend client codegen turns them into matching TypeScript types — so the same\nstructure is used for server persistence, the API contract, and the client with\nno casting."
 			},
-			"Record_string.unknown_": {
+			"WidgetScope": {
+				"anyOf": [
+					{
+						"properties": {
+							"kind": {
+								"type": "string",
+								"enum": [
+									"me"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"kind"
+						],
+						"type": "object"
+					},
+					{
+						"properties": {
+							"kind": {
+								"type": "string",
+								"enum": [
+									"current_context"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"kind"
+						],
+						"type": "object"
+					},
+					{
+						"properties": {
+							"kind": {
+								"type": "string",
+								"enum": [
+									"all_orgs"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"kind"
+						],
+						"type": "object"
+					},
+					{
+						"properties": {
+							"kind": {
+								"type": "string",
+								"enum": [
+									"all_shops"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"kind"
+						],
+						"type": "object"
+					},
+					{
+						"properties": {
+							"spectrumId": {
+								"type": "string"
+							},
+							"kind": {
+								"type": "string",
+								"enum": [
+									"specific_org"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"spectrumId",
+							"kind"
+						],
+						"type": "object"
+					},
+					{
+						"properties": {
+							"shopId": {
+								"type": "string"
+							},
+							"kind": {
+								"type": "string",
+								"enum": [
+									"specific_shop"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"shopId",
+							"kind"
+						],
+						"type": "object"
+					}
+				],
+				"description": "Widget data-scope binding, chosen per widget when it is added."
+			},
+			"WidgetLayout": {
+				"description": "Grid placement in react-grid-layout coordinates.",
+				"properties": {
+					"x": {
+						"type": "number",
+						"format": "double"
+					},
+					"y": {
+						"type": "number",
+						"format": "double"
+					},
+					"w": {
+						"type": "number",
+						"format": "double"
+					},
+					"h": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"x",
+					"y",
+					"w",
+					"h"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.string-or-number-or-boolean_": {
 				"properties": {},
-				"additionalProperties": {},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number",
+							"format": "double"
+						},
+						{
+							"type": "boolean"
+						}
+					]
+				},
 				"type": "object",
 				"description": "Construct a type with a set of properties K of type T"
 			},
-			"DashboardLayoutResponse": {
+			"DashboardWidget": {
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Stable per-instance id (a widget type may appear multiple times)."
+					},
+					"type": {
+						"type": "string",
+						"description": "Key into the widget registry."
+					},
+					"scope": {
+						"$ref": "#/components/schemas/WidgetScope"
+					},
+					"layout": {
+						"$ref": "#/components/schemas/WidgetLayout"
+					},
+					"settings": {
+						"$ref": "#/components/schemas/Record_string.string-or-number-or-boolean_",
+						"description": "Widget-specific settings (e.g. period). Validated per widget on the client."
+					}
+				},
+				"required": [
+					"id",
+					"type",
+					"scope",
+					"layout"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DashboardConfig": {
+				"properties": {
+					"version": {
+						"type": "number",
+						"format": "double"
+					},
+					"widgets": {
+						"items": {
+							"$ref": "#/components/schemas/DashboardWidget"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"version",
+					"widgets"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DashboardLayout": {
 				"properties": {
 					"owner_type": {
 						"$ref": "#/components/schemas/DashboardOwnerType"
@@ -9623,8 +9819,7 @@
 						"type": "string"
 					},
 					"config": {
-						"$ref": "#/components/schemas/Record_string.unknown_",
-						"description": "Opaque DashboardConfig blob (widgets, scopes, grid layout). Validated client-side."
+						"$ref": "#/components/schemas/DashboardConfig"
 					},
 					"updated_by": {
 						"type": "string"
@@ -9643,6 +9838,9 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DashboardLayoutResponse": {
+				"$ref": "#/components/schemas/DashboardLayout"
+			},
 			"UpdateDashboardLayoutRequest": {
 				"properties": {
 					"owner_type": {
@@ -9652,7 +9850,7 @@
 						"type": "string"
 					},
 					"config": {
-						"$ref": "#/components/schemas/Record_string.unknown_"
+						"$ref": "#/components/schemas/DashboardConfig"
 					}
 				},
 				"required": [
