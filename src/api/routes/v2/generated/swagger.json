@@ -1254,12 +1254,22 @@
 			},
 			"TransferShopRequest": {
 				"properties": {
-					"target_contractor_id": {
-						"type": "string"
+					"target_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						],
+						"description": "Whether ownership transfers to a user account or an org."
+					},
+					"target_id": {
+						"type": "string",
+						"description": "Identifier of the new owner.\n- When target_type is \"user\": the target user's user_id or username.\n- When target_type is \"contractor\": the target org's contractor_id (UUID) or spectrum_id."
 					}
 				},
 				"required": [
-					"target_contractor_id"
+					"target_type",
+					"target_id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -12421,8 +12431,8 @@
 						}
 					}
 				},
-				"description": "Transfer shop ownership to an org. Auto-accepts if the requesting user\nhas manage_market in the target org.",
-				"summary": "Transfer shop to org",
+				"description": "Transfer shop ownership to a user or an org.\n\nSupports all directions (user↔user, user↔org, org↔org). The requester must\ncurrently be able to manage the shop. When transferring to an org, the\nrequester must also have manage_market in the target org (auto-accept).\n\nAfter transfer, active order/offer assignments held by people no longer\nassociated with the new owner are cleared so the new owner can reclaim them,\nand shop badges are recomputed (owner-derived badges may change).",
+				"summary": "Transfer shop ownership",
 				"tags": [
 					"Shops"
 				],
