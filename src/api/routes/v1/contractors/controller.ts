@@ -31,6 +31,7 @@ import {
   self_member_role_removal_forbidden,
 } from "../util/permissions.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
+import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { fetchRSIOrgDirect } from "../../../../clients/rsi/scraper.js"
 import { authorizeProfile } from "../profiles/helpers.js"
@@ -1857,6 +1858,14 @@ export const post_spectrum_id_webhooks: RequestHandler = async (
   // Do checks first
   if (!webhook_url || !name) {
     res.status(400).json(createErrorResponse({ message: "Invalid arguments" }))
+    return
+  }
+
+  const webhookValidation = validateWebhookUrl(webhook_url)
+  if (!webhookValidation.valid) {
+    res
+      .status(400)
+      .json(createErrorResponse({ message: webhookValidation.reason! }))
     return
   }
 
