@@ -86,6 +86,10 @@ export interface GameItemListingResult {
   /** Shop rating (0-5) */
   shop_rating: number
 
+  /** Number of ratings the shop has — used to weight "top rated" so a 5★/1-review
+   * shop doesn't outrank a 4.9★/300-review one. */
+  shop_rating_count: number
+
   /** Shop slug — use for profile links: /shops/:slug */
   shop_slug: string
 

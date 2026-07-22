@@ -4719,6 +4719,11 @@
 						"format": "double",
 						"description": "Shop rating (0-5)"
 					},
+					"shop_rating_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of ratings the shop has — used to weight \"top rated\" so a 5★/1-review\nshop doesn't outrank a 4.9★/300-review one."
+					},
 					"shop_slug": {
 						"type": "string",
 						"description": "Shop slug — use for profile links: /shops/:slug"
@@ -4763,6 +4768,7 @@
 					"shop_id",
 					"shop_name",
 					"shop_rating",
+					"shop_rating_count",
 					"shop_slug",
 					"price",
 					"quantity_available",

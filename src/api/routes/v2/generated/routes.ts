@@ -1567,6 +1567,7 @@ const models: TsoaRoute.Models = {
             "shop_id": {"dataType":"string","required":true},
             "shop_name": {"dataType":"string","required":true},
             "shop_rating": {"dataType":"double","required":true},
+            "shop_rating_count": {"dataType":"double","required":true},
             "shop_slug": {"dataType":"string","required":true},
             "price": {"dataType":"double","required":true},
             "quantity_available": {"dataType":"double","required":true},
