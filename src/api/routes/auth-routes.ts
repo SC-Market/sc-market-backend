@@ -153,7 +153,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       const receivedState = query.state
 
       // Verify the signed state token and extract the redirect path and action
-      const sessionSecret = env.SESSION_SECRET || "set this var"
+      if (!env.SESSION_SECRET) {
+        throw Error("Session secret must be set")
+      }
+      const sessionSecret = env.SESSION_SECRET
       const verified = verifySignedStateToken(
         receivedState || "",
         sessionSecret,
@@ -248,7 +251,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       }
 
       // Store redirect info in a signed cookie (works without sessions)
-      const sessionSecret = env.SESSION_SECRET || "set this var"
+      if (!env.SESSION_SECRET) {
+        throw Error("Session secret must be set")
+      }
+      const sessionSecret = env.SESSION_SECRET
       const stateToken = createSignedStateToken(path, sessionSecret, action, query.origin || "")
       const prod = app.get("env") === "production"
       res.cookie("scmarket.cidstate", stateToken, {
@@ -275,7 +281,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     "/auth/citizenid/link",
     userAuthorized,
     async (req: Request, res: Response, next: NextFunction) => {
-      const sessionSecret = env.SESSION_SECRET || "set this var"
+      if (!env.SESSION_SECRET) {
+        throw Error("Session secret must be set")
+      }
+      const sessionSecret = env.SESSION_SECRET
       const stateToken = createSignedStateToken("/settings", sessionSecret, "signin", "")
       const prod = app.get("env") === "production"
       res.cookie("scmarket.cidstate", stateToken, {
@@ -305,7 +314,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       }
 
       // Recover redirect info from signed cookie (session-free)
-      const sessionSecret = env.SESSION_SECRET || "set this var"
+      if (!env.SESSION_SECRET) {
+        throw Error("Session secret must be set")
+      }
+      const sessionSecret = env.SESSION_SECRET
       const cidState = req.cookies?.["scmarket.cidstate"]
       const verified = cidState ? verifySignedStateToken(cidState, sessionSecret) : null
       const redirectPath = verified?.path || (req.session as any)?.citizenid_redirect_path || "/market"
