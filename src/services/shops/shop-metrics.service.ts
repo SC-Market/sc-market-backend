@@ -1,4 +1,5 @@
 import { getKnex } from "../../clients/database/knex-db.js"
+import { computeShopBadges } from "./shop-badges.service.js"
 
 export interface ShopMetrics {
   total_orders: number
@@ -91,6 +92,9 @@ export async function refreshShopMetrics(shopId: string): Promise<void> {
     streak,
     response_rate: responseRate,
   })
+
+  // Recompute badges now that metrics have changed (order fulfilled, review left).
+  await computeShopBadges(shopId)
 }
 
 /**

@@ -18,6 +18,7 @@ export interface Shop {
   status: string
   created_at: string
   updated_at: string
+  badge_ids: string[]
 }
 
 /**

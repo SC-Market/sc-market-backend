@@ -87,6 +87,24 @@ export async function refresh_badge_view() {
   await marketDb.refreshBadgeView()
 }
 
+/**
+ * Recompute shop badge_ids for all active shops.
+ * Metric-driven badges refresh on order/review events, but time-based badges
+ * (early_adopter, consistency tiers crossing month boundaries, donor duration)
+ * need a periodic sweep since no order event triggers them.
+ */
+export async function recompute_shop_badges() {
+  try {
+    const { recomputeAllShopBadges } = await import(
+      "../services/shops/shop-badges.service.js"
+    )
+    const count = await recomputeAllShopBadges()
+    logger.info("Recomputed shop badges", { count })
+  } catch (error) {
+    logger.error("Failed to recompute shop badges", { error })
+  }
+}
+
 export async function update_price_history() {
   await marketDb.updatePriceHistpry()
 }
