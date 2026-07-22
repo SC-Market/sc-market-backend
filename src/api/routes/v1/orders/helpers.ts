@@ -9,7 +9,7 @@ import {
   DBOrderSetting,
   DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
-import { database } from "../../../../clients/database/knex-db.js"
+import { database, getKnex } from "../../../../clients/database/knex-db.js"
 import * as chatDb from "../chats/database.js"
 import * as contractorDb from "../contractors/database.js"
 import * as profileDb from "../profiles/database.js"
@@ -650,9 +650,24 @@ export async function createOffer(
         ? await profileDb.getUser({ user_id: session.assigned_id })
         : null
 
-      const channel_id = contractor
-        ? contractor?.discord_thread_channel_id
-        : assigned?.discord_thread_channel_id
+      // Prefer the shop's per-shop Discord config when the session has a shop_id.
+      let channel_id: string | null = null
+      if (session.shop_id) {
+        const shop = await getKnex()("shops")
+          .where("shop_id", session.shop_id)
+          .first("official_server_id", "discord_thread_channel_id")
+        if (shop?.official_server_id && shop?.discord_thread_channel_id) {
+          channel_id = shop.discord_thread_channel_id?.toString() || null
+        }
+      }
+
+      // Fall back to contractor/user config when the shop has no Discord config set
+      if (!channel_id) {
+        channel_id =
+          (contractor
+            ? contractor?.discord_thread_channel_id
+            : assigned?.discord_thread_channel_id) ?? null
+      }
 
       if (channel_id) {
         discord_invite = await discordService.createInvite(channel_id)

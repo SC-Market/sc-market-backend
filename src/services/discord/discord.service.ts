@@ -21,6 +21,7 @@ import logger from "../../logger/logger.js"
 import { env } from "../../config/env.js"
 import { sendMessage } from "../../clients/aws/sqs.js"
 import { checkDiscordSQSConfiguration } from "../../clients/aws/sqs-config.js"
+import { getKnex } from "../../clients/database/knex-db.js"
 import {
   DiscordIntegrationSettings,
   DiscordInviteOptions,
@@ -136,19 +137,33 @@ class RestDiscordService implements DiscordService {
       ? await profileDb.getUser({ user_id: object.customer_id })
       : null
 
-    // Get Discord integration settings with fallback to old columns
+    // Get Discord integration settings with fallback to old columns.
+    // Prefer the shop's per-shop Discord config when the entity has a shop_id.
     let server_id: string | null = null
     let channel_id: string | null = null
 
-    if (contractor) {
-      server_id = contractor.official_server_id?.toString() || null
-      channel_id = contractor.discord_thread_channel_id?.toString() || null
-    } else if (assigned) {
-      const discordSettings = await this.getDiscordIntegrationSettings(
-        assigned.user_id,
-      )
-      server_id = discordSettings.official_server_id
-      channel_id = discordSettings.discord_thread_channel_id
+    if (object.shop_id) {
+      const shop = await getKnex()("shops")
+        .where("shop_id", object.shop_id)
+        .first("official_server_id", "discord_thread_channel_id")
+      if (shop?.official_server_id && shop?.discord_thread_channel_id) {
+        server_id = shop.official_server_id?.toString() || null
+        channel_id = shop.discord_thread_channel_id?.toString() || null
+      }
+    }
+
+    // Fall back to contractor/user config when the shop has no Discord config set
+    if (!server_id || !channel_id) {
+      if (contractor) {
+        server_id = contractor.official_server_id?.toString() || null
+        channel_id = contractor.discord_thread_channel_id?.toString() || null
+      } else if (assigned) {
+        const discordSettings = await this.getDiscordIntegrationSettings(
+          assigned.user_id,
+        )
+        server_id = discordSettings.official_server_id
+        channel_id = discordSettings.discord_thread_channel_id
+      }
     }
 
     if (!server_id || !channel_id) {
