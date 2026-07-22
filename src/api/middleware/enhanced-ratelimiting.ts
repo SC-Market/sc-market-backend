@@ -324,3 +324,58 @@ export const listingUpdateRateLimit = createHourBasedRateLimit({
   authenticated: { points: 1 },
   admin: { points: 1 },
 })
+
+// ── Auth endpoint rate limits (Phase 1 — H3) ─────────────────────────────
+// These are IP-keyed by design: the login init / callback / refresh / logout
+// legs are unauthenticated, so detectUserTier() returns "anonymous" and
+// generateRateLimitKey() keys on `ip:<ip>`. trust proxy = 2 makes req.ip the
+// real client IP.
+//
+// Effective req/min = tier bucket ÷ points (anonymous bucket = 120 pts/60s,
+// authenticated = 500 pts/60s, admin = 300 pts/60s).
+//
+// OVERRIDING PRINCIPLE: these are GENEROUS anti-abuse floors, NOT throttles.
+// A single legitimate user refreshes ~0.08/min (frontend single-flight mutex +
+// 30s circuit breaker). The per-IP floors below are deliberately raised to
+// absorb CGNAT / corporate-NAT aggregation (many users behind one egress IP)
+// so a shared IP is never locked out. When in doubt these err HIGH.
+
+// POST /api/auth/refresh + /auth/refresh — ~120/min per IP.
+// anonymous 120 ÷ 1 = 120/min per IP (plan's upper bound, chosen for NAT).
+export const authRefreshLimit = createRateLimit({
+  anonymous: { points: 1 }, // 120/min per IP
+  authenticated: { points: 1 }, // 500/min per user (generous)
+  admin: { points: 1 }, // 300/min
+})
+
+// OAuth init (GET /auth/discord, /auth/citizenid, /auth/citizenid/link)
+// ~60/min per IP. anonymous 120 ÷ 2 = 60/min per IP.
+export const authInitLimit = createRateLimit({
+  anonymous: { points: 2 }, // 60/min per IP
+  authenticated: { points: 1 }, // 500/min per user (generous)
+  admin: { points: 1 }, // 300/min
+})
+
+// OAuth callbacks (GET /auth/*/callback) — ~60/min per IP.
+// anonymous 120 ÷ 2 = 60/min per IP (raised for concurrent NAT logins).
+export const authCallbackLimit = createRateLimit({
+  anonymous: { points: 2 }, // 60/min per IP
+  authenticated: { points: 1 }, // 500/min per user (generous)
+  admin: { points: 1 }, // 300/min
+})
+
+// Logout (POST /logout, POST /auth/jwt-logout) — ~60/min per IP.
+// anonymous 120 ÷ 2 = 60/min per IP.
+export const authLogoutLimit = createRateLimit({
+  anonymous: { points: 2 }, // 60/min per IP
+  authenticated: { points: 1 }, // 500/min per user (generous)
+  admin: { points: 1 }, // 300/min
+})
+
+// Own-session listing / revoke (GET /auth/sessions, DELETE
+// /auth/sessions/:tokenId) — generous ~120/min. anonymous 120 ÷ 1 = 120/min.
+export const authSessionsLimit = createRateLimit({
+  anonymous: { points: 1 }, // 120/min per IP
+  authenticated: { points: 1 }, // 500/min per user (generous)
+  admin: { points: 1 }, // 300/min
+})

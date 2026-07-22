@@ -32,6 +32,13 @@ import {
   verifyAccessToken,
 } from "../util/jwt.js"
 import * as profileDb from "./v1/profiles/database.js"
+import {
+  authRefreshLimit,
+  authInitLimit,
+  authCallbackLimit,
+  authLogoutLimit,
+  authSessionsLimit,
+} from "../middleware/enhanced-ratelimiting.js"
 
 /**
  * Setup authentication routes
@@ -103,6 +110,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Discord authentication routes
   app.get(
     "/auth/discord",
+    authInitLimit,
     async (req: Request, res: Response, next: NextFunction) => {
       const query = req.query as { path?: string; action?: string; origin?: string }
       const path = query.path || ""
@@ -148,6 +156,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
   app.get(
     "/auth/discord/callback",
+    authCallbackLimit,
     async (req: Request, res: Response, next: NextFunction) => {
       const query = req.query as { state?: string }
       const receivedState = query.state
@@ -240,6 +249,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Citizen ID authentication routes
   app.get(
     "/auth/citizenid",
+    authInitLimit,
     async (req: Request, res: Response, next: NextFunction) => {
       const query = req.query as { path?: string; action?: string; origin?: string }
       const path = query.path || "/market"
@@ -279,6 +289,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Linking route (for existing users)
   app.get(
     "/auth/citizenid/link",
+    authInitLimit,
     userAuthorized,
     async (req: Request, res: Response, next: NextFunction) => {
       if (!env.SESSION_SECRET) {
@@ -304,6 +315,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Login callback
   app.get(
     "/auth/citizenid/callback",
+    authCallbackLimit,
     async (req: Request, res: Response, next: NextFunction) => {
       const query = req.query as {
         state?: string
@@ -437,6 +449,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Linking callback
   app.get(
     "/auth/citizenid/link/callback",
+    authCallbackLimit,
     userAuthorized,
     async (req: Request, res: Response, next: NextFunction) => {
       const query = req.query as {
@@ -535,7 +548,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Logout route - POST only
   // Note: This route works for all authenticated users regardless of verification status
   // No authentication or verification middleware is applied - logout should always be accessible
-  app.post("/logout", async (req: Request, res: Response, next: NextFunction) => {
+  app.post("/logout", authLogoutLimit, async (req: Request, res: Response, next: NextFunction) => {
     // Revoke JWT refresh token if present
     const rawRefresh = getRefreshTokenFromRequest(req)
     if (rawRefresh) {
@@ -609,11 +622,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       return res.status(401).json({ error: "User not found" })
     }
   }
-  app.post("/api/auth/refresh", refreshHandler)
-  app.post("/auth/refresh", refreshHandler) // legacy — remove after transition
+  app.post("/api/auth/refresh", authRefreshLimit, refreshHandler)
+  app.post("/auth/refresh", authRefreshLimit, refreshHandler) // legacy — remove after transition
 
   // JWT logout — revoke refresh token + clear cookies
-  app.post("/auth/jwt-logout", async (req: Request, res: Response) => {
+  app.post("/auth/jwt-logout", authLogoutLimit, async (req: Request, res: Response) => {
     const rawRefresh = getRefreshTokenFromRequest(req)
     if (rawRefresh) {
       await revokeRefreshToken(rawRefresh)
@@ -623,7 +636,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   })
 
   // List active sessions (refresh tokens) for current user
-  app.get("/auth/sessions", async (req: Request, res: Response) => {
+  app.get("/auth/sessions", authSessionsLimit, async (req: Request, res: Response) => {
     // Works with both JWT and session auth
     const userId = (req.user as any)?.user_id
     if (!userId) {
@@ -655,7 +668,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   })
 
   // Revoke a specific session
-  app.delete("/auth/sessions/:tokenId", async (req: Request, res: Response) => {
+  app.delete("/auth/sessions/:tokenId", authSessionsLimit, async (req: Request, res: Response) => {
     const userId = (req.user as any)?.user_id
     if (!userId) return res.status(401).json({ error: "Unauthenticated" })
     const revoked = await revokeSessionById(userId, req.params.tokenId)
