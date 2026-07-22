@@ -9600,6 +9600,69 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DashboardOwnerType": {
+				"type": "string",
+				"enum": [
+					"user",
+					"org",
+					"shop"
+				]
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"DashboardLayoutResponse": {
+				"properties": {
+					"owner_type": {
+						"$ref": "#/components/schemas/DashboardOwnerType"
+					},
+					"owner_id": {
+						"type": "string"
+					},
+					"config": {
+						"$ref": "#/components/schemas/Record_string.unknown_",
+						"description": "Opaque DashboardConfig blob (widgets, scopes, grid layout). Validated client-side."
+					},
+					"updated_by": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"owner_type",
+					"owner_id",
+					"config",
+					"updated_by",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateDashboardLayoutRequest": {
+				"properties": {
+					"owner_type": {
+						"$ref": "#/components/schemas/DashboardOwnerType"
+					},
+					"owner_id": {
+						"type": "string"
+					},
+					"config": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					}
+				},
+				"required": [
+					"owner_type",
+					"owner_id",
+					"config"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CartListingInfo": {
 				"description": "Listing information for cart items",
 				"properties": {
@@ -18283,6 +18346,90 @@
 							"schema": {
 								"$ref": "#/components/schemas/SetFeatureFlagRequest",
 								"description": "Feature flag setting request"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/dashboard/layout": {
+			"get": {
+				"operationId": "GetLayout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/DashboardLayoutResponse"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the saved dashboard layout for an owner. `owner_type`/`owner_id` default\nto the authenticated user's personal dashboard. Returns null config when no\nlayout has been saved yet.",
+				"tags": [
+					"Dashboard V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "owner_type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/DashboardOwnerType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "owner_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "SaveLayout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DashboardLayoutResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create or replace the dashboard layout for an owner. Requires edit access:\npersonal dashboards by their owner, org dashboards by members with\nmanage_org_details, shop dashboards by users who can manage the shop.",
+				"tags": [
+					"Dashboard V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateDashboardLayoutRequest"
 							}
 						}
 					}
