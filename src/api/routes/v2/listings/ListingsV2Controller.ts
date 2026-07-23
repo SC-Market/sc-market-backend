@@ -708,9 +708,30 @@ export class ListingsV2Controller extends BaseController {
       const statusFilter = status || 'active';
       query = query.where('ls.status', statusFilter);
 
-      // Filter by item type
+      // Filter by item type.
+      //
+      // ls.game_item_type is the game item's SUBCATEGORY (e.g. "Shield",
+      // "Helmet", "Ranged Weapon") — it never holds a broad category name. The
+      // market sidebar shortcuts (Weapons / Armor / Components) pass a broad
+      // CATEGORY value ("weapon" / "armor" / "component"), so an exact match on
+      // game_item_type always returned zero rows for those tabs. Resolve a broad
+      // category to its member subcategories (via game_item_categories) and
+      // match any of them; if the value isn't a category, fall back to an exact
+      // subcategory match so the item-type dropdown / unified search (which send
+      // subcategory values directly) keep working unchanged.
       if (item_type) {
-        query = query.where('ls.game_item_type', item_type);
+        const subcategories: string[] = await db("game_item_categories")
+          .whereRaw("LOWER(category) = LOWER(?) OR LOWER(category) LIKE LOWER(?)", [
+            item_type,
+            `%${item_type}%`,
+          ])
+          .pluck("subcategory");
+
+        if (subcategories.length > 0) {
+          query = query.whereIn("ls.game_item_type", subcategories);
+        } else {
+          query = query.where("ls.game_item_type", item_type);
+        }
       }
 
       // Filter by minimum quantity
