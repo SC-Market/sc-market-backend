@@ -67,6 +67,9 @@
   "resolutions": {
     "@types/express": "4.17.20"
   },
+  "overrides": {
+    "ts-deepmerge": "^8.0.0"
+  },
   "devDependencies": {
     "@discordjs/rest": "^2.5.1",
     "@eslint/js": "^9.34.0",
