@@ -47,6 +47,7 @@ import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
 import { setupSitemapRoutes } from "./services/sitemap/sitemap.routes.js"
+import { setupWellKnownRoutes } from "./services/well-known/well-known.routes.js"
 import { chatServer } from "./clients/messaging/websocket.js"
 import { start_tasks } from "./tasks/tasks.js"
 import {
@@ -268,6 +269,8 @@ app.use(trackActivity)
 setupAuthRoutes(app, frontend_url)
 
 setupSitemapRoutes(app)
+
+setupWellKnownRoutes(app)
 
 
 app.use(oapi)
