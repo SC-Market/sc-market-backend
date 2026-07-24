@@ -4,6 +4,11 @@ import { gunzipSync } from "node:zlib"
 import logger from "../../logger/logger.js"
 import { getSitemapCache } from "./sitemap.service.js"
 
+// Served at api.sc-market.space/robots.txt (a different host than the frontend's
+// public/robots.txt at sc-market.space). This host serves only the JSON API and
+// the sitemap files, so we allow crawlers (including AI/answer-engine bots) to
+// fetch the sitemaps but keep them out of the API surface. App-page crawl rules
+// live in the frontend's public/robots.txt.
 const ROBOTS_TXT = `User-agent: *
 Allow: /sitemap
 Disallow: /api/
