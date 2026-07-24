@@ -1,10 +1,15 @@
 import multer from "multer"
 
+// 5mb: sits above the image Lambda's 4mb decoded-byte gate so the Lambda (not
+// multer) produces the user-facing "too large" error. The frontend downscales
+// before upload, so real payloads are well under this.
+const PHOTO_UPLOAD_LIMIT = 5 * 1000 * 1000
+
 // Standard file upload configuration for photos
 export const photoUpload = multer({
   dest: "uploads/",
   limits: {
-    fileSize: 2.5 * 1000 * 1000 /* 2.5mb to account for multipart overhead */,
+    fileSize: PHOTO_UPLOAD_LIMIT,
   },
 })
 
@@ -12,7 +17,7 @@ export const photoUpload = multer({
 export const singlePhotoUpload = multer({
   dest: "uploads/",
   limits: {
-    fileSize: 2.5 * 1000 * 1000 /* 2.5mb to account for multipart overhead */,
+    fileSize: PHOTO_UPLOAD_LIMIT,
   },
 })
 
@@ -20,7 +25,7 @@ export const singlePhotoUpload = multer({
 export const multiplePhotoUpload = multer({
   dest: "uploads/",
   limits: {
-    fileSize: 2.5 * 1000 * 1000 /* 2.5mb to account for multipart overhead */,
+    fileSize: PHOTO_UPLOAD_LIMIT,
   },
 })
 
