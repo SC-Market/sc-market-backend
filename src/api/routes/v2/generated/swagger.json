@@ -3324,6 +3324,13 @@
 						"type": "array",
 						"description": "Optional array of image resource UUIDs to attach as photos"
 					},
+					"external_photo_urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Optional array of external image URLs to link as photos (validated against domain allowlist)"
+					},
 					"pickup_method": {
 						"type": "string",
 						"enum": [
@@ -4301,6 +4308,13 @@
 						},
 						"type": "array",
 						"description": "New photo resource IDs to append (from two-phase upload)"
+					},
+					"external_photo_urls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "New external image URLs to link as photos (validated against domain allowlist, appended after resource IDs)"
 					},
 					"visibility": {
 						"type": "string",
