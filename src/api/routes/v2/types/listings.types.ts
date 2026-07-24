@@ -89,6 +89,9 @@ export interface CreateListingRequest {
   /** Optional array of image resource UUIDs to attach as photos */
   photo_resource_ids?: string[];
 
+  /** Optional array of external image URLs to link as photos (validated against domain allowlist) */
+  external_photo_urls?: string[];
+
   /** Pickup method: how the buyer receives the item */
   pickup_method?: 'delivery' | 'pickup' | 'any';
 
@@ -532,6 +535,9 @@ export interface UpdateListingRequest {
 
   /** New photo resource IDs to append (from two-phase upload) */
   photo_resource_ids?: string[];
+
+  /** New external image URLs to link as photos (validated against domain allowlist, appended after resource IDs) */
+  external_photo_urls?: string[];
 
   /** Listing visibility (null to keep unchanged). Only contractor listings can be 'private'. */
   visibility?: 'public' | 'private';

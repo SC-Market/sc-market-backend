@@ -239,7 +239,8 @@ export class ListingsV2Controller extends BaseController {
           }
         }
 
-        // Link photos if provided
+        // Link photos if provided (resource IDs from two-phase upload)
+        let photoDisplayOrder = 0
         if (requestBody.photo_resource_ids && requestBody.photo_resource_ids.length > 0) {
           const photoRows = requestBody.photo_resource_ids.map((resource_id, index) => ({
             listing_id: listing.listing_id,
@@ -247,6 +248,29 @@ export class ListingsV2Controller extends BaseController {
             display_order: index,
           }));
           await trx('listing_photos_v2').insert(photoRows);
+          photoDisplayOrder = requestBody.photo_resource_ids.length
+        }
+
+        // Link external photo URLs (validated against domain allowlist)
+        if (requestBody.external_photo_urls && requestBody.external_photo_urls.length > 0) {
+          for (const url of requestBody.external_photo_urls) {
+            if (!cdn.verifyExternalResource(url)) {
+              throw this.throwValidationError("Invalid photo URL", [
+                { field: "external_photo_urls", message: `URL not allowed: ${url}` },
+              ])
+            }
+          }
+          const resources = await Promise.all(
+            requestBody.external_photo_urls.map((url, i) =>
+              cdn.createExternalResource(url, `${listing.listing_id}_photo_ext_${i}`)
+            )
+          )
+          const extPhotoRows = resources.map((r, i) => ({
+            listing_id: listing.listing_id,
+            resource_id: r.resource_id,
+            display_order: photoDisplayOrder + i,
+          }))
+          await trx('listing_photos_v2').insert(extPhotoRows)
         }
 
         // Create auction details if sale_type is 'auction'
@@ -1609,6 +1633,40 @@ export class ListingsV2Controller extends BaseController {
           logger.info("Appended listing photos via resource IDs", {
             listingId: id,
             count: requestBody.photo_resource_ids.length,
+          })
+        }
+
+        // Append new photos by external URL (validated against domain allowlist)
+        if (requestBody.external_photo_urls && requestBody.external_photo_urls.length > 0) {
+          for (const url of requestBody.external_photo_urls) {
+            if (!cdn.verifyExternalResource(url)) {
+              throw this.throwValidationError("Invalid photo URL", [
+                { field: "external_photo_urls", message: `URL not allowed: ${url}` },
+              ])
+            }
+          }
+
+          const maxOrderRow2 = await trx("listing_photos_v2")
+            .where("listing_id", id)
+            .max("display_order as max_order")
+            .first()
+          const startOrder2 = (maxOrderRow2?.max_order ?? -1) + 1
+
+          const resources = await Promise.all(
+            requestBody.external_photo_urls.map((url, i) =>
+              cdn.createExternalResource(url, `${id}_photo_ext_${i}`)
+            )
+          )
+          const extPhotoRows = resources.map((r, i) => ({
+            listing_id: id,
+            resource_id: r.resource_id,
+            display_order: startOrder2 + i,
+          }))
+          await trx("listing_photos_v2").insert(extPhotoRows)
+
+          logger.info("Appended listing photos via external URLs", {
+            listingId: id,
+            count: requestBody.external_photo_urls.length,
           })
         }
 
