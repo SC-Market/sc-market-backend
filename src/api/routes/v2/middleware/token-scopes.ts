@@ -92,6 +92,15 @@ function domainForPath(path: string): string | null {
 }
 
 /**
+ * Whether a router-relative path targets the admin surface. Used to enforce the
+ * admin *role* centrally (not just the admin token scope). Single source of
+ * truth for "what is an admin route", shared with the domain table above.
+ */
+export function isAdminPath(path: string): boolean {
+  return domainForPath(path) === "admin"
+}
+
+/**
  * The concrete scope this request requires. `domain:level` for known domains,
  * or a bare level marker for v2-only routes.
  */

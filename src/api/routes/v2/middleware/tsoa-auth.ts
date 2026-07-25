@@ -8,7 +8,7 @@
 
 import { Request } from "express"
 import { User } from "../../v1/api-models.js"
-import { enforceTokenScopes, TokenInfo } from "./token-scopes.js"
+import { enforceTokenScopes, isAdminPath, TokenInfo } from "./token-scopes.js"
 
 export async function expressAuthentication(
   request: Request,
@@ -34,6 +34,19 @@ export async function expressAuthentication(
     }
     if (securityName === "verified" && !user.rsi_confirmed) {
       throw new Error("Your account is not verified.")
+    }
+
+    // Admin routes MUST be executed by an admin user, regardless of token
+    // scope. This is enforced centrally here — not just in-controller via
+    // requireAdmin() — so a demoted user whose token still carries the `admin`
+    // scope is rejected, and a future admin controller that forgets its guard
+    // is still protected. The token scope check below is a second gate.
+    if (isAdminPath(request.path) && user.role !== "admin") {
+      const err = new Error("Admin access required") as Error & {
+        status: number
+      }
+      err.status = 403
+      throw err
     }
 
     // Constrain Bearer API tokens to their granted scopes. No-op for
