@@ -1,4 +1,5 @@
 import { createGzip } from "node:zlib"
+import { createRequire } from "node:module"
 import {
   EnumChangefreq,
   SitemapItemLoose,
@@ -13,6 +14,16 @@ import * as recruitingDb from "../../api/routes/v1/recruiting/database.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
+
+const require = createRequire(import.meta.url)
+const Bugsnag = require("@bugsnag/js") as {
+  notify: (
+    error: Error,
+    onError?: (event: {
+      addMetadata: (section: string, values: Record<string, unknown>) => void
+    }) => void,
+  ) => void
+}
 
 export const SITEMAP_URL_LIMIT = 10_000
 export const SITEMAP_TTL_MS = 6 * 60 * 60 * 1000
@@ -37,6 +48,34 @@ function getSitemapIndexHostname(): string {
   const url = new URL(frontend)
   url.hostname = `api.${url.hostname}`
   return url.origin + "/"
+}
+
+/**
+ * Build one dynamic section, isolating its failure. If the section's queries
+ * throw, we log and skip that section instead of aborting the whole sitemap.
+ * Previously any single failing query (e.g. a users/contractors scan) rejected
+ * generateSitemapCache() entirely, so every sitemap file — including unrelated
+ * ones like shops — served a 500 and Google reported "sitemap could not be
+ * read". Degrading one section to empty is far better than losing them all.
+ */
+async function collectSection(
+  sections: SitemapSection[],
+  name: string,
+  build: () => Promise<SitemapItemLoose[]>,
+): Promise<void> {
+  try {
+    sections.push({ name, pages: await build() })
+  } catch (error) {
+    logger.error("Failed to build sitemap section", { section: name, error })
+    if (process.env.NODE_ENV !== "development") {
+      Bugsnag.notify(
+        error instanceof Error ? error : new Error(String(error)),
+        (event) => {
+          event.addMetadata("sitemap", { section: name })
+        },
+      )
+    }
+  }
 }
 
 export async function collectSitemapSections(): Promise<SitemapSection[]> {
@@ -77,74 +116,83 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
   })
 
   // ── Market listings ──
-  const market_listings: { listing_id: string; title: string }[] = await db("listing_search")
-    .select("listing_id", "title")
-    .where("status", "active")
-    .where("visibility", "public")
+  await collectSection(sections, "market", async () => {
+    const market_listings: { listing_id: string; title: string }[] = await db("listing_search")
+      .select("listing_id", "title")
+      .where("status", "active")
+      .where("visibility", "public")
 
-  const aggregateItems: { game_item_id: string; game_item_name: string }[] = await db("listing_search")
-    .select("game_item_id", "game_item_name")
-    .where("status", "active")
-    .where("visibility", "public")
-    .whereNotNull("game_item_id")
-    .groupBy("game_item_id", "game_item_name")
+    const aggregateItems: { game_item_id: string; game_item_name: string }[] = await db("listing_search")
+      .select("game_item_id", "game_item_name")
+      .where("status", "active")
+      .where("visibility", "public")
+      .whereNotNull("game_item_id")
+      .groupBy("game_item_id", "game_item_name")
 
-  const marketPages: SitemapItemLoose[] = []
-  for (const listing of market_listings) {
-    marketPages.push({
-      url: `/market/${formatShortSlug(listing.listing_id, listing.title)}`,
-      changefreq: EnumChangefreq.WEEKLY,
-      priority: 0.8,
-    })
-  }
-  for (const item of aggregateItems) {
-    marketPages.push({
-      url: `/market/aggregate/${formatShortSlug(item.game_item_id, item.game_item_name || "")}`,
-      changefreq: EnumChangefreq.WEEKLY,
-      priority: 0.7,
-    })
-  }
-  sections.push({ name: "market", pages: marketPages })
+    const marketPages: SitemapItemLoose[] = []
+    for (const listing of market_listings) {
+      marketPages.push({
+        url: `/market/${formatShortSlug(listing.listing_id, listing.title)}`,
+        changefreq: EnumChangefreq.WEEKLY,
+        priority: 0.8,
+      })
+    }
+    for (const item of aggregateItems) {
+      marketPages.push({
+        url: `/market/aggregate/${formatShortSlug(item.game_item_id, item.game_item_name || "")}`,
+        changefreq: EnumChangefreq.WEEKLY,
+        priority: 0.7,
+      })
+    }
+    return marketPages
+  })
 
   // ── Contractors ──
-  const contractors = await contractorDb.getContractorListings({})
-  const contractorPages: SitemapItemLoose[] = []
-  for (const contractor of contractors) {
-    contractorPages.push(
-      { url: `/contractor/${contractor.spectrum_id}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
-      { url: `/contractor/${contractor.spectrum_id}/members`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
-    )
-  }
-  sections.push({ name: "contractors", pages: contractorPages })
+  await collectSection(sections, "contractors", async () => {
+    const contractors = await contractorDb.getContractorListings({})
+    const contractorPages: SitemapItemLoose[] = []
+    for (const contractor of contractors) {
+      contractorPages.push(
+        { url: `/contractor/${contractor.spectrum_id}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
+        { url: `/contractor/${contractor.spectrum_id}/members`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
+      )
+    }
+    return contractorPages
+  })
 
   // ── Shops ──
-  const shops: { slug: string }[] = await db("shops")
-    .select("slug")
-    .where("status", "active")
-    .whereNot("slug", "")
-  const shopPages: SitemapItemLoose[] = []
-  for (const shop of shops) {
-    shopPages.push(
-      { url: `/shops/${shop.slug}`, changefreq: EnumChangefreq.WEEKLY, priority: 0.7 },
-      { url: `/shops/${shop.slug}/services`, changefreq: EnumChangefreq.WEEKLY, priority: 0.5 },
-      { url: `/shops/${shop.slug}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-    )
-  }
-  sections.push({ name: "shops", pages: shopPages })
+  await collectSection(sections, "shops", async () => {
+    const shops: { slug: string }[] = await db("shops")
+      .select("slug")
+      .where("status", "active")
+      .whereNot("slug", "")
+    const shopPages: SitemapItemLoose[] = []
+    for (const shop of shops) {
+      shopPages.push(
+        { url: `/shops/${shop.slug}`, changefreq: EnumChangefreq.WEEKLY, priority: 0.7 },
+        { url: `/shops/${shop.slug}/services`, changefreq: EnumChangefreq.WEEKLY, priority: 0.5 },
+        { url: `/shops/${shop.slug}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
+      )
+    }
+    return shopPages
+  })
 
   // ── Recruiting ──
-  const recruit_posts = await recruitingDb.getAllRecruitingPosts()
-  const recruitPages: SitemapItemLoose[] = []
-  for (const post of recruit_posts) {
-    recruitPages.push({
-      url: `/recruiting/post/${post.post_id}`,
-      changefreq: EnumChangefreq.MONTHLY,
-      priority: 0.5,
-    })
-  }
-  sections.push({ name: "recruiting", pages: recruitPages })
+  await collectSection(sections, "recruiting", async () => {
+    const recruit_posts = await recruitingDb.getAllRecruitingPosts()
+    const recruitPages: SitemapItemLoose[] = []
+    for (const post of recruit_posts) {
+      recruitPages.push({
+        url: `/recruiting/post/${post.post_id}`,
+        changefreq: EnumChangefreq.MONTHLY,
+        priority: 0.5,
+      })
+    }
+    return recruitPages
+  })
 
   // ── Wiki & Game Data ──
+  await collectSection(sections, "wiki", async () => {
   const wikiPages: SitemapItemLoose[] = []
 
   const wikiQueries = [
@@ -198,22 +246,33 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
       await query()
     } catch (error) {
       logger.warn("Failed to fetch game data section for sitemap", { error })
+      if (process.env.NODE_ENV !== "development") {
+        Bugsnag.notify(
+          error instanceof Error ? error : new Error(String(error)),
+          (event) => {
+            event.addMetadata("sitemap", { section: "wiki" })
+          },
+        )
+      }
     }
   }
-  sections.push({ name: "wiki", pages: wikiPages })
+    return wikiPages
+  })
 
   // ── Users (last — lowest priority) ──
-  const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
-  const userPages: SitemapItemLoose[] = []
-  for (const user of users) {
-    userPages.push(
-      { url: `/user/${user.username}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
-      { url: `/user/${user.username}/services`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-      { url: `/user/${user.username}/market`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-      { url: `/user/${user.username}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
-    )
-  }
-  sections.push({ name: "users", pages: userPages })
+  await collectSection(sections, "users", async () => {
+    const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
+    const userPages: SitemapItemLoose[] = []
+    for (const user of users) {
+      userPages.push(
+        { url: `/user/${user.username}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
+        { url: `/user/${user.username}/services`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
+        { url: `/user/${user.username}/market`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
+        { url: `/user/${user.username}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
+      )
+    }
+    return userPages
+  })
 
   return sections
 }
