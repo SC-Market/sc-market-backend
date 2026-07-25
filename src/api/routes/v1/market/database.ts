@@ -5,6 +5,7 @@
  */
 
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { buildPrefixTsquery } from "../../../../util/full-text-search.js"
 import { getService } from "../services/database.js"
 import { applyAttributeFilters } from "./attribute-query-optimizer.js"
 import {
@@ -1921,23 +1922,30 @@ export async function searchGameItems(
   const trimmed = query.trim()
   const effectiveLimit = limit || 50
 
-  // Build a prefix-aware tsquery: each word gets :* for prefix matching
-  const prefixTsquery = trimmed
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((word) => `${word.replace(/[^\w]/g, "")}:*`)
-    .join(" & ")
+  // Prefix-aware tsquery; empty when the input is all punctuation.
+  const prefixTsquery = buildPrefixTsquery(trimmed)
 
-  return knex()<DBMarketItem>("game_items")
-    .whereRaw(
+  const q = knex()<DBMarketItem>("game_items")
+
+  // If nothing usable survived (query was all punctuation), fall back to
+  // ILIKE only — never pass an empty tsquery.
+  if (prefixTsquery) {
+    q.whereRaw(
       "to_tsvector('english', name) @@ to_tsquery('english', ?)",
       [prefixTsquery],
-    )
-    .orWhere("name", "ilike", `%${trimmed}%`)
-    .orderByRaw(
+    ).orWhere("name", "ilike", `%${trimmed}%`)
+  } else {
+    q.where("name", "ilike", `%${trimmed}%`)
+  }
+
+  if (prefixTsquery) {
+    q.orderByRaw(
       `ts_rank(to_tsvector('english', name), to_tsquery('english', ?)) DESC`,
       [prefixTsquery],
     )
+  }
+
+  return q
     .orderByRaw(
       `CASE WHEN name ILIKE ? THEN 0 ELSE 1 END`,
       [`${trimmed}%`],
