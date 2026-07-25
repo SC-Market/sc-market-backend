@@ -8,6 +8,7 @@
 
 import { Request } from "express"
 import { User } from "../../v1/api-models.js"
+import { enforceTokenScopes, TokenInfo } from "./token-scopes.js"
 
 export async function expressAuthentication(
   request: Request,
@@ -34,6 +35,15 @@ export async function expressAuthentication(
     if (securityName === "verified" && !user.rsi_confirmed) {
       throw new Error("Your account is not verified.")
     }
+
+    // Constrain Bearer API tokens to their granted scopes. No-op for
+    // session/JWT requests (no __tokenInfo), so browser users are unaffected.
+    // Throws a 403 (mapped by tsoa-error-handler) when the token's scopes do
+    // not cover this method+path. `request.path` is router-relative here (the
+    // router is mounted at /api/v2), matching the deletion-status check above.
+    const tokenInfo = (request as { __tokenInfo?: TokenInfo }).__tokenInfo
+    enforceTokenScopes(tokenInfo, request.method, request.path)
+
     return user
   }
 
