@@ -3,6 +3,7 @@ import {
   requiredScope,
   tokenSatisfiesScope,
   enforceTokenScopes,
+  isAdminPath,
   TokenInfo,
 } from "./token-scopes.js"
 
@@ -56,6 +57,20 @@ describe("v2 token scope enforcement", () => {
     it("does not match on partial segment names", () => {
       // "administrators" must NOT match the "admin" prefix
       expect(requiredScope("GET", "/administrators").domain).toBeNull()
+    })
+  })
+
+  describe("isAdminPath", () => {
+    it("is true for admin and its sub-paths", () => {
+      expect(isAdminPath("/admin")).toBe(true)
+      expect(isAdminPath("/admin/feature-flags")).toBe(true)
+      expect(isAdminPath("/admin/imports/spectrum")).toBe(true)
+    })
+
+    it("is false for non-admin and lookalike paths", () => {
+      expect(isAdminPath("/administrators")).toBe(false)
+      expect(isAdminPath("/listings")).toBe(false)
+      expect(isAdminPath("/dashboard")).toBe(false)
     })
   })
 
