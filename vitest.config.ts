@@ -12,8 +12,9 @@ export default defineConfig({
       "src/test-utils/database-*.test.ts",
       "src/test-utils/migration-validation.test.ts",
       "src/test-utils/variant-types.test.ts",
-      // V2 controller tests need mock infrastructure updates (TODO)
-      "src/api/routes/v2/**/*.test.ts",
+      // V2 controller tests need mock infrastructure updates (TODO).
+      // Scoped to *Controller* so pure-function middleware tests still run.
+      "src/api/routes/v2/**/*Controller*.test.ts",
       // V2 service tests need mock knex improvements (TODO)
       "src/services/market-v2/**/*.test.ts",
     ],
