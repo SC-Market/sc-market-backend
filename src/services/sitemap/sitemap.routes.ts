@@ -7,14 +7,11 @@ import { getSitemapCache } from "./sitemap.service.js"
 // Served at api.sc-market.space/robots.txt (a different host than the frontend's
 // public/robots.txt at sc-market.space). App-page crawl rules live in the
 // frontend's public/robots.txt.
-// This host serves only the JSON API and the sitemap files. Disallow the whole
-// surface and explicitly allow only the sitemap index + shards. Longest-match
-// wins in Google's parser, so `/sitemap.xml` and `/sitemap-<section>-<n>.xml`
-// stay crawlable while everything else (the entire API) is blocked.
+// This host serves only the JSON API and the sitemap files. Block only the API
+// surface; everything else (notably the sitemaps, which are not under /api/)
+// stays crawlable by default.
 const ROBOTS_TXT = `User-agent: *
-Allow: /sitemap.xml
-Allow: /sitemap-
-Disallow: /
+Disallow: /api/
 
 Sitemap: https://api.sc-market.space/sitemap.xml
 `
