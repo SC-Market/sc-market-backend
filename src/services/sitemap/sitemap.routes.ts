@@ -5,13 +5,16 @@ import logger from "../../logger/logger.js"
 import { getSitemapCache } from "./sitemap.service.js"
 
 // Served at api.sc-market.space/robots.txt (a different host than the frontend's
-// public/robots.txt at sc-market.space). This host serves only the JSON API and
-// the sitemap files, so we allow crawlers (including AI/answer-engine bots) to
-// fetch the sitemaps but keep them out of the API surface. App-page crawl rules
-// live in the frontend's public/robots.txt.
+// public/robots.txt at sc-market.space). App-page crawl rules live in the
+// frontend's public/robots.txt.
+// This host serves only the JSON API and the sitemap files. Disallow the whole
+// surface and explicitly allow only the sitemap index + shards. Longest-match
+// wins in Google's parser, so `/sitemap.xml` and `/sitemap-<section>-<n>.xml`
+// stay crawlable while everything else (the entire API) is blocked.
 const ROBOTS_TXT = `User-agent: *
-Allow: /sitemap
-Disallow: /api/
+Allow: /sitemap.xml
+Allow: /sitemap-
+Disallow: /
 
 Sitemap: https://api.sc-market.space/sitemap.xml
 `
