@@ -1,5 +1,5 @@
 import { gunzipSync } from "node:zlib"
-import { describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("../../api/routes/v1/contractors/database.js", () => ({
   getContractorListings: vi.fn(async () => []),
@@ -35,7 +35,12 @@ vi.mock("../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn() },
 }))
 
-import { generateSitemapCache } from "./sitemap.service.js"
+import {
+  generateSitemapCache,
+  getSitemapCache,
+  clearSitemapCache,
+  SITEMAP_TTL_MS,
+} from "./sitemap.service.js"
 
 describe("generateSitemapCache", () => {
   it("produces a valid sitemap index with section-based keys", async () => {
@@ -78,5 +83,37 @@ describe("generateSitemapCache", () => {
 
     // Reset for any subsequent tests.
     mockKnex.mockImplementation(() => createChainMock([]))
+  })
+})
+
+describe("getSitemapCache (stale-while-revalidate)", () => {
+  beforeEach(() => {
+    clearSitemapCache()
+    mockKnex.mockImplementation(() => createChainMock([]))
+  })
+
+  it("serves the stale cache immediately and triggers a background rebuild", async () => {
+    // Cold start builds and caches.
+    const first = await getSitemapCache()
+
+    // A warm call returns the exact same cache object without re-querying.
+    const callsAfterBuild = mockKnex.mock.calls.length
+    expect(await getSitemapCache()).toBe(first)
+    expect(mockKnex.mock.calls.length).toBe(callsAfterBuild)
+
+    // Make the cache look stale, then call again: it must return the old
+    // object immediately (no blocking rebuild) yet kick off a fresh build
+    // (observable as additional DB queries).
+    vi.useFakeTimers()
+    vi.setSystemTime(Date.now() + SITEMAP_TTL_MS + 1)
+    try {
+      const stale = await getSitemapCache()
+      expect(stale).toBe(first)
+      expect(mockKnex.mock.calls.length).toBeGreaterThan(callsAfterBuild)
+    } finally {
+      vi.useRealTimers()
+    }
+
+    clearSitemapCache()
   })
 })
