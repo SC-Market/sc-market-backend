@@ -197,22 +197,22 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
 
   const wikiQueries = [
     async () => {
-      const missions = await db("missions").select("mission_code", "title").limit(5000)
+      const missions = await db("missions").select("mission_code", "mission_name").limit(5000)
       for (const m of missions) {
         wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
     },
     async () => {
-      const blueprints = await db("blueprints").select("blueprint_code", "name").limit(5000)
+      const blueprints = await db("blueprints").select("blueprint_code", "blueprint_name").limit(5000)
       for (const b of blueprints) {
         wikiPages.push({ url: `/blueprints/${b.blueprint_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
     },
     async () => {
-      const resources = await db("resources").select("resource_id", "name").limit(5000)
+      const resources = await db("resources").select("resource_id", "resource_name").limit(5000)
       for (const r of resources) {
-        wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
-        wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+        wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+        wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
       }
     },
     async () => {
@@ -234,9 +234,9 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
       }
     },
     async () => {
-      const ores = await db("resources").select("name").whereNotNull("name").where("is_mineable", true).limit(500)
+      const ores = await db("resources").select("resource_name").whereNotNull("resource_name").where("can_be_mined", true).limit(500)
       for (const o of ores) {
-        wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+        wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.resource_name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
       }
     },
   ]
