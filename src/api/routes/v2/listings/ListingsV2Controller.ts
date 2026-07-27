@@ -542,6 +542,8 @@ export class ListingsV2Controller extends BaseController {
     @Query() game_item_id?: string,
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,
+    @Query() quality_value_min?: number,
+    @Query() quality_value_max?: number,
     @Query() price_min?: number,
     @Query() price_max?: number,
     @Query() page?: number,
@@ -554,6 +556,10 @@ export class ListingsV2Controller extends BaseController {
     @Query() language_codes?: string,
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
     @Query() shop_slug?: string,
+    @Query() pickup_method?: 'delivery' | 'pickup' | 'any',
+    @Query() in_stock?: boolean,
+    @Query() has_photos?: boolean,
+    @Query() bulk_discount?: boolean,
     @Request() request?: ExpressRequest,
   ): Promise<SearchListingsResponse> {
     if (request) this.request = request
@@ -715,6 +721,28 @@ export class ListingsV2Controller extends BaseController {
         })
       }
 
+      // Apply quality value filters (mirrors the tier logic against the
+      // quality_value_min/max columns exposed by the listing_search view)
+      if (quality_value_min !== undefined) {
+        query = query.where(function () {
+          this.whereNull("ls.quality_value_max").orWhere(
+            "ls.quality_value_max",
+            ">=",
+            quality_value_min,
+          )
+        })
+      }
+
+      if (quality_value_max !== undefined) {
+        query = query.where(function () {
+          this.whereNull("ls.quality_value_min").orWhere(
+            "ls.quality_value_min",
+            "<=",
+            quality_value_max,
+          )
+        })
+      }
+
       // Apply price filters (Requirement 15.5)
       if (price_min !== undefined) {
         query = query.where(function () {
@@ -782,6 +810,24 @@ export class ListingsV2Controller extends BaseController {
       // Filter by shop
       if (shop_slug) {
         query = query.where('ls.shop_slug', shop_slug)
+      }
+
+      // Filter by pickup method (only when set and not 'any')
+      if (pickup_method && pickup_method !== 'any') {
+        query = query.where('ls.pickup_method', pickup_method)
+      }
+
+      // Tag filters (UnifiedSearchBar chips): In Stock / Has Photos / Bulk Discount
+      if (in_stock) {
+        query = query.where('ls.quantity_available', '>', 0)
+      }
+
+      if (has_photos) {
+        query = query.whereNotNull('ls.photo')
+      }
+
+      if (bulk_discount) {
+        query = query.where('ls.has_bulk_discount', true)
       }
 
       // Filter by visibility: exclude private listings unless user is an org member of the shop's owner

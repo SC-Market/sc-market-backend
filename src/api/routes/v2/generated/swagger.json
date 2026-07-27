@@ -13946,6 +13946,24 @@
 						}
 					},
 					{
+						"in": "query",
+						"name": "quality_value_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quality_value_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
 						"description": "Minimum price filter",
 						"in": "query",
 						"name": "price_min",
@@ -14074,6 +14092,43 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pickup_method",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"delivery",
+								"pickup",
+								"any"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "in_stock",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "has_photos",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "bulk_discount",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
