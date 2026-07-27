@@ -222,7 +222,7 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
       }
     },
     async () => {
-      const ships = await db("game_items").where("type", "Ship").select("id", "name").limit(2000)
+      const ships = await db("game_items").where("type", "Ship for Sale/Rental").select("id", "name").limit(2000)
       for (const s of ships) {
         wikiPages.push({ url: `/wiki/ships/${formatShortSlug(s.id, s.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
@@ -234,9 +234,9 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
       }
     },
     async () => {
-      const ores = await db("resources").select("resource_name").whereNotNull("resource_name").where("can_be_mined", true).limit(500)
+      const ores = await db("mineable_elements").select("name").whereNotNull("name").limit(500)
       for (const o of ores) {
-        wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.resource_name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+        wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
       }
     },
   ]
