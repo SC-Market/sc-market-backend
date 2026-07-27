@@ -333,27 +333,55 @@ let cache: SitemapCache | null = null
 let cacheGeneratedAt = 0
 let generationPromise: Promise<SitemapCache> | null = null
 
-export async function getSitemapCache(): Promise<SitemapCache> {
-  if (cache && Date.now() - cacheGeneratedAt < SITEMAP_TTL_MS) {
-    return cache
-  }
-
+// Kick off a (de-duplicated) regeneration. Resolves to the freshly built cache.
+// Errors are swallowed here so background callers can't produce unhandled
+// rejections; the failure is logged/reported and the previous cache is kept.
+function startRegeneration(): Promise<SitemapCache> {
   if (generationPromise) {
     return generationPromise
   }
 
   generationPromise = (async () => {
-    const generated = await generateSitemapCache()
-    cache = generated
-    cacheGeneratedAt = Date.now()
-    return generated
+    try {
+      const generated = await generateSitemapCache()
+      cache = generated
+      cacheGeneratedAt = Date.now()
+      return generated
+    } finally {
+      generationPromise = null
+    }
   })()
 
-  try {
-    return await generationPromise
-  } finally {
-    generationPromise = null
+  return generationPromise
+}
+
+export async function getSitemapCache(): Promise<SitemapCache> {
+  const isStale = !cache || Date.now() - cacheGeneratedAt >= SITEMAP_TTL_MS
+
+  // Warm cache: serve it directly.
+  if (cache && !isStale) {
+    return cache
   }
+
+  // Stale-while-revalidate: we have a usable (if old) cache, so serve it
+  // immediately and rebuild in the background. This keeps crawler requests
+  // fast — no request ever blocks on a full DB-backed regeneration, which
+  // could otherwise exceed a crawler's read timeout ("Sitemap could not be
+  // read"). Worst case a single request gets a sitemap up to a few hours old.
+  if (cache) {
+    startRegeneration().catch((error) => {
+      logger.error("Background sitemap regeneration failed", { error })
+      if (process.env.NODE_ENV !== "development") {
+        Bugsnag.notify(
+          error instanceof Error ? error : new Error(String(error)),
+        )
+      }
+    })
+    return cache
+  }
+
+  // Cold start: nothing to serve yet, so we must wait for the first build.
+  return startRegeneration()
 }
 
 export function clearSitemapCache(): void {
