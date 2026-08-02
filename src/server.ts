@@ -15,7 +15,12 @@ const bugsnag = isDevelopment
       enabledReleaseStages: ["production", "staging"],
     })
 
-import express, { Request, RequestHandler } from "express"
+import express, {
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express"
 import compression from "compression"
 import cookieParser from "cookie-parser"
 import passport from "passport"
@@ -64,9 +69,18 @@ const SessionPool = pg.Pool
 const deployEnvironment = env.NODE_ENV
 const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
 const frontend_url = new URL(env.FRONTEND_URL || "http://localhost:5173")
-const discord_backend_url = new URL(
-  env.DISCORD_BACKEND_URL || "http://localhost:8081",
-)
+if (!env.BACKEND_PORT) {
+  throw new Error(
+    "BACKEND_PORT is not set. It must match the port the reverse proxy and the Lightsail publicEndpoint target, so there is no safe default to fall back to.",
+  )
+}
+if (!env.DISCORD_BACKEND_URL) {
+  throw new Error(
+    "DISCORD_BACKEND_URL is not set. It determines the port the internal discord_app listens on, which the Discord bot must agree with.",
+  )
+}
+const backend_port = env.BACKEND_PORT
+const discord_backend_url = new URL(env.DISCORD_BACKEND_URL)
 const discord_bot_url = new URL(env.DISCORD_BOT_URL || "http://localhost:8081")
 
 import {
@@ -320,10 +334,16 @@ const io = new Server(httpServer, {
   },
 })
 
+/**
+ * engine.io invokes these middlewares with its own request object, which carries
+ * the parsed handshake query under `_query`. cookieParser / sessionMiddleware /
+ * passport.session decorate that same object, so it doubles as an Express request.
+ */
+type HandshakeRequest = Request & { _query: Record<string, string> }
+
 function onlyForHandshake(middleware: RequestHandler): RequestHandler {
   return (req, res, next) => {
-    // @ts-ignore
-    const isHandshake = req._query.sid === undefined
+    const isHandshake = (req as HandshakeRequest)._query.sid === undefined
     if (isHandshake) {
       middleware(req, res, next)
     } else {
@@ -337,7 +357,7 @@ io.engine.use(onlyForHandshake(cookieParser()))
 io.engine.use(onlyForHandshake(sessionMiddleware))
 io.engine.use(onlyForHandshake(passport.session()))
 io.engine.use(
-  onlyForHandshake(async (req: any, res: any, next: any) => {
+  onlyForHandshake(async (req: Request, res: Response, next: NextFunction) => {
     // Try JWT cookie auth first
     if (isJWTAuthEnabled()) {
       const accessToken = getAccessTokenFromRequest(req)
@@ -371,8 +391,8 @@ attributeDefinitionCache.warmUp().catch((error) => {
 })
 
 // Start the app
-logger.info(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
-httpServer.listen(env.BACKEND_PORT || 7000)
+logger.info(`server up on port ${hostname()}:${backend_port}`)
+httpServer.listen(backend_port)
 
 const discord_app = express()
 discord_app.use(
@@ -386,11 +406,9 @@ discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
 discord_app.use("/alert-subscriptions", subscriptionRouter)
 discord_app.use("/claim", claimRouter)
-discord_app.listen(discord_backend_url.port || 8081)
+discord_app.listen(discord_backend_url.port)
 logger.info(
-  `discord backend up on port ${hostname()}:${
-    discord_backend_url.port || 8081
-  }`,
+  `discord backend up on port ${hostname()}:${discord_backend_url.port}`,
 )
 
 start_tasks()
