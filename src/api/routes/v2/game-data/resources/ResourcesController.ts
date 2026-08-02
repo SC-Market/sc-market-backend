@@ -256,6 +256,84 @@ export class ResourcesController extends BaseController {
   }
 
   /**
+   * Get resource categories
+   *
+   * Returns all resource categories with item counts, supporting
+   * hierarchical category navigation in the resource browser.
+   *
+   * Requirements:
+   * - 44.2: Categorize resources by type (Metals, Gases, Minerals, Components, etc.)
+   * - 44.4: Support filtering resources by category
+   *
+   * @summary Get categories
+   * @param version_id Optional game version ID (defaults to active LIVE version)
+   * @returns Array of categories with counts
+   */
+  @Get("categories")
+  public async getResourceCategories(
+    @Query() version_id?: string,
+  ): Promise<ResourceCategory[]> {
+    const knex = getKnex()
+
+    logger.info("Fetching resource categories", { version_id })
+
+    try {
+      // ========================================================================
+      // Get or validate version_id
+      // ========================================================================
+      let effectiveVersionId = version_id
+
+      if (!effectiveVersionId) {
+        // Get active LIVE version
+        const activeVersion = await knex("game_versions")
+          .where("version_type", "LIVE")
+          .where("is_active", true)
+          .orderBy("created_at", "desc")
+          .first()
+
+        if (!activeVersion) {
+          this.throwNotFound("Active LIVE game version", "LIVE")
+        }
+
+        effectiveVersionId = activeVersion.version_id
+      }
+
+      // ========================================================================
+      // Get categories with counts (Requirement 44.2)
+      // ========================================================================
+      const categoriesQuery = await knex("resources")
+        .select(
+          "resource_category as category",
+          "resource_subcategory as subcategory",
+        )
+        .count<ResourceCategoryCountRow[]>("* as count")
+        .where("version_id", effectiveVersionId)
+        .groupBy("resource_category", "resource_subcategory")
+        .orderBy("resource_category", "asc")
+        .orderBy("resource_subcategory", "asc")
+
+      const categories: ResourceCategory[] = categoriesQuery.map((row) => ({
+        category: row.category,
+        subcategory: row.subcategory || undefined,
+        count: parseInt(String(row.count), 10),
+      }))
+
+      logger.info("Resource categories fetched successfully", {
+        category_count: categories.length,
+      })
+
+      return categories
+    } catch (error) {
+      logger.error("Failed to fetch resource categories", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
    * Get resource detail with blueprints and locations
    *
    * Returns complete resource information including all blueprints that require
@@ -395,81 +473,4 @@ export class ResourcesController extends BaseController {
     }
   }
 
-  /**
-   * Get resource categories
-   *
-   * Returns all resource categories with item counts, supporting
-   * hierarchical category navigation in the resource browser.
-   *
-   * Requirements:
-   * - 44.2: Categorize resources by type (Metals, Gases, Minerals, Components, etc.)
-   * - 44.4: Support filtering resources by category
-   *
-   * @summary Get categories
-   * @param version_id Optional game version ID (defaults to active LIVE version)
-   * @returns Array of categories with counts
-   */
-  @Get("categories")
-  public async getResourceCategories(
-    @Query() version_id?: string,
-  ): Promise<ResourceCategory[]> {
-    const knex = getKnex()
-
-    logger.info("Fetching resource categories", { version_id })
-
-    try {
-      // ========================================================================
-      // Get or validate version_id
-      // ========================================================================
-      let effectiveVersionId = version_id
-
-      if (!effectiveVersionId) {
-        // Get active LIVE version
-        const activeVersion = await knex("game_versions")
-          .where("version_type", "LIVE")
-          .where("is_active", true)
-          .orderBy("created_at", "desc")
-          .first()
-
-        if (!activeVersion) {
-          this.throwNotFound("Active LIVE game version", "LIVE")
-        }
-
-        effectiveVersionId = activeVersion.version_id
-      }
-
-      // ========================================================================
-      // Get categories with counts (Requirement 44.2)
-      // ========================================================================
-      const categoriesQuery = await knex("resources")
-        .select(
-          "resource_category as category",
-          "resource_subcategory as subcategory",
-        )
-        .count<ResourceCategoryCountRow[]>("* as count")
-        .where("version_id", effectiveVersionId)
-        .groupBy("resource_category", "resource_subcategory")
-        .orderBy("resource_category", "asc")
-        .orderBy("resource_subcategory", "asc")
-
-      const categories: ResourceCategory[] = categoriesQuery.map((row) => ({
-        category: row.category,
-        subcategory: row.subcategory || undefined,
-        count: parseInt(String(row.count), 10),
-      }))
-
-      logger.info("Resource categories fetched successfully", {
-        category_count: categories.length,
-      })
-
-      return categories
-    } catch (error) {
-      logger.error("Failed to fetch resource categories", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
 }

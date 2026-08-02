@@ -6315,6 +6315,30 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ResourceCategory": {
+				"description": "Resource category with count",
+				"properties": {
+					"category": {
+						"type": "string",
+						"description": "Category name"
+					},
+					"subcategory": {
+						"type": "string",
+						"description": "Subcategory name"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of resources in this category"
+					}
+				},
+				"required": [
+					"category",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MiningLocation": {
 				"description": "Mining location information",
 				"properties": {
@@ -6531,30 +6555,6 @@
 				"required": [
 					"resource",
 					"blueprints_requiring"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ResourceCategory": {
-				"description": "Resource category with count",
-				"properties": {
-					"category": {
-						"type": "string",
-						"description": "Category name"
-					},
-					"subcategory": {
-						"type": "string",
-						"description": "Subcategory name"
-					},
-					"count": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of resources in this category"
-					}
-				},
-				"required": [
-					"category",
-					"count"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -7032,6 +7032,72 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ReputationRank": {
+				"description": "Reputation rank threshold for a career scope",
+				"properties": {
+					"scope_code": {
+						"type": "string"
+					},
+					"scope_display_name": {
+						"type": "string"
+					},
+					"standing_code": {
+						"type": "string"
+					},
+					"standing_display_name": {
+						"type": "string"
+					},
+					"threshold": {
+						"type": "number",
+						"format": "double"
+					},
+					"ceiling": {
+						"type": "number",
+						"format": "double"
+					},
+					"rank_index": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"scope_code",
+					"scope_display_name",
+					"standing_code",
+					"standing_display_name",
+					"threshold",
+					"ceiling",
+					"rank_index"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameEvent": {
+				"description": "Game event/scenario (e.g. Luminalia, Invictus)",
+				"properties": {
+					"event_id": {
+						"type": "string"
+					},
+					"event_code": {
+						"type": "string"
+					},
+					"event_name": {
+						"type": "string"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"event_id",
+					"event_code",
+					"event_name",
+					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MissionBlueprintReward": {
 				"description": "Blueprint reward in a mission reward pool",
 				"properties": {
@@ -7417,72 +7483,6 @@
 					"ingredient_count",
 					"drop_probability",
 					"is_guaranteed"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ReputationRank": {
-				"description": "Reputation rank threshold for a career scope",
-				"properties": {
-					"scope_code": {
-						"type": "string"
-					},
-					"scope_display_name": {
-						"type": "string"
-					},
-					"standing_code": {
-						"type": "string"
-					},
-					"standing_display_name": {
-						"type": "string"
-					},
-					"threshold": {
-						"type": "number",
-						"format": "double"
-					},
-					"ceiling": {
-						"type": "number",
-						"format": "double"
-					},
-					"rank_index": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"scope_code",
-					"scope_display_name",
-					"standing_code",
-					"standing_display_name",
-					"threshold",
-					"ceiling",
-					"rank_index"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"GameEvent": {
-				"description": "Game event/scenario (e.g. Luminalia, Invictus)",
-				"properties": {
-					"event_id": {
-						"type": "string"
-					},
-					"event_code": {
-						"type": "string"
-					},
-					"event_name": {
-						"type": "string"
-					},
-					"mission_count": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"event_id",
-					"event_code",
-					"event_name",
-					"mission_count"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -9015,6 +9015,30 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BlueprintCategory": {
+				"description": "Blueprint category with count",
+				"properties": {
+					"category": {
+						"type": "string",
+						"description": "Category name"
+					},
+					"subcategory": {
+						"type": "string",
+						"description": "Subcategory name"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of blueprints in this category"
+					}
+				},
+				"required": [
+					"category",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Blueprint": {
 				"description": "Complete blueprint data",
 				"properties": {
@@ -9425,30 +9449,6 @@
 					"missions_rewarding",
 					"slot_modifiers",
 					"item_attributes"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"BlueprintCategory": {
-				"description": "Blueprint category with count",
-				"properties": {
-					"category": {
-						"type": "string",
-						"description": "Category name"
-					},
-					"subcategory": {
-						"type": "string",
-						"description": "Subcategory name"
-					},
-					"count": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of blueprints in this category"
-					}
-				},
-				"required": [
-					"category",
-					"count"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -16628,40 +16628,6 @@
 				]
 			}
 		},
-		"/game-data/resources/{resource_id}": {
-			"get": {
-				"operationId": "GetResource",
-				"responses": {
-					"200": {
-						"description": "Complete resource details with blueprints and locations",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ResourceDetailResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get resource detail with blueprints and locations\n\nReturns complete resource information including all blueprints that require\nthis resource, mining/purchase locations, and market price data.\n\nRequirements:\n- 44.3: Display resource properties (quality tiers, stack sizes, etc.)\n- 44.5: Display which blueprints require each resource\n- 44.6: Display where resources can be obtained (mining, purchase, salvage)\n- 44.8: Display resource market prices and availability",
-				"summary": "Get resource details",
-				"tags": [
-					"Game Data - Resources"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Resource UUID",
-						"in": "path",
-						"name": "resource_id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/game-data/resources/categories": {
 			"get": {
 				"operationId": "GetResourceCategories",
@@ -16692,6 +16658,40 @@
 						"in": "query",
 						"name": "version_id",
 						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/resources/{resource_id}": {
+			"get": {
+				"operationId": "GetResource",
+				"responses": {
+					"200": {
+						"description": "Complete resource details with blueprints and locations",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResourceDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get resource detail with blueprints and locations\n\nReturns complete resource information including all blueprints that require\nthis resource, mining/purchase locations, and market price data.\n\nRequirements:\n- 44.3: Display resource properties (quality tiers, stack sizes, etc.)\n- 44.5: Display which blueprints require each resource\n- 44.6: Display where resources can be obtained (mining, purchase, salvage)\n- 44.8: Display resource market prices and availability",
+				"summary": "Get resource details",
+				"tags": [
+					"Game Data - Resources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Resource UUID",
+						"in": "path",
+						"name": "resource_id",
+						"required": true,
 						"schema": {
 							"type": "string"
 						}
@@ -16941,6 +16941,162 @@
 						}
 					}
 				]
+			}
+		},
+		"/game-data/missions/chains": {
+			"get": {
+				"operationId": "GetMissionChains",
+				"responses": {
+					"200": {
+						"description": "Array of mission chains",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"total_missions": {
+												"type": "number",
+												"format": "double"
+											},
+											"chain_missions": {
+												"items": {
+													"$ref": "#/components/schemas/Mission"
+												},
+												"type": "array"
+											},
+											"starter_mission": {
+												"$ref": "#/components/schemas/Mission"
+											},
+											"chain_name": {
+												"type": "string"
+											},
+											"chain_id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"total_missions",
+											"chain_missions",
+											"starter_mission",
+											"chain_name",
+											"chain_id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get mission chains\n\nReturns all mission chains with their starter missions and progression paths.\nMission chains are series of related missions that must be completed in order.\n\nRequirements:\n- 47.1: Identify mission chains (series of related missions)\n- 47.2: Display starter missions (entry points to chains)\n- 47.3: Display unique missions (one-time only)\n- 47.4: Display mission prerequisites and unlock requirements",
+				"summary": "Get mission chains",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/missions/reputation-ranks": {
+			"get": {
+				"operationId": "GetReputationRanks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"display_name": {
+											"type": "string"
+										},
+										"scopes": {
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										"ranks": {
+											"items": {
+												"$ref": "#/components/schemas/ReputationRank"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"display_name",
+										"scopes",
+										"ranks"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get reputation rank thresholds for a scope (e.g., headhunter, salvage)",
+				"summary": "Get reputation ranks",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The reputation scope code",
+						"in": "query",
+						"name": "scope_code",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/missions/events": {
+			"get": {
+				"operationId": "GetGameEvents",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"events": {
+											"items": {
+												"$ref": "#/components/schemas/GameEvent"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"events"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all game events/scenarios that have associated missions",
+				"summary": "Get game events",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/game-data/missions/{mission_id}": {
@@ -17197,162 +17353,6 @@
 						}
 					}
 				}
-			}
-		},
-		"/game-data/missions/chains": {
-			"get": {
-				"operationId": "GetMissionChains",
-				"responses": {
-					"200": {
-						"description": "Array of mission chains",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"properties": {
-											"total_missions": {
-												"type": "number",
-												"format": "double"
-											},
-											"chain_missions": {
-												"items": {
-													"$ref": "#/components/schemas/Mission"
-												},
-												"type": "array"
-											},
-											"starter_mission": {
-												"$ref": "#/components/schemas/Mission"
-											},
-											"chain_name": {
-												"type": "string"
-											},
-											"chain_id": {
-												"type": "string"
-											}
-										},
-										"required": [
-											"total_missions",
-											"chain_missions",
-											"starter_mission",
-											"chain_name",
-											"chain_id"
-										],
-										"type": "object"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get mission chains\n\nReturns all mission chains with their starter missions and progression paths.\nMission chains are series of related missions that must be completed in order.\n\nRequirements:\n- 47.1: Identify mission chains (series of related missions)\n- 47.2: Display starter missions (entry points to chains)\n- 47.3: Display unique missions (one-time only)\n- 47.4: Display mission prerequisites and unlock requirements",
-				"summary": "Get mission chains",
-				"tags": [
-					"Game Data - Missions"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Game version ID (defaults to active LIVE version)",
-						"in": "query",
-						"name": "version_id",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/game-data/missions/reputation-ranks": {
-			"get": {
-				"operationId": "GetReputationRanks",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"display_name": {
-											"type": "string"
-										},
-										"scopes": {
-											"items": {
-												"type": "string"
-											},
-											"type": "array"
-										},
-										"ranks": {
-											"items": {
-												"$ref": "#/components/schemas/ReputationRank"
-											},
-											"type": "array"
-										}
-									},
-									"required": [
-										"display_name",
-										"scopes",
-										"ranks"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get reputation rank thresholds for a scope (e.g., headhunter, salvage)",
-				"summary": "Get reputation ranks",
-				"tags": [
-					"Game Data - Missions"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "The reputation scope code",
-						"in": "query",
-						"name": "scope_code",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/game-data/missions/events": {
-			"get": {
-				"operationId": "GetGameEvents",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"events": {
-											"items": {
-												"$ref": "#/components/schemas/GameEvent"
-											},
-											"type": "array"
-										}
-									},
-									"required": [
-										"events"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "List all game events/scenarios that have associated missions",
-				"summary": "Get game events",
-				"tags": [
-					"Game Data - Missions"
-				],
-				"security": [],
-				"parameters": []
 			}
 		},
 		"/game-data/mining/ores": {
@@ -18081,237 +18081,6 @@
 				]
 			}
 		},
-		"/game-data/blueprints/{blueprint_id}": {
-			"get": {
-				"operationId": "GetBlueprintDetail",
-				"responses": {
-					"200": {
-						"description": "Complete blueprint details with ingredients and missions",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BlueprintDetailResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get blueprint detail with ingredients and missions\n\nReturns complete blueprint information including all required ingredients\nwith market prices, missions that reward this blueprint, and crafting recipe details.\n\nRequirements:\n- 50.1: List all required ingredients with names\n- 50.2: Display required quantity for each ingredient\n- 50.3: Display ingredient quality requirements if applicable\n- 50.4: Highlight ingredients the player doesn't have\n- 50.5: Display ingredient icons or images\n- 50.6: Support clicking ingredients to view details\n- 50.7: Display total ingredient count\n- 50.8: Group ingredients by category\n- 50.9: Display alternative ingredients if substitutions are allowed\n- 50.10: Calculate total material cost based on market prices",
-				"summary": "Get blueprint details",
-				"tags": [
-					"Game Data - Blueprints"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Blueprint UUID",
-						"in": "path",
-						"name": "blueprint_id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/game-data/blueprints/by-code/{blueprint_code}": {
-			"get": {
-				"operationId": "GetBlueprintDetailByCode",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BlueprintDetailResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get missions that reward this blueprint\n\nReturns all missions that can reward the specified blueprint,\n/**\nGet blueprint detail by blueprint_code (string identifier)",
-				"summary": "Get blueprint by code",
-				"tags": [
-					"Game Data - Blueprints"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "The blueprint code string",
-						"in": "path",
-						"name": "blueprint_code",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/game-data/blueprints/{blueprint_id}/missions": {
-			"get": {
-				"operationId": "GetBlueprintMissions",
-				"responses": {
-					"200": {
-						"description": "Array of missions that reward this blueprint",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/MissionRewardingBlueprint"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get missions that reward a specific blueprint\n\nincluding drop probabilities and mission locations.",
-				"summary": "Get blueprint missions",
-				"tags": [
-					"Game Data - Blueprints"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Blueprint UUID",
-						"in": "path",
-						"name": "blueprint_id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"description": "Optional game version ID",
-						"in": "query",
-						"name": "version_id",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/game-data/blueprints/{blueprint_id}/inventory": {
-			"post": {
-				"operationId": "AddBlueprintToInventory",
-				"responses": {
-					"200": {
-						"description": "Success response with inventory ID",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"inventory_id": {
-											"type": "string"
-										},
-										"success": {
-											"type": "boolean"
-										}
-									},
-									"required": [
-										"inventory_id",
-										"success"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Add blueprint to user inventory\n\nMarks a blueprint as owned by the authenticated user. Records acquisition\ndetails including date, method, location, and notes for tracking purposes.\n\nRequirements:\n- 30.1: Allow players to mark blueprints as owned/not owned\n- 30.2: Display owned blueprint count vs. total available\n- 30.3: Support filtering blueprints by owned status\n- 30.4: Display acquisition progress\n- 44.1: Support Discord OAuth integration for authentication\n- 44.2: Associate blueprint inventory with Discord user account",
-				"summary": "Add blueprint to inventory",
-				"tags": [
-					"Game Data - Blueprints"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [
-					{
-						"description": "Blueprint UUID",
-						"in": "path",
-						"name": "blueprint_id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Acquisition details",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"acquisition_notes": {
-										"type": "string"
-									},
-									"acquisition_location": {
-										"type": "string"
-									},
-									"acquisition_method": {
-										"type": "string"
-									}
-								},
-								"type": "object",
-								"description": "Acquisition details"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "RemoveBlueprintFromInventory",
-				"responses": {
-					"200": {
-						"description": "Success response",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"success": {
-											"type": "boolean"
-										}
-									},
-									"required": [
-										"success"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Remove blueprint from user inventory\n\nMarks a blueprint as not owned by the authenticated user. This allows users\nto maintain accurate inventory tracking when they lose access to blueprints.\n\nRequirements:\n- 30.1: Allow players to mark blueprints as owned/not owned\n- 30.3: Support filtering blueprints by owned status\n- 44.2: Associate blueprint inventory with Discord user account",
-				"summary": "Remove blueprint from inventory",
-				"tags": [
-					"Game Data - Blueprints"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [
-					{
-						"description": "Blueprint UUID",
-						"in": "path",
-						"name": "blueprint_id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/game-data/blueprints/categories": {
 			"get": {
 				"operationId": "GetBlueprintCategories",
@@ -18546,6 +18315,237 @@
 							"default": 50,
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/blueprints/{blueprint_id}": {
+			"get": {
+				"operationId": "GetBlueprintDetail",
+				"responses": {
+					"200": {
+						"description": "Complete blueprint details with ingredients and missions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlueprintDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blueprint detail with ingredients and missions\n\nReturns complete blueprint information including all required ingredients\nwith market prices, missions that reward this blueprint, and crafting recipe details.\n\nRequirements:\n- 50.1: List all required ingredients with names\n- 50.2: Display required quantity for each ingredient\n- 50.3: Display ingredient quality requirements if applicable\n- 50.4: Highlight ingredients the player doesn't have\n- 50.5: Display ingredient icons or images\n- 50.6: Support clicking ingredients to view details\n- 50.7: Display total ingredient count\n- 50.8: Group ingredients by category\n- 50.9: Display alternative ingredients if substitutions are allowed\n- 50.10: Calculate total material cost based on market prices",
+				"summary": "Get blueprint details",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/blueprints/by-code/{blueprint_code}": {
+			"get": {
+				"operationId": "GetBlueprintDetailByCode",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlueprintDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get missions that reward this blueprint\n\nReturns all missions that can reward the specified blueprint,\n/**\nGet blueprint detail by blueprint_code (string identifier)",
+				"summary": "Get blueprint by code",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The blueprint code string",
+						"in": "path",
+						"name": "blueprint_code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/blueprints/{blueprint_id}/missions": {
+			"get": {
+				"operationId": "GetBlueprintMissions",
+				"responses": {
+					"200": {
+						"description": "Array of missions that reward this blueprint",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/MissionRewardingBlueprint"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get missions that reward a specific blueprint\n\nincluding drop probabilities and mission locations.",
+				"summary": "Get blueprint missions",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional game version ID",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/blueprints/{blueprint_id}/inventory": {
+			"post": {
+				"operationId": "AddBlueprintToInventory",
+				"responses": {
+					"200": {
+						"description": "Success response with inventory ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"inventory_id": {
+											"type": "string"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"inventory_id",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add blueprint to user inventory\n\nMarks a blueprint as owned by the authenticated user. Records acquisition\ndetails including date, method, location, and notes for tracking purposes.\n\nRequirements:\n- 30.1: Allow players to mark blueprints as owned/not owned\n- 30.2: Display owned blueprint count vs. total available\n- 30.3: Support filtering blueprints by owned status\n- 30.4: Display acquisition progress\n- 44.1: Support Discord OAuth integration for authentication\n- 44.2: Associate blueprint inventory with Discord user account",
+				"summary": "Add blueprint to inventory",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Acquisition details",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"acquisition_notes": {
+										"type": "string"
+									},
+									"acquisition_location": {
+										"type": "string"
+									},
+									"acquisition_method": {
+										"type": "string"
+									}
+								},
+								"type": "object",
+								"description": "Acquisition details"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveBlueprintFromInventory",
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove blueprint from user inventory\n\nMarks a blueprint as not owned by the authenticated user. This allows users\nto maintain accurate inventory tracking when they lose access to blueprints.\n\nRequirements:\n- 30.1: Allow players to mark blueprints as owned/not owned\n- 30.3: Support filtering blueprints by owned status\n- 44.2: Associate blueprint inventory with Discord user account",
+				"summary": "Remove blueprint from inventory",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

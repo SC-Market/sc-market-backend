@@ -621,6 +621,190 @@ export class MissionsController extends BaseController {
   }
 
   /**
+   * Get mission chains
+   *
+   * Returns all mission chains with their starter missions and progression paths.
+   * Mission chains are series of related missions that must be completed in order.
+   *
+   * Requirements:
+   * - 47.1: Identify mission chains (series of related missions)
+   * - 47.2: Display starter missions (entry points to chains)
+   * - 47.3: Display unique missions (one-time only)
+   * - 47.4: Display mission prerequisites and unlock requirements
+   *
+   * @summary Get mission chains
+   * @param version_id Game version ID (defaults to active LIVE version)
+   * @returns Array of mission chains
+   */
+  @Get("chains")
+  public async getMissionChains(
+    @Query() version_id?: string,
+  ): Promise<
+    Array<{
+      chain_id: string
+      chain_name: string
+      starter_mission: Mission
+      chain_missions: Mission[]
+      total_missions: number
+    }>
+  > {
+    const knex = getKnex()
+
+    logger.info("Fetching mission chains", { version_id })
+
+    try {
+      // Get or validate version_id
+      let effectiveVersionId = version_id
+
+      if (!effectiveVersionId) {
+        // Get active LIVE version
+        const activeVersion = await knex("game_versions")
+          .where("version_type", "LIVE")
+          .where("is_active", true)
+          .orderBy("created_at", "desc")
+          .first()
+
+        if (!activeVersion) {
+          this.throwNotFound("Active LIVE game version", "LIVE")
+        }
+
+        effectiveVersionId = activeVersion.version_id
+      }
+
+      // Get all chain starter missions
+      const starterMissions = await knex("missions")
+        .where("version_id", effectiveVersionId)
+        .where("is_chain_starter", true)
+        .orderBy("mission_name", "asc")
+
+      if (starterMissions.length === 0) {
+        logger.info("No mission chains found", { version_id: effectiveVersionId })
+        return []
+      }
+
+      // For each starter mission, build the chain
+      const chains = []
+
+      for (const starterRow of starterMissions) {
+        const chainMissions: Mission[] = []
+
+        // Get all missions that are part of this chain
+        // We identify chain missions by checking if they have the starter as a prerequisite
+        // or are marked as chain missions with matching criteria
+        const relatedMissions = await knex("missions")
+          .where("version_id", effectiveVersionId)
+          .where("is_chain_mission", true)
+          .where(function () {
+            // Missions that have this starter in their prerequisites
+            this.whereRaw("prerequisite_missions @> ?", [
+              JSON.stringify([starterRow.mission_id]),
+            ])
+              // Or missions with the same faction/category as the starter
+              .orWhere(function () {
+                if (starterRow.faction) {
+                  this.where("faction", starterRow.faction)
+                }
+                if (starterRow.category) {
+                  this.where("category", starterRow.category)
+                }
+              })
+          })
+          .orderBy("rank_index", "asc")
+          .orderBy("mission_name", "asc")
+
+        // Transform missions to Mission type
+        for (const row of relatedMissions) {
+          chainMissions.push(this.transformMissionRow(row))
+        }
+
+        chains.push({
+          chain_id: starterRow.mission_id, // Use starter mission ID as chain ID
+          chain_name: `${starterRow.mission_name} Chain`,
+          starter_mission: this.transformMissionRow(starterRow),
+          chain_missions: chainMissions,
+          total_missions: chainMissions.length + 1, // +1 for starter
+        })
+      }
+
+      logger.info("Mission chains fetched successfully", {
+        version_id: effectiveVersionId,
+        chain_count: chains.length,
+      })
+
+      return chains
+    } catch (error) {
+      logger.error("Failed to fetch mission chains", {
+        version_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Get reputation rank thresholds for a scope (e.g., headhunter, salvage)
+   * @param scope_code The reputation scope code
+   * @summary Get reputation ranks
+   */
+  @Get("reputation-ranks")
+  public async getReputationRanks(
+    @Query() scope_code?: string,
+  ): Promise<{ ranks: ReputationRank[]; scopes: string[]; display_name: string }> {
+    const knex = getKnex()
+
+    // Get all unique scopes
+    const scopeRows = await knex("reputation_ranks")
+      .distinct<Pick<ReputationRankRow, "scope_code" | "scope_display_name">[]>("scope_code", "scope_display_name")
+      .orderBy("scope_display_name")
+
+    const scopes = scopeRows.map((r) => r.scope_code)
+
+    // Get ranks for the requested scope (or all if not specified)
+    let query = knex("reputation_ranks").orderBy("scope_code").orderBy("rank_index").select<ReputationRankRow[]>("*")
+    if (scope_code) {
+      query = query.where("scope_code", scope_code)
+    }
+
+    const rows = await query
+    const ranks: ReputationRank[] = rows.map((r) => ({
+      scope_code: r.scope_code,
+      scope_display_name: r.scope_display_name,
+      standing_code: r.standing_code,
+      standing_display_name: r.standing_display_name,
+      threshold: r.threshold,
+      ceiling: r.ceiling,
+      rank_index: r.rank_index,
+    }))
+
+    return { ranks, scopes, display_name: ranks[0]?.scope_display_name || scope_code || "" }
+  }
+
+  /**
+   * List all game events/scenarios that have associated missions
+   * @summary Get game events
+   */
+  @Get("events")
+  public async getGameEvents(): Promise<{ events: GameEvent[] }> {
+    const knex = getKnex()
+    const rows = await knex("game_events as ge")
+      .join("mission_events as me", "ge.event_id", "me.event_id")
+      .select("ge.event_id", "ge.event_code", "ge.event_name")
+      .count<GameEventRow[]>("me.mission_id as mission_count")
+      .groupBy("ge.event_id", "ge.event_code", "ge.event_name")
+      .orderBy("ge.event_name")
+    return {
+      events: rows.map((r) => ({
+        event_id: r.event_id,
+        event_code: r.event_code,
+        event_name: r.event_name,
+        mission_count: parseInt(String(r.mission_count), 10) || 0,
+      })),
+    }
+  }
+
+  /**
    * Get mission detail with blueprint rewards
    *
    * Returns complete mission information including all blueprint reward pools,
@@ -1390,128 +1574,6 @@ export class MissionsController extends BaseController {
     }
   }
 
-  /**
-   * Get mission chains
-   *
-   * Returns all mission chains with their starter missions and progression paths.
-   * Mission chains are series of related missions that must be completed in order.
-   *
-   * Requirements:
-   * - 47.1: Identify mission chains (series of related missions)
-   * - 47.2: Display starter missions (entry points to chains)
-   * - 47.3: Display unique missions (one-time only)
-   * - 47.4: Display mission prerequisites and unlock requirements
-   *
-   * @summary Get mission chains
-   * @param version_id Game version ID (defaults to active LIVE version)
-   * @returns Array of mission chains
-   */
-  @Get("chains")
-  public async getMissionChains(
-    @Query() version_id?: string,
-  ): Promise<
-    Array<{
-      chain_id: string
-      chain_name: string
-      starter_mission: Mission
-      chain_missions: Mission[]
-      total_missions: number
-    }>
-  > {
-    const knex = getKnex()
-
-    logger.info("Fetching mission chains", { version_id })
-
-    try {
-      // Get or validate version_id
-      let effectiveVersionId = version_id
-
-      if (!effectiveVersionId) {
-        // Get active LIVE version
-        const activeVersion = await knex("game_versions")
-          .where("version_type", "LIVE")
-          .where("is_active", true)
-          .orderBy("created_at", "desc")
-          .first()
-
-        if (!activeVersion) {
-          this.throwNotFound("Active LIVE game version", "LIVE")
-        }
-
-        effectiveVersionId = activeVersion.version_id
-      }
-
-      // Get all chain starter missions
-      const starterMissions = await knex("missions")
-        .where("version_id", effectiveVersionId)
-        .where("is_chain_starter", true)
-        .orderBy("mission_name", "asc")
-
-      if (starterMissions.length === 0) {
-        logger.info("No mission chains found", { version_id: effectiveVersionId })
-        return []
-      }
-
-      // For each starter mission, build the chain
-      const chains = []
-
-      for (const starterRow of starterMissions) {
-        const chainMissions: Mission[] = []
-
-        // Get all missions that are part of this chain
-        // We identify chain missions by checking if they have the starter as a prerequisite
-        // or are marked as chain missions with matching criteria
-        const relatedMissions = await knex("missions")
-          .where("version_id", effectiveVersionId)
-          .where("is_chain_mission", true)
-          .where(function () {
-            // Missions that have this starter in their prerequisites
-            this.whereRaw("prerequisite_missions @> ?", [
-              JSON.stringify([starterRow.mission_id]),
-            ])
-              // Or missions with the same faction/category as the starter
-              .orWhere(function () {
-                if (starterRow.faction) {
-                  this.where("faction", starterRow.faction)
-                }
-                if (starterRow.category) {
-                  this.where("category", starterRow.category)
-                }
-              })
-          })
-          .orderBy("rank_index", "asc")
-          .orderBy("mission_name", "asc")
-
-        // Transform missions to Mission type
-        for (const row of relatedMissions) {
-          chainMissions.push(this.transformMissionRow(row))
-        }
-
-        chains.push({
-          chain_id: starterRow.mission_id, // Use starter mission ID as chain ID
-          chain_name: `${starterRow.mission_name} Chain`,
-          starter_mission: this.transformMissionRow(starterRow),
-          chain_missions: chainMissions,
-          total_missions: chainMissions.length + 1, // +1 for starter
-        })
-      }
-
-      logger.info("Mission chains fetched successfully", {
-        version_id: effectiveVersionId,
-        chain_count: chains.length,
-      })
-
-      return chains
-    } catch (error) {
-      logger.error("Failed to fetch mission chains", {
-        version_id,
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
 
   /**
    * Helper method to transform database row to Mission type
@@ -1565,43 +1627,6 @@ export class MissionsController extends BaseController {
     }
   }
 
-  /**
-   * Get reputation rank thresholds for a scope (e.g., headhunter, salvage)
-   * @param scope_code The reputation scope code
-   * @summary Get reputation ranks
-   */
-  @Get("reputation-ranks")
-  public async getReputationRanks(
-    @Query() scope_code?: string,
-  ): Promise<{ ranks: ReputationRank[]; scopes: string[]; display_name: string }> {
-    const knex = getKnex()
-
-    // Get all unique scopes
-    const scopeRows = await knex("reputation_ranks")
-      .distinct<Pick<ReputationRankRow, "scope_code" | "scope_display_name">[]>("scope_code", "scope_display_name")
-      .orderBy("scope_display_name")
-
-    const scopes = scopeRows.map((r) => r.scope_code)
-
-    // Get ranks for the requested scope (or all if not specified)
-    let query = knex("reputation_ranks").orderBy("scope_code").orderBy("rank_index").select<ReputationRankRow[]>("*")
-    if (scope_code) {
-      query = query.where("scope_code", scope_code)
-    }
-
-    const rows = await query
-    const ranks: ReputationRank[] = rows.map((r) => ({
-      scope_code: r.scope_code,
-      scope_display_name: r.scope_display_name,
-      standing_code: r.standing_code,
-      standing_display_name: r.standing_display_name,
-      threshold: r.threshold,
-      ceiling: r.ceiling,
-      rank_index: r.rank_index,
-    }))
-
-    return { ranks, scopes, display_name: ranks[0]?.scope_display_name || scope_code || "" }
-  }
 
   private async resolveStandingName(knex: Knex, code: string | null | undefined): Promise<string | undefined> {
     if (!code) return undefined
@@ -1616,26 +1641,4 @@ export class MissionsController extends BaseController {
     }
   }
 
-  /**
-   * List all game events/scenarios that have associated missions
-   * @summary Get game events
-   */
-  @Get("events")
-  public async getGameEvents(): Promise<{ events: GameEvent[] }> {
-    const knex = getKnex()
-    const rows = await knex("game_events as ge")
-      .join("mission_events as me", "ge.event_id", "me.event_id")
-      .select("ge.event_id", "ge.event_code", "ge.event_name")
-      .count<GameEventRow[]>("me.mission_id as mission_count")
-      .groupBy("ge.event_id", "ge.event_code", "ge.event_name")
-      .orderBy("ge.event_name")
-    return {
-      events: rows.map((r) => ({
-        event_id: r.event_id,
-        event_code: r.event_code,
-        event_name: r.event_name,
-        mission_count: parseInt(String(r.mission_count), 10) || 0,
-      })),
-    }
-  }
 }
