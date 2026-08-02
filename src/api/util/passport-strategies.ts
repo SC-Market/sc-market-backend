@@ -26,6 +26,21 @@ import {
 import logger from "../../logger/logger.js"
 
 /**
+ * Narrow an unknown thrown value to a Postgres error carrying a SQLSTATE code
+ * and the violated constraint name (as surfaced by `pg` through Knex).
+ */
+function isPostgresConstraintError(
+  error: unknown,
+): error is { code: string; constraint: string } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    typeof (error as { code?: unknown }).code === "string" &&
+    typeof (error as { constraint?: unknown }).constraint === "string"
+  )
+}
+
+/**
  * Get Discord passport configuration
  */
 export function getDiscordConfig(backendUrl: URL): StrategyOptionsWithRequest {
@@ -96,11 +111,11 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
 
         // Get action from session (set by route handler)
         const action: "signup" | "signin" =
-          (req.session as any)?.discord_auth_action || "signin"
+          req.session?.discord_auth_action || "signin"
 
         // Clear action from session after reading
         if (req.session) {
-          delete (req.session as any).discord_auth_action
+          delete req.session.discord_auth_action
         }
 
         // New login/signup - find or create user based on action
@@ -384,11 +399,11 @@ export function createCitizenIDVerifyCallback(
       // STEP 4: New login/signup - find or create user based on action
       // Get action from session (set by route handler)
       const action: "signup" | "signin" =
-        (req.session as any)?.citizenid_auth_action || "signin"
+        req.session?.citizenid_auth_action || "signin"
 
       // Clear action from session after reading
       if (req.session) {
-        delete (req.session as any).citizenid_auth_action
+        delete req.session.citizenid_auth_action
       }
 
       let user = await profileDb.getUserByProvider("citizenid", profile.id)
@@ -475,11 +490,12 @@ export function createCitizenIDVerifyCallback(
               )
             }
           }
-        } catch (createError: any) {
+        } catch (createError: unknown) {
           // Handle duplicate username constraint error
           if (
-            createError?.code === "23505" &&
-            createError?.constraint === "accounts_username_key"
+            isPostgresConstraintError(createError) &&
+            createError.code === "23505" &&
+            createError.constraint === "accounts_username_key"
           ) {
             // Username was taken between check and create
             // Check if it's a verified account

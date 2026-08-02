@@ -8,10 +8,21 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest"
+import type { Request as ExpressRequest } from "express"
 import { BuyOrdersV2Controller } from "./BuyOrdersV2Controller.js"
+import type { User } from "../../v1/api-models.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { v4 as uuidv4 } from "uuid"
 import type { Knex } from "knex"
+
+
+/**
+ * Build the minimal authenticated ExpressRequest these endpoints read
+ * `user.user_id` off of.
+ */
+function createMockRequest(userId: string): ExpressRequest {
+  return { user: { user_id: userId } as User } as ExpressRequest
+}
 
 describe("BuyOrdersV2Controller", () => {
   let knex: Knex
@@ -136,9 +147,7 @@ describe("BuyOrdersV2Controller", () => {
   describe("createBuyOrder", () => {
     it("should create direct purchase order with variant-specific item", async () => {
       // Mock request with authentication
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -204,9 +213,7 @@ describe("BuyOrdersV2Controller", () => {
     })
 
     it("should reject buy order with insufficient stock", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -220,9 +227,7 @@ describe("BuyOrdersV2Controller", () => {
     })
 
     it("should reject buy order with invalid listing", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: uuidv4(), // Non-existent listing
@@ -236,9 +241,7 @@ describe("BuyOrdersV2Controller", () => {
     })
 
     it("should reject buy order with invalid variant", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -257,9 +260,7 @@ describe("BuyOrdersV2Controller", () => {
         .where({ listing_id: testListingId })
         .update({ status: "sold" })
 
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -298,9 +299,7 @@ describe("BuyOrdersV2Controller", () => {
         created_at: new Date(),
       })
 
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -318,9 +317,7 @@ describe("BuyOrdersV2Controller", () => {
     })
 
     it("should reject buy order with zero quantity", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -334,9 +331,7 @@ describe("BuyOrdersV2Controller", () => {
     })
 
     it("should reject buy order with negative quantity", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -364,9 +359,7 @@ describe("BuyOrdersV2Controller", () => {
         updated_at: new Date(),
       })
 
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,
@@ -404,9 +397,7 @@ describe("BuyOrdersV2Controller", () => {
     })
 
     it("should snapshot price at time of purchase", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const buyOrderRequest = {
         listing_id: testListingId,

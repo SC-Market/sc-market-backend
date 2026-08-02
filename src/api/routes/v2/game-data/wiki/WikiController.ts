@@ -24,6 +24,123 @@ import {
 import { parseShortSlug, buildUuidRangeQuery } from "../../util/short-slug.js"
 import logger from "../../../../../logger/logger.js"
 
+/** Row shape of the `game_item_attributes` projection used here */
+interface GameItemAttributeRow {
+  attribute_name: string
+  attribute_value: string
+}
+
+/** Row shape of the item-detail blueprint query */
+interface ItemBlueprintRow {
+  blueprint_id: string
+  blueprint_name: string
+  rarity: string | null
+  tier: number | null
+  crafting_time_seconds: number | null
+}
+
+/** Row shape of the item-detail mission reward query */
+interface ItemMissionRewardRow {
+  mission_id: string
+  mission_name: string
+  star_system: string | null
+  drop_probability: string
+  blueprint_id: string
+  blueprint_name: string
+}
+
+/** Row shape of the item-detail market statistics aggregate */
+interface ItemMarketStatsRow {
+  listing_count: string
+  min_price: string | null
+  max_price: string | null
+  total_quantity: string | null
+}
+
+/** Row shape of the ship search query */
+interface WikiShipSearchRow {
+  id: string
+  name: string
+  manufacturer: string | null
+  size: number | null
+  image_url: string | null
+  focus: string | null
+  ship_code: string | null
+  crew_size: number | null
+  career: string | null
+  role: string | null
+  length_m: string | null
+  width_m: string | null
+  height_m: string | null
+}
+
+/** Row shape of the `game_versions` table */
+interface GameVersionRow {
+  version_id: string
+  version_type: string
+  version_number: string
+  build_number: string | null
+  release_date: Date | null
+  is_active: boolean
+  last_data_update: Date | null
+  created_at: Date
+  updated_at: Date
+}
+
+/** Row shape of the commodity search query */
+interface WikiCommodityRow {
+  resource_id: string
+  game_item_id: string
+  name: string
+  resource_category: string
+  resource_subcategory: string | null
+  can_be_mined: boolean | null
+  can_be_purchased: boolean | null
+  can_be_salvaged: boolean | null
+  can_be_looted: boolean | null
+  image_url: string | null
+}
+
+/** Row shape of the location hierarchy query */
+interface StarmapLocationRow {
+  location_id: string
+  location_code: string
+  location_name: string
+  location_type: string | null
+  parent_code: string | null
+  jurisdiction: string | null
+  jurisdiction_code: string | null
+  description: string | null
+  size: number | null
+  nav_icon: string | null
+  respawn_type: string | null
+  file_name: string | null
+  qt_arrival_radius: string | null
+  qt_obstruction_radius: string | null
+  jurisdiction_name: string | null
+}
+
+/** Row shape of the location amenity join */
+interface LocationAmenityRow {
+  location_code: string
+  name: string
+}
+
+/** Row shape of the `wiki_manufacturers` projection used by the list endpoint */
+interface WikiManufacturerRow {
+  manufacturer_id: string
+  code: string
+  name: string
+  description: string | null
+}
+
+/** Row shape of the manufacturer item-count aggregate */
+interface ManufacturerCountRow {
+  mfr_lower: string
+  item_count: string
+}
+
+
 @Route("game-data/wiki")
 @Tags("Game Data - Wiki")
 export class WikiController extends BaseController {
@@ -162,6 +279,10 @@ export class WikiController extends BaseController {
         page: validatedPage,
       })
 
+      // NOTE: `row` is deliberately left untyped. `game_items.size`/`grade` are
+      // integer columns, but WikiItemSearchResult declares them as `string`.
+      // Typing the row surfaces that pre-existing contract mismatch as a
+      // compile error, and fixing it would change the API response shape.
       // Transform results
       const items = itemsResults.map((row: any) => ({
         id: row.id,
@@ -218,6 +339,10 @@ export class WikiController extends BaseController {
     try {
       const { prefix, isFullUuid } = parseShortSlug(id)
 
+      // NOTE: itemRow is deliberately left with knex's untyped result. The
+      // `game_items.size`/`grade` columns are integers, but WikiItemDetail
+      // declares them as `string`; typing the row surfaces that pre-existing
+      // contract mismatch as a compile error (see report).
       let itemRow
       if (isFullUuid) {
         itemRow = await knex("game_items").where("id", prefix).first()
@@ -233,9 +358,9 @@ export class WikiController extends BaseController {
       // Get item attributes
       const attributesRows = await knex("game_item_attributes")
         .where("game_item_id", itemRow.id)
-        .select("attribute_name", "attribute_value")
+        .select<GameItemAttributeRow[]>("attribute_name", "attribute_value")
 
-      const attributes: Record<string, any> = {}
+      const attributes: Record<string, string> = {}
       for (const row of attributesRows) {
         attributes[row.attribute_name] = row.attribute_value
       }
@@ -246,7 +371,7 @@ export class WikiController extends BaseController {
       const blueprintsRows = await knex("blueprints as b")
         .where("b.output_game_item_id", resolvedItemId)
         .where("b.is_active", true)
-        .select(
+        .select<ItemBlueprintRow[]>(
           "b.blueprint_id",
           "b.blueprint_name",
           "b.rarity",
@@ -255,7 +380,7 @@ export class WikiController extends BaseController {
         )
         .orderBy("b.blueprint_name", "asc")
 
-      const craftable_from = blueprintsRows.map((row: any) => ({
+      const craftable_from = blueprintsRows.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_name: row.blueprint_name,
         rarity: row.rarity || undefined,
@@ -269,7 +394,7 @@ export class WikiController extends BaseController {
         .join("blueprints as b", "mbr.blueprint_id", "b.blueprint_id")
         .where("b.output_game_item_id", resolvedItemId)
         .where("b.is_active", true)
-        .select(
+        .select<ItemMissionRewardRow[]>(
           "m.mission_id",
           "m.mission_name",
           "m.star_system",
@@ -280,7 +405,7 @@ export class WikiController extends BaseController {
         .orderBy("mbr.drop_probability", "desc")
         .orderBy("m.mission_name", "asc")
 
-      const rewarded_by = missionsRows.map((row: any) => ({
+      const rewarded_by = missionsRows.map((row) => ({
         mission_id: row.mission_id,
         mission_name: row.mission_name,
         star_system: row.star_system || undefined,
@@ -294,7 +419,7 @@ export class WikiController extends BaseController {
         .join("listing_items as li", "l.listing_id", "li.listing_id")
         .where("li.game_item_id", resolvedItemId)
         .where("l.status", "active")
-        .select(
+        .select<ItemMarketStatsRow>(
           knex.raw("COUNT(DISTINCT l.listing_id) as listing_count"),
           knex.raw("MIN(li.base_price) as min_price"),
           knex.raw("MAX(li.base_price) as max_price"),
@@ -389,7 +514,7 @@ export class WikiController extends BaseController {
       const latestVersion = await knex("game_versions")
         .whereIn("version_type", ["LIVE", "PTU"])
         .orderBy("created_at", "desc")
-        .first()
+        .first<GameVersionRow | undefined>()
 
       if (!latestVersion) {
         return { ships: [], total: 0, page: validatedPage, page_size: validatedPageSize }
@@ -460,9 +585,9 @@ export class WikiController extends BaseController {
       shipsQuery = shipsQuery.limit(validatedPageSize).offset(offset)
 
       // Execute query
-      const shipsResults = await shipsQuery
+      const shipsResults: WikiShipSearchRow[] = await shipsQuery
 
-      const ships = shipsResults.map((row: any) => ({
+      const ships = shipsResults.map((row) => ({
         id: row.id,
         name: row.name,
         ship_code: row.ship_code || undefined,
@@ -523,11 +648,17 @@ export class WikiController extends BaseController {
       const latestVersion = await knex("game_versions")
         .whereIn("version_type", ["LIVE", "PTU"])
         .orderBy("created_at", "desc")
-        .first()
+        .first<GameVersionRow | undefined>()
 
       // Short-slug is resolved to UUID by the middleware.
       // id is either a full UUID or a ship_code.
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+      // NOTE: these two are deliberately left untyped. `game_items.size` and
+      // `wiki_ships.size` are integer columns, but WikiShipDetail.size is
+      // declared `string` and this method (unlike getShips) passes the value
+      // through without String() conversion. Typing the rows surfaces that
+      // pre-existing mismatch as a compile error, and correcting it either way
+      // would change the response payload.
       let shipRow: any
       let wikiShip: any = null
 
@@ -563,11 +694,11 @@ export class WikiController extends BaseController {
       }
 
       // Get ship attributes (only if we have a game_items row)
-      const attributes: Record<string, any> = {}
+      const attributes: Record<string, string> = {}
       if (shipRow) {
         const attributesRows = await knex("game_item_attributes")
           .where("game_item_id", shipRow.id)
-          .select("attribute_name", "attribute_value")
+          .select<GameItemAttributeRow[]>("attribute_name", "attribute_value")
         for (const row of attributesRows) {
           attributes[row.attribute_name] = row.attribute_value
         }
@@ -580,9 +711,12 @@ export class WikiController extends BaseController {
 
       // Resolve manufacturer display name (try both codes)
       const mfrCodes = [wikiShip?.manufacturer_code, shipRow?.manufacturer].filter(Boolean)
-      let mfrRow: any = null
+      let mfrRow: Pick<WikiManufacturerRow, "name"> | undefined = undefined
       for (const code of mfrCodes) {
-        mfrRow = await knex("wiki_manufacturers").whereRaw("lower(code) = lower(?)", [code]).select("name").first()
+        mfrRow = await knex("wiki_manufacturers")
+          .whereRaw("lower(code) = lower(?)", [code])
+          .select<Pick<WikiManufacturerRow, "name">[]>("name")
+          .first()
         if (mfrRow) break
       }
       const manufacturerName = mfrRow?.name || mfrCodes[0] || undefined
@@ -658,7 +792,7 @@ export class WikiController extends BaseController {
         .where("version_type", "LIVE")
         .where("is_active", true)
         .orderBy("created_at", "desc")
-        .first()
+        .first<GameVersionRow | undefined>()
 
       if (!activeVersion) {
         this.throwNotFound("Active LIVE game version", "LIVE")
@@ -668,7 +802,7 @@ export class WikiController extends BaseController {
       let commoditiesQuery = knex("resources as r")
         .join("game_items as gi", "r.game_item_id", "gi.id")
         .where("r.version_id", activeVersion.version_id)
-        .select(
+        .select<WikiCommodityRow[]>(
           "r.resource_id",
           "gi.id as game_item_id",
           "gi.name",
@@ -704,7 +838,7 @@ export class WikiController extends BaseController {
       // Execute query
       const commoditiesResults = await commoditiesQuery
 
-      const commodities = commoditiesResults.map((row: any) => ({
+      const commodities: WikiCommoditySearchResult[] = commoditiesResults.map((row) => ({
         resource_id: row.resource_id,
         game_item_id: row.game_item_id,
         name: row.name,
@@ -755,7 +889,7 @@ export class WikiController extends BaseController {
       // Query all locations with jurisdiction friendly name
       const rows = await knex("starmap_locations as sl")
         .leftJoin("jurisdictions as j", "sl.jurisdiction_code", "j.code")
-        .select(
+        .select<StarmapLocationRow[]>(
           "sl.location_id",
           "sl.location_code",
           "sl.location_name",
@@ -777,7 +911,7 @@ export class WikiController extends BaseController {
       const amenityRows = await knex("location_amenities as la")
         .join("starmap_locations as sl2", "la.location_id", "sl2.location_id")
         .join("starmap_amenity_types as sat", "la.amenity_p4k_id", "sat.p4k_id")
-        .select("sl2.location_code", "sat.name")
+        .select<LocationAmenityRow[]>("sl2.location_code", "sat.name")
 
       // Build amenities map: location_code -> amenity names
       const amenitiesMap = new Map<string, string[]>()
@@ -870,7 +1004,12 @@ export class WikiController extends BaseController {
 
     try {
       // Step 1: Build a lookup from wiki_manufacturers (code → id, name → id)
-      const wmRows = await knex("wiki_manufacturers").select("manufacturer_id", "code", "name", "description")
+      const wmRows = await knex("wiki_manufacturers").select<WikiManufacturerRow[]>(
+        "manufacturer_id",
+        "code",
+        "name",
+        "description",
+      )
 
       // Map lowercase variants to the canonical manufacturer entry
       const codeToMfr = new Map<string, { id: string; code: string; name: string }>()
@@ -881,9 +1020,9 @@ export class WikiController extends BaseController {
       }
 
       // Step 2: Get all distinct manufacturer values with item counts
-      const rawCounts = await knex("game_items")
+      const rawCounts: ManufacturerCountRow[] = await knex("game_items")
         .select(knex.raw("lower(manufacturer) as mfr_lower"))
-        .count("* as item_count")
+        .count<ManufacturerCountRow[]>("* as item_count")
         .whereNotNull("manufacturer")
         .andWhere("manufacturer", "!=", "")
         .groupByRaw("lower(manufacturer)")
@@ -891,7 +1030,7 @@ export class WikiController extends BaseController {
       // Step 3: Merge by resolved manufacturer identity
       const merged = new Map<string, { code: string; displayName: string | null; count: number }>()
       for (const row of rawCounts) {
-        const key = row.mfr_lower as string
+        const key = row.mfr_lower
         const count = parseInt(String(row.item_count), 10)
         const resolved = codeToMfr.get(key)
         const groupKey = resolved?.id || key
@@ -956,7 +1095,11 @@ export class WikiController extends BaseController {
       const mfrRow = await knex("wiki_manufacturers")
         .whereRaw("lower(code) = lower(?)", [id])
         .orWhereRaw("lower(name) = lower(?)", [id])
-        .select("code", "name", "description")
+        .select<Pick<WikiManufacturerRow, "code" | "name" | "description">[]>(
+          "code",
+          "name",
+          "description",
+        )
         .first()
 
       // Get items matching either the code or the name (covers "aegs" and "Aegis Dynamics")
@@ -977,6 +1120,10 @@ export class WikiController extends BaseController {
         this.throwNotFound("Manufacturer", id)
       }
 
+      // NOTE: `row` is deliberately left untyped. `game_items.size`/`grade` are
+      // integer columns, but ManufacturerItem declares them as `string`. Typing
+      // the row surfaces that pre-existing contract mismatch as a compile
+      // error, and fixing it would change the API response shape.
       const items = itemsQuery.map((row: any) => ({
         id: row.id,
         name: row.name,

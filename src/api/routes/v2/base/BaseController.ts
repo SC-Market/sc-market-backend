@@ -146,7 +146,7 @@ export abstract class BaseController extends Controller {
   protected throwBusinessError(
     code: ErrorCode,
     message: string,
-    details?: Record<string, any>,
+    details?: Record<string, unknown>,
   ): never {
     throw new BusinessLogicError(code, message, details)
   }
@@ -170,7 +170,7 @@ export abstract class BaseController extends Controller {
   /**
    * Throw a conflict error
    */
-  protected throwConflict(message: string, details?: Record<string, any>): never {
+  protected throwConflict(message: string, details?: Record<string, unknown>): never {
     throw new BusinessLogicError(ErrorCode.CONFLICT, message, details)
   }
 }

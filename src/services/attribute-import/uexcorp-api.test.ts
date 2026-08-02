@@ -7,6 +7,31 @@ import { describe, it, expect } from "vitest"
 
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
 
+/**
+ * Shapes of the UEXCorp v2.0 responses consumed by UEXCorpImporter
+ * (see uexcorp-importer.ts). Declared here so a drift in the fields these
+ * tests exercise becomes a compile error.
+ */
+interface UexCategory {
+  id: number
+  name?: string
+}
+
+interface UexItem {
+  id: number
+  // Optional to match UEXCorpImporter's defensive `i.name?.` access.
+  name?: string
+}
+
+interface UexItemAttribute {
+  attribute_name?: string
+  value?: string
+}
+
+interface UexResponse<T> {
+  data: T[]
+}
+
 describe("UEXCorp API Integration", () => {
   it("should fetch items by category", async () => {
     // UEX API requires id_category, id_company, or uuid parameter
@@ -16,7 +41,7 @@ describe("UEXCorp API Integration", () => {
     })
 
     expect(categoriesResponse.ok).toBe(true)
-    const categoriesData = await categoriesResponse.json()
+    const categoriesData = (await categoriesResponse.json()) as UexResponse<UexCategory>
 
     expect(categoriesData).toHaveProperty("data")
     expect(Array.isArray(categoriesData.data)).toBe(true)
@@ -38,7 +63,7 @@ describe("UEXCorp API Integration", () => {
     )
 
     expect(itemsResponse.ok).toBe(true)
-    const itemsData = await itemsResponse.json()
+    const itemsData = (await itemsResponse.json()) as UexResponse<UexItem>
 
     expect(itemsData).toHaveProperty("data")
     expect(Array.isArray(itemsData.data)).toBe(true)
@@ -57,7 +82,7 @@ describe("UEXCorp API Integration", () => {
       headers: { accept: "application/json" },
     })
 
-    const categoriesData = await categoriesResponse.json()
+    const categoriesData = (await categoriesResponse.json()) as UexResponse<UexCategory>
     if (!categoriesData.data || categoriesData.data.length === 0) {
       console.log("No categories found, skipping test")
       return
@@ -72,7 +97,7 @@ describe("UEXCorp API Integration", () => {
       },
     )
 
-    const itemsData = await itemsResponse.json()
+    const itemsData = (await itemsResponse.json()) as UexResponse<UexItem>
     if (!itemsData.data || itemsData.data.length === 0) {
       console.log("No items found, skipping test")
       return
@@ -90,7 +115,7 @@ describe("UEXCorp API Integration", () => {
     )
 
     expect(attrsResponse.ok).toBe(true)
-    const attrsData = await attrsResponse.json()
+    const attrsData = (await attrsResponse.json()) as UexResponse<UexItemAttribute>
 
     expect(attrsData).toHaveProperty("data")
     expect(Array.isArray(attrsData.data)).toBe(true)
@@ -111,7 +136,7 @@ describe("UEXCorp API Integration", () => {
       headers: { accept: "application/json" },
     })
 
-    const categoriesData = await categoriesResponse.json()
+    const categoriesData = (await categoriesResponse.json()) as UexResponse<UexCategory>
     if (!categoriesData.data || categoriesData.data.length === 0) {
       console.log("No categories found, skipping test")
       return
@@ -126,7 +151,7 @@ describe("UEXCorp API Integration", () => {
       },
     )
 
-    const itemsData = await itemsResponse.json()
+    const itemsData = (await itemsResponse.json()) as UexResponse<UexItem>
     if (!itemsData.data || itemsData.data.length === 0) {
       console.log("No items found, skipping test")
       return
@@ -137,11 +162,11 @@ describe("UEXCorp API Integration", () => {
 
     // Simulate case-insensitive name search
     const found = itemsData.data.find(
-      (item: any) => item.name?.toLowerCase() === testName.toLowerCase(),
+      (item) => item.name?.toLowerCase() === testName?.toLowerCase(),
     )
 
     expect(found).toBeDefined()
-    expect(found.name).toBe(testName)
+    expect(found?.name).toBe(testName)
     console.log("Successfully found item by name match")
   })
 })

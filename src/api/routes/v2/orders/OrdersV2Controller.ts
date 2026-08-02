@@ -32,6 +32,21 @@ import {
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 
+/**
+ * Row shape of the `order_market_items_v2` table. `price_per_unit` is a bigint,
+ * which the pg driver returns as a string.
+ */
+interface OrderMarketItemV2Row {
+  order_item_id: string
+  order_id: string
+  listing_id: string
+  item_id: string
+  variant_id: string
+  quantity: number
+  price_per_unit: string
+  created_at: Date
+}
+
 @Route("orders")
 @Tags("Orders V2")
 @Security("loggedin")
@@ -370,7 +385,7 @@ export class OrdersV2Controller extends BaseController {
       // V2 order items
       const v2Items = await knex("order_market_items_v2")
         .where({ order_id: orderId })
-        .select("*")
+        .select<OrderMarketItemV2Row[]>("*")
 
       // V1 market listings
       const v1Listings = await knex("market_orders")
@@ -395,7 +410,7 @@ export class OrdersV2Controller extends BaseController {
       // Build V2 market listings (separate, with variant data)
       const market_listings_v2: OrderMarketListingV2[] = []
       if (v2Items.length > 0) {
-        const grouped = new Map<string, any[]>()
+        const grouped = new Map<string, OrderMarketItemV2Row[]>()
         for (const vi of v2Items) {
           if (!grouped.has(vi.listing_id)) grouped.set(vi.listing_id, [])
           grouped.get(vi.listing_id)!.push(vi)
@@ -415,9 +430,9 @@ export class OrdersV2Controller extends BaseController {
             .orderBy("lp.display_order", "asc")
             .select(knex.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
             .first()
-          const totalQty = litems.reduce((s: number, i: any) => s + i.quantity, 0)
+          const totalQty = litems.reduce((s: number, i) => s + i.quantity, 0)
           const v2Variants: OrderVariantItem[] = await Promise.all(
-            litems.map(async (vi: any) => {
+            litems.map(async (vi) => {
               const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
               return {
                 order_item_id: vi.order_item_id, variant_id: vi.variant_id, quantity: vi.quantity,

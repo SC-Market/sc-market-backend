@@ -21,6 +21,42 @@ import {
 } from "../types/game-items.types.js"
 import logger from "../../../../logger/logger.js"
 
+/**
+ * Row shape of the quality-distribution aggregate query. The integer columns are
+ * explicitly cast `::integer` in SQL; the price columns are bigint aggregates,
+ * which the pg driver returns as strings (hence the parseInt in the mapper).
+ */
+interface GameItemQualityDistributionRow {
+  quality_tier: number
+  quantity_available: number
+  listing_count: number
+  shop_count: number
+  price_avg: string
+  price_min: string
+  price_max: string
+}
+
+/**
+ * Row shape of the game-item aggregate search query over the `listing_search`
+ * view. The price/quantity/count columns are bigint aggregates, which the pg
+ * driver returns as strings (hence the parseInt in the mapper); the quality
+ * tiers are integer aggregates.
+ */
+interface GameItemAggregateRow {
+  game_item_id: string
+  name: string | null
+  type: string | null
+  image_url: string | null
+  listing_photo: string | null
+  min_price: string | null
+  max_price: string | null
+  total_quantity: string | null
+  listing_count: string
+  shop_count: string
+  quality_tier_min: number | null
+  quality_tier_max: number | null
+}
+
 /** Search result for a game item */
 export interface GameItemSearchResult {
   id: string
@@ -219,7 +255,7 @@ export class GameItemsV2Controller extends BaseController {
             "lil.variant_id",
           )
         })
-        .select(
+        .select<GameItemQualityDistributionRow[]>(
           knex.raw("(iv.attributes->>'quality_tier')::integer as quality_tier"),
           knex.raw("SUM(lil.quantity_total)::integer as quantity_available"),
           knex.raw("COUNT(DISTINCT l.listing_id)::integer as listing_count"),
@@ -235,9 +271,13 @@ export class GameItemsV2Controller extends BaseController {
         .where("lil.listed", true)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
-        .orderBy(knex.raw("(iv.attributes->>'quality_tier')::integer") as any, "asc")
+        // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
+        // orderBy signature only accepts a column name or QueryBuilder, not a
+        // Raw. The emitted SQL is byte-identical.
+        .orderByRaw("(iv.attributes->>'quality_tier')::integer asc")
 
-      const qualityDistributionResults = await qualityDistributionQuery
+      const qualityDistributionResults: GameItemQualityDistributionRow[] =
+        await qualityDistributionQuery
 
       logger.info("Quality distribution computed", {
         game_item_id: gameItemId,
@@ -246,7 +286,7 @@ export class GameItemsV2Controller extends BaseController {
 
       // Transform results to quality distribution format (Requirements 38.4-38.6)
       const quality_distribution: GameItemQualityDistribution[] =
-        qualityDistributionResults.map((row: any) => ({
+        qualityDistributionResults.map((row) => ({
           quality_tier: row.quality_tier,
           quantity_available: row.quantity_available,
           price_min: parseInt(row.price_min, 10),
@@ -526,16 +566,20 @@ export class GameItemsV2Controller extends BaseController {
         default: query = query.orderByRaw(`SUM(ls.quantity_available) ${sortDir}`); break
       }
 
-      const rows = await query.limit(validatedPageSize).offset(offset)
+      const rows: GameItemAggregateRow[] = await query
+        .limit(validatedPageSize)
+        .offset(offset)
 
-      const items: GameItemAggregate[] = rows.map((r: any) => ({
+      const items: GameItemAggregate[] = rows.map((r) => ({
         game_item_id: r.game_item_id,
         name: r.name || "Unknown",
         type: r.type || "Other",
         image_url: r.listing_photo || r.image_url || undefined,
-        min_price: parseInt(r.min_price, 10) || 0,
-        max_price: parseInt(r.max_price, 10) || 0,
-        total_quantity: parseInt(r.total_quantity, 10) || 0,
+        // String() is a no-op for the string values the pg driver returns and
+        // matches parseInt's own ToString coercion for null aggregates.
+        min_price: parseInt(String(r.min_price), 10) || 0,
+        max_price: parseInt(String(r.max_price), 10) || 0,
+        total_quantity: parseInt(String(r.total_quantity), 10) || 0,
         listing_count: parseInt(r.listing_count, 10) || 0,
         shop_count: parseInt(r.shop_count, 10) || 0,
         quality_tier_min: r.quality_tier_min || undefined,

@@ -98,6 +98,9 @@ export class InventoryV2Controller extends BaseController {
         this.on("lp.listing_id", "l.listing_id").andOn("lp.display_order", knex.raw("0"))
       })
       .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
+      // NOTE: not typed with InventoryLotRow because the mapper below uses a
+      // defensive `created_at?.toISOString?.() || created_at` fallback whose
+      // `string | Date` result is incompatible with InventoryLotDetail.
       .select(
         "lil.*",
         "gi.name as game_item_name",

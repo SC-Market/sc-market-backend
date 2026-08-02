@@ -140,7 +140,7 @@ export class ConcurrentModificationError extends Error {
   constructor(
     public readonly resourceId: string,
     public readonly resourceType: string = "resource",
-    public readonly latestData?: any,
+    public readonly latestData?: unknown,
   ) {
     super(
       `${resourceType} ${resourceId} was modified by another operation. Please retry with latest data.`,

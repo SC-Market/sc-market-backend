@@ -38,9 +38,68 @@ import {
   SearchBuyOrdersResponse,
   DeclineBuyOrderRequest,
 } from "../types/buy-orders.types.js"
+import { VariantAttributes } from "../types/listings.types.js"
 import { resolveGameItemImages } from "../util/resolve-game-item-images.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
+
+/**
+ * Row shape of `buy_orders_v2` joined with the buyer account and game item.
+ * `price_min`/`price_max` are bigint columns, which the pg driver returns as
+ * strings. `game_item_type` is only selected by some of the list queries.
+ */
+interface BuyOrderJoinedRow {
+  buy_order_id: string
+  buyer_id: string
+  game_item_id: string
+  quality_tier_min: number | null
+  quality_tier_max: number | null
+  quality_value_min: number | null
+  quality_value_max: number | null
+  desired_attributes: VariantAttributes | null
+  price_min: string | null
+  price_max: string | null
+  quantity_desired: number
+  quantity_fulfilled: number
+  status: StandingBuyOrder["status"]
+  visibility: NonNullable<StandingBuyOrder["visibility"]>
+  negotiable: boolean
+  target_supplier_id: string | null
+  target_supplier_contractor_id: string | null
+  declined_at: Date | null
+  declined_by: string | null
+  created_at: Date
+  updated_at: Date
+  expires_at: Date | null
+  buyer_name: string | null
+  game_item_name: string | null
+  game_item_type?: string | null
+}
+
+/** Row shape of the `shops` shop_id lookup */
+interface ShopIdRow {
+  shop_id: string
+}
+
+/** Columns of `buy_orders_v2` the update endpoint may write */
+interface BuyOrderUpdate {
+  updated_at: Date
+  quantity_desired?: number
+  price_min?: number
+  price_max?: number
+  quality_tier_min?: number
+  quality_tier_max?: number
+  quality_value_min?: number
+  quality_value_max?: number
+  expires_at?: Date
+}
+
+/** Columns of `buy_orders_v2` written when recording a fulfillment */
+interface BuyOrderFulfillmentUpdate {
+  status: StandingBuyOrder["status"]
+  updated_at: Date
+  quantity_fulfilled?: number
+}
 
 @Route("buy-orders")
 @Tags("Buy Orders V2")
@@ -494,11 +553,11 @@ export class BuyOrdersV2Controller extends BaseController {
     const orderDir = sort_order === 'asc' ? 'asc' : 'desc';
 
     const results = await query
-      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
+      .select<BuyOrderJoinedRow[]>('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
       .orderBy(orderCol, orderDir)
       .limit(ps).offset((p - 1) * ps);
 
-    const buyOrders = results.map((r: any) => this.formatBuyOrderRow(r))
+    const buyOrders = results.map((r) => this.formatBuyOrderRow(r))
     await this.attachPhotos(buyOrders)
     return { buy_orders: buyOrders, total, page: p, page_size: ps };
   }
@@ -559,11 +618,11 @@ export class BuyOrdersV2Controller extends BaseController {
     const total = parseInt(String(count), 10)
 
     const results = await query
-      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
+      .select<BuyOrderJoinedRow[]>('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
       .orderBy('bo.price_max', 'desc')
       .limit(ps).offset((p - 1) * ps)
 
-    const buyOrders = results.map((r: any) => this.formatBuyOrderRow(r))
+    const buyOrders = results.map((r) => this.formatBuyOrderRow(r))
     await this.attachPhotos(buyOrders)
     return { buy_orders: buyOrders, total, page: p, page_size: ps }
   }
@@ -597,11 +656,11 @@ export class BuyOrdersV2Controller extends BaseController {
     const total = parseInt(String(count), 10);
 
     const results = await query
-      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
+      .select<BuyOrderJoinedRow[]>('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
       .orderBy('bo.created_at', 'desc')
       .limit(ps).offset((p - 1) * ps);
 
-    const buyOrders = results.map((r: any) => this.formatBuyOrderRow(r))
+    const buyOrders = results.map((r) => this.formatBuyOrderRow(r))
     await this.attachPhotos(buyOrders)
     return { buy_orders: buyOrders, total, page: p, page_size: ps };
   }
@@ -651,7 +710,7 @@ export class BuyOrdersV2Controller extends BaseController {
     if (order.buyer_id !== userId) throw this.throwValidationError('Not authorized', [{ field: 'id', message: 'You do not own this buy order' }]);
     if (order.status !== 'active') throw this.throwValidationError('Cannot update', [{ field: 'status', message: 'Buy order is ' + order.status }]);
 
-    const updates: Record<string, any> = { updated_at: new Date() };
+    const updates: BuyOrderUpdate = { updated_at: new Date() };
     if (body.quantity !== undefined) updates.quantity_desired = body.quantity;
     if (body.price_per_unit !== undefined) {
       updates.price_min = body.price_per_unit;
@@ -739,10 +798,10 @@ export class BuyOrdersV2Controller extends BaseController {
       }
 
       // Validate listing belongs to seller's shop and is active
-      const sellerShops = await trx('shops').where('owner_user_id', sellerId).select('shop_id')
+      const sellerShops = await trx('shops').where('owner_user_id', sellerId).select<ShopIdRow[]>('shop_id')
       const listing = await trx('listings')
         .where('listing_id', body.listing_id)
-        .whereIn('shop_id', sellerShops.map((s: any) => s.shop_id))
+        .whereIn('shop_id', sellerShops.map((s) => s.shop_id))
         .first()
       if (!listing) throw this.throwNotFound('Listing', body.listing_id)
       if (listing.status !== 'active') {
@@ -855,7 +914,7 @@ export class BuyOrdersV2Controller extends BaseController {
         // Table may not exist pre-migration
       }
 
-      const updatePayload: Record<string, any> = {
+      const updatePayload: BuyOrderFulfillmentUpdate = {
         status: isFullyFulfilled ? 'fulfilled' : 'active',
         updated_at: new Date(),
       }
@@ -954,7 +1013,7 @@ export class BuyOrdersV2Controller extends BaseController {
     return this.formatBuyOrderRow(row)
   }
 
-private formatBuyOrderRow(r: any): StandingBuyOrder {
+private formatBuyOrderRow(r: BuyOrderJoinedRow): StandingBuyOrder {
     return {
       buy_order_id: r.buy_order_id,
       game_item_id: r.game_item_id,
@@ -963,7 +1022,7 @@ private formatBuyOrderRow(r: any): StandingBuyOrder {
       buyer_name: r.buyer_name || 'Unknown',
       quantity: r.quantity_desired || 0,
       quantity_fulfilled: r.quantity_fulfilled || 0,
-      price_per_unit: parseFloat(r.price_max) || 0,
+      price_per_unit: parseFloat(r.price_max ?? "") || 0,
       quality_tier_min: r.quality_tier_min || undefined,
       quality_tier_max: r.quality_tier_max || undefined,
       quality_value_min: r.quality_value_min ?? undefined,
@@ -971,12 +1030,12 @@ private formatBuyOrderRow(r: any): StandingBuyOrder {
       game_item_type: r.game_item_type || undefined,
       negotiable: r.negotiable || false,
       status: r.status,
-      created_at: r.created_at?.toISOString?.() || r.created_at,
-      expires_at: r.expires_at?.toISOString?.() || r.expires_at || undefined,
+      created_at: r.created_at?.toISOString?.() || new Date().toISOString(),
+      expires_at: r.expires_at?.toISOString?.() || undefined,
       visibility: r.visibility || 'public',
       target_supplier_id: r.target_supplier_id || null,
       target_supplier_contractor_id: r.target_supplier_contractor_id || null,
-      declined_at: r.declined_at?.toISOString?.() || r.declined_at || null,
+      declined_at: r.declined_at?.toISOString?.() || null,
     };
   }
 

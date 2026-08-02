@@ -30,14 +30,49 @@ import {
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
 
-// Bugsnag reference — populated lazily
-let Bugsnag: any = null
+/**
+ * The subset of the Bugsnag client this module uses. Declared locally (rather
+ * than importing `BugsnagStatic`) because the module is loaded lazily and may
+ * legitimately be absent, so we only ever touch these two members.
+ */
+interface BugsnagLike {
+  isStarted?: () => boolean
+  notify: (
+    error: Error,
+    onError?: (event: {
+      addMetadata: (section: string, values: Record<string, unknown>) => void
+    }) => void,
+  ) => void
+}
 
-async function ensureBugsnag() {
+/**
+ * `@bugsnag/js` is CJS, so under esModuleInterop the awaited namespace nests the
+ * real client under `default`. The shipped .d.ts does not describe that interop
+ * shape, so the value is narrowed structurally rather than asserted.
+ */
+function isBugsnagClient(value: unknown): value is BugsnagLike {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    typeof (value as { notify?: unknown }).notify === "function"
+  )
+}
+
+function asBugsnagClient(module: unknown): BugsnagLike | false {
+  if (typeof module !== "object" || module === null) return false
+  const named = (module as { default?: unknown }).default
+  if (isBugsnagClient(named)) return named
+  if (isBugsnagClient(module)) return module
+  return false
+}
+
+// Bugsnag reference — populated lazily. `false` marks it as unavailable.
+let Bugsnag: BugsnagLike | false | null = null
+
+async function ensureBugsnag(): Promise<BugsnagLike | false> {
   if (Bugsnag !== null) return Bugsnag
   try {
-    const mod = await import("@bugsnag/js")
-    Bugsnag = mod.default || mod
+    Bugsnag = asBugsnagClient(await import("@bugsnag/js"))
   } catch {
     Bugsnag = false // mark as unavailable
   }
@@ -45,14 +80,14 @@ async function ensureBugsnag() {
 }
 
 function notifyBugsnag(err: Error, req: Request) {
-  ensureBugsnag().then((bs: any) => {
+  ensureBugsnag().then((bs) => {
     if (!bs || !bs.isStarted?.()) return
     try {
-      bs.notify(err, (event: any) => {
+      bs.notify(err, (event) => {
         event.addMetadata("request", {
           path: req.path,
           method: req.method,
-          user_id: (req.user as any)?.user_id,
+          user_id: req.user?.user_id,
         })
       })
     } catch { /* ignore */ }
@@ -60,13 +95,30 @@ function notifyBugsnag(err: Error, req: Request) {
 }
 
 /**
+ * Pull a human-readable message out of an error response body. Bodies are
+ * either a StandardErrorResponse (`{ error: { message } }`) or a legacy
+ * `{ error: "..." }`; anything else falls back to a generic label.
+ */
+function describeErrorBody(body: unknown): string {
+  if (typeof body === "object" && body !== null && "error" in body) {
+    const { error } = body as { error: unknown }
+    if (typeof error === "object" && error !== null) {
+      const { message } = error as { message?: unknown }
+      if (message) return String(message)
+    }
+    if (error) return String(error)
+  }
+  return "Internal Server Error"
+}
+
+/**
  * Middleware that intercepts 500 responses to log them in Bugsnag.
  */
 export function track500Responses(req: Request, res: Response, next: NextFunction) {
   const originalJson = res.json.bind(res)
-  res.json = function(this: Response, body: any) {
+  res.json = function(this: Response, body?: unknown) {
     if (res.statusCode >= 500) {
-      const message = body?.error?.message || body?.error || "Internal Server Error"
+      const message = describeErrorBody(body)
       notifyBugsnag(new Error(`[${res.statusCode}] ${req.method} ${req.path}: ${message}`), req)
     }
     return originalJson(body)
@@ -81,8 +133,28 @@ interface AjvValidationError {
   instancePath: string
   schemaPath: string
   keyword: string
-  params: Record<string, any>
+  // AJV's `params` payload varies by keyword; only the two members this handler
+  // reads are described.
+  params: {
+    missingProperty?: string
+    allowedValues?: unknown[]
+  }
   message: string
+}
+
+/**
+ * Read the `validationErrors` array that the @wesleytodd/openapi validation
+ * middleware attaches to the thrown error (or, when wrapped by http-errors, to
+ * its `cause`). It is not part of the Error type, hence the structural read.
+ */
+function readValidationErrors(
+  source: unknown,
+): AjvValidationError[] | undefined {
+  if (typeof source !== "object" || source === null) return undefined
+  const { validationErrors } = source as { validationErrors?: unknown }
+  return Array.isArray(validationErrors)
+    ? (validationErrors as AjvValidationError[])
+    : undefined
 }
 
 /**
@@ -136,13 +208,13 @@ function convertAjvErrorsToValidationErrors(
 
     // For enum errors, include the allowed values after the field context
     if (ajvError.keyword === "enum" && ajvError.params?.allowedValues) {
-      const allowedValues = ajvError.params.allowedValues as any[]
+      const allowedValues = ajvError.params.allowedValues
       const valuesList =
         allowedValues.length <= 10
-          ? allowedValues.map((v: any) => `"${v}"`).join(", ")
+          ? allowedValues.map((v) => `"${v}"`).join(", ")
           : `${allowedValues
               .slice(0, 10)
-              .map((v: any) => `"${v}"`)
+              .map((v) => `"${v}"`)
               .join(", ")}, ... (${allowedValues.length} total)`
       message = `${message}. Allowed values: ${valuesList}`
     }
@@ -221,7 +293,7 @@ export async function errorHandler(
       error: err,
       path: req.path,
       method: req.method,
-      user_id: (req.user as any)?.user_id,
+      user_id: req.user?.user_id,
       stack: err.stack,
     })
   }
@@ -239,18 +311,13 @@ export async function errorHandler(
     err.message === "Request validation failed" ||
     err.message?.includes("Request validation failed")
   ) {
-    // Extract AJV validation errors from the error object
-    // @ts-ignore - validationErrors is attached by the OpenAPI middleware
-    let ajvErrors = (err as any).validationErrors as
-      | AjvValidationError[]
-      | undefined
+    // Extract AJV validation errors from the error object — attached by the
+    // @wesleytodd/openapi validation middleware, so not on the Error type.
+    let ajvErrors = readValidationErrors(err)
 
     // If not found, check the cause (http-errors may wrap the original error)
-    if (!ajvErrors && (err as any).cause) {
-      // @ts-ignore
-      ajvErrors = (err as any).cause?.validationErrors as
-        | AjvValidationError[]
-        | undefined
+    if (!ajvErrors && err.cause) {
+      ajvErrors = readValidationErrors(err.cause)
     }
 
     // Convert AJV errors to frontend-friendly format
@@ -309,9 +376,9 @@ export async function errorHandler(
   ) {
     return res.status(400).json(
       createErrorResponse(
-        (err as any).code || ErrorCode.VALIDATION_ERROR,
+        err.code || ErrorCode.VALIDATION_ERROR,
         err.message,
-        (err as any).toJSON?.(),
+        err.toJSON(),
       ),
     )
   }
@@ -319,9 +386,9 @@ export async function errorHandler(
   if (err instanceof ConcurrentModificationError) {
     return res.status(409).json(
       createErrorResponse(
-        (err as any).code || ErrorCode.CONFLICT,
+        err.code || ErrorCode.CONFLICT,
         err.message,
-        (err as any).toJSON?.(),
+        err.toJSON(),
       ),
     )
   }

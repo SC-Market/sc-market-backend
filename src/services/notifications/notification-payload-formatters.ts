@@ -337,7 +337,7 @@ export function formatMarketBidNotificationPayload(
   const listingId =
     "listing" in listing
       ? listing.listing.listing_id
-      : (listing as any).listing_id
+      : (listing as { listing_id: string }).listing_id
   const url = `${getBaseUrl()}/market/${listingId}`
 
   // Extract title from details (all types have details)

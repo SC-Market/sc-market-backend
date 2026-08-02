@@ -11,8 +11,10 @@
  */
 
 import { Request, Response, NextFunction } from "express"
+import { Knex } from "knex"
 import crypto from "crypto"
 import { database } from "../../clients/database/knex-db.js"
+import { DBApiToken } from "../../clients/database/db-models.js"
 import * as profileDb from "../routes/v1/profiles/database.js"
 import {
   isJWTAuthEnabled,
@@ -39,11 +41,11 @@ export async function populateUser(
           .createHash("sha256")
           .update(token)
           .digest("hex")
-        const tokenRecord = await database
-          .knex("api_tokens")
+        const tokenRecord: DBApiToken | undefined = await database
+          .knex<DBApiToken>("api_tokens")
           .where("token_hash", tokenHash)
           .whereNull("revoked_at")
-          .where(function (this: any) {
+          .where(function (this: Knex.QueryBuilder<DBApiToken>) {
             this.whereNull("expires_at").orWhere("expires_at", ">", new Date())
           })
           .first()
@@ -55,7 +57,7 @@ export async function populateUser(
           if (user && !user.banned && !user.is_tombstone) {
             req.user = user
             // Stash token metadata for scope checks downstream
-            ;(req as any).__tokenInfo = {
+            req.__tokenInfo = {
               id: tokenRecord.id,
               name: tokenRecord.name,
               scopes: tokenRecord.scopes,

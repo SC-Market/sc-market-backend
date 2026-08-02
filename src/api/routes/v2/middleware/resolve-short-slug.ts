@@ -11,6 +11,7 @@ const SLUG_PATH_TABLES: Record<
   "/game-items/": { table: "game_items", column: "id" },
   "/game-data/wiki/items/": { table: "game_items", column: "id" },
   "/game-data/wiki/ships/": { table: "game_items", column: "id" },
+  "/game-data/resources/": { table: "resources", column: "resource_id" },
 }
 
 const SLUG_QUERY_PARAMS: Record<string, { table: string; column: string }> = {

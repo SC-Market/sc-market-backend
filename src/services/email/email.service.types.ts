@@ -48,7 +48,7 @@ export interface EmailTemplateData {
   preferencesUrl: string
 
   // Notification-specific data
-  [key: string]: any // Order, offer, message data, etc.
+  [key: string]: unknown // Order, offer, message data, etc.
 }
 
 /**
@@ -56,7 +56,7 @@ export interface EmailTemplateData {
  * The notificationType is passed as a separate parameter, not in this data object
  */
 export interface NotificationEmailData {
-  [key: string]: any // Order, offer, message data, etc.
+  [key: string]: unknown // Order, offer, message data, etc.
 }
 
 /**

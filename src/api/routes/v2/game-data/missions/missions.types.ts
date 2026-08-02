@@ -213,7 +213,8 @@ export interface Mission {
   is_chain_starter: boolean
   is_chain_mission: boolean
   is_unique_mission: boolean
-  prerequisite_missions?: any
+  /** Mission UUIDs that must be completed first */
+  prerequisite_missions?: string[]
   estimated_uec_per_hour?: number
   estimated_rep_per_hour?: number
   rank_index?: number

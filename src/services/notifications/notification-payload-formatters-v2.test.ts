@@ -1,4 +1,3 @@
-// @ts-nocheck — test file, payload.data assertions are guarded by expect()
 /**
  * Unit tests for V2 notification payload formatters
  * 
@@ -21,28 +20,46 @@ import type {
   CreateOrderResponse,
   GetOrderDetailResponse,
 } from '../../api/routes/v2/types/orders.types.js'
+import type { PushNotificationPayload } from '../push-notifications/push-notification.service.types.js'
+
+/**
+ * Every formatter under test populates `data`, but PushNotificationPayload
+ * declares it optional. Narrow it here rather than optional-chaining at each
+ * assertion, so a formatter that stopped emitting `data` fails loudly instead of
+ * silently comparing against undefined.
+ */
+function payloadData(
+  payload: PushNotificationPayload,
+): NonNullable<PushNotificationPayload['data']> {
+  const { data } = payload
+  if (!data) {
+    throw new Error('notification payload is missing `data`')
+  }
+  return data
+}
 
 describe('notification-payload-formatters-v2', () => {
   // Mock listing data
   const mockListing: GetListingDetailResponse = {
     listing: {
       listing_id: 'listing-123',
-      seller_id: 'seller-456',
-      seller_type: 'user',
+      shop_id: 'shop-456',
       title: 'Test Listing',
       description: 'Test description',
       status: 'active',
       visibility: 'public',
       sale_type: 'fixed',
       listing_type: 'single',
+      quantity_unit: 'unit',
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z',
     },
     seller: {
-      id: 'seller-456',
+      shop_id: 'shop-456',
       name: 'TestSeller',
-      type: 'user',
+      slug: 'test-seller',
       rating: 4.5,
+      languages: ['en'],
     },
     items: [
       {
@@ -88,7 +105,7 @@ describe('notification-payload-formatters-v2', () => {
   const mockOrder: CreateOrderResponse = {
     order_id: 'order-123',
     buyer_id: 'buyer-456',
-    seller_id: 'seller-789',
+    shop_id: 'shop-789',
     total_price: 100000,
     status: 'pending',
     created_at: '2024-01-01T00:00:00Z',
@@ -97,6 +114,7 @@ describe('notification-payload-formatters-v2', () => {
         order_item_id: 'order-item-001',
         listing_id: 'listing-123',
         item_id: 'item-789',
+        listing_title: 'Test Listing',
         variant: {
           variant_id: 'variant-001',
           attributes: {
@@ -123,15 +141,20 @@ describe('notification-payload-formatters-v2', () => {
       avatar: null,
     },
     seller: {
-      user_id: 'seller-789',
-      username: 'TestSeller',
-      display_name: 'Test Seller',
-      avatar: null,
+      shop_id: 'shop-789',
+      name: 'TestSeller',
+      slug: 'test-seller',
     },
     total_price: 100000,
     status: 'pending',
+    kind: 'Delivery',
+    title: 'Test Order',
+    description: 'Test order description',
+    payment_type: 'one-time',
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z',
+    market_listings: [],
+    market_listings_v2: [],
     items: mockOrder.items,
   }
 
@@ -142,10 +165,10 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.title).toBe('New Bid')
       expect(payload.body).toContain('Test Listing')
       expect(payload.body).toContain('45000 aUEC')
-      expect(payload.data.type).toBe('market_listing_v2')
-      expect(payload.data.action).toBe('market_item_bid_v2')
-      expect(payload.data.entityId).toBe('listing-123')
-      expect(payload.data.variantId).toBeUndefined()
+      expect(payloadData(payload).type).toBe('market_listing_v2')
+      expect(payloadData(payload).action).toBe('market_item_bid_v2')
+      expect(payloadData(payload).entityId).toBe('listing-123')
+      expect(payloadData(payload).variantId).toBeUndefined()
     })
 
     it('should format bid notification with variant information', () => {
@@ -159,7 +182,7 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.body).toContain('Test Listing')
       expect(payload.body).toContain('45000 aUEC')
       expect(payload.body).toContain('Diamond') // Quality tier 5
-      expect(payload.data.variantId).toBe('variant-001')
+      expect(payloadData(payload).variantId).toBe('variant-001')
     })
 
     it('should include crafted source in notification', () => {
@@ -180,10 +203,10 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.title).toBe('New Offer')
       expect(payload.body).toContain('Test Listing')
       expect(payload.body).toContain('40000 aUEC')
-      expect(payload.data.type).toBe('market_listing_v2')
-      expect(payload.data.action).toBe('market_item_offer_v2')
-      expect(payload.data.entityId).toBe('listing-123')
-      expect(payload.data.variantId).toBeUndefined()
+      expect(payloadData(payload).type).toBe('market_listing_v2')
+      expect(payloadData(payload).action).toBe('market_item_offer_v2')
+      expect(payloadData(payload).entityId).toBe('listing-123')
+      expect(payloadData(payload).variantId).toBeUndefined()
     })
 
     it('should format offer notification with variant information', () => {
@@ -198,7 +221,7 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.body).toContain('40000 aUEC')
       expect(payload.body).toContain('Gold') // Quality tier 3
       expect(payload.body).toContain('Store')
-      expect(payload.data.variantId).toBe('variant-002')
+      expect(payloadData(payload).variantId).toBe('variant-002')
     })
   })
 
@@ -210,9 +233,9 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.body).toContain('100000 aUEC')
       expect(payload.body).toContain('Diamond') // Quality tier 5
       expect(payload.body).toContain('Crafted')
-      expect(payload.data.type).toBe('order_v2')
-      expect(payload.data.action).toBe('order_create_v2')
-      expect(payload.data.entityId).toBe('order-123')
+      expect(payloadData(payload).type).toBe('order_v2')
+      expect(payloadData(payload).action).toBe('order_create_v2')
+      expect(payloadData(payload).entityId).toBe('order-123')
     })
 
     it('should handle multiple items in order', () => {
@@ -247,8 +270,8 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.title).toBe('Order Completed')
       expect(payload.body).toContain('completed')
       expect(payload.body).toContain('Diamond') // Quality tier 5
-      expect(payload.data.type).toBe('order_v2')
-      expect(payload.data.action).toBe('order_status_completed_v2')
+      expect(payloadData(payload).type).toBe('order_v2')
+      expect(payloadData(payload).action).toBe('order_status_completed_v2')
     })
 
     it('should format order status notification for cancelled status', () => {
@@ -259,7 +282,7 @@ describe('notification-payload-formatters-v2', () => {
 
       expect(payload.title).toBe('Order Cancelled')
       expect(payload.body).toContain('cancelled')
-      expect(payload.data.action).toBe('order_status_cancelled_v2')
+      expect(payloadData(payload).action).toBe('order_status_cancelled_v2')
     })
 
     it('should handle unknown status gracefully', () => {
@@ -302,10 +325,10 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.body).toContain('matches a buy order')
       expect(payload.body).toContain('Diamond') // Quality tier 5
       expect(payload.body).toContain('Crafted')
-      expect(payload.data.type).toBe('buy_order_match_v2')
-      expect(payload.data.entityId).toBe('buy-order-123')
-      expect(payload.data.listingId).toBe('listing-456')
-      expect(payload.data.variantId).toBe('variant-001')
+      expect(payloadData(payload).type).toBe('buy_order_match_v2')
+      expect(payloadData(payload).entityId).toBe('buy-order-123')
+      expect(payloadData(payload).listingId).toBe('listing-456')
+      expect(payloadData(payload).variantId).toBe('variant-001')
     })
   })
 
@@ -394,7 +417,7 @@ describe('notification-payload-formatters-v2', () => {
         'variant-001'
       )
 
-      expect(payload.data.variantId).toBe('variant-001')
+      expect(payloadData(payload).variantId).toBe('variant-001')
     })
 
     it('includes quality tier in notification body', () => {
@@ -429,7 +452,7 @@ describe('notification-payload-formatters-v2', () => {
     it('formats notification without variant when not specified', () => {
       const payload = formatMarketBidNotificationPayloadV2(mockListing, 45000)
 
-      expect(payload.data.variantId).toBeUndefined()
+      expect(payloadData(payload).variantId).toBeUndefined()
       expect(payload.body).not.toContain('Diamond')
       expect(payload.body).not.toContain('Crafted')
     })
@@ -459,7 +482,7 @@ describe('notification-payload-formatters-v2', () => {
 
       expect(payload.body).toContain('Platinum') // Tier 4
       expect(payload.body).toContain('Looted')
-      expect(payload.data.variantId).toBe('variant-001')
+      expect(payloadData(payload).variantId).toBe('variant-001')
     })
 
     it('includes variant information in order status notifications', () => {
@@ -491,6 +514,7 @@ describe('notification-payload-formatters-v2', () => {
             order_item_id: 'order-item-002',
             listing_id: 'listing-124',
             item_id: 'item-790',
+            listing_title: 'Second Listing',
             variant: {
               variant_id: 'variant-002',
               attributes: {

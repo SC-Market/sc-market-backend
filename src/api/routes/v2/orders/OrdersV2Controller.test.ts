@@ -8,10 +8,21 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest"
+import type { Request as ExpressRequest } from "express"
 import { OrdersV2Controller } from "./OrdersV2Controller.js"
+import type { User } from "../../v1/api-models.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { v4 as uuidv4 } from "uuid"
 import type { Knex } from "knex"
+
+
+/**
+ * Build the minimal authenticated ExpressRequest these endpoints read
+ * `user.user_id` off of.
+ */
+function createMockRequest(userId: string): ExpressRequest {
+  return { user: { user_id: userId } as User } as ExpressRequest
+}
 
 describe("OrdersV2Controller", () => {
   let knex: Knex
@@ -110,9 +121,7 @@ describe("OrdersV2Controller", () => {
   describe("createOrder", () => {
     it("should create order with variant-specific items", async () => {
       // Mock request with authentication
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const orderRequest = {
         items: [
@@ -153,9 +162,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should reject order with insufficient stock", async () => {
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const orderRequest = {
         items: [
@@ -173,9 +180,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should reject order with invalid variant", async () => {
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const orderRequest = {
         items: [
@@ -198,9 +203,7 @@ describe("OrdersV2Controller", () => {
         .where({ listing_id: testListingId })
         .update({ status: "sold" })
 
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const orderRequest = {
         items: [
@@ -223,9 +226,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should snapshot variant price at purchase time", async () => {
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const orderRequest = {
         items: [
@@ -331,9 +332,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should return order detail with variant information for buyer", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const result = await controller.getOrderDetail(testOrderId, mockRequest)
 
@@ -356,9 +355,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should return order detail with variant information for seller", async () => {
-      const mockRequest = {
-        user: { user_id: testSellerId },
-      } as any
+      const mockRequest = createMockRequest(testSellerId)
 
       const result = await controller.getOrderDetail(testOrderId, mockRequest)
 
@@ -369,9 +366,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should return 404 for non-existent order", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const nonExistentOrderId = uuidv4()
 
@@ -390,9 +385,7 @@ describe("OrdersV2Controller", () => {
         created_at: new Date(),
       })
 
-      const mockRequest = {
-        user: { user_id: unauthorizedUserId },
-      } as any
+      const mockRequest = createMockRequest(unauthorizedUserId)
 
       await expect(
         controller.getOrderDetail(testOrderId, mockRequest),
@@ -403,9 +396,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should include quality tier attributes in variant details", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       const result = await controller.getOrderDetail(testOrderId, mockRequest)
 
@@ -416,9 +407,7 @@ describe("OrdersV2Controller", () => {
     })
 
     it("should preserve price snapshot from purchase time", async () => {
-      const mockRequest = {
-        user: { user_id: testBuyerId },
-      } as any
+      const mockRequest = createMockRequest(testBuyerId)
 
       // Change the listing price after order creation
       await knex("listing_items")

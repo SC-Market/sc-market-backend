@@ -7,6 +7,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
+import type { Mock } from "vitest"
+import type { Knex } from "knex"
 import { database } from "../../../../clients/database/knex-db.js"
 
 // Mock all transitive dependencies of helpers.ts
@@ -77,8 +79,48 @@ vi.mock("../../../../logger/logger.js", () => ({
 }))
 
 vi.mock("../../../../clients/database/transaction.js", () => ({
-  withTransaction: vi.fn(async (cb: any) => cb(vi.fn())),
+  withTransaction: vi.fn(
+    async <T,>(cb: (trx: Knex.Transaction) => Promise<T>) =>
+      // The mocked callback never touches the trx, so a bare stub suffices.
+      cb(vi.fn() as unknown as Knex.Transaction),
+  ),
 }))
+
+/**
+ * The nested builder handed to a `.where(cb)` callback. search_orders only
+ * chains these three methods inside its grouped-where callbacks.
+ */
+type SubBuilder = {
+  where: Mock
+  whereNull: Mock
+  whereIn: Mock
+}
+
+/**
+ * The slice of the knex query-builder surface search_orders touches. Chain
+ * methods return the same builder; `select`, `first` and `then` are terminals.
+ */
+type FullBuilder = {
+  where: Mock
+  andWhere: Mock
+  clone: Mock
+  groupByRaw: Mock
+  select: Mock
+  orderBy: Mock
+  orderByRaw: Mock
+  leftJoin: Mock
+  limit: Mock
+  offset: Mock
+  whereNull: Mock
+  whereIn: Mock
+  whereRaw: Mock
+  count: Mock
+  first: Mock
+  then: (resolve: (value: unknown[]) => unknown) => Promise<unknown>
+}
+
+/** The setupTests knex stand-in is a vi.fn() table factory (see setupTests.ts). */
+type MockedKnexFn = Mock<(table: string) => FullBuilder>
 
 describe("search_orders — shop_id filter", () => {
   let whereCalls: Array<{ args: unknown[] }>
@@ -87,13 +129,13 @@ describe("search_orders — shop_id filter", () => {
     whereCalls = []
 
     // Create a comprehensive mock builder that tracks .where() calls
-    const createFullBuilder = () => {
-      const builder: any = {
+    const createFullBuilder = (): FullBuilder => {
+      const builder: FullBuilder = {
         where: vi.fn((...args: unknown[]) => {
           // Track where calls, including callback invocations
           if (typeof args[0] === "function") {
             // Execute the callback with a sub-builder that also tracks
-            const subBuilder: any = {}
+            const subBuilder = {} as SubBuilder
             const subWhere = vi.fn((...subArgs: unknown[]) => {
               whereCalls.push({ args: subArgs })
               return subBuilder
@@ -101,7 +143,7 @@ describe("search_orders — shop_id filter", () => {
             subBuilder.where = subWhere
             subBuilder.whereNull = vi.fn(() => subBuilder)
             subBuilder.whereIn = vi.fn(() => subBuilder)
-            ;(args[0] as Function)(subBuilder)
+            ;(args[0] as (b: SubBuilder) => void)(subBuilder)
           } else {
             whereCalls.push({ args })
           }
@@ -121,7 +163,8 @@ describe("search_orders — shop_id filter", () => {
         whereRaw: vi.fn(() => builder),
         count: vi.fn(() => builder),
         first: vi.fn(() => Promise.resolve({ count: 0 })),
-        then: (resolve: any) => Promise.resolve([]).then(resolve),
+        then: (resolve: (value: unknown[]) => unknown) =>
+          Promise.resolve([]).then(resolve),
       }
       // Make select chainable AND resolvable
       builder.select = vi.fn((...args: unknown[]) => {
@@ -132,7 +175,7 @@ describe("search_orders — shop_id filter", () => {
     }
 
     // Replace the mock knex function
-    const mockKnex = database.knex as any
+    const mockKnex = database.knex as unknown as MockedKnexFn
     mockKnex.mockImplementation(() => createFullBuilder())
   })
 

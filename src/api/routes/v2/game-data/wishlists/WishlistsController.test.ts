@@ -6,17 +6,32 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
+import type { Request as ExpressRequest } from "express"
 import { WishlistsController } from "./WishlistsController.js"
+import type { User } from "../../../v1/api-models.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
+
+/**
+ * Controller under test with its protected `request` slot exposed, so these
+ * tests can inject an authenticated (or guest) request without widening the
+ * controller to `any`.
+ */
+type ControllerWithRequest = WishlistsController & {
+  request?: ExpressRequest
+}
+
+/** Build the minimal ExpressRequest the controller reads `user` off of. */
+function mockRequest(user?: Partial<User>): ExpressRequest {
+  return { user: user as User } as ExpressRequest
+}
 
 describe("WishlistsController", () => {
   let controller: WishlistsController
   let knex: ReturnType<typeof getKnex>
 
   // Mock user context
-  const mockUser = {
+  const mockUser: Partial<User> = {
     user_id: "test-user-id",
-    discord_id: "123456789",
     username: "testuser",
   }
 
@@ -24,7 +39,7 @@ describe("WishlistsController", () => {
     knex = getKnex()
     controller = new WishlistsController()
     // Mock the request object with user
-    ;(controller as any).request = { user: mockUser }
+    ;(controller as ControllerWithRequest).request = mockRequest(mockUser)
   })
 
   afterEach(async () => {
@@ -229,7 +244,7 @@ describe("WishlistsController", () => {
         .returning("*")
 
       // Access without authentication (simulate guest)
-      ;(controller as any).request = { user: undefined }
+      ;(controller as ControllerWithRequest).request = mockRequest(undefined)
 
       const result = await controller.getWishlist(wishlist.wishlist_id, "test-share-token-123456789012")
 

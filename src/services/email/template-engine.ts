@@ -57,9 +57,9 @@ function registerHelpers(): void {
   Handlebars.registerHelper(
     "ifEquals",
     function (
-      this: any,
-      arg1: any,
-      arg2: any,
+      this: unknown,
+      arg1: unknown,
+      arg2: unknown,
       options: Handlebars.HelperOptions,
     ) {
       return arg1 === arg2 ? options.fn(this) : options.inverse(this)
@@ -67,7 +67,10 @@ function registerHelpers(): void {
   )
 
   // URL helper (ensures absolute URLs)
-  Handlebars.registerHelper("absoluteUrl", function (this: any, url: string) {
+  Handlebars.registerHelper("absoluteUrl", function (
+    this: { siteUrl?: string },
+    url: string,
+  ) {
     if (!url) return ""
     if (url.startsWith("http://") || url.startsWith("https://")) {
       return url

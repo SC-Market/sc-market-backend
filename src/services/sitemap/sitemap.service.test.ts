@@ -1,5 +1,6 @@
 import { gunzipSync } from "node:zlib"
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import type { Mock } from "vitest"
 
 vi.mock("../../api/routes/v1/contractors/database.js", () => ({
   getContractorListings: vi.fn(async () => []),
@@ -11,18 +12,44 @@ vi.mock("../../api/routes/v1/recruiting/database.js", () => ({
   getAllRecruitingPosts: vi.fn(async () => []),
 }))
 
-function createChainMock(resolveValue: any = []) {
-  const chain: any = {}
-  const methods = ["select", "where", "whereNot", "whereNotNull", "groupBy", "limit", "orderBy"]
+/** A row as the sitemap service reads it off a knex query. */
+type SitemapRow = Record<string, unknown>
+
+/**
+ * The slice of the knex query-builder surface the sitemap service touches.
+ * Every chain method returns the same builder; `then` and the iterator are the
+ * terminals.
+ */
+type ChainMock = {
+  select: Mock
+  where: Mock
+  whereNot: Mock
+  whereNotNull: Mock
+  groupBy: Mock
+  limit: Mock
+  orderBy: Mock
+  then: (
+    resolve: (value: SitemapRow[]) => unknown,
+    reject?: (reason: Error) => unknown,
+  ) => unknown
+  [Symbol.iterator]: () => Generator<SitemapRow>
+}
+
+function createChainMock(resolveValue: SitemapRow[] = []): ChainMock {
+  const chain = {} as ChainMock
+  const methods = ["select", "where", "whereNot", "whereNotNull", "groupBy", "limit", "orderBy"] as const
   for (const m of methods) {
     chain[m] = vi.fn(() => chain)
   }
-  chain.then = (resolve: any) => resolve(resolveValue)
+  chain.then = (resolve) => resolve(resolveValue)
   chain[Symbol.iterator] = function* () { yield* resolveValue }
   return chain
 }
 
-const mockKnex: any = vi.fn(() => createChainMock([]))
+/** The mocked getKnex() table factory, kept as a Mock so tests can re-stub it. */
+const mockKnex: Mock<(table?: string) => ChainMock> = vi.fn(() =>
+  createChainMock([]),
+)
 
 vi.mock("../../clients/database/knex-db.js", () => ({
   getKnex: () => mockKnex,
@@ -61,11 +88,11 @@ describe("generateSitemapCache", () => {
   it("isolates a failing section instead of aborting the whole sitemap", async () => {
     bugsnagNotify.mockClear()
     // Make the shops query throw; every other db(...) call still returns [].
-    mockKnex.mockImplementation((table: string) => {
+    mockKnex.mockImplementation((table?: string) => {
       if (table === "shops") {
         const chain = createChainMock([])
-        chain.then = (_resolve: any, reject: any) =>
-          reject(new Error("shops query blew up"))
+        chain.then = (_resolve, reject) =>
+          reject?.(new Error("shops query blew up"))
         return chain
       }
       return createChainMock([])

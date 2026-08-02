@@ -1,4 +1,3 @@
-// @ts-nocheck — test file, parameter type mismatches are non-blocking
 /**
  * Unit tests for ShopsV2Controller — blocklist and customers endpoints.
  *
@@ -10,7 +9,12 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
+import type { Mock } from "vitest"
+import type { Request as ExpressRequest } from "express"
+import type { Knex } from "knex"
 import { ShopsV2Controller } from "./ShopsV2Controller.js"
+import type { Shop } from "../../../../services/shops/shop-permissions.service.js"
+import type { User } from "../../v1/api-models.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
   clearMockData,
@@ -21,17 +25,25 @@ import { createTestUser } from "../../../../test-utils/testFixturesMock.js"
 
 // Mock the shop-permissions service since it uses getKnex internally
 vi.mock("../../../../services/shops/shop-permissions.service.js", async (importOriginal) => {
-  const actual = await importOriginal()
+  const actual =
+    await importOriginal<
+      typeof import("../../../../services/shops/shop-permissions.service.js")
+    >()
   return {
     ...actual,
-    getShopById: vi.fn(async (shopId: string) => {
-      const shops = getMockTableDataGeneric("shops")
-      return shops.find((s: any) => s.shop_id === shopId) || null
+    getShopById: vi.fn(async (shopId: string): Promise<Shop | null> => {
+      const shops = getMockTableDataGeneric("shops") as unknown as Shop[]
+      return shops.find((s) => s.shop_id === shopId) || null
     }),
-    canManageShop: vi.fn(async (shop: any, userId: string) => {
-      if (shop.owner_user_id === userId) return true
-      return false
-    }),
+    canManageShop: vi.fn(
+      async (
+        shop: Pick<Shop, "shop_id" | "owner_user_id" | "owner_contractor_id">,
+        userId: string,
+      ): Promise<boolean> => {
+        if (shop.owner_user_id === userId) return true
+        return false
+      },
+    ),
   }
 })
 
@@ -56,11 +68,46 @@ vi.mock("../../v1/notifications/database.js", () => ({
 }))
 
 /**
+ * Controller under test with its protected `request` slot exposed, so tests can
+ * inject an authenticated request without widening the controller to `any`.
+ */
+type ControllerWithRequest = ShopsV2Controller & {
+  request?: ExpressRequest
+}
+
+/** Build the minimal ExpressRequest the controller reads `user` off of. */
+function mockRequest(userId: string, role: User["role"]): ExpressRequest {
+  return { user: { user_id: userId, role } as User } as ExpressRequest
+}
+
+/**
+ * The test knex is a vi.fn() table-factory (see test-utils/mockDatabase.ts), so
+ * expose it as such to allow per-table mockImplementation overrides.
+ */
+type MockedKnexFn = Mock<(table: string) => ChainableBuilder>
+
+function mockedKnex(): MockedKnexFn {
+  return getKnex() as unknown as MockedKnexFn
+}
+
+/**
  * Helper: create a comprehensive chainable mock query builder for tests
  * that exercise the full query chain (join, onConflict, groupBy, raw, etc.).
+ *
+ * The subset of the knex query-builder surface these tests stub. Every chain
+ * method returns the same builder; `first`/`then` are the terminals.
  */
-function createChainableBuilder(resolveValue: any = []) {
-  const builder: any = {}
+type ChainableBuilder = {
+  [method: string]: unknown
+} & {
+  first: Mock
+  then: (resolve: (value: unknown) => unknown) => Promise<unknown>
+}
+
+function createChainableBuilder(
+  resolveValue: Record<string, unknown>[] = [],
+): ChainableBuilder {
+  const builder = {} as ChainableBuilder
   const chainMethods = [
     "join", "leftJoin", "where", "andWhere", "select", "orderBy",
     "groupBy", "limit", "offset", "insert", "delete", "update",
@@ -72,7 +119,8 @@ function createChainableBuilder(resolveValue: any = []) {
   }
   // Terminal methods
   builder.first = vi.fn(async () => resolveValue?.[0] ?? null)
-  builder.then = (resolve: any) => Promise.resolve(resolveValue).then(resolve)
+  builder.then = (resolve: (value: unknown) => unknown) =>
+    Promise.resolve(resolveValue).then(resolve)
   // Special: onConflict returns an object with ignore
   builder.onConflict = vi.fn(() => ({ ignore: vi.fn(() => Promise.resolve()) }))
   return builder
@@ -115,11 +163,9 @@ describe("ShopsV2Controller — Blocklist", () => {
     setupMockTableDataGeneric("shop_blocklist", [])
   })
 
-  function createController(userId: string, role: string = "user") {
+  function createController(userId: string, role: User["role"] = "user") {
     const controller = new ShopsV2Controller()
-    ;(controller as any).request = {
-      user: { user_id: userId, role },
-    }
+    ;(controller as ControllerWithRequest).request = mockRequest(userId, role)
     return controller
   }
 
@@ -136,8 +182,9 @@ describe("ShopsV2Controller — Blocklist", () => {
       }
 
       // Override the mock knex to handle the join query
-      const db = getKnex() as any
-      const originalImpl = db.getMockImplementation?.() || db
+      const db = mockedKnex()
+      const originalImpl =
+        db.getMockImplementation() ?? ((table: string) => createChainableBuilder())
       db.mockImplementation((table: string) => {
         if (table === "shop_blocklist") {
           return createChainableBuilder([blocklistEntry])
@@ -146,7 +193,7 @@ describe("ShopsV2Controller — Blocklist", () => {
       })
 
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       const result = await controller.getShopBlocklist(mockReq, shopId)
 
@@ -159,7 +206,7 @@ describe("ShopsV2Controller — Blocklist", () => {
 
     it("should throw forbidden for non-managers", async () => {
       const controller = createController(otherUser.user_id)
-      const mockReq = { user: { user_id: otherUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(otherUser.user_id, "user")
 
       await expect(
         controller.getShopBlocklist(mockReq, shopId),
@@ -168,7 +215,7 @@ describe("ShopsV2Controller — Blocklist", () => {
 
     it("should throw not found for non-existent shop", async () => {
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       await expect(
         controller.getShopBlocklist(mockReq, "nonexistent-shop"),
@@ -179,7 +226,7 @@ describe("ShopsV2Controller — Blocklist", () => {
   describe("blockUserFromShop", () => {
     it("should block a user by username", async () => {
       // Override mock to handle the accounts lookup and insert.onConflict chain
-      const db = getKnex() as any
+      const db = mockedKnex()
       db.mockImplementation((table: string) => {
         if (table === "accounts") {
           const b = createChainableBuilder([{ user_id: targetUser.user_id }])
@@ -199,7 +246,7 @@ describe("ShopsV2Controller — Blocklist", () => {
       })
 
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       const result = await controller.blockUserFromShop(
         mockReq,
@@ -212,7 +259,7 @@ describe("ShopsV2Controller — Blocklist", () => {
 
     it("should throw not found when target username does not exist", async () => {
       // Reset mock to default (accounts lookup returns null for unknown username)
-      const db = getKnex() as any
+      const db = mockedKnex()
       db.mockImplementation((table: string) => {
         if (table === "accounts") {
           const b = createChainableBuilder([])
@@ -223,7 +270,7 @@ describe("ShopsV2Controller — Blocklist", () => {
       })
 
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       await expect(
         controller.blockUserFromShop(mockReq, shopId, {
@@ -235,7 +282,7 @@ describe("ShopsV2Controller — Blocklist", () => {
 
     it("should throw forbidden for non-managers", async () => {
       const controller = createController(otherUser.user_id)
-      const mockReq = { user: { user_id: otherUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(otherUser.user_id, "user")
 
       await expect(
         controller.blockUserFromShop(mockReq, shopId, {
@@ -258,7 +305,7 @@ describe("ShopsV2Controller — Blocklist", () => {
       ])
 
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       const result = await controller.unblockUserFromShop(
         mockReq,
@@ -271,7 +318,7 @@ describe("ShopsV2Controller — Blocklist", () => {
 
     it("should throw forbidden for non-managers", async () => {
       const controller = createController(otherUser.user_id)
-      const mockReq = { user: { user_id: otherUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(otherUser.user_id, "user")
 
       await expect(
         controller.unblockUserFromShop(mockReq, shopId, targetUser.user_id),
@@ -280,7 +327,7 @@ describe("ShopsV2Controller — Blocklist", () => {
 
     it("should throw not found for non-existent shop", async () => {
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       await expect(
         controller.unblockUserFromShop(mockReq, "nonexistent-shop", targetUser.user_id),
@@ -343,18 +390,16 @@ describe("ShopsV2Controller — Customers", () => {
     ])
   })
 
-  function createController(userId: string, role: string = "user") {
+  function createController(userId: string, role: User["role"] = "user") {
     const controller = new ShopsV2Controller()
-    ;(controller as any).request = {
-      user: { user_id: userId, role },
-    }
+    ;(controller as ControllerWithRequest).request = mockRequest(userId, role)
     return controller
   }
 
   describe("getShopCustomers", () => {
     it("should throw forbidden for non-managers", async () => {
       const controller = createController(otherUser.user_id)
-      const mockReq = { user: { user_id: otherUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(otherUser.user_id, "user")
 
       await expect(
         controller.getShopCustomers(mockReq, shopId),
@@ -363,7 +408,7 @@ describe("ShopsV2Controller — Customers", () => {
 
     it("should throw not found for non-existent shop", async () => {
       const controller = createController(ownerUser.user_id)
-      const mockReq = { user: { user_id: ownerUser.user_id, role: "user" } } as any
+      const mockReq = mockRequest(ownerUser.user_id, "user")
 
       await expect(
         controller.getShopCustomers(mockReq, "nonexistent-shop"),
@@ -379,7 +424,7 @@ describe("ShopsV2Controller — Customers", () => {
       //
       // We use a call counter to differentiate them.
       let ordersCallCount = 0
-      const db = getKnex() as any
+      const db = mockedKnex()
       db.mockImplementation((table: string) => {
         if (table === "orders") {
           ordersCallCount++
@@ -404,7 +449,8 @@ describe("ShopsV2Controller — Customers", () => {
               // This is the terminal: `await db("orders").where(...).countDistinct(...)`
               // which resolves to [{ count: "1" }]
               return {
-                then: (resolve: any) => Promise.resolve([{ count: "1" }]).then(resolve),
+                then: (resolve: (value: unknown) => unknown) =>
+                  Promise.resolve([{ count: "1" }]).then(resolve),
                 catch: vi.fn(),
               }
             })
@@ -415,7 +461,7 @@ describe("ShopsV2Controller — Customers", () => {
       })
 
       const controller = createController(adminUser.user_id, "admin")
-      const mockReq = { user: { user_id: adminUser.user_id, role: "admin" } } as any
+      const mockReq = mockRequest(adminUser.user_id, "admin")
 
       // Admin should not throw — the mock canManageShop returns false for non-owners
       // but isAdmin() returns true which bypasses the permission check

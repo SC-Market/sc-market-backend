@@ -25,8 +25,60 @@ import {
   StockLotDetail,
   BulkUpdateResult,
 } from "../types/stock-lots.types.js"
+import { VariantAttributes } from "../types/listings.types.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
+
+/**
+ * Row shape of the enriched stock-lot query: `listing_item_lots` joined with
+ * variant, listing item/listing, game item, location, owner/crafter accounts and
+ * the first listing photo.
+ */
+interface StockLotRow {
+  lot_id: string
+  item_id: string
+  listing_id: string
+  listing_title: string | null
+  game_item_name: string | null
+  listing_photo: string | null
+  variant_id: string
+  quantity_total: number
+  listed: boolean
+  notes: string | null
+  created_at: Date
+  updated_at: Date
+  crafted_at: Date | null
+  variant_attributes: VariantAttributes
+  variant_display_name: string | null
+  variant_short_name: string | null
+  location_id: string | null
+  location_name: string
+  location_is_preset: boolean
+  owner_user_id: string | null
+  owner_username: string
+  owner_display_name: string
+  owner_avatar: string
+  crafted_by_username: string
+}
+
+/**
+ * Row shape of the per-lot active allocation sum. The `SUM(quantity)` is cast
+ * `::integer` in SQL.
+ */
+interface StockAllocationSumRow {
+  lot_id: string
+  allocated: number
+}
+
+/** Columns of `listing_item_lots` that the update endpoints may write */
+interface StockLotUpdate {
+  updated_at: Date
+  quantity_total?: number
+  listed?: boolean
+  location_id?: string | null
+  notes?: string | null
+  variant_id?: string
+}
 
 @Route("stock-lots")
 @Tags("Stock Lots V2")
@@ -210,7 +262,7 @@ export class StockLotsV2Controller extends BaseController {
             this.whereIn("lst.shop_id", knex("shops").where("owner_user_id", userId).select("shop_id"))
           }
         })
-        .select(
+        .select<StockLotRow[]>(
           "sl.lot_id",
           "sl.item_id",
           "li.listing_id",
@@ -293,18 +345,18 @@ export class StockLotsV2Controller extends BaseController {
       const results = await query
 
       // Fetch allocations for all lots in one query
-      const lotIds = results.map((r: any) => r.lot_id)
-      const allocationRows = lotIds.length > 0
+      const lotIds = results.map((r) => r.lot_id)
+      const allocationRows: StockAllocationSumRow[] = lotIds.length > 0
         ? await knex("stock_allocations")
             .whereIn("lot_id", lotIds)
             .where("status", "active")
             .groupBy("lot_id")
             .select("lot_id", knex.raw("SUM(quantity)::integer as allocated"))
         : []
-      const allocationMap = new Map(allocationRows.map((r: any) => [r.lot_id, r.allocated]))
+      const allocationMap = new Map(allocationRows.map((r) => [r.lot_id, r.allocated]))
 
       // Transform results to match response type (Requirements 20.8, 20.9, 20.12)
-      const lots: StockLotDetail[] = await Promise.all(results.map(async (row: any) => ({
+      const lots: StockLotDetail[] = await Promise.all(results.map(async (row) => ({
         lot_id: row.lot_id,
         item_id: row.item_id,
         listing_id: row.listing_id,
@@ -437,7 +489,7 @@ export class StockLotsV2Controller extends BaseController {
         }
 
         // 2. Validate updates
-        const updates: any = {
+        const updates: StockLotUpdate = {
           updated_at: new Date(),
         }
 
@@ -706,7 +758,7 @@ export class StockLotsV2Controller extends BaseController {
             }
 
             // Build update object
-            const updates: any = {
+            const updates: StockLotUpdate = {
               updated_at: new Date(),
             }
 

@@ -811,6 +811,24 @@ export interface DBAccountProvider {
   last_used_at: Date | null
 }
 
+// Mirrors config/postgres/14-create-api-tokens-table.sql and
+// 15-add-organization-access-to-api-tokens.sql /
+// migrations/20260418220000_add_revoked_at_to_api_tokens.ts
+export interface DBApiToken {
+  id: string
+  user_id: string
+  name: string
+  description: string | null
+  token_hash: string
+  scopes: string[]
+  contractor_ids: string[]
+  expires_at: Date | null
+  last_used_at: Date | null
+  revoked_at: Date | null
+  created_at: Date
+  updated_at: Date
+}
+
 export interface DBAccountIntegration {
   id: string
   user_id: string

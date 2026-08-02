@@ -59,7 +59,8 @@ export interface WikiItemDetail {
   p4k_id?: string
   p4k_file?: string
   name_key?: string
-  attributes: Record<string, any>
+  /** Key/value attributes from game_item_attributes (values are stored as text) */
+  attributes: Record<string, string>
   craftable_from: BlueprintReference[]
   rewarded_by: MissionRewardReference[]
   market_stats: MarketStats
@@ -119,8 +120,10 @@ export interface WikiShipDetail {
   description?: string
   movement_class?: string
   image_url?: string
-  default_loadout?: any
-  attributes: Record<string, any>
+  /** Raw `default_loadout` attribute value from game_item_attributes (stored as text) */
+  default_loadout?: string
+  /** Key/value attributes from game_item_attributes (values are stored as text) */
+  attributes: Record<string, string>
   crew_size?: number
   career?: string
   role?: string

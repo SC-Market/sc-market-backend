@@ -1,4 +1,15 @@
-// @ts-nocheck — test file, parameter type mismatches are non-blocking
+// @ts-nocheck
+// This file predates the shops refactor and several controller signature
+// changes, so it does not typecheck. Specifically: the CreateListingRequest
+// fixtures omit the now-required `shop_id` (21 sites); assertions still read
+// `seller.id` / `seller.type` / `seller_name` / `seller_rating`, which
+// SellerInfo and ListingSearchResult replaced with `shop_id` / `shop_name` /
+// `shop_rating`; and 27 calls pass positional arguments that no longer line up
+// with searchListings/getMyListings, whose @Query lists grew. Fixing those
+// means changing what these tests assert and feed in, which is out of scope for
+// a types-only pass — and this file is excluded from the vitest run
+// (vitest.config.ts: "src/api/routes/v2/**/*Controller*.test.ts"), so nothing
+// here executes today. Every `any` has been removed regardless.
 /**
  * Unit tests for ListingsV2Controller
  *
@@ -12,7 +23,11 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
 import { ListingsV2Controller } from "./ListingsV2Controller.js"
-import { CreateListingRequest } from "../types/listings.types.js"
+import {
+  CreateListingRequest,
+  type VariantAttributes,
+} from "../types/listings.types.js"
+import type { User } from "../../v1/api-models.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { Request as ExpressRequest } from "express"
 
@@ -28,7 +43,7 @@ describe("ListingsV2Controller.createListing", () => {
       user_id: testUserId,
       username: "testuser",
       role: "user",
-    } as any,
+    } as User,
   })
 
   beforeEach(async () => {
@@ -504,7 +519,12 @@ describe("ListingsV2Controller.createListing", () => {
         lots: [
           {
             quantity: 10,
-            variant_attributes: { crafted_source: "invalid" as any },
+            variant_attributes: {
+              // Not a member of VariantAttributes["crafted_source"] —
+              // deliberately invalid to exercise the controller's validation.
+              crafted_source:
+                "invalid" as unknown as VariantAttributes["crafted_source"],
+            },
           },
         ],
       }
@@ -547,7 +567,7 @@ describe("ListingsV2Controller.getListingDetail", () => {
       user_id: testUserId,
       username: "testuser",
       role: "user",
-    } as any,
+    } as User,
   })
 
   // Helper to create test listing
@@ -1151,7 +1171,7 @@ describe("ListingsV2Controller.searchListings", () => {
       user_id: testUserId,
       username: "testuser",
       role: "user",
-    } as any,
+    } as User,
   })
 
   // Helper to create test listing
@@ -1801,7 +1821,7 @@ describe("ListingsV2Controller.updateListing", () => {
       user_id: testUserId,
       username: "testuser",
       role: "user",
-    } as any,
+    } as User,
   })
 
   // Helper to create test listing
@@ -2137,16 +2157,24 @@ describe("ListingsV2Controller.updateListing", () => {
         .where({ item_id: listingItem.item_id })
         .select("listing_item_lots.variant_id", "item_variants.attributes")
 
-      const tier5Variant = lots.find((lot: any) => lot.attributes.quality_tier === 5)
-      const tier3Variant = lots.find((lot: any) => lot.attributes.quality_tier === 3)
+      const joinedLots = lots as Array<{
+        variant_id: string
+        attributes: VariantAttributes
+      }>
+      const tier5Variant = joinedLots.find(
+        (lot) => lot.attributes.quality_tier === 5,
+      )
+      const tier3Variant = joinedLots.find(
+        (lot) => lot.attributes.quality_tier === 3,
+      )
 
       // Update prices
       const response = await controller.updateListing(
         listingId,
         {
           variant_prices: [
-            { variant_id: tier5Variant.variant_id, price: 2500 },
-            { variant_id: tier3Variant.variant_id, price: 1200 },
+            { variant_id: tier5Variant!.variant_id, price: 2500 },
+            { variant_id: tier3Variant!.variant_id, price: 1200 },
           ],
         },
         createMockRequest() as ExpressRequest,
@@ -2503,7 +2531,7 @@ describe("ListingsV2Controller.updateListing", () => {
           user_id: "other-user-456",
           username: "otheruser",
           role: "user",
-        } as any,
+        } as User,
       }
 
       const otherController = new ListingsV2Controller(
@@ -2728,7 +2756,7 @@ describe("ListingsV2Controller.getMyListings", () => {
       user_id: userId,
       username: "testuser",
       role: "user",
-    } as any,
+    } as User,
   })
 
   // Helper to create test listing
@@ -3518,7 +3546,9 @@ describe("ListingsV2Controller.getMyListings", () => {
 
       await expect(
         controller.getMyListings(
-          "invalid" as any,
+          // Not a valid listing status — deliberately invalid to exercise the
+          // controller's status validation.
+          "invalid" as unknown as "active",
           undefined,
           undefined,
           undefined,

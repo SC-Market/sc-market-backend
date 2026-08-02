@@ -22,45 +22,41 @@ import {
   GetOfferSessionV2Response,
   SearchOffersV2Response,
 } from "../types/offers.types.js"
+import {
+  DBOffer,
+  DBOfferMarketListing,
+  DBOfferSession,
+} from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
+
+/**
+ * Row shape of the `offer_market_items_v2` join table. `price_per_unit` is a
+ * bigint, which the pg driver returns as a string.
+ */
+interface OfferMarketItemV2Row {
+  offer_item_id: string
+  offer_id: string
+  listing_id: string
+  variant_id: string
+  quantity: number
+  price_per_unit: string
+  created_at: Date
+}
+
+/**
+ * Narrow an unknown thrown value to something carrying a string `message`.
+ * Knex rejects with Error instances, but the driver layer can surface plain
+ * objects too, so `instanceof Error` alone would miss those.
+ */
+function hasMessage(value: unknown): value is { message?: string } {
+  return typeof value === "object" && value !== null && "message" in value
+}
 
 @Route("offers")
 @Tags("Offers V2")
 export class OffersV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)
-  }
-
-  /**
-   * Get offer session with V2 variant-enriched market listings
-   */
-  @Get("{sessionId}")
-  @Security("loggedin")
-  public async getOfferSession(
-    @Path() sessionId: string,
-    @Request() request: ExpressRequest,
-  ): Promise<GetOfferSessionV2Response> {
-    this.request = request
-    this.requireAuth()
-    const userId = this.getUserId()
-    const knex = getKnex()
-
-    const session = await knex("offer_sessions").where({ id: sessionId }).first()
-    if (!session) throw this.throwNotFound("Offer session", sessionId)
-
-    // Auth: must be customer, assigned, or contractor member
-    if (session.customer_id !== userId && session.assigned_id !== userId) {
-      if (session.contractor_id) {
-        const member = await knex("contractor_members")
-          .where({ contractor_id: session.contractor_id, user_id: userId })
-          .first()
-        if (!member) throw this.throwForbidden("Not authorized to view this offer")
-      } else {
-        throw this.throwForbidden("Not authorized to view this offer")
-      }
-    }
-
-    return this.serializeSession(session)
   }
 
   /**
@@ -109,14 +105,56 @@ export class OffersV2Controller extends BaseController {
     const [{ count }] = await query.clone().clearSelect().clearOrder().count("* as count")
     const total = parseInt(String(count), 10)
 
-    const sessions = await query.orderBy("timestamp", "desc").limit(ps).offset((p - 1) * ps)
+    const sessions: DBOfferSession[] = await query
+      .orderBy("timestamp", "desc")
+      .limit(ps)
+      .offset((p - 1) * ps)
 
-    const offers = await Promise.all(sessions.map((s: any) => this.serializeSession(s)))
+    const offers = await Promise.all(sessions.map((s) => this.serializeSession(s)))
 
     return { offers, total, page: p, page_size: ps }
   }
 
-  private async serializeSession(session: any): Promise<OfferSessionV2> {
+  /**
+   * Get offer session with V2 variant-enriched market listings
+   *
+   * NOTE: must stay declared *after* every literal-path GET on this route
+   * (e.g. "search"). TSOA emits Express routes in declaration order, so a
+   * "{sessionId}" registered first would swallow /offers/search and try to
+   * load a session whose id is the literal string "search".
+   */
+  @Get("{sessionId}")
+  @Security("loggedin")
+  public async getOfferSession(
+    @Path() sessionId: string,
+    @Request() request: ExpressRequest,
+  ): Promise<GetOfferSessionV2Response> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+    const knex = getKnex()
+
+    const session = await knex("offer_sessions")
+      .where({ id: sessionId })
+      .first<DBOfferSession | undefined>()
+    if (!session) throw this.throwNotFound("Offer session", sessionId)
+
+    // Auth: must be customer, assigned, or contractor member
+    if (session.customer_id !== userId && session.assigned_id !== userId) {
+      if (session.contractor_id) {
+        const member = await knex("contractor_members")
+          .where({ contractor_id: session.contractor_id, user_id: userId })
+          .first()
+        if (!member) throw this.throwForbidden("Not authorized to view this offer")
+      } else {
+        throw this.throwForbidden("Not authorized to view this offer")
+      }
+    }
+
+    return this.serializeSession(session)
+  }
+
+  private async serializeSession(session: DBOfferSession): Promise<OfferSessionV2> {
     const knex = getKnex()
 
     // Use V1 helpers for full user data (ratings, badges, presence)
@@ -140,8 +178,10 @@ export class OffersV2Controller extends BaseController {
     const contract_id = contractOffer?.contract_id || null
 
     // Offers
-    const dbOffers = await knex("order_offers").where({ session_id: session.id }).orderBy("timestamp", "desc")
-    const offers: OfferV2[] = await Promise.all(dbOffers.map((o: any) => this.serializeOffer(o)))
+    const dbOffers: DBOffer[] = await knex("order_offers")
+      .where({ session_id: session.id })
+      .orderBy("timestamp", "desc")
+    const offers: OfferV2[] = await Promise.all(dbOffers.map((o) => this.serializeOffer(o)))
 
     // Derive status
     const mostRecent = dbOffers[0]
@@ -200,7 +240,7 @@ export class OffersV2Controller extends BaseController {
     }
   }
 
-  private async serializeOffer(offer: any): Promise<OfferV2> {
+  private async serializeOffer(offer: DBOffer): Promise<OfferV2> {
     const knex = getKnex()
 
     // Resolve actor_id to username
@@ -211,9 +251,11 @@ export class OffersV2Controller extends BaseController {
     }
 
     // V1 market listings — kept as their own type
-    const v1Rows = await knex("offer_market_items").where({ offer_id: offer.id }).select("*")
+    const v1Rows = await knex("offer_market_items")
+      .where({ offer_id: offer.id })
+      .select<DBOfferMarketListing[]>("*")
     const market_listings: OfferMarketListingV1[] = await Promise.all(
-      v1Rows.map(async (row: any) => {
+      v1Rows.map(async (row) => {
         let title = "Unknown"
         let price = 0
         const v1 = await knex("market_unique_listings")
@@ -227,11 +269,16 @@ export class OffersV2Controller extends BaseController {
     )
 
     // V2 variant items — kept as their own type
-    let v2Items: any[] = []
+    let v2Items: OfferMarketItemV2Row[] = []
     try {
-      v2Items = await knex("offer_market_items_v2").where({ offer_id: offer.id }).select("*")
-    } catch (err: any) {
-      logger.error("Failed to fetch offer_market_items_v2", { offer_id: offer.id, error: err.message })
+      v2Items = await knex("offer_market_items_v2")
+        .where({ offer_id: offer.id })
+        .select<OfferMarketItemV2Row[]>("*")
+    } catch (err: unknown) {
+      logger.error("Failed to fetch offer_market_items_v2", {
+        offer_id: offer.id,
+        error: hasMessage(err) ? err.message : undefined,
+      })
     }
 
     const market_listings_v2: OfferMarketListingV2[] = []
@@ -260,9 +307,9 @@ export class OffersV2Controller extends BaseController {
           .select(knex.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
           .first()
 
-        const totalQty = items.reduce((s: number, i: any) => s + i.quantity, 0)
+        const totalQty = items.reduce((s: number, i) => s + i.quantity, 0)
         const v2Variants: OfferVariantItem[] = await Promise.all(
-          items.map(async (vi: any) => {
+          items.map(async (vi) => {
             const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
             return {
               variant_id: vi.variant_id,
@@ -295,7 +342,10 @@ export class OffersV2Controller extends BaseController {
       payment_type: offer.payment_type || "",
       status: offer.status || "pending",
       created_at: offer.timestamp?.toISOString?.() || new Date().toISOString(),
-      collateral: parseFloat(offer.collateral) || 0,
+      // `collateral` is a bigint column the driver returns as a string, but the
+      // shared DBOffer type also admits number/null/undefined. String() matches
+      // parseFloat's own ToString coercion, so this is a no-op at runtime.
+      collateral: parseFloat(String(offer.collateral)) || 0,
       actor_username,
       market_listings,
       market_listings_v2,

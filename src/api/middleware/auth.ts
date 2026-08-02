@@ -21,14 +21,18 @@ import logger from "../../logger/logger.js"
 
 export interface AuthRequest extends Request {
   user?: User
-  token?: {
-    id: string
-    name: string
-    scopes: string[]
-    expires_at?: Date
-    contractor_ids?: string[]
-  }
+  token?: Request["__tokenInfo"]
   authMethod?: "session" | "token" | "jwt"
+}
+
+/**
+ * Shape of the errors that reach this middleware: a plain `Error` optionally
+ * decorated with an HTTP status and validation details by upstream libraries.
+ */
+interface HttpErrorLike extends Error {
+  status?: number
+  errors?: unknown
+  validationErrors?: unknown
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -38,7 +42,7 @@ function getUser(req: Request): User | undefined {
 }
 
 function getTokenInfo(req: Request): AuthRequest["token"] | undefined {
-  return (req as any).__tokenInfo
+  return req.__tokenInfo
 }
 
 function isTokenAuth(req: Request): boolean {
@@ -72,7 +76,7 @@ export async function guestAuthorized(
 }
 
 export function errorHandler(
-  err: any,
+  err: HttpErrorLike,
   req: Request,
   res: Response,
   next: NextFunction,

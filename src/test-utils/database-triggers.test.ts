@@ -447,7 +447,9 @@ describe('Database Triggers - update_quantity_available()', () => {
       `, [testItemId, testVariantId1]);
 
       // Parse execution time from EXPLAIN output
-      const explainOutput = result.rows.map((r: any) => r['QUERY PLAN']).join('\n');
+      const explainOutput = (result.rows as { 'QUERY PLAN': string }[])
+        .map((r) => r['QUERY PLAN'])
+        .join('\n');
       console.log('EXPLAIN ANALYZE output:', explainOutput);
       
       // Extract execution time (format: "Execution Time: X.XXX ms")

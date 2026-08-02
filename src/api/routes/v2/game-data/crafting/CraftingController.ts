@@ -41,6 +41,26 @@ import {
 } from "./crafting.types.js"
 import logger from "../../../../../logger/logger.js"
 
+/** Row shape of the `game_items` id/name lookup used to label input materials */
+interface GameItemNameRow {
+  id: string
+  name: string
+}
+
+/**
+ * Row shape of the per-blueprint crafting statistics aggregate. Every aggregate
+ * column is a count/sum/avg, which the pg driver returns as a string.
+ */
+interface BlueprintStatisticsRow {
+  blueprint_id: string
+  blueprint_name: string
+  total_crafts: string
+  avg_quality: string
+  success_rate: string
+  critical_successes: string
+  total_cost: string
+}
+
 @Route("game-data/crafting")
 @Tags("Game Data - Crafting")
 export class CraftingController extends BaseController {
@@ -151,9 +171,9 @@ export class CraftingController extends BaseController {
           "id",
           body.input_materials.map((m) => m.game_item_id),
         )
-        .select("id", "name")
+        .select<GameItemNameRow[]>("id", "name")
 
-      const nameMap = new Map(materialNames.map((m: any) => [m.id, m.name]))
+      const nameMap = new Map(materialNames.map((m) => [m.id, m.name]))
 
       // ========================================================================
       // Part 4: Calculate output quality based on formula type
@@ -583,7 +603,10 @@ export class CraftingController extends BaseController {
 
       const results = await query
 
-      // Transform results
+      // NOTE: row left untyped — `crafting_history.input_materials` is a jsonb
+      // column, so the pg driver already returns it parsed, yet the mapper below
+      // calls JSON.parse on it. Typing the row surfaces that mismatch; fixing it
+      // would be a runtime change (see report).
       const history: CraftingSessionHistory[] = results.map((row: any) => ({
         session_id: row.session_id,
         blueprint_id: row.blueprint_id,
@@ -987,7 +1010,7 @@ export class CraftingController extends BaseController {
         .join("blueprints as b", "cs.blueprint_id", "b.blueprint_id")
         .where("cs.user_id", user_id)
         .groupBy("cs.blueprint_id", "b.blueprint_name")
-        .select(
+        .select<BlueprintStatisticsRow[]>(
           "cs.blueprint_id",
           "b.blueprint_name",
           knex.raw("COUNT(*) as total_crafts"),
@@ -998,7 +1021,7 @@ export class CraftingController extends BaseController {
         )
         .orderBy("total_crafts", "desc")
 
-      const blueprintStatistics: BlueprintStatistics[] = blueprintStats.map((row: any) => ({
+      const blueprintStatistics: BlueprintStatistics[] = blueprintStats.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_name: row.blueprint_name,
         total_crafts: parseInt(row.total_crafts, 10),

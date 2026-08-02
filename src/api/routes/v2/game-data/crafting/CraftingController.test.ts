@@ -6,6 +6,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest"
+import type { Mock } from "vitest"
+import type { Knex } from "knex"
 import { CraftingController } from "./CraftingController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -25,9 +27,45 @@ vi.mock("../../../../../logger/logger.js", () => ({
   },
 }))
 
+/**
+ * The knex surface these tests stub. Chain methods return the mock itself;
+ * `first` / `returning` / `count` are the terminals.
+ */
+interface MockKnex {
+  select: Mock
+  where: Mock
+  whereIn: Mock
+  first: Mock
+  insert: Mock
+  returning: Mock
+  join: Mock
+  leftJoin: Mock
+  groupBy: Mock
+  orderBy: Mock
+  limit: Mock
+  offset: Mock
+  count: Mock
+  clone: Mock
+  clearSelect: Mock
+  clearOrder: Mock
+  fn: { now: Mock }
+  raw: Mock
+}
+
+/**
+ * `getUserId` is protected on BaseController; expose it so vi.spyOn can target
+ * it without widening the controller to `any`.
+ */
+type ControllerWithUserId = CraftingController & {
+  getUserId: () => string
+}
+
+/** Resolver passed to the hand-rolled thenables below. */
+type Resolve = (value: unknown) => unknown
+
 describe("CraftingController", () => {
   let controller: CraftingController
-  let mockKnex: any
+  let mockKnex: MockKnex
 
   beforeEach(() => {
     // Create mock knex instance
@@ -55,7 +93,7 @@ describe("CraftingController", () => {
     }
 
     // Mock getKnex to return our mock
-    vi.mocked(getKnex).mockReturnValue(mockKnex as any)
+    vi.mocked(getKnex).mockReturnValue(mockKnex as unknown as Knex)
 
     // Create controller instance
     controller = new CraftingController()
@@ -105,7 +143,7 @@ describe("CraftingController", () => {
       mockKnex.select.mockImplementation(() => {
         return {
           ...mockKnex,
-          then: (resolve: any) => resolve(mockIngredients),
+          then: (resolve: Resolve) => resolve(mockIngredients),
         }
       })
 
@@ -113,7 +151,7 @@ describe("CraftingController", () => {
         return {
           ...mockKnex,
           select: () => ({
-            then: (resolve: any) => resolve(mockMaterialNames),
+            then: (resolve: Resolve) => resolve(mockMaterialNames),
           }),
         }
       })
@@ -420,7 +458,7 @@ describe("CraftingController", () => {
       mockKnex.returning.mockResolvedValue([mockSession])
 
       // Mock getUserId
-      vi.spyOn(controller as any, "getUserId").mockReturnValue("user-123")
+      vi.spyOn(controller as ControllerWithUserId, "getUserId").mockReturnValue("user-123")
     })
 
     it("should record crafting session successfully", async () => {
@@ -475,7 +513,7 @@ describe("CraftingController", () => {
     })
 
     it("should require authentication", async () => {
-      vi.spyOn(controller as any, "getUserId").mockImplementation(() => {
+      vi.spyOn(controller as ControllerWithUserId, "getUserId").mockImplementation(() => {
         throw new Error("User not authenticated")
       })
 
@@ -517,7 +555,7 @@ describe("CraftingController", () => {
     ]
 
     beforeEach(() => {
-      vi.spyOn(controller as any, "getUserId").mockReturnValue("user-123")
+      vi.spyOn(controller as ControllerWithUserId, "getUserId").mockReturnValue("user-123")
 
       // Mock count query
       mockKnex.count.mockResolvedValue([{ count: "1" }])
@@ -557,7 +595,7 @@ describe("CraftingController", () => {
     })
 
     it("should require authentication", async () => {
-      vi.spyOn(controller as any, "getUserId").mockImplementation(() => {
+      vi.spyOn(controller as ControllerWithUserId, "getUserId").mockImplementation(() => {
         throw new Error("User not authenticated")
       })
 
@@ -591,7 +629,7 @@ describe("CraftingController", () => {
     ]
 
     beforeEach(() => {
-      vi.spyOn(controller as any, "getUserId").mockReturnValue("user-123")
+      vi.spyOn(controller as ControllerWithUserId, "getUserId").mockReturnValue("user-123")
 
       mockKnex.first.mockResolvedValue(mockOverallStats)
       mockKnex.orderBy.mockResolvedValue(mockBlueprintStats)
@@ -640,7 +678,7 @@ describe("CraftingController", () => {
     })
 
     it("should require authentication", async () => {
-      vi.spyOn(controller as any, "getUserId").mockImplementation(() => {
+      vi.spyOn(controller as ControllerWithUserId, "getUserId").mockImplementation(() => {
         throw new Error("User not authenticated")
       })
 

@@ -1,6 +1,30 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import knex, { Knex } from 'knex';
 import knexConfig from '../../knexfile.js';
+import type { VariantType } from '../api/routes/v2/types/variant-types.types.js';
+
+/**
+ * A raw `variant_types` row as the pg driver returns it. Every field is
+ * inherited from the API-facing VariantType so a schema change breaks these
+ * tests at compile time; only the three columns whose wire format differs are
+ * overridden.
+ *
+ * min_value/max_value/allowed_values are nullable in the schema but typed
+ * non-null here because the assertions below feed them straight to
+ * parseFloat/JSON.parse; the null cases are checked with toBeNull(), which
+ * accepts any actual value.
+ */
+type VariantTypeRow = Omit<
+  VariantType,
+  'min_value' | 'max_value' | 'allowed_values'
+> & {
+  /** NUMERIC column — pg returns it as a string. */
+  min_value: string;
+  /** NUMERIC column — pg returns it as a string. */
+  max_value: string;
+  /** Stored as JSON text, not a parsed array. */
+  allowed_values: string;
+};
 
 /**
  * Variant Types Seed Data Tests for Task 1.6
@@ -55,7 +79,9 @@ describe('Variant Types Seed Data - Task 1.6', () => {
         ORDER BY ordinal_position
       `);
       
-      const columns = result.rows.map((r: any) => r.column_name);
+      const columns = (result.rows as { column_name: string }[]).map(
+        (r) => r.column_name,
+      );
       
       expect(columns).toContain('variant_type_id');
       expect(columns).toContain('name');
@@ -121,13 +147,13 @@ describe('Variant Types Seed Data - Task 1.6', () => {
   });
 
   describe('quality_tier Variant Type', () => {
-    let qualityTier: any;
+    let qualityTier: VariantTypeRow;
 
     beforeAll(async () => {
       const result = await db('variant_types')
         .where('name', 'quality_tier')
         .first();
-      qualityTier = result;
+      qualityTier = result as VariantTypeRow;
     });
 
     it('should exist in database', () => {
@@ -178,13 +204,13 @@ describe('Variant Types Seed Data - Task 1.6', () => {
   });
 
   describe('quality_value Variant Type', () => {
-    let qualityValue: any;
+    let qualityValue: VariantTypeRow;
 
     beforeAll(async () => {
       const result = await db('variant_types')
         .where('name', 'quality_value')
         .first();
-      qualityValue = result;
+      qualityValue = result as VariantTypeRow;
     });
 
     it('should exist in database', () => {
@@ -235,13 +261,13 @@ describe('Variant Types Seed Data - Task 1.6', () => {
   });
 
   describe('crafted_source Variant Type', () => {
-    let craftedSource: any;
+    let craftedSource: VariantTypeRow;
 
     beforeAll(async () => {
       const result = await db('variant_types')
         .where('name', 'crafted_source')
         .first();
-      craftedSource = result;
+      craftedSource = result as VariantTypeRow;
     });
 
     it('should exist in database', () => {
@@ -298,13 +324,13 @@ describe('Variant Types Seed Data - Task 1.6', () => {
   });
 
   describe('blueprint_tier Variant Type', () => {
-    let blueprintTier: any;
+    let blueprintTier: VariantTypeRow;
 
     beforeAll(async () => {
       const result = await db('variant_types')
         .where('name', 'blueprint_tier')
         .first();
-      blueprintTier = result;
+      blueprintTier = result as VariantTypeRow;
     });
 
     it('should exist in database', () => {

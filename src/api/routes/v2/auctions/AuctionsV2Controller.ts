@@ -15,6 +15,25 @@ import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { ListingsV2Controller } from "../listings/ListingsV2Controller.js"
 
+/**
+ * Row shape of the auction-detail bid query: `bids_v2.*` joined with the
+ * bidder's account columns. `amount` is a bigint, which the pg driver returns
+ * as a string.
+ */
+interface BidWithBidderRow {
+  bid_id: string
+  listing_id: string
+  bidder_id: string
+  bidder_type: string
+  contractor_id: string | null
+  amount: string
+  is_active: boolean
+  created_at: Date
+  username: string
+  display_name: string
+  avatar: string | null
+}
+
 interface PlaceBidRequest {
   amount: number
 }
@@ -70,7 +89,12 @@ export class AuctionsV2Controller extends BaseController {
     const bids = await knex("bids_v2")
       .where({ listing_id: listingId, is_active: true })
       .join("accounts", "bids_v2.bidder_id", "accounts.user_id")
-      .select("bids_v2.*", "accounts.username", "accounts.display_name", "accounts.avatar")
+      .select<BidWithBidderRow[]>(
+        "bids_v2.*",
+        "accounts.username",
+        "accounts.display_name",
+        "accounts.avatar",
+      )
       .orderBy("amount", "desc")
 
     const highest = bids[0]?.amount || null
@@ -84,7 +108,7 @@ export class AuctionsV2Controller extends BaseController {
       status: auction.status,
       current_highest_bid: highest ? parseInt(String(highest)) : null,
       total_bids: bids.length,
-      bids: await Promise.all(bids.map(async (b: any) => ({
+      bids: await Promise.all(bids.map(async (b) => ({
         bid_id: b.bid_id,
         bidder: { username: b.username, display_name: b.display_name, avatar: b.avatar ? await cdn.getFileLinkResource(b.avatar) : null },
         amount: parseInt(b.amount),

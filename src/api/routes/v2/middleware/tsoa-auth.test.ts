@@ -1,15 +1,19 @@
 import { describe, it, expect } from "vitest"
 import { Request } from "express"
 import { expressAuthentication } from "./tsoa-auth.js"
+import type { User } from "../../v1/api-models.js"
+
+/** The __tokenInfo shape the populate-user middleware stashes on the request. */
+type RequestTokenInfo = NonNullable<Request["__tokenInfo"]>
 
 function mockReq(opts: {
-  user?: any
+  user?: Partial<User>
   method?: string
   path?: string
-  tokenInfo?: any
+  tokenInfo?: RequestTokenInfo
 }): Request {
-  const req: any = {
-    user: opts.user,
+  const req: Partial<Request> = {
+    user: opts.user as User,
     method: opts.method ?? "GET",
     path: opts.path ?? "/listings",
   }
@@ -17,8 +21,16 @@ function mockReq(opts: {
   return req as Request
 }
 
-const adminUser = { user_id: "a", role: "admin", rsi_confirmed: true }
-const normalUser = { user_id: "u", role: "user", rsi_confirmed: true }
+const adminUser: Partial<User> = {
+  user_id: "a",
+  role: "admin",
+  rsi_confirmed: true,
+}
+const normalUser: Partial<User> = {
+  user_id: "u",
+  role: "user",
+  rsi_confirmed: true,
+}
 
 describe("expressAuthentication — admin route role gate", () => {
   it("allows an admin user on an admin route", async () => {
