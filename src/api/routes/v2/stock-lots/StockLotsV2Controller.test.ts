@@ -8,9 +8,29 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest"
+import type { Request as ExpressRequest } from "express"
 import { StockLotsV2Controller } from "./StockLotsV2Controller.js"
+import type { User } from "../../v1/api-models.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { Knex } from "knex"
+
+
+/**
+ * Build the minimal authenticated ExpressRequest these endpoints read
+ * `user.user_id` off of.
+ */
+function createMockRequest(userId: string): ExpressRequest {
+  return { user: { user_id: userId } as User } as ExpressRequest
+}
+
+/**
+ * NOTE: these tests populate `user.userId` (camelCase), but BaseController
+ * reads `user.user_id`. Preserved verbatim so this refactor stays types-only —
+ * the key name mismatch is a pre-existing bug in these fixtures.
+ */
+function createLegacyMockRequest(userId: string): ExpressRequest {
+  return { user: { userId } } as unknown as ExpressRequest
+}
 
 describe("StockLotsV2Controller", () => {
   let controller: StockLotsV2Controller
@@ -171,9 +191,7 @@ describe("StockLotsV2Controller", () => {
   describe("updateStockLot", () => {
     it("should update stock lot quantity", async () => {
       // Requirement 20.2: Accept quantity_total update
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const response = await controller.updateStockLot(
         testLotId,
@@ -188,9 +206,7 @@ describe("StockLotsV2Controller", () => {
 
     it("should update stock lot listed status", async () => {
       // Requirement 20.3: Accept listed status update
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const response = await controller.updateStockLot(
         testLotId,
@@ -204,9 +220,7 @@ describe("StockLotsV2Controller", () => {
 
     it("should prevent negative quantities", async () => {
       // Requirement 20.8: Prevent negative quantities
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       await expect(
         controller.updateStockLot(testLotId, { quantity_total: -10 }, mockRequest),
@@ -215,9 +229,7 @@ describe("StockLotsV2Controller", () => {
 
     it("should validate notes length", async () => {
       // Requirement 20.11: Validate notes length (max 1000 characters)
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const longNotes = "a".repeat(1001)
 
@@ -229,9 +241,7 @@ describe("StockLotsV2Controller", () => {
     it("should verify ownership before updates", async () => {
       // Requirement 20.6: Verify ownership before updates
       const differentUserId = "00000000-0000-0000-0000-000000000099"
-      const mockRequest = {
-        user: { userId: differentUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(differentUserId)
 
       await expect(
         controller.updateStockLot(testLotId, { quantity_total: 50 }, mockRequest),
@@ -242,9 +252,7 @@ describe("StockLotsV2Controller", () => {
   describe("bulkUpdateStockLots", () => {
     it("should perform bulk updates", async () => {
       // Requirement 22.1: POST /api/v2/stock-lots/bulk-update endpoint
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const response = await controller.bulkUpdateStockLots(
         {
@@ -274,9 +282,7 @@ describe("StockLotsV2Controller", () => {
     it("should validate ownership for all lots in batch", async () => {
       // Requirement 22.8: Validate ownership for all stock lots in batch
       const differentUserId = "00000000-0000-0000-0000-000000000099"
-      const mockRequest = {
-        user: { userId: differentUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(differentUserId)
 
       const response = await controller.bulkUpdateStockLots(
         {
@@ -298,9 +304,7 @@ describe("StockLotsV2Controller", () => {
 
     it("should return summary of successful and failed operations", async () => {
       // Requirement 22.7: Return summary of successful and failed operations
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const nonExistentLotId = "00000000-0000-0000-0000-000000000999"
 
@@ -334,9 +338,7 @@ describe("StockLotsV2Controller", () => {
 
     it("should support bulk quantity updates", async () => {
       // Requirement 22.3: Support bulk quantity updates
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const response = await controller.bulkUpdateStockLots(
         {
@@ -361,9 +363,7 @@ describe("StockLotsV2Controller", () => {
 
     it("should support bulk listing/unlisting operations", async () => {
       // Requirement 22.4: Support bulk listing/unlisting operations
-      const mockRequest = {
-        user: { userId: testUserId },
-      } as any
+      const mockRequest = createLegacyMockRequest(testUserId)
 
       const response = await controller.bulkUpdateStockLots(
         {

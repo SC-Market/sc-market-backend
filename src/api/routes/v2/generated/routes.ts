@@ -1049,27 +1049,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GetOfferSessionV2Response": {
-        "dataType": "refObject",
-        "properties": {
-            "session_id": {"dataType":"string","required":true},
-            "status": {"dataType":"string","required":true},
-            "created_at": {"dataType":"string","required":true},
-            "order_id": {"dataType":"string"},
-            "contract_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-            "discord_thread_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-            "discord_server_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-            "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-            "customer": {"ref":"MinimalUser","required":true},
-            "assigned_to": {"dataType":"union","subSchemas":[{"ref":"MinimalUser"},{"dataType":"enum","enums":[null]}],"required":true},
-            "contractor": {"dataType":"union","subSchemas":[{"ref":"MinimalContractor"},{"dataType":"enum","enums":[null]}],"required":true},
-            "shop_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-            "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
-            "availability": {"dataType":"union","subSchemas":[{"ref":"OfferAvailability"},{"dataType":"enum","enums":[null]}]},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OfferSessionV2": {
         "dataType": "refObject",
         "properties": {
@@ -1098,6 +1077,27 @@ const models: TsoaRoute.Models = {
             "total": {"dataType":"double","required":true},
             "page": {"dataType":"double","required":true},
             "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetOfferSessionV2Response": {
+        "dataType": "refObject",
+        "properties": {
+            "session_id": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "order_id": {"dataType":"string"},
+            "contract_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "discord_thread_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "discord_server_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "customer": {"ref":"MinimalUser","required":true},
+            "assigned_to": {"dataType":"union","subSchemas":[{"ref":"MinimalUser"},{"dataType":"enum","enums":[null]}],"required":true},
+            "contractor": {"dataType":"union","subSchemas":[{"ref":"MinimalContractor"},{"dataType":"enum","enums":[null]}],"required":true},
+            "shop_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
+            "availability": {"dataType":"union","subSchemas":[{"ref":"OfferAvailability"},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
     },
@@ -1487,7 +1487,7 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["running"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["failed"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string.any_": {
+    "Record_string.unknown_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"any"},"validators":{}},
     },
@@ -1500,7 +1500,7 @@ const models: TsoaRoute.Models = {
             "status": {"ref":"JobStatus","required":true},
             "startedAt": {"dataType":"string","required":true},
             "completedAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "result": {"dataType":"union","subSchemas":[{"ref":"Record_string.any_"},{"dataType":"enum","enums":[null]}],"required":true},
+            "result": {"dataType":"union","subSchemas":[{"ref":"Record_string.unknown_"},{"dataType":"enum","enums":[null]}],"required":true},
             "error": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
@@ -1812,6 +1812,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.string_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BlueprintReference": {
         "dataType": "refObject",
         "properties": {
@@ -1864,7 +1869,7 @@ const models: TsoaRoute.Models = {
             "p4k_id": {"dataType":"string"},
             "p4k_file": {"dataType":"string"},
             "name_key": {"dataType":"string"},
-            "attributes": {"ref":"Record_string.any_","required":true},
+            "attributes": {"ref":"Record_string.string_","required":true},
             "craftable_from": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintReference"},"required":true},
             "rewarded_by": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardReference"},"required":true},
             "market_stats": {"ref":"MarketStats","required":true},
@@ -1904,8 +1909,8 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string"},
             "movement_class": {"dataType":"string"},
             "image_url": {"dataType":"string"},
-            "default_loadout": {"dataType":"any"},
-            "attributes": {"ref":"Record_string.any_","required":true},
+            "default_loadout": {"dataType":"string"},
+            "attributes": {"ref":"Record_string.string_","required":true},
             "crew_size": {"dataType":"double"},
             "career": {"dataType":"string"},
             "role": {"dataType":"string"},
@@ -2218,11 +2223,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string.string_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Mission": {
         "dataType": "refObject",
         "properties": {
@@ -2252,7 +2252,7 @@ const models: TsoaRoute.Models = {
             "is_chain_starter": {"dataType":"boolean","required":true},
             "is_chain_mission": {"dataType":"boolean","required":true},
             "is_unique_mission": {"dataType":"boolean","required":true},
-            "prerequisite_missions": {"dataType":"any"},
+            "prerequisite_missions": {"dataType":"array","array":{"dataType":"string"}},
             "estimated_uec_per_hour": {"dataType":"double"},
             "estimated_rep_per_hour": {"dataType":"double"},
             "rank_index": {"dataType":"double"},
@@ -5128,38 +5128,6 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsOffersV2Controller_getOfferSession: Record<string, TsoaRoute.ParameterSchema> = {
-                sessionId: {"in":"path","name":"sessionId","required":true,"dataType":"string"},
-                request: {"in":"request","name":"request","required":true,"dataType":"object"},
-        };
-        app.get('/offers/:sessionId',
-            authenticateMiddleware([{"loggedin":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller)),
-            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller.prototype.getOfferSession)),
-
-            async function OffersV2Controller_getOfferSession(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsOffersV2Controller_getOfferSession, request, response });
-
-                const controller = new OffersV2Controller();
-
-              await templateService.apiHandler({
-                methodName: 'getOfferSession',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsOffersV2Controller_searchOffers: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 role: {"in":"query","name":"role","dataType":"union","subSchemas":[{"dataType":"enum","enums":["customer"]},{"dataType":"enum","enums":["seller"]}]},
@@ -5184,6 +5152,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'searchOffers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOffersV2Controller_getOfferSession: Record<string, TsoaRoute.ParameterSchema> = {
+                sessionId: {"in":"path","name":"sessionId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/offers/:sessionId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller.prototype.getOfferSession)),
+
+            async function OffersV2Controller_getOfferSession(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOffersV2Controller_getOfferSession, request, response });
+
+                const controller = new OffersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOfferSession',
                 controller,
                 response,
                 next,

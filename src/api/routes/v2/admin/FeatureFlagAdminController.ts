@@ -20,6 +20,15 @@ import {
 import logger from "../../../../logger/logger.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 
+/** Row shape of the user-override list query */
+interface UserOverrideRow {
+  user_id: string
+  username: string | null
+  flag_name: string
+  enabled: boolean
+  updated_at: Date
+}
+
 // ── Request / Response types ─────────────────────────────────────
 
 export interface UpdateConfigRequest {
@@ -147,7 +156,13 @@ export class FeatureFlagAdminController extends BaseController {
 
     let query = db("user_feature_overrides as uo")
       .leftJoin("accounts as a", "uo.user_id", "a.user_id")
-      .select("uo.user_id", "a.username", "uo.flag_name", "uo.enabled", "uo.updated_at")
+      .select<UserOverrideRow[]>(
+        "uo.user_id",
+        "a.username",
+        "uo.flag_name",
+        "uo.enabled",
+        "uo.updated_at",
+      )
 
     if (flag_name) query = query.where("uo.flag_name", flag_name)
     if (search) query = query.where("a.username", "ilike", `%${search}%`)
@@ -159,7 +174,7 @@ export class FeatureFlagAdminController extends BaseController {
     ])
 
     return {
-      overrides: overrides.map((o: any) => ({
+      overrides: overrides.map((o) => ({
         user_id: o.user_id,
         username: o.username || "Unknown",
         flag_name: o.flag_name,

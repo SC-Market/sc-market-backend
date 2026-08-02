@@ -2995,87 +2995,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GetOfferSessionV2Response": {
-				"properties": {
-					"session_id": {
-						"type": "string"
-					},
-					"status": {
-						"type": "string"
-					},
-					"created_at": {
-						"type": "string"
-					},
-					"order_id": {
-						"type": "string"
-					},
-					"contract_id": {
-						"type": "string",
-						"nullable": true
-					},
-					"discord_thread_id": {
-						"type": "string",
-						"nullable": true
-					},
-					"discord_server_id": {
-						"type": "string",
-						"nullable": true
-					},
-					"discord_invite": {
-						"type": "string",
-						"nullable": true
-					},
-					"customer": {
-						"$ref": "#/components/schemas/MinimalUser"
-					},
-					"assigned_to": {
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/MinimalUser"
-							}
-						],
-						"nullable": true
-					},
-					"contractor": {
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/MinimalContractor"
-							}
-						],
-						"nullable": true
-					},
-					"shop_slug": {
-						"type": "string",
-						"nullable": true,
-						"description": "Shop slug for the seller — use to filter listings in counteroffers"
-					},
-					"offers": {
-						"items": {
-							"$ref": "#/components/schemas/OfferV2"
-						},
-						"type": "array"
-					},
-					"availability": {
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/OfferAvailability"
-							}
-						],
-						"nullable": true
-					}
-				},
-				"required": [
-					"session_id",
-					"status",
-					"created_at",
-					"customer",
-					"assigned_to",
-					"contractor",
-					"offers"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"OfferSessionV2": {
 				"description": "V2 serialization of an offer session with variant-enriched market listings",
 				"properties": {
@@ -3184,6 +3103,87 @@
 					"total",
 					"page",
 					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOfferSessionV2Response": {
+				"properties": {
+					"session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"order_id": {
+						"type": "string"
+					},
+					"contract_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_thread_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_server_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_invite": {
+						"type": "string",
+						"nullable": true
+					},
+					"customer": {
+						"$ref": "#/components/schemas/MinimalUser"
+					},
+					"assigned_to": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalUser"
+							}
+						],
+						"nullable": true
+					},
+					"contractor": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalContractor"
+							}
+						],
+						"nullable": true
+					},
+					"shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Shop slug for the seller — use to filter listings in counteroffers"
+					},
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferV2"
+						},
+						"type": "array"
+					},
+					"availability": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OfferAvailability"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"session_id",
+					"status",
+					"created_at",
+					"customer",
+					"assigned_to",
+					"contractor",
+					"offers"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -4555,7 +4555,7 @@
 					"failed"
 				]
 			},
-			"Record_string.any_": {
+			"Record_string.unknown_": {
 				"properties": {},
 				"additionalProperties": {},
 				"type": "object",
@@ -4582,10 +4582,11 @@
 					"result": {
 						"allOf": [
 							{
-								"$ref": "#/components/schemas/Record_string.any_"
+								"$ref": "#/components/schemas/Record_string.unknown_"
 							}
 						],
-						"nullable": true
+						"nullable": true,
+						"description": "Free-form summary emitted by the import runner. Each source returns a\ndifferent shape, so this is only logged and serialised — never indexed."
 					},
 					"error": {
 						"type": "string",
@@ -5574,6 +5575,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Record_string.string_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
 			"BlueprintReference": {
 				"properties": {
 					"blueprint_id": {
@@ -5701,7 +5710,8 @@
 						"type": "string"
 					},
 					"attributes": {
-						"$ref": "#/components/schemas/Record_string.any_"
+						"$ref": "#/components/schemas/Record_string.string_",
+						"description": "Key/value attributes from game_item_attributes (values are stored as text)"
 					},
 					"craftable_from": {
 						"items": {
@@ -5812,9 +5822,13 @@
 					"image_url": {
 						"type": "string"
 					},
-					"default_loadout": {},
+					"default_loadout": {
+						"type": "string",
+						"description": "Raw `default_loadout` attribute value from game_item_attributes (stored as text)"
+					},
 					"attributes": {
-						"$ref": "#/components/schemas/Record_string.any_"
+						"$ref": "#/components/schemas/Record_string.string_",
+						"description": "Key/value attributes from game_item_attributes (values are stored as text)"
 					},
 					"crew_size": {
 						"type": "number",
@@ -6761,14 +6775,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Record_string.string_": {
-				"properties": {},
-				"additionalProperties": {
-					"type": "string"
-				},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
 			"Mission": {
 				"description": "Complete mission data",
 				"properties": {
@@ -6861,7 +6867,13 @@
 					"is_unique_mission": {
 						"type": "boolean"
 					},
-					"prerequisite_missions": {},
+					"prerequisite_missions": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Mission UUIDs that must be completed first"
+					},
 					"estimated_uec_per_hour": {
 						"type": "number",
 						"format": "double"
@@ -13739,42 +13751,6 @@
 				"parameters": []
 			}
 		},
-		"/offers/{sessionId}": {
-			"get": {
-				"operationId": "GetOfferSession",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/GetOfferSessionV2Response"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get offer session with V2 variant-enriched market listings",
-				"tags": [
-					"Offers V2"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "sessionId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/offers/search": {
 			"get": {
 				"operationId": "SearchOffers",
@@ -13840,6 +13816,42 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/offers/{sessionId}": {
+			"get": {
+				"operationId": "GetOfferSession",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetOfferSessionV2Response"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get offer session with V2 variant-enriched market listings\n\nNOTE: must stay declared *after* every literal-path GET on this route\n(e.g. \"search\"). TSOA emits Express routes in declaration order, so a\n\"{sessionId}\" registered first would swallow /offers/search and try to\nload a session whose id is the literal string \"search\".",
+				"tags": [
+					"Offers V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

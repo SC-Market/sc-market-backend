@@ -37,7 +37,7 @@ async function buildMarketListingFields(offerId: string): Promise<{ name: string
     const items: string[] = []
     for (const listing of listings) {
       const complete = await marketDb.getMarketListingComplete(listing.listing_id)
-      const name = (complete as any)?.details?.title || (complete as any)?.details?.item_name || "Item"
+      const name = complete?.details?.title || complete?.details?.item_name || "Item"
       items.push(`${name} ×${listing.quantity}`)
     }
 

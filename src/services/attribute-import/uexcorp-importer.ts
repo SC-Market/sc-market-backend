@@ -13,6 +13,26 @@ import {
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
 
 /**
+ * The subset of a UEXCorp `/items` record this importer reads.
+ */
+interface UEXCorpItem {
+  id?: number
+  name?: string
+  size?: string | number
+  color?: string
+  quality?: number
+  company_name?: string
+}
+
+/**
+ * The subset of a UEXCorp `/items_attributes` record this importer reads.
+ */
+interface UEXCorpItemAttribute {
+  attribute_name?: string
+  value?: string | number
+}
+
+/**
  * Importer for UEXCorp.space API
  * Fetches item specifications and maps them to internal attribute schema
  */
@@ -94,7 +114,7 @@ export class UEXCorpImporter implements AttributeImporter {
       }
 
       // Search for item across all categories
-      let item: any = null
+      let item: UEXCorpItem | undefined = undefined
 
       for (const category of categoriesData.data) {
         const itemResponse = await fetch(
@@ -111,13 +131,14 @@ export class UEXCorpImporter implements AttributeImporter {
         if (itemData.data && Array.isArray(itemData.data)) {
           // Try exact match first
           item = itemData.data.find(
-            (i: any) => i.name?.toLowerCase() === itemName.toLowerCase(),
+            (i: UEXCorpItem) =>
+              i.name?.toLowerCase() === itemName.toLowerCase(),
           )
 
           // If no exact match, try fuzzy match (normalize special chars)
           if (!item) {
             item = itemData.data.find(
-              (i: any) =>
+              (i: UEXCorpItem) =>
                 this.normalizeItemName(i.name) ===
                 this.normalizeItemName(itemName),
             )
@@ -146,7 +167,7 @@ export class UEXCorpImporter implements AttributeImporter {
   /**
    * Extract attributes from UEX item data
    */
-  private async extractAttributes(item: any): Promise<ItemAttributes> {
+  private async extractAttributes(item: UEXCorpItem): Promise<ItemAttributes> {
     const attributes: ItemAttributes = {}
 
     // Extract basic attributes
@@ -168,7 +189,7 @@ export class UEXCorpImporter implements AttributeImporter {
         const attrsData = await attrsResponse.json()
 
         if (attrsData.data && Array.isArray(attrsData.data)) {
-          for (const attr of attrsData.data) {
+          for (const attr of attrsData.data as UEXCorpItemAttribute[]) {
             const attrName = attr.attribute_name?.toLowerCase()
             const value = attr.value
 

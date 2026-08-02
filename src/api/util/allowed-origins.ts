@@ -17,6 +17,7 @@
  */
 
 import { env } from "../../config/env.js"
+import type { DBOrgPremiumTier } from "../../clients/database/db-models.js"
 
 const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
 const frontend_url = new URL(env.FRONTEND_URL || "http://localhost:5173")
@@ -42,11 +43,11 @@ const CACHE_TTL = 60_000
 export async function refreshCustomDomainCache(): Promise<void> {
   try {
     const { getKnex } = await import("../../clients/database/knex-db.js")
-    const rows = await getKnex()("org_premium_tiers")
+    const rows = await getKnex()<DBOrgPremiumTier>("org_premium_tiers")
       .whereNotNull("custom_domain")
       .whereNull("revoked_at")
       .select("custom_domain")
-    customDomainCache = rows.flatMap((r: any) => [
+    customDomainCache = rows.flatMap((r) => [
       `https://${r.custom_domain}`,
       `http://${r.custom_domain}`,
     ])

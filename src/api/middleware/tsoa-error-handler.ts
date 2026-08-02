@@ -23,7 +23,7 @@ function transformTsoaValidationError(
   const validationErrors: ValidationErrorType[] = []
 
   // TSOA ValidateError has a 'fields' property with validation details
-  // Format: { fieldName: { message: string, value?: any } }
+  // Format: { fieldName: { message: string, value?: unknown } }
   for (const [fieldName, fieldError] of Object.entries(tsoaError.fields)) {
     validationErrors.push({
       field: fieldName,
@@ -36,13 +36,22 @@ function transformTsoaValidationError(
 }
 
 /**
+ * Errors reaching this handler are plain `Error`s that TSOA (or an upstream
+ * library) may have decorated with an HTTP status under either name.
+ */
+interface TsoaHandledError extends Error {
+  status?: number
+  statusCode?: number
+}
+
+/**
  * TSOA error handler middleware
  *
  * Catches TSOA-specific errors and transforms them to v1 error format.
  * Should be mounted on the v2 router before other error handlers.
  */
 export function tsoaErrorHandler(
-  err: any,
+  err: TsoaHandledError,
   req: Request,
   res: Response,
   next: NextFunction,

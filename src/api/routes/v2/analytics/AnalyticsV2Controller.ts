@@ -26,6 +26,77 @@ import {
 } from "../types/analytics.types.js"
 import logger from "../../../../logger/logger.js"
 
+/**
+ * Aggregated row of the `price_history_v2` time-bucket query. `price` is a
+ * bigint column, so AVG/MIN/MAX come back from the pg driver as strings, while
+ * the `::integer`-cast columns come back as numbers. `quality_tier` is only
+ * selected when the caller supplies a quality_tier filter.
+ */
+interface PriceHistoryBucketRow {
+  time_bucket: Date
+  avg_price: string
+  min_price: string
+  max_price: string
+  volume: number
+  quality_tier?: number
+}
+
+/**
+ * Aggregated row of the per-quality-tier inventory distribution query (used for
+ * both the market-wide and the per-shop variants). The `::integer`-cast columns
+ * come back as numbers; `avg_price` is cast to bigint and `min_price`/
+ * `max_price` come from bigint columns, so the pg driver returns them as
+ * strings.
+ */
+interface QualityTierDistributionRow {
+  quality_tier: number
+  quantity_available: number
+  listing_count: number
+  shop_count: number
+  avg_price: string
+  min_price: string
+  max_price: string
+}
+
+/**
+ * Aggregated row of the per-quality-tier sales query. `volume` is cast to
+ * integer, while `avg_price` (bigint) and `avg_time_to_sale_hours` (numeric)
+ * come back from the pg driver as strings.
+ */
+interface QualityTierSalesRow {
+  quality_tier: number
+  volume: number
+  avg_price: string
+  avg_time_to_sale_hours: string
+}
+
+/** Views funnel stage: one row per listing from `listing_views_v2` */
+interface ListingViewCountRow {
+  listing_id: string
+  views: number
+  unique_viewers: number
+}
+
+/** Cart funnel stage: one row per listing from `cart_items_v2` */
+interface ListingCartCountRow {
+  listing_id: string
+  cart_adds: number
+}
+
+/** Order funnel stage: one row per listing from `order_market_items_v2` */
+interface ListingOrderCountRow {
+  listing_id: string
+  orders: number
+  sales: number
+}
+
+/** Listing title/created_at lookup for the conversion report */
+interface ListingMetaRow {
+  listing_id: string
+  title: string
+  created_at: Date
+}
+
 @Route("analytics")
 @Tags("Analytics V2")
 export class AnalyticsV2Controller extends BaseController {
@@ -143,9 +214,12 @@ export class AnalyticsV2Controller extends BaseController {
           }
         })
         .groupBy(knex.raw(`date_trunc('${truncInterval}', ph.recorded_at)`))
-        .orderBy(knex.raw(`date_trunc('${truncInterval}', ph.recorded_at)`) as any, "asc")
+        // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
+        // orderBy signature only accepts a column name or QueryBuilder, not a
+        // Raw. The emitted SQL is byte-identical.
+        .orderByRaw(`date_trunc('${truncInterval}', ph.recorded_at) asc`)
 
-      const results = await query
+      const results: PriceHistoryBucketRow[] = await query
 
       logger.info("Price history fetched successfully", {
         game_item_id,
@@ -153,7 +227,7 @@ export class AnalyticsV2Controller extends BaseController {
       })
 
       // Transform results to PriceDataPoint format (Requirement 46.5)
-      const data: PriceDataPoint[] = results.map((row: any) => ({
+      const data: PriceDataPoint[] = results.map((row) => ({
         timestamp: new Date(row.time_bucket).toISOString(),
         avg_price: parseInt(row.avg_price, 10),
         min_price: parseInt(row.min_price, 10),
@@ -305,9 +379,12 @@ export class AnalyticsV2Controller extends BaseController {
           }
         })
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
-        .orderBy(knex.raw("(iv.attributes->>'quality_tier')::integer") as any, "asc")
+        // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
+        // orderBy signature only accepts a column name or QueryBuilder, not a
+        // Raw. The emitted SQL is byte-identical.
+        .orderByRaw("(iv.attributes->>'quality_tier')::integer asc")
 
-      const results = await query
+      const results: QualityTierDistributionRow[] = await query
 
       logger.info("Quality distribution fetched successfully", {
         game_item_id,
@@ -316,7 +393,7 @@ export class AnalyticsV2Controller extends BaseController {
 
       // Transform results to QualityTierDistribution format (Requirement 47.5)
       const distribution: QualityTierDistribution[] = results.map(
-        (row: any) => ({
+        (row) => ({
           quality_tier: row.quality_tier,
           quantity_available: row.quantity_available,
           listing_count: row.listing_count,
@@ -416,9 +493,12 @@ export class AnalyticsV2Controller extends BaseController {
         .where("l.shop_id", shop_id)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
-        .orderBy(knex.raw("(iv.attributes->>'quality_tier')::integer") as any, "asc")
+        // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
+        // orderBy signature only accepts a column name or QueryBuilder, not a
+        // Raw. The emitted SQL is byte-identical.
+        .orderByRaw("(iv.attributes->>'quality_tier')::integer asc")
 
-      const salesResults = await salesQuery
+      const salesResults: QualityTierSalesRow[] = await salesQuery
 
       logger.info("Fetched sales by quality tier", {
         shop_id,
@@ -427,7 +507,7 @@ export class AnalyticsV2Controller extends BaseController {
 
       // Transform sales results (Requirement 48.2, 48.3, 48.4)
       const sales_by_quality: QualityTierSales[] = salesResults.map(
-        (row: any) => ({
+        (row) => ({
           quality_tier: row.quality_tier,
           volume: row.volume,
           avg_price: parseInt(row.avg_price, 10),
@@ -470,9 +550,12 @@ export class AnalyticsV2Controller extends BaseController {
         .where("lil.listed", true)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
-        .orderBy(knex.raw("(iv.attributes->>'quality_tier')::integer") as any, "asc")
+        // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
+        // orderBy signature only accepts a column name or QueryBuilder, not a
+        // Raw. The emitted SQL is byte-identical.
+        .orderByRaw("(iv.attributes->>'quality_tier')::integer asc")
 
-      const inventoryResults = await inventoryQuery
+      const inventoryResults: QualityTierDistributionRow[] = await inventoryQuery
 
       logger.info("Fetched inventory distribution", {
         shop_id,
@@ -481,7 +564,7 @@ export class AnalyticsV2Controller extends BaseController {
 
       // Transform inventory results (Requirement 48.5)
       const inventory_distribution: QualityTierDistribution[] =
-        inventoryResults.map((row: any) => ({
+        inventoryResults.map((row) => ({
           quality_tier: row.quality_tier,
           quantity_available: row.quantity_available,
           listing_count: row.listing_count,
@@ -604,7 +687,7 @@ export class AnalyticsV2Controller extends BaseController {
 
     try {
       // Views + unique viewers per listing for this shop.
-      const viewRows = await knex("listing_views_v2 as lv")
+      const viewRows: ListingViewCountRow[] = await knex("listing_views_v2 as lv")
         .join("listings as l", "lv.listing_id", "l.listing_id")
         .where("l.shop_id", shop_id)
         .groupBy("lv.listing_id")
@@ -615,7 +698,7 @@ export class AnalyticsV2Controller extends BaseController {
         )
 
       // Distinct cart adds per listing for this shop.
-      const cartRows = await knex("cart_items_v2 as ci")
+      const cartRows: ListingCartCountRow[] = await knex("cart_items_v2 as ci")
         .join("listings as l", "ci.listing_id", "l.listing_id")
         .where("l.shop_id", shop_id)
         .groupBy("ci.listing_id")
@@ -625,7 +708,9 @@ export class AnalyticsV2Controller extends BaseController {
         )
 
       // Orders + fulfilled sales per listing for this shop.
-      const orderRows = await knex("order_market_items_v2 as omi")
+      const orderRows: ListingOrderCountRow[] = await knex(
+        "order_market_items_v2 as omi",
+      )
         .join("listings as l", "omi.listing_id", "l.listing_id")
         .join("orders as o", "omi.order_id", "o.order_id")
         .where("l.shop_id", shop_id)
@@ -639,17 +724,15 @@ export class AnalyticsV2Controller extends BaseController {
         )
 
       // Index the funnel stages by listing id so they can be merged per listing.
-      const viewByListing = new Map(viewRows.map((r: any) => [r.listing_id, r]))
-      const cartByListing = new Map(cartRows.map((r: any) => [r.listing_id, r]))
-      const orderByListing = new Map(
-        orderRows.map((r: any) => [r.listing_id, r]),
-      )
+      const viewByListing = new Map(viewRows.map((r) => [r.listing_id, r]))
+      const cartByListing = new Map(cartRows.map((r) => [r.listing_id, r]))
+      const orderByListing = new Map(orderRows.map((r) => [r.listing_id, r]))
 
       // A listing appears in the report if it has any activity in any stage.
       const listingIds = new Set<string>([
-        ...viewRows.map((r: any) => r.listing_id),
-        ...cartRows.map((r: any) => r.listing_id),
-        ...orderRows.map((r: any) => r.listing_id),
+        ...viewRows.map((r) => r.listing_id),
+        ...cartRows.map((r) => r.listing_id),
+        ...orderRows.map((r) => r.listing_id),
       ])
 
       if (listingIds.size === 0) {
@@ -671,9 +754,9 @@ export class AnalyticsV2Controller extends BaseController {
       const listingMeta = await knex("listings")
         .whereIn("listing_id", Array.from(listingIds))
         .where("shop_id", shop_id)
-        .select("listing_id", "title", "created_at")
+        .select<ListingMetaRow[]>("listing_id", "title", "created_at")
 
-      const stats: ListingConversionStat[] = listingMeta.map((meta: any) => {
+      const stats: ListingConversionStat[] = listingMeta.map((meta) => {
         const v = viewByListing.get(meta.listing_id)
         const c = cartByListing.get(meta.listing_id)
         const o = orderByListing.get(meta.listing_id)

@@ -23,6 +23,30 @@ import {
 } from "./resources.types.js"
 import logger from "../../../../../logger/logger.js"
 
+/**
+ * Row shape of the "blueprints requiring this resource" query:
+ * `blueprint_ingredients` joined with `blueprints` and the output `game_items`.
+ */
+interface BlueprintRequiringResourceRow {
+  blueprint_id: string
+  blueprint_name: string
+  output_item_name: string
+  output_item_icon: string | null
+  quantity_required: number
+  min_quality_tier: number | null
+  recommended_quality_tier: number | null
+}
+
+/**
+ * Row shape of the grouped resource-category count query. `count` comes from
+ * Postgres `count(*)`, which the pg driver returns as a string.
+ */
+interface ResourceCategoryCountRow {
+  category: string
+  subcategory: string | null
+  count: string
+}
+
 @Route("game-data/resources")
 @Tags("Game Data - Resources")
 export class ResourcesController extends BaseController {
@@ -194,6 +218,10 @@ export class ResourcesController extends BaseController {
       })
 
       // Transform results
+      // NOTE: row left untyped — `resources.base_value` is a bigint column, so
+      // the pg driver returns a string, but ResourceSearchResult.base_value is
+      // declared `number` and the mapper passes it through unconverted. Typing
+      // the row surfaces that contract mismatch (see report).
       const resources: ResourceSearchResult[] = resourcesResults.map((row: any) => ({
         resource_id: row.resource_id,
         game_item_id: row.game_item_id,
@@ -317,7 +345,7 @@ export class ResourcesController extends BaseController {
       const blueprintsQuery = await knex("blueprint_ingredients as bi")
         .join("blueprints as b", "bi.blueprint_id", "b.blueprint_id")
         .join("game_items as gi", "b.output_game_item_id", "gi.id")
-        .select(
+        .select<BlueprintRequiringResourceRow[]>(
           "b.blueprint_id",
           "b.blueprint_name",
           "gi.name as output_item_name",
@@ -330,7 +358,7 @@ export class ResourcesController extends BaseController {
         .where("b.is_active", true)
         .orderBy("b.blueprint_name", "asc")
 
-      const blueprints_requiring: BlueprintRequiringResource[] = blueprintsQuery.map((row: any) => ({
+      const blueprints_requiring: BlueprintRequiringResource[] = blueprintsQuery.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_name: row.blueprint_name,
         output_item_name: row.output_item_name,
@@ -418,13 +446,13 @@ export class ResourcesController extends BaseController {
           "resource_category as category",
           "resource_subcategory as subcategory",
         )
-        .count("* as count")
+        .count<ResourceCategoryCountRow[]>("* as count")
         .where("version_id", effectiveVersionId)
         .groupBy("resource_category", "resource_subcategory")
         .orderBy("resource_category", "asc")
         .orderBy("resource_subcategory", "asc")
 
-      const categories: ResourceCategory[] = categoriesQuery.map((row: any) => ({
+      const categories: ResourceCategory[] = categoriesQuery.map((row) => ({
         category: row.category,
         subcategory: row.subcategory || undefined,
         count: parseInt(String(row.count), 10),

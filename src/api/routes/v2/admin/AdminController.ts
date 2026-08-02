@@ -13,6 +13,16 @@ import AdmZip from "adm-zip"
 import * as fs from "fs"
 import * as path from "path"
 
+/**
+ * Multipart form fields accompanying the game-data ZIP upload. Multer parses
+ * non-file fields as strings, so both are optional strings here; they override
+ * the matching fields on the parsed GameDataPayload.
+ */
+interface ImportGameDataFormFields {
+  gameVersion?: GameDataPayload["gameVersion"]
+  gameChannel?: GameDataPayload["gameChannel"]
+}
+
 // ── Job tracking ───────────────────────────────────────────────────────
 
 interface GameDataImportJob {
@@ -49,7 +59,7 @@ export class AdminController extends BaseController {
     this.requireAdmin()
 
     const adminUserId = this.getUserId()
-    const file = (request as any).file as Express.Multer.File | undefined
+    const file = request.file
 
     if (!file) {
       this.setStatus(400)
@@ -120,7 +130,7 @@ export class AdminController extends BaseController {
   private async runImport(
     job: GameDataImportJob,
     uploadedFilePath: string,
-    body: any,
+    body: ImportGameDataFormFields,
     adminUserId: string,
   ) {
     let tempDir: string | null = null

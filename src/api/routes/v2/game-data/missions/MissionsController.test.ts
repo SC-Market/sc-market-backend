@@ -6,7 +6,17 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
+import type { User } from "../../../v1/api-models.js"
 import { MissionsController } from "./MissionsController.js"
+
+/**
+ * Controller under test with the `user` slot these tests write to exposed.
+ * BaseController itself has no `user` property, so this describes the shape the
+ * tests actually assign rather than widening the controller to `any`.
+ */
+type ControllerWithUser = MissionsController & {
+  user?: Partial<User>
+}
 
 describe("MissionsController", () => {
   let controller: MissionsController
@@ -326,7 +336,7 @@ describe("MissionsController", () => {
 
     it("should record mission completion", async () => {
       // Mock authentication context
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.completeMission(testMissionId, {
         blueprints_rewarded: [],
@@ -349,7 +359,7 @@ describe("MissionsController", () => {
     })
 
     it("should update existing completion", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // First completion
       const result1 = await controller.completeMission(testMissionId, {
@@ -373,7 +383,7 @@ describe("MissionsController", () => {
     })
 
     it("should validate blueprint IDs", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.completeMission(testMissionId, {
@@ -383,7 +393,7 @@ describe("MissionsController", () => {
     })
 
     it("should require authentication", async () => {
-      ;(controller as any).user = undefined
+      ;(controller as ControllerWithUser).user = undefined
 
       await expect(
         controller.completeMission(testMissionId, {
@@ -393,7 +403,7 @@ describe("MissionsController", () => {
     })
 
     it("should throw error for non-existent mission", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.completeMission("00000000-0000-0000-0000-000000000000", {
@@ -436,7 +446,7 @@ describe("MissionsController", () => {
     })
 
     it("should record mission rating", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.rateMission(testMissionId, {
         difficulty_rating: 4,
@@ -462,7 +472,7 @@ describe("MissionsController", () => {
     })
 
     it("should update existing rating", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // First rating
       const result1 = await controller.rateMission(testMissionId, {
@@ -491,7 +501,7 @@ describe("MissionsController", () => {
     })
 
     it("should validate difficulty rating range", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.rateMission(testMissionId, {
@@ -509,7 +519,7 @@ describe("MissionsController", () => {
     })
 
     it("should validate satisfaction rating range", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.rateMission(testMissionId, {
@@ -520,7 +530,7 @@ describe("MissionsController", () => {
     })
 
     it("should require integer ratings", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.rateMission(testMissionId, {
@@ -531,7 +541,7 @@ describe("MissionsController", () => {
     })
 
     it("should require authentication", async () => {
-      ;(controller as any).user = undefined
+      ;(controller as ControllerWithUser).user = undefined
 
       await expect(
         controller.rateMission(testMissionId, {
@@ -542,7 +552,7 @@ describe("MissionsController", () => {
     })
 
     it("should throw error for non-existent mission", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.rateMission("00000000-0000-0000-0000-000000000000", {

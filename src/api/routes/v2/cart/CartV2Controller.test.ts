@@ -8,10 +8,21 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest"
+import type { Request as ExpressRequest } from "express"
 import { CartV2Controller } from "./CartV2Controller.js"
+import type { AddToCartRequest } from "../types/cart.types.js"
+import type { User } from "../../v1/api-models.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { v4 as uuidv4 } from "uuid"
 import type { Knex } from "knex"
+
+/**
+ * Build the minimal authenticated ExpressRequest the cart endpoints read
+ * `user.user_id` off of.
+ */
+function createMockRequest(userId: string): ExpressRequest {
+  return { user: { user_id: userId } as User } as ExpressRequest
+}
 
 describe("CartV2Controller", () => {
   let knex: Knex
@@ -123,9 +134,7 @@ describe("CartV2Controller", () => {
   describe("GET /api/v2/cart - getCart", () => {
     it("should return empty cart for user with no items", async () => {
       // Requirement 29.1: GET /api/v2/cart endpoint
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const result = await controller.getCart(mockRequest)
 
@@ -148,9 +157,7 @@ describe("CartV2Controller", () => {
         updated_at: new Date(),
       })
 
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const result = await controller.getCart(mockRequest)
 
@@ -184,9 +191,7 @@ describe("CartV2Controller", () => {
         updated_at: new Date(),
       })
 
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const result = await controller.getCart(mockRequest)
 
@@ -207,9 +212,7 @@ describe("CartV2Controller", () => {
         updated_at: new Date(),
       })
 
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const result = await controller.getCart(mockRequest)
 
@@ -224,9 +227,7 @@ describe("CartV2Controller", () => {
   describe("POST /api/v2/cart/add - addToCart", () => {
     it("should add item to cart", async () => {
       // Requirement 30.1: POST /api/v2/cart/add endpoint
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const addRequest = {
         listing_id: testListingId,
@@ -257,14 +258,13 @@ describe("CartV2Controller", () => {
 
     it("should validate required fields", async () => {
       // Requirement 30.2: Accept listing_id, variant_id, and quantity
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
+      // Deliberately missing variant_id/quantity to exercise the
+      // controller's required-field validation.
       const invalidRequest = {
         listing_id: testListingId,
-        // Missing variant_id and quantity
-      } as any
+      } as unknown as AddToCartRequest
 
       await expect(
         controller.addToCart(invalidRequest, mockRequest),
@@ -273,9 +273,7 @@ describe("CartV2Controller", () => {
 
     it("should reject invalid listing", async () => {
       // Requirement 30.3: Validate listing exists and is active
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const addRequest = {
         listing_id: uuidv4(), // Non-existent listing
@@ -294,9 +292,7 @@ describe("CartV2Controller", () => {
         .where({ listing_id: testListingId })
         .update({ status: "sold" })
 
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const addRequest = {
         listing_id: testListingId,
@@ -316,9 +312,7 @@ describe("CartV2Controller", () => {
 
     it("should reject invalid variant", async () => {
       // Requirement 30.4: Validate variant exists and belongs to listing
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const addRequest = {
         listing_id: testListingId,
@@ -333,9 +327,7 @@ describe("CartV2Controller", () => {
 
     it("should check variant availability", async () => {
       // Requirement 30.5: Check variant availability before adding
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const addRequest = {
         listing_id: testListingId,
@@ -351,9 +343,7 @@ describe("CartV2Controller", () => {
 
     it("should upsert existing cart item", async () => {
       // Requirement 30.8: Support upsert (update if already in cart)
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       // Add item first time
       const addRequest = {
@@ -380,9 +370,7 @@ describe("CartV2Controller", () => {
 
     it("should validate positive quantity", async () => {
       // Requirement 30.9: Validate quantity is positive integer
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const addRequest = {
         listing_id: testListingId,
@@ -419,9 +407,7 @@ describe("CartV2Controller", () => {
 
     it("should update cart item quantity", async () => {
       // Requirement 31.2: Accept quantity updates
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const updateRequest = {
         quantity: 3,
@@ -445,9 +431,7 @@ describe("CartV2Controller", () => {
 
     it("should validate cart item exists", async () => {
       // Requirement 31.9: Return 404 if cart item not found
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const nonExistentId = uuidv4()
 
@@ -459,9 +443,7 @@ describe("CartV2Controller", () => {
     it("should validate ownership", async () => {
       // Requirement 31.10: Return 403 if cart item belongs to different user
       const differentUserId = uuidv4()
-      const mockRequest = {
-        user: { user_id: differentUserId },
-      } as any
+      const mockRequest = createMockRequest(differentUserId)
 
       await expect(
         controller.updateCartItem(testCartItemId, { quantity: 2 }, mockRequest),
@@ -470,9 +452,7 @@ describe("CartV2Controller", () => {
 
     it("should validate new quantity against availability", async () => {
       // Requirement 31.4: Validate new quantity against variant availability
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const updateRequest = {
         quantity: 30, // More than available (20)
@@ -485,9 +465,7 @@ describe("CartV2Controller", () => {
 
     it("should prevent quantity from being set to 0", async () => {
       // Requirement 31.7: Prevent quantity from being set to 0 (use DELETE instead)
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const updateRequest = {
         quantity: 0,
@@ -505,9 +483,7 @@ describe("CartV2Controller", () => {
         .where({ item_id: testItemId })
         .update({ base_price: 1500 })
 
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       await controller.updateCartItem(
         testCartItemId,
@@ -552,9 +528,7 @@ describe("CartV2Controller", () => {
 
     it("should remove cart item", async () => {
       // Requirement 33.1: DELETE /api/v2/cart/:id endpoint
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const result = await controller.removeCartItem(testCartItemId, mockRequest)
 
@@ -570,9 +544,7 @@ describe("CartV2Controller", () => {
 
     it("should return 404 for non-existent cart item", async () => {
       // Requirement 33.4: Return 404 if cart item not found
-      const mockRequest = {
-        user: { user_id: testUserId },
-      } as any
+      const mockRequest = createMockRequest(testUserId)
 
       const nonExistentId = uuidv4()
 
@@ -584,9 +556,7 @@ describe("CartV2Controller", () => {
     it("should validate ownership before deletion", async () => {
       // Requirement 33.5: Return 403 if cart item belongs to different user
       const differentUserId = uuidv4()
-      const mockRequest = {
-        user: { user_id: differentUserId },
-      } as any
+      const mockRequest = createMockRequest(differentUserId)
 
       await expect(
         controller.removeCartItem(testCartItemId, mockRequest),

@@ -24,9 +24,127 @@ import {
   BlueprintCategory,
   CraftableBlueprintResult,
   CraftedPropertyDef,
+  UserBlueprintAcquisition,
+  SlotModifier,
 } from "./blueprints.types.js"
 import logger from "../../../../../logger/logger.js"
 import { resolveGameItemImages } from "../../util/resolve-game-item-images.js"
+
+/** Row shape returned by the blueprint search query */
+interface BlueprintSearchRow {
+  blueprint_id: string
+  blueprint_code: string
+  blueprint_name: string
+  output_item_name: string
+  output_item_icon: string | null
+  manufacturer: string | null
+  item_category: string | null
+  item_subcategory: string | null
+  rarity: string | null
+  tier: number | null
+  source: string | null
+  crafting_time_seconds: number | null
+  ingredient_count: number
+  mission_count: number
+  modifier_properties: string[] | null
+}
+
+/** user_blueprint_inventory keyed by blueprint_name (deployments where that column exists) */
+interface OwnedBlueprintNameRow {
+  blueprint_name: string
+}
+
+/** user_blueprint_inventory keyed by blueprint_id */
+interface OwnedBlueprintIdRow {
+  blueprint_id: string
+}
+
+/** Row shape returned by the blueprint search ingredient batch query */
+interface BlueprintSearchIngredientRow {
+  blueprint_id: string
+  name: string
+  sub_type: string | null
+  image_url: string | null
+  quantity_required: string
+}
+
+/** Row shape returned by the blueprint detail ingredients query */
+interface BlueprintIngredientRow {
+  ingredient_id: string
+  quantity_required: number
+  min_quality_tier: number | null
+  recommended_quality_tier: number | null
+  is_alternative: boolean | null
+  alternative_group: number | null
+  display_order: number | null
+  game_item_id: string
+  game_item_name: string
+  game_item_type: string | null
+  game_item_sub_type: string | null
+  game_item_icon: string | null
+  slot_name: string | null
+  slot_display_name: string | null
+}
+
+/** Row shape returned by the mission_blueprint_rewards join queries */
+interface MissionRewardRow {
+  mission_id: string
+  mission_name: string
+  star_system: string | null
+  drop_probability: string
+}
+
+/** Row shape returned by the blueprint_slot_modifiers query */
+interface SlotModifierRow {
+  slot_name: string
+  slot_display_name: string | null
+  property: string
+  start_quality: number
+  end_quality: number
+  modifier_at_start: string
+  modifier_at_end: string
+  modifier_type: "linear" | "additive" | null
+}
+
+/** Row shape returned by the crafted_property_defs query */
+interface CraftedPropertyDefRow {
+  property_key: string
+  display_name: string | null
+  display_mode: CraftedPropertyDef["display_mode"] | null
+  scale_factor: string | null
+  unit_label: string | null
+}
+
+/** Row shape returned by the blueprint categories aggregate query */
+interface BlueprintCategoryRow {
+  category: string
+  subcategory: string | null
+  count: string | number
+}
+
+/** Row shape returned by the user blueprint inventory query */
+interface UserBlueprintInventoryRow {
+  blueprint_id: string
+  blueprint_name: string
+  output_item_name: string
+  output_item_icon: string | null
+  item_category: string | null
+  rarity: string | null
+  tier: number | null
+  acquisition_date: Date | null
+  acquisition_method: string | null
+  acquisition_location: string | null
+  acquisition_notes: string | null
+}
+
+/** Row shape returned by the org blueprint owners query */
+interface OrgBlueprintOwnerRow {
+  user_id: string
+  username: string
+  display_name: string | null
+  avatar: string | null
+  acquisition_date: Date | null
+}
 
 @Route("game-data/blueprints")
 @Tags("Game Data - Blueprints")
@@ -149,7 +267,7 @@ export class BlueprintsController extends BaseController {
           "b.blueprint_id",
           "mission_counts.blueprint_id",
         )
-        .select(
+        .select<BlueprintSearchRow[]>(
           "b.blueprint_id",
           "b.blueprint_code",
           "b.blueprint_name",
@@ -277,13 +395,17 @@ export class BlueprintsController extends BaseController {
 
       if (user_id && !user_owned_only) {
         const hasBpNameCol = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
-        const ownedBlueprints = hasBpNameCol
-          ? await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true)
-              .whereIn("blueprint_name", blueprintsResults.map((b: any) => b.blueprint_name)).select("blueprint_name")
-          : await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true)
-              .whereIn("blueprint_id", blueprintsResults.map((b: any) => b.blueprint_id)).select("blueprint_id")
+        const ownedKeys: string[] = hasBpNameCol
+          ? (
+              await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true)
+                .whereIn("blueprint_name", blueprintsResults.map((b) => b.blueprint_name)).select<OwnedBlueprintNameRow[]>("blueprint_name")
+            ).map((b) => b.blueprint_name)
+          : (
+              await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true)
+                .whereIn("blueprint_id", blueprintsResults.map((b) => b.blueprint_id)).select<OwnedBlueprintIdRow[]>("blueprint_id")
+            ).map((b) => b.blueprint_id)
 
-        userOwnedBlueprintNames = new Set(ownedBlueprints.map((b: any) => b.blueprint_name || b.blueprint_id))
+        userOwnedBlueprintNames = new Set(ownedKeys)
       }
 
       logger.info("Blueprints search completed", {
@@ -293,18 +415,18 @@ export class BlueprintsController extends BaseController {
       })
 
       // Transform results
-      const blueprintIds = blueprintsResults.map((r: any) => r.blueprint_id)
+      const blueprintIds = blueprintsResults.map((r) => r.blueprint_id)
 
       // Batch fetch ingredients for all results
-      const ingredientRows = blueprintIds.length > 0
+      const ingredientRows: BlueprintSearchIngredientRow[] = blueprintIds.length > 0
         ? await knex("blueprint_ingredients as bi")
             .join("game_items as gi", "bi.ingredient_game_item_id", "gi.id")
             .whereIn("bi.blueprint_id", blueprintIds)
-            .select("bi.blueprint_id", "gi.name", "gi.sub_type", "gi.image_url", "bi.quantity_required")
+            .select<BlueprintSearchIngredientRow[]>("bi.blueprint_id", "gi.name", "gi.sub_type", "gi.image_url", "bi.quantity_required")
             .orderBy("bi.display_order")
         : []
 
-      const ingredientsByBp = new Map<string, any[]>()
+      const ingredientsByBp = new Map<string, BlueprintSearchResult["ingredients"]>()
       for (const row of ingredientRows) {
         if (!ingredientsByBp.has(row.blueprint_id)) ingredientsByBp.set(row.blueprint_id, [])
         ingredientsByBp.get(row.blueprint_id)!.push({
@@ -315,7 +437,7 @@ export class BlueprintsController extends BaseController {
         })
       }
 
-      const blueprints: BlueprintSearchResult[] = blueprintsResults.map((row: any) => ({
+      const blueprints: BlueprintSearchResult[] = blueprintsResults.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_code: row.blueprint_code,
         blueprint_name: row.blueprint_name,
@@ -457,7 +579,7 @@ export class BlueprintsController extends BaseController {
       // ========================================================================
       const ingredientsQuery = await knex("blueprint_ingredients as bi")
         .join("game_items as gi", "bi.ingredient_game_item_id", "gi.id")
-        .select(
+        .select<BlueprintIngredientRow[]>(
           "bi.ingredient_id",
           "bi.quantity_required",
           "bi.min_quality_tier",
@@ -480,7 +602,7 @@ export class BlueprintsController extends BaseController {
       // TODO: Add market price queries when Market V2 integration is complete
       // For now, we'll leave market prices as undefined
 
-      const ingredients: BlueprintIngredient[] = ingredientsQuery.map((row: any) => ({
+      const ingredients: BlueprintIngredient[] = ingredientsQuery.map((row) => ({
         ingredient_id: row.ingredient_id,
         game_item: {
           game_item_id: row.game_item_id,
@@ -522,7 +644,7 @@ export class BlueprintsController extends BaseController {
       // ========================================================================
       const missionsQuery = await knex("mission_blueprint_rewards as mbr")
         .join("missions as m", "mbr.mission_id", "m.mission_id")
-        .select(
+        .select<MissionRewardRow[]>(
           "m.mission_id",
           "m.mission_name",
           "m.star_system",
@@ -532,7 +654,7 @@ export class BlueprintsController extends BaseController {
         .orderBy("mbr.drop_probability", "desc")
         .orderBy("m.mission_name", "asc")
 
-      const missions_rewarding: MissionRewardingBlueprint[] = missionsQuery.map((row: any) => ({
+      const missions_rewarding: MissionRewardingBlueprint[] = missionsQuery.map((row) => ({
         mission_id: row.mission_id,
         mission_name: row.mission_name,
         drop_probability: parseFloat(row.drop_probability),
@@ -558,7 +680,7 @@ export class BlueprintsController extends BaseController {
       // Part 6: Get user-specific data (if user_id provided)
       // ========================================================================
       let user_owns: boolean | undefined
-      let user_acquisition: any | undefined
+      let user_acquisition: UserBlueprintAcquisition | undefined
 
       if (user_id) {
         const hasBpNameCol = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
@@ -593,6 +715,7 @@ export class BlueprintsController extends BaseController {
         .where("blueprint_id", blueprint_id)
         .orderBy("slot_name")
         .orderBy("property")
+        .select<SlotModifierRow[]>("*")
 
       // Fetch output item attributes (base stats for Product Stats display)
       const itemAttributeRows = await knex("game_item_attributes")
@@ -604,7 +727,7 @@ export class BlueprintsController extends BaseController {
         item_attributes[row.attribute_name] = row.attribute_value
       }
 
-      const slot_modifiers = slotModifierRows.map((r: any) => ({
+      const slot_modifiers: SlotModifier[] = slotModifierRows.map((r) => ({
         slot_name: r.slot_name,
         slot_display_name: r.slot_display_name || r.slot_name,
         property: r.property,
@@ -618,13 +741,13 @@ export class BlueprintsController extends BaseController {
       // Fetch crafted property display definitions for all properties referenced in slot_modifiers
       let crafted_property_defs: CraftedPropertyDef[] | undefined
       if (slot_modifiers.length > 0) {
-        const propertyKeys = [...new Set(slot_modifiers.map((m: { property: string }) => m.property))]
+        const propertyKeys = [...new Set(slot_modifiers.map((m) => m.property))]
         try {
           const propDefRows = await knex("crafted_property_defs")
             .whereIn("property_key", propertyKeys)
-            .select("property_key", "display_name", "display_mode", "scale_factor", "unit_label")
+            .select<CraftedPropertyDefRow[]>("property_key", "display_name", "display_mode", "scale_factor", "unit_label")
           if (propDefRows.length > 0) {
-            crafted_property_defs = propDefRows.map((r: any) => ({
+            crafted_property_defs = propDefRows.map((r) => ({
               property_key: r.property_key,
               display_name: r.display_name || null,
               display_mode: r.display_mode || "raw",
@@ -719,7 +842,7 @@ export class BlueprintsController extends BaseController {
       // Build query
       let missionsQuery = knex("mission_blueprint_rewards as mbr")
         .join("missions as m", "mbr.mission_id", "m.mission_id")
-        .select(
+        .select<MissionRewardRow[]>(
           "m.mission_id",
           "m.mission_name",
           "m.star_system",
@@ -737,7 +860,7 @@ export class BlueprintsController extends BaseController {
         .orderBy("mbr.drop_probability", "desc")
         .orderBy("m.mission_name", "asc")
 
-      const missions: MissionRewardingBlueprint[] = missionsResults.map((row: any) => ({
+      const missions: MissionRewardingBlueprint[] = missionsResults.map((row) => ({
         mission_id: row.mission_id,
         mission_name: row.mission_name,
         drop_probability: parseFloat(row.drop_probability),
@@ -1022,19 +1145,19 @@ export class BlueprintsController extends BaseController {
       // ========================================================================
       // Get categories with counts (Requirement 19.5)
       // ========================================================================
-      const categoriesQuery = await knex("blueprints")
+      const categoriesQuery: BlueprintCategoryRow[] = await knex("blueprints")
         .select(
           "item_category as category",
           "item_subcategory as subcategory",
         )
-        .count("* as count")
+        .count<BlueprintCategoryRow[]>("* as count")
         .where("version_id", effectiveVersionId)
         .where("is_active", true)
         .groupBy("item_category", "item_subcategory")
         .orderBy("item_category", "asc")
         .orderBy("item_subcategory", "asc")
 
-      const categories: BlueprintCategory[] = categoriesQuery.map((row: any) => ({
+      const categories: BlueprintCategory[] = categoriesQuery.map((row) => ({
         category: row.category,
         subcategory: row.subcategory || undefined,
         count: parseInt(String(row.count), 10),
@@ -1178,7 +1301,7 @@ export class BlueprintsController extends BaseController {
       let inventoryQuery = knex("user_blueprint_inventory as ubi")
         .join("blueprints as b", "ubi.blueprint_id", "b.blueprint_id")
         .join("game_items as gi", "b.output_game_item_id", "gi.id")
-        .select(
+        .select<UserBlueprintInventoryRow[]>(
           "b.blueprint_id",
           "b.blueprint_name",
           "gi.name as output_item_name",
@@ -1284,7 +1407,7 @@ export class BlueprintsController extends BaseController {
       })
 
       // Transform results
-      const blueprints = inventoryResults.map((row: any) => ({
+      const blueprints = inventoryResults.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_name: row.blueprint_name,
         output_item_name: row.output_item_name,
@@ -1350,7 +1473,7 @@ export class BlueprintsController extends BaseController {
       .where("ubi.blueprint_id", resolvedId)
       .where("c.spectrum_id", spectrum_id)
       .where("ubi.is_owned", true)
-      .select(
+      .select<OrgBlueprintOwnerRow[]>(
         "a.user_id",
         "a.username",
         "a.display_name",
@@ -1360,7 +1483,7 @@ export class BlueprintsController extends BaseController {
       .orderBy("a.display_name")
 
     return {
-      members: await Promise.all(rows.map(async (r: any) => ({
+      members: await Promise.all(rows.map(async (r) => ({
         user_id: r.user_id,
         username: r.username,
         display_name: r.display_name || r.username,

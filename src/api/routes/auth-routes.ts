@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express"
+import { Application, Request, Response, NextFunction } from "express"
 import passport from "passport"
 import { User } from "./v1/api-models.js"
 import { userAuthorized } from "../middleware/auth.js"
@@ -41,9 +41,25 @@ import {
 } from "../middleware/enhanced-ratelimiting.js"
 
 /**
+ * Errors surfaced through the passport `authenticate` callbacks. The verify
+ * callbacks in src/api/util/passport-strategies.ts decorate a plain Error with
+ * an auth error code and, for linking conflicts, the conflicting identifiers.
+ */
+interface AuthCallbackError extends Error {
+  code?: string
+  accountSpectrumId?: string
+  citizenIDSpectrumId?: string
+  accountUsername?: string
+  citizenIDUsername?: string
+}
+
+/** Extra info passed by passport strategies alongside a failed authentication. */
+type AuthCallbackInfo = object | string | Array<string | undefined> | undefined
+
+/**
  * Setup authentication routes
  */
-export function setupAuthRoutes(app: any, frontendUrl: URL): void {
+export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
   /**
    * Complete login: issue JWT cookies (if enabled) or save session, then redirect.
    */
@@ -126,7 +142,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       if (!req.session) {
         return res.status(500).json({ error: "Session not available" })
       }
-      ;(req.session as any).discord_auth_action = action
+      req.session.discord_auth_action = action
 
       // Create a signed state token that includes both CSRF protection and the redirect path
       if (!env.SESSION_SECRET) {
@@ -194,7 +210,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
       // Ensure action is stored in session
       if (req.session) {
-        ;(req.session as any).discord_auth_action = action
+        req.session.discord_auth_action = action
       }
 
       // State is valid, proceed with authentication
@@ -204,7 +220,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         session: true,
           failWithError: true,
         },
-        async (err: any, user: User | false, info: any) => {
+        async (
+          err: AuthCallbackError | null,
+          user: User | false,
+          info: AuthCallbackInfo,
+        ) => {
           if (err) {
             logger.error("[Auth] Error", {
               error: err,
@@ -277,7 +297,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
       // Also store action in session for the verify callback (reads citizenid_auth_action)
       if (req.session) {
-        ;(req.session as any).citizenid_auth_action = action
+        req.session.citizenid_auth_action = action
       }
 
       return passport.authenticate("citizenid", {
@@ -332,15 +352,15 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       const sessionSecret = env.SESSION_SECRET
       const cidState = req.cookies?.["scmarket.cidstate"]
       const verified = cidState ? verifySignedStateToken(cidState, sessionSecret) : null
-      const redirectPath = verified?.path || (req.session as any)?.citizenid_redirect_path || "/market"
-      const citizenidOrigin = verified?.origin || (req.session as any)?.citizenid_origin || ""
+      const redirectPath = verified?.path || req.session?.citizenid_redirect_path || "/market"
+      const citizenidOrigin = verified?.origin || req.session?.citizenid_origin || ""
 
       // Clear cookie and session data
       const prod = app.get("env") === "production"
       res.clearCookie("scmarket.cidstate", { path: "/auth/citizenid", httpOnly: true, secure: prod, sameSite: prod ? ("none" as const) : ("lax" as const) })
       if (req.session) {
-        delete (req.session as any).citizenid_redirect_path
-        delete (req.session as any).citizenid_origin
+        delete req.session.citizenid_redirect_path
+        delete req.session.citizenid_origin
       }
 
       const redirectBase = getRedirectBase(citizenidOrigin)
@@ -362,7 +382,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           session: true,
           failWithError: true,
         },
-        async (err: any, user: User | false, info: any) => {
+        async (
+          err: AuthCallbackError | null,
+          user: User | false,
+          info: AuthCallbackInfo,
+        ) => {
           if (err) {
             logger.error("[CitizenID login callback] Error", {
               error: err,
@@ -403,7 +427,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             if (err.message && err.message !== errorCode) {
               redirectTo.searchParams.set("error_description", err.message)
             }
-            const errorWithSpectrumIds = err as any
+            const errorWithSpectrumIds = err
             if (errorWithSpectrumIds.accountSpectrumId) {
               redirectTo.searchParams.set(
                 "account_spectrum_id",
@@ -466,7 +490,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
       // Clear redirect path from session (legacy cleanup)
       if (req.session) {
-        delete (req.session as any).citizenid_redirect_path
+        delete req.session.citizenid_redirect_path
       }
 
       // Check for OAuth errors
@@ -486,7 +510,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           session: true,
           failWithError: true,
         },
-        async (err: any, user: User | false, info: any) => {
+        async (
+          err: AuthCallbackError | null,
+          user: User | false,
+          info: AuthCallbackInfo,
+        ) => {
           if (err) {
             logger.error("[CitizenID link callback] Error", {
               error: err,
@@ -502,7 +530,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             if (err.message && err.message !== errorCode) {
               redirectTo.searchParams.set("error_description", err.message)
             }
-            const errorWithUsernames = err as any
+            const errorWithUsernames = err
             if (errorWithUsernames.accountUsername) {
               redirectTo.searchParams.set(
                 "account_username",
@@ -638,7 +666,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // List active sessions (refresh tokens) for current user
   app.get("/auth/sessions", authSessionsLimit, async (req: Request, res: Response) => {
     // Works with both JWT and session auth
-    const userId = (req.user as any)?.user_id
+    const userId = req.user?.user_id
     if (!userId) {
       // Try JWT
       const accessToken = req.cookies?.["scmarket.access"]
@@ -669,7 +697,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
   // Revoke a specific session
   app.delete("/auth/sessions/:tokenId", authSessionsLimit, async (req: Request, res: Response) => {
-    const userId = (req.user as any)?.user_id
+    const userId = req.user?.user_id
     if (!userId) return res.status(401).json({ error: "Unauthenticated" })
     const revoked = await revokeSessionById(userId, req.params.tokenId)
     if (!revoked) return res.status(404).json({ error: "Session not found" })

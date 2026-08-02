@@ -42,6 +42,17 @@ import {
 } from "../../clients/database/db-models.js"
 
 /**
+ * NotificationEmailData is an open bag of caller-supplied entities, so its
+ * members arrive as `unknown`. Read the `contractor_id` off one of those
+ * entities without assuming anything else about its shape.
+ */
+function readContractorId(entity: unknown): string | undefined {
+  if (typeof entity !== "object" || entity === null) return undefined
+  const { contractor_id } = entity as { contractor_id?: unknown }
+  return typeof contractor_id === "string" ? contractor_id : undefined
+}
+
+/**
  * AWS SES implementation of EmailService
  */
 class SESEmailService implements EmailService {
@@ -380,10 +391,12 @@ class SESEmailService implements EmailService {
         let contractorIdToCheck: string | null = contractorId ?? null
         if (contractorIdToCheck === null || contractorIdToCheck === undefined) {
           // Try to extract from notification data
-          if (data.order?.contractor_id) {
-            contractorIdToCheck = data.order.contractor_id
-          } else if (data.offer?.contractor_id) {
-            contractorIdToCheck = data.offer.contractor_id
+          const orderContractorId = readContractorId(data.order)
+          const offerContractorId = readContractorId(data.offer)
+          if (orderContractorId) {
+            contractorIdToCheck = orderContractorId
+          } else if (offerContractorId) {
+            contractorIdToCheck = offerContractorId
           }
         }
 

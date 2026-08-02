@@ -1,3 +1,4 @@
+import { Knex } from "knex"
 import { database, getKnex } from "../database/knex-db.js"
 import * as orderDb from "../../api/routes/v1/orders/database.js"
 import * as chatDb from "../../api/routes/v1/chats/database.js"
@@ -287,7 +288,7 @@ threadRouter.get("/user/:discord_id/listings", async (req, res) => {
   const shopIds = userShops.map((s: { shop_id: string }) => s.shop_id)
   const listings = await marketDb.searchMarket(
     await convertQuery({ page_size: "100" }),
-    (qb: any) =>
+    (qb: Knex.QueryBuilder) =>
       shopIds.length > 0
         ? qb.whereIn("shop_id", shopIds).andWhere("status", "!=", "archived")
         : qb.where("user_seller_id", "=", user.user_id).andWhere("status", "!=", "archived"),
@@ -343,7 +344,7 @@ threadRouter.get(
     const orgShopIds = orgShops.map((s: { shop_id: string }) => s.shop_id)
     const listings = await marketDb.searchMarket(
       await convertQuery({ page_size: "100" }),
-      (qb: any) =>
+      (qb: Knex.QueryBuilder) =>
         orgShopIds.length > 0
           ? qb.whereIn("shop_id", orgShopIds).andWhere("status", "!=", "archived")
           : qb.where("contractor_seller_id", "=", contractor.contractor_id).andWhere("status", "!=", "archived"),

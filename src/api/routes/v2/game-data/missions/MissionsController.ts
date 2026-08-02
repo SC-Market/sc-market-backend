@@ -22,8 +22,215 @@ import {
   BlueprintDetail,
   ReputationRank,
   GameEvent,
+  ItemReward,
+  ShipEncounter,
+  ShipWave,
+  NpcEncounter,
+  HaulingOrder,
+  EntitySpawn,
+  UserMissionRating,
 } from "./missions.types.js"
 import logger from "../../../../../logger/logger.js"
+import type { Knex } from "knex"
+
+/**
+ * Row shape of the `missions` table, as consumed by the mission serializers.
+ * Numeric/decimal columns come back from pg as strings.
+ */
+interface MissionRow {
+  mission_id: string
+  version_id: string
+  mission_code: string
+  mission_name: string
+  mission_description: string | null
+  category: string
+  mission_type: string | null
+  career_type: string | null
+  legal_status: Mission["legal_status"] | null
+  difficulty_level: number | null
+  star_system: string | null
+  planet_moon: string | null
+  location_detail: string | null
+  mission_giver_org: string | null
+  faction: string | null
+  credit_reward_min: number | null
+  credit_reward_max: number | null
+  reputation_reward: number | null
+  is_shareable: boolean | null
+  availability_type: string | null
+  associated_event: string | null
+  required_rank: number | null
+  required_reputation: number | null
+  is_chain_starter: boolean | null
+  is_chain_mission: boolean | null
+  is_unique_mission: boolean | null
+  prerequisite_missions: string[] | null
+  estimated_uec_per_hour: number | null
+  estimated_rep_per_hour: number | null
+  rank_index: number | null
+  reward_scope: string | null
+  reputation_reward_faction: string | null
+  min_standing: string | null
+  max_standing: string | null
+  can_reaccept_after_failing: boolean | null
+  can_reaccept_after_abandoning: boolean | null
+  abandoned_cooldown_time: number | null
+  personal_cooldown_time: number | null
+  deadline_seconds: number | null
+  available_in_prison: boolean | null
+  is_illegal: boolean | null
+  is_lawful: boolean | null
+  max_crimestat: number | null
+  difficulty_from_broker: number | null
+  time_to_complete: number | null
+  /** jsonb — string when the driver hands back raw text */
+  accept_locations: string[] | string | null
+  /** jsonb — string when the driver hands back raw text */
+  destinations: string[] | string | null
+  /** jsonb — string when the driver hands back raw text */
+  item_rewards: ItemReward[] | string | null
+  /** jsonb — string when the driver hands back raw text */
+  token_substitutions: Record<string, string> | string | null
+  community_difficulty_avg: string | null
+  community_difficulty_count: number | null
+  community_satisfaction_avg: string | null
+  community_satisfaction_count: number | null
+  data_source: string
+  is_verified: boolean | null
+  created_at: Date
+  updated_at: Date
+}
+
+/** Row shape returned by the mission search query */
+interface MissionSearchRow {
+  mission_id: string
+  mission_code: string
+  mission_name: string
+  category: string
+  career_type: string | null
+  legal_status: Mission["legal_status"] | null
+  difficulty_level: number | null
+  star_system: string | null
+  planet_moon: string | null
+  faction: string | null
+  mission_giver_org: string | null
+  credit_reward_min: number | null
+  credit_reward_max: number | null
+  community_difficulty_avg: string | null
+  community_satisfaction_avg: string | null
+  is_chain_starter: boolean | null
+  is_chain_mission: boolean | null
+  is_shareable: boolean | null
+  is_unique_mission: boolean | null
+  is_illegal: boolean | null
+  reputation_reward: number | null
+  reward_scope: string | null
+  reputation_reward_faction: string | null
+  associated_event: string | null
+  blueprint_reward_count: number
+  blueprint_reward_names: string[] | null
+  ship_encounter_count: number
+  hauling_orders: HaulingOrder[] | null
+}
+
+/** Row shape returned by the mission blueprint reward pool query */
+interface MissionBlueprintRewardRow {
+  reward_pool_id: number
+  reward_pool_size: number
+  selection_count: number
+  pool_name: string | null
+  pool_chance: string | null
+  drop_probability: string
+  is_guaranteed: boolean | null
+  blueprint_id: string
+  blueprint_code: string
+  blueprint_name: string
+  output_item_name: string
+  output_item_icon: string | null
+  rarity: string | null
+  tier: number | null
+  user_owns: boolean
+}
+
+/** Row shape returned by the mission blueprints detail query */
+interface MissionBlueprintDetailRow {
+  blueprint_id: string
+  blueprint_code: string
+  blueprint_name: string
+  blueprint_description: string | null
+  output_game_item_id: string
+  output_item_name: string
+  output_item_type: string | null
+  output_item_icon: string | null
+  output_quantity: number
+  item_category: string | null
+  item_subcategory: string | null
+  rarity: string | null
+  tier: number | null
+  crafting_station_type: string | null
+  crafting_time_seconds: number | null
+  required_skill_level: number | null
+  icon_url: string | null
+  drop_probability: string
+  is_guaranteed: boolean | null
+  ingredient_count: number
+}
+
+/** Row shape of the `mission_ship_encounters` table */
+interface ShipEncounterRow {
+  role: string
+  alignment: ShipEncounter["alignment"] | null
+  /** jsonb — string when the driver hands back raw text */
+  waves: ShipWaveJson[] | string | null
+  /** jsonb — string when the driver hands back raw text */
+  ship_pool: string[] | string | null
+}
+
+/**
+ * Raw wave object stored in `mission_ship_encounters.waves`. Extracted game
+ * data uses both camelCase and snake_case key spellings.
+ */
+interface ShipWaveJson {
+  name: string
+  minShips?: number
+  min_ships?: number
+  maxShips?: number
+  max_ships?: number
+  shipCount?: number
+  ship_count?: number
+}
+
+/** Row shape of the `mission_npc_encounters` and `mission_entity_spawns` tables */
+interface NamedCountRow {
+  name: string
+  count: number
+}
+
+/** Row shape of the `mission_hauling_orders` table */
+interface HaulingOrderRow {
+  resource_name: string
+  min_scu: string
+  max_scu: string
+}
+
+/** Row shape of the `reputation_ranks` table */
+interface ReputationRankRow {
+  scope_code: string
+  scope_display_name: string
+  standing_code: string
+  standing_display_name: string
+  threshold: number
+  ceiling: number
+  rank_index: number
+}
+
+/** Row shape returned by the game events aggregate query */
+interface GameEventRow {
+  event_id: string
+  event_code: string
+  event_name: string
+  mission_count: string | number
+}
 
 @Route("game-data/missions")
 @Tags("Game Data - Missions")
@@ -165,7 +372,7 @@ export class MissionsController extends BaseController {
           "m.mission_id",
           "ship_counts.mission_id",
         )
-        .select(
+        .select<MissionSearchRow[]>(
           "m.mission_id",
           "m.mission_code",
           "m.mission_name",
@@ -362,7 +569,7 @@ export class MissionsController extends BaseController {
       })
 
       // Transform results
-      const missions: MissionSearchResult[] = missionsResults.map((row: any) => ({
+      const missions: MissionSearchResult[] = missionsResults.map((row) => ({
         mission_id: row.mission_id,
         mission_code: row.mission_code,
         mission_name: row.mission_name,
@@ -463,7 +670,7 @@ export class MissionsController extends BaseController {
       // ========================================================================
       const missionRow = await knex("missions")
         .where("mission_id", mission_id)
-        .first()
+        .first<MissionRow | undefined>()
 
       if (!missionRow) {
         this.throwNotFound("Mission", mission_id)
@@ -547,7 +754,7 @@ export class MissionsController extends BaseController {
             this.andOn("ubi.user_id", "=", knex.raw("?", [user_id]))
           }
         })
-        .select(
+        .select<MissionBlueprintRewardRow[]>(
           "mbr.reward_pool_id",
           "mbr.reward_pool_size",
           "mbr.selection_count",
@@ -614,9 +821,9 @@ export class MissionsController extends BaseController {
       ) {
         const prereqRows = await knex("missions")
           .whereIn("mission_id", missionRow.prerequisite_missions)
-          .select()
+          .select<MissionRow[]>()
 
-        prerequisite_missions = prereqRows.map((row: any) => ({
+        prerequisite_missions = prereqRows.map((row) => ({
           mission_id: row.mission_id,
           version_id: row.version_id,
           mission_code: row.mission_code,
@@ -668,7 +875,7 @@ export class MissionsController extends BaseController {
       // Part 4: Get user-specific data (if user_id provided)
       // ========================================================================
       let user_completed: boolean | undefined
-      let user_rating: any | undefined
+      let user_rating: UserMissionRating | undefined
 
       if (user_id) {
         // Check if user completed this mission
@@ -705,27 +912,30 @@ export class MissionsController extends BaseController {
       // ========================================================================
       const shipEncounterRows = await knex("mission_ship_encounters")
         .where("mission_id", mission_id)
-      const ship_encounters = shipEncounterRows.map((r: any) => ({
+        .select<ShipEncounterRow[]>("*")
+      const ship_encounters: ShipEncounter[] = shipEncounterRows.map((r) => ({
         role: r.role,
         alignment: r.alignment || "neutral",
-        waves: (typeof r.waves === "string" ? JSON.parse(r.waves) : r.waves || []).map((w: any) => ({
+        waves: (typeof r.waves === "string" ? (JSON.parse(r.waves) as ShipWaveJson[]) : r.waves || []).map((w): ShipWave => ({
           name: w.name,
           min_ships: w.minShips ?? w.min_ships ?? w.shipCount ?? w.ship_count ?? 0,
           max_ships: w.maxShips ?? w.max_ships ?? w.shipCount ?? w.ship_count ?? 0,
         })),
-        ship_pool: r.ship_pool ? (typeof r.ship_pool === "string" ? JSON.parse(r.ship_pool) : r.ship_pool) : undefined,
+        ship_pool: r.ship_pool ? (typeof r.ship_pool === "string" ? (JSON.parse(r.ship_pool) as string[]) : r.ship_pool) : undefined,
       }))
 
       const npcEncounterRows = await knex("mission_npc_encounters")
         .where("mission_id", mission_id)
-      const npc_encounters = npcEncounterRows.map((r: any) => ({
+        .select<NamedCountRow[]>("*")
+      const npc_encounters: NpcEncounter[] = npcEncounterRows.map((r) => ({
         name: r.name,
         count: r.count,
       }))
 
       const haulingRows = await knex("mission_hauling_orders")
         .where("mission_id", mission_id)
-      const hauling_orders = haulingRows.map((r: any) => ({
+        .select<HaulingOrderRow[]>("*")
+      const hauling_orders: HaulingOrder[] = haulingRows.map((r) => ({
         resource_name: r.resource_name,
         min_scu: parseFloat(r.min_scu),
         max_scu: parseFloat(r.max_scu),
@@ -733,7 +943,8 @@ export class MissionsController extends BaseController {
 
       const entityRows = await knex("mission_entity_spawns")
         .where("mission_id", mission_id)
-      const entity_spawns = entityRows.map((r: any) => ({
+        .select<NamedCountRow[]>("*")
+      const entity_spawns: EntitySpawn[] = entityRows.map((r) => ({
         name: r.name,
         count: r.count,
       }))
@@ -823,7 +1034,7 @@ export class MissionsController extends BaseController {
           "b.blueprint_id",
           "ingredient_counts.blueprint_id",
         )
-        .select(
+        .select<MissionBlueprintDetailRow[]>(
           "b.blueprint_id",
           "b.blueprint_code",
           "b.blueprint_name",
@@ -848,7 +1059,7 @@ export class MissionsController extends BaseController {
         .where("mbr.mission_id", mission_id)
         .orderBy("b.blueprint_name", "asc")
 
-      const blueprints: BlueprintDetail[] = blueprintsQuery.map((row: any) => ({
+      const blueprints: BlueprintDetail[] = blueprintsQuery.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_code: row.blueprint_code,
         blueprint_name: row.blueprint_name,
@@ -928,6 +1139,9 @@ export class MissionsController extends BaseController {
     // Get user_id from authentication context
     // In production, this would come from the authenticated session
     // For now, we'll require it to be passed or use a placeholder
+    // NOTE: left as `any` — tsoa never assigns a `user` property to the
+    // controller instance, so this always evaluates to undefined and the
+    // endpoint unconditionally 401s. Typing it away would change behaviour.
     const user_id = (this as any).user?.user_id
 
     if (!user_id) {
@@ -1087,6 +1301,9 @@ export class MissionsController extends BaseController {
     }
 
     // Get user_id from authentication context
+    // NOTE: left as `any` — tsoa never assigns a `user` property to the
+    // controller instance, so this always evaluates to undefined and the
+    // endpoint unconditionally 401s. Typing it away would change behaviour.
     const user_id = (this as any).user?.user_id
 
     if (!user_id) {
@@ -1299,7 +1516,7 @@ export class MissionsController extends BaseController {
   /**
    * Helper method to transform database row to Mission type
    */
-  private transformMissionRow(row: any): Mission {
+  private transformMissionRow(row: MissionRow): Mission {
     return {
       mission_id: row.mission_id,
       version_id: row.version_id,
@@ -1361,19 +1578,19 @@ export class MissionsController extends BaseController {
 
     // Get all unique scopes
     const scopeRows = await knex("reputation_ranks")
-      .distinct("scope_code", "scope_display_name")
+      .distinct<Pick<ReputationRankRow, "scope_code" | "scope_display_name">[]>("scope_code", "scope_display_name")
       .orderBy("scope_display_name")
 
-    const scopes = scopeRows.map((r: any) => r.scope_code)
+    const scopes = scopeRows.map((r) => r.scope_code)
 
     // Get ranks for the requested scope (or all if not specified)
-    let query = knex("reputation_ranks").orderBy("scope_code").orderBy("rank_index")
+    let query = knex("reputation_ranks").orderBy("scope_code").orderBy("rank_index").select<ReputationRankRow[]>("*")
     if (scope_code) {
       query = query.where("scope_code", scope_code)
     }
 
     const rows = await query
-    const ranks: ReputationRank[] = rows.map((r: any) => ({
+    const ranks: ReputationRank[] = rows.map((r) => ({
       scope_code: r.scope_code,
       scope_display_name: r.scope_display_name,
       standing_code: r.standing_code,
@@ -1386,10 +1603,13 @@ export class MissionsController extends BaseController {
     return { ranks, scopes, display_name: ranks[0]?.scope_display_name || scope_code || "" }
   }
 
-  private async resolveStandingName(knex: any, code: string | null | undefined): Promise<string | undefined> {
+  private async resolveStandingName(knex: Knex, code: string | null | undefined): Promise<string | undefined> {
     if (!code) return undefined
     try {
-      const row = await knex("reputation_ranks").where("standing_code", code).select("standing_display_name").first()
+      const row = await knex("reputation_ranks")
+        .where("standing_code", code)
+        .select<Pick<ReputationRankRow, "standing_display_name">[]>("standing_display_name")
+        .first()
       return row?.standing_display_name || code
     } catch {
       return code
@@ -1406,15 +1626,15 @@ export class MissionsController extends BaseController {
     const rows = await knex("game_events as ge")
       .join("mission_events as me", "ge.event_id", "me.event_id")
       .select("ge.event_id", "ge.event_code", "ge.event_name")
-      .count("me.mission_id as mission_count")
+      .count<GameEventRow[]>("me.mission_id as mission_count")
       .groupBy("ge.event_id", "ge.event_code", "ge.event_name")
       .orderBy("ge.event_name")
     return {
-      events: rows.map((r: any) => ({
+      events: rows.map((r) => ({
         event_id: r.event_id,
         event_code: r.event_code,
         event_name: r.event_name,
-        mission_count: parseInt(r.mission_count) || 0,
+        mission_count: parseInt(String(r.mission_count), 10) || 0,
       })),
     }
   }

@@ -21,8 +21,69 @@ import {
   ShoppingListResponse,
   Wishlist,
   WishlistItemWithDetails,
+  AcquisitionMode,
 } from "./wishlists.types.js"
 import logger from "../../../../../logger/logger.js"
+
+/** Row shape returned by the wishlists list query (with aggregate counts) */
+interface WishlistListRow {
+  wishlist_id: string
+  user_id: string
+  wishlist_name: string
+  wishlist_description: string | null
+  is_public: boolean
+  share_token: string | null
+  organization_id: string | null
+  is_collaborative: boolean
+  created_at: Date
+  updated_at: Date
+  item_count: number
+  completed_items: number | null
+}
+
+/** Row shape returned by the wishlist items detail query */
+interface WishlistItemRow {
+  item_id: string
+  wishlist_id: string
+  game_item_id: string
+  desired_quantity: number
+  desired_quality_tier: number | null
+  blueprint_id: string | null
+  /** Not part of the detail query's select list — always absent at runtime */
+  acquisition_mode?: AcquisitionMode | null
+  priority: number
+  notes: string | null
+  is_acquired: boolean
+  acquired_quantity: number
+  created_at: Date
+  updated_at: Date
+  game_item_name: string
+  game_item_icon: string | null
+  game_item_type: string | null
+  blueprint_name: string | null
+}
+
+/** Columns writable on the `wishlists` table by the update endpoint */
+interface WishlistUpdate {
+  updated_at: ReturnType<ReturnType<typeof getKnex>["fn"]["now"]>
+  wishlist_name?: string
+  wishlist_description?: string | null
+  is_public?: boolean
+  share_token?: string
+  is_collaborative?: boolean
+}
+
+/** Columns writable on the `wishlist_items` table by the update endpoint */
+interface WishlistItemUpdate {
+  updated_at: ReturnType<ReturnType<typeof getKnex>["fn"]["now"]>
+  desired_quantity?: number
+  desired_quality_tier?: number
+  priority?: number
+  notes?: string | null
+  is_acquired?: boolean
+  acquired_quantity?: number
+  acquisition_mode?: AcquisitionMode
+}
 
 @Route("game-data/wishlists")
 @Tags("Game Data - Wishlists")
@@ -68,7 +129,7 @@ export class WishlistsController extends BaseController {
             })
         })
         .groupBy("w.wishlist_id")
-        .select(
+        .select<WishlistListRow[]>(
           "w.wishlist_id",
           "w.user_id",
           "w.wishlist_name",
@@ -84,7 +145,7 @@ export class WishlistsController extends BaseController {
         )
         .orderBy("w.updated_at", "desc")
 
-      const wishlistsWithProgress = wishlists.map((w: any) => ({
+      const wishlistsWithProgress = wishlists.map((w) => ({
         wishlist_id: w.wishlist_id,
         user_id: w.user_id,
         wishlist_name: w.wishlist_name,
@@ -251,7 +312,7 @@ export class WishlistsController extends BaseController {
         .join("game_items as gi", "wi.game_item_id", "gi.id")
         .leftJoin("blueprints as b", "wi.blueprint_id", "b.blueprint_id")
         .where("wi.wishlist_id", wishlist_id)
-        .select(
+        .select<WishlistItemRow[]>(
           "wi.item_id",
           "wi.wishlist_id",
           "wi.game_item_id",
@@ -272,7 +333,7 @@ export class WishlistsController extends BaseController {
         .orderBy("wi.priority", "desc")
         .orderBy("wi.created_at", "asc")
 
-      const itemsWithDetails: WishlistItemWithDetails[] = items.map((item: any) => ({
+      const itemsWithDetails: WishlistItemWithDetails[] = items.map((item) => ({
         item_id: item.item_id,
         wishlist_id: item.wishlist_id,
         game_item_id: item.game_item_id,
@@ -296,7 +357,7 @@ export class WishlistsController extends BaseController {
 
       // Calculate statistics
       const total_items = items.length
-      const completed_items = items.filter((i: any) => i.is_acquired).length
+      const completed_items = items.filter((i) => i.is_acquired).length
       const progress_percentage =
         total_items > 0 ? Math.round((completed_items / total_items) * 100) : 0
 
@@ -383,7 +444,7 @@ export class WishlistsController extends BaseController {
       }
 
       // Build update object
-      const updates: any = {
+      const updates: WishlistUpdate = {
         updated_at: knex.fn.now(),
       }
 
@@ -813,7 +874,7 @@ export class WishlistsController extends BaseController {
       }
 
       // Build update object
-      const updates: any = {
+      const updates: WishlistItemUpdate = {
         updated_at: knex.fn.now(),
       }
 

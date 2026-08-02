@@ -2,6 +2,21 @@ import { Knex } from "knex"
 import logger from "../../logger/logger.js"
 
 /**
+ * Bindings as Knex reports them on its query events / accepts in `knex.raw`.
+ */
+type QueryBindings = readonly Knex.RawBinding[]
+
+/**
+ * The query object Knex emits on the `query` / `query-response` / `query-error`
+ * events. `__knexQueryUid` is Knex's own correlation id.
+ */
+interface MonitoredQuery {
+  sql: string
+  bindings?: QueryBindings
+  __knexQueryUid?: string
+}
+
+/**
  * Query performance monitoring configuration
  */
 const SLOW_QUERY_THRESHOLD_MS = 2000 // 2 seconds as per requirement 7.5
@@ -11,7 +26,7 @@ const SLOW_QUERY_THRESHOLD_MS = 2000 // 2 seconds as per requirement 7.5
  */
 export interface QueryMetrics {
   sql: string
-  bindings?: any[]
+  bindings?: QueryBindings
   duration: number
   timestamp: Date
 }
@@ -29,22 +44,19 @@ export function enableQueryMonitoring(knex: Knex): void {
   knex
     .on(
       "query",
-      (query: { sql: string; bindings?: any[]; __knexQueryUid?: string }) => {
+      (query: MonitoredQuery) => {
         const queryId = query.__knexQueryUid || generateQueryId()
         queryStartTimes.set(queryId, Date.now())
 
         // Store query ID for response handler
         if (query.__knexQueryUid === undefined) {
-          ;(query as any).__knexQueryUid = queryId
+          query.__knexQueryUid = queryId
         }
       },
     )
     .on(
       "query-response",
-      (
-        response: any,
-        query: { sql: string; bindings?: any[]; __knexQueryUid?: string },
-      ) => {
+      (_response: unknown, query: MonitoredQuery) => {
         const queryId = query.__knexQueryUid
         if (!queryId) return
 
@@ -72,10 +84,7 @@ export function enableQueryMonitoring(knex: Knex): void {
     )
     .on(
       "query-error",
-      (
-        error: Error,
-        query: { sql: string; bindings?: any[]; __knexQueryUid?: string },
-      ) => {
+      (error: Error, query: MonitoredQuery) => {
         const queryId = query.__knexQueryUid
         if (queryId) {
           queryStartTimes.delete(queryId)
@@ -100,13 +109,15 @@ export function enableQueryMonitoring(knex: Knex): void {
 export async function analyzeQueryPlan(
   knex: Knex,
   sql: string,
-  bindings?: any[],
+  bindings?: QueryBindings,
 ): Promise<void> {
   try {
     // Use EXPLAIN ANALYZE to get actual execution statistics
     const explainQuery = `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ${sql}`
 
-    const result = await knex.raw(explainQuery, bindings || [])
+    const result = await knex.raw<{
+      rows: { "QUERY PLAN": ExplainPlanNode[] }[]
+    }>(explainQuery, bindings || [])
     const plan = result.rows[0]["QUERY PLAN"]
 
     // Log the execution plan
@@ -132,15 +143,31 @@ export async function analyzeQueryPlan(
 }
 
 /**
+ * A node in the tree returned by `EXPLAIN (FORMAT JSON)`. The top-level array
+ * holds one entry per statement, each wrapping its root node under `Plan`;
+ * nested nodes hang off `Plans`. Only the members this analysis reads are
+ * described.
+ */
+interface ExplainPlanNode {
+  "Node Type"?: string
+  "Plan Rows"?: number
+  "Join Type"?: string
+  "Actual Total Time"?: number
+  "Total Cost"?: number
+  Plan?: ExplainPlanNode
+  Plans?: ExplainPlanNode[]
+}
+
+/**
  * Identify common performance issues from query execution plan
  *
  * @param plan - PostgreSQL query execution plan
  * @returns Array of identified issues
  */
-function identifyPerformanceIssues(plan: any[]): string[] {
+function identifyPerformanceIssues(plan: ExplainPlanNode[]): string[] {
   const issues: string[] = []
 
-  function traverse(node: any) {
+  function traverse(node: ExplainPlanNode | undefined) {
     if (!node) return
 
     // Check for sequential scans on large tables
@@ -201,7 +228,7 @@ export class QueryMetricsCollector {
 
   recordQuery(
     sql: string,
-    bindings: any[] | undefined,
+    bindings: QueryBindings | undefined,
     duration: number,
   ): void {
     this.metrics.push({

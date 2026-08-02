@@ -18,6 +18,22 @@ import {
 } from "./versions.types.js"
 import logger from "../../../../../logger/logger.js"
 
+/**
+ * Row shape of the `game_versions` table. `version_type` is constrained by
+ * `chk_game_versions_type` to LIVE/PTU/EPTU.
+ */
+interface GameVersionRow {
+  version_id: string
+  version_type: GameVersion["version_type"]
+  version_number: string
+  build_number: string | null
+  release_date: Date | null
+  is_active: boolean
+  last_data_update: Date | null
+  created_at: Date
+  updated_at: Date
+}
+
 @Route("game-data/versions")
 @Tags("Game Data - Versions")
 export class VersionsController extends BaseController {
@@ -45,7 +61,7 @@ export class VersionsController extends BaseController {
 
     try {
       const versionsQuery = await knex("game_versions")
-        .select(
+        .select<GameVersionRow[]>(
           "version_id",
           "version_type",
           "version_number",
@@ -59,7 +75,7 @@ export class VersionsController extends BaseController {
         .orderBy("version_type", "asc")
         .orderBy("created_at", "desc")
 
-      const versions: GameVersion[] = versionsQuery.map((row: any) => ({
+      const versions: GameVersion[] = versionsQuery.map((row) => ({
         version_id: row.version_id,
         version_type: row.version_type,
         version_number: row.version_number,
@@ -114,7 +130,7 @@ export class VersionsController extends BaseController {
     try {
       // Get active version for each type
       const activeVersionsQuery = await knex("game_versions")
-        .select(
+        .select<GameVersionRow[]>(
           "version_id",
           "version_type",
           "version_number",
@@ -195,6 +211,9 @@ export class VersionsController extends BaseController {
 
     // Get user_id from authentication context
     // In production, this would come from the authenticated session
+    // NOTE: left as `any` — tsoa never assigns a `user` property to the
+    // controller instance, so this always evaluates to undefined and the
+    // endpoint unconditionally 401s. Typing it away would change behaviour.
     const user_id = (this as any).user?.user_id
 
     if (!user_id) {
@@ -206,7 +225,7 @@ export class VersionsController extends BaseController {
     try {
       // Verify version exists
       const version = await knex("game_versions")
-        .select(
+        .select<GameVersionRow>(
           "version_id",
           "version_type",
           "version_number",

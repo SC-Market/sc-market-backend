@@ -6,7 +6,10 @@ import {
   verifiedUser,
 } from "./auth.js"
 import { clearMockData } from "../../test-utils/mockDatabase.js"
-import { createTestUser } from "../../test-utils/testFixturesMock.js"
+import {
+  createTestUser,
+  type TestUser,
+} from "../../test-utils/testFixturesMock.js"
 
 /**
  * These tests verify the simplified auth middleware.
@@ -15,19 +18,32 @@ import { createTestUser } from "../../test-utils/testFixturesMock.js"
  * These middleware functions just check req.user exists and meets conditions.
  */
 
-function mockReq(user?: any): Request {
+/**
+ * Builds the request these middlewares see. Typed against the TestUser fixture
+ * rather than the express `User`: TestUser declares `balance: number` while
+ * `User` declares `balance: string`, so the two are not assignable. The
+ * middleware under test only reads `banned`, `role` and `rsi_confirmed`, all of
+ * which TestUser carries.
+ */
+function mockReq(user?: TestUser): Request {
   return { user, headers: {}, isAuthenticated: () => !!user } as unknown as Request
 }
 
+/** Body the auth middleware writes via res.json() on rejection. */
+type ErrorBody = { error?: string }
+
 function mockRes() {
   let _status = 0
-  let _data: any = null
+  let _data: ErrorBody | null = null
   const res = {
     status: (code: number) => { _status = code; return res },
-    json: (data: any) => { _data = data; return res },
+    json: (data: ErrorBody) => { _data = data; return res },
     get statusCode() { return _status },
     get responseData() { return _data },
-  } as unknown as Response & { statusCode: number; responseData: any }
+  } as unknown as Response & {
+    statusCode: number
+    responseData: ErrorBody | null
+  }
   return res
 }
 

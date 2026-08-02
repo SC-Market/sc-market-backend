@@ -6,7 +6,17 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
+import type { User } from "../../../v1/api-models.js"
 import { VersionsController } from "./VersionsController.js"
+
+/**
+ * Controller under test with the `user` slot these tests write to exposed.
+ * BaseController itself has no `user` property, so this describes the shape the
+ * tests actually assign rather than widening the controller to `any`.
+ */
+type ControllerWithUser = VersionsController & {
+  user?: Partial<User>
+}
 
 describe("VersionsController", () => {
   let controller: VersionsController
@@ -206,7 +216,7 @@ describe("VersionsController", () => {
   describe("selectVersion", () => {
     it("should successfully select a valid version", async () => {
       // Mock authentication context
-      ;(controller as any).user = { user_id: "test-user-123" }
+      ;(controller as ControllerWithUser).user = { user_id: "test-user-123" }
 
       const result = await controller.selectVersion({
         version_id: testLiveVersionId,
@@ -220,7 +230,7 @@ describe("VersionsController", () => {
     })
 
     it("should return complete version details", async () => {
-      ;(controller as any).user = { user_id: "test-user-123" }
+      ;(controller as ControllerWithUser).user = { user_id: "test-user-123" }
 
       const result = await controller.selectVersion({
         version_id: testPtuVersionId,
@@ -234,7 +244,7 @@ describe("VersionsController", () => {
     })
 
     it("should throw error for non-existent version", async () => {
-      ;(controller as any).user = { user_id: "test-user-123" }
+      ;(controller as ControllerWithUser).user = { user_id: "test-user-123" }
 
       const fakeVersionId = "00000000-0000-0000-0000-000000000000"
 
@@ -246,7 +256,7 @@ describe("VersionsController", () => {
     })
 
     it("should throw validation error for missing version_id", async () => {
-      ;(controller as any).user = { user_id: "test-user-123" }
+      ;(controller as ControllerWithUser).user = { user_id: "test-user-123" }
 
       await expect(
         controller.selectVersion({
@@ -257,7 +267,7 @@ describe("VersionsController", () => {
 
     it("should throw unauthorized error when user not authenticated", async () => {
       // Clear authentication context
-      ;(controller as any).user = undefined
+      ;(controller as ControllerWithUser).user = undefined
 
       await expect(
         controller.selectVersion({
@@ -267,7 +277,7 @@ describe("VersionsController", () => {
     })
 
     it("should allow selecting inactive version", async () => {
-      ;(controller as any).user = { user_id: "test-user-123" }
+      ;(controller as ControllerWithUser).user = { user_id: "test-user-123" }
 
       const knex = getKnex()
       const inactiveVersion = await knex("game_versions")
@@ -283,7 +293,7 @@ describe("VersionsController", () => {
     })
 
     it("should work for all version types", async () => {
-      ;(controller as any).user = { user_id: "test-user-123" }
+      ;(controller as ControllerWithUser).user = { user_id: "test-user-123" }
 
       // Test LIVE
       const liveResult = await controller.selectVersion({

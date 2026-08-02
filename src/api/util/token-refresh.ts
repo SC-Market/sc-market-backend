@@ -36,10 +36,10 @@ export async function refreshDiscordToken(
         "discord",
         refreshToken,
         (
-          err: any,
+          err: Error | { statusCode: number; data?: unknown },
           access_token?: string,
           refresh_token?: string,
-          results?: any,
+          results?: { expires_in?: number },
         ) => {
           if (err) {
             reject(

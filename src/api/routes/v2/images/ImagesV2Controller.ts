@@ -16,6 +16,15 @@ import { ImageModerationError } from "../../../../clients/image-lambda/image-lam
 import logger from "../../../../logger/logger.js"
 
 /**
+ * Narrow an unknown thrown value to something carrying a string `message`.
+ * The CDN client rejects with plain objects as well as Error instances, so
+ * `instanceof Error` alone would miss those.
+ */
+function hasMessage(value: unknown): value is { message?: string } {
+  return typeof value === "object" && value !== null && "message" in value
+}
+
+/**
  * Response for a single image upload
  */
 export interface ImageUploadResponse {
@@ -49,7 +58,7 @@ export class ImagesV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
 
-    const file = (request as any).file as Express.Multer.File | undefined
+    const file = request.file
 
     if (!file) {
       this.throwValidationError("No image provided", [
@@ -87,7 +96,7 @@ export class ImagesV2Controller extends BaseController {
         resource_id: resource.resource_id,
         url,
       }
-    } catch (uploadError: any) {
+    } catch (uploadError: unknown) {
       if (uploadError instanceof ImageModerationError) {
         this.throwValidationError("Image failed moderation", [
           {
@@ -99,7 +108,9 @@ export class ImagesV2Controller extends BaseController {
         ])
       }
 
-      const msg = uploadError?.message || "Image upload failed"
+      const msg = hasMessage(uploadError)
+        ? uploadError.message || "Image upload failed"
+        : "Image upload failed"
 
       if (msg.includes("Unsupported") || msg.includes("UNSUPPORTED")) {
         this.throwValidationError("Unsupported image format", [

@@ -9,6 +9,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
+import type { Knex } from "knex"
 import {
   clearMockData,
   setupMockTableDataGeneric,
@@ -85,7 +86,11 @@ vi.mock("../../services/stock-lot/stock-lot.service.js", () => ({
 }))
 
 vi.mock("../database/transaction.js", () => ({
-  withTransaction: vi.fn(async (cb: any) => cb(vi.fn())),
+  withTransaction: vi.fn(
+    async <T,>(cb: (trx: Knex.Transaction) => Promise<T>) =>
+      // The mocked callback never touches the trx, so a bare stub suffices.
+      cb(vi.fn() as unknown as Knex.Transaction),
+  ),
 }))
 
 vi.mock("../../services/market-v2/variant.service.js", () => ({

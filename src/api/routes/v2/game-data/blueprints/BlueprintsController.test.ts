@@ -6,7 +6,17 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
+import type { User } from "../../../v1/api-models.js"
 import { BlueprintsController } from "./BlueprintsController.js"
+
+/**
+ * Controller under test with the `user` slot these tests write to exposed.
+ * BaseController itself has no `user` property, so this describes the shape the
+ * tests actually assign rather than widening the controller to `any`.
+ */
+type ControllerWithUser = BlueprintsController & {
+  user?: Partial<User>
+}
 
 describe("BlueprintsController", () => {
   let controller: BlueprintsController
@@ -519,7 +529,7 @@ describe("BlueprintsController", () => {
 
     it("should add blueprint to user inventory", async () => {
       // Mock authentication context
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.addBlueprintToInventory(testBlueprintId, {
         acquisition_method: "mission_reward",
@@ -546,7 +556,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should update existing inventory record", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Add blueprint first time
       await controller.addBlueprintToInventory(testBlueprintId, {
@@ -576,7 +586,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should throw error for non-existent blueprint", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.addBlueprintToInventory("00000000-0000-0000-0000-000000000000", {}),
@@ -584,19 +594,19 @@ describe("BlueprintsController", () => {
     })
 
     it("should throw error when user not authenticated", async () => {
-      ;(controller as any).user = undefined
+      ;(controller as ControllerWithUser).user = undefined
 
       await expect(controller.addBlueprintToInventory(testBlueprintId, {})).rejects.toThrow()
     })
 
     it("should throw error for missing blueprint_id", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(controller.addBlueprintToInventory("", {})).rejects.toThrow()
     })
 
     it("should handle minimal acquisition details", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.addBlueprintToInventory(testBlueprintId, {})
 
@@ -641,7 +651,7 @@ describe("BlueprintsController", () => {
 
     it("should remove blueprint from user inventory", async () => {
       const knex = getKnex()
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Add blueprint first
       await controller.addBlueprintToInventory(testBlueprintId, {})
@@ -663,7 +673,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should handle removing non-existent inventory record", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Remove blueprint that was never added
       const result = await controller.removeBlueprintFromInventory(testBlueprintId)
@@ -672,7 +682,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should throw error for non-existent blueprint", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(
         controller.removeBlueprintFromInventory("00000000-0000-0000-0000-000000000000"),
@@ -680,20 +690,20 @@ describe("BlueprintsController", () => {
     })
 
     it("should throw error when user not authenticated", async () => {
-      ;(controller as any).user = undefined
+      ;(controller as ControllerWithUser).user = undefined
 
       await expect(controller.removeBlueprintFromInventory(testBlueprintId)).rejects.toThrow()
     })
 
     it("should throw error for missing blueprint_id", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       await expect(controller.removeBlueprintFromInventory("")).rejects.toThrow()
     })
 
     it("should preserve acquisition history when removing", async () => {
       const knex = getKnex()
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Add blueprint with details
       await controller.addBlueprintToInventory(testBlueprintId, {
@@ -807,7 +817,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should return user's blueprint inventory", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined, // item_category
@@ -828,7 +838,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should include acquisition details", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined,
@@ -836,7 +846,7 @@ describe("BlueprintsController", () => {
         testVersionId,
       )
 
-      const blueprint = result.blueprints.find((b: any) => b.blueprint_id === testBlueprintId)
+      const blueprint = result.blueprints.find((b) => b.blueprint_id === testBlueprintId)
       expect(blueprint).toBeDefined()
       expect(blueprint?.acquisition_method).toBe("mission_reward")
       expect(blueprint?.acquisition_location).toBe("Stanton")
@@ -844,7 +854,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should include statistics", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined,
@@ -861,7 +871,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should filter by category", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         "Weapons", // item_category
@@ -870,13 +880,13 @@ describe("BlueprintsController", () => {
       )
 
       expect(result.blueprints.length).toBeGreaterThanOrEqual(2)
-      result.blueprints.forEach((bp: any) => {
+      result.blueprints.forEach((bp) => {
         expect(bp.item_category).toBe("Weapons")
       })
     })
 
     it("should filter by rarity", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined,
@@ -885,13 +895,13 @@ describe("BlueprintsController", () => {
       )
 
       expect(result.blueprints.length).toBeGreaterThanOrEqual(1)
-      result.blueprints.forEach((bp: any) => {
+      result.blueprints.forEach((bp) => {
         expect(bp.rarity).toBe("Epic")
       })
     })
 
     it("should sort by acquisition_date descending", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined,
@@ -911,7 +921,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should sort by blueprint_name ascending", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined,
@@ -933,7 +943,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should handle pagination correctly", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory(
         undefined,
@@ -951,13 +961,13 @@ describe("BlueprintsController", () => {
     })
 
     it("should throw error when user not authenticated", async () => {
-      ;(controller as any).user = undefined
+      ;(controller as ControllerWithUser).user = undefined
 
       await expect(controller.getUserBlueprintInventory()).rejects.toThrow()
     })
 
     it("should use active LIVE version when version_id not provided", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       const result = await controller.getUserBlueprintInventory()
 
@@ -967,7 +977,7 @@ describe("BlueprintsController", () => {
 
     it("should only include owned blueprints", async () => {
       const knex = getKnex()
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Add a not-owned blueprint
       const [notOwnedBlueprint] = await knex("blueprints")
@@ -994,7 +1004,7 @@ describe("BlueprintsController", () => {
       )
 
       const notOwned = result.blueprints.find(
-        (b: any) => b.blueprint_id === notOwnedBlueprint.blueprint_id,
+        (b) => b.blueprint_id === notOwnedBlueprint.blueprint_id,
       )
       expect(notOwned).toBeUndefined()
 
@@ -1006,14 +1016,16 @@ describe("BlueprintsController", () => {
     })
 
     it("should validate sort parameters", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Invalid sort_by should default to acquisition_date
       const result = await controller.getUserBlueprintInventory(
         undefined,
         undefined,
         testVersionId,
-        "invalid_field" as any,
+        // Not a valid sort_by value — deliberately invalid to check the
+        // controller falls back to acquisition_date.
+        "invalid_field" as unknown as "acquisition_date",
         "desc",
       )
 
@@ -1022,7 +1034,7 @@ describe("BlueprintsController", () => {
     })
 
     it("should validate pagination parameters", async () => {
-      ;(controller as any).user = { user_id: testUserId }
+      ;(controller as ControllerWithUser).user = { user_id: testUserId }
 
       // Negative page should default to 1
       const result = await controller.getUserBlueprintInventory(

@@ -3,6 +3,7 @@ import {
   SendMessageCommand,
   ReceiveMessageCommand,
   DeleteMessageCommand,
+  type SendMessageCommandOutput,
 } from "@aws-sdk/client-sqs"
 import { STSClient, AssumeRoleCommand } from "@aws-sdk/client-sts"
 import { env } from "../../config/env.js"
@@ -63,7 +64,10 @@ async function getSQSClient(): Promise<SQSClient> {
 // Keep the old export name for backward compatibility
 export const createSQSClient = getSQSClient
 
-export async function sendMessage(queueUrl: string, messageBody: any) {
+export async function sendMessage(
+  queueUrl: string,
+  messageBody: unknown,
+): Promise<SendMessageCommandOutput> {
   try {
     const client = await getSQSClient()
     return client.send(new SendMessageCommand({

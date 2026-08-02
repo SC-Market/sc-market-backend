@@ -1553,7 +1553,7 @@ class DatabaseNotificationService implements NotificationService {
             shop.owner_contractor_id,
             { manage_market: true },
           )
-          recipients.push(...admins.map((u: any) => u.user_id))
+          recipients.push(...admins.map((u) => u.user_id))
         } else if (shop?.owner_user_id) {
           recipients.push(shop.owner_user_id)
         }

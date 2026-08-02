@@ -173,7 +173,7 @@ async function sendWatchlistNotification(
   // 3. Email notification (uses generic sendNotificationEmail if available)
   try {
     if ('sendNotificationEmail' in emailService) {
-      await (emailService as any).sendNotificationEmail(
+      await emailService.sendNotificationEmail(
         match.user_id,
         "watchlist_alert",
         {

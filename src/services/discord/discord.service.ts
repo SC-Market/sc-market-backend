@@ -85,8 +85,8 @@ export interface DiscordService {
   // Channel messages with components
   postChannelMessage(
     channelId: string,
-    body: RESTPostAPIChannelMessageJSONBody & { components?: any[] },
-  ): Promise<any>
+    body: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<unknown>
 }
 
 /**
@@ -482,8 +482,8 @@ class RestDiscordService implements DiscordService {
    */
   async postChannelMessage(
     channelId: string,
-    body: RESTPostAPIChannelMessageJSONBody & { components?: any[] },
-  ): Promise<any> {
+    body: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<unknown> {
     try {
       const result = await this.rest.post(Routes.channelMessages(channelId), {
         body,

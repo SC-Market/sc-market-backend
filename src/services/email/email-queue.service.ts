@@ -24,7 +24,7 @@ export type EmailQueueMessageType =
  */
 interface BaseEmailQueueMessage {
   type: EmailQueueMessageType
-  payload: any
+  payload: unknown
   metadata: {
     created_at: string
     priority?: "high" | "normal" | "low"

@@ -202,9 +202,10 @@ describe("v2 token scope enforcement", () => {
       try {
         enforceTokenScopes(token(["market:read"]), "POST", "/listings")
         throw new Error("expected to throw")
-      } catch (e: any) {
-        expect(e.status).toBe(403)
-        expect(e.message).toMatch(/insufficient/i)
+      } catch (e) {
+        const err = e as Error & { status?: number }
+        expect(err.status).toBe(403)
+        expect(err.message).toMatch(/insufficient/i)
       }
     })
 
@@ -212,8 +213,9 @@ describe("v2 token scope enforcement", () => {
       try {
         enforceTokenScopes(token(["full"]), "GET", "/admin/feature-flags")
         throw new Error("expected to throw")
-      } catch (e: any) {
-        expect(e.status).toBe(403)
+      } catch (e) {
+        const err = e as Error & { status?: number }
+        expect(err.status).toBe(403)
       }
     })
 

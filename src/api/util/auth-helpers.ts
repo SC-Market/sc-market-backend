@@ -104,9 +104,10 @@ export function isCitizenIDVerified(profile: CitizenIDProfile): boolean {
  * Helper function to validate locale and fallback to 'en' if not supported
  */
 export function getValidLocale(requestedLocale: string): string {
-  return SUPPORTED_LOCALES.includes(requestedLocale as any)
-    ? requestedLocale
-    : "en"
+  // SUPPORTED_LOCALES is a readonly literal tuple; widen it so an arbitrary
+  // string can be tested for membership.
+  const supported: readonly string[] = SUPPORTED_LOCALES
+  return supported.includes(requestedLocale) ? requestedLocale : "en"
 }
 
 /**

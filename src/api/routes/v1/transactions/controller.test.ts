@@ -12,6 +12,25 @@ import { createTestUser } from "../../../../test-utils/testFixturesMock.js"
 import { createTestUserWithAuth } from "../../../../test-utils/testAuthMock.js"
 import { User } from "../api-models.js"
 
+/**
+ * Body shape the transaction controller writes via res.json() — either a
+ * success envelope or an error. Assertions below use toHaveProperty, so this
+ * only needs to cover the fields the tests read.
+ */
+type JsonBody = {
+  result?: string
+  error?: string
+  transaction_id?: string
+  amount?: number
+}
+
+/**
+ * Captures what the controller passed to res.json(). Held in an object rather
+ * than a bare `let` so reads after the awaited handler call are not narrowed to
+ * the initial null by control-flow analysis.
+ */
+type Captured = { statusCode: number; body: JsonBody | null }
+
 describe.skip("Transaction Controller", () => {
   beforeEach(() => {
     clearMockData()
@@ -44,16 +63,15 @@ describe.skip("Transaction Controller", () => {
         },
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
@@ -62,20 +80,20 @@ describe.skip("Transaction Controller", () => {
 
       // Controller calls res.json() directly, not res.status().json()
       // So statusCode might be 0, but responseData should be set
-      if (responseData?.error) {
+      if (captured.body?.error) {
         // If there's an error, log it to help debug
-        console.log("Transaction creation error:", responseData.error)
+        console.log("Transaction creation error:", captured.body.error)
       }
-      expect(responseData).toBeDefined()
-      expect(responseData).toHaveProperty("result", "Success")
+      expect(captured.body).toBeDefined()
+      expect(captured.body).toHaveProperty("result", "Success")
 
       // Verify balances were updated in mock data
       const accounts = getMockTableData("accounts")
       const updatedSender = accounts.find(
-        (a: any) => a.user_id === sender.user_id,
+        (a) => a.user_id === sender.user_id,
       )
       const updatedRecipient = accounts.find(
-        (a: any) => a.user_id === recipient.user_id,
+        (a) => a.user_id === recipient.user_id,
       )
 
       expect(updatedSender).toBeDefined()
@@ -104,24 +122,23 @@ describe.skip("Transaction Controller", () => {
         },
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
 
       await transaction_post_create(req, res, () => {})
 
-      expect(statusCode).toBe(400)
-      expect(responseData).toHaveProperty("error", "Insufficient funds")
+      expect(captured.statusCode).toBe(400)
+      expect(captured.body).toHaveProperty("error", "Insufficient funds")
     })
 
     it("should reject transaction to self", async () => {
@@ -140,24 +157,23 @@ describe.skip("Transaction Controller", () => {
         },
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
 
       await transaction_post_create(req, res, () => {})
 
-      expect(statusCode).toBe(400)
-      expect(responseData).toHaveProperty(
+      expect(captured.statusCode).toBe(400)
+      expect(captured.body).toHaveProperty(
         "error",
         "Cannot send money to yourself",
       )
@@ -181,24 +197,23 @@ describe.skip("Transaction Controller", () => {
         },
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
 
       await transaction_post_create(req, res, () => {})
 
-      expect(statusCode).toBe(400)
-      expect(responseData).toHaveProperty("error", "Invalid transaction amount")
+      expect(captured.statusCode).toBe(400)
+      expect(captured.body).toHaveProperty("error", "Invalid transaction amount")
     })
 
     it("should reject transaction with missing required fields", async () => {
@@ -217,24 +232,23 @@ describe.skip("Transaction Controller", () => {
         },
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
 
       await transaction_post_create(req, res, () => {})
 
-      expect(statusCode).toBe(400)
-      expect(responseData).toHaveProperty("error", "Missing required fields")
+      expect(captured.statusCode).toBe(400)
+      expect(captured.body).toHaveProperty("error", "Missing required fields")
     })
   })
 
@@ -274,16 +288,15 @@ describe.skip("Transaction Controller", () => {
         } as User,
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
@@ -292,9 +305,9 @@ describe.skip("Transaction Controller", () => {
 
       // The controller returns 200 and JSON directly, not through status()
       // So statusCode might be 0, but responseData should be set
-      expect(responseData).toBeDefined()
-      expect(responseData).toHaveProperty("transaction_id", transactionId)
-      expect(responseData).toHaveProperty("amount", 100)
+      expect(captured.body).toBeDefined()
+      expect(captured.body).toHaveProperty("transaction_id", transactionId)
+      expect(captured.body).toHaveProperty("amount", 100)
     })
 
     it("should reject access for unauthorized user", async () => {
@@ -333,24 +346,23 @@ describe.skip("Transaction Controller", () => {
         } as User,
       } as unknown as Request
 
-      let statusCode = 0
-      let responseData: any = null
+      const captured: Captured = { statusCode: 0, body: null }
 
       const res = {
         status: (code: number) => {
-          statusCode = code
+          captured.statusCode = code
           return res
         },
-        json: (data: any) => {
-          responseData = data
+        json: (data: JsonBody) => {
+          captured.body = data
           return res
         },
       } as unknown as Response
 
       await transaction_get_transaction_id(req, res, () => {})
 
-      expect(statusCode).toBe(403)
-      expect(responseData).toHaveProperty("error")
+      expect(captured.statusCode).toBe(403)
+      expect(captured.body).toHaveProperty("error")
     })
   })
 })

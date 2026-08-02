@@ -6,7 +6,10 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest"
-import { FeatureFlagService } from "./feature-flag.service.js"
+import {
+  FeatureFlagService,
+  type MarketVersion,
+} from "./feature-flag.service.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 
 describe("Feature Flag Service - Unit Tests", () => {
@@ -135,7 +138,9 @@ describe("Feature Flag Service - Unit Tests", () => {
       const userId = "test-user-9"
 
       await expect(
-        service.setMarketVersion(userId, "V3" as any),
+        // "V3" is not a MarketVersion — deliberately invalid to exercise the
+        // service's runtime validation.
+        service.setMarketVersion(userId, "V3" as unknown as MarketVersion),
       ).rejects.toThrow("Invalid market version")
     })
 

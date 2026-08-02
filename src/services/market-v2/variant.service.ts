@@ -18,7 +18,6 @@ export interface VariantAttributes {
   quality_value?: number // 0-1000
   crafted_source?: "crafted" | "store" | "looted" | "unknown" | "duped"
   blueprint_tier?: number // 1-5
-  [key: string]: any // Future extensibility
 }
 
 export interface ItemVariant {
@@ -49,11 +48,15 @@ export interface ItemVariant {
 export function normalizeVariantAttributes(
   attributes: VariantAttributes,
 ): VariantAttributes {
-  const sortedKeys = Object.keys(attributes).sort()
+  // Sorted by raw key with the same ordering Array.prototype.sort applies to
+  // strings, so the resulting key order (and therefore the hash) is unchanged.
+  const sortedEntries = Object.entries(attributes).sort(([a], [b]) =>
+    a < b ? -1 : a > b ? 1 : 0,
+  )
   const normalized: VariantAttributes = {}
 
-  for (const key of sortedKeys) {
-    normalized[key] = attributes[key]
+  for (const [key, value] of sortedEntries) {
+    Object.assign(normalized, { [key]: value })
   }
 
   return normalized

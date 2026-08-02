@@ -22,7 +22,11 @@ interface ImportJob {
   status: JobStatus
   startedAt: string
   completedAt: string | null
-  result: Record<string, any> | null
+  /**
+   * Free-form summary emitted by the import runner. Each source returns a
+   * different shape, so this is only logged and serialised — never indexed.
+   */
+  result: Record<string, unknown> | null
   error: string | null
 }
 

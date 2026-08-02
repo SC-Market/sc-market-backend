@@ -16,6 +16,24 @@ import {
 } from "../types/variant-types.types.js"
 import logger from "../../../../logger/logger.js"
 
+/** Row shape of the `variant_types` table */
+interface VariantTypeRow {
+  variant_type_id: string
+  name: string
+  display_name: string
+  description: string | null
+  affects_pricing: boolean
+  searchable: boolean
+  filterable: boolean
+  value_type: VariantType["value_type"]
+  min_value: string | null
+  max_value: string | null
+  allowed_values: string[] | null
+  display_order: number
+  icon: string | null
+  created_at: Date
+}
+
 @Route("variant-types")
 @Tags("Variant Types V2")
 export class VariantTypesV2Controller extends BaseController {
@@ -49,14 +67,14 @@ export class VariantTypesV2Controller extends BaseController {
       const result = await knex.raw(`
         SELECT * FROM variant_types ORDER BY display_order ASC
       `)
-      const results = result.rows
+      const results: VariantTypeRow[] = result.rows
 
       logger.info("Variant types fetched successfully", {
         count: results.length,
       })
 
       // Transform results to VariantType format
-      const variant_types: VariantType[] = results.map((row: any) => ({
+      const variant_types: VariantType[] = results.map((row) => ({
         variant_type_id: row.variant_type_id,
         name: row.name,
         display_name: row.display_name,

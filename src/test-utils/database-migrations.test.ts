@@ -80,7 +80,9 @@ describe('Database Migrations - Task 1.7', () => {
         ORDER BY ordinal_position
       `);
       
-      const columns = result.rows.map((r: any) => r.column_name);
+      const columns = (result.rows as { column_name: string }[]).map(
+        (r) => r.column_name,
+      );
       
       expect(columns).toContain('listing_id');
       expect(columns).toContain('seller_id');
@@ -104,7 +106,9 @@ describe('Database Migrations - Task 1.7', () => {
         ORDER BY ordinal_position
       `);
       
-      const columns = result.rows.map((r: any) => r.column_name);
+      const columns = (result.rows as { column_name: string }[]).map(
+        (r) => r.column_name,
+      );
       
       expect(columns).toContain('item_id');
       expect(columns).toContain('listing_id');
@@ -124,7 +128,9 @@ describe('Database Migrations - Task 1.7', () => {
         ORDER BY ordinal_position
       `);
       
-      const columns = result.rows.map((r: any) => r.column_name);
+      const columns = (result.rows as { column_name: string }[]).map(
+        (r) => r.column_name,
+      );
       
       expect(columns).toContain('variant_id');
       expect(columns).toContain('game_item_id');
@@ -145,7 +151,9 @@ describe('Database Migrations - Task 1.7', () => {
         ORDER BY ordinal_position
       `);
       
-      const columns = result.rows.map((r: any) => r.column_name);
+      const columns = (result.rows as { column_name: string }[]).map(
+        (r) => r.column_name,
+      );
       
       expect(columns).toContain('lot_id');
       expect(columns).toContain('item_id');

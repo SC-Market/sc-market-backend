@@ -1,3 +1,4 @@
+import { Knex } from "knex"
 import { database } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
 
@@ -10,13 +11,13 @@ export interface AuditLogRecordInput {
 }
 
 export interface AuditLogService {
-  record(entry: AuditLogRecordInput, trx?: any): Promise<void>
+  record(entry: AuditLogRecordInput, trx?: Knex.Transaction): Promise<void>
 }
 
 class DatabaseAuditLogService implements AuditLogService {
   async record(
     { action, actorId, subjectType, subjectId, metadata }: AuditLogRecordInput,
-    trx?: any,
+    trx?: Knex.Transaction,
   ): Promise<void> {
     try {
       const query = trx ? trx("audit_logs") : database.knex("audit_logs")

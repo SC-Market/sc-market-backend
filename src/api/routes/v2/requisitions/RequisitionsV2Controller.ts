@@ -35,6 +35,73 @@ import {
 } from "../types/requisitions.types.js"
 import logger from "../../../../logger/logger.js"
 
+/** Row shape of the `game_items` id/name lookup used to snapshot item names */
+interface GameItemNameRow {
+  id: string
+  name: string
+}
+
+/** Row shape of the `contractor_members` contractor_id lookup */
+interface ContractorMemberIdRow {
+  contractor_id: string
+}
+
+/**
+ * Row shape of the `requisition_items` table. `price_per_unit` is a bigint,
+ * which the pg driver returns as a string.
+ */
+interface RequisitionItemRow {
+  requisition_item_id: string
+  order_id: string
+  game_item_id: string
+  quantity: number
+  price_per_unit: string
+  fulfilled_quantity: number
+  quality_tier_min: number | null
+  quality_tier_max: number | null
+  game_item_name: string | null
+  created_at: Date
+}
+
+/**
+ * Row shape of the `offer_requisition_items` query joined with the game item
+ * name and (optional) listing title. `price_per_unit` is a bigint, which the pg
+ * driver returns as a string.
+ */
+interface OfferRequisitionItemRow {
+  id: string
+  offer_id: string
+  game_item_id: string
+  quantity: number
+  price_per_unit: string
+  listing_id: string | null
+  created_at: Date
+  game_item_name: string | null
+  listing_title: string | null
+}
+
+/**
+ * Columns of the V1 `orders` table read when serialising a requisition. Only
+ * the fields this controller consumes are modelled.
+ */
+interface RequisitionOrderRow {
+  order_id: string
+  offer_session_id: string | null
+  status: string
+  kind: string
+  title: string
+  description: string
+  customer_id: string
+  assigned_id: string | null
+  contractor_id: string | null
+  timestamp: Date
+  /**
+   * Not part of the base `orders` DDL — optional so the serialiser's existing
+   * `updated_at ?? timestamp` precedence is preserved either way.
+   */
+  updated_at?: Date
+}
+
 @Route("requisitions")
 @Tags("Requisitions V2")
 @Security("loggedin")
@@ -87,8 +154,10 @@ export class RequisitionsV2Controller extends BaseController {
 
     // Snapshot game item names
     const gameItemIds = body.items.map((i) => i.game_item_id)
-    const gameItems = await knex("game_items").whereIn("id", gameItemIds).select("id", "name")
-    const gameItemMap = new Map<string, string>(gameItems.map((g: any) => [g.id, g.name]))
+    const gameItems = await knex("game_items")
+      .whereIn("id", gameItemIds)
+      .select<GameItemNameRow[]>("id", "name")
+    const gameItemMap = new Map<string, string>(gameItems.map((g) => [g.id, g.name]))
 
     for (const item of body.items) {
       if (!gameItemMap.has(item.game_item_id)) {
@@ -218,11 +287,11 @@ export class RequisitionsV2Controller extends BaseController {
     const total = parseInt(String(count), 10)
 
     const orders = await query
-      .select("orders.*")
+      .select<RequisitionOrderRow[]>("orders.*")
       .orderBy("orders.timestamp", "desc")
       .limit(ps).offset((p - 1) * ps)
 
-    const requisitions = await Promise.all(orders.map((o: any) => this.serializeRequisitionDetail(o)))
+    const requisitions = await Promise.all(orders.map((o) => this.serializeRequisitionDetail(o)))
 
     return { requisitions, total, page: p, page_size: ps }
   }
@@ -241,7 +310,9 @@ export class RequisitionsV2Controller extends BaseController {
     const userId = this.getUserId()
     const knex = getKnex()
 
-    const order = await knex("orders").where({ order_id: orderId, kind: "requisition" }).first()
+    const order = await knex("orders")
+      .where({ order_id: orderId, kind: "requisition" })
+      .first<RequisitionOrderRow | undefined>()
     if (!order) throw this.throwNotFound("Requisition", orderId)
 
     // Auth: buyer, assigned supplier, or contractor member
@@ -285,8 +356,10 @@ export class RequisitionsV2Controller extends BaseController {
 
     // Validate game items exist
     const gameItemIds = body.items.map((i) => i.game_item_id)
-    const gameItems = await knex("game_items").whereIn("id", gameItemIds).select("id", "name")
-    const gameItemMap = new Map<string, string>(gameItems.map((g: any) => [g.id, g.name]))
+    const gameItems = await knex("game_items")
+      .whereIn("id", gameItemIds)
+      .select<GameItemNameRow[]>("id", "name")
+    const gameItemMap = new Map<string, string>(gameItems.map((g) => [g.id, g.name]))
 
     for (const item of body.items) {
       if (!gameItemMap.has(item.game_item_id)) {
@@ -313,10 +386,10 @@ export class RequisitionsV2Controller extends BaseController {
       .leftJoin("game_items as gi", "ori.game_item_id", "gi.id")
       .leftJoin("listings as l", "ori.listing_id", "l.listing_id")
       .where("ori.offer_id", body.offer_id)
-      .select("ori.*", "gi.name as game_item_name", "l.title as listing_title")
+      .select<OfferRequisitionItemRow[]>("ori.*", "gi.name as game_item_name", "l.title as listing_title")
 
     return {
-      items: rows.map((r: any): OfferRequisitionItem => ({
+      items: rows.map((r): OfferRequisitionItem => ({
         id: r.id,
         offer_id: r.offer_id,
         game_item_id: r.game_item_id,
@@ -360,10 +433,10 @@ export class RequisitionsV2Controller extends BaseController {
       .leftJoin("game_items as gi", "ori.game_item_id", "gi.id")
       .leftJoin("listings as l", "ori.listing_id", "l.listing_id")
       .where("ori.offer_id", offerId)
-      .select("ori.*", "gi.name as game_item_name", "l.title as listing_title")
+      .select<OfferRequisitionItemRow[]>("ori.*", "gi.name as game_item_name", "l.title as listing_title")
 
     return {
-      items: rows.map((r: any): OfferRequisitionItem => ({
+      items: rows.map((r): OfferRequisitionItem => ({
         id: r.id,
         offer_id: r.offer_id,
         game_item_id: r.game_item_id,
@@ -380,7 +453,7 @@ export class RequisitionsV2Controller extends BaseController {
   // Helpers
   // ---------------------------------------------------------------------------
 
-  private serializeRequisitionItem(row: any): RequisitionLineItem {
+  private serializeRequisitionItem(row: RequisitionItemRow): RequisitionLineItem {
     return {
       requisition_item_id: row.requisition_item_id,
       game_item_id: row.game_item_id,
@@ -393,7 +466,9 @@ export class RequisitionsV2Controller extends BaseController {
     }
   }
 
-  private async serializeRequisitionDetail(order: any): Promise<RequisitionDetail> {
+  private async serializeRequisitionDetail(
+    order: RequisitionOrderRow,
+  ): Promise<RequisitionDetail> {
     const knex = getKnex()
 
     const buyer = await knex("accounts").where({ user_id: order.customer_id }).first()
@@ -409,8 +484,10 @@ export class RequisitionsV2Controller extends BaseController {
       if (c) supplierContractor = { contractor_id: c.contractor_id, spectrum_id: c.spectrum_id, name: c.name, avatar: c.avatar ? await cdn.getFileLinkResource(c.avatar) : null }
     }
 
-    const itemRows = await knex("requisition_items").where({ order_id: order.order_id })
-    const items = itemRows.map((r: any) => this.serializeRequisitionItem(r))
+    const itemRows = await knex("requisition_items")
+      .where({ order_id: order.order_id })
+      .select<RequisitionItemRow[]>("*")
+    const items = itemRows.map((r) => this.serializeRequisitionItem(r))
 
     const totalPrice = items.reduce((s, i) => s + i.price_per_unit * i.quantity, 0)
 
@@ -437,7 +514,9 @@ export class RequisitionsV2Controller extends BaseController {
   }
 
   private async getUserContractorIds(userId: string): Promise<string[]> {
-    const rows = await getKnex()("contractor_members").where({ user_id: userId }).select("contractor_id")
-    return rows.map((r: any) => r.contractor_id)
+    const rows = await getKnex()("contractor_members")
+      .where({ user_id: userId })
+      .select<ContractorMemberIdRow[]>("contractor_id")
+    return rows.map((r) => r.contractor_id)
   }
 }

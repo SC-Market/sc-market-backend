@@ -25,7 +25,41 @@ import {
   GetSuppliersResponse,
   SupplierRelationship,
   SupplierEntityInfo,
+  SupplierTier,
+  SupplierStatus,
 } from "../types/suppliers.types.js"
+
+/**
+ * The aggregator side of a roster row: exactly one of the two columns is
+ * non-null, enforced by the `chk_supplier_rel_aggregator` check constraint.
+ */
+type SupplierRelationshipAggregatorSide =
+  | { aggregator_id: string; aggregator_contractor_id: null }
+  | { aggregator_id: null; aggregator_contractor_id: string }
+
+/**
+ * The supplier side of a roster row: exactly one of the two columns is
+ * non-null, enforced by the `chk_supplier_rel_supplier` check constraint.
+ */
+type SupplierRelationshipSupplierSide =
+  | { supplier_id: string; supplier_contractor_id: null }
+  | { supplier_id: null; supplier_contractor_id: string }
+
+/** Row shape of the `supplier_relationships` table */
+type SupplierRelationshipRow = {
+  relationship_id: string
+  tier: SupplierTier | null
+  notes: string | null
+  status: SupplierStatus
+  created_at: Date
+  updated_at: Date
+} & SupplierRelationshipAggregatorSide &
+  SupplierRelationshipSupplierSide
+
+/** Row shape of the `contractor_members` contractor_id lookup */
+interface ContractorMemberIdRow {
+  contractor_id: string
+}
 
 @Route("suppliers")
 @Tags("Suppliers V2")
@@ -69,11 +103,11 @@ export class SuppliersV2Controller extends BaseController {
     const total = parseInt(String(count), 10)
 
     const rows = await query
-      .select("sr.*")
+      .select<SupplierRelationshipRow[]>("sr.*")
       .orderBy("sr.created_at", "desc")
       .limit(ps).offset((p - 1) * ps)
 
-    const suppliers = await Promise.all(rows.map((r: any) => this.serializeRelationship(r)))
+    const suppliers = await Promise.all(rows.map((r) => this.serializeRelationship(r)))
 
     return { suppliers, total, page: p, page_size: ps }
   }
@@ -120,7 +154,7 @@ export class SuppliersV2Controller extends BaseController {
       if (!org) throw this.throwNotFound("Contractor", body.supplier_contractor_id!)
     }
 
-    const [row] = await knex("supplier_relationships").insert({
+    const [row]: SupplierRelationshipRow[] = await knex("supplier_relationships").insert({
       aggregator_id: userId,
       aggregator_contractor_id: null,
       supplier_id: body.supplier_id || null,
@@ -148,7 +182,9 @@ export class SuppliersV2Controller extends BaseController {
     const userId = this.getUserId()
     const knex = getKnex()
 
-    const rel = await knex("supplier_relationships").where({ relationship_id: relationshipId }).first()
+    const rel = await knex("supplier_relationships")
+      .where({ relationship_id: relationshipId })
+      .first<SupplierRelationshipRow | undefined>()
     if (!rel) throw this.throwNotFound("Supplier relationship", relationshipId)
     await this.assertAggregatorAccess(rel, userId)
 
@@ -157,7 +193,7 @@ export class SuppliersV2Controller extends BaseController {
     if (body.notes !== undefined) updates.notes  = body.notes
     if (body.status !== undefined) updates.status = body.status
 
-    const [updated] = await knex("supplier_relationships")
+    const [updated]: SupplierRelationshipRow[] = await knex("supplier_relationships")
       .where({ relationship_id: relationshipId })
       .update(updates)
       .returning("*")
@@ -179,7 +215,9 @@ export class SuppliersV2Controller extends BaseController {
     const userId = this.getUserId()
     const knex = getKnex()
 
-    const rel = await knex("supplier_relationships").where({ relationship_id: relationshipId }).first()
+    const rel = await knex("supplier_relationships")
+      .where({ relationship_id: relationshipId })
+      .first<SupplierRelationshipRow | undefined>()
     if (!rel) throw this.throwNotFound("Supplier relationship", relationshipId)
     await this.assertAggregatorAccess(rel, userId)
 
@@ -215,8 +253,8 @@ export class SuppliersV2Controller extends BaseController {
     const [{ count }] = await query.clone().count("* as count")
     const total = parseInt(String(count), 10)
 
-    const rows = await query.select("sr.*").orderBy("sr.created_at", "desc").limit(ps).offset((p - 1) * ps)
-    const suppliers = await Promise.all(rows.map((r: any) => this.serializeRelationship(r)))
+    const rows = await query.select<SupplierRelationshipRow[]>("sr.*").orderBy("sr.created_at", "desc").limit(ps).offset((p - 1) * ps)
+    const suppliers = await Promise.all(rows.map((r) => this.serializeRelationship(r)))
 
     return { suppliers, total, page: p, page_size: ps }
   }
@@ -226,11 +264,16 @@ export class SuppliersV2Controller extends BaseController {
   // ---------------------------------------------------------------------------
 
   private async getUserContractorIds(userId: string): Promise<string[]> {
-    const rows = await getKnex()("contractor_members").where({ user_id: userId }).select("contractor_id")
-    return rows.map((r: any) => r.contractor_id)
+    const rows = await getKnex()("contractor_members")
+      .where({ user_id: userId })
+      .select<ContractorMemberIdRow[]>("contractor_id")
+    return rows.map((r) => r.contractor_id)
   }
 
-  private async assertAggregatorAccess(rel: any, userId: string): Promise<void> {
+  private async assertAggregatorAccess(
+    rel: SupplierRelationshipRow,
+    userId: string,
+  ): Promise<void> {
     if (rel.aggregator_id === userId) return
     if (rel.aggregator_contractor_id) {
       const member = await getKnex()("contractor_members")
@@ -241,12 +284,14 @@ export class SuppliersV2Controller extends BaseController {
     throw this.throwForbidden("Not authorized to modify this supplier relationship")
   }
 
-  private async serializeRelationship(row: any): Promise<SupplierRelationship> {
+  private async serializeRelationship(
+    row: SupplierRelationshipRow,
+  ): Promise<SupplierRelationship> {
     const knex = getKnex()
 
     // Aggregator side
     let aggregator: SupplierEntityInfo
-    if (row.aggregator_id) {
+    if (row.aggregator_id !== null) {
       const u = await knex("accounts").where({ user_id: row.aggregator_id }).first()
       aggregator = {
         id: row.aggregator_id,
@@ -269,7 +314,7 @@ export class SuppliersV2Controller extends BaseController {
 
     // Supplier side
     let supplier: SupplierEntityInfo
-    if (row.supplier_id) {
+    if (row.supplier_id !== null) {
       const u = await knex("accounts").where({ user_id: row.supplier_id }).first()
       supplier = {
         id: row.supplier_id,

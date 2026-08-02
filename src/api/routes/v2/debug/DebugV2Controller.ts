@@ -43,7 +43,7 @@ export class DebugV2Controller extends BaseController {
     @Request() request: ExpressRequest,
   ): Promise<GetFeatureFlagResponse> {
     this.request = request
-    const user = request.user as any
+    const user = request.user
 
     if (!user?.user_id) {
       return {
