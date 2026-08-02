@@ -17,6 +17,12 @@ export default defineConfig({
       "src/api/routes/v2/**/*Controller*.test.ts",
       // V2 service tests need mock knex improvements (TODO)
       "src/services/market-v2/**/*.test.ts",
+      // Hits api.uexcorp.uk for real. The deploy workflow runs `npm test` before
+      // building the image, so a third-party outage would block deploys on
+      // something this repo neither owns nor changed. Run it explicitly
+      // (`npx vitest run src/services/attribute-import/uexcorp-api.test.ts`)
+      // when touching the UEXCorp importer.
+      "src/services/attribute-import/uexcorp-api.test.ts",
     ],
     coverage: {
       provider: "v8",
