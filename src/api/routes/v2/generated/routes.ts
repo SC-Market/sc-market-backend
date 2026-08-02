@@ -2078,6 +2078,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ResourceCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "category": {"dataType":"string","required":true},
+            "subcategory": {"dataType":"string"},
+            "count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MiningLocation": {
         "dataType": "refObject",
         "properties": {
@@ -2145,16 +2155,6 @@ const models: TsoaRoute.Models = {
             "resource": {"ref":"Resource","required":true},
             "blueprints_requiring": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintRequiringResource"},"required":true},
             "market_price": {"dataType":"nestedObjectLiteral","nestedProperties":{"last_updated":{"dataType":"string"},"average_price":{"dataType":"double"},"max_price":{"dataType":"double"},"min_price":{"dataType":"double"}}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ResourceCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "category": {"dataType":"string","required":true},
-            "subcategory": {"dataType":"string"},
-            "count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -2289,6 +2289,31 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReputationRank": {
+        "dataType": "refObject",
+        "properties": {
+            "scope_code": {"dataType":"string","required":true},
+            "scope_display_name": {"dataType":"string","required":true},
+            "standing_code": {"dataType":"string","required":true},
+            "standing_display_name": {"dataType":"string","required":true},
+            "threshold": {"dataType":"double","required":true},
+            "ceiling": {"dataType":"double","required":true},
+            "rank_index": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GameEvent": {
+        "dataType": "refObject",
+        "properties": {
+            "event_id": {"dataType":"string","required":true},
+            "event_code": {"dataType":"string","required":true},
+            "event_name": {"dataType":"string","required":true},
+            "mission_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MissionBlueprintReward": {
         "dataType": "refObject",
         "properties": {
@@ -2407,31 +2432,6 @@ const models: TsoaRoute.Models = {
             "ingredient_count": {"dataType":"double","required":true},
             "drop_probability": {"dataType":"double","required":true},
             "is_guaranteed": {"dataType":"boolean","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ReputationRank": {
-        "dataType": "refObject",
-        "properties": {
-            "scope_code": {"dataType":"string","required":true},
-            "scope_display_name": {"dataType":"string","required":true},
-            "standing_code": {"dataType":"string","required":true},
-            "standing_display_name": {"dataType":"string","required":true},
-            "threshold": {"dataType":"double","required":true},
-            "ceiling": {"dataType":"double","required":true},
-            "rank_index": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "GameEvent": {
-        "dataType": "refObject",
-        "properties": {
-            "event_id": {"dataType":"string","required":true},
-            "event_code": {"dataType":"string","required":true},
-            "event_name": {"dataType":"string","required":true},
-            "mission_count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -2882,6 +2882,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "category": {"dataType":"string","required":true},
+            "subcategory": {"dataType":"string"},
+            "count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Blueprint": {
         "dataType": "refObject",
         "properties": {
@@ -3000,16 +3010,6 @@ const models: TsoaRoute.Models = {
             "crafted_property_defs": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftedPropertyDef"}},
             "user_owns": {"dataType":"boolean"},
             "user_acquisition": {"ref":"UserBlueprintAcquisition"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BlueprintCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "category": {"dataType":"string","required":true},
-            "subcategory": {"dataType":"string"},
-            "count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -6852,36 +6852,6 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsResourcesController_getResource: Record<string, TsoaRoute.ParameterSchema> = {
-                resource_id: {"in":"path","name":"resource_id","required":true,"dataType":"string"},
-        };
-        app.get('/game-data/resources/:resource_id',
-            ...(fetchMiddlewares<RequestHandler>(ResourcesController)),
-            ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.getResource)),
-
-            async function ResourcesController_getResource(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsResourcesController_getResource, request, response });
-
-                const controller = new ResourcesController();
-
-              await templateService.apiHandler({
-                methodName: 'getResource',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsResourcesController_getResourceCategories: Record<string, TsoaRoute.ParameterSchema> = {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
@@ -6901,6 +6871,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getResourceCategories',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsResourcesController_getResource: Record<string, TsoaRoute.ParameterSchema> = {
+                resource_id: {"in":"path","name":"resource_id","required":true,"dataType":"string"},
+        };
+        app.get('/game-data/resources/:resource_id',
+            ...(fetchMiddlewares<RequestHandler>(ResourcesController)),
+            ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.getResource)),
+
+            async function ResourcesController_getResource(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsResourcesController_getResource, request, response });
+
+                const controller = new ResourcesController();
+
+              await templateService.apiHandler({
+                methodName: 'getResource',
                 controller,
                 response,
                 next,
@@ -6953,6 +6953,95 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'searchMissions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionChains: Record<string, TsoaRoute.ParameterSchema> = {
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+        };
+        app.get('/game-data/missions/chains',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionChains)),
+
+            async function MissionsController_getMissionChains(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionChains, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionChains',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getReputationRanks: Record<string, TsoaRoute.ParameterSchema> = {
+                scope_code: {"in":"query","name":"scope_code","dataType":"string"},
+        };
+        app.get('/game-data/missions/reputation-ranks',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getReputationRanks)),
+
+            async function MissionsController_getReputationRanks(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getReputationRanks, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getReputationRanks',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getGameEvents: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/game-data/missions/events',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getGameEvents)),
+
+            async function MissionsController_getGameEvents(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getGameEvents, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getGameEvents',
                 controller,
                 response,
                 next,
@@ -7109,95 +7198,6 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'rateMission',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMissionsController_getMissionChains: Record<string, TsoaRoute.ParameterSchema> = {
-                version_id: {"in":"query","name":"version_id","dataType":"string"},
-        };
-        app.get('/game-data/missions/chains',
-            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
-            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionChains)),
-
-            async function MissionsController_getMissionChains(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionChains, request, response });
-
-                const controller = new MissionsController();
-
-              await templateService.apiHandler({
-                methodName: 'getMissionChains',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMissionsController_getReputationRanks: Record<string, TsoaRoute.ParameterSchema> = {
-                scope_code: {"in":"query","name":"scope_code","dataType":"string"},
-        };
-        app.get('/game-data/missions/reputation-ranks',
-            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
-            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getReputationRanks)),
-
-            async function MissionsController_getReputationRanks(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getReputationRanks, request, response });
-
-                const controller = new MissionsController();
-
-              await templateService.apiHandler({
-                methodName: 'getReputationRanks',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMissionsController_getGameEvents: Record<string, TsoaRoute.ParameterSchema> = {
-        };
-        app.get('/game-data/missions/events',
-            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
-            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getGameEvents)),
-
-            async function MissionsController_getGameEvents(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getGameEvents, request, response });
-
-                const controller = new MissionsController();
-
-              await templateService.apiHandler({
-                methodName: 'getGameEvents',
                 controller,
                 response,
                 next,
@@ -7607,6 +7607,73 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getBlueprintCategories: Record<string, TsoaRoute.ParameterSchema> = {
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+        };
+        app.get('/game-data/blueprints/categories',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
+
+            async function BlueprintsController_getBlueprintCategories(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintCategories, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getBlueprintCategories',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getUserBlueprintInventory: Record<string, TsoaRoute.ParameterSchema> = {
+                item_category: {"in":"query","name":"item_category","dataType":"string"},
+                rarity: {"in":"query","name":"rarity","dataType":"string"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+                sort_by: {"default":"acquisition_date","in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["acquisition_date"]},{"dataType":"enum","enums":["blueprint_name"]}]},
+                sort_order: {"default":"desc","in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":50,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/game-data/blueprints/inventory',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getUserBlueprintInventory)),
+
+            async function BlueprintsController_getUserBlueprintInventory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getUserBlueprintInventory, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getUserBlueprintInventory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlueprintsController_getBlueprintDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 request: {"in":"request","name":"request","dataType":"object"},
@@ -7754,73 +7821,6 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'removeBlueprintFromInventory',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsBlueprintsController_getBlueprintCategories: Record<string, TsoaRoute.ParameterSchema> = {
-                version_id: {"in":"query","name":"version_id","dataType":"string"},
-        };
-        app.get('/game-data/blueprints/categories',
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
-
-            async function BlueprintsController_getBlueprintCategories(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintCategories, request, response });
-
-                const controller = new BlueprintsController();
-
-              await templateService.apiHandler({
-                methodName: 'getBlueprintCategories',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsBlueprintsController_getUserBlueprintInventory: Record<string, TsoaRoute.ParameterSchema> = {
-                item_category: {"in":"query","name":"item_category","dataType":"string"},
-                rarity: {"in":"query","name":"rarity","dataType":"string"},
-                version_id: {"in":"query","name":"version_id","dataType":"string"},
-                sort_by: {"default":"acquisition_date","in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["acquisition_date"]},{"dataType":"enum","enums":["blueprint_name"]}]},
-                sort_order: {"default":"desc","in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
-                page: {"default":1,"in":"query","name":"page","dataType":"double"},
-                page_size: {"default":50,"in":"query","name":"page_size","dataType":"double"},
-        };
-        app.get('/game-data/blueprints/inventory',
-            authenticateMiddleware([{"loggedin":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getUserBlueprintInventory)),
-
-            async function BlueprintsController_getUserBlueprintInventory(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getUserBlueprintInventory, request, response });
-
-                const controller = new BlueprintsController();
-
-              await templateService.apiHandler({
-                methodName: 'getUserBlueprintInventory',
                 controller,
                 response,
                 next,

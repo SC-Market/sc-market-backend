@@ -117,74 +117,15 @@ if (process.env.NODE_ENV !== "production") {
 })
 }
 
-// Register static routes that conflict with TSOA parameterized routes
-// TSOA registers /:param before /static, so we need to handle these manually
-import { BlueprintsController } from "./game-data/blueprints/BlueprintsController.js"
-import { ResourcesController } from "./game-data/resources/ResourcesController.js"
-import { MissionsController } from "./game-data/missions/MissionsController.js"
-
-const staticRoutes: Array<{ path: string; handler: (req: express.Request, res: express.Response, next: express.NextFunction) => void }> = [
-  {
-    path: "/game-data/blueprints/categories",
-    handler: async (req, res, next) => {
-      try {
-        const c = new BlueprintsController(req)
-        res.json(await c.getBlueprintCategories(req.query.version_id as string | undefined))
-      } catch (err) { next(err) }
-    },
-  },
-  {
-    path: "/game-data/blueprints/inventory",
-    handler: async (req, res, next) => {
-      try {
-        const c = new BlueprintsController(req)
-        res.json(await c.getUserBlueprintInventory(
-          req.query.item_category as string | undefined,
-          req.query.rarity as string | undefined,
-          req.query.version_id as string | undefined,
-        ))
-      } catch (err) { next(err) }
-    },
-  },
-  {
-    path: "/game-data/resources/categories",
-    handler: async (req, res, next) => {
-      try {
-        const c = new ResourcesController(req)
-        res.json(await c.getResourceCategories(req.query.version_id as string | undefined))
-      } catch (err) { next(err) }
-    },
-  },
-  {
-    path: "/game-data/missions/chains",
-    handler: async (req, res, next) => {
-      try {
-        const c = new MissionsController(req)
-        res.json(await c.getMissionChains(
-          req.query.version_id as string | undefined,
-        ))
-      } catch (err) { next(err) }
-    },
-  },
-]
-
-for (const route of staticRoutes) {
-  apiV2Router.get(route.path, route.handler)
-}
-
-// Fix TSOA route ordering: static mission paths must be registered before /:mission_id
-apiV2Router.get("/game-data/missions/chains", async (req, res, next) => {
-  try { const c = new MissionsController(req); res.json(await c.getMissionChains(req.query.version_id as string | undefined)) } catch (e) { next(e) }
-})
-apiV2Router.get("/game-data/missions/reputation-ranks", async (req, res, next) => {
-  try { const c = new MissionsController(req); res.json(await c.getReputationRanks(req.query.scope_code as string | undefined)) } catch (e) { next(e) }
-})
-apiV2Router.get("/game-data/missions/events", async (req, res, next) => {
-  try { const c = new MissionsController(req); res.json(await c.getGameEvents()) } catch (e) { next(e) }
-})
-apiV2Router.get("/game-data/missions/by-code/:mission_code", async (req, res, next) => {
-  try { const c = new MissionsController(req); res.json(await c.getMissionDetailByCode(req.params.mission_code, req)) } catch (e) { next(e) }
-})
+// NOTE: literal-path routes under a `{param}` path used to be hand-registered
+// here, because TSOA emitted `/game-data/resources/{resource_id}` before
+// `/game-data/resources/categories` and Express matches in registration order.
+// They are now ordered correctly in the controllers themselves — TSOA emits
+// routes in declaration order, so each literal @Get is simply declared above its
+// `{param}` sibling. Do not reintroduce workarounds here: a hand-registered
+// route bypasses TSOA's @Security middleware and its query-param binding, which
+// is how /game-data/blueprints/inventory silently lost its pagination and sort
+// arguments.
 
 // Resolve short-slug URLs to full UUIDs before TSOA routes handle them
 import { resolveShortSlug } from "./middleware/resolve-short-slug.js"

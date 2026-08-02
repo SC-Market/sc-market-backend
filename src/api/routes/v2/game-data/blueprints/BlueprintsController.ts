@@ -478,6 +478,351 @@ export class BlueprintsController extends BaseController {
   }
 
   /**
+   * Get blueprint categories
+   *
+   * Returns all blueprint categories with item counts, supporting
+   * hierarchical category navigation in the blueprint browser.
+   *
+   * Requirements:
+   * - 19.1: Categorize blueprints by item type
+   * - 19.2: Support hierarchical categories with subcategories
+   * - 19.5: Display item count per category
+   *
+   * @summary Get categories
+   * @param version_id Optional game version ID (defaults to active LIVE version)
+   * @returns Array of categories with counts
+   */
+  @Get("categories")
+  public async getBlueprintCategories(
+    @Query() version_id?: string,
+  ): Promise<BlueprintCategory[]> {
+    const knex = getKnex()
+
+    logger.info("Fetching blueprint categories", { version_id })
+
+    try {
+      // ========================================================================
+      // Get or validate version_id
+      // ========================================================================
+      let effectiveVersionId = version_id
+
+      if (!effectiveVersionId) {
+        // Get active LIVE version
+        const activeVersion = await knex("game_versions")
+          .where("version_type", "LIVE")
+          .where("is_active", true)
+          .orderBy("created_at", "desc")
+          .first()
+
+        if (!activeVersion) {
+          this.throwNotFound("Active LIVE game version", "LIVE")
+        }
+
+        effectiveVersionId = activeVersion.version_id
+      }
+
+      // ========================================================================
+      // Get categories with counts (Requirement 19.5)
+      // ========================================================================
+      const categoriesQuery: BlueprintCategoryRow[] = await knex("blueprints")
+        .select(
+          "item_category as category",
+          "item_subcategory as subcategory",
+        )
+        .count<BlueprintCategoryRow[]>("* as count")
+        .where("version_id", effectiveVersionId)
+        .where("is_active", true)
+        .groupBy("item_category", "item_subcategory")
+        .orderBy("item_category", "asc")
+        .orderBy("item_subcategory", "asc")
+
+      const categories: BlueprintCategory[] = categoriesQuery.map((row) => ({
+        category: row.category,
+        subcategory: row.subcategory || undefined,
+        count: parseInt(String(row.count), 10),
+      }))
+
+      logger.info("Blueprint categories fetched successfully", {
+        category_count: categories.length,
+      })
+
+      return categories
+    } catch (error) {
+      logger.error("Failed to fetch blueprint categories", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Get user's blueprint inventory
+   *
+   * Returns all blueprints owned by the authenticated user with acquisition details.
+   * Supports filtering by category, rarity, and version. Displays acquisition progress
+   * and statistics.
+   *
+   * Requirements:
+   * - 30.1: Record which blueprints each player owns
+   * - 30.2: Display owned blueprint count vs. total available
+   * - 30.3: Display acquisition date for each blueprint
+   * - 30.4: Support filtering blueprints by owned status
+   * - 30.5: Display acquisition progress
+   * - 30.6: Support bulk import of owned blueprints
+   * - 44.3: Allow players to mark blueprints as owned/not owned
+   * - 44.4: Display owned blueprint count vs. total available
+   * - 44.5: Support filtering blueprints by owned status
+   * - 44.6: Display acquisition progress
+   * - 44.7: Sync blueprint inventory across devices
+   * - 44.8: Support bulk import of blueprint lists
+   * - 44.9: Display recently acquired blueprints
+   * - 44.10: Support blueprint collection goals and achievements
+   *
+   * @summary Get user inventory
+   * @param item_category Filter by item category
+   * @param rarity Filter by rarity
+   * @param version_id Game version ID (defaults to active LIVE version)
+   * @param sort_by Sort field (acquisition_date, blueprint_name)
+   * @param sort_order Sort order (asc, desc)
+   * @param page Page number (default: 1)
+   * @param page_size Results per page (default: 50, max: 100)
+   * @returns User's blueprint inventory with statistics
+   */
+  @Get("inventory")
+  @Security("loggedin")
+  public async getUserBlueprintInventory(
+    @Query() item_category?: string,
+    @Query() rarity?: string,
+    @Query() version_id?: string,
+    @Query() sort_by: "acquisition_date" | "blueprint_name" = "acquisition_date",
+    @Query() sort_order: "asc" | "desc" = "desc",
+    @Query() page: number = 1,
+    @Query() page_size: number = 50,
+  ): Promise<{
+    blueprints: Array<{
+      blueprint_id: string
+      blueprint_name: string
+      output_item_name: string
+      output_item_icon?: string
+      item_category?: string
+      rarity?: string
+      tier?: number
+      acquisition_date: string
+      acquisition_method?: string
+      acquisition_location?: string
+      acquisition_notes?: string
+    }>
+    statistics: {
+      total_owned: number
+      total_available: number
+      completion_percentage: number
+      recently_acquired_count: number
+    }
+    total: number
+    page: number
+    page_size: number
+  }> {
+    const knex = getKnex()
+
+    // Get user_id from authentication context
+    const user_id = this.getUserId()
+
+    if (!user_id) {
+      this.throwUnauthorized("User must be authenticated to view blueprint inventory")
+    }
+
+    // Validate pagination parameters
+    const validatedPage = Math.max(1, page || 1)
+    const validatedPageSize = Math.min(100, Math.max(1, page_size || 50))
+
+    // Validate sort parameters
+    const validSortBy = ["acquisition_date", "blueprint_name"].includes(sort_by)
+      ? sort_by
+      : "acquisition_date"
+    const validSortOrder = ["asc", "desc"].includes(sort_order) ? sort_order : "desc"
+
+    logger.info("Fetching user blueprint inventory", {
+      user_id,
+      item_category,
+      rarity,
+      version_id,
+      page: validatedPage,
+      page_size: validatedPageSize,
+    })
+
+    try {
+      // ========================================================================
+      // Part 1: Get or validate version_id
+      // ========================================================================
+      let effectiveVersionId = version_id
+
+      if (!effectiveVersionId) {
+        // Get active LIVE version
+        const activeVersion = await knex("game_versions")
+          .where("version_type", "LIVE")
+          .where("is_active", true)
+          .orderBy("created_at", "desc")
+          .first()
+
+        if (!activeVersion) {
+          this.throwNotFound("Active LIVE game version", "LIVE")
+        }
+
+        effectiveVersionId = activeVersion.version_id
+      }
+
+      // ========================================================================
+      // Part 2: Build inventory query with filters
+      // ========================================================================
+      let inventoryQuery = knex("user_blueprint_inventory as ubi")
+        .join("blueprints as b", "ubi.blueprint_id", "b.blueprint_id")
+        .join("game_items as gi", "b.output_game_item_id", "gi.id")
+        .select<UserBlueprintInventoryRow[]>(
+          "b.blueprint_id",
+          "b.blueprint_name",
+          "gi.name as output_item_name",
+          "gi.image_url as output_item_icon",
+          "b.item_category",
+          "b.rarity",
+          "b.tier",
+          "ubi.acquisition_date",
+          "ubi.acquisition_method",
+          "ubi.acquisition_location",
+          "ubi.acquisition_notes",
+        )
+        .where("ubi.user_id", user_id)
+        .where("ubi.is_owned", true)
+        .where("b.version_id", effectiveVersionId)
+        .where("b.is_active", true)
+
+      // Apply category filter
+      if (item_category) {
+        inventoryQuery = inventoryQuery.where("b.item_category", item_category)
+      }
+
+      // Apply rarity filter
+      if (rarity) {
+        inventoryQuery = inventoryQuery.where("b.rarity", rarity)
+      }
+
+      // ========================================================================
+      // Part 3: Get total count for pagination
+      // ========================================================================
+      const countQuery = inventoryQuery.clone().clearSelect().clearOrder().count("* as count")
+      const [{ count: totalCount }] = await countQuery
+      const total = parseInt(String(totalCount), 10)
+
+      // ========================================================================
+      // Part 4: Apply sorting and pagination
+      // ========================================================================
+      if (validSortBy === "acquisition_date") {
+        inventoryQuery = inventoryQuery.orderBy("ubi.acquisition_date", validSortOrder)
+      } else if (validSortBy === "blueprint_name") {
+        inventoryQuery = inventoryQuery.orderBy("b.blueprint_name", validSortOrder)
+      }
+
+      // Apply pagination
+      const offset = (validatedPage - 1) * validatedPageSize
+      inventoryQuery = inventoryQuery.limit(validatedPageSize).offset(offset)
+
+      // Execute query
+      const inventoryResults = await inventoryQuery
+
+      // ========================================================================
+      // Part 5: Calculate statistics (Requirement 30.2, 44.4)
+      // ========================================================================
+      // Get total owned count
+      const [{ count: totalOwnedCount }] = await knex("user_blueprint_inventory")
+        .join("blueprints", "user_blueprint_inventory.blueprint_id", "blueprints.blueprint_id")
+        .where("user_blueprint_inventory.user_id", user_id)
+        .where("user_blueprint_inventory.is_owned", true)
+        .where("blueprints.version_id", effectiveVersionId)
+        .where("blueprints.is_active", true)
+        .count("* as count")
+
+      const total_owned = parseInt(String(totalOwnedCount), 10)
+
+      // Get total available count (only obtainable: default source or has mission rewards)
+      const [{ count: totalAvailableCount }] = await knex("blueprints as b")
+        .where("b.version_id", effectiveVersionId)
+        .where("b.is_active", true)
+        .where(function () {
+          this.where("b.source", "default").orWhereExists(
+            knex("mission_blueprint_rewards").whereRaw("mission_blueprint_rewards.blueprint_id = b.blueprint_id"),
+          )
+        })
+        .count("* as count")
+
+      const total_available = parseInt(String(totalAvailableCount), 10)
+
+      // Calculate completion percentage
+      const completion_percentage =
+        total_available > 0 ? (total_owned / total_available) * 100 : 0
+
+      // Get recently acquired count (last 7 days) (Requirement 44.9)
+      const sevenDaysAgo = new Date()
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+
+      const [{ count: recentlyAcquiredCount }] = await knex("user_blueprint_inventory")
+        .join("blueprints", "user_blueprint_inventory.blueprint_id", "blueprints.blueprint_id")
+        .where("user_blueprint_inventory.user_id", user_id)
+        .where("user_blueprint_inventory.is_owned", true)
+        .where("blueprints.version_id", effectiveVersionId)
+        .where("blueprints.is_active", true)
+        .where("user_blueprint_inventory.acquisition_date", ">=", sevenDaysAgo)
+        .count("* as count")
+
+      const recently_acquired_count = parseInt(String(recentlyAcquiredCount), 10)
+
+      logger.info("User blueprint inventory fetched successfully", {
+        user_id,
+        total_owned,
+        total_available,
+        completion_percentage,
+        returned: inventoryResults.length,
+      })
+
+      // Transform results
+      const blueprints = inventoryResults.map((row) => ({
+        blueprint_id: row.blueprint_id,
+        blueprint_name: row.blueprint_name,
+        output_item_name: row.output_item_name,
+        output_item_icon: row.output_item_icon || undefined,
+        item_category: row.item_category || undefined,
+        rarity: row.rarity || undefined,
+        tier: row.tier || undefined,
+        acquisition_date: row.acquisition_date ? row.acquisition_date.toISOString() : new Date().toISOString(),
+        acquisition_method: row.acquisition_method || undefined,
+        acquisition_location: row.acquisition_location || undefined,
+        acquisition_notes: row.acquisition_notes || undefined,
+      }))
+
+      return {
+        blueprints,
+        statistics: {
+          total_owned,
+          total_available,
+          completion_percentage,
+          recently_acquired_count,
+        },
+        total,
+        page: validatedPage,
+        page_size: validatedPageSize,
+      }
+    } catch (error) {
+      logger.error("Failed to fetch user blueprint inventory", {
+        user_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
    * Get blueprint detail with ingredients and missions
    *
    * Returns complete blueprint information including all required ingredients
@@ -1098,351 +1443,6 @@ export class BlueprintsController extends BaseController {
     }
   }
 
-  /**
-   * Get blueprint categories
-   *
-   * Returns all blueprint categories with item counts, supporting
-   * hierarchical category navigation in the blueprint browser.
-   *
-   * Requirements:
-   * - 19.1: Categorize blueprints by item type
-   * - 19.2: Support hierarchical categories with subcategories
-   * - 19.5: Display item count per category
-   *
-   * @summary Get categories
-   * @param version_id Optional game version ID (defaults to active LIVE version)
-   * @returns Array of categories with counts
-   */
-  @Get("categories")
-  public async getBlueprintCategories(
-    @Query() version_id?: string,
-  ): Promise<BlueprintCategory[]> {
-    const knex = getKnex()
-
-    logger.info("Fetching blueprint categories", { version_id })
-
-    try {
-      // ========================================================================
-      // Get or validate version_id
-      // ========================================================================
-      let effectiveVersionId = version_id
-
-      if (!effectiveVersionId) {
-        // Get active LIVE version
-        const activeVersion = await knex("game_versions")
-          .where("version_type", "LIVE")
-          .where("is_active", true)
-          .orderBy("created_at", "desc")
-          .first()
-
-        if (!activeVersion) {
-          this.throwNotFound("Active LIVE game version", "LIVE")
-        }
-
-        effectiveVersionId = activeVersion.version_id
-      }
-
-      // ========================================================================
-      // Get categories with counts (Requirement 19.5)
-      // ========================================================================
-      const categoriesQuery: BlueprintCategoryRow[] = await knex("blueprints")
-        .select(
-          "item_category as category",
-          "item_subcategory as subcategory",
-        )
-        .count<BlueprintCategoryRow[]>("* as count")
-        .where("version_id", effectiveVersionId)
-        .where("is_active", true)
-        .groupBy("item_category", "item_subcategory")
-        .orderBy("item_category", "asc")
-        .orderBy("item_subcategory", "asc")
-
-      const categories: BlueprintCategory[] = categoriesQuery.map((row) => ({
-        category: row.category,
-        subcategory: row.subcategory || undefined,
-        count: parseInt(String(row.count), 10),
-      }))
-
-      logger.info("Blueprint categories fetched successfully", {
-        category_count: categories.length,
-      })
-
-      return categories
-    } catch (error) {
-      logger.error("Failed to fetch blueprint categories", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
-
-
-  /**
-   * Get user's blueprint inventory
-   *
-   * Returns all blueprints owned by the authenticated user with acquisition details.
-   * Supports filtering by category, rarity, and version. Displays acquisition progress
-   * and statistics.
-   *
-   * Requirements:
-   * - 30.1: Record which blueprints each player owns
-   * - 30.2: Display owned blueprint count vs. total available
-   * - 30.3: Display acquisition date for each blueprint
-   * - 30.4: Support filtering blueprints by owned status
-   * - 30.5: Display acquisition progress
-   * - 30.6: Support bulk import of owned blueprints
-   * - 44.3: Allow players to mark blueprints as owned/not owned
-   * - 44.4: Display owned blueprint count vs. total available
-   * - 44.5: Support filtering blueprints by owned status
-   * - 44.6: Display acquisition progress
-   * - 44.7: Sync blueprint inventory across devices
-   * - 44.8: Support bulk import of blueprint lists
-   * - 44.9: Display recently acquired blueprints
-   * - 44.10: Support blueprint collection goals and achievements
-   *
-   * @summary Get user inventory
-   * @param item_category Filter by item category
-   * @param rarity Filter by rarity
-   * @param version_id Game version ID (defaults to active LIVE version)
-   * @param sort_by Sort field (acquisition_date, blueprint_name)
-   * @param sort_order Sort order (asc, desc)
-   * @param page Page number (default: 1)
-   * @param page_size Results per page (default: 50, max: 100)
-   * @returns User's blueprint inventory with statistics
-   */
-  @Get("inventory")
-  @Security("loggedin")
-  public async getUserBlueprintInventory(
-    @Query() item_category?: string,
-    @Query() rarity?: string,
-    @Query() version_id?: string,
-    @Query() sort_by: "acquisition_date" | "blueprint_name" = "acquisition_date",
-    @Query() sort_order: "asc" | "desc" = "desc",
-    @Query() page: number = 1,
-    @Query() page_size: number = 50,
-  ): Promise<{
-    blueprints: Array<{
-      blueprint_id: string
-      blueprint_name: string
-      output_item_name: string
-      output_item_icon?: string
-      item_category?: string
-      rarity?: string
-      tier?: number
-      acquisition_date: string
-      acquisition_method?: string
-      acquisition_location?: string
-      acquisition_notes?: string
-    }>
-    statistics: {
-      total_owned: number
-      total_available: number
-      completion_percentage: number
-      recently_acquired_count: number
-    }
-    total: number
-    page: number
-    page_size: number
-  }> {
-    const knex = getKnex()
-
-    // Get user_id from authentication context
-    const user_id = this.getUserId()
-
-    if (!user_id) {
-      this.throwUnauthorized("User must be authenticated to view blueprint inventory")
-    }
-
-    // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 50))
-
-    // Validate sort parameters
-    const validSortBy = ["acquisition_date", "blueprint_name"].includes(sort_by)
-      ? sort_by
-      : "acquisition_date"
-    const validSortOrder = ["asc", "desc"].includes(sort_order) ? sort_order : "desc"
-
-    logger.info("Fetching user blueprint inventory", {
-      user_id,
-      item_category,
-      rarity,
-      version_id,
-      page: validatedPage,
-      page_size: validatedPageSize,
-    })
-
-    try {
-      // ========================================================================
-      // Part 1: Get or validate version_id
-      // ========================================================================
-      let effectiveVersionId = version_id
-
-      if (!effectiveVersionId) {
-        // Get active LIVE version
-        const activeVersion = await knex("game_versions")
-          .where("version_type", "LIVE")
-          .where("is_active", true)
-          .orderBy("created_at", "desc")
-          .first()
-
-        if (!activeVersion) {
-          this.throwNotFound("Active LIVE game version", "LIVE")
-        }
-
-        effectiveVersionId = activeVersion.version_id
-      }
-
-      // ========================================================================
-      // Part 2: Build inventory query with filters
-      // ========================================================================
-      let inventoryQuery = knex("user_blueprint_inventory as ubi")
-        .join("blueprints as b", "ubi.blueprint_id", "b.blueprint_id")
-        .join("game_items as gi", "b.output_game_item_id", "gi.id")
-        .select<UserBlueprintInventoryRow[]>(
-          "b.blueprint_id",
-          "b.blueprint_name",
-          "gi.name as output_item_name",
-          "gi.image_url as output_item_icon",
-          "b.item_category",
-          "b.rarity",
-          "b.tier",
-          "ubi.acquisition_date",
-          "ubi.acquisition_method",
-          "ubi.acquisition_location",
-          "ubi.acquisition_notes",
-        )
-        .where("ubi.user_id", user_id)
-        .where("ubi.is_owned", true)
-        .where("b.version_id", effectiveVersionId)
-        .where("b.is_active", true)
-
-      // Apply category filter
-      if (item_category) {
-        inventoryQuery = inventoryQuery.where("b.item_category", item_category)
-      }
-
-      // Apply rarity filter
-      if (rarity) {
-        inventoryQuery = inventoryQuery.where("b.rarity", rarity)
-      }
-
-      // ========================================================================
-      // Part 3: Get total count for pagination
-      // ========================================================================
-      const countQuery = inventoryQuery.clone().clearSelect().clearOrder().count("* as count")
-      const [{ count: totalCount }] = await countQuery
-      const total = parseInt(String(totalCount), 10)
-
-      // ========================================================================
-      // Part 4: Apply sorting and pagination
-      // ========================================================================
-      if (validSortBy === "acquisition_date") {
-        inventoryQuery = inventoryQuery.orderBy("ubi.acquisition_date", validSortOrder)
-      } else if (validSortBy === "blueprint_name") {
-        inventoryQuery = inventoryQuery.orderBy("b.blueprint_name", validSortOrder)
-      }
-
-      // Apply pagination
-      const offset = (validatedPage - 1) * validatedPageSize
-      inventoryQuery = inventoryQuery.limit(validatedPageSize).offset(offset)
-
-      // Execute query
-      const inventoryResults = await inventoryQuery
-
-      // ========================================================================
-      // Part 5: Calculate statistics (Requirement 30.2, 44.4)
-      // ========================================================================
-      // Get total owned count
-      const [{ count: totalOwnedCount }] = await knex("user_blueprint_inventory")
-        .join("blueprints", "user_blueprint_inventory.blueprint_id", "blueprints.blueprint_id")
-        .where("user_blueprint_inventory.user_id", user_id)
-        .where("user_blueprint_inventory.is_owned", true)
-        .where("blueprints.version_id", effectiveVersionId)
-        .where("blueprints.is_active", true)
-        .count("* as count")
-
-      const total_owned = parseInt(String(totalOwnedCount), 10)
-
-      // Get total available count (only obtainable: default source or has mission rewards)
-      const [{ count: totalAvailableCount }] = await knex("blueprints as b")
-        .where("b.version_id", effectiveVersionId)
-        .where("b.is_active", true)
-        .where(function () {
-          this.where("b.source", "default").orWhereExists(
-            knex("mission_blueprint_rewards").whereRaw("mission_blueprint_rewards.blueprint_id = b.blueprint_id"),
-          )
-        })
-        .count("* as count")
-
-      const total_available = parseInt(String(totalAvailableCount), 10)
-
-      // Calculate completion percentage
-      const completion_percentage =
-        total_available > 0 ? (total_owned / total_available) * 100 : 0
-
-      // Get recently acquired count (last 7 days) (Requirement 44.9)
-      const sevenDaysAgo = new Date()
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-      const [{ count: recentlyAcquiredCount }] = await knex("user_blueprint_inventory")
-        .join("blueprints", "user_blueprint_inventory.blueprint_id", "blueprints.blueprint_id")
-        .where("user_blueprint_inventory.user_id", user_id)
-        .where("user_blueprint_inventory.is_owned", true)
-        .where("blueprints.version_id", effectiveVersionId)
-        .where("blueprints.is_active", true)
-        .where("user_blueprint_inventory.acquisition_date", ">=", sevenDaysAgo)
-        .count("* as count")
-
-      const recently_acquired_count = parseInt(String(recentlyAcquiredCount), 10)
-
-      logger.info("User blueprint inventory fetched successfully", {
-        user_id,
-        total_owned,
-        total_available,
-        completion_percentage,
-        returned: inventoryResults.length,
-      })
-
-      // Transform results
-      const blueprints = inventoryResults.map((row) => ({
-        blueprint_id: row.blueprint_id,
-        blueprint_name: row.blueprint_name,
-        output_item_name: row.output_item_name,
-        output_item_icon: row.output_item_icon || undefined,
-        item_category: row.item_category || undefined,
-        rarity: row.rarity || undefined,
-        tier: row.tier || undefined,
-        acquisition_date: row.acquisition_date ? row.acquisition_date.toISOString() : new Date().toISOString(),
-        acquisition_method: row.acquisition_method || undefined,
-        acquisition_location: row.acquisition_location || undefined,
-        acquisition_notes: row.acquisition_notes || undefined,
-      }))
-
-      return {
-        blueprints,
-        statistics: {
-          total_owned,
-          total_available,
-          completion_percentage,
-          recently_acquired_count,
-        },
-        total,
-        page: validatedPage,
-        page_size: validatedPageSize,
-      }
-    } catch (error) {
-      logger.error("Failed to fetch user blueprint inventory", {
-        user_id,
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
 
   /**
    * Get org members who own a specific blueprint
