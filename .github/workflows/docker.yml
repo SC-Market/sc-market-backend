@@ -1,29 +1,188 @@
+#
 name: Create and publish a Docker image
 
-# Builds the backend image, pushes it to GHCR, and redeploys the `backend`
-# container on the `sc-market` Lightsail service. The implementation lives in the
-# org-level reusable workflow so the backend and sc-orgs share one pipeline —
-# see SC-Market/.github/.github/workflows/deploy-lightsail.yml
+# Configures this workflow to run every time a change is pushed to the branch called `main`.
 on:
   push:
     branches: ["main"]
-  workflow_dispatch: {}
 
-# A called workflow only gets the permissions the caller grants, so these must be
-# declared here as well as in the reusable workflow.
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-  attestations: write
+# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
+# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
-  deploy:
-    uses: SC-Market/.github/.github/workflows/deploy-lightsail.yml@main
-    with:
-      service-name: sc-market
-      container-name: backend
-      role-arn: arn:aws:iam::272095582125:role/github-actions-lightsail-deploy
-      aws-region: us-east-2
-      node-version: "24"
-      run-tests: true
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=main
+      # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
+      # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the `docker/build-push-action` repository.
+      # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::272095582125:role/github-actions-lightsail-deploy
+          aws-region: us-east-2
+      
+      - name: Force Lightsail redeployment
+        run: |
+          # Wait for any in-progress deployment to complete
+          echo "Checking for in-progress deployments..."
+          while true; do
+            STATE=$(aws lightsail get-container-services \
+              --service-name sc-market \
+              --region us-east-2 \
+              --query 'containerServices[0].state' \
+              --output text)
+            
+            if [ "$STATE" = "READY" ]; then
+              echo "Service is ready for new deployment"
+              break
+            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ]; then
+              echo "Service is $STATE, waiting 30 seconds..."
+              sleep 30
+            else
+              echo "Service state: $STATE"
+              break
+            fi
+          done
+          
+          # Use the git SHA tag for this specific build
+          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_TAG_SHORT="${IMAGE_TAG:0:7}"
+          
+          # Get current deployment configuration
+          CURRENT_DEPLOYMENT=$(aws lightsail get-container-services \
+            --service-name sc-market \
+            --region us-east-2 \
+            --query 'containerServices[0].currentDeployment' \
+            --output json)
+          
+          # Extract containers config and update backend image to specific SHA tag
+          CONTAINERS=$(echo $CURRENT_DEPLOYMENT | jq --arg tag "$IMAGE_TAG_SHORT" '.containers | 
+            .backend.image = "ghcr.io/sc-market/sc-market-backend:" + $tag')
+          
+          # Extract public endpoint config
+          PUBLIC_ENDPOINT=$(echo $CURRENT_DEPLOYMENT | jq '.publicEndpoint')
+          
+          # Create new deployment with specific image tag
+          echo "Creating deployment with image tag: $IMAGE_TAG_SHORT"
+          echo "Deploying to sc-market service..."
+          aws lightsail create-container-service-deployment \
+            --service-name sc-market \
+            --region us-east-2 \
+            --containers "$CONTAINERS" \
+            --public-endpoint "$PUBLIC_ENDPOINT" > /dev/null
+          
+          # Wait for deployment to complete
+          echo "Waiting for deployment to complete..."
+          TIMEOUT=600  # 10 minutes
+          ELAPSED=0
+          
+          while [ $ELAPSED -lt $TIMEOUT ]; do
+            STATE=$(aws lightsail get-container-services \
+              --service-name sc-market \
+              --region us-east-2 \
+              --query 'containerServices[0].state' \
+              --output text)
+            
+            if [ "$STATE" = "RUNNING" ]; then
+              echo "✓ Deployment completed successfully - Service is RUNNING"
+              exit 0
+            elif [ "$STATE" = "READY" ]; then
+              echo "✓ Service is READY (no active deployment)"
+              exit 0
+            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ]; then
+              echo "Deployment in progress... ($ELAPSED/$TIMEOUT seconds) - State: $STATE"
+              sleep 30
+              ELAPSED=$((ELAPSED + 30))
+            else
+              echo "✗ Deployment failed with state: $STATE"
+              exit 1
+            fi
+          done
+          
+          echo "✗ Deployment timed out after $TIMEOUT seconds"
+          exit 1
+
+      - name: Clean up old Lightsail container images
+        if: success()
+        run: |
+          CURRENT_IMAGE=$(aws lightsail get-container-services \
+            --service-name sc-market \
+            --region us-east-2 \
+            --query 'containerServices[0].currentDeployment.containers.backend.image' \
+            --output text)
+
+          echo "Current deployment image: $CURRENT_IMAGE"
+
+          ALL_IMAGES=$(aws lightsail get-container-images \
+            --service-name sc-market \
+            --region us-east-2 \
+            --query 'containerImages[].image' \
+            --output text)
+
+          DELETED=0
+          for IMG in $ALL_IMAGES; do
+            if [ "$IMG" = "$CURRENT_IMAGE" ]; then
+              echo "Skipping (active): $IMG"
+              continue
+            fi
+            echo "Deleting: $IMG"
+            if aws lightsail delete-container-image \
+              --service-name sc-market \
+              --region us-east-2 \
+              --image "$IMG" 2>&1; then
+              DELETED=$((DELETED + 1))
+            else
+              echo "Warning: could not delete $IMG (may still be referenced)"
+            fi
+          done
+          echo "Image cleanup complete — deleted $DELETED image(s)"
