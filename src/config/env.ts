@@ -64,7 +64,7 @@ interface Environment {
 
   // Other
   NODE_ENV?: string
-  PORT?: string
+  BACKEND_PORT?: string // Port the public API listens on; required, no default
   SESSION_SECRET?: string
 
   // JWT Authentication
