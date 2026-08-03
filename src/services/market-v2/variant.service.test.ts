@@ -149,9 +149,13 @@ describe("generateVariantDisplayName", () => {
   })
 
   it("should capitalize crafted source", () => {
-    expect(generateVariantDisplayName({ crafted_source: "crafted" })).toBe("- Crafted")
-    expect(generateVariantDisplayName({ crafted_source: "store" })).toBe("- Store")
-    expect(generateVariantDisplayName({ crafted_source: "looted" })).toBe("- Looted")
+    // No leading "- ": the separator is only added when a tier precedes the
+    // source, so a source-only variant does not render an orphan dash. This
+    // test previously asserted "- Crafted" and had been excluded from the suite,
+    // so the disagreement went unnoticed; the implementation is the correct side.
+    expect(generateVariantDisplayName({ crafted_source: "crafted" })).toBe("Crafted")
+    expect(generateVariantDisplayName({ crafted_source: "store" })).toBe("Store")
+    expect(generateVariantDisplayName({ crafted_source: "looted" })).toBe("Looted")
   })
 
   it("should skip unknown crafted source", () => {
@@ -248,7 +252,12 @@ describe("generateVariantShortName", () => {
   })
 })
 
-describe("getOrCreateVariant (database integration)", () => {
+// Needs a live Postgres: these exercise real inserts against item_variants and
+// use knex query-builder features (.modify) a hand-rolled fake does not carry.
+// Skipped rather than excluded at the config level so the pure-function tests
+// above still run — a directory-wide exclusion is what let this file rot.
+// Run with a database up: npx vitest run src/services/market-v2/variant.service.test.ts
+describe.skip("getOrCreateVariant (database integration)", () => {
   const db = getKnex()
   const testGameItemId = "123e4567-e89b-12d3-a456-426614174000"
 
@@ -386,16 +395,6 @@ describe("getOrCreateVariant (database integration)", () => {
 
 describe("VariantService class", () => {
   const service = new VariantService()
-  const db = getKnex()
-  const testGameItemId = "123e4567-e89b-12d3-a456-426614174000"
-
-  beforeEach(async () => {
-    await db("item_variants").where({ game_item_id: testGameItemId }).delete()
-  })
-
-  afterEach(async () => {
-    await db("item_variants").where({ game_item_id: testGameItemId }).delete()
-  })
 
   it("should expose normalizeVariantAttributes method", () => {
     const normalized = service.normalizeVariantAttributes({
@@ -419,6 +418,21 @@ describe("VariantService class", () => {
   it("should expose generateVariantShortName method", () => {
     const shortName = service.generateVariantShortName({ quality_tier: 5 })
     expect(shortName).toBe("T5")
+  })
+})
+
+// Same as above: real inserts against item_variants, needs a database.
+describe.skip("VariantService class (database integration)", () => {
+  const service = new VariantService()
+  const db = getKnex()
+  const testGameItemId = "123e4567-e89b-12d3-a456-426614174000"
+
+  beforeEach(async () => {
+    await db("item_variants").where({ game_item_id: testGameItemId }).delete()
+  })
+
+  afterEach(async () => {
+    await db("item_variants").where({ game_item_id: testGameItemId }).delete()
   })
 
   it("should expose getOrCreateVariant method", async () => {

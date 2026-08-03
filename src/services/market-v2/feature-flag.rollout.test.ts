@@ -280,6 +280,137 @@ describe("updateConfig", () => {
   })
 })
 
+describe("setFlagOverride / removeFlagOverride", () => {
+  it("writes a new override and makes it take effect", async () => {
+    const { service, db } = await freshService({
+      configs: [flagRow({ enabled: true, rollout_percentage: 0 })],
+    })
+
+    await service.setFlagOverride("user-1", "nav_v2", true)
+
+    expect(db.state.user_feature_overrides).toHaveLength(1)
+    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+  })
+
+  it("upserts rather than duplicating an existing override", async () => {
+    const { service, db } = await freshService({
+      configs: [flagRow({ enabled: true, rollout_percentage: 0 })],
+      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+    })
+
+    await service.setFlagOverride("user-1", "nav_v2", false)
+
+    expect(db.state.user_feature_overrides).toHaveLength(1)
+    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+  })
+
+  it("returns the user to the rollout when the override is removed", async () => {
+    const { service, db } = await freshService({
+      configs: [flagRow({ enabled: true, rollout_percentage: 100 })],
+      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: false }],
+    })
+
+    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+
+    await service.removeFlagOverride("user-1", "nav_v2")
+
+    expect(db.state.user_feature_overrides).toHaveLength(0)
+    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+  })
+
+  it("removes only the targeted flag's override", async () => {
+    const { service, db } = await freshService({
+      configs: [flagRow({ enabled: true })],
+      overrides: [
+        { user_id: "user-1", flag_name: "nav_v2", enabled: true },
+        { user_id: "user-1", flag_name: "wiki", enabled: true },
+      ],
+    })
+
+    await service.removeFlagOverride("user-1", "nav_v2")
+
+    expect(db.state.user_feature_overrides).toEqual([
+      { user_id: "user-1", flag_name: "wiki", enabled: true },
+    ])
+  })
+
+  it("reports whether a user has any override at all", async () => {
+    const { service } = await freshService({
+      configs: [flagRow({ enabled: true })],
+      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+    })
+
+    expect(await service.hasOverride("user-1")).toBe(true)
+    expect(await service.hasOverride("user-2")).toBe(false)
+  })
+})
+
+describe("getUserOverrides — pagination", () => {
+  it("pages through market_v2 overrides without repeating a user", async () => {
+    const overrides: FakeOverrideRow[] = Array.from({ length: 10 }, (_, i) => ({
+      user_id: `user-${i}`,
+      flag_name: "market_v2",
+      enabled: i % 2 === 0,
+      updated_at: new Date(2026, 0, i + 1),
+    }))
+    const { service } = await freshService({
+      configs: [flagRow({ flag_name: "market_v2", enabled: true })],
+      overrides,
+    })
+
+    const page1 = await service.getUserOverrides(1, 5)
+    const page2 = await service.getUserOverrides(2, 5)
+
+    expect(page1.total).toBe(10)
+    expect(page1.overrides).toHaveLength(5)
+    expect(page2.overrides).toHaveLength(5)
+
+    const ids = [...page1.overrides, ...page2.overrides].map((o) => o.user_id)
+    expect(new Set(ids).size).toBe(10)
+  })
+
+  it("excludes overrides for other flags", async () => {
+    const { service } = await freshService({
+      configs: [flagRow({ flag_name: "market_v2", enabled: true })],
+      overrides: [
+        { user_id: "user-1", flag_name: "market_v2", enabled: true, updated_at: new Date(2026, 0, 1) },
+        { user_id: "user-2", flag_name: "nav_v2", enabled: true, updated_at: new Date(2026, 0, 2) },
+      ],
+    })
+
+    const { overrides, total } = await service.getUserOverrides(1, 50)
+
+    expect(total).toBe(1)
+    expect(overrides.map((o) => o.user_id)).toEqual(["user-1"])
+  })
+})
+
+describe("getUserFlagOverrides", () => {
+  it("returns every flag the user has an override for", async () => {
+    const { service } = await freshService({
+      configs: [flagRow({ enabled: true })],
+      overrides: [
+        { user_id: "user-1", flag_name: "nav_v2", enabled: true },
+        { user_id: "user-1", flag_name: "wiki", enabled: false },
+        { user_id: "user-2", flag_name: "nav_v2", enabled: true },
+      ],
+    })
+
+    const rows = await service.getUserFlagOverrides("user-1")
+
+    expect(rows.map((r) => r.flag_name).sort()).toEqual(["nav_v2", "wiki"])
+  })
+
+  it("returns nothing when the overrides table is absent", async () => {
+    const { service } = await freshService({
+      configs: [flagRow({ enabled: true })],
+      missingTables: ["user_feature_overrides"],
+    })
+
+    expect(await service.getUserFlagOverrides("user-1")).toEqual([])
+  })
+})
+
 describe("getMarketVersion", () => {
   it("maps the market_v2 flag onto the V1/V2 string", async () => {
     const { service } = await freshService({

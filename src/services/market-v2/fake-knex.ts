@@ -62,8 +62,24 @@ class FakeBuilder implements PromiseLike<Row[]> {
    * back live references would make a missing cache invalidation invisible.
    */
   private filtered(): Row[] {
-    return this.hits().map((r) => ({ ...r }))
+    let rows = this.hits().map((r) => ({ ...r }))
+    if (this.order) {
+      const { column, direction } = this.order
+      rows.sort((a, b) => {
+        const av = a[column] as string | number | Date
+        const bv = b[column] as string | number | Date
+        const cmp = av < bv ? -1 : av > bv ? 1 : 0
+        return direction === "desc" ? -cmp : cmp
+      })
+    }
+    if (this.offsetCount) rows = rows.slice(this.offsetCount)
+    if (this.limitCount !== undefined) rows = rows.slice(0, this.limitCount)
+    return rows
   }
+
+  private order?: { column: string; direction: "asc" | "desc" }
+  private limitCount?: number
+  private offsetCount?: number
 
   where(criteria: Row | string, value?: unknown): this {
     if (typeof criteria === "string") {
@@ -76,6 +92,26 @@ class FakeBuilder implements PromiseLike<Row[]> {
 
   select(..._columns: unknown[]): this {
     return this
+  }
+
+  orderBy(column: string, direction: "asc" | "desc" = "asc"): this {
+    this.order = { column, direction }
+    return this
+  }
+
+  limit(n: number): this {
+    this.limitCount = n
+    return this
+  }
+
+  offset(n: number): this {
+    this.offsetCount = n
+    return this
+  }
+
+  /** Terminal: knex resolves count() to `[{ count: "<n>" }]` with a string. */
+  async count(_alias: string): Promise<Array<{ count: string }>> {
+    return [{ count: String(this.hits().length) }]
   }
 
   async first(): Promise<Row | undefined> {
