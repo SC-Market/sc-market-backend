@@ -15,8 +15,16 @@ export default defineConfig({
       // V2 controller tests need mock infrastructure updates (TODO).
       // Scoped to *Controller* so pure-function middleware tests still run.
       "src/api/routes/v2/**/*Controller*.test.ts",
-      // V2 service tests need mock knex improvements (TODO)
-      "src/services/market-v2/**/*.test.ts",
+      // These three talk to a real Postgres (they delete from user_preferences
+      // in afterEach) and have since rotted: they call `service.clearAllCache()`,
+      // which no longer exists, and query a `feature_flag_config.key` column the
+      // schema replaced with `flag_name`. Listed individually rather than as
+      // `market-v2/**` so new tests in this directory are not silently skipped —
+      // see feature-flag.rollout.test.ts, which covers the same rollout logic
+      // against an in-memory fake (fake-knex.ts).
+      "src/services/market-v2/feature-flag.service.test.ts",
+      "src/services/market-v2/feature-flag.service.property.test.ts",
+      "src/services/market-v2/variant.service.test.ts",
       // Hits api.uexcorp.uk for real. The deploy workflow runs `npm test` before
       // building the image, so a third-party outage would block deploys on
       // something this repo neither owns nor changed. Run it explicitly

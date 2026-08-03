@@ -18743,9 +18743,6 @@
 				"security": [
 					{
 						"loggedin": []
-					},
-					{
-						"loggedin": []
 					}
 				],
 				"parameters": [],

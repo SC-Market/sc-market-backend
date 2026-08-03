@@ -101,7 +101,6 @@ export class DebugV2Controller extends BaseController {
    */
   @Security("loggedin")
   @Post("feature-flag")
-  @Security("loggedin")
   public async setFeatureFlag(
     @Body() request: SetFeatureFlagRequest,
     @Request() expressRequest: ExpressRequest,
