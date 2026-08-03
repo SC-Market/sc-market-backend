@@ -7930,7 +7930,7 @@ export function RegisterRoutes(app: Router) {
                 expressRequest: {"in":"request","name":"expressRequest","required":true,"dataType":"object"},
         };
         app.post('/debug/feature-flag',
-            authenticateMiddleware([{"loggedin":[]},{"loggedin":[]}]),
+            authenticateMiddleware([{"loggedin":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller.prototype.setFeatureFlag)),
 
