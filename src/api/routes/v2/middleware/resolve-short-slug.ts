@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { parseShortSlug, buildUuidRangeQuery } from "../util/short-slug.js"
+import { createErrorResponse } from "../../v1/util/response.js"
+import { ErrorCode } from "../../v1/util/error-codes.js"
 
 const SLUG_PATH_TABLES: Record<
   string,
@@ -45,7 +47,7 @@ async function resolveToUuid(
 
 export async function resolveShortSlug(
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction,
 ): Promise<void> {
   // Resolve path params
@@ -65,6 +67,15 @@ export async function resolveShortSlug(
           req.url = req.url.replace(idSegment, resolved)
           const pName = paramName || "id"
           if (req.params[pName]) req.params[pName] = resolved
+        } else {
+          // A short-slug that resolves to no row must not fall through: the raw
+          // segment is not a UUID, so letting it reach a UUID column would make
+          // Postgres reject the cast and surface as a 500. The resource is
+          // simply absent — answer 404, matching the full-UUID not-found path.
+          res.status(404).json(
+            createErrorResponse(ErrorCode.NOT_FOUND, "Resource not found"),
+          )
+          return
         }
       }
     }
