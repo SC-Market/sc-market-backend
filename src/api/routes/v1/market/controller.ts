@@ -753,7 +753,30 @@ const STATS_DISPLAY_FLOORS = {
   total_orders: 500,
   total_order_value: 25_000_000,
   week_orders: 23,
-  week_order_value: 2_281_000,
+  week_order_value: 12_000_000,
+}
+
+// Vary these floors deterministically by day so they stay stable within a
+// given day but shift across days. Range: base .. base + variance.
+const WEEK_ORDERS_FLOOR_VARIANCE = 5
+const WEEK_ORDER_VALUE_FLOOR_VARIANCE = 500_000
+
+// Deterministic hash of the day index -> [0, 1). The salt decorrelates
+// separate floors so they don't move in lockstep on the same day.
+function dayFraction(salt: number): number {
+  const dayIndex = Math.floor(Date.now() / 86_400_000) // days since epoch (UTC)
+  const seeded = Math.abs(Math.sin(dayIndex + salt) * 10_000)
+  return seeded % 1
+}
+
+function getWeekOrdersFloor(): number {
+  const offset = Math.floor(dayFraction(0) * WEEK_ORDERS_FLOOR_VARIANCE)
+  return STATS_DISPLAY_FLOORS.week_orders + offset
+}
+
+function getWeekOrderValueFloor(): number {
+  const offset = Math.floor(dayFraction(1) * WEEK_ORDER_VALUE_FLOOR_VARIANCE)
+  return STATS_DISPLAY_FLOORS.week_order_value + offset
 }
 
 export const get_order_stats: RequestHandler = async (req, res) => {
@@ -778,8 +801,8 @@ export const get_order_stats: RequestHandler = async (req, res) => {
     ...order_stats,
     total_orders: Math.max(order_stats?.total_orders || 0, STATS_DISPLAY_FLOORS.total_orders),
     total_order_value: Math.max(order_stats?.total_order_value || 0, STATS_DISPLAY_FLOORS.total_order_value),
-    week_orders: Math.max(order_stats?.week_orders || 0, STATS_DISPLAY_FLOORS.week_orders),
-    week_order_value: Math.max(order_stats?.week_order_value || 0, STATS_DISPLAY_FLOORS.week_order_value),
+    week_orders: Math.max(order_stats?.week_orders || 0, getWeekOrdersFloor()),
+    week_order_value: Math.max(order_stats?.week_order_value || 0, getWeekOrderValueFloor()),
   }
 
   res.json(createResponse(displayStats))
