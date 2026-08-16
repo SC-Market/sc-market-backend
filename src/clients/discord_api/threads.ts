@@ -1,4 +1,4 @@
-import { Knex } from "knex"
+import type { Knex } from "knex"
 import { database, getKnex } from "../database/knex-db.js"
 import * as orderDb from "../../api/routes/v1/orders/database.js"
 import * as chatDb from "../../api/routes/v1/chats/database.js"
@@ -12,7 +12,6 @@ import { handleStatusUpdate } from "../../api/routes/v1/orders/helpers.js"
 import { serializeAssignedOrder } from "../../api/routes/v1/orders/serializers.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { User } from "../../api/routes/v1/api-models.js"
-import { convertQuery } from "../../api/routes/v1/market/helpers.js"
 import { chatServer } from "../messaging/websocket.js"
 import logger from "../../logger/logger.js"
 import { StockLotService } from "../../services/stock-lot/stock-lot.service.js"
@@ -275,23 +274,41 @@ threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
   })
 })
 
+// Selects a seller's V2 listings from the listing_search view for the given shops
+// (passed as a knex subquery), shaped for the bot's /stock and /price pickers.
+// V1 market_listings / searchMarket is dead, so those tables are no longer queried.
+export function selectSellerListings(
+  db: Knex,
+  shopIdSubquery: Knex.QueryBuilder,
+) {
+  return db("listing_search as ls")
+    .select(
+      "ls.listing_id",
+      "ls.title",
+      "ls.quantity_available",
+      "ls.status",
+      "ls.price_min",
+      "ls.price_max",
+      "ls.variant_count",
+    )
+    .whereIn("ls.shop_id", shopIdSubquery)
+    .andWhere("ls.status", "!=", "cancelled")
+    .orderBy("ls.created_at", "desc")
+    .limit(100)
+}
+
 threadRouter.get("/user/:discord_id/listings", async (req, res) => {
   const discord_id = req.params.discord_id
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.json({ result: "Success", thread_ids: [] })
+    res.json({ result: "Success", listings: [] })
     return
   }
 
-  const userShops = await getKnex()("shops").where("owner_user_id", user.user_id).where("status", "active").select("shop_id")
-  const shopIds = userShops.map((s: { shop_id: string }) => s.shop_id)
-  const listings = await marketDb.searchMarket(
-    await convertQuery({ page_size: "100" }),
-    (qb: Knex.QueryBuilder) =>
-      shopIds.length > 0
-        ? qb.whereIn("shop_id", shopIds).andWhere("status", "!=", "archived")
-        : qb.where("user_seller_id", "=", user.user_id).andWhere("status", "!=", "archived"),
+  const listings = await selectSellerListings(
+    getKnex(),
+    getKnex()("shops").where("owner_user_id", user.user_id).select("shop_id"),
   )
 
   res.json({
@@ -340,14 +357,11 @@ threadRouter.get(
       return
     }
 
-    const orgShops = await getKnex()("shops").where("owner_contractor_id", contractor.contractor_id).where("status", "active").select("shop_id")
-    const orgShopIds = orgShops.map((s: { shop_id: string }) => s.shop_id)
-    const listings = await marketDb.searchMarket(
-      await convertQuery({ page_size: "100" }),
-      (qb: Knex.QueryBuilder) =>
-        orgShopIds.length > 0
-          ? qb.whereIn("shop_id", orgShopIds).andWhere("status", "!=", "archived")
-          : qb.where("contractor_seller_id", "=", contractor.contractor_id).andWhere("status", "!=", "archived"),
+    const listings = await selectSellerListings(
+      getKnex(),
+      getKnex()("shops")
+        .where("owner_contractor_id", contractor.contractor_id)
+        .select("shop_id"),
     )
 
     res.json({
