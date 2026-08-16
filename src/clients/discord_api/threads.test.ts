@@ -258,3 +258,53 @@ describe("resolveShopForUser", () => {
     expect(expectedSlug).toBe("user-fallback-abc")
   })
 })
+
+describe("selectSellerListings", () => {
+  let selectSellerListings: typeof import("./threads.js").selectSellerListings
+
+  beforeEach(async () => {
+    const mod = await import("./threads.js")
+    selectSellerListings = mod.selectSellerListings
+  })
+
+  it("reads listing_search scoped to the given shops, excluding cancelled", async () => {
+    const rows = [
+      { listing_id: "l1", title: "Widget", quantity_available: 5, status: "active" },
+    ]
+    const calls: Record<string, unknown[][]> = {}
+    const record = (name: string) => (...args: unknown[]) => {
+      ;(calls[name] ||= []).push(args)
+      return qb
+    }
+    // Chainable, thenable stand-in for a knex QueryBuilder.
+    const qb: Record<string, unknown> = {
+      select: record("select"),
+      whereIn: record("whereIn"),
+      andWhere: record("andWhere"),
+      orderBy: record("orderBy"),
+      limit: record("limit"),
+      then: (resolve: (v: unknown) => void) => resolve(rows),
+    }
+    const db = vi.fn((table: string) => {
+      ;(calls.table ||= []).push([table])
+      return qb
+    })
+    const shopSubquery = { __isSubquery: true }
+
+    const result = await selectSellerListings(
+      db as never,
+      shopSubquery as never,
+    )
+
+    expect(result).toEqual(rows)
+    expect(db).toHaveBeenCalledWith("listing_search as ls")
+    // Shop scoping is passed through as a subquery, not an inlined array.
+    expect(calls.whereIn[0]).toEqual(["ls.shop_id", shopSubquery])
+    expect(calls.andWhere[0]).toEqual(["ls.status", "!=", "cancelled"])
+    expect(calls.orderBy[0]).toEqual(["ls.created_at", "desc"])
+    expect(calls.limit[0]).toEqual([100])
+    expect(calls.select[0]).toContain("ls.quantity_available")
+    expect(calls.select[0]).toContain("ls.listing_id")
+    expect(calls.select[0]).toContain("ls.title")
+  })
+})
