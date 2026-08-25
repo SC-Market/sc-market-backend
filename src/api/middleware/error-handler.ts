@@ -10,6 +10,7 @@
  */
 
 import { Request, Response, NextFunction } from "express"
+import multer from "multer"
 import {
   createErrorResponse,
   ValidationError as ValidationErrorType,
@@ -278,6 +279,7 @@ export async function errorHandler(
 
   // Log error with context — only log unexpected errors, not client errors
   const isClientError =
+    err instanceof multer.MulterError ||
     err instanceof ValidationError ||
     err instanceof NotFoundError ||
     err instanceof InvalidQuantityError ||
@@ -389,6 +391,34 @@ export async function errorHandler(
         err.code || ErrorCode.CONFLICT,
         err.message,
         err.toJSON(),
+      ),
+    )
+  }
+
+  // Multer file-upload errors (e.g. a file that exceeds the size limit).
+  // Without this branch multer's error falls through to the generic 500 below,
+  // so an oversized image surfaced to the user as "An unexpected error
+  // occurred" instead of an actionable message. Map the size limit to 413
+  // (Payload Too Large) and the remaining multer limits to 400.
+  if (err instanceof multer.MulterError) {
+    const multerMessages: Record<string, string> = {
+      LIMIT_FILE_SIZE:
+        "File too large. Please upload a smaller file and try again.",
+      LIMIT_FILE_COUNT: "Too many files uploaded.",
+      LIMIT_UNEXPECTED_FILE: "Unexpected file field in upload.",
+      LIMIT_PART_COUNT: "Too many parts in the upload.",
+      LIMIT_FIELD_KEY: "Upload field name is too long.",
+      LIMIT_FIELD_VALUE: "Upload field value is too long.",
+      LIMIT_FIELD_COUNT: "Too many fields in the upload.",
+    }
+    const message = multerMessages[err.code] || "File upload failed."
+    const status = err.code === "LIMIT_FILE_SIZE" ? 413 : 400
+    return res.status(status).json(
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        message,
+        { code: err.code },
+        [{ field: err.field || "file", message, code: err.code }],
       ),
     )
   }
