@@ -67,6 +67,9 @@ export interface DiscordService {
   ): Promise<void>
 
   // Integration settings
+  resolveThreadConfig(
+    object: Pick<DBOrder, "shop_id" | "contractor_id" | "assigned_id">,
+  ): Promise<DiscordIntegrationSettings>
   getDiscordIntegrationSettings(
     userId: string,
   ): Promise<DiscordIntegrationSettings>
@@ -125,11 +128,6 @@ class RestDiscordService implements DiscordService {
   async queueThreadCreation(
     object: DBOfferSession | DBOrder,
   ): Promise<ThreadCreationResult> {
-    const contractor = object.contractor_id
-      ? await contractorDb.getContractor({
-          contractor_id: object.contractor_id,
-        })
-      : null
     const assigned = object.assigned_id
       ? await profileDb.getUser({ user_id: object.assigned_id })
       : null
@@ -137,34 +135,10 @@ class RestDiscordService implements DiscordService {
       ? await profileDb.getUser({ user_id: object.customer_id })
       : null
 
-    // Get Discord integration settings with fallback to old columns.
-    // Prefer the shop's per-shop Discord config when the entity has a shop_id.
-    let server_id: string | null = null
-    let channel_id: string | null = null
-
-    if (object.shop_id) {
-      const shop = await getKnex()("shops")
-        .where("shop_id", object.shop_id)
-        .first("official_server_id", "discord_thread_channel_id")
-      if (shop?.official_server_id && shop?.discord_thread_channel_id) {
-        server_id = shop.official_server_id?.toString() || null
-        channel_id = shop.discord_thread_channel_id?.toString() || null
-      }
-    }
-
-    // Fall back to contractor/user config when the shop has no Discord config set
-    if (!server_id || !channel_id) {
-      if (contractor) {
-        server_id = contractor.official_server_id?.toString() || null
-        channel_id = contractor.discord_thread_channel_id?.toString() || null
-      } else if (assigned) {
-        const discordSettings = await this.getDiscordIntegrationSettings(
-          assigned.user_id,
-        )
-        server_id = discordSettings.official_server_id
-        channel_id = discordSettings.discord_thread_channel_id
-      }
-    }
+    const {
+      official_server_id: server_id,
+      discord_thread_channel_id: channel_id,
+    } = await this.resolveThreadConfig(object)
 
     if (!server_id || !channel_id) {
       const entityId = "order_id" in object ? object.order_id : object.id
@@ -421,6 +395,40 @@ class RestDiscordService implements DiscordService {
         `Failed to send Discord message to thread ${threadId}: ${error}`,
       )
     }
+  }
+
+  /**
+   * Resolve the Discord server/channel that order & offer threads live in.
+   * Prefers the shop's per-shop config, falling back to the owning org, then
+   * the assigned user. Both values come from the same source so a thread link
+   * always points at the server the thread was created in.
+   */
+  async resolveThreadConfig(
+    object: Pick<DBOrder, "shop_id" | "contractor_id" | "assigned_id">,
+  ): Promise<DiscordIntegrationSettings> {
+    if (object.shop_id) {
+      const shop = await getKnex()("shops")
+        .where("shop_id", object.shop_id)
+        .first("official_server_id", "discord_thread_channel_id")
+      if (shop?.official_server_id && shop?.discord_thread_channel_id) {
+        return {
+          official_server_id: shop.official_server_id.toString(),
+          discord_thread_channel_id: shop.discord_thread_channel_id.toString(),
+        }
+      }
+    }
+
+    if (object.contractor_id) {
+      return this.getDiscordIntegrationSettingsForContractor(
+        object.contractor_id,
+      )
+    }
+
+    if (object.assigned_id) {
+      return this.getDiscordIntegrationSettings(object.assigned_id)
+    }
+
+    return { official_server_id: null, discord_thread_channel_id: null }
   }
 
   async getDiscordIntegrationSettings(

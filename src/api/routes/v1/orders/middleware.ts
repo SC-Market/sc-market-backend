@@ -26,14 +26,16 @@ export async function related_to_order(
   const assigned = order.assigned_id === user.user_id
   const customer = order.customer_id === user.user_id
   let unrelated = !customer && !assigned && user.role !== "admin"
-  if (order.contractor_id) {
+  if (order.contractor_id && unrelated) {
+    // claim_orders members need access to self-claim; finer-grained checks
+    // (status changes, assigning others) happen in the handlers.
     unrelated =
-      unrelated &&
       !(await has_permission(
         order.contractor_id,
         user.user_id,
         "manage_orders",
-      ))
+      )) &&
+      !(await has_permission(order.contractor_id, user.user_id, "claim_orders"))
   }
 
   if (unrelated) {

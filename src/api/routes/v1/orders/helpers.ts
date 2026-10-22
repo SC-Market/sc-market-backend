@@ -472,50 +472,61 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
     : await withTransaction(orderFn)
 
   // Non-critical side effects — only run when we own the transaction
-  // (when externalTrx is provided, the caller handles side effects after commit)
+  // (when externalTrx is provided, the caller runs them after commit)
   if (!externalTrx) {
-    try {
-      const existingChat = await chatDb.getChat({ session_id: session.id }).catch(() => null)
-      if (existingChat) {
-        await chatDb.updateChat(
-          { chat_id: existingChat.chat_id },
-          { order_id: order.order_id },
-        )
-      }
-    } catch (e) {
-      logger.error(`Failed to link chat to order: ${e}`)
-    }
-
-    try {
-      await chatParticipantService.ensureOrderChatParticipants(order)
-    } catch (e) {
-      logger.error(`Failed to ensure order chat participants: ${e}`)
-    }
-
-    try {
-      await notificationService.createOrderNotification(order)
-    } catch (e) {}
-
-    try {
-      await postOrderAlert(order)
-    } catch (e) {
-      logger.error(`Failed to post order alert: ${e}`)
-    }
-
-    try {
-      await discordService.renameThread(
-        session.thread_id!,
-        `order-${order.order_id.substring(0, 8)}`,
-      )
-    } catch (e) {
-      logger.error(`Failed to rename thread: ${e}`)
-    }
-
-    // Send custom order message if setting exists
-    await sendCustomOrderMessage(order, session)
+    await runOrderCreatedSideEffects(order, session)
   }
 
   return { ...order }
+}
+
+/**
+ * Non-critical side effects after an order is created from an offer session.
+ * Must run after the creating transaction has committed.
+ */
+export async function runOrderCreatedSideEffects(
+  order: DBOrder,
+  session: DBOfferSession,
+) {
+  try {
+    const existingChat = await chatDb.getChat({ session_id: session.id }).catch(() => null)
+    if (existingChat) {
+      await chatDb.updateChat(
+        { chat_id: existingChat.chat_id },
+        { order_id: order.order_id },
+      )
+    }
+  } catch (e) {
+    logger.error(`Failed to link chat to order: ${e}`)
+  }
+
+  try {
+    await chatParticipantService.ensureOrderChatParticipants(order)
+  } catch (e) {
+    logger.error(`Failed to ensure order chat participants: ${e}`)
+  }
+
+  try {
+    await notificationService.createOrderNotification(order)
+  } catch (e) {}
+
+  try {
+    await postOrderAlert(order)
+  } catch (e) {
+    logger.error(`Failed to post order alert: ${e}`)
+  }
+
+  try {
+    await discordService.renameThread(
+      session.thread_id!,
+      `order-${order.order_id.substring(0, 8)}`,
+    )
+  } catch (e) {
+    logger.error(`Failed to rename thread: ${e}`)
+  }
+
+  // Send custom order message if setting exists
+  await sendCustomOrderMessage(order, session)
 }
 
 export async function createOffer(
@@ -901,16 +912,19 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         req.user.user_id,
         "manage_orders",
       )
-      if (
-        ["fulfilled", "in-progress", "not-started"].includes(status) &&
-        !order.assigned_id &&
-        !orgAdmin
-      ) {
-        return res
-          .status(400)
+      const assigned = order.assigned_id === user.user_id
+      const customer = order.customer_id === user.user_id
+      const allowed =
+        orgAdmin || assigned || (status === "cancelled" && customer)
+      if (!allowed) {
+        res
+          .status(403)
           .json(
-            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid status!"),
+            createForbiddenErrorResponse(
+              `You may not set the status of this order to ${status}`,
+            ),
           )
+        return
       }
     }
 
