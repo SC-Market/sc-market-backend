@@ -14,6 +14,7 @@ import {
 } from "../util/formatting.js"
 import { serializeService } from "../services/serializers.js"
 import logger from "../../../../logger/logger.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
 import { DBContractOffer } from "../contracts/types.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 
@@ -203,12 +204,8 @@ export async function serializeOfferSession(session: DBOfferSession) {
     .where({ session_id: session.id })
     .first()
 
-  const contractor = session.contractor_id
-    ? await contractorDb.getContractor({ contractor_id: session.contractor_id })
-    : null
-  const assignee = session.assigned_id
-    ? await profileDb.getUser({ user_id: session.assigned_id })
-    : null
+  const { official_server_id: discord_server_id } =
+    await discordService.resolveThreadConfig(session)
 
   // Check if there's an order associated with this offer session (when status is "Accepted")
   let order_id = undefined
@@ -229,8 +226,7 @@ export async function serializeOfferSession(session: DBOfferSession) {
     offers: await Promise.all(offers.map(serializeOffer)),
     availability: await formatOrderAvailability(session),
     discord_thread_id: session.thread_id,
-    discord_server_id:
-      contractor?.official_server_id || assignee?.official_server_id || null,
+    discord_server_id,
     discord_invite: session.discord_invite || null,
   }
 }

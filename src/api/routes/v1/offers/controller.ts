@@ -17,7 +17,7 @@ import {
   serializeOfferSession,
   serializeOfferSessionStubOptimized,
 } from "./serializers.js"
-import { initiateOrder } from "../orders/helpers.js"
+import { initiateOrder, runOrderCreatedSideEffects } from "../orders/helpers.js"
 import { CounterOfferBody } from "./types.js"
 import { verify_listings } from "../market/helpers.js"
 import logger from "../../../../logger/logger.js"
@@ -106,22 +106,16 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
           const chat = await chatDb.getChat({ session_id: session.id })
           const actionBy = user ? ` by ${user.username}` : ""
           await sendSystemMessage(chat.chat_id, `Offer status updated to **Accepted**${actionBy}`, false)
-
-          // Link chat to order
-          await chatDb.updateChat(
-            { chat_id: chat.chat_id },
-            { order_id: order.order_id },
-          )
         } catch (error) {
           logger.debug(`Failed to send offer accept side effects for session ${session.id}: ${error}`)
         }
 
-        // Non-critical: notifications, discord alerts
-        try { await notificationService.createOrderNotification(order) } catch {}
+        // Chat link, chat participants, notifications, discord alerts, custom order message
         try {
-          const { postOrderAlert } = await import("../../../../services/discord/order-alerts.js")
-          await postOrderAlert(order)
-        } catch (e) { logger.error(`Failed to post order alert: ${e}`) }
+          await runOrderCreatedSideEffects(order, session)
+        } catch (e) {
+          logger.error(`Failed to run order created side effects for session ${session.id}: ${e}`)
+        }
 
         res.json(createResponse({ order_id: order.order_id }))
         return

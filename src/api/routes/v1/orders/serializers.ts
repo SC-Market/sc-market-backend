@@ -16,6 +16,7 @@ import {
 import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
 
 export async function serializeAssignedOrder(
   order: DBOrder,
@@ -156,10 +157,8 @@ export async function serializeOrderDetails(
     user_id: order.customer_id,
   })
 
-  // Get full assigned user data for discord_server_id (only if needed)
-  const assigned_to_full = order.assigned_id
-    ? await profileDb.getUser({ user_id: order.assigned_id })
-    : null
+  const { official_server_id: discord_server_id } =
+    await discordService.resolveThreadConfig(order)
 
   // Get discord_invite from offer_session if available
   let discord_invite: string | null = null
@@ -264,7 +263,7 @@ export async function serializeOrderDetails(
     rush: order.rush,
     offer_session_id: order.offer_session_id,
     discord_thread_id: order.thread_id,
-    discord_server_id: assigned_to_full?.official_server_id,
+    discord_server_id,
     discord_invite: discord_invite,
     allocation_summary: allocation_summary,
   }
