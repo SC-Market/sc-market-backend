@@ -19,20 +19,29 @@ export async function valid_contractor(
   next: NextFunction,
 ) {
   const spectrum_id = req.params["spectrum_id"]
+  let contractor
   try {
-    req.contractor = await contractorDb.getContractor({ spectrum_id })
-    if (!req.contractor) {
-      throw new Error("Invalid contractor")
-    }
-    next()
-  } catch {
+    contractor = await contractorDb.getContractorSafe({ spectrum_id })
+  } catch (error) {
+    logger.error("Failed to look up contractor", { spectrum_id, error })
     res
-      .status(400)
+      .status(500)
       .json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
       )
     return
   }
+  if (!contractor) {
+    res
+      .status(404)
+      .json(createNotFoundErrorResponse("Contractor", spectrum_id))
+    return
+  }
+  req.contractor = contractor
+  next()
 }
 
 export async function org_authorized(

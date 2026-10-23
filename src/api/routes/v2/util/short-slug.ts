@@ -1,6 +1,11 @@
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const SHORT_SLUG_REGEX = /^([0-9a-f]{8})--.+$/i
 
+/** True if `value` is a canonical UUID string (safe to bind to a uuid column). */
+export function isUuid(value: string): boolean {
+  return UUID_REGEX.test(value)
+}
+
 export function formatShortSlug(id: string, name: string): string {
   const prefix = id.replace(/-/g, "").slice(0, 8)
   const slug = name

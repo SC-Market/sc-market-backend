@@ -11,6 +11,7 @@ import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
 import * as recruitingDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
+import { isUuid } from "../../v2/util/short-slug.js"
 
 export async function valid_recruiting_post(
   req: Request,
@@ -28,6 +29,15 @@ export async function valid_recruiting_post(
           "Missing post_id parameter",
         ),
       )
+    return
+  }
+
+  // post_id is a uuid column; a malformed id can't match any post, and binding
+  // it would make Postgres throw (22P02) and surface as a 500.
+  if (!isUuid(post_id)) {
+    res
+      .status(404)
+      .json(createNotFoundErrorResponse("Recruiting post", post_id))
     return
   }
 

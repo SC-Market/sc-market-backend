@@ -18,7 +18,11 @@ import { get_sentinel as get_sentinel } from "./helpers.js"
 import { syncRSIHandle as syncRSIHandle } from "./helpers.js"
 import { serializeDetailedProfile as serializeDetailedProfile } from "./serializers.js"
 import { serializePublicProfile as serializePublicProfile } from "./serializers.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createNotFoundErrorResponse,
+  createResponse,
+} from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import { randomUUID as randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -683,21 +687,26 @@ export const profile_get_user_username: RequestHandler = async (req, res) => {
   try {
     const requester = req.user as User
     const username = req.params["username"]
-    let user
-    try {
-      user = await profileDb.getUser(
-        { username: username },
-        { noBalance: true },
-      )
-    } catch (e) {
-      res.status(400).json({ error: "Invalid user" })
+    const user = await profileDb.findUser(
+      { username: username },
+      { noBalance: true },
+    )
+    if (!user) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
     res.json(await serializePublicProfile(user, { discord: !!requester }))
   } catch (e) {
     logger.error("Error fetching user profile", { error: e })
-    res.status(400).json({ error: "Invalid user" })
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
     return
   }
 }
