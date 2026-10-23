@@ -16,6 +16,13 @@
 
 import { Knex } from "knex"
 import logger from "../../logger/logger.js"
+import {
+  type CanonicalManufacturer,
+  canonicalizeManufacturers,
+  canonicalManufacturerCode,
+  MANUFACTURER_CODE_MAX,
+  MANUFACTURER_NAME_MAX,
+} from "./manufacturers.js"
 
 // --- P4K Type to DB Subcategory Mapping (62 types) ---
 const P4K_TYPE_MAP: Record<string, string> = {
@@ -648,7 +655,15 @@ export class GameDataImportService {
       // ========================================================================
       logger.info("Starting game data import")
 
-      const p4kItems: P4KItem[] = gameData.items || []
+      // Items/ships reference manufacturer records by file name, and most of
+      // those records are per-livery/legacy aliases of a brand. Resolve every
+      // reference to its brand's canonical code so game_items, wiki_ships and
+      // wiki_manufacturers all agree (see manufacturers.ts).
+      const manufacturerCanon = canonicalizeManufacturers(gameData.manufacturers || [])
+      const p4kItems: P4KItem[] = (gameData.items || []).map((item) => ({
+        ...item,
+        manufacturer: canonicalManufacturerCode(manufacturerCanon.aliasToCanonical, item.manufacturer),
+      }))
       stats.totalP4KItems = p4kItems.length
 
       if (p4kItems.length === 0) {
@@ -1300,27 +1315,12 @@ export class GameDataImportService {
       // STEP 14: Import manufacturers
       // ========================================================================
       if (gameData.manufacturers && gameData.manufacturers.length > 0) {
-        logger.info("Importing manufacturers")
-        try {
-          for (const mfr of gameData.manufacturers) {
-            if (!mfr.code) continue
-            await knex("wiki_manufacturers")
-              .insert({
-                code: mfr.code,
-                name: mfr.name || mfr.code,
-                description: mfr.description || null,
-                name_key: mfr.nameKey || null,
-              })
-              .onConflict("code")
-              .merge({
-                name: mfr.name || mfr.code,
-                description: mfr.description || null,
-              })
-          }
-          logger.info(`Imported ${gameData.manufacturers.length} manufacturers`)
-        } catch {
-          logger.debug("Manufacturers import skipped (table may not exist)")
-        }
+        logger.info("Importing manufacturers", {
+          records: gameData.manufacturers.length,
+          brands: manufacturerCanon.brands.length,
+        })
+        const imported = await this.importManufacturers(knex, manufacturerCanon.brands, stats)
+        logger.info(`Imported ${imported}/${manufacturerCanon.brands.length} manufacturers`)
       }
 
       // ========================================================================
@@ -1332,8 +1332,12 @@ export class GameDataImportService {
         try {
           {
             let shipsInserted = 0
-            for (const ship of gameData.ships) {
-              if (!ship.name || ship.name.startsWith("@") || ship.name.startsWith("<=")) continue
+            for (const rawShip of gameData.ships) {
+              if (!rawShip.name || rawShip.name.startsWith("@") || rawShip.name.startsWith("<=")) continue
+              const ship = {
+                ...rawShip,
+                manufacturer: canonicalManufacturerCode(manufacturerCanon.aliasToCanonical, rawShip.manufacturer),
+              }
 
               // Upsert as game_item so ships are linkable
               const existing = await knex("game_items")
@@ -1445,6 +1449,62 @@ export class GameDataImportService {
       stats.errors.push(errorMessage)
       throw error
     }
+  }
+
+  /**
+   * Upsert one wiki_manufacturers row per brand and drop rows the game data no
+   * longer produces.
+   *
+   * Rows are upserted individually so one bad record cannot abort the rest —
+   * previously the whole loop sat in one try/catch, a single livery code longer
+   * than varchar(50) threw, the catch logged it at debug as "table may not
+   * exist", and every manufacturer after it (aegs, anvl, behr, klwe, ...) was
+   * silently never imported. The table is derived purely from the import, so
+   * rows outside the current brand set (livery/kiosk/alias codes written by
+   * older imports) are removed — but only once at least one brand landed, so a
+   * broken payload cannot empty it.
+   *
+   * @returns number of brands upserted
+   */
+  async importManufacturers(
+    knex: Knex,
+    brands: CanonicalManufacturer[],
+    stats: Pick<ImportStats, "errors">,
+  ): Promise<number> {
+    let imported = 0
+    for (const mfr of brands) {
+      if (mfr.code.length > MANUFACTURER_CODE_MAX || mfr.name.length > MANUFACTURER_NAME_MAX) {
+        stats.errors.push(`Manufacturer ${mfr.code} skipped: code/name exceeds column width`)
+        continue
+      }
+      const row = {
+        name: mfr.name,
+        description: mfr.description,
+        name_key: truncate(mfr.nameKey, 200),
+      }
+      try {
+        await knex("wiki_manufacturers")
+          .insert({ code: mfr.code, ...row })
+          .onConflict("code")
+          .merge(row)
+        imported++
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err)
+        logger.warn("Manufacturer import failed", { code: mfr.code, error: message })
+        stats.errors.push(`Manufacturer ${mfr.code}: ${message}`)
+      }
+    }
+
+    if (imported > 0) {
+      const pruned = await knex("wiki_manufacturers")
+        .whereNotIn(
+          "code",
+          brands.map((b) => b.code),
+        )
+        .delete()
+      if (pruned > 0) logger.info(`Removed ${pruned} non-brand manufacturer rows`)
+    }
+    return imported
   }
 
   /**
