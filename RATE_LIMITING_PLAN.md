@@ -4,6 +4,13 @@ Addresses security-audit findings **H2** (no rate limiting on the V2 API — 33 
 controllers) and **H3** (no rate limiting on auth endpoints in
 `src/api/routes/auth-routes.ts`).
 
+> **Status (2026-10-23): still open, deferred.** Re-confirmed live: V2 responses carry
+> no `X-RateLimit-*` headers and no limiter is mounted on the V2 router. Deliberately
+> deferred for now. When implemented, the V2 floor must allow for the frontend's
+> edge "bridge" (Cloudflare Pages Function, `frontend/src/bridge/`), which makes
+> anonymous same-zone subrequests keyed by the visitor's IP (`CF-Connecting-IP`), and
+> for future SSR renderers (see `frontend/docs/ssr-migration-design.md`).
+
 **Scope:** planning only. No source changes are proposed to be made by this document.
 Implementation touches `auth-routes.ts`, controllers, and `package.json`, which are
 owned by other agents — this plan defines *what* they should do.
