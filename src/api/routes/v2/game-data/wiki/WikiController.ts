@@ -1057,28 +1057,26 @@ export class WikiController extends BaseController {
         .andWhere("manufacturer", "!=", "")
         .groupByRaw("lower(manufacturer)")
 
-      // Step 3: Merge by resolved manufacturer identity
-      const merged = new Map<string, { code: string; displayName: string | null; count: number }>()
+      // Step 3: Merge by resolved manufacturer identity. Values that don't
+      // resolve to a wiki_manufacturers brand (livery logo records, kiosk/UI
+      // records, unlocalized placeholders) are not manufacturers and are left
+      // out of the list; the detail endpoint still serves them by raw code.
+      const merged = new Map<string, { code: string; displayName: string; count: number }>()
       for (const row of rawCounts) {
-        const key = row.mfr_lower
+        const resolved = codeToMfr.get(row.mfr_lower)
+        if (!resolved) continue
         const count = parseInt(String(row.item_count), 10)
-        const resolved = codeToMfr.get(key)
-        const groupKey = resolved?.id || key
-        const existing = merged.get(groupKey)
+        const existing = merged.get(resolved.id)
         if (existing) {
           existing.count += count
         } else {
-          merged.set(groupKey, {
-            code: resolved?.code || key,
-            displayName: resolved?.name || null,
-            count,
-          })
+          merged.set(resolved.id, { code: resolved.code, displayName: resolved.name, count })
         }
       }
 
       // Step 4: Sort and return
       const manufacturers = Array.from(merged.values())
-        .sort((a, b) => (a.displayName || a.code).localeCompare(b.displayName || b.code))
+        .sort((a, b) => a.displayName.localeCompare(b.displayName))
         .map((m) => ({
           manufacturer: m.code,
           display_name: m.displayName,
