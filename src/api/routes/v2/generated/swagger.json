@@ -5528,6 +5528,11 @@
 					"manufacturer": {
 						"type": "string"
 					},
+					"manufacturer_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name (e.g. \"Aegis Dynamics\") resolved from\nwiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves\n`display_name`. Null when the manufacturer is unknown or unset."
+					},
 					"image_url": {
 						"type": "string"
 					},
@@ -5540,7 +5545,8 @@
 				},
 				"required": [
 					"id",
-					"name"
+					"name",
+					"manufacturer_name"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -5691,6 +5697,11 @@
 					"manufacturer": {
 						"type": "string"
 					},
+					"manufacturer_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name (e.g. \"Aegis Dynamics\") resolved from\nwiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves\n`display_name`. Null when the manufacturer is unknown or unset."
+					},
 					"image_url": {
 						"type": "string"
 					},
@@ -5732,6 +5743,7 @@
 				"required": [
 					"id",
 					"name",
+					"manufacturer_name",
 					"attributes",
 					"craftable_from",
 					"rewarded_by",
@@ -5753,6 +5765,11 @@
 					},
 					"manufacturer": {
 						"type": "string"
+					},
+					"manufacturer_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name (e.g. \"Aegis Dynamics\") resolved from\nwiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves\n`display_name`. Null when the manufacturer is unknown or unset."
 					},
 					"focus": {
 						"type": "string"
@@ -5788,7 +5805,8 @@
 				},
 				"required": [
 					"id",
-					"name"
+					"name",
+					"manufacturer_name"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -5806,6 +5824,11 @@
 					},
 					"manufacturer": {
 						"type": "string"
+					},
+					"manufacturer_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name (e.g. \"Aegis Dynamics\") resolved from\nwiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves\n`display_name`. Null when the manufacturer is unknown or unset."
 					},
 					"focus": {
 						"type": "string"
@@ -5856,6 +5879,7 @@
 				"required": [
 					"id",
 					"name",
+					"manufacturer_name",
 					"attributes"
 				],
 				"type": "object",

@@ -40,6 +40,12 @@ export interface WikiItemSearchResult {
   size?: string
   grade?: string
   manufacturer?: string
+  /**
+   * Manufacturer display name (e.g. "Aegis Dynamics") resolved from
+   * wiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves
+   * `display_name`. Null when the manufacturer is unknown or unset.
+   */
+  manufacturer_name: string | null
   image_url?: string
   thumbnail_path?: string
   display_type?: string
@@ -53,6 +59,12 @@ export interface WikiItemDetail {
   size?: string
   grade?: string
   manufacturer?: string
+  /**
+   * Manufacturer display name (e.g. "Aegis Dynamics") resolved from
+   * wiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves
+   * `display_name`. Null when the manufacturer is unknown or unset.
+   */
+  manufacturer_name: string | null
   image_url?: string
   thumbnail_path?: string
   display_type?: string
@@ -99,6 +111,12 @@ export interface WikiShipSearchResult {
   name: string
   ship_code?: string
   manufacturer?: string
+  /**
+   * Manufacturer display name (e.g. "Aegis Dynamics") resolved from
+   * wiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves
+   * `display_name`. Null when the manufacturer is unknown or unset.
+   */
+  manufacturer_name: string | null
   focus?: string
   size?: string
   image_url?: string
@@ -115,6 +133,12 @@ export interface WikiShipDetail {
   name: string
   ship_code?: string
   manufacturer?: string
+  /**
+   * Manufacturer display name (e.g. "Aegis Dynamics") resolved from
+   * wiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves
+   * `display_name`. Null when the manufacturer is unknown or unset.
+   */
+  manufacturer_name: string | null
   focus?: string
   size?: string
   description?: string

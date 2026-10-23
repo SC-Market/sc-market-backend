@@ -21,7 +21,11 @@ import {
   WikiManufacturerSearchResult,
   WikiManufacturerDetail,
 } from "./wiki.types.js"
-import { parseShortSlug, buildUuidRangeQuery } from "../../util/short-slug.js"
+import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../util/short-slug.js"
+import {
+  loadManufacturerNameLookup,
+  lookupManufacturerName,
+} from "./manufacturer-names.js"
 import logger from "../../../../../logger/logger.js"
 
 /** Row shape of the `game_item_attributes` projection used here */
@@ -62,6 +66,8 @@ interface WikiShipSearchRow {
   id: string
   name: string
   manufacturer: string | null
+  manufacturer_code: string | null
+  gi_manufacturer: string | null
   size: number | null
   image_url: string | null
   focus: string | null
@@ -272,6 +278,10 @@ export class WikiController extends BaseController {
 
       // Execute query
       const itemsResults = await itemsQuery
+      const mfrLookup = await loadManufacturerNameLookup(
+        knex,
+        itemsResults.map((row: any) => row.manufacturer),
+      )
 
       logger.info("Wiki items search completed", {
         total,
@@ -292,6 +302,7 @@ export class WikiController extends BaseController {
         size: row.size || undefined,
         grade: row.grade || undefined,
         manufacturer: row.manufacturer_name || row.manufacturer || undefined,
+        manufacturer_name: lookupManufacturerName(mfrLookup, row.manufacturer),
         image_url: row.image_url || row.listing_photo || undefined,
         thumbnail_path: row.thumbnail_path || undefined,
         display_type: row.display_type || undefined,
@@ -338,6 +349,13 @@ export class WikiController extends BaseController {
 
     try {
       const { prefix, isFullUuid } = parseShortSlug(id)
+
+      // parseShortSlug falls back to "full UUID" for anything it doesn't
+      // recognise (e.g. "does-not-exist"); binding that to the uuid column
+      // makes Postgres throw and surface as a 500. It can't match — 404.
+      if (isFullUuid && !isUuid(prefix)) {
+        this.throwNotFound("Item", id)
+      }
 
       // NOTE: itemRow is deliberately left with knex's untyped result. The
       // `game_items.size`/`grade` columns are integers, but WikiItemDetail
@@ -427,6 +445,8 @@ export class WikiController extends BaseController {
         )
         .first()
 
+      const mfrLookup = await loadManufacturerNameLookup(knex, [itemRow.manufacturer])
+
       const market_stats = marketStatsRow
         ? {
             listing_count: parseInt(String(marketStatsRow.listing_count), 10) || 0,
@@ -457,6 +477,7 @@ export class WikiController extends BaseController {
         size: itemRow.size || undefined,
         grade: itemRow.grade || undefined,
         manufacturer: itemRow.manufacturer || undefined,
+        manufacturer_name: lookupManufacturerName(mfrLookup, itemRow.manufacturer),
         image_url: itemRow.image_url || undefined,
         thumbnail_path: itemRow.thumbnail_path || undefined,
         display_type: itemRow.display_type || undefined,
@@ -543,6 +564,8 @@ export class WikiController extends BaseController {
           knex.raw("COALESCE(gi.id::text, ws.ship_id::text) as id"),
           "ws.name",
           knex.raw("COALESCE(wm.name, ws.manufacturer_code, gi.manufacturer) as manufacturer"),
+          "ws.manufacturer_code",
+          knex.raw("gi.manufacturer as gi_manufacturer"),
           "ws.size",
           "gi.image_url",
           "ws.focus",
@@ -586,12 +609,21 @@ export class WikiController extends BaseController {
 
       // Execute query
       const shipsResults: WikiShipSearchRow[] = await shipsQuery
+      const mfrLookup = await loadManufacturerNameLookup(
+        knex,
+        shipsResults.flatMap((row) => [row.manufacturer_code, row.gi_manufacturer]),
+      )
 
       const ships = shipsResults.map((row) => ({
         id: row.id,
         name: row.name,
         ship_code: row.ship_code || undefined,
         manufacturer: row.manufacturer || undefined,
+        manufacturer_name: lookupManufacturerName(
+          mfrLookup,
+          row.manufacturer_code,
+          row.gi_manufacturer,
+        ),
         focus: row.focus || undefined,
         size: row.size != null ? String(row.size) : undefined,
         image_url: row.image_url || undefined,
@@ -710,16 +742,13 @@ export class WikiController extends BaseController {
       const default_loadout = attributes.default_loadout || undefined
 
       // Resolve manufacturer display name (try both codes)
-      const mfrCodes = [wikiShip?.manufacturer_code, shipRow?.manufacturer].filter(Boolean)
-      let mfrRow: Pick<WikiManufacturerRow, "name"> | undefined = undefined
-      for (const code of mfrCodes) {
-        mfrRow = await knex("wiki_manufacturers")
-          .whereRaw("lower(code) = lower(?)", [code])
-          .select<Pick<WikiManufacturerRow, "name">[]>("name")
-          .first()
-        if (mfrRow) break
-      }
-      const manufacturerName = mfrRow?.name || mfrCodes[0] || undefined
+      const mfrCodes: string[] = [wikiShip?.manufacturer_code, shipRow?.manufacturer].filter(
+        Boolean,
+      )
+      const mfrLookup = await loadManufacturerNameLookup(knex, mfrCodes)
+      const manufacturerDisplayName = lookupManufacturerName(mfrLookup, ...mfrCodes)
+      // `manufacturer` keeps its existing value (display name, else first code)
+      const manufacturerName = manufacturerDisplayName || mfrCodes[0] || undefined
 
       logger.info("Ship detail fetched successfully", { id })
 
@@ -728,6 +757,7 @@ export class WikiController extends BaseController {
         name: shipRow?.name || wikiShip.name,
         ship_code: wikiShip?.ship_code || undefined,
         manufacturer: manufacturerName,
+        manufacturer_name: manufacturerDisplayName,
         focus,
         size: shipRow?.size || wikiShip?.size || undefined,
         description,

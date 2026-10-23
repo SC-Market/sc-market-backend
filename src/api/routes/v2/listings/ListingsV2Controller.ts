@@ -14,6 +14,7 @@ import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { canModifyListing } from "../util/listing-permissions.js"
+import { isUuid } from "../util/short-slug.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateListingRequest,
@@ -1213,6 +1214,13 @@ export class ListingsV2Controller extends BaseController {
     const db = getKnex()
 
     logger.info("Fetching listing detail", { listingId: id })
+
+    // Short-slugs are resolved to a UUID by the middleware before we get here.
+    // Anything that is still not a UUID can't match a listing, and binding it
+    // to the uuid column makes Postgres throw (22P02) — answer 404 instead.
+    if (!isUuid(id)) {
+      this.throwNotFound("Listing", id)
+    }
 
     try {
       // Short-slug is resolved to UUID by the middleware
