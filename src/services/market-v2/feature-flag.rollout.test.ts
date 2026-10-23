@@ -345,46 +345,6 @@ describe("setFlagOverride / removeFlagOverride", () => {
   })
 })
 
-describe("getUserOverrides — pagination", () => {
-  it("pages through market_v2 overrides without repeating a user", async () => {
-    const overrides: FakeOverrideRow[] = Array.from({ length: 10 }, (_, i) => ({
-      user_id: `user-${i}`,
-      flag_name: "market_v2",
-      enabled: i % 2 === 0,
-      updated_at: new Date(2026, 0, i + 1),
-    }))
-    const { service } = await freshService({
-      configs: [flagRow({ flag_name: "market_v2", enabled: true })],
-      overrides,
-    })
-
-    const page1 = await service.getUserOverrides(1, 5)
-    const page2 = await service.getUserOverrides(2, 5)
-
-    expect(page1.total).toBe(10)
-    expect(page1.overrides).toHaveLength(5)
-    expect(page2.overrides).toHaveLength(5)
-
-    const ids = [...page1.overrides, ...page2.overrides].map((o) => o.user_id)
-    expect(new Set(ids).size).toBe(10)
-  })
-
-  it("excludes overrides for other flags", async () => {
-    const { service } = await freshService({
-      configs: [flagRow({ flag_name: "market_v2", enabled: true })],
-      overrides: [
-        { user_id: "user-1", flag_name: "market_v2", enabled: true, updated_at: new Date(2026, 0, 1) },
-        { user_id: "user-2", flag_name: "nav_v2", enabled: true, updated_at: new Date(2026, 0, 2) },
-      ],
-    })
-
-    const { overrides, total } = await service.getUserOverrides(1, 50)
-
-    expect(total).toBe(1)
-    expect(overrides.map((o) => o.user_id)).toEqual(["user-1"])
-  })
-})
-
 describe("getUserFlagOverrides", () => {
   it("returns every flag the user has an override for", async () => {
     const { service } = await freshService({
@@ -411,20 +371,14 @@ describe("getUserFlagOverrides", () => {
   })
 })
 
-describe("getMarketVersion", () => {
-  it("maps the market_v2 flag onto the V1/V2 string", async () => {
+describe("hasConfig", () => {
+  it("is true only for flags with a feature_flag_config row", async () => {
     const { service } = await freshService({
-      configs: [
-        flagRow({ flag_name: "market_v2", enabled: true, rollout_percentage: 100 }),
-      ],
+      configs: [flagRow({ flag_name: "nav_v2" })],
     })
 
-    expect(await service.getMarketVersion("user-1")).toBe("V2")
-  })
-
-  it("reports V1 when market_v2 has no config row", async () => {
-    const { service } = await freshService({ configs: [] })
-
-    expect(await service.getMarketVersion("user-1")).toBe("V1")
+    expect(await service.hasConfig("nav_v2")).toBe(true)
+    // Retired flags have no config row, so overrides for them are refused.
+    expect(await service.hasConfig("market_v2")).toBe(false)
   })
 })

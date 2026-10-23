@@ -3034,11 +3034,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "MarketVersion": {
-        "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["V1"]},{"dataType":"enum","enums":["V2"]}],"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Record_string.boolean_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"boolean"},"validators":{}},
@@ -3048,7 +3043,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "user_id": {"dataType":"string","required":true},
-            "market_version": {"ref":"MarketVersion","required":true},
+            "market_version": {"dataType":"enum","enums":["V2"],"required":true},
             "is_developer": {"dataType":"boolean","required":true},
             "has_override": {"dataType":"boolean","required":true},
             "flags": {"ref":"Record_string.boolean_","required":true},
@@ -3061,7 +3056,6 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "user_id": {"dataType":"string","required":true},
-            "market_version": {"ref":"MarketVersion","required":true},
             "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -3070,9 +3064,8 @@ const models: TsoaRoute.Models = {
     "SetFeatureFlagRequest": {
         "dataType": "refObject",
         "properties": {
-            "market_version": {"ref":"MarketVersion"},
-            "flag_name": {"dataType":"string"},
-            "enabled": {"dataType":"boolean"},
+            "flag_name": {"dataType":"string","required":true},
+            "enabled": {"dataType":"boolean","required":true},
         },
         "additionalProperties": false,
     },
@@ -3602,6 +3595,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MarketVersion": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["V1"]},{"dataType":"enum","enums":["V2"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "FeatureFlagConfig": {
         "dataType": "refObject",
         "properties": {
@@ -3616,7 +3614,7 @@ const models: TsoaRoute.Models = {
     "UpdateConfigRequest": {
         "dataType": "refObject",
         "properties": {
-            "flag_name": {"dataType":"string"},
+            "flag_name": {"dataType":"string","required":true},
             "default_version": {"ref":"MarketVersion"},
             "rollout_percentage": {"dataType":"double"},
             "enabled": {"dataType":"boolean"},
@@ -8730,37 +8728,6 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getListingStats',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsFeatureFlagAdminController_getConfig: Record<string, TsoaRoute.ParameterSchema> = {
-                request: {"in":"request","name":"request","required":true,"dataType":"object"},
-        };
-        app.get('/admin/feature-flags/config',
-            authenticateMiddleware([{"loggedin":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
-            ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.getConfig)),
-
-            async function FeatureFlagAdminController_getConfig(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsFeatureFlagAdminController_getConfig, request, response });
-
-                const controller = new FeatureFlagAdminController();
-
-              await templateService.apiHandler({
-                methodName: 'getConfig',
                 controller,
                 response,
                 next,

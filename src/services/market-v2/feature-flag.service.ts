@@ -10,6 +10,10 @@ import crypto from "crypto"
 import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
 
+/**
+ * Legacy name for a flag row's `default_version`: "V2" means the flag is on for
+ * everyone (when enabled), "V1" means it is on only for the rollout bucket.
+ */
 export type MarketVersion = "V1" | "V2"
 
 export interface FeatureFlagConfig {
@@ -27,12 +31,6 @@ export interface FeatureFlagStats {
   override_count: number
   enabled_overrides: number
   disabled_overrides: number
-}
-
-export interface UserOverride {
-  user_id: string
-  market_version: MarketVersion
-  updated_at: Date
 }
 
 export interface UserFlagOverride {
@@ -69,15 +67,20 @@ export class FeatureFlagService {
     return map
   }
 
-  async getConfig(flagName?: string): Promise<FeatureFlagConfig> {
+  async getConfig(flagName: string): Promise<FeatureFlagConfig> {
     const all = await this.getAllConfigs()
-    const name = flagName || "market_v2"
-    return all.get(name) ?? {
-      flag_name: name,
+    return all.get(flagName) ?? {
+      flag_name: flagName,
       default_version: "V1",
       rollout_percentage: 0,
       enabled: false,
     }
+  }
+
+  /** Whether a feature_flag_config row exists for this flag. */
+  async hasConfig(flagName: string): Promise<boolean> {
+    const all = await this.getAllConfigs()
+    return all.has(flagName)
   }
 
   async getAllFlagConfigs(): Promise<FeatureFlagConfig[]> {
@@ -131,11 +134,6 @@ export class FeatureFlagService {
     return result
   }
 
-  /** Backward compat: get market version as V1/V2 string. */
-  async getMarketVersion(userId: string): Promise<MarketVersion> {
-    return (await this.isFlagEnabled(userId, "market_v2")) ? "V2" : "V1"
-  }
-
   // ── Per-user overrides ─────────────────────────────────────────
 
   async setFlagOverride(userId: string, flagName: string, enabled: boolean): Promise<void> {
@@ -144,53 +142,11 @@ export class FeatureFlagService {
       .insert({ user_id: userId, flag_name: flagName, enabled, updated_at: new Date() })
       .onConflict(["user_id", "flag_name"])
       .merge({ enabled, updated_at: new Date() })
-
-    // Backward compat: also update user_preferences if it exists
-    if (flagName === "market_v2") {
-      const hasPrefs = await db.schema.hasTable("user_preferences")
-      if (hasPrefs) {
-        await db("user_preferences")
-          .insert({ user_id: userId, market_version: enabled ? "V2" : "V1", updated_at: new Date() })
-          .onConflict("user_id")
-          .merge({ market_version: enabled ? "V2" : "V1", updated_at: new Date() })
-      }
-    }
-  }
-
-  /** Backward compat wrapper. */
-  async setMarketVersion(userId: string, version: MarketVersion): Promise<void> {
-    await this.setFlagOverride(userId, "market_v2", version === "V2")
   }
 
   async removeFlagOverride(userId: string, flagName: string): Promise<void> {
     const db = getKnex()
     await db("user_feature_overrides").where({ user_id: userId, flag_name: flagName }).del()
-
-    if (flagName === "market_v2") {
-      const hasPrefs = await db.schema.hasTable("user_preferences")
-      if (hasPrefs) {
-        await db("user_preferences").where({ user_id: userId }).del()
-      }
-    }
-  }
-
-  async removeUserOverride(userId: string): Promise<void> {
-    await this.removeFlagOverride(userId, "market_v2")
-  }
-
-  async getUserOverrides(page = 1, pageSize = 50): Promise<{ overrides: UserOverride[]; total: number }> {
-    const db = getKnex()
-    const offset = (page - 1) * pageSize
-    const [overrides, [{ count }]] = await Promise.all([
-      db("user_feature_overrides")
-        .where("flag_name", "market_v2")
-        .select("user_id", db.raw("CASE WHEN enabled THEN 'V2' ELSE 'V1' END as market_version"), "updated_at")
-        .orderBy("updated_at", "desc")
-        .limit(pageSize)
-        .offset(offset),
-      db("user_feature_overrides").where("flag_name", "market_v2").count("* as count"),
-    ])
-    return { overrides, total: Number(count) }
   }
 
   /** Get all overrides for a specific user (all flags). */
@@ -207,13 +163,7 @@ export class FeatureFlagService {
   async hasOverride(userId: string): Promise<boolean> {
     const db = getKnex()
     const hasTable = await db.schema.hasTable("user_feature_overrides")
-    if (!hasTable) {
-      // Fall back to old table
-      const hasPrefs = await db.schema.hasTable("user_preferences")
-      if (!hasPrefs) return false
-      const row = await db("user_preferences").where({ user_id: userId }).first()
-      return !!row
-    }
+    if (!hasTable) return false
     const row = await db("user_feature_overrides").where({ user_id: userId }).first()
     return !!row
   }

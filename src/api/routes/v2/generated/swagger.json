@@ -9550,13 +9550,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"MarketVersion": {
-				"type": "string",
-				"enum": [
-					"V1",
-					"V2"
-				]
-			},
 			"Record_string.boolean_": {
 				"properties": {},
 				"additionalProperties": {
@@ -9566,15 +9559,20 @@
 				"description": "Construct a type with a set of properties K of type T"
 			},
 			"GetFeatureFlagResponse": {
-				"description": "Response for getting feature flag\n\nReturns the current market version for the authenticated user,\nalong with developer status to determine if debug UI should be shown.",
+				"description": "Response for getting feature flags\n\nReturns every resolved flag for the caller, along with developer status to\ndetermine if debug UI should be shown.",
 				"properties": {
 					"user_id": {
 						"type": "string",
 						"description": "User ID"
 					},
 					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion",
-						"description": "Current market version (V1 or V2) — backward compat"
+						"type": "string",
+						"enum": [
+							"V2"
+						],
+						"nullable": false,
+						"description": "Always \"V2\". The V1 market and its `market_v2` flag are retired; the field\nis only kept until no client reads it. Use `flags` instead.",
+						"deprecated": true
 					},
 					"is_developer": {
 						"type": "boolean",
@@ -9608,15 +9606,11 @@
 				"additionalProperties": false
 			},
 			"SetFeatureFlagResponse": {
-				"description": "Response for setting feature flag\n\nConfirms the market version has been updated for the user.",
+				"description": "Response for setting a per-user flag override.",
 				"properties": {
 					"user_id": {
 						"type": "string",
 						"description": "User ID"
-					},
-					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion",
-						"description": "Updated market version"
 					},
 					"message": {
 						"type": "string",
@@ -9625,28 +9619,27 @@
 				},
 				"required": [
 					"user_id",
-					"market_version",
 					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
 			"SetFeatureFlagRequest": {
-				"description": "Request for setting feature flag\n\nAllows developers to switch between V1 and V2 market experiences.\nRestricted to users with admin role.",
+				"description": "Request for setting a per-user flag override.",
 				"properties": {
-					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion",
-						"description": "Market version to set (V1 or V2) — backward compat for market_v2"
-					},
 					"flag_name": {
 						"type": "string",
-						"description": "Flag name to set (e.g. \"market_v2\", \"crafting\", \"wiki\")"
+						"description": "Flag name to set (must have a feature_flag_config row, e.g. \"wiki\")"
 					},
 					"enabled": {
 						"type": "boolean",
 						"description": "Whether to enable or disable the flag"
 					}
 				},
+				"required": [
+					"flag_name",
+					"enabled"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -11262,6 +11255,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MarketVersion": {
+				"type": "string",
+				"enum": [
+					"V1",
+					"V2"
+				],
+				"description": "Legacy name for a flag row's `default_version`: \"V2\" means the flag is on for\neveryone (when enabled), \"V1\" means it is on only for the rollout bucket."
+			},
 			"FeatureFlagConfig": {
 				"properties": {
 					"flag_name": {
@@ -11291,22 +11292,25 @@
 				"properties": {
 					"flag_name": {
 						"type": "string",
-						"description": "Which flag to update (defaults to market_v2)"
+						"description": "Which flag to update"
 					},
 					"default_version": {
 						"$ref": "#/components/schemas/MarketVersion",
-						"description": "Global default version for users without overrides"
+						"description": "\"V2\" turns the flag on for everyone; \"V1\" limits it to the rollout"
 					},
 					"rollout_percentage": {
 						"type": "number",
 						"format": "double",
-						"description": "Percentage of users (0-100) to receive V2 via rollout"
+						"description": "Percentage of users (0-100) to receive the flag via rollout"
 					},
 					"enabled": {
 						"type": "boolean",
-						"description": "Master kill-switch: when false, everyone gets V1"
+						"description": "Master kill-switch: when false, the flag is off for everyone without an override"
 					}
 				},
+				"required": [
+					"flag_name"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -18737,7 +18741,7 @@
 						}
 					}
 				},
-				"description": "Get current feature flag setting\n\nReturns the current market version (V1 or V2) for the authenticated user.\nAlso indicates whether the client should show debug / feature-flag tooling\n(admin users, or any user when NODE_ENV is development).\n\nRestricted to authenticated users only.",
+				"description": "Get current feature flag settings\n\nReturns every resolved flag for the authenticated user (anonymous callers\nget an empty map). Also indicates whether the client should show debug / feature-flag tooling\n(admin users, or any user when NODE_ENV is development).",
 				"summary": "Get feature flag",
 				"tags": [
 					"Debug V2"
@@ -18759,7 +18763,7 @@
 						}
 					}
 				},
-				"description": "Set feature flag\n\nSets the market version (V1 or V2) for the authenticated user.\nThis allows developers to switch between V1 and V2 experiences.\n\nRestricted to users with developer privileges (admin role) only.",
+				"description": "Set feature flag\n\nSets a per-user override of one flag for the authenticated user.\n\nRestricted to admins, users who already have an override, and any user\nwhen NODE_ENV is development.",
 				"summary": "Set feature flag",
 				"tags": [
 					"Debug V2"
@@ -19910,32 +19914,6 @@
 			}
 		},
 		"/admin/feature-flags/config": {
-			"get": {
-				"operationId": "GetConfig",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FeatureFlagConfig"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get global feature flag configuration",
-				"summary": "Get config",
-				"tags": [
-					"Admin Feature Flags"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": []
-			},
 			"put": {
 				"operationId": "UpdateConfig",
 				"responses": {

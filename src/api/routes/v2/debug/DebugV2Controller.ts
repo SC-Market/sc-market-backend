@@ -3,14 +3,11 @@
  *
  * TSOA controller for debug endpoints in the V2 market system.
  * Provides feature flag management for developers.
- *
- * Requirements: 3.1, 3.5
  */
 
 import { Controller, Get, Post, Route, Tags, Body, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
-import { getKnex } from "../../../../clients/database/knex-db.js"
 import { featureFlagService } from "../../../../services/market-v2/feature-flag.service.js"
 import {
   GetFeatureFlagResponse,
@@ -27,13 +24,11 @@ export class DebugV2Controller extends BaseController {
   }
 
   /**
-   * Get current feature flag setting
+   * Get current feature flag settings
    *
-   * Returns the current market version (V1 or V2) for the authenticated user.
-   * Also indicates whether the client should show debug / feature-flag tooling
+   * Returns every resolved flag for the authenticated user (anonymous callers
+   * get an empty map). Also indicates whether the client should show debug / feature-flag tooling
    * (admin users, or any user when NODE_ENV is development).
-   *
-   * Restricted to authenticated users only.
    *
    * @summary Get feature flag
    * @returns Current feature flag setting
@@ -48,7 +43,7 @@ export class DebugV2Controller extends BaseController {
     if (!user?.user_id) {
       return {
         user_id: "",
-        market_version: "V1",
+        market_version: "V2",
         is_developer: false,
         has_override: false,
         flags: {},
@@ -63,14 +58,13 @@ export class DebugV2Controller extends BaseController {
     logger.info("Getting feature flag", { userId, isDeveloper })
 
     try {
-      const marketVersion = await featureFlagService.getMarketVersion(userId)
       const flags = await featureFlagService.getAllFlags(userId)
       const hasOverride = await featureFlagService.hasOverride(userId)
       const userOverrides = await featureFlagService.getUserFlagOverrides(userId)
 
       return {
         user_id: userId,
-        market_version: marketVersion,
+        market_version: "V2",
         is_developer: isDeveloper,
         has_override: hasOverride,
         flags,
@@ -90,10 +84,10 @@ export class DebugV2Controller extends BaseController {
   /**
    * Set feature flag
    *
-   * Sets the market version (V1 or V2) for the authenticated user.
-   * This allows developers to switch between V1 and V2 experiences.
+   * Sets a per-user override of one flag for the authenticated user.
    *
-   * Restricted to users with developer privileges (admin role) only.
+   * Restricted to admins, users who already have an override, and any user
+   * when NODE_ENV is development.
    *
    * @summary Set feature flag
    * @param request Feature flag setting request
@@ -117,30 +111,23 @@ export class DebugV2Controller extends BaseController {
       }
     }
 
+    if (!(await featureFlagService.hasConfig(request.flag_name))) {
+      this.throwNotFound("Feature flag", request.flag_name)
+    }
+
     logger.info("Setting feature flag", {
       userId,
-      marketVersion: request.market_version,
+      flagName: request.flag_name,
+      enabled: request.enabled,
     })
 
     try {
-      // Handle generic flag_name + enabled
-      if (request.flag_name && request.enabled !== undefined) {
-        await featureFlagService.setFlagOverride(userId, request.flag_name, request.enabled)
-        const mv = await featureFlagService.getMarketVersion(userId)
-        return { user_id: userId, market_version: mv, message: `Set ${request.flag_name}=${request.enabled}` }
-      }
-
-      // Backward compat: market_version field
-      if (request.market_version) {
-        await featureFlagService.setMarketVersion(userId, request.market_version)
-        return { user_id: userId, market_version: request.market_version, message: `Market version set to ${request.market_version}` }
-      }
-
-      return { user_id: userId, market_version: await featureFlagService.getMarketVersion(userId), message: "No changes" }
+      await featureFlagService.setFlagOverride(userId, request.flag_name, request.enabled)
+      return { user_id: userId, message: `Set ${request.flag_name}=${request.enabled}` }
     } catch (error) {
       logger.error("Failed to set feature flag", {
         userId,
-        marketVersion: request.market_version,
+        flagName: request.flag_name,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
