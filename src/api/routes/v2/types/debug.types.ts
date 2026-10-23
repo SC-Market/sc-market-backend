@@ -3,23 +3,23 @@
  *
  * TypeScript interfaces for debug endpoints in the V2 market system.
  * These types are used by DebugV2Controller for feature flag management.
- *
- * Requirements: 2.1-2.10, 59.1-59.6
  */
 
-import { MarketVersion } from "../../../../services/market-v2/feature-flag.service.js"
-
 /**
- * Response for getting feature flag
+ * Response for getting feature flags
  *
- * Returns the current market version for the authenticated user,
- * along with developer status to determine if debug UI should be shown.
+ * Returns every resolved flag for the caller, along with developer status to
+ * determine if debug UI should be shown.
  */
 export interface GetFeatureFlagResponse {
   /** User ID */
   user_id: string
-  /** Current market version (V1 or V2) — backward compat */
-  market_version: MarketVersion
+  /**
+   * Always "V2". The V1 market and its `market_v2` flag are retired; the field
+   * is only kept until no client reads it. Use `flags` instead.
+   * @deprecated
+   */
+  market_version: "V2"
   /** Whether user has developer privileges (admin or dev environment) */
   is_developer: boolean
   /** Whether this user has a manual override (show treatment picker if true) */
@@ -31,30 +31,21 @@ export interface GetFeatureFlagResponse {
 }
 
 /**
- * Request for setting feature flag
- *
- * Allows developers to switch between V1 and V2 market experiences.
- * Restricted to users with admin role.
+ * Request for setting a per-user flag override.
  */
 export interface SetFeatureFlagRequest {
-  /** Market version to set (V1 or V2) — backward compat for market_v2 */
-  market_version?: MarketVersion
-  /** Flag name to set (e.g. "market_v2", "crafting", "wiki") */
-  flag_name?: string
+  /** Flag name to set (must have a feature_flag_config row, e.g. "wiki") */
+  flag_name: string
   /** Whether to enable or disable the flag */
-  enabled?: boolean
+  enabled: boolean
 }
 
 /**
- * Response for setting feature flag
- *
- * Confirms the market version has been updated for the user.
+ * Response for setting a per-user flag override.
  */
 export interface SetFeatureFlagResponse {
   /** User ID */
   user_id: string
-  /** Updated market version */
-  market_version: MarketVersion
   /** Success message */
   message: string
 }

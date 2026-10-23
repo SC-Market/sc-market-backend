@@ -1,13 +1,13 @@
 /**
  * Feature Flag Admin Controller
  *
- * Admin-only endpoints for managing the V1/V2 market rollout:
- * - Get/update global config (default version, rollout %)
- * - View stats (how many users on each version)
+ * Admin-only endpoints for managing feature flags:
+ * - Update a flag's global config (default version, rollout %, kill-switch)
+ * - View stats (config summary + override counts per flag)
  * - List/add/remove per-user overrides
  */
 
-import { Controller, Get, Put, Post, Delete, Route, Tags, Body, Query, Path, Request, Security } from "tsoa"
+import { Get, Put, Post, Delete, Route, Tags, Body, Query, Path, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import {
@@ -15,7 +15,6 @@ import {
   type MarketVersion,
   type FeatureFlagConfig,
   type FeatureFlagStats,
-  type UserOverride,
 } from "../../../../services/market-v2/feature-flag.service.js"
 import logger from "../../../../logger/logger.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
@@ -32,13 +31,13 @@ interface UserOverrideRow {
 // ── Request / Response types ─────────────────────────────────────
 
 export interface UpdateConfigRequest {
-  /** Which flag to update (defaults to market_v2) */
-  flag_name?: string
-  /** Global default version for users without overrides */
+  /** Which flag to update */
+  flag_name: string
+  /** "V2" turns the flag on for everyone; "V1" limits it to the rollout */
   default_version?: MarketVersion
-  /** Percentage of users (0-100) to receive V2 via rollout */
+  /** Percentage of users (0-100) to receive the flag via rollout */
   rollout_percentage?: number
-  /** Master kill-switch: when false, everyone gets V1 */
+  /** Master kill-switch: when false, the flag is off for everyone without an override */
   enabled?: boolean
 }
 
@@ -72,19 +71,6 @@ export class FeatureFlagAdminController extends BaseController {
   }
 
   /**
-   * Get global feature flag configuration
-   * @summary Get config
-   */
-  @Get("config")
-  public async getConfig(
-    @Request() request: ExpressRequest,
-  ): Promise<FeatureFlagConfig> {
-    this.request = request
-    this.requireAdmin()
-    return featureFlagService.getConfig()
-  }
-
-  /**
    * Update global feature flag configuration
    * @summary Update config
    */
@@ -111,12 +97,17 @@ export class FeatureFlagAdminController extends BaseController {
       }
     }
 
+    if (!(await featureFlagService.hasConfig(body.flag_name))) {
+      this.throwNotFound("Feature flag", body.flag_name)
+    }
+
     logger.info("Admin updating feature flag config", {
       admin: this.getUserId(),
       updates: body,
     })
 
-    return featureFlagService.updateConfig(body.flag_name || "market_v2", body)
+    const { flag_name, ...updates } = body
+    return featureFlagService.updateConfig(flag_name, updates)
   }
 
   /**
@@ -202,6 +193,9 @@ export class FeatureFlagAdminController extends BaseController {
     if (!user) {
       this.throwNotFound("User", body.username)
     }
+    if (!(await featureFlagService.hasConfig(body.flag_name))) {
+      this.throwNotFound("Feature flag", body.flag_name)
+    }
 
     logger.info("Admin setting user override", {
       admin: this.getUserId(),
@@ -239,7 +233,6 @@ export class FeatureFlagAdminController extends BaseController {
       // Remove all overrides for this user
       const hasTable = await db.schema.hasTable("user_feature_overrides")
       if (hasTable) await db("user_feature_overrides").where({ user_id: user.user_id }).del()
-      await featureFlagService.removeUserOverride(user.user_id)
     }
 
     return { message: `Removed override for ${username}${flag_name ? ` (${flag_name})` : " (all flags)"}` }
