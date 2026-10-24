@@ -7,6 +7,7 @@ import {
   validateRedirectPath,
   createSignedStateToken,
   verifySignedStateToken,
+  resolveSameOriginRedirect,
 } from "../util/oauth-state.js"
 import { isOriginAllowed } from "../util/allowed-origins.js"
 import {
@@ -259,7 +260,7 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
             return res.redirect(redirectTo.toString())
           }
 
-          const successRedirect = new URL(redirectPath, redirectBase).toString()
+          const successRedirect = resolveSameOriginRedirect(redirectPath, redirectBase)
           await completeLogin(req, res, user as User, successRedirect, "Discord")
         },
       )(req, res, next)
@@ -463,7 +464,7 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
             return res.redirect(redirectTo.toString())
           }
 
-          const successRedirect = new URL(redirectPath, redirectBase).toString()
+          const successRedirect = resolveSameOriginRedirect(redirectPath, redirectBase)
           await completeLogin(req, res, user as User, successRedirect, "CitizenID")
         },
       )(req, res, next)

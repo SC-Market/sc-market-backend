@@ -3,6 +3,21 @@ import { randomBytes, createHmac, timingSafeEqual } from "node:crypto"
 /**
  * Validates that a redirect path is safe (relative, no protocol handlers, etc.)
  */
+/**
+ * Resolve a post-auth redirect path against an allowed base URL. Returns the
+ * base's root if the result would land on a different origin, so a path that
+ * slips past validateRedirectPath still can't redirect off-site.
+ */
+export function resolveSameOriginRedirect(path: string, base: URL): string {
+  try {
+    const url = new URL(path || "/", base)
+    if (url.origin === base.origin) return url.toString()
+  } catch {
+    /* unparseable path */
+  }
+  return new URL("/", base).toString()
+}
+
 export function validateRedirectPath(path: string): boolean {
   if (!path) return true // Empty path is valid (redirects to home)
 
@@ -21,8 +36,15 @@ export function validateRedirectPath(path: string): boolean {
     return false
   }
 
-  // Prevent null bytes
-  if (path.includes("\0")) {
+  // Prevent backslashes: URL parsers treat "\" like "/", so "/\evil.com"
+  // resolves to https://evil.com/.
+  if (path.includes("\\")) {
+    return false
+  }
+
+  // Prevent control characters (incl. NUL, tab, CR/LF): parsers strip tabs and
+  // newlines, which can turn an innocent-looking path into "//host".
+  if (/[\u0000-\u001f\u007f]/.test(path)) {
     return false
   }
 
