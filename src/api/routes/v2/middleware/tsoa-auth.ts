@@ -6,7 +6,7 @@
  * so this just checks it exists.
  */
 
-import { Request } from "express"
+import { NextFunction, Request, RequestHandler, Response } from "express"
 import { User } from "../../v1/api-models.js"
 import { enforceTokenScopes, isAdminPath, TokenInfo } from "./token-scopes.js"
 
@@ -61,4 +61,40 @@ export async function expressAuthentication(
   }
 
   throw new Error(`Unknown security name: ${securityName}`)
+}
+
+/**
+ * Run the @Security(securityName) check as plain Express middleware.
+ *
+ * For routes whose body must not be parsed before the caller is authenticated
+ * (multer uploads, which parse multipart and write to disk). TSOA only runs its
+ * @Security check inside the generated route, i.e. after any middleware
+ * registered ahead of RegisterRoutes(), so those routes put this in front of
+ * the parser instead.
+ *
+ * This is not a second auth policy: it calls expressAuthentication exactly as
+ * TSOA's generated authenticateMiddleware does, including defaulting a thrown
+ * error's status to 401, and hands the error to next() so tsoaErrorHandler
+ * renders the same 401/403 body a TSOA route would. Must be registered on the
+ * v2 router with the full route path (not via .use(path)), so request.path
+ * matches what the TSOA route sees.
+ */
+export function requireSecurity(
+  securityName: "loggedin" | "verified",
+): RequestHandler {
+  return async function runSecurityCheck(
+    request: Request,
+    _response: Response,
+    next: NextFunction,
+  ) {
+    try {
+      await expressAuthentication(request, securityName)
+    } catch (err) {
+      const error = err as Error & { status?: number }
+      error.status = error.status || 401
+      next(error)
+      return
+    }
+    next()
+  }
 }

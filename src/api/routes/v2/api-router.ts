@@ -15,8 +15,8 @@ import {
   canViewV2DebugInternals,
   filterV2DebugFromOpenApiSpec,
 } from "./util/openapi-debug-visibility.js"
-import { gameDataZipUpload } from "../v1/util/upload.js"
-import { multiplePhotoUpload } from "../v1/util/upload.js"
+import { gameDataZipUpload, multiplePhotoUpload } from "../v1/util/upload.js"
+import { requireSecurity } from "./middleware/tsoa-auth.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -66,56 +66,38 @@ apiV2Router.use(
 // Import and register routes like this:
 import { RegisterRoutes } from "./generated/routes.js"
 
-// Register file upload middleware for admin import endpoint BEFORE TSOA routes
-// multer processes the file and attaches it to req.file, then next() passes to TSOA
-apiV2Router.use(
+// Multipart upload routes. multer must run before the TSOA handler (it
+// populates req.file / req.files), but it must NOT run before authentication:
+// it parses the body and writes it to disk. So each upload route runs the same
+// @Security check TSOA runs (requireSecurity -> expressAuthentication) first,
+// and an anonymous request is rejected with 401 before any byte is parsed.
+// The TSOA route still re-runs its own @Security check afterwards.
+//
+// These are registered per-method (.post) rather than with .use(): inside a
+// .use("/admin/import-game-data") mount req.path is stripped to "/", which
+// would hide the admin path from expressAuthentication's admin-role gate.
+
+// Admin game data import (50 MB zip). expressAuthentication enforces the admin
+// role for /admin/* paths, so non-admins get 403 before the upload is parsed.
+apiV2Router.post(
   "/admin/import-game-data",
+  requireSecurity("loggedin"),
   gameDataZipUpload.single("file"),
 )
 
-// Register multer for listing photo uploads
+// Listing photo uploads
 apiV2Router.post(
   "/listings/:id/photos",
+  requireSecurity("loggedin"),
   multiplePhotoUpload.array("photos", 5),
 )
 
-// Register multer for standalone image upload (two-phase upload)
+// Standalone image upload (two-phase upload)
 apiV2Router.post(
   "/images/upload",
+  requireSecurity("loggedin"),
   multiplePhotoUpload.single("photo"),
 )
-
-// DEV ONLY: unauthenticated import endpoint for testing — REMOVE BEFORE PRODUCTION
-if (process.env.NODE_ENV !== "production") {
-  apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), async (req, res) => {
-  const { gameDataImportService } = await import("../../../services/game-data/import.service.js")
-  const { getKnex } = await import("../../../clients/database/knex-db.js")
-  const fs = await import("fs")
-  const path = await import("path")
-  const { execSync } = await import("child_process")
-
-  const file = (req as express.Request & { file?: Express.Multer.File }).file
-  if (!file) return res.status(400).json({ error: "No file" })
-
-  const tmpDir = path.join("/tmp", `dev-import-${Date.now()}`)
-  fs.mkdirSync(tmpDir, { recursive: true })
-  try {
-    execSync(`unzip -o "${file.path}" -d "${tmpDir}"`, { stdio: "pipe", timeout: 30000 })
-    const jsonPath = path.join(tmpDir, "game-data.json")
-    const gameData = JSON.parse(fs.readFileSync(jsonPath, "utf-8"))
-    if (req.body?.gameVersion) gameData.gameVersion = req.body.gameVersion
-    if (req.body?.gameChannel) gameData.gameChannel = req.body.gameChannel
-    const stats = await gameDataImportService.importGameData(getKnex(), gameData)
-    res.json({ success: true, stats })
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err)
-    res.status(500).json({ error: msg })
-  } finally {
-    try { fs.rmSync(tmpDir, { recursive: true, force: true }) } catch {}
-    try { if (file.path) fs.unlinkSync(file.path) } catch {}
-  }
-})
-}
 
 // NOTE: literal-path routes under a `{param}` path used to be hand-registered
 // here, because TSOA emitted `/game-data/resources/{resource_id}` before
