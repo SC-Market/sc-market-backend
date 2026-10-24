@@ -14,12 +14,20 @@ import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { User } from "../../api/routes/v1/api-models.js"
 import { chatServer } from "../messaging/websocket.js"
 import logger from "../../logger/logger.js"
-import { StockLotService } from "../../services/stock-lot/stock-lot.service.js"
 import { withTransaction } from "../database/transaction.js"
 import { getOrCreateVariant } from "../../services/market-v2/variant.service.js"
 import { checkWatchlistMatches } from "../../services/watchlist/watchlist.service.js"
+import { canManageShop } from "../../services/shops/shop-permissions.service.js"
+import {
+  ListingQuickEditError,
+  STOCK_OPERATIONS,
+  type StockOperation,
+  updateListingPrice,
+  updateListingStock,
+} from "../../services/market-v2/listing-quick-edit.service.js"
 
-const stockLotService = new StockLotService()
+const USER_NOT_LINKED =
+  "User not found. Link your Discord account on sc-market.space."
 
 export async function resolveShopForUser(userId: string, contractorId?: string): Promise<string> {
   const db = getKnex()
@@ -35,6 +43,57 @@ export async function resolveShopForUser(userId: string, contractorId?: string):
     slug, name: user?.username || "My Shop", description: "", owner_user_id: userId,
   }).returning("shop_id")
   return shop.shop_id
+}
+
+export interface ListingSeller {
+  shop_id: string
+  seller_id: string
+  seller_type: "user" | "contractor"
+}
+
+/**
+ * Resolve the shop (and the seller_id/seller_type that V2 `listings` still
+ * requires, NOT NULL) for a listing created from Discord. Mirrors
+ * POST /api/v2/listings: an org shop needs canManageShop (manage_market). An
+ * org that doesn't exist or has no active shop is an error, not a silent
+ * fallback to the user's personal shop.
+ */
+export async function resolveListingSeller(
+  userId: string,
+  contractorSpectrumId?: string,
+): Promise<ListingSeller> {
+  if (!contractorSpectrumId) {
+    const shopId = await resolveShopForUser(userId)
+    return { shop_id: shopId, seller_id: userId, seller_type: "user" }
+  }
+
+  const db = getKnex()
+  const contractor = await db("contractors")
+    .where("spectrum_id", contractorSpectrumId)
+    .first("contractor_id")
+  if (!contractor) {
+    throw new ListingQuickEditError("Organization not found", 404)
+  }
+  const shop = await db("shops")
+    .where({ owner_contractor_id: contractor.contractor_id, status: "active" })
+    .first()
+  if (!shop) {
+    throw new ListingQuickEditError(
+      "This organization has no active shop; create one on sc-market.space",
+      400,
+    )
+  }
+  if (!(await canManageShop(shop, userId))) {
+    throw new ListingQuickEditError(
+      "You do not have permission to create listings in this shop",
+      403,
+    )
+  }
+  return {
+    shop_id: shop.shop_id,
+    seller_id: contractor.contractor_id,
+    seller_type: "contractor",
+  }
 }
 
 async function userOwnsListing(userId: string, listing: { shop_id: string | null; seller_id: string | null; seller_type: string | null }): Promise<boolean> {
@@ -169,6 +228,8 @@ threadRouter.post("/order/status", async (req, res) => {
   }
 })
 
+// Bot /stock set|add|sub. The bot's listing picker (selectSellerListings) returns
+// V2 listing ids, so this operates on V2 listing_item_lots, not V1 stock_lots.
 threadRouter.post("/market/quantity/:opt", async (req, res) => {
   const opt = req.params.opt
 
@@ -182,41 +243,42 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
     quantity: number
   } = req.body
 
+  if (!STOCK_OPERATIONS.includes(opt as StockOperation)) {
+    res.status(400).json({ error: `Invalid stock operation "${opt}"` })
+    return
+  }
+  if (!listing_id) {
+    res.status(400).json({ error: "listing_id is required" })
+    return
+  }
+
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.json({ result: "Success", thread_ids: [] })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
-  let listing
   try {
-    listing = await marketDb.getMarketListing({ listing_id })
-  } catch {
-    res.status(400).json({ error: "Invalid listing" })
-    return
-  }
-
-  let new_quantity = quantity
-  if (opt === "add") {
-    const currentStock = await stockLotService.getSimpleStock(listing.listing_id)
-    new_quantity = currentStock + quantity
-  } else if (opt === "sub") {
-    const currentStock = await stockLotService.getSimpleStock(listing.listing_id)
-    new_quantity = currentStock - quantity
-    if (new_quantity < 0) {
-      res.status(400).json({ error: "Invalid quantity" })
+    const result = await withTransaction((trx) =>
+      updateListingStock(trx, {
+        listingId: listing_id,
+        userId: user.user_id,
+        operation: opt as StockOperation,
+        quantity,
+      }),
+    )
+    res.json({ result: "Success", ...result })
+  } catch (err: unknown) {
+    if (err instanceof ListingQuickEditError) {
+      res.status(err.status).json({ error: err.message })
       return
     }
+    logger.error("Error updating stock from Discord", {
+      listing_id,
+      error: err instanceof Error ? err.message : String(err),
+    })
+    res.status(500).json({ error: "Failed to update stock" })
   }
-
-  try {
-    await stockLotService.updateSimpleStock(listing.listing_id, new_quantity)
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to update stock"
-    res.status(400).json({ error: message })
-    return
-  }
-  res.json({ result: "Success" })
 })
 
 threadRouter.get("/user/:discord_id/assigned", async (req, res) => {
@@ -255,13 +317,16 @@ threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
     user_id: user.user_id,
   })
 
+  // Owner picker for /stock, /price and /listing create. Those edits require
+  // canManageShop (manage_market), the same as the V2 web endpoints, so only
+  // offer orgs where the user holds it.
   const filteredContractors = []
   for (const contractor of contractors) {
     if (
       await has_permission(
         contractor.contractor_id,
         user.user_id,
-        "manage_stock",
+        "manage_market",
       )
     ) {
       filteredContractors.push(contractor)
@@ -401,38 +466,39 @@ threadRouter.post("/market/price", async (req, res) => {
     price: number
   }
 
+  if (!listing_id) {
+    res.status(400).json({ error: "listing_id is required" })
+    return
+  }
+
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
-  const db = getKnex()
-
-  const listing = await db("listings").where("listing_id", listing_id).first()
-  if (!listing) {
-    res.status(404).json({ error: "Listing not found" })
+  let title: string
+  try {
+    ;({ title } = await withTransaction((trx) =>
+      updateListingPrice(trx, { listingId: listing_id, userId: user.user_id, price }),
+    ))
+  } catch (err: unknown) {
+    if (err instanceof ListingQuickEditError) {
+      res.status(err.status).json({ error: err.message })
+      return
+    }
+    logger.error("Error updating price from Discord", {
+      listing_id,
+      error: err instanceof Error ? err.message : String(err),
+    })
+    res.status(500).json({ error: "Failed to update price" })
     return
   }
-
-  if (!(await userOwnsListing(user.user_id, listing))) {
-    res.status(403).json({ error: "You don't own this listing" })
-    return
-  }
-
-  // Update base_price on the listing_items record
-  await db("listing_items")
-    .where("listing_id", listing_id)
-    .update({ base_price: price })
-
-  await db("listings")
-    .where("listing_id", listing_id)
-    .update({ updated_at: new Date() })
 
   // Check watchlist matches for the new price
   checkWatchlistMatches({
     listing_id,
-    title: listing.title,
+    title,
     price,
     quantity: 1,
   }).catch(() => {})
@@ -452,25 +518,17 @@ threadRouter.post("/market/create", async (req, res) => {
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
   try {
-    const db = getKnex()
-
-    let contractorId: string | undefined
-    if (contractor_spectrum_id) {
-      const contractor = await db("contractors").where("spectrum_id", contractor_spectrum_id).first()
-      if (contractor) contractorId = contractor.contractor_id
-    }
-
-    const shopId = await resolveShopForUser(user.user_id, contractorId)
+    const seller = await resolveListingSeller(user.user_id, contractor_spectrum_id)
 
     const result = await withTransaction(async (trx) => {
       const [listing] = await trx("listings")
         .insert({
-          shop_id: shopId,
+          ...seller,
           title,
           description: description || title,
           status: "active",
@@ -522,6 +580,10 @@ threadRouter.post("/market/create", async (req, res) => {
 
     res.json({ result: "Success", listing_id: result.listing_id })
   } catch (err: unknown) {
+    if (err instanceof ListingQuickEditError) {
+      res.status(err.status).json({ error: err.message })
+      return
+    }
     const message = err instanceof Error ? err.message : "Failed to create listing"
     logger.error("Error creating listing from Discord", { error: message })
     res.status(500).json({ error: message })
@@ -538,7 +600,7 @@ threadRouter.post("/market/buy", async (req, res) => {
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
@@ -588,7 +650,7 @@ threadRouter.post("/market/offer", async (req, res) => {
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
@@ -653,12 +715,12 @@ threadRouter.post("/market/import-uex", async (req, res) => {
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
   try {
-    const shopId = await resolveShopForUser(user.user_id)
+    const seller = await resolveListingSeller(user.user_id)
     let imported = 0
 
     for (const item of listings) {
@@ -666,7 +728,7 @@ threadRouter.post("/market/import-uex", async (req, res) => {
         await withTransaction(async (trx) => {
           const [listing] = await trx("listings")
             .insert({
-              shop_id: shopId,
+              ...seller,
               title: item.title,
               description: item.description || item.title,
               status: "active",
@@ -748,7 +810,7 @@ threadRouter.post("/watchlist/add", async (req, res) => {
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
@@ -778,7 +840,7 @@ threadRouter.post("/watchlist/remove", async (req, res) => {
 
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
-    res.status(404).json({ error: "User not found. Link your Discord account on sc-market.space." })
+    res.status(404).json({ error: USER_NOT_LINKED })
     return
   }
 
