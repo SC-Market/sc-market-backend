@@ -44,6 +44,7 @@ import * as profileDb from "./api/routes/v1/profiles/database.js"
 import { userAuthorized } from "./api/middleware/auth.js"
 import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
+import { bodyParsers } from "./api/middleware/body-parsers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
 import { subscriptionRouter } from "./clients/discord_api/subscriptions.js"
@@ -218,14 +219,7 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware)
 app.use(cookieParser())
 
-app.use(express.json({ limit: "2.5mb" }))
-app.use(express.text({ type: "text/plain", limit: "128kb" }))
-app.use(
-  express.urlencoded({
-    extended: true,
-    limit: "2.5mb",
-  }),
-)
+app.use(bodyParsers())
 
 // SCMDB ingest endpoint — token-authenticated, no cookies needed
 app.options("/api/v2/integrations/scmdb/ingest/*", cors({ origin: "https://scmdb.net" }))
