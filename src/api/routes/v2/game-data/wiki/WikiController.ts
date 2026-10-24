@@ -695,7 +695,9 @@ export class WikiController extends BaseController {
       let wikiShip: any = null
 
       if (isUuid) {
-        shipRow = await knex("game_items").where("id", id).first()
+        shipRow =
+          (await knex("game_items").where("id", id).first()) ??
+          (await knex("game_items").where("p4k_id", id).first())
         if (shipRow && latestVersion) {
           wikiShip = await knex("wiki_ships")
             .where("name", shipRow.name)
@@ -715,9 +717,6 @@ export class WikiController extends BaseController {
             .where("name", wikiShip.name)
             .where("type", "Ship for Sale/Rental")
             .first()
-        }
-        if (!shipRow) {
-          shipRow = await knex("game_items").where("p4k_id", id).first()
         }
       }
 
