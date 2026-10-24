@@ -20,6 +20,7 @@ import {
   GameItemAggregate,
 } from "../types/game-items.types.js"
 import logger from "../../../../logger/logger.js"
+import { isUuid } from "../util/short-slug.js"
 
 /**
  * Row shape of the quality-distribution aggregate query. The integer columns are
@@ -186,6 +187,13 @@ export class GameItemsV2Controller extends BaseController {
       this.throwValidationError("game_item_id is required", [
         { field: "id", message: "Game item ID is required" },
       ])
+    }
+
+    // Short-slugs are resolved to a UUID by the middleware before we get here.
+    // Anything that is still not a UUID can't match a game item, and binding it
+    // to the uuid column makes Postgres throw (22P02) — answer 404 instead.
+    if (!isUuid(id)) {
+      this.throwNotFound("Game item", id)
     }
 
     // Validate quality_tier if provided (Requirement 38.7)

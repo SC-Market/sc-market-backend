@@ -41,6 +41,7 @@ import {
 import { VariantAttributes } from "../types/listings.types.js"
 import { resolveGameItemImages } from "../util/resolve-game-item-images.js"
 import logger from "../../../../logger/logger.js"
+import { isUuid } from "../util/short-slug.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 
 /**
@@ -675,6 +676,10 @@ export class BuyOrdersV2Controller extends BaseController {
   ): Promise<StandingBuyOrder> {
     this.request = request
     const db = getKnex()
+
+    // buy_order_id is a uuid column: a non-UUID id can't match and would make
+    // Postgres throw (22P02) — answer 404 instead.
+    if (!isUuid(id)) this.throwNotFound('Buy order', id)
 
     const row = await db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')

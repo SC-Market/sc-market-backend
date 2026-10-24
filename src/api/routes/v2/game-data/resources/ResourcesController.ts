@@ -22,6 +22,7 @@ import {
   PurchaseLocation,
 } from "./resources.types.js"
 import logger from "../../../../../logger/logger.js"
+import { isUuid } from "../../util/short-slug.js"
 
 /**
  * Row shape of the "blueprints requiring this resource" query:
@@ -359,6 +360,13 @@ export class ResourcesController extends BaseController {
       this.throwValidationError("resource_id is required", [
         { field: "resource_id", message: "Resource ID is required" },
       ])
+    }
+
+    // Short-slugs are resolved to a UUID by the middleware before we get here.
+    // Anything that is still not a UUID can't match, and binding it to the
+    // uuid column makes Postgres throw (22P02) — answer 404 instead.
+    if (!isUuid(resource_id)) {
+      this.throwNotFound("Resource", resource_id)
     }
 
     logger.info("Fetching resource detail", { resource_id })
