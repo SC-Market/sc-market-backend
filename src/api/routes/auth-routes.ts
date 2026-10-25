@@ -613,6 +613,43 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
 
   // ── JWT Auth Endpoints ─────────────────────────────────────────────────
 
+  /**
+   * Rotate the refresh-token cookie into a fresh access + refresh pair.
+   * Shared by POST /api/auth/refresh and GET /api/auth/session so both have
+   * identical rotation, ban and cookie-clearing semantics. Caller must have
+   * checked isJWTAuthEnabled() and the presence of a refresh cookie.
+   */
+  async function rotateFromRefreshCookie(
+    req: Request,
+    res: Response,
+    rawRefresh: string,
+  ): Promise<
+    | { ok: true; user: User }
+    | { ok: false; status: 401 | 403; error: string }
+  > {
+    // Rotate: revoke old token and issue new one atomically
+    const rotation = await rotateRefreshToken(rawRefresh, req)
+    if (!rotation) {
+      clearAuthCookies(res)
+      return { ok: false, status: 401, error: "Invalid or expired refresh token" }
+    }
+
+    try {
+      const user = await profileDb.getUser({ user_id: rotation.userId })
+      if (user.banned) {
+        clearAuthCookies(res)
+        return { ok: false, status: 403, error: "Account suspended" }
+      }
+
+      const accessToken = generateAccessToken(user)
+      setAuthCookies(res, accessToken, rotation.newRawToken)
+      return { ok: true, user }
+    } catch {
+      clearAuthCookies(res)
+      return { ok: false, status: 401, error: "User not found" }
+    }
+  }
+
   // Refresh access token using refresh token cookie
   // Mounted at both paths for backwards compat (old cookies have path=/api/auth)
   const refreshHandler = async (req: Request, res: Response) => {
@@ -629,30 +666,77 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
       return res.status(401).json({ error: "No refresh token" })
     }
 
-    // Rotate: revoke old token and issue new one atomically
-    const rotation = await rotateRefreshToken(rawRefresh, req)
-    if (!rotation) {
-      clearAuthCookies(res)
-      return res.status(401).json({ error: "Invalid or expired refresh token" })
+    const outcome = await rotateFromRefreshCookie(req, res, rawRefresh)
+    if (!outcome.ok) {
+      return res.status(outcome.status).json({ error: outcome.error })
     }
-
-    try {
-      const user = await profileDb.getUser({ user_id: rotation.userId })
-      if (user.banned) {
-        clearAuthCookies(res)
-        return res.status(403).json({ error: "Account suspended" })
-      }
-
-      const accessToken = generateAccessToken(user)
-      setAuthCookies(res, accessToken, rotation.newRawToken)
-      return res.json({ success: true })
-    } catch {
-      clearAuthCookies(res)
-      return res.status(401).json({ error: "User not found" })
-    }
+    return res.json({ success: true })
   }
   app.post("/api/auth/refresh", authRefreshLimit, refreshHandler)
   app.post("/auth/refresh", authRefreshLimit, refreshHandler) // legacy — remove after transition
+
+  /**
+   * Same rule the protected routes apply: populateUser drops banned and
+   * tombstoned (deleted) users, userAuthorized rejects banned users and any
+   * role other than user/admin.
+   */
+  function isUsableUser(user: User | undefined): boolean {
+    return (
+      !!user &&
+      !user.banned &&
+      !user.is_tombstone &&
+      (user.role === "user" || user.role === "admin")
+    )
+  }
+
+  /**
+   * Silent session check for app start. The auth cookies are httpOnly and
+   * host-only on the API origin, so the frontend cannot tell whether it is
+   * logged in without asking; probing a protected endpoint logs a 401 (plus a
+   * failed refresh) in every anonymous visitor's console. This always answers
+   * 200 for anonymous / expired cases:
+   *
+   *   - req.user already populated (passport session, JWT access cookie or
+   *     Bearer token, via populateUser) → authenticated
+   *   - JWT mode with a refresh cookie (path=/api/auth, so it is sent here) →
+   *     the exact rotation POST /api/auth/refresh performs (new cookies are
+   *     set; an invalid/banned refresh clears them, as refresh does)
+   *   - otherwise → not authenticated, nothing cleared
+   *
+   * Rate limited with the refresh bucket: it replaces the page-load refresh.
+   */
+  app.get(
+    "/api/auth/session",
+    authRefreshLimit,
+    async (req: Request, res: Response) => {
+      res.set("Cache-Control", "no-store")
+
+      if (req.user) {
+        return res.json({ authenticated: isUsableUser(req.user) })
+      }
+
+      if (!isJWTAuthEnabled()) {
+        return res.json({ authenticated: false })
+      }
+
+      const rawRefresh = getRefreshTokenFromRequest(req)
+      if (!rawRefresh) {
+        return res.json({ authenticated: false })
+      }
+
+      try {
+        const outcome = await rotateFromRefreshCookie(req, res, rawRefresh)
+        return res.json({
+          authenticated: outcome.ok && isUsableUser(outcome.user),
+        })
+      } catch (error) {
+        // DB failure during rotation: don't guess either way. A non-200 makes
+        // the frontend fall back to probing (its pre-session-check behaviour).
+        logger.error("[Auth] Session check rotation failed", { error })
+        return res.status(503).json({ error: "Session check unavailable" })
+      }
+    },
+  )
 
   // JWT logout — revoke refresh token + clear cookies
   app.post("/auth/jwt-logout", authLogoutLimit, async (req: Request, res: Response) => {
