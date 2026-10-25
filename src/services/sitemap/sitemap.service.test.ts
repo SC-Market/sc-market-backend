@@ -62,10 +62,27 @@ vi.mock("../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn() },
 }))
 
+/**
+ * The content manifest is fetched from the frontend. Never hit the network in
+ * tests (the deploy workflow runs them): default to "not published yet".
+ */
+const fetchMock: Mock<typeof fetch> = vi.fn(
+  async () => new Response("<!doctype html>", { status: 200, headers: { "content-type": "text/html" } }),
+)
+vi.stubGlobal("fetch", fetchMock)
+
+function manifestResponse(body: unknown): Response {
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { "content-type": "application/json" },
+  })
+}
+
 import {
   generateSitemapCache,
   getSitemapCache,
   clearSitemapCache,
+  SITEMAP_DEGRADED_TTL_MS,
   SITEMAP_TTL_MS,
 } from "./sitemap.service.js"
 
@@ -113,10 +130,69 @@ describe("generateSitemapCache", () => {
   })
 })
 
+describe("content (Help & Guides) section", () => {
+  beforeEach(() => {
+    mockKnex.mockImplementation(() => createChainMock([]))
+    fetchMock.mockReset()
+  })
+
+  it("adds the manifest's content pages with lastmod and a full TTL", async () => {
+    fetchMock.mockResolvedValue(
+      manifestResponse({
+        version: 1,
+        pages: [
+          { path: "/guides", updated: "2026-10-25" },
+          { path: "/guides/buying/buy-an-item", updated: "2026-10-24" },
+          { path: "/about", updated: "2026-10-25" },
+          // Anything outside the content routes is ignored.
+          { path: "https://evil.example/x", updated: "2026-10-25" },
+          { path: "/market/x", updated: "2026-10-25" },
+        ],
+      }),
+    )
+    const { index, sitemaps, ttlMs } = await generateSitemapCache()
+
+    expect(String(fetchMock.mock.calls[0][0])).toBe("https://sc-market.space/content/manifest.json")
+    expect(gunzipSync(index).toString("utf8")).toContain("sitemap-content-0.xml")
+    const xml = gunzipSync(sitemaps.get("content-0")!).toString("utf8")
+    expect(xml).toContain("<loc>https://sc-market.space/guides</loc>")
+    expect(xml).toContain("<loc>https://sc-market.space/guides/buying/buy-an-item</loc>")
+    expect(xml).toContain("<lastmod>2026-10-24")
+    expect(xml).toContain("<loc>https://sc-market.space/about</loc>")
+    expect(xml).not.toContain("evil.example")
+    expect(xml).not.toContain("/market/x")
+    expect(ttlMs).toBe(SITEMAP_TTL_MS)
+  })
+
+  it.each([
+    ["a 404", () => new Response("not found", { status: 404 })],
+    [
+      "the SPA fallback (HTML 200)",
+      () => new Response("<!doctype html>", { status: 200, headers: { "content-type": "text/html" } }),
+    ],
+    ["a wrong shape", () => manifestResponse({ pages: "nope" })],
+  ])("fails safely to no content URLs on %s, and retries sooner", async (_label, response) => {
+    fetchMock.mockImplementation(async () => response())
+    const { sitemaps, ttlMs } = await generateSitemapCache()
+    expect(sitemaps.has("content-0")).toBe(false)
+    expect(sitemaps.has("static-0")).toBe(true)
+    expect(ttlMs).toBe(SITEMAP_DEGRADED_TTL_MS)
+  })
+
+  it("fails safely when the fetch itself throws (timeout, DNS)", async () => {
+    fetchMock.mockRejectedValue(new DOMException("timed out", "TimeoutError"))
+    const { sitemaps, ttlMs } = await generateSitemapCache()
+    expect(sitemaps.has("content-0")).toBe(false)
+    expect(sitemaps.has("static-0")).toBe(true)
+    expect(ttlMs).toBe(SITEMAP_DEGRADED_TTL_MS)
+  })
+})
+
 describe("getSitemapCache (stale-while-revalidate)", () => {
   beforeEach(() => {
     clearSitemapCache()
     mockKnex.mockImplementation(() => createChainMock([]))
+    fetchMock.mockResolvedValue(manifestResponse({ version: 1, pages: [] }))
   })
 
   it("serves the stale cache immediately and triggers a background rebuild", async () => {

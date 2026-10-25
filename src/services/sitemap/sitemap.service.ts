@@ -14,6 +14,7 @@ import * as recruitingDb from "../../api/routes/v1/recruiting/database.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
+import { fetchContentSitemapPages } from "./content-manifest.js"
 
 const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js") as {
@@ -27,6 +28,11 @@ const Bugsnag = require("@bugsnag/js") as {
 
 export const SITEMAP_URL_LIMIT = 10_000
 export const SITEMAP_TTL_MS = 6 * 60 * 60 * 1000
+/**
+ * TTL when a best-effort source (the frontend's content manifest) was
+ * unavailable, so its URLs come back soon instead of after the full TTL.
+ */
+export const SITEMAP_DEGRADED_TTL_MS = 15 * 60 * 1000
 
 export interface SitemapSection {
   name: string
@@ -36,6 +42,14 @@ export interface SitemapSection {
 export interface SitemapCache {
   index: Buffer
   sitemaps: Map<string, Buffer>
+  /** How long this cache stays fresh (shorter when a source was missing). */
+  ttlMs: number
+}
+
+export interface SitemapSections {
+  sections: SitemapSection[]
+  /** False when the content manifest couldn't be fetched this time. */
+  complete: boolean
 }
 
 function getSitemapHostname(): string {
@@ -78,9 +92,12 @@ async function collectSection(
   }
 }
 
-export async function collectSitemapSections(): Promise<SitemapSection[]> {
+export async function collectSitemapSections(): Promise<SitemapSections> {
   const db = getKnex()
   const sections: SitemapSection[] = []
+  // Help & Guides, About: Markdown built by the frontend (see
+  // content-manifest.ts). Fetched in parallel with the DB sections below.
+  const contentPagesPromise = fetchContentSitemapPages(getSitemapHostname())
 
   // ── Static pages ──
   sections.push({
@@ -274,7 +291,13 @@ export async function collectSitemapSections(): Promise<SitemapSection[]> {
     return userPages
   })
 
-  return sections
+  const contentPages = await contentPagesPromise
+  if (contentPages && contentPages.length > 0) {
+    // Right after "static": the hand-written pages come first in the index.
+    sections.splice(1, 0, { name: "content", pages: contentPages })
+  }
+
+  return { sections, complete: contentPages !== null }
 }
 
 async function generateSectionSitemap(
@@ -299,7 +322,7 @@ async function generateSectionSitemap(
 }
 
 export async function generateSitemapCache(): Promise<SitemapCache> {
-  const sections = await collectSitemapSections()
+  const { sections, complete } = await collectSitemapSections()
   const hostname = getSitemapHostname()
   const indexHostname = getSitemapIndexHostname()
   const sitemaps = new Map<string, Buffer>()
@@ -326,7 +349,11 @@ export async function generateSitemapCache(): Promise<SitemapCache> {
   const { gzipSync } = await import("node:zlib")
   const index = gzipSync(Buffer.from(indexXml, "utf-8"))
 
-  return { index, sitemaps }
+  return {
+    index,
+    sitemaps,
+    ttlMs: complete ? SITEMAP_TTL_MS : SITEMAP_DEGRADED_TTL_MS,
+  }
 }
 
 let cache: SitemapCache | null = null
@@ -356,7 +383,7 @@ function startRegeneration(): Promise<SitemapCache> {
 }
 
 export async function getSitemapCache(): Promise<SitemapCache> {
-  const isStale = !cache || Date.now() - cacheGeneratedAt >= SITEMAP_TTL_MS
+  const isStale = !cache || Date.now() - cacheGeneratedAt >= cache.ttlMs
 
   // Warm cache: serve it directly.
   if (cache && !isStale) {
