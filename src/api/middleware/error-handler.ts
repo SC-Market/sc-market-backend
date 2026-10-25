@@ -255,6 +255,32 @@ function getStatusCodeForErrorCode(code: ErrorCode | string): number {
 }
 
 /**
+ * Postgres SQLSTATE 22P02 (invalid_text_representation): a value that cannot be
+ * cast to the column type — almost always a non-UUID bound to a uuid column.
+ * That is bad client input, not a server fault. pg/knex put the SQLSTATE on
+ * `code` (knex may nest the driver error under `cause`/`nativeError`).
+ */
+const PG_INVALID_TEXT_REPRESENTATION = "22P02"
+
+function isPgInvalidTextRepresentation(err: unknown): boolean {
+  if (typeof err !== "object" || err === null) return false
+  const e = err as { code?: unknown; cause?: unknown; nativeError?: unknown }
+  if (e.code === PG_INVALID_TEXT_REPRESENTATION) return true
+  return (
+    isPgCode(e.cause, PG_INVALID_TEXT_REPRESENTATION) ||
+    isPgCode(e.nativeError, PG_INVALID_TEXT_REPRESENTATION)
+  )
+}
+
+function isPgCode(value: unknown, code: string): boolean {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    (value as { code?: unknown }).code === code
+  )
+}
+
+/**
  * Top-level error handler middleware
  *
  * Handles all unhandled errors and ensures CORS headers are present
@@ -289,6 +315,27 @@ export async function errorHandler(
     err instanceof ConcurrentModificationError ||
     (err instanceof BusinessLogicError &&
       [ErrorCode.UNAUTHORIZED, ErrorCode.FORBIDDEN, ErrorCode.VALIDATION_ERROR, ErrorCode.NOT_FOUND, ErrorCode.CONFLICT].includes(err.code as ErrorCode))
+
+  // Safety net for endpoints that bind an unvalidated id to a uuid column.
+  // Endpoints should validate ids themselves (isUuid -> 404/400); anything that
+  // still reaches Postgres malformed is answered as a 400, never a 500. The
+  // driver message embeds the SQL and the bad value, so it is not echoed back.
+  if (isPgInvalidTextRepresentation(err)) {
+    logger.warn("Invalid input rejected by database (22P02)", {
+      path: req.path,
+      method: req.method,
+      user_id: req.user?.user_id,
+    })
+    if (res.headersSent) return next(err)
+    return res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid identifier or value format in request",
+        ),
+      )
+  }
 
   if (!isClientError) {
     logger.error("Request error", {

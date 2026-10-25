@@ -2118,6 +2118,13 @@ export class ListingsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
   ): Promise<{ views: number }> {
     this.request = request
+
+    // Short-slugs are resolved to a UUID by the middleware before we get here.
+    // Anything still not a UUID (e.g. "stock" from a bare /market/stock page)
+    // can't match a listing, and binding it to the uuid column makes Postgres
+    // throw (22P02) — answer 404 without querying.
+    if (!isUuid(id)) this.throwNotFound('Listing', id)
+
     const db = getKnex()
 
     const listing = await db('listings').where('listing_id', id).first()

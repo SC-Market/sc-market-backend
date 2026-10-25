@@ -782,6 +782,25 @@ export class BuyOrdersV2Controller extends BaseController {
     this.request = request
     this.requireAuth()
     const sellerId = this.getUserId()
+
+    // Validate ids before any query: binding a non-UUID to a uuid column makes
+    // Postgres throw (22P02) and the request surfaces as a 500. A listing_id
+    // short-slug has already been resolved to a UUID by the short-slug
+    // middleware (SLUG_BODY_FIELDS), so anything still not a UUID is invalid.
+    if (!isUuid(id)) this.throwNotFound('Buy order', id)
+    const idErrors: { field: string; message: string }[] = []
+    for (const field of ['listing_id', 'variant_id'] as const) {
+      const value: unknown = body?.[field]
+      if (typeof value !== 'string' || value.trim() === '') {
+        idErrors.push({ field, message: `${field} is required` })
+      } else if (!isUuid(value)) {
+        idErrors.push({ field, message: `${field} must be a valid UUID` })
+      }
+    }
+    if (idErrors.length > 0) {
+      this.throwValidationError('Invalid fulfillment request', idErrors)
+    }
+
     const db = getKnex()
 
     const result = await withTransaction(async (trx) => {
