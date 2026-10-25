@@ -14,9 +14,13 @@ services:
   web:
     build: .
     env_file: .env
+    environment:
+      # The bot reaches discord_app over the compose network (8081 is not
+      # published), so it must listen beyond loopback inside the container.
+      DISCORD_APP_HOST: 0.0.0.0
     ports:
-      - "8080:8080"
-      - "7000:7000"
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:7000:7000"
     volumes:
       - ./logs:/app/logs
     restart: always
@@ -36,7 +40,7 @@ services:
     env_file: .env
     restart: unless-stopped
     ports:
-      - "8082:8080"
+      - "127.0.0.1:8082:8080"
 
   postgres:
     image: postgres:13.20
@@ -47,4 +51,4 @@ services:
     volumes:
       - ./config/postgres:/docker-entrypoint-initdb.d
     ports:
-      - "0.0.0.0:5432:5432"
+      - "127.0.0.1:5432:5432"
