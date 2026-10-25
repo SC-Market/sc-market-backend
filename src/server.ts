@@ -400,9 +400,15 @@ discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
 discord_app.use("/alert-subscriptions", subscriptionRouter)
 discord_app.use("/claim", claimRouter)
-discord_app.listen(discord_backend_url.port)
+// discord_app has no caller authentication: it trusts the discord_id in the
+// request body. It must therefore only be reachable by the bot, which shares
+// the container network namespace in Lightsail and calls http://localhost:8081.
+// Bind to loopback by default; DISCORD_APP_HOST exists only for setups where
+// the bot runs in a separate network namespace (e.g. docker-compose).
+const discord_app_host = env.DISCORD_APP_HOST || "127.0.0.1"
+discord_app.listen(Number(discord_backend_url.port), discord_app_host)
 logger.info(
-  `discord backend up on port ${hostname()}:${discord_backend_url.port}`,
+  `discord backend up on ${discord_app_host}:${discord_backend_url.port}`,
 )
 
 start_tasks()

@@ -31,6 +31,9 @@ interface Environment {
   DISCORD_API_KEY?: string
   DISCORD_BOT_URL?: string
   DISCORD_PUBLIC_KEY?: string
+  // Interface the internal discord_app binds to. Defaults to 127.0.0.1; the
+  // app is unauthenticated, so only widen this inside a private network.
+  DISCORD_APP_HOST?: string
 
   // Database
   DATABASE_URL?: string

@@ -3,7 +3,7 @@
  * equality filters over a handful of tables.
  *
  * Supported: db(table).where({...} | col, val).first(...) / .select(...) /
- * .forUpdate() / .update({...}) / .insert(row | rows).returning("*"), awaiting
+ * .forUpdate() / .update({...}) / .del() / .insert(row | rows).returning("*"), awaiting
  * a builder yields the matching rows. Anything else is undefined on the
  * builder and fails loudly, so a query shape the fake doesn't model can't
  * pass a test vacuously.
@@ -67,6 +67,13 @@ class FakeBuilder implements PromiseLike<Row[]> {
     const hits = this.hits()
     for (const r of hits) Object.assign(r, values)
     return hits.length
+  }
+
+  async del(): Promise<number> {
+    const hits = new Set(this.hits())
+    const kept = this.rows.filter((r) => !hits.has(r))
+    this.rows.splice(0, this.rows.length, ...kept)
+    return hits.size
   }
 
   insert(values: Row | Row[]): this {
