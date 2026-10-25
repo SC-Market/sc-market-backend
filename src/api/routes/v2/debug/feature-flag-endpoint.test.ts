@@ -30,7 +30,7 @@ function requestFor(user: Record<string, unknown> | null): ExpressRequest {
 
 beforeEach(() => {
   vi.clearAllMocks()
-  service.getAllFlags.mockResolvedValue({ wiki: true, nav_v2: false })
+  service.getAllFlags.mockResolvedValue({ other_flag: true, test_flag: false })
   service.hasOverride.mockResolvedValue(false)
   service.getUserFlagOverrides.mockResolvedValue([])
   service.hasConfig.mockResolvedValue(true)
@@ -56,15 +56,15 @@ describe("GET /debug/feature-flag", () => {
   it("returns the resolved flags for a signed-in user", async () => {
     service.hasOverride.mockResolvedValue(true)
     service.getUserFlagOverrides.mockResolvedValue([
-      { user_id: "u1", flag_name: "wiki", enabled: true, updated_at: "" },
+      { user_id: "u1", flag_name: "other_flag", enabled: true, updated_at: "" },
     ])
     const req = requestFor({ user_id: "u1", role: "user" })
     const result = await new DebugV2Controller(req).getFeatureFlag(req)
 
     expect(result.market_version).toBe("V2")
-    expect(result.flags).toEqual({ wiki: true, nav_v2: false })
+    expect(result.flags).toEqual({ other_flag: true, test_flag: false })
     expect(result.has_override).toBe(true)
-    expect(result.overridden_flags).toEqual(["wiki"])
+    expect(result.overridden_flags).toEqual(["other_flag"])
     expect(service.getAllFlags).toHaveBeenCalledWith("u1")
   })
 })
@@ -75,12 +75,12 @@ describe("POST /debug/feature-flag", () => {
   it("sets an override for a configured flag", async () => {
     const req = requestFor(admin)
     const result = await new DebugV2Controller(req).setFeatureFlag(
-      { flag_name: "wiki", enabled: false },
+      { flag_name: "other_flag", enabled: false },
       req,
     )
 
-    expect(service.setFlagOverride).toHaveBeenCalledWith("admin-1", "wiki", false)
-    expect(result).toEqual({ user_id: "admin-1", message: "Set wiki=false" })
+    expect(service.setFlagOverride).toHaveBeenCalledWith("admin-1", "other_flag", false)
+    expect(result).toEqual({ user_id: "admin-1", message: "Set other_flag=false" })
   })
 
   it("refuses overrides for flags without a config row (e.g. retired market_v2)", async () => {
@@ -99,7 +99,7 @@ describe("POST /debug/feature-flag", () => {
     try {
       const req = requestFor({ user_id: "u2", role: "user" })
       await expect(
-        new DebugV2Controller(req).setFeatureFlag({ flag_name: "wiki", enabled: true }, req),
+        new DebugV2Controller(req).setFeatureFlag({ flag_name: "other_flag", enabled: true }, req),
       ).rejects.toThrow()
       expect(service.setFlagOverride).not.toHaveBeenCalled()
     } finally {

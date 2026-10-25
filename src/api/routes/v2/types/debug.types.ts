@@ -34,7 +34,7 @@ export interface GetFeatureFlagResponse {
  * Request for setting a per-user flag override.
  */
 export interface SetFeatureFlagRequest {
-  /** Flag name to set (must have a feature_flag_config row, e.g. "wiki") */
+  /** Flag name to set (must have a feature_flag_config row, e.g. "market_v2_redesign") */
   flag_name: string
   /** Whether to enable or disable the flag */
   enabled: boolean

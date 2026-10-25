@@ -58,7 +58,7 @@ async function freshService(seed: {
 /** A flag row in the shape the seed migrations create it. */
 function flagRow(overrides: Partial<FakeConfigRow> = {}): FakeConfigRow {
   return {
-    flag_name: "nav_v2",
+    flag_name: "test_flag",
     default_version: "V1",
     rollout_percentage: 0,
     enabled: false,
@@ -78,7 +78,7 @@ describe("isFlagEnabled — rollout percentage", () => {
 
     // Sample across the bucket space rather than one lucky id.
     for (let i = 0; i < 500; i++) {
-      expect(await service.isFlagEnabled(`user-${i}`, "nav_v2")).toBe(true)
+      expect(await service.isFlagEnabled(`user-${i}`, "test_flag")).toBe(true)
     }
   })
 
@@ -88,7 +88,7 @@ describe("isFlagEnabled — rollout percentage", () => {
     })
 
     for (let i = 0; i < 500; i++) {
-      expect(await service.isFlagEnabled(`user-${i}`, "nav_v2")).toBe(false)
+      expect(await service.isFlagEnabled(`user-${i}`, "test_flag")).toBe(false)
     }
   })
 
@@ -102,8 +102,8 @@ describe("isFlagEnabled — rollout percentage", () => {
 
     // `bucket < rollout` — 49 is in, 50 is out. Pinning both sides of the
     // comparison catches an off-by-one that a "roughly 50%" check would not.
-    expect(await service.isFlagEnabled(below, "nav_v2")).toBe(true)
-    expect(await service.isFlagEnabled(at, "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled(below, "test_flag")).toBe(true)
+    expect(await service.isFlagEnabled(at, "test_flag")).toBe(false)
   })
 
   it("is stable for the same user across calls", async () => {
@@ -112,7 +112,7 @@ describe("isFlagEnabled — rollout percentage", () => {
     })
 
     const results = await Promise.all(
-      Array.from({ length: 5 }, () => service.isFlagEnabled("user-7", "nav_v2")),
+      Array.from({ length: 5 }, () => service.isFlagEnabled("user-7", "test_flag")),
     )
     expect(new Set(results).size).toBe(1)
   })
@@ -127,7 +127,7 @@ describe("isFlagEnabled — rollout percentage", () => {
       })
       const enabled = new Set<string>()
       for (const id of ids) {
-        if (await service.isFlagEnabled(id, "nav_v2")) enabled.add(id)
+        if (await service.isFlagEnabled(id, "test_flag")) enabled.add(id)
       }
       // Monotonic: nobody loses the feature when the rollout widens. A
       // non-stable hash would show up here as a user dropping out.
@@ -149,7 +149,7 @@ describe("isFlagEnabled — rollout percentage", () => {
       ],
     })
 
-    expect(await service.isFlagEnabled(userInBucket((b) => b === 99), "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled(userInBucket((b) => b === 99), "test_flag")).toBe(true)
   })
 })
 
@@ -162,7 +162,7 @@ describe("isFlagEnabled — the enabled kill switch", () => {
       configs: [flagRow({ enabled: false, rollout_percentage: 100 })],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(false)
   })
 
   it("returns false when disabled even with default_version V2", async () => {
@@ -172,7 +172,7 @@ describe("isFlagEnabled — the enabled kill switch", () => {
       ],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(false)
   })
 })
 
@@ -187,11 +187,11 @@ describe("isFlagEnabled — unknown flags", () => {
     // The frontend merges the server response over its own DEFAULT_FLAGS, so a
     // flag missing from the database is invisible here rather than false.
     const { service } = await freshService({
-      configs: [flagRow({ flag_name: "nav_v2", enabled: true, rollout_percentage: 100 })],
+      configs: [flagRow({ flag_name: "test_flag", enabled: true, rollout_percentage: 100 })],
     })
 
     const flags = await service.getAllFlags("user-1")
-    expect(flags).toEqual({ nav_v2: true })
+    expect(flags).toEqual({ test_flag: true })
     expect("customizable_dashboard" in flags).toBe(false)
   })
 })
@@ -200,19 +200,19 @@ describe("isFlagEnabled — per-user overrides", () => {
   it("prefers an enabling override over a 0% rollout", async () => {
     const { service } = await freshService({
       configs: [flagRow({ enabled: true, rollout_percentage: 0 })],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: true }],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
   })
 
   it("prefers a disabling override over a 100% rollout", async () => {
     const { service } = await freshService({
       configs: [flagRow({ enabled: true, rollout_percentage: 100 })],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: false }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: false }],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(false)
   })
 
   it("lets an override win over the disabled kill switch", async () => {
@@ -220,24 +220,24 @@ describe("isFlagEnabled — per-user overrides", () => {
     // `enabled` gate is consulted, so an override re-enables a killed flag.
     const { service } = await freshService({
       configs: [flagRow({ enabled: false, rollout_percentage: 0 })],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: true }],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
   })
 
   it("scopes an override to its own flag and user", async () => {
     const { service } = await freshService({
       configs: [
-        flagRow({ flag_name: "nav_v2", enabled: true, rollout_percentage: 0 }),
-        flagRow({ flag_name: "wiki", enabled: true, rollout_percentage: 0 }),
+        flagRow({ flag_name: "test_flag", enabled: true, rollout_percentage: 0 }),
+        flagRow({ flag_name: "other_flag", enabled: true, rollout_percentage: 0 }),
       ],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: true }],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
-    expect(await service.isFlagEnabled("user-1", "wiki")).toBe(false)
-    expect(await service.isFlagEnabled("user-2", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "other_flag")).toBe(false)
+    expect(await service.isFlagEnabled("user-2", "test_flag")).toBe(false)
   })
 
   it("falls back to the rollout when the overrides table is absent", async () => {
@@ -246,7 +246,7 @@ describe("isFlagEnabled — per-user overrides", () => {
       missingTables: ["user_feature_overrides"],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
   })
 })
 
@@ -256,12 +256,12 @@ describe("updateConfig", () => {
       configs: [flagRow({ enabled: true, rollout_percentage: 0 })],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(false)
 
-    await service.updateConfig("nav_v2", { rollout_percentage: 100 })
+    await service.updateConfig("test_flag", { rollout_percentage: 100 })
 
     // Without cache invalidation this would still read 0% for up to 30s.
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
   })
 
   it("leaves fields it was not given untouched", async () => {
@@ -271,7 +271,7 @@ describe("updateConfig", () => {
       configs: [flagRow({ enabled: true, rollout_percentage: 10 })],
     })
 
-    await service.updateConfig("nav_v2", { rollout_percentage: 80 })
+    await service.updateConfig("test_flag", { rollout_percentage: 80 })
 
     const row = db.state.feature_flag_config[0]
     expect(row.rollout_percentage).toBe(80)
@@ -286,58 +286,58 @@ describe("setFlagOverride / removeFlagOverride", () => {
       configs: [flagRow({ enabled: true, rollout_percentage: 0 })],
     })
 
-    await service.setFlagOverride("user-1", "nav_v2", true)
+    await service.setFlagOverride("user-1", "test_flag", true)
 
     expect(db.state.user_feature_overrides).toHaveLength(1)
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
   })
 
   it("upserts rather than duplicating an existing override", async () => {
     const { service, db } = await freshService({
       configs: [flagRow({ enabled: true, rollout_percentage: 0 })],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: true }],
     })
 
-    await service.setFlagOverride("user-1", "nav_v2", false)
+    await service.setFlagOverride("user-1", "test_flag", false)
 
     expect(db.state.user_feature_overrides).toHaveLength(1)
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(false)
   })
 
   it("returns the user to the rollout when the override is removed", async () => {
     const { service, db } = await freshService({
       configs: [flagRow({ enabled: true, rollout_percentage: 100 })],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: false }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: false }],
     })
 
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(false)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(false)
 
-    await service.removeFlagOverride("user-1", "nav_v2")
+    await service.removeFlagOverride("user-1", "test_flag")
 
     expect(db.state.user_feature_overrides).toHaveLength(0)
-    expect(await service.isFlagEnabled("user-1", "nav_v2")).toBe(true)
+    expect(await service.isFlagEnabled("user-1", "test_flag")).toBe(true)
   })
 
   it("removes only the targeted flag's override", async () => {
     const { service, db } = await freshService({
       configs: [flagRow({ enabled: true })],
       overrides: [
-        { user_id: "user-1", flag_name: "nav_v2", enabled: true },
-        { user_id: "user-1", flag_name: "wiki", enabled: true },
+        { user_id: "user-1", flag_name: "test_flag", enabled: true },
+        { user_id: "user-1", flag_name: "other_flag", enabled: true },
       ],
     })
 
-    await service.removeFlagOverride("user-1", "nav_v2")
+    await service.removeFlagOverride("user-1", "test_flag")
 
     expect(db.state.user_feature_overrides).toEqual([
-      { user_id: "user-1", flag_name: "wiki", enabled: true },
+      { user_id: "user-1", flag_name: "other_flag", enabled: true },
     ])
   })
 
   it("reports whether a user has any override at all", async () => {
     const { service } = await freshService({
       configs: [flagRow({ enabled: true })],
-      overrides: [{ user_id: "user-1", flag_name: "nav_v2", enabled: true }],
+      overrides: [{ user_id: "user-1", flag_name: "test_flag", enabled: true }],
     })
 
     expect(await service.hasOverride("user-1")).toBe(true)
@@ -350,15 +350,15 @@ describe("getUserFlagOverrides", () => {
     const { service } = await freshService({
       configs: [flagRow({ enabled: true })],
       overrides: [
-        { user_id: "user-1", flag_name: "nav_v2", enabled: true },
-        { user_id: "user-1", flag_name: "wiki", enabled: false },
-        { user_id: "user-2", flag_name: "nav_v2", enabled: true },
+        { user_id: "user-1", flag_name: "test_flag", enabled: true },
+        { user_id: "user-1", flag_name: "other_flag", enabled: false },
+        { user_id: "user-2", flag_name: "test_flag", enabled: true },
       ],
     })
 
     const rows = await service.getUserFlagOverrides("user-1")
 
-    expect(rows.map((r) => r.flag_name).sort()).toEqual(["nav_v2", "wiki"])
+    expect(rows.map((r) => r.flag_name).sort()).toEqual(["other_flag", "test_flag"])
   })
 
   it("returns nothing when the overrides table is absent", async () => {
@@ -374,10 +374,10 @@ describe("getUserFlagOverrides", () => {
 describe("hasConfig", () => {
   it("is true only for flags with a feature_flag_config row", async () => {
     const { service } = await freshService({
-      configs: [flagRow({ flag_name: "nav_v2" })],
+      configs: [flagRow({ flag_name: "test_flag" })],
     })
 
-    expect(await service.hasConfig("nav_v2")).toBe(true)
+    expect(await service.hasConfig("test_flag")).toBe(true)
     // Retired flags have no config row, so overrides for them are refused.
     expect(await service.hasConfig("market_v2")).toBe(false)
   })

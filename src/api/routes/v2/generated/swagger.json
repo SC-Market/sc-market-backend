@@ -9629,7 +9629,7 @@
 				"properties": {
 					"flag_name": {
 						"type": "string",
-						"description": "Flag name to set (must have a feature_flag_config row, e.g. \"wiki\")"
+						"description": "Flag name to set (must have a feature_flag_config row, e.g. \"market_v2_redesign\")"
 					},
 					"enabled": {
 						"type": "boolean",
