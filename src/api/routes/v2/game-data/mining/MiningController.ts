@@ -24,6 +24,7 @@ import {
   RefiningMethodsResponse,
 } from "./mining.types.js"
 import logger from "../../../../../logger/logger.js"
+import { LISTING_MARKET_PRICE, excludePlaceholderPrices } from "./market-price.js"
 
 const MINING_METHOD_PATTERN: Record<string, string> = {
   ship: "SpaceShip",
@@ -233,8 +234,9 @@ export class MiningController extends BaseController {
         .join("game_items as gi", "gi.id", "me2.game_item_id")
         .join("listing_items as li", "li.game_item_id", "gi.id")
         .join("listings as l", "li.listing_id", "l.listing_id")
-        .select(knex.raw("MIN(li.base_price) as min_price"), "me2.element_id")
+        .select(knex.raw(LISTING_MARKET_PRICE), "me2.element_id")
         .where("l.status", "active")
+        .where(excludePlaceholderPrices)
         .whereNotNull("me2.game_item_id")
         .groupBy("me2.element_id")
         .as("mp")
@@ -376,8 +378,9 @@ export class MiningController extends BaseController {
       if (element.game_item_id) {
         const priceRow = await knex("listing_items as li")
           .join("listings as l", "li.listing_id", "l.listing_id")
-          .select(knex.raw("MIN(li.base_price) as min_price"))
+          .select(knex.raw(LISTING_MARKET_PRICE))
           .where("l.status", "active")
+          .where(excludePlaceholderPrices)
           .where("li.game_item_id", element.game_item_id)
           .first()
         if (priceRow?.min_price) marketPrice = parseInt(priceRow.min_price, 10)
@@ -582,8 +585,9 @@ export class MiningController extends BaseController {
         const prices = await knex("game_items as gi")
           .join("listing_items as li", "li.game_item_id", "gi.id")
           .join("listings as l", "li.listing_id", "l.listing_id")
-          .select("gi.name", knex.raw("MIN(li.base_price) as min_price"))
+          .select("gi.name", knex.raw(LISTING_MARKET_PRICE))
           .where("l.status", "active")
+          .where(excludePlaceholderPrices)
           .where(function () {
             for (const rn of resourceNames) {
               this.orWhere("gi.name", "ilike", `%${rn}%`)
