@@ -67,6 +67,9 @@ interface Environment {
 
   // Other
   NODE_ENV?: string
+  // "true" | "false": reject requests that bypass Cloudflare. Unset means on
+  // in production, off elsewhere (see api/middleware/cloudflare-only.ts).
+  ENFORCE_CLOUDFLARE_ORIGIN?: string
   BACKEND_PORT?: string // Port the public API listens on; required, no default
   SESSION_SECRET?: string
 

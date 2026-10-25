@@ -64,6 +64,11 @@ import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
+import {
+  cloudflareOnly,
+  isRequestFromCloudflare,
+  shouldEnforceCloudflareOrigin,
+} from "./api/middleware/cloudflare-only.js"
 
 const SessionPool = pg.Pool
 
@@ -117,6 +122,26 @@ if (!isDevelopment && bugsnag) {
 }
 
 const app = enableWS(rootApp).app
+
+if (app.get("env") === "production") {
+  app.set("trust proxy", 2) // trust first and second proxy
+}
+
+// Reject requests that reached the origin without passing through Cloudflare
+// (e.g. via the *.cs.amazonlightsail.com URL, where X-Forwarded-For is
+// caller-controlled and per-IP rate limits can be dodged). Runs before
+// everything else on the public app; discord_app is a separate listener.
+const enforceCloudflareOrigin = shouldEnforceCloudflareOrigin(env)
+logger.info(
+  `Cloudflare-only origin enforcement: ${enforceCloudflareOrigin ? "on" : "off"}`,
+)
+app.use(
+  cloudflareOnly({
+    enforce: enforceCloudflareOrigin,
+    // Lightsail health check path (cdk lightsail-stack.ts).
+    exemptPaths: ["/api/languages"],
+  }),
+)
 
 // Configure response compression
 // Compression is enabled with optimized settings:
@@ -183,10 +208,6 @@ const sessionDBaccess = new SessionPool({
     (dbConfig.port as unknown as number) ||
     (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
 })
-
-if (app.get("env") === "production") {
-  app.set("trust proxy", 2) // trust first and second proxy
-}
 
 if (!env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET must be set in .env")
@@ -316,6 +337,13 @@ app.use(errorHandler)
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   path: "/ws",
+  // Socket.IO handles /ws before Express, so it needs its own guard.
+  ...(enforceCloudflareOrigin && {
+    allowRequest: (req, callback) => {
+      const ok = isRequestFromCloudflare(req)
+      callback(ok ? null : "Direct origin access is not allowed", ok)
+    },
+  }),
   cors: {
     credentials: true,
     origin: (origin, callback) => {
