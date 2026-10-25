@@ -1,7 +1,9 @@
 /**
- * HTTP-level tests for DELETE /alert-subscriptions/:channel_id (bot
- * /unsubscribe alerts). Deleting used to key on channel_id alone, so anyone
- * who could run a slash command in an alert channel could switch it off.
+ * HTTP-level tests for the bot's /subscribe and /unsubscribe alerts routes.
+ * Deleting used to key on channel_id alone, so anyone who could run a slash
+ * command in an alert channel could switch it off; creating let any org
+ * member point the org's order alerts at a channel, or replace another
+ * channel's subscription.
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
@@ -19,7 +21,11 @@ vi.mock("../database/knex-db.js", () => ({
 vi.mock("../../api/routes/v1/profiles/database.js", () => ({
   getUserByDiscordId: vi.fn(),
 }))
-vi.mock("../../api/routes/v1/contractors/database.js", () => ({}))
+vi.mock("../../api/routes/v1/contractors/database.js", () => ({
+  getContractor: vi.fn(async ({ spectrum_id }: { spectrum_id: string }) =>
+    spectrum_id === "ORG1" ? { contractor_id: "org-1" } : null,
+  ),
+}))
 vi.mock("../../api/routes/v1/util/permissions.js", () => ({
   has_permission: vi.fn(async () => false),
   is_member: vi.fn(async () => false),
@@ -145,5 +151,47 @@ describe("DELETE /alert-subscriptions/:channel_id", () => {
   it("answers 404 for a channel with no subscription", async () => {
     const res = await unsubscribe("chan-none", { discord_id: "d-creator" })
     expect(res.status).toBe(404)
+  })
+})
+
+describe("POST /alert-subscriptions", () => {
+  const subscribe = (body: object) =>
+    request(app()).post("/alert-subscriptions").send({ guild_id: "g-2", ...body })
+
+  it("forbids an org member without management rights from subscribing the org", async () => {
+    const res = await subscribe({ channel_id: "chan-new", spectrum_id: "ORG1", discord_id: "d-member" })
+    expect(res.status).toBe(403)
+    expect(state.db.tables.order_alert_subscriptions.map((s) => s.channel_id)).not.toContain("chan-new")
+  })
+
+  it("lets an org manager subscribe a new channel to the org", async () => {
+    const res = await subscribe({ channel_id: "chan-new", spectrum_id: "ORG1", discord_id: "d-manager" })
+    expect(res.status).toBe(200)
+    expect(res.body.data).toMatchObject({ channel_id: "chan-new", contractor_id: "org-1" })
+  })
+
+  it("forbids replacing a channel's subscription created by someone else", async () => {
+    const res = await subscribe({ channel_id: "chan-user", discord_id: "d-member" })
+    expect(res.status).toBe(403)
+    const sub = state.db.tables.order_alert_subscriptions.find((s) => s.channel_id === "chan-user")
+    expect(sub).toMatchObject({ user_id: "owner-1", created_by_discord_id: "d-creator" })
+  })
+
+  it("lets an org manager replace the org's subscription", async () => {
+    const res = await subscribe({ channel_id: "chan-org", spectrum_id: "ORG1", discord_id: "d-manager" })
+    expect(res.status).toBe(200)
+    expect(res.body.data).toMatchObject({ channel_id: "chan-org", created_by_discord_id: "d-manager" })
+  })
+
+  it("lets the creator replace their own subscription", async () => {
+    const res = await subscribe({ channel_id: "chan-user", discord_id: "d-creator" })
+    expect(res.status).toBe(200)
+    expect(res.body.data).toMatchObject({ user_id: "creator-1", created_by_discord_id: "d-creator" })
+  })
+
+  it("creates a personal subscription for an unclaimed channel", async () => {
+    const res = await subscribe({ channel_id: "chan-new", discord_id: "d-member" })
+    expect(res.status).toBe(200)
+    expect(res.body.data).toMatchObject({ user_id: "member-1", contractor_id: null })
   })
 })
