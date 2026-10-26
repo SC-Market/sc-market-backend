@@ -8,6 +8,7 @@ import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { DBOrgWhitelabelConfig, DBOrgSidebarConfig } from "../../../../clients/database/db-models.js"
 import { validateRedirectPath } from "../../../util/oauth-state.js"
+import { effectiveRequireMembership } from "./whitelabel-rules.js"
 
 const knex = () => getKnex()
 
@@ -65,10 +66,16 @@ whitelabelConfigRouter.put(
         .where({ contractor_id: contractor.contractor_id })
         .first()
 
+      const membership = effectiveRequireMembership(
+        focus_mode ?? existing?.focus_mode ?? "public",
+        require_membership ?? existing?.require_membership ?? false,
+      )
       const data: Partial<DBOrgWhitelabelConfig> = {
         ...(focus_mode !== undefined && { focus_mode }),
         ...(homepage_path !== undefined && { homepage_path }),
-        ...(require_membership !== undefined && { require_membership }),
+        ...((require_membership !== undefined || focus_mode !== undefined) && {
+          require_membership: membership,
+        }),
         ...(drawer_style !== undefined && { drawer_style }),
         updated_at: new Date(),
         updated_by: user.user_id,
