@@ -18,6 +18,7 @@
  * can be compared with the legacy path on real traffic before switching.
  */
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
+import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
 import { eventDefinition, type EventKey } from "./catalog.js"
 import type {
@@ -48,6 +49,12 @@ export interface NotifyOptions {
   notifyActor?: boolean
   /** Restrict this call to some of the event's channels. */
   channels?: readonly UserChannel[]
+  /**
+   * "unread": one in-app notification per entity while it is unread (chat
+   * messages). The existing object is reused and bumped; a recipient who
+   * still has it unread gets nothing on any channel.
+   */
+  collapse?: "unread"
   /** What each channel delivers; may depend on the recipient. */
   messages: RenderedMessages | ((recipient: UserRecipient) => RenderedMessages)
   shadow?: boolean
@@ -124,6 +131,36 @@ export async function notify(
   )
 
   try {
+    // 1b. Collapse: drop recipients who still have this entity unread.
+    let collapseObjectId: string | null = null
+    if (opts.collapse === "unread") {
+      const action = await notificationDb.getNotificationActionByName(def.legacyAction)
+      const existing = await notificationDb.getNotificationObjectByEntityAndAction(
+        opts.entityId,
+        action.action_type_id,
+      )
+      if (existing) {
+        collapseObjectId = existing.notification_object_id
+        const unread: string[] = await getKnex()("notification")
+          .where({ notification_object_id: collapseObjectId, read: false })
+          .whereIn("notifier_id", recipients.map((r) => r.userId))
+          .pluck("notifier_id")
+        const keep = recipients.filter((r) => !unread.includes(r.userId))
+        recipients.splice(0, recipients.length, ...keep)
+        if (!opts.shadow) {
+          // As the legacy chat notifications did: every new message bumps the
+          // conversation's notification and records its author, whether or
+          // not anyone needs a new notification row.
+          await notificationDb.updateNotificationObjectTimestamp(collapseObjectId)
+          if (opts.actorId) {
+            await notificationDb.insertNotificationChange([
+              { notification_object_id: collapseObjectId, actor_id: opts.actorId },
+            ])
+          }
+        }
+      }
+    }
+
     // 2. Preferences.
     const prefs = await resolvePreferences(def, recipients, channels)
     for (const r of recipients) {
@@ -156,21 +193,25 @@ export async function notify(
     })
     if (opts.shadow) return result
 
-    // 4a. In-app: one notification object for the event.
+    // 4a. In-app: one notification object for the event (or the collapsed one).
     const inApp = toSend.filter((d) => d.channel === "in_app")
     if (inApp.length) {
       try {
-        const action = await notificationDb.getNotificationActionByName(def.legacyAction)
-        const [object] = await notificationDb.insertNotificationObjects([
-          { action_type_id: action.action_type_id, entity_id: opts.entityId },
-        ])
-        if (opts.actorId) {
-          await notificationDb.insertNotificationChange([
-            { notification_object_id: object.notification_object_id, actor_id: opts.actorId },
+        let objectId = collapseObjectId
+        if (!objectId) {
+          const action = await notificationDb.getNotificationActionByName(def.legacyAction)
+          const [object] = await notificationDb.insertNotificationObjects([
+            { action_type_id: action.action_type_id, entity_id: opts.entityId },
           ])
+          objectId = object.notification_object_id
+          if (opts.actorId) {
+            await notificationDb.insertNotificationChange([
+              { notification_object_id: objectId, actor_id: opts.actorId },
+            ])
+          }
         }
         await notificationDb.insertNotifications(
-          inApp.map((d) => ({ notification_object_id: object.notification_object_id, notifier_id: d.userId })),
+          inApp.map((d) => ({ notification_object_id: objectId!, notifier_id: d.userId })),
         )
         for (const d of inApp) {
           result.delivered.push(d)
