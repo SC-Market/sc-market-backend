@@ -554,9 +554,10 @@ export const post_merge: RequestHandler = async (req, res) => {
       return
     }
 
-    // Fallback for unexpected errors
-    const errorMessage =
-      error instanceof Error ? error.message : "Failed to merge offer sessions"
-    res.status(500).json(createErrorResponse({ message: errorMessage }))
+    // Fallback for unexpected errors: details are logged above, never sent
+    // (they can be raw database errors).
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to merge offer sessions" }))
   }
 }

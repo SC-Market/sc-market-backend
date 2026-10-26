@@ -494,13 +494,19 @@ export async function errorHandler(
     err.message?.includes("duplicate key value") ||
     err.message?.includes("unique constraint")
   ) {
+    // The driver message names tables, columns, constraints and the
+    // conflicting values: log it, never send it to the client.
+    logger.warn("Database constraint violation", {
+      path: req.path,
+      method: req.method,
+      error: err.message,
+    })
     return res
       .status(409)
       .json(
         createErrorResponse(
           ErrorCode.CONFLICT,
-          "Database constraint violation",
-          { originalError: err.message },
+          "This conflicts with existing data. Please refresh and try again.",
         ),
       )
   }
