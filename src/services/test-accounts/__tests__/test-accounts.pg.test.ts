@@ -5,20 +5,18 @@
  * flow end to end (create account, TOTP, cookies, replay, generic failures,
  * delete).
  *
- * Needs a disposable database, e.g. on a unix socket:
- *   initdb -D /tmp/pg -U postgres && pg_ctl -D /tmp/pg -o "-k /tmp/pg -c listen_addresses=''" start
- *   createdb -h /tmp/pg -U postgres tacct
- *   TEST_ACCOUNTS_PG_SOCKET=/tmp/pg TEST_ACCOUNTS_PG_DB=tacct npx vitest run src/services/test-accounts/__tests__/test-accounts.pg.test.ts
- * The test drops and recreates every table it uses: never point it at a real database.
+ * Runs when PG_TEST_URL names a throwaway Postgres server (see
+ * src/test-utils/pg-test-db.ts; CI provides one), in its own database:
+ *   PG_TEST_URL='postgres://postgres@localhost/postgres?host=/tmp/pg' npx vitest run src/services/test-accounts/__tests__/test-accounts.pg.test.ts
  */
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 import knexFactory, { type Knex } from "knex"
 import express from "express"
 import cookieParser from "cookie-parser"
 import request from "supertest"
+import { PG_TEST_URL, createTestDatabase, dropTestDatabase } from "../../../test-utils/pg-test-db.js"
 
-const SOCKET = process.env.TEST_ACCOUNTS_PG_SOCKET
-const DB = process.env.TEST_ACCOUNTS_PG_DB
+const DB = "pgtest_test_accounts"
 
 const h = vi.hoisted(() => {
   process.env.FRONTEND_URL = "https://sc-market.space"
@@ -235,9 +233,9 @@ async function sqlstate(p: Promise<unknown>): Promise<string> {
   }
 }
 
-describe.skipIf(!SOCKET || !DB)("test accounts on Postgres", () => {
+describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
   beforeAll(async () => {
-    h.db = knexFactory({ client: "pg", connection: { host: SOCKET, database: DB, user: "postgres" } })
+    h.db = knexFactory({ client: "pg", connection: await createTestDatabase(DB) })
     await createBaseSchema(db())
     await mfaUp(db())
     await up(db())
@@ -247,6 +245,7 @@ describe.skipIf(!SOCKET || !DB)("test accounts on Postgres", () => {
   afterAll(async () => {
     await down(db())
     await db().destroy()
+    await dropTestDatabase(DB)
   })
 
   describe("schema rules", () => {
