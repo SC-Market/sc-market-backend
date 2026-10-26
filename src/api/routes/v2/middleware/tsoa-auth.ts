@@ -11,6 +11,8 @@ import { User } from "../../v1/api-models.js"
 import { enforceTokenScopes, isAdminPath, TokenInfo } from "./token-scopes.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
 import { adminLockError } from "../../../util/site-admin-policy.js"
+import { enforceTokenOrgAccess } from "./token-org-access.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 
 const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa"]
 
@@ -77,6 +79,8 @@ export async function expressAuthentication(
     // router is mounted at /api/v2), matching the deletion-status check above.
     const tokenInfo = (request as { __tokenInfo?: TokenInfo }).__tokenInfo
     enforceTokenScopes(tokenInfo, request.method, request.path)
+    // ...and to the orgs the token was granted (contractor_ids).
+    await enforceTokenOrgAccess(getKnex(), tokenInfo, request, user.user_id)
 
     return user
   }
