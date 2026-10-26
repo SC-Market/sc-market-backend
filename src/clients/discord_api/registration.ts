@@ -74,7 +74,7 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
       })
       res.status(403).json({
         error:
-          "You do not have permission to register on behalf of this contractor",
+          "You need the Manage Webhooks permission in this organization on SC Market to connect its Discord server or channel",
       })
       return
     }

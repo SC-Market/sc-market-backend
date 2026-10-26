@@ -79,15 +79,19 @@ export async function postOfferAlert(session: DBOfferSession): Promise<void> {
         ],
         timestamp: new Date().toISOString(),
       }],
-      components: [{
-        type: 1, // ACTION_ROW
-        components: [{
-          type: 2, // BUTTON
-          style: 1, // PRIMARY
-          label: "Claim Offer",
-          custom_id: `claim_offer:${session.id}`,
-        }],
-      }],
+      // Only org offers can be claimed (claim_orders is an org permission); on a
+      // personal alert channel the button could only ever fail.
+      components: session.contractor_id
+        ? [{
+            type: 1, // ACTION_ROW
+            components: [{
+              type: 2, // BUTTON
+              style: 1, // PRIMARY
+              label: "Claim Offer",
+              custom_id: `claim_offer:${session.id}`,
+            }],
+          }]
+        : [],
     }
 
     for (const sub of subs) {
