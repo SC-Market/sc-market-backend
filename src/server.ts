@@ -60,7 +60,6 @@ import {
   i18nMiddleware,
   addTranslationToRequestWithUser,
 } from "./api/routes/v1/util/i18n.js"
-import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
@@ -326,8 +325,6 @@ app.use(
 )
 
 app.use(addTranslationToRequestWithUser)
-
-app.use(adminOverride)
 
 app.use("/api", apiRouter)
 app.use("/api/v1", apiV1Router)
