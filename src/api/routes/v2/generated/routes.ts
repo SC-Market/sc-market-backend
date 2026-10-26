@@ -24,6 +24,8 @@ import { OnboardingV2Controller } from './../onboarding/OnboardingV2Controller.j
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OffersV2Controller } from './../offers/OffersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { NotificationPreferencesV2Controller } from './../notification-preferences/NotificationPreferencesV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MfaController } from './../mfa/MfaController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminMfaController } from './../mfa/MfaController.js';
@@ -1143,6 +1145,91 @@ const models: TsoaRoute.Models = {
             "shop_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
             "availability": {"dataType":"union","subSchemas":[{"ref":"OfferAvailability"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationPreferenceScope": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "name": {"dataType":"string","required":true},
+            "spectrum_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationCategoryId": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["orders"]},{"dataType":"enum","enums":["order_messages"]},{"dataType":"enum","enums":["offers"]},{"dataType":"enum","enums":["offer_messages"]},{"dataType":"enum","enums":["market"]},{"dataType":"enum","enums":["reviews"]},{"dataType":"enum","enums":["watchlist"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["announcements"]},{"dataType":"enum","enums":["reminders"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationChannelId": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["in_app"]},{"dataType":"enum","enums":["push"]},{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["discord_dm"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationEventKey": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationPreferenceCell": {
+        "dataType": "refObject",
+        "properties": {
+            "channel": {"ref":"NotificationChannelId","required":true},
+            "enabled": {"dataType":"boolean","required":true},
+            "locked": {"dataType":"boolean","required":true},
+            "default": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationPreferenceEvent": {
+        "dataType": "refObject",
+        "properties": {
+            "event": {"ref":"NotificationEventKey","required":true},
+            "cells": {"dataType":"array","array":{"dataType":"refObject","ref":"NotificationPreferenceCell"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationPreferenceCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "category": {"ref":"NotificationCategoryId","required":true},
+            "cells": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"locked":{"dataType":"boolean","required":true},"state":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["on"]},{"dataType":"enum","enums":["off"]},{"dataType":"enum","enums":["mixed"]}],"required":true},"channel":{"ref":"NotificationChannelId","required":true}}},"required":true},
+            "events": {"dataType":"array","array":{"dataType":"refObject","ref":"NotificationPreferenceEvent"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationPreferencesResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "scopes": {"dataType":"array","array":{"dataType":"refObject","ref":"NotificationPreferenceScope"},"required":true},
+            "categories": {"dataType":"array","array":{"dataType":"refObject","ref":"NotificationPreferenceCategory"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NotificationPreferenceUpdate": {
+        "dataType": "refObject",
+        "properties": {
+            "category": {"ref":"NotificationCategoryId"},
+            "event": {"ref":"NotificationEventKey"},
+            "channel": {"ref":"NotificationChannelId","required":true},
+            "enabled": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateNotificationPreferencesRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "updates": {"dataType":"array","array":{"dataType":"refObject","ref":"NotificationPreferenceUpdate"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -5605,6 +5692,70 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOfferSession',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificationPreferencesV2Controller_getNotificationPreferences: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                contractor_id: {"in":"query","name":"contractor_id","dataType":"string"},
+        };
+        app.get('/notification-preferences',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(NotificationPreferencesV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(NotificationPreferencesV2Controller.prototype.getNotificationPreferences)),
+
+            async function NotificationPreferencesV2Controller_getNotificationPreferences(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificationPreferencesV2Controller_getNotificationPreferences, request, response });
+
+                const controller = new NotificationPreferencesV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getNotificationPreferences',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificationPreferencesV2Controller_updateNotificationPreferences: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateNotificationPreferencesRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.put('/notification-preferences',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(NotificationPreferencesV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(NotificationPreferencesV2Controller.prototype.updateNotificationPreferences)),
+
+            async function NotificationPreferencesV2Controller_updateNotificationPreferences(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificationPreferencesV2Controller_updateNotificationPreferences, request, response });
+
+                const controller = new NotificationPreferencesV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateNotificationPreferences',
                 controller,
                 response,
                 next,
