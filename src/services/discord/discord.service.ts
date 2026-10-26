@@ -43,6 +43,11 @@ export interface DiscordService {
     userId: string,
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void>
+  /** Like sendDirectMessage, but reports the failure (Discord error code 50007 = DMs closed). */
+  trySendDirectMessage(
+    userId: string,
+    message: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<{ ok: true } | { ok: false; error: string; code?: number; status?: number }>
 
   // Thread management
   queueThreadCreation(
@@ -109,9 +114,17 @@ class RestDiscordService implements DiscordService {
     userId: string,
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void> {
+    // Don't throw - Discord errors are expected and should be logged but not fail the operation
+    await this.trySendDirectMessage(userId, message)
+  }
+
+  async trySendDirectMessage(
+    userId: string,
+    message: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<{ ok: true } | { ok: false; error: string; code?: number; status?: number }> {
     // Test accounts have no Discord; any DM caused by one would reach a real
     // user (services/test-accounts).
-    if (actingAsTestAccount()) return
+    if (actingAsTestAccount()) return { ok: false, error: "suppressed for a test account" }
     try {
       const channel: APIChannel = (await this.rest.post(Routes.userChannels(), {
         body: {
@@ -122,9 +135,16 @@ class RestDiscordService implements DiscordService {
       await this.rest.post(Routes.channelMessages(channel.id), {
         body: message,
       })
+      return { ok: true }
     } catch (error) {
       logger.error(`Failed to send DM to user ${userId}: ${error}`)
-      // Don't throw - Discord errors are expected and should be logged but not fail the operation
+      const e = error as { code?: unknown; status?: unknown }
+      return {
+        ok: false,
+        error: String(error),
+        code: typeof e?.code === "number" ? e.code : undefined,
+        status: typeof e?.status === "number" ? e.status : undefined,
+      }
     }
   }
 

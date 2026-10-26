@@ -13,6 +13,7 @@ import {
   process_account_deletions,
 } from "./timers.js"
 import { processDmReminders } from "../services/dm-reminders/dm-reminder.service.js"
+import { pruneDeliveries } from "../services/notify/deliveries.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
 import { processEmailQueue } from "./email-queue-consumer.js"
@@ -123,6 +124,12 @@ export function start_tasks() {
     safe(processDmReminders, "processDmReminders")
     setInterval(() => safe(processDmReminders, "processDmReminders"), 6 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 80_000)
+
+  // Drop notification delivery records past their retention window, daily
+  setTimeout(() => {
+    safe(pruneDeliveries, "pruneDeliveries")
+    setInterval(() => safe(pruneDeliveries, "pruneDeliveries"), 24 * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 100_000)
 
   // Recompute shop badges daily to pick up time-based badges (early adopter,
   // consistency tiers, donor duration) that aren't triggered by order events
