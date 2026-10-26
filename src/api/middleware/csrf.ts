@@ -74,6 +74,9 @@ export const CSRF_EXEMPT_PATHS: readonly RegExp[] = [
   // SCMDB posts text/plain from https://scmdb.net; the sync token in the path
   // is the credential (ScmdbSyncController.ingestWebhook).
   /^\/api\/v2\/integrations\/scmdb\/ingest\/[^/]+$/,
+  // Browser-generated CSP violation reports (application/csp-report or
+  // application/reports+json). A write-only log sink with no auth effect.
+  /^\/api(?:\/v1)?\/csp-report$/,
 ]
 
 export interface CsrfOptions {

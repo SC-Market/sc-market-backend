@@ -243,6 +243,15 @@ describe("csrfProtection", () => {
       expect(res.status).toBe(200)
     })
 
+    it("lets browsers post CSP violation reports", async () => {
+      const res = await request(app())
+        .post("/api/csp-report")
+        .set("Cookie", COOKIE)
+        .set("Content-Type", "application/csp-report")
+        .send('{"csp-report":{}}')
+      expect(res.status).toBe(200)
+    })
+
     it("only exempts the ingest route, not the rest of the integration", () => {
       expect(
         CSRF_EXEMPT_PATHS.some((re) =>

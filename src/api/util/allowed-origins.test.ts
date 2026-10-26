@@ -156,7 +156,8 @@ describe("normalizeCustomDomain", () => {
       expect(normalizeCustomDomain("evil.sc-market.space").ok).toBe(false)
       expect(normalizeCustomDomain("sc-market.space.example.com").ok).toBe(true)
     } finally {
-      process.env.FRONTEND_URL = prev
+      if (prev === undefined) delete process.env.FRONTEND_URL
+      else process.env.FRONTEND_URL = prev
     }
   })
 })
