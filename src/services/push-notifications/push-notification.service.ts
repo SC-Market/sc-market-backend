@@ -9,6 +9,7 @@
  */
 
 import webpush from "web-push"
+import { isAllowedPushEndpoint } from "./push-endpoint.js"
 import { env } from "../../config/env.js"
 import * as pushNotificationDb from "./push-notification.database.js"
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
@@ -19,6 +20,17 @@ import {
   PushNotificationPayload,
   PushNotificationPreferences,
 } from "./push-notification.service.types.js"
+
+/** A subscription request the server refuses (bad endpoint, owned elsewhere). */
+export class PushSubscriptionRejectedError extends Error {
+  constructor(
+    message: string,
+    readonly status: 400 | 409 = 400,
+  ) {
+    super(message)
+    this.name = "PushSubscriptionRejectedError"
+  }
+}
 
 /**
  * Interface for PushNotificationService
@@ -102,6 +114,25 @@ class WebPushNotificationService implements PushNotificationService {
     userId: string,
     subscription: PushSubscriptionData,
   ): Promise<string> {
+    if (!isAllowedPushEndpoint(subscription.endpoint)) {
+      throw new PushSubscriptionRejectedError(
+        "Push endpoint must be an https URL of a browser push service",
+      )
+    }
+    // An endpoint is one browser's push channel. Never attach it to a second
+    // account: that account's notifications would be delivered to the other
+    // user's device.
+    const others = await pushNotificationDb.getOtherUsersWithEndpoint(
+      subscription.endpoint,
+      userId,
+    )
+    if (others.length) {
+      throw new PushSubscriptionRejectedError(
+        "This browser is already subscribed for another account",
+        409,
+      )
+    }
+
     const [result] = await pushNotificationDb.insertPushSubscription({
       user_id: userId,
       endpoint: subscription.endpoint,
@@ -324,6 +355,9 @@ class WebPushNotificationService implements PushNotificationService {
 
     const results = await Promise.allSettled(
       subscriptions.map(async (subscription) => {
+        // Never contact an endpoint outside the push services (rows saved
+        // before endpoints were validated).
+        if (!isAllowedPushEndpoint(subscription.endpoint)) return
         try {
           logger.debug(
             `Sending push notification to subscription ${subscription.subscription_id}`,
@@ -602,6 +636,12 @@ class WebPushNotificationService implements PushNotificationService {
     let valid = 0
 
     for (const subscription of allSubscriptions) {
+      // Rows saved before endpoints were validated: drop, don't contact.
+      if (!isAllowedPushEndpoint(subscription.endpoint)) {
+        await pushNotificationDb.deletePushSubscription(subscription.subscription_id)
+        removed++
+        continue
+      }
       try {
         // Send a test notification (silent)
         await webpush.sendNotification(

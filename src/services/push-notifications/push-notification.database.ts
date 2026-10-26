@@ -90,6 +90,20 @@ export async function deletePushSubscriptionsByUser(
 }
 
 /**
+ * Users other than `userId` that already hold a subscription for `endpoint`.
+ */
+export async function getOtherUsersWithEndpoint(
+  endpoint: string,
+  userId: string,
+): Promise<string[]> {
+  const rows = await knex()<PushSubscription>("push_subscriptions")
+    .where({ endpoint })
+    .whereNot({ user_id: userId })
+    .select("user_id")
+  return rows.map((r) => r.user_id)
+}
+
+/**
  * Delete push subscription by endpoint.
  */
 export async function deletePushSubscriptionByEndpoint(

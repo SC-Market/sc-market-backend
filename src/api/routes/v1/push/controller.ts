@@ -1,6 +1,9 @@
 import { RequestHandler } from "express"
 import { User } from "../api-models.js"
-import { pushNotificationService } from "../../../../services/push-notifications/push-notification.service.js"
+import {
+  pushNotificationService,
+  PushSubscriptionRejectedError,
+} from "../../../../services/push-notifications/push-notification.service.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
@@ -74,6 +77,17 @@ export const push_subscribe: RequestHandler = async (req, res) => {
       }),
     )
   } catch (error) {
+    if (error instanceof PushSubscriptionRejectedError) {
+      res
+        .status(error.status)
+        .json(
+          createErrorResponse(
+            error.status === 409 ? ErrorCode.CONFLICT : ErrorCode.VALIDATION_ERROR,
+            error.message,
+          ),
+        )
+      return
+    }
     logger.error("Failed to create push subscription:", error)
     res
       .status(500)
