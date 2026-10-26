@@ -156,7 +156,7 @@ const IPV4_RE = /^\d{1,3}(\.\d{1,3}){3}$/
  * Validate and normalize a shop custom domain before it is stored (and so
  * becomes a credentialed CORS origin). Lower-cases it and rejects anything
  * that is not a public multi-label hostname: IPs, localhost, single labels,
- * and the main site's own hosts.
+ * and the main site's own hosts (frontend, www, API).
  */
 export function normalizeCustomDomain(
   input: string,
@@ -174,14 +174,14 @@ export function normalizeCustomDomain(
   if (domain === "localhost" || domain.endsWith(".localhost")) {
     return { ok: false, reason: "localhost is not allowed" }
   }
-  const mainHosts = mainSiteOrigins.map((o) => new URL(o).hostname)
-  const mainZones = new Set(
-    mainHosts.map((h) => h.split(".").slice(-2).join(".")),
-  )
-  for (const zone of mainZones) {
-    if (domain === zone || domain.endsWith(`.${zone}`)) {
-      return { ok: false, reason: "The main site's domains are not allowed" }
-    }
+  // White-label subdomains of the main zone (e.g. medrunner.sc-market.space)
+  // are fine; the main site's own hosts are not.
+  const mainHosts = new Set([
+    ...mainSiteOrigins.map((o) => new URL(o).hostname),
+    ...mainSiteOrigins.map((o) => `www.${new URL(o).hostname}`),
+  ])
+  if (mainHosts.has(domain)) {
+    return { ok: false, reason: "The main site's own hosts are not allowed" }
   }
   return { ok: true, domain }
 }

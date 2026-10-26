@@ -146,18 +146,27 @@ describe("normalizeCustomDomain", () => {
     expect(normalizeCustomDomain(input).ok).toBe(false)
   })
 
-  it("rejects the main site's own zone", async () => {
+  it("rejects the main site's own hosts but allows white-label subdomains", async () => {
     vi.resetModules()
-    const prev = process.env.FRONTEND_URL
+    const prev = { f: process.env.FRONTEND_URL, b: process.env.BACKEND_URL }
     process.env.FRONTEND_URL = "https://sc-market.space"
+    process.env.BACKEND_URL = "https://api.sc-market.space"
     try {
       const { normalizeCustomDomain } = await import("./allowed-origins.js")
       expect(normalizeCustomDomain("sc-market.space").ok).toBe(false)
-      expect(normalizeCustomDomain("evil.sc-market.space").ok).toBe(false)
+      expect(normalizeCustomDomain("www.sc-market.space").ok).toBe(false)
+      expect(normalizeCustomDomain("API.sc-market.space").ok).toBe(false)
+      // Live white-label domains are subdomains of the main zone.
+      expect(normalizeCustomDomain("medrunner.sc-market.space")).toEqual({
+        ok: true,
+        domain: "medrunner.sc-market.space",
+      })
       expect(normalizeCustomDomain("sc-market.space.example.com").ok).toBe(true)
     } finally {
-      if (prev === undefined) delete process.env.FRONTEND_URL
-      else process.env.FRONTEND_URL = prev
+      for (const [k, v] of [["FRONTEND_URL", prev.f], ["BACKEND_URL", prev.b]] as const) {
+        if (v === undefined) delete process.env[k]
+        else process.env[k] = v
+      }
     }
   })
 })
