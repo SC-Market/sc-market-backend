@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest"
 import knexFactory from "knex"
-import { listingVisibleTo, visibleActiveListingCountQuery } from "./listing-visibility.js"
+import {
+  listingPubliclyListed,
+  listingVisibleTo,
+  visibleActiveListingCountQuery,
+} from "./listing-visibility.js"
 
 // SQL is only compiled, never run: no connection is needed for toSQL().
 const knex = knexFactory({ client: "pg" })
@@ -11,24 +15,39 @@ const LS_COLUMNS = {
 }
 
 describe("listing visibility", () => {
-  it("hides private listings from anonymous viewers", () => {
+  // Regression: /market showed unlisted (link-only) listings to anonymous
+  // visitors because the rule was "visibility != 'private'".
+  it("shows anonymous viewers public listings only (no private, no unlisted)", () => {
     const q = knex("listing_search as ls")
       .where(listingVisibleTo(knex, undefined, LS_COLUMNS))
       .toSQL()
     expect(q.sql).toBe(
-      'select * from "listing_search" as "ls" where ("ls"."visibility" != ?)',
+      'select * from "listing_search" as "ls" where ("ls"."visibility" = ?)',
     )
-    expect(q.bindings).toEqual(["private"])
+    expect(q.bindings).toEqual(["public"])
   })
 
-  it("lets a signed-in viewer see private listings only of orgs they belong to", () => {
+  it("lets a signed-in viewer see private listings only of orgs they belong to, never unlisted ones", () => {
     const q = knex("listing_search as ls")
       .where(listingVisibleTo(knex, "user-1", LS_COLUMNS))
       .toSQL()
-    expect(q.sql).toContain('"ls"."visibility" != ? or ("ls"."shop_owner_contractor_id" is not null and exists')
+    expect(q.sql).toContain(
+      '"ls"."visibility" = ? or ("ls"."visibility" = ? and "ls"."shop_owner_contractor_id" is not null and exists',
+    )
     expect(q.sql).toContain('contractor_members.contractor_id = "ls"."shop_owner_contractor_id"')
     expect(q.sql).toContain('"contractor_members"."user_id" = ?')
-    expect(q.bindings).toEqual(["private", "user-1"])
+    expect(q.bindings).toEqual(["public", "private", "user-1"])
+    expect(q.bindings).not.toContain("unlisted")
+  })
+
+  it("publicly listed = active and public", () => {
+    const q = knex("listing_search as ls")
+      .where(listingPubliclyListed(knex, { ...LS_COLUMNS, status: "ls.status" }))
+      .toSQL()
+    expect(q.sql).toBe(
+      'select * from "listing_search" as "ls" where ("ls"."status" = ? and ("ls"."visibility" = ?))',
+    )
+    expect(q.bindings).toEqual(["active", "public"])
   })
 })
 
@@ -36,14 +55,14 @@ describe("visibleActiveListingCountQuery (shop header / shop card count)", () =>
   // Regression: /shops/medrunner showed "3 listings" to anonymous visitors
   // while the grid said "No active listings" — the count included the
   // org-internal (private) listings the grid hides.
-  it("counts only active, non-private listings for anonymous viewers", () => {
+  it("counts only active, public listings for anonymous viewers", () => {
     const q = visibleActiveListingCountQuery(knex, "shop-1", undefined)
       .count("* as count")
       .toSQL()
     expect(q.sql).toBe(
-      'select count(*) as "count" from "listing_search" as "ls" where "ls"."shop_id" = ? and "ls"."status" = ? and ("ls"."visibility" != ?)',
+      'select count(*) as "count" from "listing_search" as "ls" where "ls"."shop_id" = ? and "ls"."status" = ? and ("ls"."visibility" = ?)',
     )
-    expect(q.bindings).toEqual(["shop-1", "active", "private"])
+    expect(q.bindings).toEqual(["shop-1", "active", "public"])
   })
 
   it("applies exactly the grid's visibility filter for signed-in viewers", () => {
@@ -63,7 +82,7 @@ describe("visibleActiveListingCountQuery (shop header / shop card count)", () =>
       .as("listing_count")
     const q = knex("shops as s").select("s.shop_id", sub).toSQL()
     expect(q.sql).toContain(
-      '(select COUNT(*)::integer from "listing_search" as "ls" where "ls"."shop_id" = "s"."shop_id" and "ls"."status" = ? and ("ls"."visibility" != ?)) as "listing_count"',
+      '(select COUNT(*)::integer from "listing_search" as "ls" where "ls"."shop_id" = "s"."shop_id" and "ls"."status" = ? and ("ls"."visibility" = ?)) as "listing_count"',
     )
   })
 })

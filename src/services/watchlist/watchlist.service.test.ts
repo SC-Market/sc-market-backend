@@ -96,12 +96,12 @@ describe("which listings may alert", () => {
   })
 
   it("never alerts on internal (org-private) or unlisted listings", () => {
-    // Same rule as the anonymous market grid (visibility != 'private'), plus
-    // visibility = 'public' so link-only 'unlisted' listings stay quiet too.
-    expect(q.sql).toContain('"ls"."visibility" != ?')
+    // Same rule as the anonymous market grid: visibility = 'public', so
+    // org-private and link-only 'unlisted' listings stay quiet.
     expect(q.sql).toContain('"ls"."visibility" = ?')
-    expect(q.bindings).toContain("private")
     expect(q.bindings).toContain("public")
+    expect(q.bindings).not.toContain("private")
+    expect(q.bindings).not.toContain("unlisted")
     // Anonymous rule: no org-member exception.
     expect(q.sql).not.toContain("contractor_members")
   })

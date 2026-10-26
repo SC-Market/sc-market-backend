@@ -42,7 +42,7 @@ function lotQueries() {
 }
 
 describe("game item listings visibility", () => {
-  it("filters private listings out for anonymous viewers", async () => {
+  it("shows anonymous viewers public listings only (no private, no unlisted)", async () => {
     await new GameItemsV2Controller().getListings(
       ITEM,
       undefined,
@@ -57,8 +57,9 @@ describe("game item listings visibility", () => {
     const queries = lotQueries()
     expect(queries.length).toBeGreaterThan(0)
     for (const q of queries) {
-      expect(q.sql).toMatch(/"l"\."visibility" != (\?|\$\d+)/)
-      expect(q.bindings).toContain("private")
+      expect(q.sql).toMatch(/"l"\."visibility" = (\?|\$\d+)/)
+      expect(q.bindings).toContain("public")
+      expect(q.bindings).not.toContain("unlisted")
     }
   })
 
@@ -80,7 +81,7 @@ describe("game item listings visibility", () => {
     }
   })
 
-  it("filters private listings out of the aggregates", async () => {
+  it("filters private and unlisted listings out of the aggregates", async () => {
     await new GameItemsV2Controller().searchGameItemAggregates(
       undefined,
       undefined,
@@ -97,6 +98,7 @@ describe("game item listings visibility", () => {
     const q = tracker.history.select.find((x) =>
       x.sql.includes("listing_search"),
     )
-    expect(q?.sql).toMatch(/"ls"\."visibility" != ('private'|\?|\$\d+)/)
+    expect(q?.sql).toMatch(/"ls"\."visibility" = ('public'|\?|\$\d+)/)
+    expect(q?.sql).not.toContain("unlisted")
   })
 })

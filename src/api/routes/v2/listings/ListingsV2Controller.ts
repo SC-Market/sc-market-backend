@@ -539,6 +539,7 @@ export class ListingsV2Controller extends BaseController {
    * @param page Page number for pagination (default: 1)
    * @param page_size Number of results per page (default: 20, max: 100)
    * @param sort_by Sort field (default: created_at)
+   * @param status Only 'active' is served (the default); other statuses return no results
    * @param sort_order Sort order (default: desc)
    * @returns Search results with pagination metadata
    */
@@ -762,9 +763,13 @@ export class ListingsV2Controller extends BaseController {
         })
       }
 
-      // Filter by status (default: active)
-      const statusFilter = status || 'active';
-      query = query.where('ls.status', statusFilter);
+      // The public search only ever serves active listings. Inactive, sold,
+      // expired and archived listings are not public: their owners manage them
+      // through GET /listings/mine. Any other requested status matches nothing.
+      if (status && status !== 'active') {
+        query = query.whereRaw('false')
+      }
+      query = query.where('ls.status', 'active');
 
       // Filter by item type.
       //
@@ -838,8 +843,9 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.has_bulk_discount', true)
       }
 
-      // Filter by visibility: exclude private listings unless user is an org member of the shop's owner
-      // (shared with the shop listing counts so they always match this grid)
+      // Filter by visibility: public listings, plus private ones of orgs the
+      // viewer belongs to; never unlisted (link-only) listings. Shared with the
+      // shop listing counts so they always match this grid.
       query = query.where(
         listingVisibleTo(db, this.tryGetUserId(), {
           visibility: "ls.visibility",
