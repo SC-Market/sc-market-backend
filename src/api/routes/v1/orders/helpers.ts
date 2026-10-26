@@ -2,7 +2,6 @@ import { assertSameRealm } from "../../../../services/test-accounts/isolation.js
 import { Knex } from "knex"
 import {
   DBAggregateListingComplete,
-  DBContractor,
   DBMultipleListingCompositeComplete,
   DBOffer,
   DBOfferSession,
@@ -27,7 +26,6 @@ import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import {
   createErrorResponse,
-  createResponse,
   createForbiddenErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
@@ -1115,110 +1113,6 @@ export async function handleAssignedUpdate(req: any, res: any) {
   }
   // Don't send response here - let the controller handle it
   // This allows multiple operations to be performed in one request
-}
-
-export async function acceptApplicant(
-  req: any,
-  res: any,
-  arg: { target_contractor?: string; target_username?: string },
-) {
-  const { target_contractor, target_username } = arg
-
-  if (req.user.user_id !== req.order.customer_id) {
-    res
-      .status(403)
-      .json(
-        createForbiddenErrorResponse(
-          "You are not authorized to assign this order",
-        ),
-      )
-    return
-  }
-
-  if (req.order.contractor_id || req.order.assigned_id) {
-    res
-      .status(400)
-      .json(
-        createErrorResponse(
-          ErrorCode.CONFLICT,
-          "This order is already assigned",
-        ),
-      )
-    return
-  }
-
-  let targetContractorObj: undefined | null | DBContractor
-  let targetUserObj: undefined | null | User
-  if (target_contractor) {
-    try {
-      targetContractorObj = await contractorDb.getContractor({
-        spectrum_id: target_contractor,
-      })
-    } catch {
-      return res
-        .status(400)
-        .json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
-        )
-    }
-  } else if (target_username) {
-    try {
-      targetUserObj = await profileDb.getUser({ username: target_username })
-    } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ message: "Invalid user" }))
-    }
-  } else {
-    return res
-      .status(400)
-      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid target"))
-  }
-
-  const applicants = await orderDb.getOrderApplicants({
-    order_id: req.order.order_id,
-  })
-  if (
-    !applicants.find(
-      (app) =>
-        app.org_applicant_id === targetContractorObj?.contractor_id ||
-        app.user_applicant_id === targetUserObj?.user_id,
-    )
-  ) {
-    res.status(400).json(
-      createErrorResponse({
-        message: "The target has not applied to this order",
-      }),
-    )
-    return
-  }
-
-  const newOrders = await orderDb.updateOrder(req.order.order_id, {
-    assigned_id: targetUserObj?.user_id || undefined,
-    contractor_id: targetContractorObj?.contractor_id || undefined,
-  })
-
-  // Track order assignment for responsive badge
-  await orderDb.trackOrderAssignment(
-    req.order.order_id,
-    targetUserObj?.user_id,
-    targetContractorObj?.contractor_id,
-  )
-
-  await orderDb.clearOrderApplications(req.order.order_id)
-
-  // Ensure chat participants are added (customer and assigned user)
-  try {
-    await chatParticipantService.ensureOrderChatParticipants(newOrders[0])
-  } catch (e) {
-    logger.error(
-      `Failed to ensure order chat participants after applicant acceptance: ${e}`,
-    )
-  }
-
-  await notificationService.createOrderNotification(newOrders[0])
-
-  res.status(201).json(createResponse({ result: "Success" }))
 }
 
 export async function convert_order_search_query(

@@ -40,22 +40,6 @@ export async function serializeAssignedOrder(
   }
 }
 
-export async function serializePublicOrder(order: DBOrder) {
-  return {
-    order_id: order.order_id,
-    kind: order.kind,
-    description: order.description,
-    contractor: null,
-    cost: +order.cost,
-    title: order.title,
-    payment_type: order.payment_type,
-    assigned_to: null,
-    customer: (await profileDb.getUser({ user_id: order.customer_id }))
-      .username,
-    timestamp: +order.timestamp,
-  }
-}
-
 export async function serializeOrderDetails(
   order: DBOrder,
   contractor: string | null | undefined = undefined,

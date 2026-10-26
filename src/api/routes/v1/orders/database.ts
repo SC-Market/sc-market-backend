@@ -161,24 +161,6 @@ export async function getOrderApplicants(
 }
 
 /**
- * Create an order application.
- */
-export async function createOrderApplication(
-  data: Partial<DBOrderApplicant>,
-): Promise<void> {
-  await knex()<DBOrderApplicant>("order_applicants").insert(data)
-}
-
-/**
- * Clear order applications (delete all applicants for an order).
- */
-export async function clearOrderApplications(order_id: string): Promise<void> {
-  await knex()<DBOrderApplicant>("order_applicants")
-    .where({ order_id })
-    .delete()
-}
-
-/**
  * Get related orders for a user (customer or assigned).
  */
 export async function getRelatedOrders(c: string): Promise<DBOrder[]> {

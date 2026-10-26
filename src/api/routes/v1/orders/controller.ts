@@ -1,4 +1,3 @@
-import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../profiles/database.js"
@@ -14,7 +13,6 @@ import {
 import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import {
-  acceptApplicant,
   convert_order_search_query,
   createOffer,
   getContractorOrderData,
@@ -25,7 +23,7 @@ import {
   search_orders_optimized,
 } from "./helpers.js"
 import { formatOrderStubOptimized } from "../util/formatting.js"
-import { has_permission, is_member } from "../util/permissions.js"
+import { is_member } from "../util/permissions.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 import { serializeOrderDetails } from "./serializers.js"
@@ -200,149 +198,6 @@ export const update_order: RequestHandler = async (req, res) => {
   }
 }
 
-export const apply_to_order: RequestHandler = async (req, res, next) => {
-  const order_id = req.params["order_id"]
-  let order: DBOrder
-  try {
-    order = await orderDb.getOrder({ order_id: order_id })
-  } catch (e) {
-    res.status(400).json(createErrorResponse({ message: "Invalid order" }))
-    return
-  }
-  const user = req.user as User
-
-  if (order.assigned_id || order.contractor_id) {
-    res
-      .status(409)
-      .json(createErrorResponse({ message: "Order is already assigned" }))
-    return
-  }
-
-  const {
-    contractor,
-    message,
-  }: {
-    contractor?: string
-    message?: string
-  } = req.body
-
-  // Test accounts apply only to test orders, real ones only to real orders
-  // (services/test-accounts/isolation.ts).
-  if (
-    await rejectMixedRealm(res, {
-      users: [order.customer_id, user.user_id],
-      shops: [order.shop_id],
-    })
-  ) {
-    return
-  }
-
-  if (!contractor) {
-    const apps = await orderDb.getOrderApplicants({
-      user_applicant_id: user.user_id,
-      order_id: order.order_id,
-    })
-    if (apps.length > 0) {
-      res.status(409).json(
-        createErrorResponse({
-          message: "You have already applied to this order",
-        }),
-      )
-      return
-    }
-
-    await orderDb.createOrderApplication({
-      order_id: order.order_id,
-      user_applicant_id: user.user_id,
-      message: message || "",
-    })
-  } else {
-    let contractor_obj
-    try {
-      contractor_obj = await contractorDb.getContractor({
-        spectrum_id: contractor,
-      })
-    } catch {
-      res
-        .status(400)
-        .json(createErrorResponse({ message: "Invalid contractor" }))
-      return
-    }
-
-    if (
-      await rejectMixedRealm(res, {
-        users: [order.customer_id],
-        contractors: [contractor_obj.contractor_id],
-      })
-    ) {
-      return
-    }
-
-    if (contractor_obj.archived) {
-      res.status(409).json(
-        createErrorResponse({
-          message: "Cannot apply on behalf of an archived contractor",
-        }),
-      )
-      return
-    }
-
-    if (
-      !(await has_permission(
-        contractor_obj.contractor_id,
-        user.user_id,
-        "manage_orders",
-      ))
-    ) {
-      res.status(403).json(
-        createErrorResponse({
-          message: "You are not authorized to apply to this order",
-        }),
-      )
-      return
-    }
-
-    const apps = await orderDb.getOrderApplicants({
-      org_applicant_id: contractor_obj.contractor_id,
-      order_id: order.order_id,
-    })
-    if (apps.length > 0) {
-      res.status(409).json(
-        createErrorResponse({
-          message: "You have already applied to this order",
-        }),
-      )
-      return
-    }
-
-    await orderDb.createOrderApplication({
-      order_id: order.order_id,
-      org_applicant_id: contractor_obj.contractor_id,
-      message: message || "",
-    })
-  }
-
-  // TODO: Submit the application
-  res.status(201).json(createResponse({ result: "Success" }))
-}
-
-export const accept_contractor_applicant: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
-  const { spectrum_id } = req.params
-
-  await acceptApplicant(req, res, { target_contractor: spectrum_id })
-  // TODO: Make apps into their own objects
-}
-
-export const accept_user_applicant: RequestHandler = async (req, res, next) => {
-  const { username } = req.params
-
-  await acceptApplicant(req, res, { target_username: username })
-}
-
 export const post_root: RequestHandler = async (req, res, next) => {
   const user = req.user as User // TODO: Handle order service
 
@@ -370,6 +225,21 @@ export const post_root: RequestHandler = async (req, res, next) => {
     service_id?: string
     payment_type: string
   } = req.body
+
+  // Every order goes to a seller: an org (contractor) or a user (assigned_to).
+  // Open orders with no seller were replaced by public contracts
+  // (POST /api/contracts); an offer with no seller could never be accepted.
+  if (!contractor && !assigned_to) {
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Specify a contractor or assigned_to. For open requests anyone can bid on, create a public contract.",
+        ),
+      )
+    return
+  }
 
   let contractor_id
   if (contractor) {

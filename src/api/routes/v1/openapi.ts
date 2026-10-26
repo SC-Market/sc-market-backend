@@ -54,24 +54,6 @@ const document: OpenAPIV3.Document = {
         },
         required: ["customer", "assigned"],
       },
-      OrderUserApplicant: {
-        type: "object",
-        properties: {
-          user: {
-            type: "string",
-          },
-        },
-        required: ["user"],
-      },
-      OrderContractorApplicant: {
-        type: "object",
-        properties: {
-          contractor: {
-            type: "string",
-          },
-        },
-        required: ["contractor"],
-      },
       OrderReview: {
         properties: {
           user_author: {

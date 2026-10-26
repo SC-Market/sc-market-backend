@@ -24,9 +24,6 @@ import {
 import orderSettingsRouter from "./order-settings.js"
 import { allocationRouter } from "../market/stock-lots.routes.js"
 import {
-  accept_contractor_applicant,
-  accept_user_applicant,
-  apply_to_order,
   get_contractor_order_data,
   get_order_metrics,
   search_orders,
@@ -46,9 +43,6 @@ import {
   post_order_id_reviews_review_id_request_revision_spec,
   put_order_id_reviews_review_id_spec,
   put_order_id_spec,
-  post_order_id_applicants_spec,
-  post_order_id_applicants_contractors_spectrum_id_spec,
-  post_order_id_applicants_users_username_spec,
   get_order_id_spec,
   post_order_id_thread_spec,
 } from "./openapi.js"
@@ -145,35 +139,6 @@ ordersRouter.put(
   put_order_id_spec,
   related_to_order,
   update_order,
-)
-
-ordersRouter.post(
-  "/:order_id/applicants",
-  userAuthorized,
-  requireOrdersWrite,
-  writeRateLimit,
-  post_order_id_applicants_spec,
-  apply_to_order,
-)
-
-ordersRouter.post(
-  "/:order_id/applicants/contractors/:spectrum_id",
-  userAuthorized,
-  requireOrdersWrite,
-  writeRateLimit,
-  related_to_order,
-  post_order_id_applicants_contractors_spectrum_id_spec,
-  accept_contractor_applicant,
-) // TODO
-
-ordersRouter.post(
-  "/:order_id/applicants/users/:username",
-  userAuthorized,
-  requireOrdersWrite,
-  writeRateLimit,
-  post_order_id_applicants_users_username_spec,
-  related_to_order,
-  accept_user_applicant,
 )
 
 ordersRouter.get(
