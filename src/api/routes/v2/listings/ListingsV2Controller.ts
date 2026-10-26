@@ -51,6 +51,9 @@ export interface CreateListingResponse {
   updated_at: string
 }
 
+/** Max listings one UEX import confirm may create. */
+const UEX_IMPORT_MAX_LISTINGS = 100
+
 @Route("listings")
 @Tags("Listings V2")
 export class ListingsV2Controller extends BaseController {
@@ -2322,6 +2325,32 @@ export class ListingsV2Controller extends BaseController {
         })),
         total: uexListings.length,
       }
+    }
+
+    // Import confirmed. The listings come from the client (the preview it was
+    // shown), so bound how many and what they contain: each one is a write
+    // transaction, and the batch used to be unlimited.
+    if (!Array.isArray(requestBody.listings) || requestBody.listings.length > UEX_IMPORT_MAX_LISTINGS) {
+      this.throwValidationError(`At most ${UEX_IMPORT_MAX_LISTINGS} listings per import`, [
+        { field: "listings", message: `At most ${UEX_IMPORT_MAX_LISTINGS} listings per import` },
+      ])
+    }
+    const badItem = requestBody.listings.findIndex(
+      (item) =>
+        typeof item?.title !== "string" ||
+        item.title.trim().length === 0 ||
+        item.title.length > 500 ||
+        (item.description != null &&
+          (typeof item.description !== "string" || item.description.length > 10000)) ||
+        !Number.isFinite(item.price) ||
+        item.price <= 0 ||
+        (item.quantity != null &&
+          (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 1_000_000)),
+    )
+    if (badItem !== -1) {
+      this.throwValidationError("Invalid listing in import", [
+        { field: `listings[${badItem}]`, message: "Title, description, price or quantity is invalid" },
+      ])
     }
 
     // Import confirmed — create listings
