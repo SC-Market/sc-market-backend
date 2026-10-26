@@ -8,6 +8,7 @@
  */
 
 import { Controller, Get, Post, Put, Delete, Route, Tags, Query, Path, Body, Security, Request } from "tsoa"
+import { redactToken } from "../../../../../util/redact.js"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
@@ -288,7 +289,10 @@ export class WishlistsController extends BaseController {
       ])
     }
 
-    logger.info("Fetching wishlist detail", { wishlist_id, share_token })
+    logger.info("Fetching wishlist detail", {
+      wishlist_id,
+      share_token: redactToken(share_token),
+    })
 
     try {
       // Get wishlist

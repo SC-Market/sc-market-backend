@@ -9,6 +9,7 @@
  */
 
 import { env } from "../../config/env.js"
+import { redactToken } from "../../util/redact.js"
 import { sendEmailViaSES } from "../../clients/aws/ses.js"
 import * as userEmailDb from "../../api/routes/v1/email/user-email-database.js"
 import * as emailPreferenceDb from "../../api/routes/v1/email/database.js"
@@ -301,7 +302,7 @@ class SESEmailService implements EmailService {
         email: result.email,
       }
     } catch (error) {
-      logger.error("Failed to verify email", { error, token })
+      logger.error("Failed to verify email", { error, token: redactToken(token) })
       return null
     }
   }

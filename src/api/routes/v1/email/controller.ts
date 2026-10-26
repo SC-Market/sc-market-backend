@@ -3,6 +3,7 @@
  */
 
 import { RequestHandler } from "express"
+import { redactToken } from "../../../../util/redact.js"
 import { User } from "../api-models.js"
 import { emailService } from "../../../../services/email/email.service.js"
 import * as userEmailDb from "./user-email-database.js"
@@ -506,7 +507,7 @@ export const verifyEmail: RequestHandler = async (req, res) => {
     const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
     res.redirect(`${frontendUrl}/email/verify?success=true`)
   } catch (error) {
-    logger.error("Failed to verify email", { error, token })
+    logger.error("Failed to verify email", { error, token: redactToken(token) })
     if (returnJson) {
       res
         .status(500)
@@ -977,7 +978,7 @@ export const unsubscribe: RequestHandler = async (req, res) => {
     const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
     res.redirect(`${frontendUrl}/email/unsubscribe?success=true`)
   } catch (error) {
-    logger.error("Failed to process unsubscribe", { error, token })
+    logger.error("Failed to process unsubscribe", { error, token: redactToken(token) })
     if (returnJson) {
       res
         .status(500)
