@@ -311,6 +311,7 @@ export async function writeUserDataExport(
           "channel_id",
           "threads",
           "alerts",
+          "contracts",
           "created_by_discord_id",
           "created_at",
           "updated_at",
@@ -327,6 +328,20 @@ export async function writeUserDataExport(
           "channel_id",
           "created_by_discord_id",
           "created_at",
+        ),
+    ),
+  )
+  await out.array(
+    "contract_alerts",
+    all(
+      knex("contract_alert_subscriptions as s")
+        .leftJoin("contractors as c", "c.contractor_id", "s.contractor_id")
+        .where("s.user_id", userId)
+        .select(
+          "c.spectrum_id as org",
+          "s.kinds",
+          "s.created_at",
+          "s.updated_at",
         ),
     ),
   )

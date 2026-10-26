@@ -243,6 +243,10 @@ describe.skipIf(!PG_TEST_URL)("personal-data export", () => {
       viewer_ip_hash: "SECRET-ip-hash",
       referrer_origin: "https://sc-market.space",
     })
+    await db("contract_alert_subscriptions").insert({
+      user_id: A,
+      kinds: ["Escort"],
+    })
     await db("user_feature_overrides").insert({
       user_id: A,
       flag_name: "market_v2",
@@ -353,6 +357,9 @@ describe.skipIf(!PG_TEST_URL)("personal-data export", () => {
         listing_type: "market",
         referrer_origin: "https://sc-market.space",
       }),
+    ])
+    expect(json.contract_alerts).toEqual([
+      expect.objectContaining({ org: null, kinds: ["Escort"] }),
     ])
     expect(json.feature_flag_overrides).toEqual([
       expect.objectContaining({ flag_name: "market_v2", enabled: true }),
