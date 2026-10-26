@@ -6543,6 +6543,7 @@ export function RegisterRoutes(app: Router) {
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-items/:id/listings',
             ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),
@@ -6582,6 +6583,7 @@ export function RegisterRoutes(app: Router) {
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-items/aggregates',
             ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),
@@ -9108,8 +9110,10 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAnalyticsV2Controller_getSellerStats: Record<string, TsoaRoute.ParameterSchema> = {
                 shop_id: {"in":"query","name":"shop_id","dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/analytics/seller-stats',
+            authenticateMiddleware([{"loggedin":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller.prototype.getSellerStats)),
 
@@ -9139,8 +9143,10 @@ export function RegisterRoutes(app: Router) {
         const argsAnalyticsV2Controller_getListingStats: Record<string, TsoaRoute.ParameterSchema> = {
                 shop_id: {"in":"query","name":"shop_id","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/analytics/listing-stats',
+            authenticateMiddleware([{"loggedin":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller.prototype.getListingStats)),
 

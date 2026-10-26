@@ -13178,7 +13178,7 @@
 						}
 					}
 				},
-				"description": "Transfer shop ownership to a user or an org.\n\nSupports all directions (user↔user, user↔org, org↔org). The requester must\ncurrently be able to manage the shop. When transferring to an org, the\nrequester must also have manage_market in the target org (auto-accept).\n\nAfter transfer, active order/offer assignments held by people no longer\nassociated with the new owner are cleared so the new owner can reclaim them,\nand shop badges are recomputed (owner-derived badges may change).",
+				"description": "Transfer shop ownership to a user or an org.\n\nSupports all directions (user↔user, user↔org, org↔org). Only the shop's\nowner may transfer it: the owning user, or the owner of the owning org\n(manage_market alone is not enough). When transferring to an org, the\nrequester must also have manage_market in the target org (auto-accept).\nEvery transfer is recorded in the audit log of the orgs involved.\n\nAfter transfer, active order/offer assignments held by people no longer\nassociated with the new owner are cleared so the new owner can reclaim them,\nand shop badges are recomputed (owner-derived badges may change).",
 				"summary": "Transfer shop ownership",
 				"tags": [
 					"Shops"
@@ -20491,7 +20491,11 @@
 				"tags": [
 					"Analytics V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Shop ID to get stats for",
@@ -20525,7 +20529,11 @@
 				"tags": [
 					"Analytics V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Shop ID to get per-listing stats for",
