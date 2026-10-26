@@ -273,6 +273,12 @@ export class BuyOrdersV2Controller extends BaseController {
         // Get shop_id from listing
         const shopId = listing.shop_id
 
+        // Same guards as cart checkout: self-purchase, shop/owner blocklists,
+        // availability requirement, order limits.
+        const purchaseShop = await trx("shops").where("shop_id", shopId).first()
+        if (!purchaseShop) this.throwNotFound("Shop", shopId)
+        await this.assertBuyerMayCheckout(userId, purchaseShop, requestBody.quantity, totalPrice)
+
         // Step 6: Create order record in V1 orders table
         const [order] = await trx("orders")
           .insert({

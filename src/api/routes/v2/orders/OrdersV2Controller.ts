@@ -125,6 +125,22 @@ export class OrdersV2Controller extends BaseController {
 
         // Get shop_id from first listing (all items must be from same shop)
         const shopId = itemsWithPricing[0].shop_id
+        if (itemsWithPricing.some((item) => item.shop_id !== shopId)) {
+          this.throwValidationError("All items must be from the same shop", [
+            { field: "items", message: "All items must be from the same shop" },
+          ])
+        }
+
+        // Same guards as cart checkout: self-purchase, shop/owner blocklists,
+        // availability requirement, order limits.
+        const orderShop = await trx("shops").where("shop_id", shopId).first()
+        if (!orderShop) this.throwNotFound("Shop", shopId)
+        await this.assertBuyerMayCheckout(
+          userId,
+          orderShop,
+          itemsWithPricing.reduce((sum, item) => sum + item.quantity, 0),
+          totalPrice,
+        )
 
         // Step 2: Create order record in V1 orders table
         // This maintains compatibility with existing order system

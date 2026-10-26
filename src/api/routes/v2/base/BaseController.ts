@@ -6,6 +6,7 @@
  */
 
 import { Controller } from "tsoa"
+import type { assertBuyerMayCheckout } from "../../../../services/checkout/checkout-guards.js"
 import { Request } from "express"
 import { User } from "../../v1/api-models.js"
 import {
@@ -175,6 +176,28 @@ export abstract class BaseController extends Controller {
   /**
    * Throw a forbidden error
    */
+  /**
+   * Run the shared checkout guards (self-purchase, blocklists, availability,
+   * order limits) and report a rejection as a 400 validation error.
+   */
+  protected async assertBuyerMayCheckout(
+    ...args: Parameters<typeof assertBuyerMayCheckout>
+  ): Promise<void> {
+    // Imported lazily: the guards pull in the v1 order helpers, which every
+    // controller would otherwise load (and risk an import cycle) at startup.
+    const guards = await import("../../../../services/checkout/checkout-guards.js")
+    try {
+      await guards.assertBuyerMayCheckout(...args)
+    } catch (error) {
+      if (error instanceof guards.CheckoutRejectedError) {
+        this.throwValidationError(error.message, [
+          { field: error.field, message: error.message },
+        ])
+      }
+      throw error
+    }
+  }
+
   protected throwForbidden(
     message: string = "You do not have permission to perform this action",
   ): never {

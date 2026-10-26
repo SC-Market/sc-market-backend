@@ -14,7 +14,6 @@ import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { getNextAvailableTime } from "../util/next-available.js"
-import * as profileDb from "../../v1/profiles/database.js"
 import {
   AddToCartRequest,
   AddToCartResponse,
@@ -937,60 +936,19 @@ export class CartV2Controller extends BaseController {
       const firstItem = validatedItems[0]
       const shop = await knex("shops").where("shop_id", firstItem.shop_id).first()
 
-      // Self-purchase check — can't buy from your own shop
-      if (shop?.owner_user_id && shop.owner_user_id === userId) {
-        this.throwValidationError("You cannot purchase from your own shop", [
-          { field: "shop", message: "You cannot purchase from your own shop" },
-        ])
-      }
+      if (!shop) this.throwNotFound("Shop", firstItem.shop_id)
 
-      // Resolve owner IDs from shop for V1 compat (blocked check, order creation)
-      const sellerContractorId = shop?.owner_contractor_id || null
-      const sellerUserId = shop?.owner_user_id || null
+      // Resolve owner IDs from shop for V1 compat (order creation)
+      const sellerContractorId = shop.owner_contractor_id || null
+      const sellerUserId = shop.owner_user_id || null
 
-      // Step 3: Blocked user check
-      if (sellerContractorId) {
-        const blocked = await profileDb.isUserBlocked(sellerContractorId, userId, "contractor")
-        if (blocked) {
-          this.throwValidationError("You are blocked from purchasing from this shop", [
-            { field: "shop", message: "You are blocked from purchasing from this shop" },
-          ])
-        }
-      }
-      if (sellerUserId) {
-        const blocked = await profileDb.isUserBlocked(sellerUserId, userId, "user")
-        if (blocked) {
-          this.throwValidationError("You are blocked from purchasing from this shop", [
-            { field: "shop", message: "You are blocked from purchasing from this shop" },
-          ])
-        }
-      }
-
-      // Step 4: Availability requirement check
-      const { validateAvailabilityRequirement, validateOrderLimits, createOffer } =
-        await import("../../v1/orders/helpers.js")
-
-      try {
-        await validateAvailabilityRequirement(userId, sellerContractorId, sellerUserId)
-      } catch (error) {
-        this.throwValidationError(
-          error instanceof Error ? error.message : "Availability is required to submit this offer.",
-          [{ field: "availability", message: error instanceof Error ? error.message : "Availability required" }],
-        )
-      }
-
-      // Step 5: Order limit validation
+      // Steps 3-5: self-purchase, blocklists (shop + owner), availability
+      // requirement, order limits. Shared with the direct-purchase paths.
       const offerSize = validatedItems.reduce((sum, i) => sum + i.quantity, 0)
       const totalPrice = validatedItems.reduce((sum, i) => sum + i.current_price * i.quantity, 0)
+      await this.assertBuyerMayCheckout(userId, shop, offerSize, totalPrice)
 
-      try {
-        await validateOrderLimits(sellerContractorId, sellerUserId, offerSize, totalPrice)
-      } catch (error) {
-        this.throwValidationError(
-          error instanceof Error ? error.message : "Order does not meet size or value requirements",
-          [{ field: "order_limits", message: error instanceof Error ? error.message : "Order limit violation" }],
-        )
-      }
+      const { createOffer } = await import("../../v1/orders/helpers.js")
 
       // Step 6: Build market_listings for createOffer (it only uses listing_id + quantity)
       const listingQuantities = new Map<string, number>()
