@@ -191,6 +191,27 @@ export interface FulfillBuyOrderRequest {
   quantity?: number
 }
 
+/** A listing variant the caller can fulfill a buy order from */
+export interface BuyOrderFulfillmentOption {
+  shop_id: string
+  shop_name: string
+  listing_id: string
+  listing_title: string
+  variant_id: string
+  variant_display_name: string
+  variant_attributes: VariantAttributes
+  /** Listed stock of this variant in this listing */
+  available: number
+  /** The listing's price for this variant: what the order charges per unit */
+  price_per_unit: number
+  /** Why fulfill would reject this entry (e.g. above the buyer's price_max); null if it accepts it */
+  problem: string | null
+}
+
+export interface BuyOrderFulfillmentOptionsResponse {
+  options: BuyOrderFulfillmentOption[]
+}
+
 export interface BuyOrderFulfillment {
   fulfillment_id: string
   buy_order_id: string

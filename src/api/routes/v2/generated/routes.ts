@@ -3537,6 +3537,31 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BuyOrderFulfillmentOption": {
+        "dataType": "refObject",
+        "properties": {
+            "shop_id": {"dataType":"string","required":true},
+            "shop_name": {"dataType":"string","required":true},
+            "listing_id": {"dataType":"string","required":true},
+            "listing_title": {"dataType":"string","required":true},
+            "variant_id": {"dataType":"string","required":true},
+            "variant_display_name": {"dataType":"string","required":true},
+            "variant_attributes": {"ref":"VariantAttributes","required":true},
+            "available": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+            "problem": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BuyOrderFulfillmentOptionsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "options": {"dataType":"array","array":{"dataType":"refObject","ref":"BuyOrderFulfillmentOption"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "FulfillBuyOrderRequest": {
         "dataType": "refObject",
         "properties": {
@@ -8870,6 +8895,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'cancelBuyOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBuyOrdersV2Controller_getFulfillmentOptions: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/buy-orders/:id/fulfillment-options',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.getFulfillmentOptions)),
+
+            async function BuyOrdersV2Controller_getFulfillmentOptions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_getFulfillmentOptions, request, response });
+
+                const controller = new BuyOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getFulfillmentOptions',
                 controller,
                 response,
                 next,

@@ -33,6 +33,7 @@ import {
   CreateStandingBuyOrderRequest,
   CreateTargetedBuyOrderRequest,
   FulfillBuyOrderRequest,
+  BuyOrderFulfillmentOptionsResponse,
   UpdateStandingBuyOrderRequest,
   StandingBuyOrder,
   BuyOrderPhoto,
@@ -44,6 +45,13 @@ import { resolveGameItemImages } from "../util/resolve-game-item-images.js"
 import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
+import { canManageShop } from "../../../../services/shops/shop-permissions.service.js"
+import {
+  fulfillmentOrderColumns,
+  getFulfillingShopIds,
+  queryFulfillmentOptionRows,
+  rankFulfillmentOptions,
+} from "../../../../services/market-v2/buy-order-fulfillment.js"
 
 /**
  * Row shape of `buy_orders_v2` joined with the buyer account and game item.
@@ -76,11 +84,6 @@ interface BuyOrderJoinedRow {
   buyer_name: string | null
   game_item_name: string | null
   game_item_type?: string | null
-}
-
-/** Row shape of the `shops` shop_id lookup */
-interface ShopIdRow {
-  shop_id: string
 }
 
 /** Columns of `buy_orders_v2` the update endpoint may write */
@@ -584,8 +587,9 @@ export class BuyOrdersV2Controller extends BaseController {
     const p = Math.max(1, page || 1)
     const ps = Math.min(50, Math.max(1, page_size || 10))
 
-    // Find game_item_ids the seller's shops have active listings for
-    const sellerShopIds = db('shops').where('owner_user_id', sellerId).select('shop_id')
+    // Find game_item_ids the seller's shops (owned, or managed for an org)
+    // have active listings for: the shops fulfill accepts listings from
+    const sellerShopIds = await getFulfillingShopIds(sellerId)
     const sellerItemIds = db('listing_items as li')
       .join('listings as l', 'l.listing_id', 'li.listing_id')
       .whereIn('l.shop_id', sellerShopIds)
@@ -772,6 +776,60 @@ export class BuyOrdersV2Controller extends BaseController {
   }
 
   /**
+   * The caller's listings of this buy order's item that fulfill could use: one
+   * entry per variant with listed stock, of an active listing in a shop the
+   * caller can manage, at the price fulfill would charge. `problem` is null
+   * when fulfill accepts the entry, otherwise the reason it would reject it
+   * (the same rules fulfill applies: price_max, quality, targeting, ...).
+   * Accepted entries first, cheapest first. Pass an accepted entry's
+   * listing_id and variant_id to fulfill.
+   * @summary Listings the seller can fulfill a buy order from
+   */
+  @Security("loggedin")
+  @Get('{id}/fulfillment-options')
+  public async getFulfillmentOptions(
+    @Request() request: ExpressRequest,
+    @Path() id: string,
+  ): Promise<BuyOrderFulfillmentOptionsResponse> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+    if (!isUuid(id)) this.throwNotFound('Buy order', id)
+
+    const db = getKnex()
+    const buyOrder = await db('buy_orders_v2').where('buy_order_id', id).first()
+    if (!buyOrder) this.throwNotFound('Buy order', id)
+
+    const shopIds = await getFulfillingShopIds(userId)
+    const rows = await queryFulfillmentOptionRows(db, shopIds, buyOrder.game_item_id)
+    const checked = await Promise.all(
+      rows.map(async (row) => {
+        const problem = await buyOrderFulfillmentProblem(
+          db,
+          buyOrder,
+          userId,
+          row.price_per_unit,
+          row.variant_attributes,
+        )
+        return { ...row, problem: problem?.message ?? null }
+      }),
+    )
+    const options = rankFulfillmentOptions(checked).map((o) => ({
+      shop_id: o.shop_id,
+      shop_name: o.shop_name,
+      listing_id: o.listing_id,
+      listing_title: o.listing_title,
+      variant_id: o.variant_id,
+      variant_display_name: o.variant_display_name || 'Standard',
+      variant_attributes: o.variant_attributes || {},
+      available: o.available,
+      price_per_unit: o.price_per_unit,
+      problem: o.problem,
+    }))
+    return { options }
+  }
+
+  /**
    * Fulfill a standing buy order (supports partial fulfillment)
    * @summary Seller fulfills a buy order
    */
@@ -824,13 +882,13 @@ export class BuyOrdersV2Controller extends BaseController {
         ])
       }
 
-      // Validate listing belongs to seller's shop and is active
-      const sellerShops = await trx('shops').where('owner_user_id', sellerId).select<ShopIdRow[]>('shop_id')
-      const listing = await trx('listings')
-        .where('listing_id', body.listing_id)
-        .whereIn('shop_id', sellerShops.map((s) => s.shop_id))
-        .first()
-      if (!listing) throw this.throwNotFound('Listing', body.listing_id)
+      // Validate the listing is in an active shop the seller can manage (owns,
+      // or has manage_market in the owning org) and is active
+      const listing = await trx('listings').where('listing_id', body.listing_id).first()
+      const shop = listing ? await trx('shops').where('shop_id', listing.shop_id).first() : null
+      if (!listing || !shop || shop.status !== 'active' || !(await canManageShop(shop, sellerId))) {
+        throw this.throwNotFound('Listing', body.listing_id)
+      }
       if (listing.status !== 'active') {
         throw this.throwValidationError('Listing is not active', [
           { field: 'listing_id', message: `Listing status is ${listing.status}` },
@@ -886,13 +944,10 @@ export class BuyOrdersV2Controller extends BaseController {
       )
       if (problem) throw this.throwValidationError(problem.message, [problem])
 
-      // Create order
-      const [order] = await trx('orders').insert({
-        customer_id: buyOrder.buyer_id,
-        status: 'pending',
-        created_at: new Date(),
-        updated_at: new Date(),
-      }).returning('*')
+      // Create the order, linked to the selling shop
+      const [order] = await trx('orders')
+        .insert(fulfillmentOrderColumns(shop, buyOrder.buyer_id, price, quantity))
+        .returning('*')
 
       // Create order item
       const [orderItem] = await trx('order_market_items_v2').insert({

@@ -10962,6 +10962,76 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BuyOrderFulfillmentOption": {
+				"description": "A listing variant the caller can fulfill a buy order from",
+				"properties": {
+					"shop_id": {
+						"type": "string"
+					},
+					"shop_name": {
+						"type": "string"
+					},
+					"listing_id": {
+						"type": "string"
+					},
+					"listing_title": {
+						"type": "string"
+					},
+					"variant_id": {
+						"type": "string"
+					},
+					"variant_display_name": {
+						"type": "string"
+					},
+					"variant_attributes": {
+						"$ref": "#/components/schemas/VariantAttributes"
+					},
+					"available": {
+						"type": "number",
+						"format": "double",
+						"description": "Listed stock of this variant in this listing"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double",
+						"description": "The listing's price for this variant: what the order charges per unit"
+					},
+					"problem": {
+						"type": "string",
+						"nullable": true,
+						"description": "Why fulfill would reject this entry (e.g. above the buyer's price_max); null if it accepts it"
+					}
+				},
+				"required": [
+					"shop_id",
+					"shop_name",
+					"listing_id",
+					"listing_title",
+					"variant_id",
+					"variant_display_name",
+					"variant_attributes",
+					"available",
+					"price_per_unit",
+					"problem"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BuyOrderFulfillmentOptionsResponse": {
+				"properties": {
+					"options": {
+						"items": {
+							"$ref": "#/components/schemas/BuyOrderFulfillmentOption"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"options"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"FulfillBuyOrderRequest": {
 				"properties": {
 					"listing_id": {
@@ -20114,6 +20184,43 @@
 					}
 				},
 				"description": "Cancel a standing buy order",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/buy-orders/{id}/fulfillment-options": {
+			"get": {
+				"operationId": "GetFulfillmentOptions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BuyOrderFulfillmentOptionsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The caller's listings of this buy order's item that fulfill could use: one\nentry per variant with listed stock, of an active listing in a shop the\ncaller can manage, at the price fulfill would charge. `problem` is null\nwhen fulfill accepts the entry, otherwise the reason it would reject it\n(the same rules fulfill applies: price_max, quality, targeting, ...).\nAccepted entries first, cheapest first. Pass an accepted entry's\nlisting_id and variant_id to fulfill.",
+				"summary": "Listings the seller can fulfill a buy order from",
 				"tags": [
 					"Buy Orders V2"
 				],
