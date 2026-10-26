@@ -71,6 +71,10 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
         res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
         return
       }
+      if (!(await is_member(session.contractor_id, targetUser.user_id))) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "The assignee must be a member of this organization"))
+        return
+      }
       await offerDb.updateOfferSession(session.id, { assigned_id: targetUser.user_id })
     } else {
       await offerDb.updateOfferSession(session.id, { assigned_id: null })

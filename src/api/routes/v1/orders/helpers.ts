@@ -24,7 +24,7 @@ import { chatParticipantService } from "../../../../services/chats/chat-particip
 import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
-import { has_permission } from "../util/permissions.js"
+import { has_permission, is_member } from "../util/permissions.js"
 import {
   createErrorResponse,
   createResponse,
@@ -1076,18 +1076,25 @@ export async function handleAssignedUpdate(req: any, res: any) {
       return
     }
 
-    const targetUserRole = await contractorDb.getContractorRoleLegacy(
-      req.user.user_id,
-      contractorObj.contractor_id,
-    )
-    if (!targetUserRole) {
+    // The assignee must belong to the org. (This used to look up the
+    // assigner's role, which let managers assign non-members and refused
+    // acting site admins, who are not members themselves.)
+    if (
+      !targetUserObj ||
+      !(await is_member(contractorObj.contractor_id, targetUserObj.user_id))
+    ) {
       return res
         .status(400)
-        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "The assignee must be a member of this organization",
+          ),
+        )
     }
 
     const newOrders = await orderDb.updateOrder(req.order.order_id, {
-      assigned_id: targetUserObj?.user_id || undefined,
+      assigned_id: targetUserObj.user_id,
     })
 
     // Ensure assigned user is added to chat

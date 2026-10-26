@@ -28,13 +28,14 @@ import { related_to_offer, can_respond_to_offer } from "./middleware.js"
 import { offer_put_session_id } from "./controller.js"
 import * as offerDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
-import { has_permission } from "../util/permissions.js"
+import { has_permission, is_member } from "../util/permissions.js"
 
 const getOfferSessions = offerDb.getOfferSessions as unknown as Mock
 const getMostRecentOrderOffer = offerDb.getMostRecentOrderOffer as unknown as Mock
 const updateOfferSession = offerDb.updateOfferSession as unknown as Mock
 const getUser = profileDb.getUser as unknown as Mock
 const hasPermission = has_permission as unknown as Mock
+const isMember = is_member as unknown as Mock
 
 const ORG_OFFER = {
   id: "session-1",
@@ -91,6 +92,8 @@ describe("claiming an org offer on the site", () => {
       user_id: `${username}-id`,
       username,
     }))
+    // Everyone is an org member unless a test says otherwise.
+    isMember.mockResolvedValue(true)
   })
 
   it("lets a member with only Claim Orders claim an unassigned offer for themselves", async () => {
@@ -138,11 +141,19 @@ describe("claiming an org offer on the site", () => {
     expect(updateOfferSession).not.toHaveBeenCalled()
   })
 
-  it("lets Manage Orders members assign the offer to anyone", async () => {
+  it("lets Manage Orders members assign the offer to another member", async () => {
     grant("manage_orders")
     const res = await put("manager-id", "manager", { assigned_to: "other" })
     expect(res.status).not.toHaveBeenCalledWith(403)
     expect(updateOfferSession).toHaveBeenCalledWith("session-1", { assigned_id: "other-id" })
+  })
+
+  it("refuses assigning the offer to someone outside the org", async () => {
+    grant("manage_orders")
+    isMember.mockImplementation(async (_c: string, u: string) => u !== "outsider-id")
+    const res = await put("manager-id", "manager", { assigned_to: "outsider" })
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(updateOfferSession).not.toHaveBeenCalled()
   })
 
   it("still makes Claim Orders members unable to accept the offer", async () => {
