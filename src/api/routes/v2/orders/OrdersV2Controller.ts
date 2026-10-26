@@ -14,7 +14,7 @@ import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
-import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   CreateOrderRequest,
   CreateOrderResponse,
@@ -210,11 +210,7 @@ export class OrdersV2Controller extends BaseController {
 
         // Step 5: Allocate stock from variant-specific lots
         // V2 uses listing_item_lots directly (not V1 stock_allocations)
-        const shop = await trx("shops").where("shop_id", shopId).first()
-        const allocationMode = await getAllocationMode(
-          shop?.owner_contractor_id ? "contractor" : "user",
-          shop?.owner_contractor_id || shop?.owner_user_id,
-        )
+        const allocationMode = await getShopAllocationMode(shopId)
 
         if (allocationMode === "auto") {
           for (const item of itemsWithPricing) {

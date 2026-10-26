@@ -71,7 +71,7 @@ vi.mock("../util/permissions.js", () => ({
 }))
 
 vi.mock("../../../../services/allocation/allocation-mode.service.js", () => ({
-  getAllocationMode: vi.fn(async () => "manual"),
+  getShopAllocationMode: vi.fn(async () => "manual"),
 }))
 
 vi.mock("../../../../logger/logger.js", () => ({

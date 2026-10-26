@@ -23,7 +23,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
-import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   CreateBuyOrderRequest,
   CreateBuyOrderResponse,
@@ -321,11 +321,7 @@ export class BuyOrdersV2Controller extends BaseController {
         })
 
         // Step 9: Allocate stock from variant-specific lots (V2 direct)
-        const listingShop = await trx("shops").where("shop_id", listing.shop_id).first()
-        const allocationMode = await getAllocationMode(
-          listingShop?.owner_contractor_id ? "contractor" : "user",
-          listingShop?.owner_contractor_id || listingShop?.owner_user_id,
-        )
+        const allocationMode = await getShopAllocationMode(listing.shop_id)
 
         if (allocationMode === "auto") {
           const listingItem = await trx("listing_items")
@@ -896,13 +892,9 @@ export class BuyOrdersV2Controller extends BaseController {
       }).returning('*')
 
       // Allocate stock
-      const fulfillShop = await trx("shops").where("shop_id", listing.shop_id).first()
-      const allocationMode2 = await getAllocationMode(
-        fulfillShop?.owner_contractor_id ? "contractor" : "user",
-        fulfillShop?.owner_contractor_id || fulfillShop?.owner_user_id,
-      )
+      const allocationMode = await getShopAllocationMode(listing.shop_id)
 
-      if (allocationMode2 === "auto") {
+      if (allocationMode === "auto") {
         const lot = await trx("listing_item_lots")
           .where({
             item_id: listingItem.item_id,

@@ -1,104 +1,46 @@
 /**
  * Allocation Mode Service
  *
- * Manages allocation mode settings for users and contractors.
- * Supports three modes:
- * - 'auto': Automatically allocate stock when orders are created (default)
- * - 'manual': Wait for seller to manually allocate via UI
- * - 'none': No physical allocation (legacy behavior)
+ * The allocation mode decides what happens to stock when an order is created:
+ * - 'auto': allocate (decrement listed lots) when the order is created (default)
+ * - 'manual': wait for the seller to allocate in the UI
+ * - 'none': no physical allocation (legacy behavior)
+ *
+ * Source of truth: the SHOP's `allocation_mode` order setting (Shop Settings ›
+ * Stock Management › Allocation mode; PUT
+ * /api/v2/shops/{shopId}/order-settings/allocation_mode). It is
+ * the only setting read; user- and org-level `allocation_mode` rows are not
+ * consulted. Migration 20261026010000_shop_allocation_mode copied each
+ * existing user/org setting onto the shops that owner owns, so no seller's
+ * behavior changed when the read moved to the shop.
+ *
+ * Explicit default, not a fallback: a shop with no setting (or a disabled or
+ * unrecognised one) is 'auto'. That is what the Shop Settings page shows when
+ * no setting exists, and saving 'auto' there deletes the row.
  */
 
 import * as orderDb from "../../api/routes/v1/orders/database.js"
-import { DBOrderSetting } from "../../clients/database/db-models.js"
 
 export type AllocationMode = "auto" | "manual" | "none"
 
-const DEFAULT_ALLOCATION_MODE: AllocationMode = "auto"
+export const DEFAULT_ALLOCATION_MODE: AllocationMode = "auto"
+
+const MODES: readonly AllocationMode[] = ["auto", "manual", "none"]
 
 /**
- * Get allocation mode for an entity (user or contractor).
- * Returns 'auto' if no setting exists.
+ * Allocation mode of the shop that is selling.
+ *
+ * `shopId` is the selling shop (the listing's / order's `shop_id`). An order
+ * with no shop has no shop setting to read, so it gets the default.
  */
-export async function getAllocationMode(
-  entityType: "user" | "contractor" | "shop",
-  entityId: string,
+export async function getShopAllocationMode(
+  shopId: string | null | undefined,
 ): Promise<AllocationMode> {
-  const setting = await orderDb.getOrderSetting(
-    entityType,
-    entityId,
-    "allocation_mode",
-  )
+  if (!shopId) return DEFAULT_ALLOCATION_MODE
 
-  if (!setting || !setting.enabled) {
-    return DEFAULT_ALLOCATION_MODE
-  }
+  const setting = await orderDb.getOrderSetting("shop", shopId, "allocation_mode")
+  if (!setting || !setting.enabled) return DEFAULT_ALLOCATION_MODE
 
   const mode = setting.message_content as AllocationMode
-  if (mode !== "auto" && mode !== "manual" && mode !== "none") {
-    return DEFAULT_ALLOCATION_MODE
-  }
-
-  return mode
-}
-
-/**
- * Set allocation mode for an entity (user or contractor).
- */
-export async function setAllocationMode(
-  entityType: "user" | "contractor" | "shop",
-  entityId: string,
-  mode: AllocationMode,
-): Promise<DBOrderSetting> {
-  // Validate mode
-  if (mode !== "auto" && mode !== "manual" && mode !== "none") {
-    throw new Error(
-      `Invalid allocation mode: ${mode}. Must be 'auto', 'manual', or 'none'.`,
-    )
-  }
-
-  // Check if setting already exists
-  const existing = await orderDb.getOrderSetting(
-    entityType,
-    entityId,
-    "allocation_mode",
-  )
-
-  if (existing) {
-    // Update existing setting
-    return orderDb.updateOrderSetting(existing.id, {
-      message_content: mode,
-      enabled: true,
-    })
-  } else {
-    // Create new setting
-    return orderDb.createOrderSetting({
-      entity_type: entityType,
-      entity_id: entityId,
-      setting_type: "allocation_mode",
-      message_content: mode,
-      enabled: true,
-    })
-  }
-}
-
-/**
- * Get allocation mode for a listing based on seller (contractor or user).
- * Prioritizes contractor settings over user settings.
- */
-export async function getAllocationModeForListing(
-  contractorId: string | null,
-  userId: string | null,
-): Promise<AllocationMode> {
-  // If there's a contractor, use contractor settings
-  if (contractorId) {
-    return getAllocationMode("contractor", contractorId)
-  }
-
-  // Otherwise use user settings
-  if (userId) {
-    return getAllocationMode("user", userId)
-  }
-
-  // Default if neither is provided
-  return DEFAULT_ALLOCATION_MODE
+  return MODES.includes(mode) ? mode : DEFAULT_ALLOCATION_MODE
 }

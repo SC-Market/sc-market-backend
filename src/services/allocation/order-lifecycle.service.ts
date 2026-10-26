@@ -15,7 +15,7 @@ import {
   AllocationService,
   InsufficientStockError,
 } from "./allocation.service.js"
-import { getAllocationMode, AllocationMode } from "./allocation-mode.service.js"
+import { getShopAllocationMode, AllocationMode } from "./allocation-mode.service.js"
 import logger from "../../logger/logger.js"
 
 export interface OrderMarketListing {
@@ -57,26 +57,23 @@ export class OrderLifecycleService {
    * @param orderId - The order ID
    * @param marketListings - Array of listings with quantities
    * @param contractorId - Optional contractor ID for strategy-based allocation
-   * @param userId - Optional user ID for allocation mode check
+   * @param shopId - The selling shop, whose allocation_mode setting applies
    * @returns Allocation result summary
    */
   async allocateStockForOrder(
     orderId: string,
     marketListings: OrderMarketListing[],
     contractorId?: string | null,
-    userId?: string | null,
+    shopId?: string | null,
   ): Promise<OrderAllocationResult> {
     // Check allocation mode first
-    const allocationMode = await getAllocationMode(
-      contractorId ? "contractor" : "user",
-      contractorId || userId || "",
-    )
+    const allocationMode = await getShopAllocationMode(shopId)
 
     logger.info("Checking allocation mode for order", {
       order_id: orderId,
       allocation_mode: allocationMode,
       contractor_id: contractorId,
-      user_id: userId,
+      shop_id: shopId,
     })
 
     // If mode is 'manual' or 'none', skip automatic allocation

@@ -33,7 +33,7 @@ import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { Request } from "express"
 import { withTransaction } from "../../../../clients/database/transaction.js"
-import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   OrderSearchQuery,
   OrderSearchQueryArguments,
@@ -399,10 +399,9 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
     // Allocate stock based on allocation_mode setting
     if (v2OfferItems.length > 0) {
       // V2 orders: directly decrement listing_item_lots (no stock_allocations FK issue)
-      const allocationMode = await getAllocationMode(
-        session.contractor_id ? "contractor" : "user",
-        session.contractor_id || session.assigned_id || session.customer_id,
-      )
+      // The selling shop's setting (createOrder resolved shop_id if the
+      // session had none).
+      const allocationMode = await getShopAllocationMode(createdOrder.shop_id)
 
       if (allocationMode === "auto") {
         for (const vi of v2OfferItems) {
@@ -454,7 +453,7 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
         createdOrder.order_id,
         market_listings,
         session.contractor_id,
-        session.customer_id,
+        createdOrder.shop_id,
       )
 
       logger.info("Stock allocated for order", {
