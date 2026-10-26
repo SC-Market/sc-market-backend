@@ -5,7 +5,12 @@
  * Follows the same pattern as the Discord queue consumer.
  */
 
-import { receiveMessage, deleteMessage } from "../clients/aws/sqs.js"
+import {
+  receiveMessage,
+  deleteMessage,
+  sendMessage,
+  MAX_SQS_DELAY_SECONDS,
+} from "../clients/aws/sqs.js"
 import { env } from "../config/env.js"
 import logger from "../logger/logger.js"
 import { checkEmailSQSConfiguration } from "../clients/aws/sqs-config.js"
@@ -83,11 +88,19 @@ export async function processEmailQueue() {
           const now = new Date()
 
           if (scheduledTime > now) {
-            logger.debug(
-              `Message scheduled for future delivery: ${scheduledTime.toISOString()}`,
+            // Leaving it on the queue would only hide it for the visibility
+            // timeout, and each receive counts towards the DLQ redrive limit.
+            // Put it back with a delay (SQS allows up to 15 min) and drop this
+            // copy; it hops forward until it is due.
+            const delaySeconds = Math.min(
+              MAX_SQS_DELAY_SECONDS,
+              Math.ceil((scheduledTime.getTime() - now.getTime()) / 1000),
             )
-            // Don't delete the message - let it be reprocessed later
-            // SQS visibility timeout will handle this
+            await sendMessage(queueUrl, body, { delaySeconds })
+            await deleteMessage(queueUrl, message.ReceiptHandle!)
+            logger.debug(
+              `Message scheduled for ${scheduledTime.toISOString()}; requeued with a ${delaySeconds}s delay`,
+            )
             continue
           }
         }

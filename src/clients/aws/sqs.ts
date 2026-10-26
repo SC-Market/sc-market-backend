@@ -64,15 +64,22 @@ async function getSQSClient(): Promise<SQSClient> {
 // Keep the old export name for backward compatibility
 export const createSQSClient = getSQSClient
 
+/** SQS's per-message delay limit. */
+export const MAX_SQS_DELAY_SECONDS = 900
+
 export async function sendMessage(
   queueUrl: string,
   messageBody: unknown,
+  options: { delaySeconds?: number } = {},
 ): Promise<SendMessageCommandOutput> {
   try {
     const client = await getSQSClient()
     return client.send(new SendMessageCommand({
       QueueUrl: queueUrl,
       MessageBody: JSON.stringify(messageBody),
+      ...(options.delaySeconds
+        ? { DelaySeconds: Math.min(MAX_SQS_DELAY_SECONDS, Math.max(0, Math.ceil(options.delaySeconds))) }
+        : {}),
     }))
   } catch (error) {
     logger.error("Failed to send SQS message:", error)

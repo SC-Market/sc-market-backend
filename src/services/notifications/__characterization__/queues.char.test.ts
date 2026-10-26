@@ -3,38 +3,48 @@
  * the email queue (tasks/email-queue-consumer.ts) and the bot's reply queue
  * (tasks/discord-queue-consumer.ts).
  */
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import * as w from "../../../test-utils/notif-char/world.js"
 import { processEmailQueue } from "../../../tasks/email-queue-consumer.js"
 import { processDiscordQueue } from "../../../tasks/discord-queue-consumer.js"
 import { sendMessage } from "../../../clients/aws/sqs.js"
-import { recorder, sqsAdvance, SQS_VISIBILITY_TIMEOUT_S } from "../../../test-utils/notif-char/fakes.js"
+import { recorder, sqsAdvance } from "../../../test-utils/notif-char/fakes.js"
 import { getKnex } from "../../../clients/database/knex-db.js"
 
 describe("email queue", () => {
-  it("a message scheduled in the future is never deleted and ends in the DLQ after 3 receives", async () => {
-    await sendMessage(w.EMAIL_QUEUE(), {
-      type: "digest_email",
-      payload: { userId: "u", frequency: "daily" },
-      metadata: { created_at: new Date().toISOString(), scheduled_at: new Date(Date.now() + 6 * 3600_000).toISOString() },
-    })
-    for (let i = 0; i < 4; i++) {
-      await processEmailQueue()
-      sqsAdvance(SQS_VISIBILITY_TIMEOUT_S * 1000)
+  it("a message scheduled in the future is requeued with a delay until due, then processed (not sent to the DLQ)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] })
+    try {
+      await sendMessage(w.EMAIL_QUEUE(), {
+        type: "digest_email",
+        payload: { userId: "u", frequency: "daily" },
+        metadata: { created_at: new Date().toISOString(), scheduled_at: new Date(Date.now() + 40 * 60_000).toISOString() },
+      })
+      // The consumer polls every 5 s; step 5 minutes at a time.
+      for (let i = 0; i < 12; i++) {
+        await processEmailQueue()
+        sqsAdvance(5 * 60_000)
+        vi.setSystemTime(Date.now() + 5 * 60_000)
+      }
+    } finally {
+      vi.useRealTimers()
     }
-    await processEmailQueue()
     const r = recorder()
     expect({
-      deleted: r.sqs.deleted.length,
-      dlq: r.sqs.dlq.map((m) => (JSON.parse(m.body) as { type: string }).type),
+      requeued_delays: r.sqs.sent.slice(1).map((m) => m.delaySeconds),
+      dlq: r.sqs.dlq.length,
       pending: r.sqs.queues.get(w.EMAIL_QUEUE())?.length ?? 0,
+      handled: r.logs.some((l) => l.message === "Digest email functionality not yet implemented"),
     }).toMatchInlineSnapshot(`
       {
-        "deleted": 0,
-        "dlq": [
-          "digest_email",
-        ],
+        "dlq": 0,
+        "handled": true,
         "pending": 0,
+        "requeued_delays": [
+          900,
+          900,
+          600,
+        ],
       }
     `)
   })
