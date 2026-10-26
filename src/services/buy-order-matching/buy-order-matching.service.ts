@@ -3,6 +3,8 @@ import { pushNotificationService } from "../push-notifications/push-notification
 import { PushNotificationPayload } from "../push-notifications/push-notification.service.types.js"
 import logger from "../../logger/logger.js"
 import { env } from "../../config/env.js"
+import { listingPubliclyListed } from "../../api/routes/v2/util/listing-visibility.js"
+import { formatShortSlug } from "../../api/routes/v2/util/short-slug.js"
 
 interface ListingMatchInfo {
   listing_id: string
@@ -17,11 +19,23 @@ interface ListingMatchInfo {
 /**
  * Check active buy orders that match a newly created listing.
  * Notifies buyers via push notification when a listing matches their buy order criteria.
+ *
+ * The buyer is a stranger to the seller, so only publicly listed listings
+ * (active + public: the anonymous market-grid rule) may alert. An org-internal
+ * (private) listing would be revealed to a non-member, and an unlisted one is
+ * link-only: pushing its link to strangers would publish it. Eligibility is
+ * read from the DB, after the listing's transaction has committed.
  */
 export async function checkBuyOrderMatches(listing: ListingMatchInfo): Promise<void> {
   const db = getKnex()
 
   try {
+    const publiclyListed = await db("listings as l")
+      .where("l.listing_id", listing.listing_id)
+      .where(listingPubliclyListed(db, { status: "l.status", visibility: "l.visibility" }))
+      .first("l.listing_id", "l.title")
+    if (!publiclyListed) return
+
     // Resolve shop owner user to exclude self-matches
     const shop = await db("shops").where("shop_id", listing.shop_id).first()
     const ownerUserId = shop?.owner_user_id
@@ -93,7 +107,7 @@ export async function checkBuyOrderMatches(listing: ListingMatchInfo): Promise<v
         title: "Buy Order Match",
         body: `A new listing matches your buy order for ${match.game_item_name}`,
         data: {
-          url: `${baseUrl}/market/listing/${listing.listing_id}`,
+          url: `${baseUrl}/market/${formatShortSlug(publiclyListed.listing_id, publiclyListed.title)}`,
           type: "buy_order_match",
           entityId: match.buy_order_id,
         },
