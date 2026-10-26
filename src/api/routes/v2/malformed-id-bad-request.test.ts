@@ -23,6 +23,16 @@ const h = vi.hoisted(() => ({
   rows: {} as Record<string, unknown>,
 }))
 
+// api-router puts a write rate limit in front of the upload routes; its real
+// store is Postgres, which this test's knex stub can't serve.
+vi.mock("../../middleware/tsoa-ratelimit.js", () => ({
+  tsoaWriteRateLimit: (
+    _req: express.Request,
+    _res: express.Response,
+    next: express.NextFunction,
+  ) => next(),
+}))
+
 vi.mock("../../../clients/database/knex-db.js", () => {
   const builder = (table: string) => {
     const b: Record<string, unknown> = {}
