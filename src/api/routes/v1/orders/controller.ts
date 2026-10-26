@@ -72,6 +72,20 @@ export const search_orders: RequestHandler = async (req, res) => {
     }
   }
 
+  // ?customer= alone must be the caller: someone else's purchases are only
+  // visible within an org/shop scope the caller was checked against above.
+  if (
+    args.customer_id &&
+    args.customer_id !== user.user_id &&
+    args.assigned_id !== user.user_id &&
+    !args.contractor_id &&
+    !args.shop_id &&
+    !isSiteAdmin(user)
+  ) {
+    res.status(403).json(createErrorResponse("Missing permissions."))
+    return
+  }
+
   const result = await search_orders_optimized(args)
   res.json(
     createResponse({

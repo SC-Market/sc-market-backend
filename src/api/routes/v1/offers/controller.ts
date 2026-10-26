@@ -417,6 +417,22 @@ export const get_search: RequestHandler = async (req, res) => {
     return
   }
 
+  // ?customer= alone must be the caller: someone else's offers are only
+  // visible within an org/shop scope the caller was checked against above.
+  if (
+    args.customer_id &&
+    args.customer_id !== user.user_id &&
+    args.assigned_id !== user.user_id &&
+    !args.contractor_id &&
+    !args.shop_id &&
+    !isSiteAdmin(user)
+  ) {
+    res
+      .status(403)
+      .json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
+    return
+  }
+
   const result = await search_offer_sessions_optimized(args)
 
   res.json(
