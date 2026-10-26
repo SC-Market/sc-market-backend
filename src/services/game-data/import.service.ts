@@ -23,6 +23,7 @@ import {
   MANUFACTURER_CODE_MAX,
   MANUFACTURER_NAME_MAX,
 } from "./manufacturers.js"
+import { importShopInventories, type P4KShopInventory } from "./shop-inventories.js"
 
 // --- P4K Type to DB Subcategory Mapping (62 types) ---
 const P4K_TYPE_MAP: Record<string, string> = {
@@ -172,6 +173,12 @@ export interface GameDataPayload {
     scaleFactor: number | null
     unitLabel: string | null
   }>
+  /**
+   * In-game shop inventories: shop-inventories.json from the same ZIP (the
+   * admin import reads it next to game-data.json). Undefined when the ZIP has
+   * none; the shop tables are then left as they are.
+   */
+  shopInventories?: P4KShopInventory[]
 }
 
 export interface P4KShip {
@@ -468,6 +475,11 @@ export interface ImportStats {
   miningSpawnsImported: number
   qualityDistributionsImported: number
   craftedPropertyDefsImported: number
+  shopsImported: number
+  shopItemsImported: number
+  shopItemsLinked: number
+  shopsRemoved: number
+  shopItemsRemoved: number
   errors: string[]
 }
 
@@ -646,6 +658,11 @@ export class GameDataImportService {
       miningSpawnsImported: 0,
       qualityDistributionsImported: 0,
       craftedPropertyDefsImported: 0,
+      shopsImported: 0,
+      shopItemsImported: 0,
+      shopItemsLinked: 0,
+      shopsRemoved: 0,
+      shopItemsRemoved: 0,
       errors: [],
     }
 
@@ -1441,6 +1458,12 @@ export class GameDataImportService {
         stats.craftedPropertyDefsImported = await this.importCraftedPropertyDefs(knex, gameData)
       }
 
+      // ========================================================================
+      // STEP 23: Refresh in-game shop inventories (after items, so p4k_id links
+      // resolve to this patch's game_items)
+      // ========================================================================
+      await this.refreshShopInventories(knex, gameData, stats)
+
       logger.info("Import completed successfully", stats)
       return stats
     } catch (error) {
@@ -1448,6 +1471,29 @@ export class GameDataImportService {
       logger.error("Import failed", { error: errorMessage })
       stats.errors.push(errorMessage)
       throw error
+    }
+  }
+
+  /**
+   * Replace the in-game shop inventories with the ZIP's shop-inventories.json
+   * (see shop-inventories.ts). Without that file the shop tables are left as
+   * they are and a warning says so. The step is one transaction, so a failure
+   * keeps the previous inventory and is reported as a warning.
+   */
+  async refreshShopInventories(knex: Knex, gameData: GameDataPayload, stats: ImportStats): Promise<void> {
+    if (!gameData.shopInventories) {
+      stats.errors.push("ZIP has no shop-inventories.json; in-game shops were not refreshed")
+      return
+    }
+    try {
+      const { errors, ...shopStats } = await importShopInventories(knex, gameData.shopInventories)
+      Object.assign(stats, shopStats)
+      stats.errors.push(...errors)
+      logger.info("Shop inventories refreshed", shopStats)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      logger.error("Shop inventory import failed", { error: message })
+      stats.errors.push(`Shop inventories not refreshed: ${message}`)
     }
   }
 

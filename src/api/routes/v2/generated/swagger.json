@@ -4868,8 +4868,7 @@
 				"enum": [
 					"cstone-items",
 					"uex-items",
-					"uex-attributes",
-					"shop-inventories"
+					"uex-attributes"
 				]
 			},
 			"JobStatus": {
@@ -12053,6 +12052,30 @@
 					},
 					"summary": {
 						"properties": {
+							"shopItemsRemoved": {
+								"type": "number",
+								"format": "double",
+								"description": "Shop inventory rows no longer in the game data, deleted"
+							},
+							"shopsRemoved": {
+								"type": "number",
+								"format": "double",
+								"description": "Shops no longer in the game data, deleted"
+							},
+							"shopItemsLinked": {
+								"type": "number",
+								"format": "double",
+								"description": "Shop inventory rows matched to a game item"
+							},
+							"shopItemsImported": {
+								"type": "number",
+								"format": "double"
+							},
+							"shopsImported": {
+								"type": "number",
+								"format": "double",
+								"description": "In-game shops upserted from shop-inventories.json"
+							},
 							"blueprintsUpdated": {
 								"type": "number",
 								"format": "double"
@@ -12123,6 +12146,11 @@
 							}
 						},
 						"required": [
+							"shopItemsRemoved",
+							"shopsRemoved",
+							"shopItemsLinked",
+							"shopItemsImported",
+							"shopsImported",
 							"blueprintsUpdated",
 							"blueprintsInserted",
 							"blueprintsProcessed",
@@ -12147,7 +12175,8 @@
 						"items": {
 							"type": "string"
 						},
-						"type": "array"
+						"type": "array",
+						"description": "Warnings from the import steps (skipped records, steps not run)"
 					},
 					"timestamp": {
 						"type": "string"

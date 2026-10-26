@@ -2539,13 +2539,21 @@ if (shopInventories.length > 0) {
   console.log(`  Shop inventories: ${shopPath} (${(fs.statSync(shopPath).size / 1024).toFixed(0)} KB)`)
 }
 
+// game-data.zip carries both files; the admin game data import refreshes the
+// in-game shops from shop-inventories.json. Remove any previous ZIP first so a
+// stale shop-inventories.json from an earlier run is never left inside it.
 const zipPath = path.join(OUTPUT_DIR, "game-data.zip")
-execSync(`cd "${OUTPUT_DIR}" && zip -j "${zipPath}" game-data.json`, { stdio: "inherit" })
+if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath)
+const zipFiles = shopInventories.length > 0 ? "game-data.json shop-inventories.json" : "game-data.json"
+execSync(`cd "${OUTPUT_DIR}" && zip -j "${zipPath}" ${zipFiles}`, { stdio: "inherit" })
 
 const zipSize = (fs.statSync(zipPath).size / 1024).toFixed(0)
 console.log(`\nDone! Output: ${zipPath} (${zipSize} KB)`)
 console.log(`  ${items.length} items, ${blueprints.length} blueprints, ${missions.length} missions`)
 console.log(`  ${resources.length} resources, ${ships.length} ships, ${manufacturers.length} manufacturers, ${starmap.length} locations`)
+if (shopInventories.length === 0) {
+  console.warn("  No shop inventories extracted: the ZIP has no shop-inventories.json and the import will not refresh in-game shops")
+}
 if (shopInventories.length > 0) {
   console.log(`  ${shopInventories.length} shops with ${shopInventories.reduce((s, sh) => s + sh.items.length, 0)} item listings`)
 }

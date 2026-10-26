@@ -1,8 +1,9 @@
 /**
- * Game Data Import Script - Blueprints, Crafting Recipes & Shop Inventories
+ * Game Data Import Script - Blueprints & Crafting Recipes
  *
- * Imports blueprint/crafting data and shop inventories from JSON source files.
- * Automatically imports shop-inventories.json if found alongside the input file.
+ * Imports blueprint/crafting data from JSON source files. In-game shop
+ * inventories are imported by the admin game data import (game-data.zip
+ * carries shop-inventories.json), not by this script.
  * Supports both initial import and incremental updates.
  *
  * Usage:
@@ -234,24 +235,6 @@ async function main() {
   console.log(`  Imported: ${imported}`)
   console.log(`  Skipped:  ${skipped}`)
   console.log(`  Errors:   ${errors}`)
-
-  // --- Shop Inventories Import ---
-  // Look for shop-inventories.json alongside the input file or in game-data-export/
-  const shopCandidates = [
-    path.resolve(path.dirname(filePath), "shop-inventories.json"),
-    path.resolve(__dirname, "../game-data-export/shop-inventories.json"),
-  ]
-  const shopFile = shopCandidates.find(f => fs.existsSync(f))
-
-  if (shopFile) {
-    console.log(`\n${"=".repeat(60)}`)
-    console.log(`Importing shop inventories from ${shopFile}...`)
-    const { importShopInventories } = await import("./import-shop-inventories.js")
-    await importShopInventories(knex, shopFile)
-  } else {
-    console.log(`\nNo shop-inventories.json found — skipping shop import.`)
-    console.log(`  Checked: ${shopCandidates.join(", ")}`)
-  }
 
   await knex.destroy()
 }

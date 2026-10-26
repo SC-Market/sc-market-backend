@@ -27,7 +27,17 @@ export interface ImportGameDataResponse {
     blueprintsProcessed: number
     blueprintsInserted: number
     blueprintsUpdated: number
+    /** In-game shops upserted from shop-inventories.json */
+    shopsImported: number
+    shopItemsImported: number
+    /** Shop inventory rows matched to a game item */
+    shopItemsLinked: number
+    /** Shops no longer in the game data, deleted */
+    shopsRemoved: number
+    /** Shop inventory rows no longer in the game data, deleted */
+    shopItemsRemoved: number
   }
+  /** Warnings from the import steps (skipped records, steps not run) */
   errors: string[]
   timestamp: string
 }

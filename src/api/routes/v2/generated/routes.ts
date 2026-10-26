@@ -1635,7 +1635,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ImportSource": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["cstone-items"]},{"dataType":"enum","enums":["uex-items"]},{"dataType":"enum","enums":["uex-attributes"]},{"dataType":"enum","enums":["shop-inventories"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["cstone-items"]},{"dataType":"enum","enums":["uex-items"]},{"dataType":"enum","enums":["uex-attributes"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "JobStatus": {
@@ -3940,7 +3940,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "success": {"dataType":"boolean","required":true},
-            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"blueprintsUpdated":{"dataType":"double","required":true},"blueprintsInserted":{"dataType":"double","required":true},"blueprintsProcessed":{"dataType":"double","required":true},"missionsUpdated":{"dataType":"double","required":true},"missionsInserted":{"dataType":"double","required":true},"missionsProcessed":{"dataType":"double","required":true},"fullSetsCreated":{"dataType":"double","required":true},"nameChanges":{"dataType":"double","required":true},"updated":{"dataType":"double","required":true},"inserted":{"dataType":"double","required":true},"matchedFuzzy":{"dataType":"double","required":true},"matchedCStoneUUID":{"dataType":"double","required":true},"matchedExact":{"dataType":"double","required":true},"matched":{"dataType":"double","required":true},"existingDBItems":{"dataType":"double","required":true},"validP4KItems":{"dataType":"double","required":true},"totalP4KItems":{"dataType":"double","required":true}},"required":true},
+            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"shopItemsRemoved":{"dataType":"double","required":true},"shopsRemoved":{"dataType":"double","required":true},"shopItemsLinked":{"dataType":"double","required":true},"shopItemsImported":{"dataType":"double","required":true},"shopsImported":{"dataType":"double","required":true},"blueprintsUpdated":{"dataType":"double","required":true},"blueprintsInserted":{"dataType":"double","required":true},"blueprintsProcessed":{"dataType":"double","required":true},"missionsUpdated":{"dataType":"double","required":true},"missionsInserted":{"dataType":"double","required":true},"missionsProcessed":{"dataType":"double","required":true},"fullSetsCreated":{"dataType":"double","required":true},"nameChanges":{"dataType":"double","required":true},"updated":{"dataType":"double","required":true},"inserted":{"dataType":"double","required":true},"matchedFuzzy":{"dataType":"double","required":true},"matchedCStoneUUID":{"dataType":"double","required":true},"matchedExact":{"dataType":"double","required":true},"matched":{"dataType":"double","required":true},"existingDBItems":{"dataType":"double","required":true},"validP4KItems":{"dataType":"double","required":true},"totalP4KItems":{"dataType":"double","required":true}},"required":true},
             "errors": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "timestamp": {"dataType":"string","required":true},
         },

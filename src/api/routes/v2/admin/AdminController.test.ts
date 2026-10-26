@@ -69,6 +69,11 @@ const emptyImportStats: ImportStats = {
   miningSpawnsImported: 0,
   qualityDistributionsImported: 0,
   craftedPropertyDefsImported: 0,
+  shopsImported: 0,
+  shopItemsImported: 0,
+  shopItemsLinked: 0,
+  shopsRemoved: 0,
+  shopItemsRemoved: 0,
   errors: [],
 }
 

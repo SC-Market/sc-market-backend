@@ -159,12 +159,25 @@ export class AdminController extends BaseController {
         throw new Error("game-data.json must contain an 'items' array")
       }
 
+      // In-game shop inventories travel in the same ZIP (extract-game-data
+      // packs shop-inventories.json next to game-data.json).
+      const shopsPath = path.join(tempDir, "shop-inventories.json")
+      if (fs.existsSync(shopsPath)) {
+        const shopInventories = JSON.parse(fs.readFileSync(shopsPath, "utf-8"))
+        if (!Array.isArray(shopInventories)) {
+          throw new Error("shop-inventories.json must contain an array of shops")
+        }
+        gameData.shopInventories = shopInventories
+      }
+
       if (body.gameVersion) gameData.gameVersion = body.gameVersion
       if (body.gameChannel) gameData.gameChannel = body.gameChannel
 
       // Import
       job.status = "importing"
-      job.progress = `Importing ${gameData.items.length} items...`
+      job.progress = gameData.shopInventories
+        ? `Importing ${gameData.items.length} items and ${gameData.shopInventories.length} shops...`
+        : `Importing ${gameData.items.length} items...`
 
       // Its own small pool: an import runs batch statements, transactions
       // and a REINDEX for far longer than the server pool's 15s
@@ -184,10 +197,11 @@ export class AdminController extends BaseController {
       job.status = "completed"
       job.completedAt = new Date().toISOString()
       job.progress = null
+      const { errors, ...summary } = stats
       job.result = {
         success: true,
-        summary: stats,
-        errors: [],
+        summary,
+        errors,
         timestamp: job.completedAt,
       }
 

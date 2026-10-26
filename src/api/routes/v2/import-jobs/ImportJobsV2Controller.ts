@@ -13,7 +13,7 @@ import logger from "../../../../logger/logger.js"
 
 // ── Job types ──────────────────────────────────────────────────────────
 
-type ImportSource = "cstone-items" | "uex-items" | "uex-attributes" | "shop-inventories"
+type ImportSource = "cstone-items" | "uex-items" | "uex-attributes"
 type JobStatus = "running" | "completed" | "failed"
 
 interface ImportJob {
@@ -85,17 +85,10 @@ async function runUexAttributes(job: ImportJob) {
   job.result = result ?? {}
 }
 
-async function runShopInventories(job: ImportJob) {
-  const { importShopInventories } = await import("../../../../../scripts/import-shop-inventories.js")
-  const result = await importShopInventories(database.knex)
-  job.result = result ?? {}
-}
-
 const runners: Record<ImportSource, (job: ImportJob) => Promise<void>> = {
   "cstone-items": runCstoneItems,
   "uex-items": runUexItems,
   "uex-attributes": runUexAttributes,
-  "shop-inventories": runShopInventories,
 }
 
 // ── Controller ─────────────────────────────────────────────────────────
