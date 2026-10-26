@@ -261,7 +261,7 @@ describe("price_alert (83, watchlist)", () => {
     expect(w.summary(await w.observe())).toMatchInlineSnapshot(`[]`)
   })
 
-  it("Discord DM failure is swallowed; the cooldown is still stamped", async () => {
+  it("only Discord DM enabled and it fails: recorded as failed, the cooldown is not started", async () => {
     const { watcher, seller, shop, item } = await scene()
     const { recorder } = await import("../../../test-utils/notif-char/fakes.js")
     recorder().discordFailures.set("/users/@me/channels", { status: 403, code: 50007 })
@@ -274,7 +274,7 @@ describe("price_alert (83, watchlist)", () => {
     const row = await getKnex()("watchlist_items").first("last_notified_at")
     expect({ summary: w.summary(obs), stamped: row.last_notified_at !== null }).toMatchInlineSnapshot(`
       {
-        "stamped": true,
+        "stamped": false,
         "summary": [
           "discord POST /users/@me/channels",
           "ERROR   Failed to send DM to user discord:watcher: Error: Discord API 403 (50007)",

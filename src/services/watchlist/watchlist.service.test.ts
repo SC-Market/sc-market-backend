@@ -41,8 +41,13 @@ vi.mock("../../clients/database/knex-db.js", () => {
   return { getKnex: () => db }
 })
 
-vi.mock("../notifications/channel-preferences.js", () => ({
-  dispatchNotification: vi.fn(async () => ["site"]),
+vi.mock("../notify/dispatcher.js", () => ({
+  notify: vi.fn(async () => ({
+    planned: [],
+    delivered: [{ userId: "u-1", contractorId: null, channel: "in_app" }],
+    failed: [],
+    duplicate: [],
+  })),
 }))
 vi.mock("../push-notifications/push-notification.service.js", () => ({
   pushNotificationService: { sendPushNotification: vi.fn() },
@@ -63,9 +68,7 @@ import {
   matchingWatchesQuery,
   type AlertableListing,
 } from "./watchlist.service.js"
-import { dispatchNotification } from "../notifications/channel-preferences.js"
-import { emailService } from "../email/email.service.js"
-import { pushNotificationService } from "../push-notifications/push-notification.service.js"
+import { notify } from "../notify/dispatcher.js"
 import { PLACEHOLDER_PRICE_MAX } from "../../api/routes/v2/util/placeholder-price.js"
 
 // SQL is only compiled, never run: no connection is needed for toSQL().
@@ -84,7 +87,7 @@ const LISTING: AlertableListing = {
 beforeEach(() => {
   fake.results = {}
   fake.calls = []
-  vi.mocked(dispatchNotification).mockClear()
+  vi.mocked(notify).mockClear()
 })
 
 describe("which listings may alert", () => {
@@ -165,7 +168,7 @@ describe("checkWatchlistMatches", () => {
     await checkWatchlistMatches("l-private")
 
     expect(fake.calls.some((c) => c.table === "watchlist_items")).toBe(false)
-    expect(dispatchNotification).not.toHaveBeenCalled()
+    expect(notify).not.toHaveBeenCalled()
   })
 
   it("alerts each match through one dispatch call and starts its cooldown", async () => {
@@ -174,9 +177,9 @@ describe("checkWatchlistMatches", () => {
 
     await checkWatchlistMatches("l-1")
 
-    expect(dispatchNotification).toHaveBeenCalledTimes(1)
-    expect(vi.mocked(dispatchNotification).mock.calls[0][0]).toBe("u-1")
-    expect(vi.mocked(dispatchNotification).mock.calls[0][1]).toBe(PRICE_ALERT_ACTION)
+    expect(notify).toHaveBeenCalledTimes(1)
+    expect(vi.mocked(notify).mock.calls[0][0]).toBe("watchlist.price_alert")
+    expect(vi.mocked(notify).mock.calls[0][1]).toEqual([{ userId: "u-1" }])
     const update = fake.calls.find((c) => c.table === "watchlist_items" && c.method === "update")
     expect(update?.args[0]).toEqual({ last_notified_at: expect.any(Date) })
     const whereIn = fake.calls.find((c) => c.table === "watchlist_items" && c.method === "whereIn")
@@ -194,7 +197,7 @@ describe("checkWatchlistMatches", () => {
 
     await checkWatchlistMatches("l-1")
 
-    expect(dispatchNotification).toHaveBeenCalledTimes(1)
+    expect(notify).toHaveBeenCalledTimes(1)
   })
 
   it("does not start the cooldown when nothing matched", async () => {
@@ -203,31 +206,42 @@ describe("checkWatchlistMatches", () => {
 
     await checkWatchlistMatches("l-1")
 
-    expect(dispatchNotification).not.toHaveBeenCalled()
+    expect(notify).not.toHaveBeenCalled()
     expect(fake.calls.some((c) => c.method === "update")).toBe(false)
   })
 
-  it("email and push senders use the price_alert type, so their own preference checks apply", async () => {
-    vi.mocked(dispatchNotification).mockImplementationOnce(async (_user, _action, send) => {
-      await send.email()
-      await send.push()
-      return ["email", "push"]
-    })
+  it("hands notify() the push, email and Discord messages; email keeps the price_alert template data", async () => {
     fake.results.listing_search = [[LISTING]]
     fake.results.watchlist_items = [[match], []]
 
     await checkWatchlistMatches("l-1")
 
-    expect(emailService.sendNotificationEmail).toHaveBeenCalledWith("u-1", "price_alert", {
-      listing: {
-        listing_id: "l-1",
-        title: "Medical Supplies x100",
-        price: 20000,
-        quantity: 100,
-        seller_name: "Shop",
+    const opts = vi.mocked(notify).mock.calls[0][2]
+    const messages = opts.messages as Exclude<typeof opts.messages, (...a: never) => unknown>
+    expect(messages.email).toEqual({
+      data: {
+        listing: {
+          listing_id: "l-1",
+          title: "Medical Supplies x100",
+          price: 20000,
+          quantity: 100,
+          seller_name: "Shop",
+        },
+        watch: { query: "Medical Supplies", max_price: 25000 },
       },
-      watch: { query: "Medical Supplies", max_price: 25000 },
     })
-    expect(vi.mocked(pushNotificationService.sendPushNotification).mock.calls[0][2]).toBe("price_alert")
+    expect(messages.push?.data?.type).toBe(PRICE_ALERT_ACTION)
+    expect(messages.discord_dm?.embeds?.[0].title).toBe("Price Alert: Medical Supplies x100")
+    expect(opts.entityId).toBe("l-1")
+  })
+
+  it("does not start the cooldown when no channel delivered", async () => {
+    vi.mocked(notify).mockResolvedValueOnce({ planned: [], delivered: [], failed: [], duplicate: [] })
+    fake.results.listing_search = [[LISTING]]
+    fake.results.watchlist_items = [[match]]
+
+    await checkWatchlistMatches("l-1")
+
+    expect(fake.calls.some((c) => c.table === "watchlist_items" && c.method === "update")).toBe(false)
   })
 })

@@ -15,17 +15,12 @@
 
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
-import { pushNotificationService } from "../push-notifications/push-notification.service.js"
-import { discordService } from "../discord/discord.service.js"
-import { emailService } from "../email/email.service.js"
-import * as profileDb from "../../api/routes/v1/profiles/database.js"
-import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import logger from "../../logger/logger.js"
-import { PushNotificationPayload } from "../push-notifications/push-notification.service.types.js"
 import { env } from "../../config/env.js"
 import { listingPubliclyListed } from "../../api/routes/v2/util/listing-visibility.js"
 import { PLACEHOLDER_PRICE_MAX } from "../../api/routes/v2/util/placeholder-price.js"
-import { dispatchNotification } from "../notifications/channel-preferences.js"
+import { notify } from "../notify/dispatcher.js"
+import type { UserChannel } from "../notify/channels.js"
 
 export const PRICE_ALERT_ACTION = "price_alert"
 
@@ -48,6 +43,8 @@ export interface WatchlistMatch {
   user_id: string
   query: string
   max_price: number
+  /** When this watch last alerted; identifies the alert cycle for idempotency. */
+  last_notified_at?: Date | string | null
 }
 
 const LS_PUBLIC_COLUMNS = {
@@ -131,7 +128,7 @@ export function matchingWatchesQuery(
         new Date(now.getTime() - NOTIFICATION_COOLDOWN_MS),
       )
     })
-    .select("w.id as watchlist_id", "w.user_id", "w.query", "w.max_price")
+    .select("w.id as watchlist_id", "w.user_id", "w.query", "w.max_price", "w.last_notified_at")
 }
 
 /**
@@ -169,8 +166,10 @@ export async function checkWatchlistMatches(listingId: string): Promise<void> {
     const notifiedIds: string[] = []
     for (const { match, listing } of alerts.values()) {
       try {
-        await sendPriceAlert(match, listing)
-        notifiedIds.push(match.watchlist_id)
+        const delivered = await sendPriceAlert(match, listing)
+        // Start the cooldown only when the alert reached the watcher somewhere;
+        // if every enabled channel failed, the next matching listing retries.
+        if (delivered.length > 0) notifiedIds.push(match.watchlist_id)
       } catch (err) {
         logger.error("Failed to send watchlist notification", {
           watchlist_id: match.watchlist_id,
@@ -193,33 +192,38 @@ export async function checkWatchlistMatches(listingId: string): Promise<void> {
   }
 }
 
-/** Deliver one price alert over the channels the watcher enabled. */
+/** Legacy channel names (notification_channel_preferences, logs) for notify() channels. */
+const LEGACY_CHANNEL: Record<UserChannel, string> = {
+  in_app: "site",
+  push: "push",
+  email: "email",
+  discord_dm: "discord",
+}
+
+/**
+ * Deliver one price alert over the channels the watcher enabled (site
+ * notification, push, email, Discord DM). Returns the channels that
+ * delivered.
+ */
 export async function sendPriceAlert(
   match: WatchlistMatch,
   listing: AlertableListing,
-): Promise<void> {
+): Promise<string[]> {
   const baseUrl = env.FRONTEND_URL || "https://sc-market.space"
   const listingUrl = `${baseUrl}/market/${listing.listing_id}`
   const price = listing.price.toLocaleString("en-US")
   const target = match.max_price.toLocaleString("en-US")
   const title = `Price Alert: ${listing.title}`
+  const cycle = match.last_notified_at ? new Date(match.last_notified_at).toISOString() : "never"
 
-  const delivered = await dispatchNotification(match.user_id, PRICE_ALERT_ACTION, {
-    site: async () => {
-      const action = await notificationDb.getNotificationActionByName(PRICE_ALERT_ACTION)
-      const [object] = await notificationDb.insertNotificationObjects([
-        { action_type_id: action.action_type_id, entity_id: listing.listing_id },
-      ])
-      await notificationDb.insertNotificationChange([
-        { notification_object_id: object.notification_object_id, actor_id: match.user_id },
-      ])
-      await notificationDb.insertNotifications([
-        { notification_object_id: object.notification_object_id, notifier_id: match.user_id },
-      ])
-    },
-
-    push: async () => {
-      const payload: PushNotificationPayload = {
+  const result = await notify("watchlist.price_alert", [{ userId: match.user_id }], {
+    entityId: listing.listing_id,
+    // The watcher is recorded as the actor of their own alert (as before).
+    actorId: match.user_id,
+    notifyActor: true,
+    dedupeKey: `${match.watchlist_id}:${listing.listing_id}:${cycle}`,
+    messages: {
+      push: {
         title,
         body: `${listing.title} is listed at ${price} aUEC (your target: ${target} aUEC)`,
         icon: listing.photo || `${baseUrl}/android-chrome-192x192.png`,
@@ -231,27 +235,20 @@ export async function sendPriceAlert(
         },
         tag: `price-alert-${match.watchlist_id}-${listing.listing_id}`,
         requireInteraction: true,
-      }
-      await pushNotificationService.sendPushNotification(match.user_id, payload, PRICE_ALERT_ACTION)
-    },
-
-    email: async () => {
-      await emailService.sendNotificationEmail(match.user_id, PRICE_ALERT_ACTION, {
-        listing: {
-          listing_id: listing.listing_id,
-          title: listing.title,
-          price: listing.price,
-          quantity: listing.quantity,
-          seller_name: listing.seller_name,
+      },
+      email: {
+        data: {
+          listing: {
+            listing_id: listing.listing_id,
+            title: listing.title,
+            price: listing.price,
+            quantity: listing.quantity,
+            seller_name: listing.seller_name,
+          },
+          watch: { query: match.query, max_price: match.max_price },
         },
-        watch: { query: match.query, max_price: match.max_price },
-      })
-    },
-
-    discord: async () => {
-      const discordId = await profileDb.getUserDiscordId(match.user_id)
-      if (!discordId) return
-      await discordService.sendDirectMessage(discordId, {
+      },
+      discord_dm: {
         embeds: [
           {
             title,
@@ -266,10 +263,11 @@ export async function sendPriceAlert(
             timestamp: new Date().toISOString(),
           },
         ],
-      })
+      },
     },
   })
 
+  const delivered = result.delivered.map((d) => LEGACY_CHANNEL[d.channel])
   logger.info("Watchlist notification sent", {
     watchlist_id: match.watchlist_id,
     user_id: match.user_id,
@@ -278,6 +276,7 @@ export async function sendPriceAlert(
     target: match.max_price,
     channels: delivered,
   })
+  return delivered
 }
 
 export const watchlistService = {

@@ -1,6 +1,7 @@
 /**
- * Per-user, per-action notification channel preferences, and the single
- * dispatch call that applies them.
+ * Per-user, per-action notification channel preferences (read and written by
+ * the price alert settings routes; services/notify/preferences.ts applies
+ * them when sending).
  *
  * Storage reuses the existing preference tables where they exist:
  * - push:    push_notification_preferences   (per action type)
@@ -15,7 +16,6 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import * as emailPreferenceDb from "../../api/routes/v1/email/database.js"
 import * as pushNotificationDb from "../push-notifications/push-notification.database.js"
-import logger from "../../logger/logger.js"
 
 export const NOTIFICATION_CHANNELS = ["site", "push", "email", "discord"] as const
 export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number]
@@ -116,38 +116,4 @@ export async function setChannelPreferences(
   }
 
   return getChannelPreferences(userId, action)
-}
-
-/** One sender per channel; each delivers the same alert over its channel. */
-export type ChannelSenders = Record<NotificationChannel, () => Promise<void>>
-
-/**
- * Deliver one notification to one user over every channel they have enabled
- * for `action`. A failing channel is logged and does not stop the others.
- * Returns the channels that delivered.
- */
-export async function dispatchNotification(
-  userId: string,
-  action: string,
-  senders: ChannelSenders,
-): Promise<NotificationChannel[]> {
-  const prefs = await getChannelPreferences(userId, action)
-  const delivered: NotificationChannel[] = []
-
-  for (const channel of NOTIFICATION_CHANNELS) {
-    if (!prefs[channel]) continue
-    try {
-      await senders[channel]()
-      delivered.push(channel)
-    } catch (err) {
-      logger.warn("Notification channel failed", {
-        user_id: userId,
-        action,
-        channel,
-        error: err instanceof Error ? err.message : String(err),
-      })
-    }
-  }
-
-  return delivered
 }

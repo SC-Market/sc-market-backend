@@ -52,20 +52,9 @@ vi.mock("../../clients/database/knex-db.js", () => {
 
 import {
   CHANNEL_DEFAULTS,
-  dispatchNotification,
   getChannelPreferences,
   setChannelPreferences,
-  type ChannelSenders,
 } from "./channel-preferences.js"
-
-function senders(): ChannelSenders & Record<string, ReturnType<typeof vi.fn>> {
-  return {
-    site: vi.fn(async () => {}),
-    push: vi.fn(async () => {}),
-    email: vi.fn(async () => {}),
-    discord: vi.fn(async () => {}),
-  }
-}
 
 beforeEach(() => {
   state.push = null
@@ -83,63 +72,6 @@ describe("price alert channel defaults", () => {
 
   it("rejects an unknown notification action", async () => {
     await expect(getChannelPreferences("u-1", "nope")).rejects.toThrow("Unknown notification action")
-  })
-})
-
-describe("dispatchNotification gates every channel on its own toggle", () => {
-  it("default: sends site, push and Discord, not email", async () => {
-    const s = senders()
-    const delivered = await dispatchNotification("u-1", "price_alert", s)
-
-    expect(delivered).toEqual(["site", "push", "discord"])
-    expect(s.email).not.toHaveBeenCalled()
-  })
-
-  it("email opt-in sends email", async () => {
-    state.email = { enabled: true }
-    const s = senders()
-    await dispatchNotification("u-1", "price_alert", s)
-    expect(s.email).toHaveBeenCalledTimes(1)
-  })
-
-  it("push off skips push only", async () => {
-    state.push = { enabled: false }
-    const s = senders()
-    expect(await dispatchNotification("u-1", "price_alert", s)).toEqual(["site", "discord"])
-    expect(s.push).not.toHaveBeenCalled()
-  })
-
-  it("site off skips the site notification only", async () => {
-    state.generic = [{ channel: "site", enabled: false }]
-    const s = senders()
-    expect(await dispatchNotification("u-1", "price_alert", s)).toEqual(["push", "discord"])
-    expect(s.site).not.toHaveBeenCalled()
-  })
-
-  it("Discord off skips the DM only", async () => {
-    state.generic = [{ channel: "discord", enabled: false }]
-    const s = senders()
-    expect(await dispatchNotification("u-1", "price_alert", s)).toEqual(["site", "push"])
-    expect(s.discord).not.toHaveBeenCalled()
-  })
-
-  it("everything off sends nothing", async () => {
-    state.push = { enabled: false }
-    state.email = { enabled: false }
-    state.generic = [
-      { channel: "site", enabled: false },
-      { channel: "discord", enabled: false },
-    ]
-    const s = senders()
-    expect(await dispatchNotification("u-1", "price_alert", s)).toEqual([])
-    for (const fn of Object.values(s)) expect(fn).not.toHaveBeenCalled()
-  })
-
-  it("a failing channel does not stop the others", async () => {
-    const s = senders()
-    s.site.mockRejectedValueOnce(new Error("db down"))
-    expect(await dispatchNotification("u-1", "price_alert", s)).toEqual(["push", "discord"])
-    expect(s.discord).toHaveBeenCalledTimes(1)
   })
 })
 
