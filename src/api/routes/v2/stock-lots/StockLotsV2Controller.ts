@@ -13,6 +13,7 @@ import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { canModifyListing } from "../util/listing-permissions.js"
+import { is_member } from "../../v1/util/permissions.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateStockLotRequest,
@@ -235,6 +236,16 @@ export class StockLotsV2Controller extends BaseController {
       page: validatedPage,
       page_size: validatedPageSize,
     })
+
+    // spectrum_id scopes the query to an org's shops; only that org's members
+    // may see its stock (lots, locations, notes, owners).
+    if (spectrum_id) {
+      const org = await knex("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
+      if (!org) this.throwNotFound("Contractor", spectrum_id)
+      if (!this.isAdmin() && !(await is_member(org.contractor_id, this.getUserId()))) {
+        this.throwForbidden("You are not a member of this organization")
+      }
+    }
 
     try {
       const userId = this.getUserId()
