@@ -137,4 +137,29 @@ export function start_tasks() {
     safe(recompute_shop_badges, "recompute_shop_badges")
     setInterval(() => safe(recompute_shop_badges, "recompute_shop_badges"), 24 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 90_000)
+
+  // Build missing order lookup indexes (see order-lookup-indexes.ts) once,
+  // well after startup so it never delays health checks. Its own one-
+  // connection pool: CREATE INDEX CONCURRENTLY may wait minutes on older
+  // transactions, which the server pool's timeouts don't allow.
+  setTimeout(() => {
+    safe(build_order_lookup_indexes, "build_order_lookup_indexes")
+  }, STARTUP_DELAY + 120_000)
+}
+
+async function build_order_lookup_indexes() {
+  const { createDedicatedKnex } = await import("../clients/database/knex-db.js")
+  const { ensureOrderLookupIndexes } = await import("./order-lookup-indexes.js")
+  const knex = createDedicatedKnex(
+    // No statement limit for the build; a long lock wait is harmless (the
+    // SHARE UPDATE EXCLUSIVE lock it waits for doesn't block reads or writes).
+    { statement_timeout: "0", lock_timeout: "15min" },
+    1,
+  )
+  try {
+    const result = await ensureOrderLookupIndexes(knex)
+    logger.info("Order lookup indexes task finished", { result })
+  } finally {
+    await knex.destroy()
+  }
 }

@@ -56,11 +56,16 @@ newer than `20261026100000`:
   transaction add up: the first table stays blocked while the next lock is
   awaited. Put each hot-table ALTER in its own migration. The hot tables are
   listed in the test.
-- **Indexes on hot tables: `CREATE INDEX CONCURRENTLY`** in a migration with
-  `export const config = { transaction: false }`. Run the statements on one
-  pinned connection if you change session settings, and handle the INVALID
-  index a failed build leaves behind (see
-  `migrations/20261027000000_order_lookup_indexes.ts`).
+- **Indexes on hot tables: not in a migration.** `CREATE INDEX CONCURRENTLY`
+  doesn't block writes, but before building it waits for every transaction
+  already running on the database, which can outlast the deploy's health
+  checks: as migration 20261027000000 it kept image a7c75ff from going live.
+  Build them from a background task after the server is serving, on a
+  dedicated connection with a long lock_timeout, guarded by
+  `pg_try_advisory_lock` (old and new containers overlap during a deploy),
+  dropping and rebuilding an INVALID index a failed build leaves behind. See
+  `src/tasks/order-lookup-indexes.ts`. The lock-rules test rejects any
+  `CREATE INDEX` on a hot table in a new migration.
 - **Make migrations idempotent** (`IF NOT EXISTS`, `IF EXISTS`, checks before
   adding constraints). A migration can be run twice, for example if a deploy
   is rolled back to an image from before it.

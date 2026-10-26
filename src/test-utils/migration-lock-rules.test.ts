@@ -11,8 +11,10 @@ import { fileURLToPath } from "node:url"
  * - A transactional migration may ALTER at most one hot table: each ALTER
  *   holds ACCESS EXCLUSIVE until the transaction ends, so several stack up.
  *   Split them into one migration per table.
- * - CREATE INDEX on a hot table must be CONCURRENTLY, in a migration with
- *   `export const config = { transaction: false }`.
+ * - No CREATE INDEX on a hot table in a migration, not even CONCURRENTLY:
+ *   it waits for every older transaction before building, which can outlast
+ *   the deploy's health checks (image a7c75ff never went live). Build it
+ *   from a background task instead (src/tasks/order-lookup-indexes.ts).
  *
  * Migrations up to RULES_START predate the rules and are not checked.
  */
@@ -53,11 +55,11 @@ function alteredHotTables(source: string): string[] {
   })
 }
 
-/** Hot tables indexed without CONCURRENTLY. */
+/** Hot tables a migration creates an index on (CONCURRENTLY or not). */
 function blockingIndexedHotTables(source: string): string[] {
   return HOT_TABLES.filter((t) =>
     new RegExp(
-      `CREATE\\s+(?:UNIQUE\\s+)?INDEX\\s+(?!CONCURRENTLY)[^;]*?\\sON\\s+(?:ONLY\\s+)?${tableRef(t)}(?![\\w"])`,
+      `CREATE\\s+(?:UNIQUE\\s+)?INDEX\\s+[^;]*?\\sON\\s+(?:ONLY\\s+)?${tableRef(t)}(?![\\w"])`,
       "i",
     ).test(source),
   )
@@ -89,7 +91,8 @@ describe("migration lock rules", () => {
     expect(blockingIndexedHotTables("CREATE INDEX idx_a ON orders (customer_id)")).toEqual(["orders"])
     expect(
       blockingIndexedHotTables("CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_a ON public.orders (customer_id)"),
-    ).toEqual([])
+    ).toEqual(["orders"])
+    expect(blockingIndexedHotTables("CREATE INDEX idx_a ON public.orders_archive (x)")).toEqual([])
     expect(isNonTransactional("export const config = { transaction: false }")).toBe(true)
   })
 
@@ -101,13 +104,10 @@ describe("migration lock rules", () => {
     expect(offenders).toEqual([])
   })
 
-  it("indexes on hot tables are built CONCURRENTLY outside a transaction", () => {
-    const offenders = checkedMigrations().flatMap(({ file, source }) => {
-      const blocking = blockingIndexedHotTables(source)
-      const concurrentInTrx =
-        /CONCURRENTLY/i.test(source) && !isNonTransactional(source)
-      return blocking.length > 0 || concurrentInTrx ? [{ file, blocking, concurrentInTrx }] : []
-    })
+  it("migrations don't build indexes on hot tables", () => {
+    const offenders = checkedMigrations()
+      .map(({ file, source }) => ({ file, tables: blockingIndexedHotTables(source) }))
+      .filter(({ tables }) => tables.length > 0)
     expect(offenders).toEqual([])
   })
 })
