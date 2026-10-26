@@ -4254,6 +4254,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["rating"]},{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["total_sales"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/shops',
             ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
@@ -4284,6 +4285,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsShopsV2Controller_getShop: Record<string, TsoaRoute.ParameterSchema> = {
                 slug: {"in":"path","name":"slug","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/shops/:slug',
             ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),

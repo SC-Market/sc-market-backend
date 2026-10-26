@@ -30,6 +30,7 @@ import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
 import { checkBuyOrderMatches } from "../../../../services/buy-order-matching/buy-order-matching.service.js"
+import { listingVisibleTo } from "../util/listing-visibility.js"
 
 /**
  * Response for creating a listing
@@ -832,23 +833,13 @@ export class ListingsV2Controller extends BaseController {
       }
 
       // Filter by visibility: exclude private listings unless user is an org member of the shop's owner
-      const currentUserId = this.tryGetUserId()
-      if (currentUserId) {
-        query = query.where(function () {
-          this.where("ls.visibility", "!=", "private")
-            .orWhere(function () {
-              this.whereNotNull("ls.shop_owner_contractor_id")
-                .whereExists(function () {
-                  this.select(db.raw("1"))
-                    .from("contractor_members")
-                    .whereRaw("contractor_members.contractor_id = ls.shop_owner_contractor_id")
-                    .where("contractor_members.user_id", currentUserId)
-                })
-            })
-        })
-      } else {
-        query = query.where("ls.visibility", "!=", "private")
-      }
+      // (shared with the shop listing counts so they always match this grid)
+      query = query.where(
+        listingVisibleTo(db, this.tryGetUserId(), {
+          visibility: "ls.visibility",
+          ownerContractorId: "ls.shop_owner_contractor_id",
+        }),
+      )
 
       // Get total count for pagination (Requirement 15.8)
       const countQuery = query.clone().clearSelect().clearOrder().count("* as count")

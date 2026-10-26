@@ -16,6 +16,7 @@ import {
   getShopsForUser,
   type Shop,
 } from "../../../../services/shops/shop-permissions.service.js"
+import { visibleActiveListingCountQuery } from "../util/listing-visibility.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
 import { has_permission, is_member } from "../../v1/util/permissions.js"
@@ -480,8 +481,11 @@ export class ShopsV2Controller extends BaseController {
     @Query() page_size?: number,
     @Query() sort_by?: "name" | "rating" | "created_at" | "total_sales",
     @Query() sort_order?: "asc" | "desc",
+    @Request() request?: ExpressRequest,
   ): Promise<{ shops: ShopPublicResponse[]; total: number; page: number; page_size: number }> {
+    if (request) this.request = request
     const db = getKnex()
+    const viewerUserId = this.tryGetUserId()
     const validatedPage = Math.max(1, page || 1)
     const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
     const sortBy = sort_by || "rating"
@@ -504,7 +508,10 @@ export class ShopsV2Controller extends BaseController {
         db.raw("COALESCE((SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as avg_rating"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
         db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
-        db.raw("COALESCE((SELECT COUNT(*)::integer FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active'), 0) as listing_count"),
+        // Only the listings this viewer can see (private ones are org-internal)
+        visibleActiveListingCountQuery(db, db.ref("s.shop_id"), viewerUserId)
+          .select(db.raw("COUNT(*)::integer"))
+          .as("listing_count"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM services sv WHERE sv.shop_id = s.shop_id AND sv.status = 'active'), 0) as service_count"),
         db.raw("s.total_completed as total_sales"),
         // Owner info — aliased to avoid clashing with shop columns
@@ -595,7 +602,11 @@ export class ShopsV2Controller extends BaseController {
    * @summary Get shop by slug
    */
   @Get("{slug}")
-  public async getShop(@Path() slug: string): Promise<ShopPublicResponse> {
+  public async getShop(
+    @Path() slug: string,
+    @Request() request?: ExpressRequest,
+  ): Promise<ShopPublicResponse> {
+    if (request) this.request = request
     const db = getKnex()
     const shop = await getShopBySlug(slug)
     if (!shop) this.throwNotFound("Shop", slug)
@@ -632,10 +643,8 @@ export class ShopsV2Controller extends BaseController {
       }
     }
 
-    // Listing count
-    const listingCount = await db("listings")
-      .where("shop_id", shop.shop_id)
-      .where("status", "active")
+    // Listing count: only what this viewer's listings grid will show
+    const listingCount = await visibleActiveListingCountQuery(db, shop.shop_id, this.tryGetUserId())
       .count("* as count")
       .first()
 
