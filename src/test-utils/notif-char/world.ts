@@ -450,13 +450,18 @@ export async function observe(opts: { drainEmail?: boolean } = {}): Promise<Obse
     push: r.push
       .map((p) => ({ to: `push:${endpointOwner.get(p.endpoint) ?? p.endpoint}`, payload: p.payload }))
       .sort((a, b) => a.to.localeCompare(b.to)),
-    email: r.email.map((e) => ({
-      to: e.to,
-      subject: e.subject,
-      text: e.text,
-      html_length_bucket: e.html ? Math.round(e.html.length / 500) * 500 : 0,
-    })),
-    email_queue: emailQueued,
+    // Sorted by recipient: deliveries to different people may go out concurrently.
+    email: r.email
+      .map((e) => ({
+        to: e.to,
+        subject: e.subject,
+        text: e.text,
+        html_length_bucket: e.html ? Math.round(e.html.length / 500) * 500 : 0,
+      }))
+      .sort((a, b) => a.to.join().localeCompare(b.to.join())),
+    email_queue: emailQueued.sort((a, b) =>
+      String(label(queuedUser(a)) ?? "").localeCompare(String(label(queuedUser(b)) ?? "")),
+    ),
     discord: r.discord,
     discord_queue: r.sqs.sent.filter((m) => m.queueUrl === DISCORD_QUEUE()).map((m) => m.body),
     webhooks: r.fetch,
@@ -464,6 +469,10 @@ export async function observe(opts: { drainEmail?: boolean } = {}): Promise<Obse
     errors: r.logs.filter((l) => l.level === "error").map((l) => l.message),
     warnings: r.logs.filter((l) => l.level === "warn").map((l) => l.message),
   })
+}
+
+function queuedUser(m: unknown): string | null {
+  return (m as { payload?: { userId?: string } })?.payload?.userId ?? null
 }
 
 /** Compact view: who got what on which channel. */

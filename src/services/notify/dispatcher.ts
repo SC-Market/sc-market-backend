@@ -84,6 +84,20 @@ export function setAdaptersForTesting(next: Partial<Adapters> | null) {
 
 const CHANNEL_ORDER: readonly UserChannel[] = ["in_app", "push", "email", "discord_dm"]
 
+/** Deliveries in flight at once for one notify() call. */
+const SEND_CONCURRENCY = 8
+
+async function forEachLimit<T>(items: T[], limit: number, fn: (item: T) => Promise<void>) {
+  let next = 0
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const item = items[next++]
+      await fn(item)
+    }
+  })
+  await Promise.all(workers)
+}
+
 export async function notify(
   eventKey: EventKey,
   recipientsIn: UserRecipient[],
@@ -172,18 +186,19 @@ export async function notify(
       }
     }
 
-    // 4b. Other channels, recipient by recipient (as the legacy loops do).
-    for (const d of toSend) {
-      if (d.channel === "in_app") continue
+    // 4b. Other channels, a few recipients at a time (admin alerts reach
+    // every user; the legacy bulk push ran them all in parallel).
+    await forEachLimit(toSend.filter((d) => d.channel !== "in_app"), SEND_CONCURRENCY, async (d) => {
+      const channel = d.channel as Exclude<UserChannel, "in_app">
       const recipient = { userId: d.userId, contractorId: d.contractorId }
       const messages = typeof opts.messages === "function" ? opts.messages(recipient) : opts.messages
-      const msg = messages[d.channel]
+      const msg = messages[channel]
       let outcome: DeliveryResult
       if (msg === undefined) {
         outcome = { status: "skipped", reason: `no ${d.channel} message for ${eventKey}` }
       } else {
         try {
-          outcome = await adapters[d.channel].send(msg as never, {
+          outcome = await adapters[channel].send(msg as never, {
             eventKey,
             legacyAction: def.legacyAction,
             recipient,
@@ -208,7 +223,7 @@ export async function notify(
         })
         await finishDelivery(keyOf(d), "failed", outcome.error)
       }
-    }
+    })
   } catch (err) {
     logger.error("notify: failed", {
       event: eventKey,
