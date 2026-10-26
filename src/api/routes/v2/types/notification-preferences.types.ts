@@ -16,6 +16,7 @@ export type NotificationCategoryId =
   | "org"
   | "announcements"
   | "reminders"
+  | "contracts"
 
 export type NotificationEventKey =
   | "order.created"
@@ -35,12 +36,18 @@ export type NotificationEventKey =
   | "admin.alert"
   | "reminder.unread_messages"
   | "watchlist.price_alert"
+  | "offer.accepted"
+  | "offer.rejected"
+  | "contract.public_created"
+  | "contract.offer_received"
 
 export interface NotificationPreferenceCell {
   channel: NotificationChannelId
   enabled: boolean
-  /** Shown but not switchable (in-app notifications are always created). */
+  /** Shown but not switchable. */
   locked: boolean
+  /** Why: always delivered, Discord not linked, set once under Personal, or not available for this event yet. */
+  reason?: "always_on" | "discord_not_linked" | "personal_only" | "coming_soon"
   /** Value when the user never chose. */
   default: boolean
 }

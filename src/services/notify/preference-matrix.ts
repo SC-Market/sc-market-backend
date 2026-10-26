@@ -12,21 +12,26 @@
  * before (no inheritance from the personal settings).
  */
 import { getKnex } from "../../clients/database/knex-db.js"
-import { CATALOG, CATEGORIES, type CategoryId, type EventKey } from "./catalog.js"
+import { CATALOG, CATEGORIES, isMandatory, type CategoryId, type EventDefinition, type EventKey } from "./catalog.js"
 import type { UserChannel } from "./channels.js"
 import { actionTypeId, recipientKey, resolvePreferences } from "./preferences.js"
 
 /** Channels a user can switch for an event (in-app is always on except for price alerts, as today). */
 export function editableChannels(event: EventKey): UserChannel[] {
-  const def = CATALOG[event]
-  return def.channels.filter((c) => c !== "in_app" || event === "watchlist.price_alert")
+  const def: EventDefinition = CATALOG[event]
+  if (isMandatory(def)) return []
+  return def.channels.filter(
+    (c) => (c !== "in_app" || event === "watchlist.price_alert") && !(c === "discord_dm" && def.legacyDelivery),
+  )
 }
 
 export interface MatrixCell {
   channel: UserChannel
   enabled: boolean
-  /** Shown but cannot be changed (in-app is always written). */
+  /** Shown but cannot be changed. */
   locked: boolean
+  /** Why it is locked: always delivered, Discord not linked, or set in Personal (one setting for all scopes). */
+  reason?: "always_on" | "discord_not_linked" | "personal_only" | "coming_soon"
   default: boolean
 }
 export interface MatrixEvent {
@@ -46,26 +51,39 @@ function eventsOf(category: CategoryId): EventKey[] {
 
 export async function getMatrix(userId: string, contractorId: string | null): Promise<MatrixCategory[]> {
   const out: MatrixCategory[] = []
+  const discordLinked = !!(await getKnex()("account_providers")
+    .where({ user_id: userId, provider_type: "discord" })
+    .first("id"))
   const recipient = { userId, contractorId }
   for (const category of Object.keys(CATEGORIES) as CategoryId[]) {
-    if (CATEGORIES[category].mandatory) continue
+    if (category === "account") continue
     if (contractorId && !CATEGORIES[category].orgScoped) continue
     const events: MatrixEvent[] = []
     for (const event of eventsOf(category)) {
-      const def = CATALOG[event]
+      const def: EventDefinition = CATALOG[event]
       const prefs = (await resolvePreferences(def, [recipient], def.channels)).get(recipientKey(recipient)) ?? {}
       const editable = editableChannels(event)
       events.push({
         event,
-        cells: def.channels
-          // Price alert in-app/Discord toggles have no org scope.
-          .filter((c) => !contractorId || c === "push" || c === "email" || c === "in_app")
-          .map((c) => ({
+        cells: def.channels.map((c) => {
+          const mandatory = isMandatory(def)
+          const reason: MatrixCell["reason"] = mandatory || (c === "in_app" && !editable.includes(c))
+            ? "always_on"
+            : c === "discord_dm" && def.legacyDelivery
+              ? "coming_soon"
+              : c === "discord_dm" && !discordLinked
+                ? "discord_not_linked"
+              : contractorId && (c === "in_app" || c === "discord_dm")
+                ? "personal_only"
+                : undefined
+          return {
             channel: c,
-            enabled: c === "in_app" && !editable.includes(c) ? true : !!prefs[c],
-            locked: !editable.includes(c) || (!!contractorId && c === "in_app"),
+            enabled: reason === "always_on" ? true : !!prefs[c],
+            locked: reason !== undefined,
+            ...(reason ? { reason } : {}),
             default: !!def.defaults[c],
-          })),
+          }
+        }),
       })
     }
     if (!events.length) continue
@@ -120,7 +138,7 @@ export async function setPreferences(
         continue // category-wide update: skip events without that channel
       }
       if (contractorId && u.channel !== "push" && u.channel !== "email") {
-        throw new PreferenceUpdateError(`${u.channel} has no organization setting`)
+        throw new PreferenceUpdateError(`${u.channel} is set once for all scopes, under Personal`)
       }
       writes.push({ event, channel: u.channel, enabled: u.enabled })
     }

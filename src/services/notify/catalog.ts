@@ -24,7 +24,8 @@ export const CATEGORIES = {
   reviews: { orgScoped: true, mandatory: false },
   watchlist: { orgScoped: false, mandatory: false },
   org: { orgScoped: false, mandatory: false },
-  announcements: { orgScoped: false, mandatory: false },
+  // Owner decision: admin alerts can't be turned off (shown locked on).
+  announcements: { orgScoped: false, mandatory: true },
   reminders: { orgScoped: false, mandatory: false },
   contracts: { orgScoped: true, mandatory: false },
   account: { orgScoped: false, mandatory: true },
@@ -39,50 +40,81 @@ export interface EventDefinition {
   channels: readonly UserChannel[]
   /** Value when the user has no preference row. */
   defaults: Partial<Record<UserChannel, boolean>>
+  /**
+   * Still delivered by the legacy notification.service.ts code (notify()
+   * runs in shadow mode). Channels the legacy code has no sender for
+   * (Discord DM) can't be turned on until the event is switched over.
+   */
+  legacyDelivery?: true
 }
 
-const LEGACY_DEFAULTS = { in_app: true, push: true, email: false, discord_dm: true } as const
+/**
+ * Defaults are today's: in-app and push on, email off (opt-in). Discord DM is
+ * available on every event group for users with Discord linked (owner
+ * decision) and off by default, except where it was on before (price alerts).
+ */
+const LEGACY_DEFAULTS = { in_app: true, push: true, email: false, discord_dm: false } as const
 
 function event(
   category: CategoryId,
   legacyAction: string,
   channels: readonly UserChannel[],
+  overrides: Partial<Record<UserChannel, boolean>> = {},
 ): EventDefinition {
   const defaults: Partial<Record<UserChannel, boolean>> = {}
-  for (const c of channels) defaults[c] = LEGACY_DEFAULTS[c]
+  for (const c of channels) defaults[c] = overrides[c] ?? LEGACY_DEFAULTS[c]
   return { category, legacyAction, channels, defaults }
 }
 
-const IN_APP_PUSH_EMAIL = ["in_app", "push", "email"] as const
-const IN_APP_PUSH = ["in_app", "push"] as const
+const ALL = ["in_app", "push", "email", "discord_dm"] as const
+/** Channels without email: these never sent email (a template exists for some; widening is the owner's call). */
+const NO_EMAIL = ["in_app", "push", "discord_dm"] as const
 
-/**
- * Channels listed here are the ones the event uses TODAY (characterized), not
- * the ones it could use: e.g. contractor invites have an email template that
- * was never sent, so email is not listed. Widening a channel list is a
- * behaviour change for the owner to decide.
- */
 export const CATALOG = {
-  "order.created": event("orders", "order_create", IN_APP_PUSH_EMAIL),
-  "order.assigned": event("orders", "order_assigned", IN_APP_PUSH_EMAIL),
-  "order.status.not_started": event("orders", "order_status_not_started", IN_APP_PUSH_EMAIL),
-  "order.status.in_progress": event("orders", "order_status_in_progress", IN_APP_PUSH_EMAIL),
-  "order.status.fulfilled": event("orders", "order_status_fulfilled", IN_APP_PUSH_EMAIL),
-  "order.status.cancelled": event("orders", "order_status_cancelled", IN_APP_PUSH_EMAIL),
-  "order.message": event("order_messages", "order_message", IN_APP_PUSH_EMAIL),
-  "order.review": event("reviews", "order_review", IN_APP_PUSH_EMAIL),
-  "order.review_revision_requested": event("reviews", "order_review_revision_requested", IN_APP_PUSH),
-  "offer.created": event("offers", "offer_create", IN_APP_PUSH_EMAIL),
-  "offer.countered": event("offers", "counter_offer_create", IN_APP_PUSH_EMAIL),
-  "offer.message": event("offer_messages", "offer_message", IN_APP_PUSH_EMAIL),
-  "market.bid": event("market", "market_item_bid", IN_APP_PUSH),
-  "org.invite": event("org", "contractor_invite", IN_APP_PUSH),
-  "admin.alert": event("announcements", "admin_alert", IN_APP_PUSH),
+  "order.created": event("orders", "order_create", ALL),
+  "order.assigned": event("orders", "order_assigned", ALL),
+  "order.status.not_started": event("orders", "order_status_not_started", ALL),
+  "order.status.in_progress": event("orders", "order_status_in_progress", ALL),
+  "order.status.fulfilled": event("orders", "order_status_fulfilled", ALL),
+  "order.status.cancelled": event("orders", "order_status_cancelled", ALL),
+  "order.message": event("order_messages", "order_message", ALL),
+  "order.review": event("reviews", "order_review", ALL),
+  "order.review_revision_requested": event("reviews", "order_review_revision_requested", NO_EMAIL),
+  "offer.created": event("offers", "offer_create", ALL),
+  "offer.countered": event("offers", "counter_offer_create", ALL),
+  "offer.accepted": event("offers", "offer_accepted", ALL),
+  "offer.rejected": event("offers", "offer_rejected", ALL),
+  "offer.message": event("offer_messages", "offer_message", ALL),
+  "market.bid": event("market", "market_item_bid", NO_EMAIL),
+  "org.invite": event("org", "contractor_invite", NO_EMAIL),
+  // Mandatory (category): delivered on in-app and push whatever the preferences.
+  "admin.alert": event("announcements", "admin_alert", ["in_app", "push"]),
   "reminder.unread_messages": event("reminders", "dm_reminder", ["email"]),
-  "watchlist.price_alert": event("watchlist", "price_alert", ["in_app", "push", "email", "discord_dm"]),
+  "watchlist.price_alert": event("watchlist", "price_alert", ALL, { discord_dm: true }),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
-  "contract.public_created": event("contracts", "public_contract_create", IN_APP_PUSH),
+  "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
+  // Someone made an offer on your public contract (was order_contractor_applied).
+  "contract.offer_received": event("contracts", "contract_offer_received", ALL),
 } as const satisfies Record<string, EventDefinition>
+
+/** Orders, offers and chat messages: shadow mode until parity is proven on real traffic. */
+const LEGACY_DELIVERY: EventKey[] = [
+  "order.created",
+  "order.assigned",
+  "order.status.not_started",
+  "order.status.in_progress",
+  "order.status.fulfilled",
+  "order.status.cancelled",
+  "order.message",
+  "offer.created",
+  "offer.countered",
+  "offer.message",
+]
+for (const key of LEGACY_DELIVERY) (CATALOG[key] as EventDefinition).legacyDelivery = true
+
+export function isMandatory(def: EventDefinition): boolean {
+  return CATEGORIES[def.category].mandatory
+}
 
 export type EventKey = keyof typeof CATALOG
 

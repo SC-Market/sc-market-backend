@@ -17,17 +17,17 @@ describe("matrix", () => {
     const u = await w.user("u")
     expect(view(await getMatrix(u.user_id, null))).toMatchInlineSnapshot(`
       [
-        "orders: in_app=on(locked) push=on email=off",
-        "order_messages: in_app=on(locked) push=on email=off",
-        "offers: in_app=on(locked) push=on email=off",
-        "offer_messages: in_app=on(locked) push=on email=off",
-        "market: in_app=on(locked) push=on",
-        "reviews: in_app=on(locked) push=on email=off",
+        "orders: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+        "order_messages: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+        "offers: in_app=on(locked) push=on email=off discord_dm=off",
+        "offer_messages: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+        "market: in_app=on(locked) push=on discord_dm=off",
+        "reviews: in_app=on(locked) push=on email=off discord_dm=off",
         "watchlist: in_app=on push=on email=off discord_dm=on",
-        "org: in_app=on(locked) push=on",
-        "announcements: in_app=on(locked) push=on",
+        "org: in_app=on(locked) push=on discord_dm=off",
+        "announcements: in_app=on(locked) push=on(locked)",
         "reminders: email=off",
-        "contracts: in_app=on(locked) push=on",
+        "contracts: in_app=on(locked) push=on discord_dm=off email=off",
       ]
     `)
   })
@@ -48,6 +48,7 @@ describe("matrix", () => {
             "default": true,
             "enabled": true,
             "locked": true,
+            "reason": "always_on",
           },
           {
             "channel": "push",
@@ -60,6 +61,13 @@ describe("matrix", () => {
             "default": false,
             "enabled": false,
             "locked": false,
+          },
+          {
+            "channel": "discord_dm",
+            "default": false,
+            "enabled": false,
+            "locked": true,
+            "reason": "coming_soon",
           },
         ],
         "cells": [
@@ -78,6 +86,11 @@ describe("matrix", () => {
             "locked": false,
             "state": "mixed",
           },
+          {
+            "channel": "discord_dm",
+            "locked": true,
+            "state": "off",
+          },
         ],
       }
     `)
@@ -92,15 +105,15 @@ describe("matrix", () => {
     expect({ org: view(org), personalOrders: view(personal).find((l) => l.startsWith("orders")) }).toMatchInlineSnapshot(`
       {
         "org": [
-          "orders: in_app=on(locked) push=off email=off",
-          "order_messages: in_app=on(locked) push=on email=off",
-          "offers: in_app=on(locked) push=on email=off",
-          "offer_messages: in_app=on(locked) push=on email=off",
-          "market: in_app=on(locked) push=on",
-          "reviews: in_app=on(locked) push=on email=off",
-          "contracts: in_app=on(locked) push=on",
+          "orders: in_app=on(locked) push=off email=off discord_dm=off(locked)",
+          "order_messages: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+          "offers: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+          "offer_messages: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+          "market: in_app=on(locked) push=on discord_dm=off(locked)",
+          "reviews: in_app=on(locked) push=on email=off discord_dm=off(locked)",
+          "contracts: in_app=on(locked) push=on discord_dm=off(locked) email=off",
         ],
-        "personalOrders": "orders: in_app=on(locked) push=on email=off",
+        "personalOrders": "orders: in_app=on(locked) push=on email=off discord_dm=off(locked)",
       }
     `)
   })

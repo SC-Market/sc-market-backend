@@ -138,3 +138,37 @@ export async function notifyPublicContractCreated(contract: DBPublicContract): P
     })
   }
 }
+
+/**
+ * Someone made an offer on a public contract: tell the contract's customer
+ * (in-app and push; email and Discord DM if they turned them on). The offer
+ * events themselves go to the offering side, never to the customer.
+ */
+export async function notifyContractOfferReceived(
+  contract: DBPublicContract,
+  session: { id: string; contractor_id?: string | null },
+  offererId: string,
+): Promise<void> {
+  try {
+    const base = env.FRONTEND_URL || "https://sc-market.space"
+    await notify("contract.offer_received", [{ userId: contract.customer_id }], {
+      entityId: session.id,
+      actorId: offererId,
+      messages: {
+        push: {
+          title: "New offer on your contract",
+          body: contract.title,
+          icon: `${base}/android-chrome-192x192.png`,
+          data: { url: `${base}/offer/${session.id}`, type: "contract_offer_received", entityId: session.id },
+          tag: `contract-offer-${session.id}`,
+        },
+        email: { data: { offer: session } },
+      },
+    })
+  } catch (err) {
+    logger.error("Failed to notify about an offer on a public contract", {
+      contract_id: contract.id,
+      error: err instanceof Error ? err.message : String(err),
+    })
+  }
+}

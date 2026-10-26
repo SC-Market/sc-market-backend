@@ -3296,7 +3296,8 @@
 					"watchlist",
 					"org",
 					"announcements",
-					"reminders"
+					"reminders",
+					"contracts"
 				]
 			},
 			"NotificationChannelId": {
@@ -3328,7 +3329,11 @@
 					"org.invite",
 					"admin.alert",
 					"reminder.unread_messages",
-					"watchlist.price_alert"
+					"watchlist.price_alert",
+					"offer.accepted",
+					"offer.rejected",
+					"contract.public_created",
+					"contract.offer_received"
 				]
 			},
 			"NotificationPreferenceCell": {
@@ -3341,7 +3346,17 @@
 					},
 					"locked": {
 						"type": "boolean",
-						"description": "Shown but not switchable (in-app notifications are always created)."
+						"description": "Shown but not switchable."
+					},
+					"reason": {
+						"type": "string",
+						"enum": [
+							"always_on",
+							"discord_not_linked",
+							"personal_only",
+							"coming_soon"
+						],
+						"description": "Why: always delivered, Discord not linked, set once under Personal, or not available for this event yet."
 					},
 					"default": {
 						"type": "boolean",

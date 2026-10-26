@@ -488,9 +488,10 @@ describe("order_review_revision_requested (22)", () => {
 })
 
 describe("order_comment (8)", () => {
-  it("has no caller: createOrderCommentNotification is never invoked by any route", async () => {
-    // Recorded so the deletion in Phase 1 shows up as a reviewed change.
-    expect(typeof notificationService.createOrderCommentNotification).toBe("function")
+  it("retired (owner decision): no sender, no webhook option, no email case", async () => {
+    expect("createOrderCommentNotification" in notificationService).toBe(false)
+    const row = await getKnex()("notification_actions").where({ action: "order_comment" }).first()
+    expect(row).toBeUndefined()
   })
 })
 

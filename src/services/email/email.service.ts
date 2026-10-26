@@ -32,7 +32,6 @@ import * as payloadFormatters from "./email-payload-formatters.js"
 import {
   DBOrder,
   DBMessage,
-  DBOrderComment,
   DBReview,
   DBOfferSession,
   DBMarketListing,
@@ -468,14 +467,6 @@ class SESEmailService implements EmailService {
           )
           break
 
-        case "order_comment":
-          templateData = await payloadFormatters.formatOrderCommentEmailData(
-            data.comment as DBOrderComment,
-            data.order as DBOrder,
-            userId,
-          )
-          break
-
         case "order_review":
           templateData = await payloadFormatters.formatOrderReviewEmailData(
             data.review as DBReview,
@@ -574,14 +565,30 @@ class SESEmailService implements EmailService {
           )
           break
 
-        case "order_contractor_applied":
-          // Same as order_create (entity is the order)
-          templateData =
-            await payloadFormatters.formatOrderNotificationEmailData(
-              data.order as DBOrder,
-              "order_create",
-              userId,
+        case "contract_offer_received":
+        case "offer_accepted":
+        case "offer_rejected":
+          if (!data.offer) {
+            logger.warn(
+              `Missing offer data for email notification: ${notificationType}`,
+              { userId, notificationType },
             )
+            return false
+          }
+          templateData = {
+            ...(await payloadFormatters.formatOfferNotificationEmailData(
+              data.offer as DBOfferSession,
+              "offer_create",
+              userId,
+            )),
+            notificationType,
+            notificationTitle:
+              notificationType === "contract_offer_received"
+                ? "New Offer on Your Contract"
+                : notificationType === "offer_accepted"
+                  ? "Offer Accepted"
+                  : "Offer Rejected",
+          }
           break
 
         case "market_bid_accepted":
@@ -596,22 +603,6 @@ class SESEmailService implements EmailService {
           templateData = await payloadFormatters.formatMarketBidEmailData(
             data.listing as DBMarketListingComplete,
             data.bid as DBMarketBid,
-            userId,
-          )
-          break
-
-        case "market_offer_accepted":
-        case "market_offer_declined":
-          if (!data.listing || !data.offer) {
-            logger.warn(
-              `Missing listing or offer data for email notification: ${notificationType}`,
-              { userId, notificationType },
-            )
-            return false
-          }
-          templateData = await payloadFormatters.formatMarketOfferEmailData(
-            data.listing as DBMarketListing,
-            data.offer as DBMarketOffer,
             userId,
           )
           break
@@ -644,14 +635,6 @@ class SESEmailService implements EmailService {
             userId,
           )
           break
-
-        case "order_comment":
-          // Obsolete but handle gracefully
-          logger.debug(
-            `order_comment notification type is obsolete, skipping email`,
-            { userId, notificationType },
-          )
-          return false
 
         default:
           logger.warn(

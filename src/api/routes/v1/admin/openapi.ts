@@ -910,7 +910,6 @@ adminOapi.schema("TestNotificationRequest", {
         "order_create",
         "order_assigned",
         "order_message",
-        "order_comment",
         "order_review",
         "order_status_fulfilled",
         "order_status_in_progress",

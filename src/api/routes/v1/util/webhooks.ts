@@ -10,7 +10,6 @@ import {
   DBNotificationWebhook,
   DBOfferSession,
   DBOrder,
-  DBOrderComment,
   DBReview,
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
@@ -901,100 +900,6 @@ export async function sendBidWebhooksV2(
       logger.error(`Failed to send V2 bid webhook ${webhook.webhook_id}: ${e}`)
     }
   }
-}
-
-export async function sendOrderCommentWebhooks(
-  order: DBOrder,
-  comment: DBOrderComment,
-) {
-  if (await involvesTestParty(orderParties(order))) return
-  const webhooks: DBNotificationWebhook[] = []
-
-  if (order.shop_id) {
-    webhooks.push(
-      ...(await notificationDb.getNotificationWebhooksByAction(
-        { "notification_webhooks.shop_id": order.shop_id },
-        "order_comment",
-      )),
-    )
-  }
-
-  if (order.assigned_id) {
-    webhooks.push(
-      ...(await notificationDb.getNotificationWebhooksByAction(
-        { "notification_webhooks.user_id": order.assigned_id },
-        "order_comment",
-      )),
-    )
-  }
-
-  if (order.customer_id) {
-    webhooks.push(
-      ...(await notificationDb.getNotificationWebhooksByAction(
-        { "notification_webhooks.user_id": order.customer_id },
-        "order_comment",
-      )),
-    )
-  }
-
-  for (const webhook of webhooks) {
-    try {
-      await orderCommentWebhook(order, comment, webhook)
-    } catch (e) {
-      logger.error(
-        `Failed to send order comment webhook ${webhook.webhook_id}: ${e}`,
-      )
-    }
-  }
-}
-
-async function orderCommentWebhook(
-  order: DBOrder,
-  comment: DBOrderComment,
-  webhook: DBNotificationWebhook,
-) {
-  const author = await profileDb.getMinimalUser({ user_id: comment.author })
-  return await sendWebhook(
-    {
-      username: "SC Market - Order Comment Received",
-      // the avatar to be displayed
-      avatar_url: getLogoUrl(),
-      // // enable mentioning of individual users or roles, but not @everyone/@here
-      allowed_mentions: {
-        parse: [],
-      },
-      // embeds to be sent
-      embeds: [
-        {
-          // decimal number colour of the side of the embed
-          color: 0x111828,
-          // author
-          // - icon next to text at top (text is a link)
-          author: {
-            name: author.display_name,
-            url: `https://sc-market.space/profile/${author.username}`,
-            icon_url: author.avatar,
-          },
-          // embed title
-          // - link on 2nd row
-          title: order.title,
-          url: `https://sc-market.space/contract/${order.order_id}`,
-          // embed description
-          // - text on 3rd row
-          // custom embed fields: bold title/name, normal content/value below title
-          // - located below description, above image.
-          fields: [
-            {
-              name: "Comment",
-              value: comment.content,
-            },
-          ],
-          timestamp: comment.timestamp.toISOString(),
-        },
-      ],
-    },
-    webhook,
-  )
 }
 
 const status_actions = new Map([

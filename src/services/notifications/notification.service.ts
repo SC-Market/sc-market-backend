@@ -6,7 +6,6 @@ import {
   DBMessage,
   DBOfferSession,
   DBOrder,
-  DBOrderComment,
   DBReview,
 } from "../../clients/database/db-models.js"
 import { User } from "../../api/routes/v1/api-models.js"
@@ -57,10 +56,6 @@ export interface NotificationService {
   createOrderMessageNotification(
     order: DBOrder,
     message: DBMessage,
-  ): Promise<void>
-  createOrderCommentNotification(
-    comment: DBOrderComment,
-    actorId: string,
   ): Promise<void>
   createOrderReviewNotification(review: DBReview): Promise<void>
   createOrderStatusNotification(
@@ -549,126 +544,6 @@ class DatabaseNotificationService implements NotificationService {
       logger.error(`Error creating order message notification:`, error)
       throw error
     }
-  }
-
-  async createOrderCommentNotification(
-    comment: DBOrderComment,
-    actorId: string,
-  ): Promise<void> {
-    const order = await orderDb.getOrder({ order_id: comment.order_id })
-
-    const action =
-      await notificationDb.getNotificationActionByName("order_comment")
-    const notif_objects = await notificationDb.insertNotificationObjects([
-      {
-        action_type_id: action.action_type_id,
-        entity_id: comment.comment_id,
-      },
-    ])
-
-    await notificationDb.insertNotificationChange([
-      {
-        notification_object_id: notif_objects[0].notification_object_id,
-        actor_id: actorId,
-      },
-    ])
-
-    if (order.assigned_id && actorId !== order.assigned_id) {
-      await notificationDb.insertNotifications([
-        {
-          notification_object_id: notif_objects[0].notification_object_id,
-          notifier_id: order.assigned_id,
-        },
-      ])
-
-      // Send push notification
-      try {
-        const payload = payloadFormatters.formatOrderCommentNotificationPayload(
-          order,
-          comment,
-        )
-        await pushNotificationService.sendPushNotification(
-          order.assigned_id,
-          payload,
-          "order_comment",
-          order.contractor_id ?? null, // contractorId for org-scoped preferences
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send push notification for order comment:`,
-          error,
-        )
-      }
-
-      // Send email notification
-      try {
-        await emailService.sendNotificationEmail(
-          order.assigned_id,
-          "order_comment",
-          {
-            order,
-            comment,
-          },
-          false, // skipQueue
-          order.contractor_id ?? null, // contractorId for org-scoped preferences
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send email notification for order comment:`,
-          error,
-        )
-      }
-    }
-
-    if (actorId !== order.customer_id) {
-      await notificationDb.insertNotifications([
-        {
-          notification_object_id: notif_objects[0].notification_object_id,
-          notifier_id: order.customer_id,
-        },
-      ])
-
-      // Send push notification
-      try {
-        const payload = payloadFormatters.formatOrderCommentNotificationPayload(
-          order,
-          comment,
-        )
-        await pushNotificationService.sendPushNotification(
-          order.customer_id,
-          payload,
-          "order_comment",
-          order.contractor_id ?? null, // contractorId for org-scoped preferences
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send push notification for order comment:`,
-          error,
-        )
-      }
-
-      // Send email notification
-      try {
-        await emailService.sendNotificationEmail(
-          order.customer_id,
-          "order_comment",
-          {
-            order,
-            comment,
-          },
-          false, // skipQueue
-          order.contractor_id ?? null, // contractorId for org-scoped preferences
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send email notification for order comment:`,
-          error,
-        )
-      }
-    }
-
-    // Send webhooks for order comments
-    await webhookService.sendOrderCommentWebhooks(order, comment)
   }
 
   async createOrderReviewNotification(review: DBReview): Promise<void> {

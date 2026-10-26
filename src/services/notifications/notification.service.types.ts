@@ -6,7 +6,6 @@ import {
   DBMessage,
   DBOfferSession,
   DBOrder,
-  DBOrderComment,
   DBReview,
 } from "../../clients/database/db-models.js"
 import { User } from "../../api/routes/v1/api-models.js"
@@ -18,7 +17,6 @@ export type NotificationServiceInputs = {
   createOrderNotification: { order: DBOrder }
   createOrderAssignedNotification: { order: DBOrder }
   createOrderMessageNotification: { order: DBOrder; message: DBMessage }
-  createOrderCommentNotification: { comment: DBOrderComment; actorId: string }
   createOrderReviewNotification: { review: DBReview }
   createOrderStatusNotification: {
     order: DBOrder

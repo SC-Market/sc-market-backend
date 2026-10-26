@@ -21,7 +21,6 @@ import * as payloadFormatters from "../../../../services/notifications/notificat
 import { webhookService } from "../../../../services/webhooks/webhook.service.js"
 import * as marketDb from "../market/database.js"
 import * as offerDb from "../offers/database.js"
-import * as commentDb from "../orders/database.js"
 import * as messageDb from "../chats/database.js"
 import * as chatDb from "../chats/database.js"
 
@@ -451,12 +450,7 @@ async function createTestNotification(
   // Note: Webhooks are sent based on entity type, not notification type
   try {
     if (payloadData.order && actionName.startsWith("order_")) {
-      if (actionName === "order_comment" && payloadData.comment) {
-        await webhookService.sendOrderCommentWebhooks(
-          payloadData.order,
-          payloadData.comment,
-        )
-      } else if (actionName.startsWith("order_status_")) {
+      if (actionName.startsWith("order_status_")) {
         const status = actionName.replace("order_status_", "").replace("_", "-")
         await webhookService.sendOrderStatusWebhooks(
           payloadData.order,
@@ -658,39 +652,6 @@ export const admin_post_test_notification: RequestHandler = async (
           order_id: order.order_id,
           message_id: message.message_id,
         }
-        break
-      }
-
-      case "order_comment": {
-        const comments = await commentDb.getOrderComments({})
-        if (comments.length === 0) {
-          res
-            .status(404)
-            .json(
-              createErrorResponse(
-                ErrorCode.NOT_FOUND,
-                "No order comments found in database",
-              ),
-            )
-          return
-        }
-        const comment = comments[0]
-        const order = await orderDb.getOrder({ order_id: comment.order_id })
-        const payload = payloadFormatters.formatOrderCommentNotificationPayload(
-          order,
-          comment,
-        )
-        const contractorId = contractor_id ?? order.contractor_id ?? null
-        await createTestNotification(
-          "order_comment",
-          comment.comment_id,
-          target_user_id,
-          user.user_id,
-          { order, comment },
-          payload,
-          contractorId,
-        )
-        result.data = { comment_id: comment.comment_id }
         break
       }
 

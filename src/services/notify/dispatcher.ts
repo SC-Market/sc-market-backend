@@ -20,7 +20,7 @@
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
-import { eventDefinition, type EventKey } from "./catalog.js"
+import { eventDefinition, isMandatory, type EventKey } from "./catalog.js"
 import type {
   DeliveryResult,
   RenderedMessages,
@@ -103,6 +103,22 @@ async function forEachLimit<T>(items: T[], limit: number, fn: (item: T) => Promi
     }
   })
   await Promise.all(workers)
+}
+
+/** A Discord DM built from the push payload, for events without their own DM. */
+function dmFromPush(push: NonNullable<RenderedMessages["push"]>) {
+  const url = push.data?.url
+  return {
+    allowed_mentions: { parse: [] },
+    embeds: [
+      {
+        title: push.title.slice(0, 256),
+        description: `${push.body}${url ? `\n\n[Open on SC Market](${url})` : ""}`.slice(0, 4000),
+        url,
+        color: 0x10b881,
+      },
+    ],
+  }
 }
 
 export async function notify(
@@ -233,7 +249,9 @@ export async function notify(
       const channel = d.channel as Exclude<UserChannel, "in_app">
       const recipient = { userId: d.userId, contractorId: d.contractorId }
       const messages = typeof opts.messages === "function" ? opts.messages(recipient) : opts.messages
-      const msg = messages[channel]
+      const msg = channel === "discord_dm" && !messages.discord_dm && messages.push
+        ? dmFromPush(messages.push)
+        : messages[channel]
       let outcome: DeliveryResult
       if (msg === undefined) {
         outcome = { status: "skipped", reason: `no ${d.channel} message for ${eventKey}` }
@@ -244,6 +262,7 @@ export async function notify(
             legacyAction: def.legacyAction,
             recipient,
             idempotencyKey: keyOf(d),
+            mandatory: isMandatory(def),
           })
         } catch (err) {
           outcome = { status: "retryable", error: err instanceof Error ? err.message : String(err) }

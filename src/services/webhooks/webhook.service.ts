@@ -13,7 +13,6 @@ import {
   DBMarketListingComplete,
   DBOfferSession,
   DBOrder,
-  DBOrderComment,
   DBReview,
 } from "../../clients/database/db-models.js"
 import * as webhookUtil from "../../api/routes/v1/util/webhooks.js"
@@ -29,10 +28,6 @@ export interface WebhookService {
     order: DBOrder,
     newStatus: string,
     actorId: string,
-  ): Promise<void>
-  sendOrderCommentWebhooks(
-    order: DBOrder,
-    comment: DBOrderComment,
   ): Promise<void>
   sendOrderAssignedWebhooks(order: DBOrder): Promise<void>
   sendOrderReviewWebhooks(order: DBOrder, review: DBReview): Promise<void>
@@ -84,21 +79,6 @@ class DatabaseWebhookService implements WebhookService {
     } catch (error) {
       logger.error(
         `Failed to send order status webhooks for order ${order.order_id}:`,
-        { error },
-      )
-      // Don't throw - webhook failures shouldn't break the main flow
-    }
-  }
-
-  async sendOrderCommentWebhooks(
-    order: DBOrder,
-    comment: DBOrderComment,
-  ): Promise<void> {
-    try {
-      await webhookUtil.sendOrderCommentWebhooks(order, comment)
-    } catch (error) {
-      logger.error(
-        `Failed to send order comment webhooks for order ${order.order_id}:`,
         { error },
       )
       // Don't throw - webhook failures shouldn't break the main flow

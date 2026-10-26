@@ -1,4 +1,7 @@
-import { notifyPublicContractCreated } from "../../../../services/contracts/public-contract-alerts.js"
+import {
+  notifyContractOfferReceived,
+  notifyPublicContractCreated,
+} from "../../../../services/contracts/public-contract-alerts.js"
 import {
   hiddenFromRealViewers,
   notTestUser,
@@ -179,6 +182,9 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     contract_id: req.contract!.id,
     session_id: session.id,
   })
+
+  // Tell the contract's customer (never throws).
+  await notifyContractOfferReceived(req.contract!, session, user.user_id)
 
   res.status(201).json(
     createResponse({

@@ -12,14 +12,14 @@
  *   events there is NO fallback to the user's personal row, and vice versa;
  * - no row: the event's catalog default (push on, email off, in-app on,
  *   Discord DM on);
- * - notification_channel_preferences has no org scope: it is only read for
- *   personal (contractor_id NULL) deliveries, as channel-preferences.ts does.
+ * - notification_channel_preferences has no org scope: a user's in-app and
+ *   Discord DM choice applies to personal and org notifications alike.
  *
  * Lookups are batched: one query per table for all recipients of an event.
  */
 import { getKnex } from "../../clients/database/knex-db.js"
 import type { UserChannel, UserRecipient } from "./channels.js"
-import type { EventDefinition } from "./catalog.js"
+import { isMandatory, type EventDefinition } from "./catalog.js"
 
 export type PreferenceMatrix = Map<string, Partial<Record<UserChannel, boolean>>>
 
@@ -50,6 +50,12 @@ export async function resolvePreferences(
   const userIds = [...new Set(recipients.map((r) => r.userId))]
   const out: PreferenceMatrix = new Map()
   if (!userIds.length) return out
+  if (isMandatory(def)) {
+    for (const r of recipients) {
+      out.set(recipientKey(r), Object.fromEntries(channels.map((c) => [c, true])))
+    }
+    return out
+  }
 
   const want = (c: UserChannel) => channels.includes(c)
   const [push, email, generic] = await Promise.all([
@@ -80,7 +86,9 @@ export async function resolvePreferences(
       let value: boolean | undefined
       if (c === "push" || c === "email") {
         value = pickScoped(c === "push" ? push : email, r.userId, scope)
-      } else if (scope === null) {
+      } else {
+        // In-app and Discord DM rows have no org scope: one setting per user
+        // that applies to personal and org notifications alike.
         const channel = c === "in_app" ? "site" : "discord"
         value = (generic as GenericRow[]).find(
           (row) => row.user_id === r.userId && row.channel === channel,

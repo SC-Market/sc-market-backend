@@ -12,7 +12,9 @@ export const pushAdapter: UserChannelAdapter<PushNotificationPayload> = {
       await pushNotificationService.sendPushNotification(
         ctx.recipient.userId,
         payload,
-        ctx.legacyAction,
+        // Without an action type the push service doesn't re-check the
+        // preference: mandatory events go out regardless.
+        ctx.mandatory ? undefined : ctx.legacyAction,
         ctx.recipient.contractorId ?? null,
       )
       return { status: "sent" }

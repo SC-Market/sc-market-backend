@@ -202,10 +202,9 @@ oapi.schema("NotificationActionType", {
     "order_status_in_progress",
     "order_status_not_started",
     "order_status_cancelled",
-    "order_comment",
     "order_review",
     "order_review_revision_requested",
-    "order_contractor_applied",
+    "contract_offer_received",
     "order_message",
     // Offer notifications
     "offer_create",
@@ -216,8 +215,8 @@ oapi.schema("NotificationActionType", {
     "market_item_offer",
     "market_bid_accepted",
     "market_bid_declined",
-    "market_offer_accepted",
-    "market_offer_declined",
+    "offer_accepted",
+    "offer_rejected",
     // Contractor notifications
     "contractor_invite",
     // Admin notifications

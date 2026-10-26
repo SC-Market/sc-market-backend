@@ -1163,7 +1163,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationCategoryId": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["orders"]},{"dataType":"enum","enums":["order_messages"]},{"dataType":"enum","enums":["offers"]},{"dataType":"enum","enums":["offer_messages"]},{"dataType":"enum","enums":["market"]},{"dataType":"enum","enums":["reviews"]},{"dataType":"enum","enums":["watchlist"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["announcements"]},{"dataType":"enum","enums":["reminders"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["orders"]},{"dataType":"enum","enums":["order_messages"]},{"dataType":"enum","enums":["offers"]},{"dataType":"enum","enums":["offer_messages"]},{"dataType":"enum","enums":["market"]},{"dataType":"enum","enums":["reviews"]},{"dataType":"enum","enums":["watchlist"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["announcements"]},{"dataType":"enum","enums":["reminders"]},{"dataType":"enum","enums":["contracts"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationChannelId": {
@@ -1173,7 +1173,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationEventKey": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationPreferenceCell": {
@@ -1182,6 +1182,7 @@ const models: TsoaRoute.Models = {
             "channel": {"ref":"NotificationChannelId","required":true},
             "enabled": {"dataType":"boolean","required":true},
             "locked": {"dataType":"boolean","required":true},
+            "reason": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["always_on"]},{"dataType":"enum","enums":["discord_not_linked"]},{"dataType":"enum","enums":["personal_only"]},{"dataType":"enum","enums":["coming_soon"]}]},
             "default": {"dataType":"boolean","required":true},
         },
         "additionalProperties": false,

@@ -13,7 +13,6 @@ import {
   DBMessage,
   DBOfferSession,
   DBOrder,
-  DBOrderComment,
   DBReview,
 } from "../../clients/database/db-models.js"
 import { EmailTemplateData } from "./email.service.types.js"
@@ -202,37 +201,6 @@ export async function formatOrderMessageEmailData(
       content: message.content,
       author: authorName,
       timestamp: message.timestamp,
-    },
-  } as EmailTemplateData
-}
-
-/**
- * Format order comment notification email data
- */
-export async function formatOrderCommentEmailData(
-  comment: DBOrderComment,
-  order: DBOrder,
-  userId: string,
-): Promise<EmailTemplateData> {
-  const baseData = await getBaseTemplateData(userId, "order_comment")
-  const url = `${getBaseUrl()}/contract/${order.order_id}`
-
-  const author = await profileDb.getUser({ user_id: comment.author })
-  const authorName = author?.display_name || author?.username || "Unknown"
-
-  return {
-    ...baseData,
-    notificationTitle: "New Comment on Order",
-    notificationBody: `${authorName} commented on order "${order.title || "Untitled"}"`,
-    actionUrl: url,
-    order: {
-      order_id: order.order_id,
-      title: order.title,
-    },
-    comment: {
-      content: comment.content,
-      author: authorName,
-      timestamp: comment.timestamp,
     },
   } as EmailTemplateData
 }

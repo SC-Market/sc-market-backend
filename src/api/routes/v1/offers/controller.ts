@@ -1,3 +1,4 @@
+import { notifyOfferDecision } from "../../../../services/notify/offer-decisions.js"
 import { RequestHandler } from "express"
 import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
 import { validateCounterOfferItems } from "./counter-offer-items.js"
@@ -83,6 +84,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     return
   }
 
+  const withdrawn = req.body.status === "cancelled"
   let status = req.body.status as
     | "accepted"
     | "rejected"
@@ -129,6 +131,12 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
           logger.error(`Failed to run order created side effects for session ${session.id}: ${e}`)
         }
 
+        try {
+          await notifyOfferDecision(session, "accepted", user.user_id)
+        } catch (e) {
+          logger.error(`Failed to notify offer acceptance for session ${session.id}: ${e}`)
+        }
+
         res.json(createResponse({ order_id: order.order_id }))
         return
       } catch (e) {
@@ -149,6 +157,12 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       await sendSystemMessage(chat.chat_id, `Offer status updated to **${nameMap.get(status)!}**${actionBy}`, false)
     } catch (error) {
       logger.debug(`Failed to send offer status update chat message for session ${session.id}: ${error}`)
+    }
+
+    try {
+      await notifyOfferDecision(session, withdrawn ? "withdrawn" : "rejected", user.user_id)
+    } catch (e) {
+      logger.error(`Failed to notify offer rejection for session ${session.id}: ${e}`)
     }
 
     res.json(createResponse({ result: "Success" }))

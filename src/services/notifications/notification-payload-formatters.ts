@@ -13,7 +13,6 @@ import {
   DBMessage,
   DBOfferSession,
   DBOrder,
-  DBOrderComment,
   DBReview,
 } from "../../clients/database/db-models.js"
 import { User } from "../../api/routes/v1/api-models.js"
@@ -178,32 +177,6 @@ export async function formatOrderMessageNotificationPayload(
       chatId: chatId || undefined,
     },
     tag: chatId ? `chat-${chatId}` : `order-message-${order.order_id}`,
-    requireInteraction: false,
-  }
-}
-
-/**
- * Format order comment notification payload
- */
-export function formatOrderCommentNotificationPayload(
-  order: DBOrder,
-  comment: DBOrderComment,
-): PushNotificationPayload {
-  const url = `${getBaseUrl()}/contract/${order.order_id}`
-
-  return {
-    title: "New Comment",
-    body: `New comment on order "${order.title || "Untitled"}"`,
-    icon: `${getBaseUrl()}/favicon.ico`,
-    badge: `${getBaseUrl()}/favicon.ico`,
-    data: {
-      url,
-      type: "order",
-      entityId: order.order_id,
-      action: "order_comment",
-      commentId: comment.comment_id,
-    },
-    tag: `order-comment-${order.order_id}`,
     requireInteraction: false,
   }
 }

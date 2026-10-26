@@ -41,6 +41,8 @@ export interface DeliveryContext {
   legacyAction: string
   recipient: UserRecipient
   idempotencyKey: string
+  /** Mandatory events bypass the transports' own preference re-checks. */
+  mandatory: boolean
 }
 
 export interface UserChannelAdapter<Msg> {
