@@ -85,7 +85,9 @@ export async function search(query: string) {
 
 export async function getObject(identifier: string) {
   const resp = await fetch(
-    `https://robertsspaceindustries.com/api/starmap/celestial-objects/${identifier}`,
+    // Encoded so the id stays one path segment: "../" or "?x" in it could
+    // otherwise make this server-side request hit another RSI endpoint.
+    `https://robertsspaceindustries.com/api/starmap/celestial-objects/${encodeURIComponent(identifier)}`,
     {
       headers: {
         accept: "application/json, text/javascript, */*; q=0.01",
