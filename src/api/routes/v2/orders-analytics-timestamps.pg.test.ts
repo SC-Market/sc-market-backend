@@ -8,11 +8,9 @@
  * Postgres rejects an unknown column at parse time, so no row data was needed
  * to hit it, which is why mocked-knex tests never caught it.
  *
- * Needs a disposable database on a unix socket:
- *   initdb -D /tmp/pg && pg_ctl -D /tmp/pg -o "-k /tmp/pg -c listen_addresses=''" start
- *   createdb -h /tmp/pg v2ts
- *   V2_PG_SOCKET=/tmp/pg V2_PG_DB=v2ts npx vitest run src/api/routes/v2/orders-analytics-timestamps.pg.test.ts
- * The test drops and recreates every table it uses, so never point it at a real database.
+ * Runs when PG_TEST_URL names a throwaway Postgres server (see
+ * src/test-utils/pg-test-db.ts; CI provides one), in its own database:
+ *   PG_TEST_URL='postgres://postgres@localhost/postgres?host=/tmp/pg' npx vitest run src/api/routes/v2/orders-analytics-timestamps.pg.test.ts
  *
  * The tables below copy production's column names and types (config/postgres/0-schema.sql
  * plus the knex migrations) for the columns these endpoints touch. Keep them that way:
@@ -20,14 +18,14 @@
  */
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 import knexFactory, { type Knex } from "knex"
+import { PG_TEST_URL, createTestDatabase, dropTestDatabase } from "../../../test-utils/pg-test-db.js"
 
 // orders."timestamp" is timestamp WITHOUT time zone, which node-postgres reads
 // in the process's local zone. Production runs in UTC; pin it so the expected
 // ISO strings below hold on a laptop too.
 process.env.TZ = "UTC"
 
-const SOCKET = process.env.V2_PG_SOCKET
-const DB = process.env.V2_PG_DB
+const DB = "pgtest_v2_orders_analytics"
 
 const state: { db: Knex | null } = { db: null }
 
@@ -231,11 +229,11 @@ async function seed(db: Knex) {
   ])
 }
 
-describe.skipIf(!SOCKET || !DB)("v2 orders + seller-stats on real Postgres", () => {
+describe.skipIf(!PG_TEST_URL)("v2 orders + seller-stats on real Postgres", () => {
   beforeAll(async () => {
     state.db = knexFactory({
       client: "pg",
-      connection: { host: SOCKET, database: DB, user: process.env.V2_PG_USER },
+      connection: await createTestDatabase(DB),
       pool: {
         min: 0,
         max: 2,
@@ -248,6 +246,7 @@ describe.skipIf(!SOCKET || !DB)("v2 orders + seller-stats on real Postgres", () 
   })
   afterAll(async () => {
     await state.db?.destroy()
+    await dropTestDatabase(DB)
   })
 
   describe("GET /orders", () => {

@@ -11,6 +11,7 @@
  */
 import { afterAll, beforeEach, inject, vi } from "vitest"
 import pg from "pg"
+import type { PgConnection } from "../pg-test-db.js"
 import {
   recorder,
   resetRecorder,
@@ -22,27 +23,27 @@ import {
 
 declare module "vitest" {
   export interface ProvidedContext {
-    notifChar: { socketDir: string; template: string; truncate: string[] }
+    notifChar: { server: PgConnection; template: string; truncate: string[] }
   }
 }
 
 const ctx = inject("notifChar")
 const dbName = `nc_${process.pid}_${Math.random().toString(36).slice(2, 8)}`
 {
-  const admin = new pg.Client({ host: ctx.socketDir, user: "postgres", database: "postgres" })
+  const admin = new pg.Client(ctx.server)
   await admin.connect()
   await admin.query(`CREATE DATABASE ${dbName} TEMPLATE ${ctx.template}`)
   await admin.end()
 }
 process.env.DATABASE_PASS = JSON.stringify({
-  host: ctx.socketDir,
-  username: "postgres",
-  password: "",
+  host: ctx.server.host,
+  username: ctx.server.user,
+  password: ctx.server.password,
   dbname: dbName,
-  port: 5432,
+  port: ctx.server.port,
 })
 
-const resetClient = new pg.Client({ host: ctx.socketDir, user: "postgres", database: dbName })
+const resetClient = new pg.Client({ ...ctx.server, database: dbName })
 await resetClient.connect()
 
 beforeEach(async () => {
@@ -66,7 +67,7 @@ afterAll(async () => {
     // never imported by this file
   }
   await resetClient.end()
-  const admin = new pg.Client({ host: ctx.socketDir, user: "postgres", database: "postgres" })
+  const admin = new pg.Client(ctx.server)
   await admin.connect()
   await admin.query(`DROP DATABASE IF EXISTS ${dbName} WITH (FORCE)`)
   await admin.end()

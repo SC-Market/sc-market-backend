@@ -14,6 +14,21 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
 
+    # Throwaway Postgres for the real-SQL tests (*.pg.test.ts, see
+    # src/test-utils/pg-test-db.ts) and for building the schema from empty.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+
+    env:
+      PG_TEST_URL: postgres://postgres:postgres@localhost:5432/postgres
+
     strategy:
       matrix:
         node-version: [24.x]
@@ -33,16 +48,38 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
+      # The legacy SQL plus every knex migration, applied to an empty database
+      # with the same `npm run migrate:latest` the deploy runs.
+      - name: Build the schema from an empty database
+        env:
+          DATABASE_HOST: localhost
+          DATABASE_PORT: "5432"
+          DATABASE_USER: postgres
+          DATABASE_PASS: postgres
+          DATABASE_TARGET: schema_from_empty
+        run: |
+          PGHOST=localhost PGUSER=postgres PGPASSWORD=postgres createdb "$DATABASE_TARGET"
+          scripts/ci/schema-from-empty.sh
+
       - name: Run tests
         run: npm test
 
   notifications:
     # Notification characterization suite: every event type x channel, against
-    # a throwaway Postgres on a unix socket (the runner image ships the
-    # server binaries in /usr/lib/postgresql/*/bin). See
-    # vitest.characterization.config.ts.
+    # the throwaway Postgres service below. See vitest.characterization.config.ts.
     name: Notification characterization
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PG_TEST_URL: postgres://postgres:postgres@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v4
 

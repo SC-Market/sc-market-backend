@@ -2,11 +2,9 @@
  * discord_channel_setups against a real, throwaway Postgres: the migration's
  * backfill, order-thread routing, alert channels and the bot's /setup routes.
  *
- * Needs a disposable database, e.g. one on a unix socket:
- *   initdb -D /tmp/pg && pg_ctl -D /tmp/pg -o "-k /tmp/pg -c listen_addresses=''" start
- *   createdb -h /tmp/pg botb
- *   DISCORD_SETUPS_PG_SOCKET=/tmp/pg DISCORD_SETUPS_PG_DB=botb npx vitest run src/services/discord/channel-setups.pg.test.ts
- * The test drops and recreates every table it uses, so never point it at a real database.
+ * Runs when PG_TEST_URL names a throwaway Postgres server (see
+ * src/test-utils/pg-test-db.ts; CI provides one), in its own database:
+ *   PG_TEST_URL='postgres://postgres@localhost/postgres?host=/tmp/pg' npx vitest run src/services/discord/channel-setups.pg.test.ts
  *
  * The seed data copies the shapes found in production (read-only counts, Oct 2026):
  * bigint IDs on accounts/contractors and varchar IDs on shops, the shared
@@ -19,9 +17,9 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 import knexFactory, { type Knex } from "knex"
 import express from "express"
 import request from "supertest"
+import { PG_TEST_URL, createTestDatabase, dropTestDatabase } from "../../test-utils/pg-test-db.js"
 
-const SOCKET = process.env.DISCORD_SETUPS_PG_SOCKET
-const DB = process.env.DISCORD_SETUPS_PG_DB
+const DB = "pgtest_discord_channel_setups"
 
 const state: { db: Knex | null } = { db: null }
 const perms: { allow: Set<string> } = { allow: new Set() }
@@ -239,9 +237,9 @@ function app() {
   return a
 }
 
-describe.skipIf(!SOCKET || !DB)("discord_channel_setups on Postgres", () => {
+describe.skipIf(!PG_TEST_URL)("discord_channel_setups on Postgres", () => {
   beforeAll(async () => {
-    state.db = knexFactory({ client: "pg", connection: { host: SOCKET, database: DB } })
+    state.db = knexFactory({ client: "pg", connection: await createTestDatabase(DB) })
     await createLegacySchema(state.db)
     await seed(state.db)
     await up(state.db)
@@ -249,6 +247,7 @@ describe.skipIf(!SOCKET || !DB)("discord_channel_setups on Postgres", () => {
 
   afterAll(async () => {
     await state.db?.destroy()
+    await dropTestDatabase(DB)
   })
 
   describe("backfill", () => {

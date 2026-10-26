@@ -1,95 +1,69 @@
 /**
  * Builds the SC Market schema in a throwaway Postgres for the notification
- * characterization suite: the legacy SQL files in config/postgres, then every
- * knex migration, each in its own transaction.
+ * characterization suite, the way production got it: scripts/ci/pre-legacy.sql
+ * (objects production has that no file creates), the legacy SQL files in
+ * config/postgres, then knex's migrate.latest over every migration.
  *
- * Production has objects no file creates (PRE_SQL). Every migration must apply
- * on an empty database: one that fails here fails the suite's global setup
- * unless it is listed in EXPECTED_FAILURES.
+ * The same sequence runs in CI as scripts/ci/schema-from-empty.sh. Every
+ * migration must apply on an empty database; one that doesn't fails the
+ * suite's global setup.
  */
 import { execFileSync } from "node:child_process"
 import { readdirSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
-import knexFactory from "knex"
+import knexFactory, { type Knex } from "knex"
+import type { PgConnection } from "../pg-test-db.js"
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../..")
 
-/** SQL run before the legacy files: objects production has that no file creates. */
-const PRE_SQL = `
-  DO $$ BEGIN CREATE ROLE scmarket; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-  DO $$ BEGIN CREATE DOMAIN public.url AS text; EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-  -- item_variants.attributes_hash is computed with pgcrypto's digest().
-  CREATE EXTENSION IF NOT EXISTS pgcrypto;
-`
-
-/** Migrations known not to apply on an empty database. Keep this empty if possible. */
-export const EXPECTED_FAILURES = new Set<string>([])
-
-export interface PgTarget {
-  socketDir: string
-  database: string
-  user?: string
+function psqlEnv(target: PgConnection) {
+  return {
+    ...process.env,
+    PGHOST: target.host,
+    PGPORT: String(target.port),
+    PGUSER: target.user,
+    PGPASSWORD: target.password,
+    PGDATABASE: target.database,
+  }
 }
 
-function psqlFile(target: PgTarget, file: string) {
+function psqlFile(target: PgConnection, file: string, { stopOnError }: { stopOnError: boolean }) {
+  execFileSync("psql", ["-q", ...(stopOnError ? ["-v", "ON_ERROR_STOP=1"] : []), "-f", file], {
+    env: psqlEnv(target),
+    stdio: ["ignore", "ignore", stopOnError ? "pipe" : "ignore"],
+  })
+}
+
+/**
+ * Loads the migrations through vitest's module loader (knex's own loader
+ * would import the .ts files natively). Ordering, transactions and
+ * `config.transaction` are knex's, as in production.
+ */
+function migrationSource(dir: string): Knex.MigrationSource<string> {
+  return {
+    getMigrations: async () => readdirSync(dir).filter((f) => f.endsWith(".ts")).sort(),
+    getMigrationName: (file) => file,
+    getMigration: (file) => import(pathToFileURL(path.join(dir, file)).href),
+  }
+}
+
+export async function buildSchema(target: PgConnection): Promise<void> {
+  psqlFile(target, path.join(ROOT, "scripts/ci/pre-legacy.sql"), { stopOnError: true })
+
   // Legacy files are pg_dump output with a few statements that fail on a clean
   // database (materialized views of tables created later); psql carries on, as
   // it did when the files were first applied.
-  execFileSync(
-    "psql",
-    ["-h", target.socketDir, "-U", target.user ?? "postgres", "-d", target.database, "-q", "-f", file],
-    { stdio: ["ignore", "ignore", "ignore"] },
-  )
-}
-
-function psqlCommand(target: PgTarget, sql: string) {
-  execFileSync(
-    "psql",
-    ["-h", target.socketDir, "-U", target.user ?? "postgres", "-d", target.database, "-q", "-v", "ON_ERROR_STOP=1", "-c", sql],
-    { stdio: ["ignore", "ignore", "pipe"] },
-  )
-}
-
-export async function buildSchema(target: PgTarget): Promise<{ failed: string[] }> {
-  psqlCommand(target, PRE_SQL)
-
   const sqlDir = path.join(ROOT, "config/postgres")
   const sqlFiles = readdirSync(sqlDir)
     .filter((f) => f.endsWith(".sql"))
     .sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
-  for (const f of sqlFiles) psqlFile(target, path.join(sqlDir, f))
+  for (const f of sqlFiles) psqlFile(target, path.join(sqlDir, f), { stopOnError: false })
 
-  const db = knexFactory({
-    client: "pg",
-    connection: { host: target.socketDir, user: target.user ?? "postgres", database: target.database },
-    pool: { min: 0, max: 2 },
-  })
-  const failed: string[] = []
+  const db = knexFactory({ client: "pg", connection: target, pool: { min: 0, max: 2 } })
   try {
-    const migDir = path.join(ROOT, "migrations")
-    // knex orders migrations by file name.
-    const files = readdirSync(migDir).filter((f) => f.endsWith(".ts")).sort()
-    for (const f of files) {
-      const mod = await import(pathToFileURL(path.join(migDir, f)).href)
-      try {
-        if (mod.config?.transaction === false) {
-          await mod.up(db)
-        } else {
-          await db.transaction(async (trx) => {
-            await mod.up(trx)
-          })
-        }
-        await db.raw(
-          "CREATE TABLE IF NOT EXISTS knex_migrations (id serial primary key, name varchar(255), batch int, migration_time timestamptz)",
-        )
-        await db("knex_migrations").insert({ name: f, batch: 1, migration_time: new Date() })
-      } catch (e) {
-        failed.push(`${f}: ${String((e as Error).message).split("\n").pop()}`)
-      }
-    }
+    await db.migrate.latest({ migrationSource: migrationSource(path.join(ROOT, "migrations")) })
   } finally {
     await db.destroy()
   }
-  return { failed }
 }

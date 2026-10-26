@@ -5,13 +5,14 @@ import { defineConfig } from "vitest/config"
  * end against a real, throwaway Postgres (unix socket only, no TCP listener),
  * with recording fakes at each transport.
  *
- *   npm run test:notifications            # needs initdb/pg_ctl/psql (Postgres 14+)
+ *   npm run test:notifications            # needs psql, plus initdb/pg_ctl without PG_TEST_URL (Postgres 14+)
  *   npm run test:notifications -- -u      # accept a deliberate behaviour change
  *
- * - global-setup starts a cluster in /tmp/notif-char-*, builds the full schema
- *   (config/postgres/*.sql + every migration) into a template database and
- *   deletes the cluster afterwards. NOTIF_CHAR_PG_SOCKET=<dir> reuses a running
- *   throwaway cluster; PG_BINDIR points at the server binaries.
+ * - global-setup builds the full schema (config/postgres/*.sql + every
+ *   migration) into a template database. It uses the throwaway server in
+ *   PG_TEST_URL (CI's service container, see src/test-utils/pg-test-db.ts), or
+ *   else starts a socket-only cluster in /tmp/notif-char-* and deletes it
+ *   afterwards (PG_BINDIR points at the server binaries).
  * - setup-file gives each test file its own database cloned from the
  *   template, and empties per-test tables before each test.
  * - fakes.ts records what each transport would have sent: web-push, SQS (with
