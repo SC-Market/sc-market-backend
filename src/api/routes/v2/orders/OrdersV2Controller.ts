@@ -10,6 +10,7 @@
 
 import { Post, Route, Tags, Body, Request, Get, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
+import type { Knex } from "knex"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
@@ -46,6 +47,17 @@ interface OrderMarketItemV2Row {
   price_per_unit: string
   created_at: Date
 }
+
+/** Order creation time; the orders table calls it "timestamp". */
+const ORDER_CREATED_AT_SQL = `orders."timestamp"`
+/**
+ * Last recorded change to an order. The table has no updated_at; besides
+ * creation, the only change it timestamps is fulfilment (fulfilled_at).
+ * GREATEST ignores NULLs, so unfulfilled orders report their creation time.
+ */
+const ORDER_UPDATED_AT_SQL = `GREATEST(orders."timestamp", orders.fulfilled_at)`
+/** Same total the list returns: the sum of the order's V2 line items. */
+const ORDER_TOTAL_PRICE_SQL = `(SELECT COALESCE(SUM(omi.price_per_unit * omi.quantity), 0) FROM order_market_items_v2 omi WHERE omi.order_id = orders.order_id)`
 
 @Route("orders")
 @Tags("Orders V2")
@@ -574,57 +586,58 @@ export class OrdersV2Controller extends BaseController {
     try {
       const knex = getKnex()
 
+      // The orders table has no created_at/updated_at columns: creation time
+      // is "timestamp", and the only later change it records is fulfilled_at.
+      // Selecting orders.created_at made every call to this endpoint a 500.
+      const sortExpressions: Record<typeof sortBy, string> = {
+        created_at: ORDER_CREATED_AT_SQL,
+        updated_at: ORDER_UPDATED_AT_SQL,
+        total_price: ORDER_TOTAL_PRICE_SQL,
+      }
+
       // Build base query
       let query = knex("orders")
         .select(
           "orders.order_id",
           "orders.status",
-          "orders.created_at",
-          "orders.updated_at",
+          knex.raw(`${ORDER_CREATED_AT_SQL} as created_at`),
+          knex.raw(`${ORDER_UPDATED_AT_SQL} as updated_at`),
           "orders.customer_id",
           "buyer.username as buyer_username",
           "buyer.avatar as buyer_avatar",
         )
         .leftJoin("accounts as buyer", "orders.customer_id", "buyer.user_id")
 
-      // Apply role filter
-      if (role === 'buyer') {
-        query = query.where("orders.customer_id", userId)
-      } else if (role === 'seller') {
-        // For seller role: orders where listing belongs to user's shops
-        const userShopIds = knex("shops").where("owner_user_id", userId).select("shop_id")
-        const orgShopIds = knex("shops")
-          .whereIn("owner_contractor_id", knex("contractor_members").where("user_id", userId).select("contractor_id"))
-          .select("shop_id")
-        query = query
-          .join("market_orders", "orders.order_id", "market_orders.order_id")
+      // Orders containing a listing from one of the user's shops (personal
+      // shops, or shops of orgs they belong to). An EXISTS rather than a join
+      // keeps one row per order, so the count query below stays a plain count.
+      const userShopIds = knex("shops").where("owner_user_id", userId).select("shop_id")
+      const orgShopIds = knex("shops")
+        .whereIn("owner_contractor_id", knex("contractor_members").where("user_id", userId).select("contractor_id"))
+        .select("shop_id")
+      const sellsInUserShop = (subquery: Knex.QueryBuilder) => {
+        subquery
+          .select(knex.raw("1"))
+          .from("market_orders")
           .join("listings", "market_orders.listing_id", "listings.listing_id")
+          .whereRaw("market_orders.order_id = orders.order_id")
           .where((qb) => {
             qb.whereIn("listings.shop_id", userShopIds)
               .orWhereIn("listings.shop_id", orgShopIds)
           })
-          .groupBy("orders.order_id", "buyer.username", "buyer.avatar")
+      }
+
+      // Apply role filter
+      if (role === 'buyer') {
+        query = query.where("orders.customer_id", userId)
+      } else if (role === 'seller') {
+        query = query.whereExists(sellsInUserShop)
       } else {
         // No role: buyer OR seller (via shop ownership)
-        const userShopIds = knex("shops").where("owner_user_id", userId).select("shop_id")
-        const orgShopIds = knex("shops")
-          .whereIn("owner_contractor_id", knex("contractor_members").where("user_id", userId).select("contractor_id"))
-          .select("shop_id")
-
         query = query.where((builder) => {
           builder
             .where("orders.customer_id", userId)
-            .orWhereExists((subquery) => {
-              subquery
-                .select(knex.raw("1"))
-                .from("market_orders")
-                .join("listings", "market_orders.listing_id", "listings.listing_id")
-                .whereRaw("market_orders.order_id = orders.order_id")
-                .where((qb) => {
-                  qb.whereIn("listings.shop_id", userShopIds)
-                    .orWhereIn("listings.shop_id", orgShopIds)
-                })
-            })
+            .orWhereExists(sellsInUserShop)
         })
       }
 
@@ -637,7 +650,9 @@ export class OrdersV2Controller extends BaseController {
       const countQuery = query.clone().clearSelect().clearOrder().count("* as total")
 
       // Apply sorting
-      query = query.orderBy(`orders.${sortBy}`, sortOrder)
+      query = query
+        .orderByRaw(`${sortExpressions[sortBy]} ${sortOrder === "asc" ? "asc" : "desc"}`)
+        .orderBy("orders.order_id", sortOrder)
 
       // Apply pagination
       query = query.limit(pageSize).offset(offset)

@@ -507,7 +507,9 @@ export class AnalyticsV2Controller extends BaseController {
       // Query order_market_items_v2 to get sales data
       // Join with item_variants to get quality_tier
       // Join with listings to get created_at for time-to-sale calculation
-      // Join with orders to filter by completed orders
+      // Join with orders to filter by completed orders. The orders table has
+      // no created_at: its creation time is "timestamp" (o.created_at made
+      // this endpoint a 500 for every shop).
       const salesQuery = knex("order_market_items_v2 as omi")
         .join("item_variants as iv", "omi.variant_id", "iv.variant_id")
         .join("listings as l", "omi.listing_id", "l.listing_id")
@@ -518,11 +520,13 @@ export class AnalyticsV2Controller extends BaseController {
           knex.raw("AVG(omi.price_per_unit)::bigint as avg_price"),
           knex.raw(`
             AVG(
-              EXTRACT(EPOCH FROM (o.created_at - l.created_at)) / 3600
+              EXTRACT(EPOCH FROM (o."timestamp" - l.created_at)) / 3600
             )::numeric as avg_time_to_sale_hours
           `),
         )
         .where("l.shop_id", shop_id)
+        // A sale is a fulfilled order, as in getListingStats.
+        .where("o.status", "fulfilled")
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
         // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
