@@ -1,0 +1,2108 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Discord order threads (specialised, not notifications) > thread creation is queued to the bot with both members 2`] = `
+[
+  {
+    "metadata": {
+      "created_at": "<ts>",
+      "entity_type": "order",
+      "order_id": "order:thr",
+    },
+    "payload": {
+      "channel_id": "900000000000000030",
+      "customer_discord_id": "discord:customer",
+      "entity_info": {
+        "assigned_discord_id": "discord:seller",
+        "customer_discord_id": "discord:customer",
+        "id": "order:thr",
+        "type": "order",
+      },
+      "members": [
+        "discord:seller",
+        "discord:customer",
+      ],
+      "order": {
+        "assigned_id": "user:seller",
+        "collateral": "0",
+        "contractor_id": null,
+        "cost": "25000",
+        "customer_id": "user:customer",
+        "departure": null,
+        "description": "Description of thr",
+        "destination": null,
+        "fulfilled_at": null,
+        "kind": "Delivery",
+        "offer_session_id": null,
+        "order_id": "order:thr",
+        "payment_type": "one-time",
+        "rush": false,
+        "service_id": null,
+        "shop_id": null,
+        "status": "not-started",
+        "thread_id": null,
+        "timestamp": "<ts>",
+        "title": "Order thr",
+      },
+      "server_id": "700000000000000030",
+    },
+    "type": "create_thread",
+  },
+]
+`;
+
+exports[`order_assigned (2) > org manager assigns an order: assignee in-app/push/email, thread message + member add, webhooks 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "author": {
+              "name": "Order o5",
+            },
+            "color": 1120296,
+            "description": "Someone has been assigned to fulfill this order",
+            "timestamp": "<ts>",
+            "title": "Order Assigned - clerk",
+            "url": "https://sc-market.space/contract/order:o5",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/thread:o5/messages",
+    },
+    {
+      "body": undefined,
+      "method": "put",
+      "route": "/channels/thread:o5/thread-members/discord:clerk",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Order Assigned",
+      "text": "SC Market
+https://sc-market.space
+
+Order Assigned to You Hello
+Clerk, You have been assigned to a new order:
+
+Order o5
+Description of o5
+Value: 25,000 aUEC
+Status:
+not-started
+
+View Order:
+https://sc-market.space/contract/order:o5
+
+Please review the order details and begin work when ready.
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "clerk@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:clerk",
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of o5",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:o5",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:acme-shop",
+            "status": "not-started",
+            "thread_id": "thread:o5",
+            "timestamp": "<ts>",
+            "title": "Order o5",
+          },
+        },
+        "notificationType": "order_assigned",
+        "userId": "user:clerk",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_assigned",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o5",
+      "to": "user:clerk",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "You have been assigned to order "Order o5"",
+        "data": {
+          "action": "order_assigned",
+          "entityId": "order:o5",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:o5",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:o5",
+        "title": "Order Assigned",
+      },
+      "to": "push:clerk",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Clerk",
+              "url": "https://sc-market.space/profile/clerk",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Assigned to",
+                "value": "Clerk",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order o5",
+            "url": "https://sc-market.space/contract/order:o5",
+          },
+        ],
+        "username": "SC Market - Order Assigned",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Clerk",
+              "url": "https://sc-market.space/profile/clerk",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Assigned to",
+                "value": "Clerk",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order o5",
+            "url": "https://sc-market.space/contract/order:o5",
+          },
+        ],
+        "username": "SC Market - Order Assigned",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/clerk-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`order_create (1) > member holding two manage_orders roles 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": null,
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of o4",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:o4",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": null,
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Order o4",
+          },
+        },
+        "notificationType": "order_create",
+        "userId": "user:boss",
+      },
+      "type": "notification_email",
+    },
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": null,
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of o4",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:o4",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": null,
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Order o4",
+          },
+        },
+        "notificationType": "order_create",
+        "userId": "user:boss",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o4",
+      "to": "user:boss",
+    },
+    {
+      "action": "order_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o4",
+      "to": "user:boss",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new order "Order o4" has been created",
+        "data": {
+          "action": "order_create",
+          "entityId": "order:o4",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:o4",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:o4",
+        "title": "New Order Created",
+      },
+      "to": "push:boss",
+    },
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new order "Order o4" has been created",
+        "data": {
+          "action": "order_create",
+          "entityId": "order:o4",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:o4",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:o4",
+        "title": "New Order Created",
+      },
+      "to": "push:boss",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
+
+exports[`order_create (1) > org order from an offer: org managers, org-scoped push/email prefs, shop webhook, alert post 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_order:order:o1",
+                "label": "Claim Order",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1095809,
+            "description": "Description of s1",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "25,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "0 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "New Order: Offer s1",
+            "url": "https://sc-market.space/contract/order:o1",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/900000000000000001/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "New Order Created",
+      "text": "SC Market
+https://sc-market.space
+
+New Order Created Hello
+Boss, A new order has been created:
+
+Offer s1
+Description of s1
+Value: 25,000 aUEC
+Status:
+not-started
+
+View Order:
+https://sc-market.space/contract/order:o1
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "boss@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": null,
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of s1",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": "session:s1",
+            "order_id": "order:o1",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:acme-shop",
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Offer s1",
+          },
+        },
+        "notificationType": "order_create",
+        "userId": "user:boss",
+      },
+      "type": "notification_email",
+    },
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": null,
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of s1",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": "session:s1",
+            "order_id": "order:o1",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:acme-shop",
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Offer s1",
+          },
+        },
+        "notificationType": "order_create",
+        "userId": "user:clerk",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [
+    "Query error",
+  ],
+  "in_app": [
+    {
+      "action": "order_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o1",
+      "to": "user:boss",
+    },
+    {
+      "action": "order_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o1",
+      "to": "user:clerk",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new order "Offer s1" has been created",
+        "data": {
+          "action": "order_create",
+          "entityId": "order:o1",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:o1",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:o1",
+        "title": "New Order Created",
+      },
+      "to": "push:clerk",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "description": "Description of s1",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "25,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "name": "Rush",
+                "value": "False",
+              },
+              {
+                "name": "Collateral",
+                "value": "25,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Offer s1",
+            "url": "https://sc-market.space/contract/order:o1",
+          },
+        ],
+        "username": "SC Market - Order Placed",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`order_create (1) > personal order with an assignee: assignee gets order_assigned, not order_create 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Order Assigned",
+      "text": "SC Market
+https://sc-market.space
+
+Order Assigned to You Hello
+Seller, You have been assigned to a new order:
+
+Offer s2
+Description of s2
+Value: 25,000 aUEC
+Status:
+not-started
+
+View Order:
+https://sc-market.space/contract/order:o2
+
+Please review the order details and begin work when ready.
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "seller@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:seller",
+            "collateral": "0",
+            "contractor_id": null,
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of s2",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": "session:s2",
+            "order_id": "order:o2",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:seller-shop",
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Offer s2",
+          },
+        },
+        "notificationType": "order_assigned",
+        "userId": "user:seller",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_assigned",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o2",
+      "to": "user:seller",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "You have been assigned to order "Offer s2"",
+        "data": {
+          "action": "order_assigned",
+          "entityId": "order:o2",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:o2",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:o2",
+        "title": "Order Assigned",
+      },
+      "to": "push:seller",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Seller",
+              "url": "https://sc-market.space/profile/seller",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Assigned to",
+                "value": "Seller",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Offer s2",
+            "url": "https://sc-market.space/contract/order:o2",
+          },
+        ],
+        "username": "SC Market - Order Assigned",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/seller-shop-hook/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Seller",
+              "url": "https://sc-market.space/profile/seller",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Assigned to",
+                "value": "Seller",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Offer s2",
+            "url": "https://sc-market.space/contract/order:o2",
+          },
+        ],
+        "username": "SC Market - Order Assigned",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/seller-hook/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "description": "Description of s2",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "25,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "name": "Rush",
+                "value": "False",
+              },
+              {
+                "name": "Collateral",
+                "value": "25,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Offer s2",
+            "url": "https://sc-market.space/contract/order:o2",
+          },
+        ],
+        "username": "SC Market - Order Placed",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/seller-shop-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`order_create (1) > unassigned order without a shop: public_order_create webhooks fire 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": null,
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of o3",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:o3",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": null,
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Order o3",
+          },
+        },
+        "notificationType": "order_create",
+        "userId": "user:boss",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:o3",
+      "to": "user:boss",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new order "Order o3" has been created",
+        "data": {
+          "action": "order_create",
+          "entityId": "order:o3",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:o3",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:o3",
+        "title": "New Order Created",
+      },
+      "to": "push:boss",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "description": "Description of o3",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "25,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "name": "Rush",
+                "value": "False",
+              },
+              {
+                "name": "Collateral",
+                "value": "25,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order o3",
+            "url": "https://sc-market.space/contract/order:o3",
+          },
+        ],
+        "username": "SC Market - Order Placed",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/public-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`order_message (81) > chat messages: coalesced in-app row; the second unread message sends nothing; mirrored to the thread 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "content": "[customer] first message",
+      },
+      "method": "post",
+      "route": "/channels/thread:chat/messages",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "content": "[customer] second message",
+      },
+      "method": "post",
+      "route": "/channels/thread:chat/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "New Message on Order",
+      "text": "SC Market
+https://sc-market.space
+
+New Message on Order Hello
+Seller,
+
+Customer
+sent a message on order "Order chat":
+
+first message
+
+View Order & Reply:
+https://sc-market.space/contract/order:chat
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "seller@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "message": {
+            "author": "user:customer",
+            "chat_id": "chat:chat",
+            "content": "first message",
+            "message_id": "uuid#1",
+            "timestamp": "<ts>",
+          },
+          "order": {
+            "assigned_id": "user:seller",
+            "collateral": "0",
+            "contractor_id": null,
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of chat",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:chat",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": null,
+            "status": "not-started",
+            "thread_id": "thread:chat",
+            "timestamp": "<ts>",
+            "title": "Order chat",
+          },
+        },
+        "notificationType": "order_message",
+        "userId": "user:seller",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_message",
+      "actors": [
+        "user:customer",
+        "user:customer",
+      ],
+      "entity": "order:chat",
+      "to": "user:seller",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "first message",
+        "data": {
+          "action": "order_message",
+          "chatId": "chat:chat",
+          "entityId": "order:chat",
+          "type": "order",
+          "url": "https://sc-market.space/messages?chat_id=chat:chat",
+        },
+        "icon": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+        "requireInteraction": false,
+        "tag": "chat-chat:chat",
+        "title": "customer: first message",
+      },
+      "to": "push:seller",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [
+    {
+      "author": "customer",
+      "chat_id": "chat:chat",
+      "content": "first message",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+    {
+      "author": "customer",
+      "chat_id": "chat:chat",
+      "content": "second message",
+      "message_id": "uuid#2",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;
+
+exports[`order_review (3) > customer reviews: assignee notified, shop order_review webhook 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "New Review on Order",
+      "text": "SC Market
+https://sc-market.space
+
+New Order Review Hello
+Seller, A new review has been submitted for your order:
+
+Order rev
+
+Rating:
+4.0/5
+Great
+By: Customer
+
+View Order:
+https://sc-market.space/contract/order:rev
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "seller@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "review": {
+            "content": "Great",
+            "contractor_author": null,
+            "last_modified_at": "<ts>",
+            "order_id": "order:rev",
+            "rating": "4.0",
+            "review_id": "review:rev",
+            "revision_message": null,
+            "revision_requested": false,
+            "revision_requested_at": null,
+            "role": "customer",
+            "timestamp": "<ts>",
+            "user_author": "user:customer",
+          },
+        },
+        "notificationType": "order_review",
+        "userId": "user:seller",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_review",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "review:rev",
+      "to": "user:seller",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/favicon.ico",
+        "body": "You have received a new review",
+        "data": {
+          "action": "order_review",
+          "entityId": "review:rev",
+          "type": "order_review",
+          "url": "https://sc-market.space/contract/order:rev",
+        },
+        "icon": "https://sc-market.space/favicon.ico",
+        "requireInteraction": false,
+        "tag": "order-review-review:rev",
+        "title": "New Review",
+      },
+      "to": "push:seller",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Rating",
+                "value": "★★★★☆ (4.0/5)",
+              },
+              {
+                "name": "Buyer's review",
+                "value": "Great",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order rev",
+            "url": "https://sc-market.space/contract/order:rev",
+          },
+        ],
+        "username": "SC Market - Order Review",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`order_review_revision_requested (22) > personal review author 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_review_revision_requested",
+      "actors": [
+        "user:seller",
+      ],
+      "entity": "review:rr",
+      "to": "user:customer",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/favicon.ico",
+        "body": "A revision has been requested for your review",
+        "data": {
+          "action": "order_review_revision_requested",
+          "entityId": "review:rr",
+          "type": "order_review",
+          "url": "https://sc-market.space/contract/order:rr",
+        },
+        "icon": "https://sc-market.space/favicon.ico",
+        "requireInteraction": false,
+        "tag": "order-review-revision-review:rr",
+        "title": "Review Revision Requested",
+      },
+      "to": "push:customer",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
+
+exports[`order_status_* (4-7) > assignee sets cancelled: thread archived 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "author": {
+              "name": "Order st-cancelled",
+            },
+            "color": 11141120,
+            "description": "Was: not-started",
+            "timestamp": "<ts>",
+            "title": "Order Status Updated - cancelled",
+            "url": "https://sc-market.space/contract/order:st-cancelled",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/thread:st-cancelled/messages",
+    },
+    {
+      "body": {
+        "archived": true,
+      },
+      "method": "patch",
+      "route": "/channels/thread:st-cancelled",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Order Cancelled",
+      "text": "SC Market
+https://sc-market.space
+
+Order Cancelled Hello
+Customer, Order "Order st-cancelled" has been cancelled.
+
+Order st-cancelled
+Description of st-cancelled
+Value: 25,000 aUEC
+Status: Cancelled View Order:
+https://sc-market.space/contract/order:st-cancelled
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "customer@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:seller",
+            "collateral": "0",
+            "contractor_id": null,
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of st-cancelled",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:st-cancelled",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:seller-shop",
+            "status": "not-started",
+            "thread_id": "thread:st-cancelled",
+            "timestamp": "<ts>",
+            "title": "Order st-cancelled",
+          },
+        },
+        "notificationType": "order_status_cancelled",
+        "userId": "user:customer",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_status_cancelled",
+      "actors": [
+        "user:seller",
+      ],
+      "entity": "order:st-cancelled",
+      "to": "user:customer",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Order "Order st-cancelled" has been cancelled",
+        "data": {
+          "action": "order_status_cancelled",
+          "entityId": "order:st-cancelled",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:st-cancelled",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:st-cancelled",
+        "title": "Order Cancelled",
+      },
+      "to": "push:customer",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Seller",
+              "url": "https://sc-market.space/profile/seller",
+            },
+            "color": 11141120,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "cancelled",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order st-cancelled",
+            "url": "https://sc-market.space/contract/order:st-cancelled",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [
+    {
+      "author": null,
+      "chat_id": "chat:st-cancelled",
+      "content": "Order status has been updated to cancelled from not-started",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;
+
+exports[`order_status_* (4-7) > assignee sets fulfilled: thread archived 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "author": {
+              "name": "Order st-fulfilled",
+            },
+            "color": 43520,
+            "description": "Was: not-started",
+            "timestamp": "<ts>",
+            "title": "Order Status Updated - fulfilled",
+            "url": "https://sc-market.space/contract/order:st-fulfilled",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/thread:st-fulfilled/messages",
+    },
+    {
+      "body": {
+        "archived": true,
+      },
+      "method": "patch",
+      "route": "/channels/thread:st-fulfilled",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "Order Fulfilled",
+      "text": "SC Market
+https://sc-market.space
+
+Order Fulfilled Hello
+Customer, Order "Order st-fulfilled" has been fulfilled.
+
+Order st-fulfilled
+Value: 25,000 aUEC
+
+View Order:
+https://sc-market.space/contract/order:st-fulfilled
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "customer@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:seller",
+            "collateral": "0",
+            "contractor_id": null,
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of st-fulfilled",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:st-fulfilled",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:seller-shop",
+            "status": "not-started",
+            "thread_id": "thread:st-fulfilled",
+            "timestamp": "<ts>",
+            "title": "Order st-fulfilled",
+          },
+        },
+        "notificationType": "order_status_fulfilled",
+        "userId": "user:customer",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_status_fulfilled",
+      "actors": [
+        "user:seller",
+      ],
+      "entity": "order:st-fulfilled",
+      "to": "user:customer",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Order "Order st-fulfilled" has been fulfilled",
+        "data": {
+          "action": "order_status_fulfilled",
+          "entityId": "order:st-fulfilled",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:st-fulfilled",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:st-fulfilled",
+        "title": "Order Fulfilled",
+      },
+      "to": "push:customer",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Seller",
+              "url": "https://sc-market.space/profile/seller",
+            },
+            "color": 43520,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "fulfilled",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order st-fulfilled",
+            "url": "https://sc-market.space/contract/order:st-fulfilled",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [
+    {
+      "author": null,
+      "chat_id": "chat:st-fulfilled",
+      "content": "Order status has been updated to fulfilled from not-started",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;
+
+exports[`order_status_* (4-7) > assignee sets in-progress: customer notified, thread status message, webhooks 2`] = `
+{
+  "discord": [
+    {
+      "body": undefined,
+      "method": "put",
+      "route": "/channels/thread:st-in-progress/thread-members/discord:seller",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "author": {
+              "name": "Order st-in-progress",
+            },
+            "color": 166097,
+            "description": "Was: not-started",
+            "timestamp": "<ts>",
+            "title": "Order Status Updated - in-progress",
+            "url": "https://sc-market.space/contract/order:st-in-progress",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/thread:st-in-progress/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Order In Progress",
+      "text": "SC Market
+https://sc-market.space
+
+Order In Progress Hello
+Customer, Order "Order st-in-progress" is now in progress.
+
+Order st-in-progress
+Description of st-in-progress
+Value: 25,000 aUEC
+Status: In Progress View Order:
+https://sc-market.space/contract/order:st-in-progress
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "customer@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:seller",
+            "collateral": "0",
+            "contractor_id": null,
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of st-in-progress",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:st-in-progress",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:seller-shop",
+            "status": "not-started",
+            "thread_id": "thread:st-in-progress",
+            "timestamp": "<ts>",
+            "title": "Order st-in-progress",
+          },
+        },
+        "notificationType": "order_status_in_progress",
+        "userId": "user:customer",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_status_in_progress",
+      "actors": [
+        "user:seller",
+      ],
+      "entity": "order:st-in-progress",
+      "to": "user:customer",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Order "Order st-in-progress" is now in progress",
+        "data": {
+          "action": "order_status_in_progress",
+          "entityId": "order:st-in-progress",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:st-in-progress",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:st-in-progress",
+        "title": "Order In Progress",
+      },
+      "to": "push:customer",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Seller",
+              "url": "https://sc-market.space/profile/seller",
+            },
+            "color": 166097,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "in-progress",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order st-in-progress",
+            "url": "https://sc-market.space/contract/order:st-in-progress",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [
+    {
+      "author": null,
+      "chat_id": "chat:st-in-progress",
+      "content": "Order status has been updated to in-progress from not-started",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;
+
+exports[`order_status_* (4-7) > assignee sets not-started 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "author": {
+              "name": "Order st-not-started",
+            },
+            "color": 1120296,
+            "description": "Was: in-progress",
+            "timestamp": "<ts>",
+            "title": "Order Status Updated - not-started",
+            "url": "https://sc-market.space/contract/order:st-not-started",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/thread:st-not-started/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Order Status Updated",
+      "text": "SC Market
+https://sc-market.space
+
+Order Not Started Hello
+Customer, Order "Order st-not-started" status has been updated to Not
+Started.
+
+Order st-not-started
+Description of st-not-started
+Value: 25,000 aUEC
+Status: Not Started View Order:
+https://sc-market.space/contract/order:st-not-started
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "customer@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:seller",
+            "collateral": "0",
+            "contractor_id": null,
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of st-not-started",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:st-not-started",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:seller-shop",
+            "status": "in-progress",
+            "thread_id": "thread:st-not-started",
+            "timestamp": "<ts>",
+            "title": "Order st-not-started",
+          },
+        },
+        "notificationType": "order_status_not_started",
+        "userId": "user:customer",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_status_not_started",
+      "actors": [
+        "user:seller",
+      ],
+      "entity": "order:st-not-started",
+      "to": "user:customer",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Order "Order st-not-started" status updated to not started",
+        "data": {
+          "action": "order_status_not_started",
+          "entityId": "order:st-not-started",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:st-not-started",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:st-not-started",
+        "title": "Order Status Updated",
+      },
+      "to": "push:customer",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Seller",
+              "url": "https://sc-market.space/profile/seller",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "not-started",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Order st-not-started",
+            "url": "https://sc-market.space/contract/order:st-not-started",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [
+    {
+      "author": null,
+      "chat_id": "chat:st-not-started",
+      "content": "Order status has been updated to not-started from in-progress",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;
+
+exports[`order_status_* (4-7) > customer cancels an org order: assignee notified (org-scoped prefs), customer not 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Order Cancelled",
+      "text": "SC Market
+https://sc-market.space
+
+Order Cancelled Hello
+Clerk, Order "Order cx" has been cancelled.
+
+Order cx
+Description of cx
+Value: 25,000 aUEC
+Status: Cancelled View Order:
+https://sc-market.space/contract/order:cx
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "clerk@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "order": {
+            "assigned_id": "user:clerk",
+            "collateral": "0",
+            "contractor_id": "org:acme",
+            "cost": "25000",
+            "customer_id": "user:customer",
+            "departure": null,
+            "description": "Description of cx",
+            "destination": null,
+            "fulfilled_at": null,
+            "kind": "Delivery",
+            "offer_session_id": null,
+            "order_id": "order:cx",
+            "payment_type": "one-time",
+            "rush": false,
+            "service_id": null,
+            "shop_id": "shop:acme-shop",
+            "status": "not-started",
+            "thread_id": null,
+            "timestamp": "<ts>",
+            "title": "Order cx",
+          },
+        },
+        "notificationType": "order_status_cancelled",
+        "userId": "user:clerk",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "order_status_cancelled",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "order:cx",
+      "to": "user:clerk",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Order "Order cx" has been cancelled",
+        "data": {
+          "action": "order_status_cancelled",
+          "entityId": "order:cx",
+          "type": "order",
+          "url": "https://sc-market.space/contract/order:cx",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "order-order:cx",
+        "title": "Order Cancelled",
+      },
+      "to": "push:clerk",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [
+    {
+      "author": null,
+      "chat_id": "chat:cx",
+      "content": "Order status has been updated to cancelled from not-started",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;

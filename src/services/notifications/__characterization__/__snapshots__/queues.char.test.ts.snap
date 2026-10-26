@@ -1,0 +1,45 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Discord bot reply queue > thread_created: stores the thread id and posts the welcome message 2`] = `
+[
+  {
+    "body": {
+      "allowed_mentions": {
+        "parse": [],
+      },
+      "embeds": [
+        {
+          "author": {
+            "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+            "name": "Customer",
+            "url": "https://discordapp.com/users/customer",
+          },
+          "color": 1120296,
+          "description": "Discord User Details: <@discord:customer>
+
+Description of t1",
+          "fields": [
+            {
+              "name": "Offer",
+              "value": "25,000 aUEC",
+            },
+            {
+              "name": "Kind",
+              "value": "Delivery",
+            },
+            {
+              "name": "Collateral",
+              "value": "0 aUEC",
+            },
+          ],
+          "timestamp": "<ts>",
+          "title": "Order t1",
+          "url": "https://sc-market.space/contract/order:t1",
+        },
+      ],
+    },
+    "method": "post",
+    "route": "/channels/thread:t1/messages",
+  },
+]
+`;

@@ -35,3 +35,25 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  notifications:
+    # Notification characterization suite: every event type x channel, against
+    # a throwaway Postgres on a unix socket (the runner image ships the
+    # server binaries in /usr/lib/postgresql/*/bin). See
+    # vitest.characterization.config.ts.
+    name: Notification characterization
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run notification characterization tests
+        run: npm run test:notifications

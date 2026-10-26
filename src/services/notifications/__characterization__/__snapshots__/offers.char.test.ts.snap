@@ -1,0 +1,718 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`counter_offer_create (20) > counter-offer: same recipients as offer_create, plus a thread status message 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "author": {
+              "name": "Offer c1",
+            },
+            "color": 166097,
+            "fields": [
+              {
+                "inline": true,
+                "name": "Updated by",
+                "value": "customer",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Offer Status Updated - Counter-Offered",
+            "url": "https://sc-market.space/offer/session:c1",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/thread:c1/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "Counter Offer Received",
+      "text": "SC Market
+https://sc-market.space
+
+Counter Offer Received Hello
+Seller, A counter offer has been created: Offer #session:c1
+Status:
+active
+
+View Offer:
+https://sc-market.space/offers/session:c1
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "seller@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "offer": {
+            "assigned_id": "user:seller",
+            "contractor_id": null,
+            "customer_id": "user:customer",
+            "discord_invite": null,
+            "id": "session:c1",
+            "shop_id": "shop:seller-shop",
+            "status": "active",
+            "thread_id": "thread:c1",
+            "timestamp": "<ts>",
+          },
+        },
+        "notificationType": "counter_offer_create",
+        "userId": "user:seller",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "counter_offer_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "session:c1",
+      "to": "user:seller",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A counter-offer has been submitted",
+        "data": {
+          "action": "counter_offer_create",
+          "entityId": "session:c1",
+          "type": "offer",
+          "url": "https://sc-market.space/offer/session:c1",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "offer-session:c1",
+        "title": "Counter-Offer",
+      },
+      "to": "push:seller",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "description": "Description of c1",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "25,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Offer c1",
+            "url": "https://sc-market.space/offer/session:c1",
+          },
+        ],
+        "username": "SC Market - Counter Offer Received",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`offer accepted / rejected (thread only) > rejected: thread message and archive 2`] = `
+[
+  {
+    "body": {
+      "allowed_mentions": {
+        "parse": [],
+      },
+      "embeds": [
+        {
+          "author": {
+            "name": "Offer r1",
+          },
+          "color": 11141120,
+          "fields": [
+            {
+              "inline": true,
+              "name": "Updated by",
+              "value": "seller",
+            },
+          ],
+          "timestamp": "<ts>",
+          "title": "Offer Status Updated - Rejected",
+          "url": "https://sc-market.space/offer/session:r1",
+        },
+      ],
+    },
+    "method": "post",
+    "route": "/channels/thread:r1/messages",
+  },
+  {
+    "body": {
+      "archived": true,
+    },
+    "method": "patch",
+    "route": "/channels/thread:r1",
+  },
+]
+`;
+
+exports[`offer_create (19) > offer to a personal shop: the assignee gets in-app, push and email; alert post without Claim 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1095809,
+            "description": "Please haul",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Offer",
+                "value": "40,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "0 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "New Offer: Haul 40 SCU",
+            "url": "https://sc-market.space/offer/session:o2",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/900000000000000102/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "New Offer Created",
+      "text": "SC Market
+https://sc-market.space
+
+New Offer Created Hello
+Seller, A new offer has been created: Offer #session:o2
+Status:
+active
+
+View Offer:
+https://sc-market.space/offers/session:o2
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "seller@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "offer": {
+            "assigned_id": "user:seller",
+            "contractor_id": null,
+            "customer_id": "user:customer",
+            "discord_invite": null,
+            "id": "session:o2",
+            "shop_id": "shop:seller-shop",
+            "status": "active",
+            "thread_id": null,
+            "timestamp": "<ts>",
+          },
+        },
+        "notificationType": "offer_create",
+        "userId": "user:seller",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "offer_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "session:o2",
+      "to": "user:seller",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new offer has been submitted",
+        "data": {
+          "action": "offer_create",
+          "entityId": "session:o2",
+          "type": "offer",
+          "url": "https://sc-market.space/offer/session:o2",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "offer-session:o2",
+        "title": "New Offer",
+      },
+      "to": "push:seller",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "description": "Please haul",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "40,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Haul 40 SCU",
+            "url": "https://sc-market.space/offer/session:o2",
+          },
+        ],
+        "username": "SC Market - Offer Received",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`offer_create (19) > offer to an org shop: managers get in-app + email but no push; alert post with Claim; thread queued 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_offer:session:o1",
+                "label": "Claim Offer",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1095809,
+            "description": "Please haul",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Offer",
+                "value": "40,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "0 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "New Offer: Haul 40 SCU",
+            "url": "https://sc-market.space/offer/session:o1",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/900000000000000101/messages",
+    },
+    {
+      "body": {
+        "max_age": 3600,
+        "max_uses": 0,
+        "temporary": false,
+        "unique": true,
+      },
+      "method": "post",
+      "route": "/channels/900000000000000101/invites",
+    },
+  ],
+  "discord_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "entity_type": "offer_session",
+        "order_id": "session:o1",
+      },
+      "payload": {
+        "channel_id": "900000000000000101",
+        "customer_discord_id": "discord:customer",
+        "entity_info": {
+          "assigned_discord_id": null,
+          "customer_discord_id": "discord:customer",
+          "id": "session:o1",
+          "type": "offer_session",
+        },
+        "members": [
+          "discord:customer",
+        ],
+        "order": {
+          "assigned_id": null,
+          "contractor_id": "org:acme",
+          "customer_id": "user:customer",
+          "discord_invite": null,
+          "id": "session:o1",
+          "shop_id": "shop:acme-shop",
+          "status": "active",
+          "thread_id": null,
+          "timestamp": "<ts>",
+        },
+        "server_id": "700000000000000101",
+      },
+      "type": "create_thread",
+    },
+  ],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "New Offer Created",
+      "text": "SC Market
+https://sc-market.space
+
+New Offer Created Hello
+Boss, A new offer has been created: Offer #session:o1
+Status:
+active
+
+View Offer:
+https://sc-market.space/offers/session:o1
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "boss@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "offer": {
+            "assigned_id": null,
+            "contractor_id": "org:acme",
+            "customer_id": "user:customer",
+            "discord_invite": null,
+            "id": "session:o1",
+            "shop_id": "shop:acme-shop",
+            "status": "active",
+            "thread_id": null,
+            "timestamp": "<ts>",
+          },
+        },
+        "notificationType": "offer_create",
+        "userId": "user:boss",
+      },
+      "type": "notification_email",
+    },
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "offer": {
+            "assigned_id": null,
+            "contractor_id": "org:acme",
+            "customer_id": "user:customer",
+            "discord_invite": null,
+            "id": "session:o1",
+            "shop_id": "shop:acme-shop",
+            "status": "active",
+            "thread_id": null,
+            "timestamp": "<ts>",
+          },
+        },
+        "notificationType": "offer_create",
+        "userId": "user:clerk",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "offer_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "session:o1",
+      "to": "user:boss",
+    },
+    {
+      "action": "offer_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "session:o1",
+      "to": "user:clerk",
+    },
+  ],
+  "push": [],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Customer",
+              "url": "https://sc-market.space/profile/customer",
+            },
+            "color": 1120296,
+            "description": "Please haul",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "40,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Haul 40 SCU",
+            "url": "https://sc-market.space/offer/session:o1",
+          },
+        ],
+        "username": "SC Market - Offer Received",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`offer_message (18) > seller replies: customer gets one coalesced notification; mirrored to the thread 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "content": "[seller] hello",
+      },
+      "method": "post",
+      "route": "/channels/thread:m1/messages",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "content": "[seller] are you there?",
+      },
+      "method": "post",
+      "route": "/channels/thread:m1/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "message": {
+            "author": "user:seller",
+            "chat_id": "chat:m1",
+            "content": "hello",
+            "message_id": "uuid#1",
+            "timestamp": "<ts>",
+          },
+          "offer": {
+            "assigned_id": "user:seller",
+            "contractor_id": "org:acme",
+            "customer_id": "user:customer",
+            "discord_invite": null,
+            "id": "session:m1",
+            "shop_id": null,
+            "status": "active",
+            "thread_id": "thread:m1",
+            "timestamp": "<ts>",
+          },
+        },
+        "notificationType": "offer_message",
+        "userId": "user:customer",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "offer_message",
+      "actors": [
+        "user:seller",
+        "user:seller",
+      ],
+      "entity": "session:m1",
+      "to": "user:customer",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "hello",
+        "data": {
+          "action": "offer_message",
+          "chatId": "chat:m1",
+          "entityId": "session:m1",
+          "type": "offer",
+          "url": "https://sc-market.space/messages?chat_id=chat:m1",
+        },
+        "icon": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+        "requireInteraction": false,
+        "tag": "chat-chat:m1",
+        "title": "seller: hello",
+      },
+      "to": "push:customer",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [
+    {
+      "author": "seller",
+      "chat_id": "chat:m1",
+      "content": "hello",
+      "message_id": "uuid#1",
+      "timestamp": "<ts>",
+    },
+    {
+      "author": "seller",
+      "chat_id": "chat:m1",
+      "content": "are you there?",
+      "message_id": "uuid#2",
+      "timestamp": "<ts>",
+    },
+  ],
+}
+`;

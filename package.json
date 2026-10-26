@@ -144,6 +144,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --coverage --reporter=verbose",
+    "test:notifications": "vitest run --config vitest.characterization.config.ts",
     "tsoa:spec": "tsoa spec",
     "tsoa:routes": "tsoa routes",
     "tsoa:generate": "tsoa spec-and-routes",

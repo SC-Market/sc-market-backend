@@ -1,0 +1,250 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`V2 order push (order_create_v2, no action row) > createNewOrderNotificationV2 (direct buy-order purchase): push only, ungated, org manage_orders 2`] = `
+[
+  {
+    "payload": {
+      "badge": "https://sc-market.space/android-chrome-192x192.png",
+      "body": "New order for 30000 aUEC -  (Platinum)",
+      "data": {
+        "action": "order_create_v2",
+        "entityId": "order:v2",
+        "type": "order_v2",
+        "url": "https://sc-market.space/orders/order:v2",
+      },
+      "icon": "https://sc-market.space/android-chrome-192x192.png",
+      "requireInteraction": false,
+      "tag": "order-v2-order:v2",
+      "title": "New Order",
+    },
+    "to": "push:boss",
+  },
+  {
+    "payload": {
+      "badge": "https://sc-market.space/android-chrome-192x192.png",
+      "body": "New order for 30000 aUEC -  (Platinum)",
+      "data": {
+        "action": "order_create_v2",
+        "entityId": "order:v2",
+        "type": "order_v2",
+        "url": "https://sc-market.space/orders/order:v2",
+      },
+      "icon": "https://sc-market.space/android-chrome-192x192.png",
+      "requireInteraction": false,
+      "tag": "order-v2-order:v2",
+      "title": "New Order",
+    },
+    "to": "push:clerk",
+  },
+]
+`;
+
+exports[`market_item_bid (10), V1 route > org seller: manage_market members get in-app + push; push ignores org-scoped prefs; no email; webhook 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "market_item_bid",
+      "actors": [
+        "user:bidder",
+      ],
+      "entity": "bid:b1",
+      "to": "user:boss",
+    },
+    {
+      "action": "market_item_bid",
+      "actors": [
+        "user:bidder",
+      ],
+      "entity": "bid:b1",
+      "to": "user:trader",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/favicon.ico",
+        "body": "A new bid has been placed on "Auctioned Gladius"",
+        "data": {
+          "action": "market_item_bid",
+          "bidId": "bid:b1",
+          "entityId": "listing:v1",
+          "type": "market_listing",
+          "url": "https://sc-market.space/market/listing:v1",
+        },
+        "icon": "https://sc-market.space/favicon.ico",
+        "requireInteraction": false,
+        "tag": "market-bid-bid:b1",
+        "title": "New Bid",
+      },
+      "to": "push:boss",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Bidder",
+              "url": "https://sc-market.space/profile/bidder",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "1,500 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Auctioned Gladius",
+            "url": "https://sc-market.space/market/listing:v1/#/auctioned-gladius",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/org-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;
+
+exports[`market_item_bid (10), V2 auctions > org shop: manage_market members; shop and org webhooks (deduplicated) 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "market_item_bid",
+      "actors": [
+        "user:bidder",
+      ],
+      "entity": "bid:b3",
+      "to": "user:boss",
+    },
+    {
+      "action": "market_item_bid",
+      "actors": [
+        "user:bidder",
+      ],
+      "entity": "bid:b3",
+      "to": "user:trader",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new bid of 1200000 aUEC has been placed on "Prospector auction"",
+        "data": {
+          "action": "market_item_bid_v2",
+          "entityId": "listing:auction",
+          "type": "market_listing_v2",
+          "url": "https://sc-market.space/market/listing:auction",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "market-bid-v2-listing:auction",
+        "title": "New Bid",
+      },
+      "to": "push:boss",
+    },
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new bid of 1200000 aUEC has been placed on "Prospector auction"",
+        "data": {
+          "action": "market_item_bid_v2",
+          "entityId": "listing:auction",
+          "type": "market_listing_v2",
+          "url": "https://sc-market.space/market/listing:auction",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "market-bid-v2-listing:auction",
+        "title": "New Bid",
+      },
+      "to": "push:trader",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "1,200,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Prospector auction",
+            "url": "https://sc-market.space/market/listing:auction",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/shop-hook/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "1,200,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "Prospector auction",
+            "url": "https://sc-market.space/market/listing:auction",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/org-hook/token",
+    },
+  ],
+  "websocket": [],
+}
+`;

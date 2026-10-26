@@ -27,6 +27,9 @@ export default defineConfig({
       // (`npx vitest run src/services/attribute-import/uexcorp-api.test.ts`)
       // when touching the UEXCorp importer.
       "src/services/attribute-import/uexcorp-api.test.ts",
+      // Notification characterization suite: needs Postgres server binaries.
+      // Runs with `npm run test:notifications` (vitest.characterization.config.ts).
+      "src/**/*.char.test.ts",
     ],
     coverage: {
       provider: "v8",

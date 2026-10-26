@@ -1,0 +1,400 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`admin_alert (21) > all_users: everyone not banned, including the admin; push only (bulk path); no email 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "admin_alert",
+      "actors": [
+        "user:admin",
+      ],
+      "entity": "alert:all_users",
+      "to": "user:admin",
+    },
+    {
+      "action": "admin_alert",
+      "actors": [
+        "user:admin",
+      ],
+      "entity": "alert:all_users",
+      "to": "user:alice",
+    },
+    {
+      "action": "admin_alert",
+      "actors": [
+        "user:admin",
+      ],
+      "entity": "alert:all_users",
+      "to": "user:bob",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/favicon.ico",
+        "body": "Down at 10:00",
+        "data": {
+          "action": "admin_alert",
+          "entityId": "alert:all_users",
+          "type": "admin_alert",
+          "url": "https://sc-market.space/news",
+        },
+        "icon": "https://sc-market.space/favicon.ico",
+        "requireInteraction": true,
+        "tag": "admin-alert-alert:all_users",
+        "title": "Maintenance",
+      },
+      "to": "push:admin",
+    },
+    {
+      "payload": {
+        "badge": "https://sc-market.space/favicon.ico",
+        "body": "Down at 10:00",
+        "data": {
+          "action": "admin_alert",
+          "entityId": "alert:all_users",
+          "type": "admin_alert",
+          "url": "https://sc-market.space/news",
+        },
+        "icon": "https://sc-market.space/favicon.ico",
+        "requireInteraction": true,
+        "tag": "admin-alert-alert:all_users",
+        "title": "Maintenance",
+      },
+      "to": "push:alice",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
+
+exports[`contractor_invite (9) > invitee gets in-app + push; email is never sent even when opted in 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "contractor_invite",
+      "actors": [],
+      "entity": "invite:1",
+      "to": "user:invitee",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/favicon.ico",
+        "body": "You have been invited to join a contractor organization",
+        "data": {
+          "action": "contractor_invite",
+          "entityId": "invite:1",
+          "type": "contractor_invite",
+          "url": "https://sc-market.space/contractors",
+        },
+        "icon": "https://sc-market.space/favicon.ico",
+        "requireInteraction": false,
+        "tag": "contractor-invite-invite:1",
+        "title": "Contractor Invitation",
+      },
+      "to": "push:invitee",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
+
+exports[`dm_reminder (82) > opted-in user with a >24 h unread message: one email per run (rendering today) 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [
+    "Failed to render email template: dm-reminder",
+    "DM reminder: failed to send email",
+  ],
+  "in_app": [
+    {
+      "action": "order_message",
+      "actors": [
+        "user:author",
+      ],
+      "entity": "order:old",
+      "to": "user:optedin",
+    },
+    {
+      "action": "order_message",
+      "actors": [
+        "user:author",
+      ],
+      "entity": "order:recent",
+      "to": "user:optedin",
+    },
+    {
+      "action": "order_message",
+      "actors": [
+        "user:author",
+      ],
+      "entity": "order:quiet",
+      "to": "user:quiet",
+    },
+    {
+      "action": "order_message",
+      "actors": [
+        "user:author",
+      ],
+      "entity": "order:unv",
+      "to": "user:unverified",
+    },
+  ],
+  "push": [],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
+
+exports[`email verification (transactional) > queued, then sent by the consumer with a token link; unsubscribe link points at /settings?tab=email 2`] = `
+{
+  "discord": [],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Verify Your Email Address - SC Market",
+      "text": "SC Market
+https://sc-market.space
+
+Verify Your Email Address Hello
+Newbie, Thank you for adding your email address to your SC Market
+account. Please verify your email address by visiting the link below:
+
+https://sc-market.space/email/verify/<token>
+
+This verification link will expire in 24 hours. If you didn't request this
+email, you can safely ignore it.
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/settings?tab&#x3D;email
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "newbie@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "high",
+      },
+      "payload": {
+        "email": "newbie@example.test",
+        "userId": "user:newbie",
+      },
+      "type": "verification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [],
+  "push": [],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
+
+exports[`price_alert (83, watchlist) > matching public listing: site, push, Discord DM by default; email only when opted in 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "recipient_id": "discord:watcher",
+      },
+      "method": "post",
+      "route": "/users/@me/channels",
+    },
+    {
+      "body": {
+        "embeds": [
+          {
+            "color": 1095809,
+            "description": "**Laranite Ore 50 SCU** is listed at **4,200 aUEC**
+Your target price: 5,000 aUEC
+Quantity: 5
+Seller: Shop seller-shop
+
+[View Listing](https://sc-market.space/market/listing:lara)",
+            "thumbnail": undefined,
+            "timestamp": "<ts>",
+            "title": "Price Alert: Laranite Ore 50 SCU",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/dm-discord:watcher/messages",
+    },
+    {
+      "body": {
+        "recipient_id": "discord:other",
+      },
+      "method": "post",
+      "route": "/users/@me/channels",
+    },
+    {
+      "body": {
+        "embeds": [
+          {
+            "color": 1095809,
+            "description": "**Laranite Ore 50 SCU** is listed at **4,200 aUEC**
+Your target price: 5,000 aUEC
+Quantity: 5
+Seller: Shop seller-shop
+
+[View Listing](https://sc-market.space/market/listing:lara)",
+            "thumbnail": undefined,
+            "timestamp": "<ts>",
+            "title": "Price Alert: Laranite Ore 50 SCU",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/dm-discord:other/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "Price Alert: Laranite Ore 50 SCU is 4,200 aUEC",
+      "text": "SC Market
+https://sc-market.space
+
+Price Alert
+
+Hello Other, a listing on your watchlist hit your target price:
+
+Laranite Ore 50 SCU
+Price: 4,200 aUEC
+Your target: 5,000 aUEC (laranite ore)
+Quantity: 5
+Seller: Shop seller-shop
+
+View Listing:
+https://sc-market.space/market/listing:lara
+
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "other@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "listing": {
+            "listing_id": "listing:lara",
+            "price": 4200,
+            "quantity": 5,
+            "seller_name": "Shop seller-shop",
+            "title": "Laranite Ore 50 SCU",
+          },
+          "watch": {
+            "max_price": 5000,
+            "query": "laranite ore",
+          },
+        },
+        "notificationType": "price_alert",
+        "userId": "user:other",
+      },
+      "type": "notification_email",
+    },
+  ],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "price_alert",
+      "actors": [
+        "user:watcher",
+      ],
+      "entity": "listing:lara",
+      "to": "user:watcher",
+    },
+    {
+      "action": "price_alert",
+      "actors": [
+        "user:other",
+      ],
+      "entity": "listing:lara",
+      "to": "user:other",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Laranite Ore 50 SCU is listed at 4,200 aUEC (your target: 5,000 aUEC)",
+        "data": {
+          "entityId": "listing:lara",
+          "type": "price_alert",
+          "url": "https://sc-market.space/market/listing:lara",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": true,
+        "tag": "price-alert-watch:by-text-listing:lara",
+        "title": "Price Alert: Laranite Ore 50 SCU",
+      },
+      "to": "push:other",
+    },
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "Laranite Ore 50 SCU is listed at 4,200 aUEC (your target: 5,000 aUEC)",
+        "data": {
+          "entityId": "listing:lara",
+          "type": "price_alert",
+          "url": "https://sc-market.space/market/listing:lara",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": true,
+        "tag": "price-alert-watch:by-item-listing:lara",
+        "title": "Price Alert: Laranite Ore 50 SCU",
+      },
+      "to": "push:watcher",
+    },
+  ],
+  "warnings": [],
+  "webhooks": [],
+  "websocket": [],
+}
+`;
