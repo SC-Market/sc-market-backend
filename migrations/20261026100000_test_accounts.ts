@@ -24,6 +24,10 @@ import type { Knex } from "knex"
  *   code.
  *
  * Additive: every existing row is real (false) and passes every check.
+ *
+ * Idempotent: an older image's entrypoint deletes knex_migrations rows whose
+ * file it doesn't have, so a later deploy can run this again over its own
+ * objects. Every statement tolerates that.
  */
 export async function up(knex: Knex): Promise<void> {
   await knex.raw(`
@@ -31,8 +35,12 @@ export async function up(knex: Knex): Promise<void> {
     ALTER TABLE contractors ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT false;
     ALTER TABLE shops ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT false;
 
-    ALTER TABLE accounts ADD CONSTRAINT accounts_test_account_is_user
-      CHECK (NOT is_test OR role = 'user');
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'accounts_test_account_is_user') THEN
+        ALTER TABLE accounts ADD CONSTRAINT accounts_test_account_is_user
+          CHECK (NOT is_test OR role = 'user');
+      END IF;
+    END $$;
 
     -- Tiny partial indexes: the public-surface filters anti-join against them.
     CREATE INDEX IF NOT EXISTS idx_accounts_is_test ON accounts (user_id) WHERE is_test;
@@ -69,9 +77,11 @@ export async function up(knex: Knex): Promise<void> {
       RETURN NEW;
     END $$;
 
+    DROP TRIGGER IF EXISTS trg_accounts_test_flag_immutable ON accounts;
     CREATE TRIGGER trg_accounts_test_flag_immutable
       BEFORE UPDATE OF is_test ON accounts
       FOR EACH ROW EXECUTE FUNCTION scm_test_flag_immutable();
+    DROP TRIGGER IF EXISTS trg_contractors_test_flag_immutable ON contractors;
     CREATE TRIGGER trg_contractors_test_flag_immutable
       BEFORE UPDATE OF is_test ON contractors
       FOR EACH ROW EXECUTE FUNCTION scm_test_flag_immutable();
@@ -105,6 +115,7 @@ export async function up(knex: Knex): Promise<void> {
       RETURN NEW;
     END $$;
 
+    DROP TRIGGER IF EXISTS trg_shops_test_realm ON shops;
     CREATE TRIGGER trg_shops_test_realm
       BEFORE INSERT OR UPDATE OF owner_user_id, owner_contractor_id, is_test ON shops
       FOR EACH ROW EXECUTE FUNCTION scm_shops_test_realm();
@@ -121,9 +132,11 @@ export async function up(knex: Knex): Promise<void> {
       RETURN NEW;
     END $$;
 
+    DROP TRIGGER IF EXISTS trg_orders_same_realm ON orders;
     CREATE TRIGGER trg_orders_same_realm
       BEFORE INSERT OR UPDATE OF customer_id, assigned_id, contractor_id, shop_id ON orders
       FOR EACH ROW EXECUTE FUNCTION scm_order_parties_same_realm();
+    DROP TRIGGER IF EXISTS trg_offer_sessions_same_realm ON offer_sessions;
     CREATE TRIGGER trg_offer_sessions_same_realm
       BEFORE INSERT OR UPDATE OF customer_id, assigned_id, contractor_id, shop_id ON offer_sessions
       FOR EACH ROW EXECUTE FUNCTION scm_order_parties_same_realm();
@@ -136,6 +149,7 @@ export async function up(knex: Knex): Promise<void> {
       RETURN NEW;
     END $$;
 
+    DROP TRIGGER IF EXISTS trg_contractor_members_same_realm ON contractor_members;
     CREATE TRIGGER trg_contractor_members_same_realm
       BEFORE INSERT OR UPDATE OF user_id, contractor_id ON contractor_members
       FOR EACH ROW EXECUTE FUNCTION scm_contractor_members_same_realm();
@@ -150,11 +164,13 @@ export async function up(knex: Knex): Promise<void> {
       RETURN NEW;
     END $$;
 
+    DROP TRIGGER IF EXISTS trg_chat_participants_same_realm ON chat_participants;
     CREATE TRIGGER trg_chat_participants_same_realm
       BEFORE INSERT OR UPDATE OF user_id, chat_id ON chat_participants
       FOR EACH ROW EXECUTE FUNCTION scm_chat_participants_same_realm();
   `)
 
+  if (await knex.schema.hasTable("test_login_events")) return
   await knex.schema.createTable("test_login_events", (t) => {
     t.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"))
     // As submitted (trimmed, max 100). Unknown usernames are recorded too.
