@@ -31,6 +31,7 @@ import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
 import { checkBuyOrderMatches } from "../../../../services/buy-order-matching/buy-order-matching.service.js"
 import { listingVisibleTo } from "../util/listing-visibility.js"
+import { resolveItemTypes } from "../util/item-type-filter.js"
 
 /**
  * Response for creating a listing
@@ -784,7 +785,9 @@ export class ListingsV2Controller extends BaseController {
         if (subcategories.length > 0) {
           query = query.whereIn("ls.game_item_type", subcategories);
         } else {
-          query = query.where("ls.game_item_type", item_type);
+          // Case-insensitive subcategory match ("helmet" == "Helmet"), resolved
+          // to the stored spellings so this stays a plain IN on game_items.type.
+          query = query.whereIn("ls.game_item_type", await resolveItemTypes(db, item_type));
         }
       }
 

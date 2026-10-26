@@ -21,6 +21,7 @@ import {
 } from "../types/game-items.types.js"
 import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
+import { resolveItemTypes } from "../util/item-type-filter.js"
 
 /**
  * Row shape of the quality-distribution aggregate query. The integer columns are
@@ -542,7 +543,14 @@ export class GameItemsV2Controller extends BaseController {
         )
       }
       if (item_type) {
-        query = query.whereRaw("COALESCE(gi.type, ls.game_item_type) = ?", [item_type])
+        // Case-insensitive, like the listing search's item_type filter
+        const itemTypes = await resolveItemTypes(db, item_type)
+        query = itemTypes.length
+          ? query.whereRaw(
+              `COALESCE(gi.type, ls.game_item_type) IN (${itemTypes.map(() => "?").join(", ")})`,
+              itemTypes,
+            )
+          : query.whereRaw("false")
       }
       if (price_min !== undefined) {
         query = query.having(db.raw("MIN(ls.price_min)"), ">=", price_min)
