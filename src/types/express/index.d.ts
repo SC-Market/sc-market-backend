@@ -38,6 +38,10 @@ declare global {
       __tokenInfo?: Omit<TokenInfo, "expires_at"> & {
         expires_at?: Date | null
       }
+      // Set by applySiteRolePolicy (src/api/util/site-admin-policy.ts) when the
+      // account is a site admin but this request may not use the role; req.user
+      // then carries role "user".
+      adminLocked?: import("../../api/util/site-admin-policy.js").AdminLockReason
       contractor?: DBContractor
       order?: DBOrder
       offer_session?: DBOfferSession

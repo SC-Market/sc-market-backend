@@ -3,18 +3,29 @@ import {
   DBOrder,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
-import * as profileDb from "../profiles/database.js"
+import { currentRequestUser } from "../../../util/request-context.js"
 import * as contractorDb from "../contractors/database.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+
+/**
+ * The site-admin short-circuit applies only to the user making the current
+ * request, with that request's effective role (populateUser masks it on
+ * custom-domain origins). It used to re-read the role from the DB, which
+ * bypassed the masking. Outside a request (background tasks, the Discord bot's
+ * discord_app) and for users other than the requester there is no admin
+ * short-circuit; org roles decide.
+ */
+function isActingSiteAdmin(user_id: string): boolean {
+  const requester = currentRequestUser()
+  return !!requester && requester.user_id === user_id && isSiteAdmin(requester)
+}
 
 export async function has_permission(
   contractor_id: string,
   user_id: string,
   permission_name: keyof DBContractorRole,
 ) {
-  // let roles = await database.getContractorRoles({contractor_id})
-  const user = await profileDb.getUser({ user_id })
-  if (isSiteAdmin(user)) {
+  if (isActingSiteAdmin(user_id)) {
     return true
   }
 

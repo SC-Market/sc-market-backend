@@ -62,19 +62,27 @@ describe("customDomainOrigins", () => {
 })
 
 describe("custom domain cache", () => {
+  let rows: Array<{ custom_domain: string }> | Error
+
   beforeEach(() => {
     vi.resetModules()
+    vi.useFakeTimers()
+    rows = [{ custom_domain: "shop.example.com" }]
     vi.doMock("../../clients/database/knex-db.js", () => {
       const builder = {
         whereNotNull: () => builder,
         whereNull: () => builder,
-        select: async () => [{ custom_domain: "shop.example.com" }],
+        select: async () => {
+          if (rows instanceof Error) throw rows
+          return rows
+        },
       }
       return { getKnex: () => () => builder }
     })
   })
 
   afterEach(() => {
+    vi.useRealTimers()
     vi.doUnmock("../../clients/database/knex-db.js")
   })
 
@@ -83,5 +91,72 @@ describe("custom domain cache", () => {
     expect(await m.isOriginAllowedAsync("https://shop.example.com")).toBe(true)
     expect(await m.isOriginAllowedAsync("http://shop.example.com")).toBe(false)
     expect(m.isOriginAllowed("http://shop.example.com")).toBe(false)
+  })
+
+  it("drops custom domains (keeps static origins) when the DB refresh fails", async () => {
+    const m = await import("./allowed-origins.js")
+    expect(await m.isOriginAllowedAsync("https://shop.example.com")).toBe(true)
+
+    rows = new Error("db down")
+    vi.advanceTimersByTime(61_000)
+    expect(await m.isOriginAllowedAsync("https://shop.example.com")).toBe(false)
+    expect(m.isOriginAllowed("https://shop.example.com")).toBe(false)
+    expect(m.isOriginAllowed(m.staticAllowlist[0])).toBe(true)
+  })
+
+  it("stops trusting a cache that has not refreshed for 5 minutes", async () => {
+    const m = await import("./allowed-origins.js")
+    await m.refreshCustomDomainCache()
+    expect(m.isOriginAllowed("https://shop.example.com")).toBe(true)
+    vi.advanceTimersByTime(5 * 60_000 + 1)
+    expect(m.isOriginAllowed("https://shop.example.com")).toBe(false)
+  })
+
+  it("picks up a revoked domain on the next check after invalidation", async () => {
+    const m = await import("./allowed-origins.js")
+    expect(await m.isOriginAllowedAsync("https://shop.example.com")).toBe(true)
+    rows = []
+    m.invalidateCustomDomainCache()
+    expect(await m.isOriginAllowedAsync("https://shop.example.com")).toBe(false)
+  })
+})
+
+describe("normalizeCustomDomain", () => {
+  it.each([
+    ["Shop.Example.COM", "shop.example.com"],
+    ["  shop.example.com.  ", "shop.example.com"],
+    ["a-b.c.example.org", "a-b.c.example.org"],
+  ])("accepts %j as %j", async (input, expected) => {
+    const { normalizeCustomDomain } = await import("./allowed-origins.js")
+    expect(normalizeCustomDomain(input)).toEqual({ ok: true, domain: expected })
+  })
+
+  it.each([
+    "localhost",
+    "foo.localhost",
+    "127.0.0.1",
+    "10.0.0.5",
+    "intranet",
+    "https://shop.example.com",
+    "shop.example.com/path",
+    "-bad.example.com",
+    "",
+  ])("rejects %j", async (input) => {
+    const { normalizeCustomDomain } = await import("./allowed-origins.js")
+    expect(normalizeCustomDomain(input).ok).toBe(false)
+  })
+
+  it("rejects the main site's own zone", async () => {
+    vi.resetModules()
+    const prev = process.env.FRONTEND_URL
+    process.env.FRONTEND_URL = "https://sc-market.space"
+    try {
+      const { normalizeCustomDomain } = await import("./allowed-origins.js")
+      expect(normalizeCustomDomain("sc-market.space").ok).toBe(false)
+      expect(normalizeCustomDomain("evil.sc-market.space").ok).toBe(false)
+      expect(normalizeCustomDomain("sc-market.space.example.com").ok).toBe(true)
+    } finally {
+      process.env.FRONTEND_URL = prev
+    }
   })
 })

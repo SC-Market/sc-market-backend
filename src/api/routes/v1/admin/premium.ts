@@ -14,6 +14,10 @@ import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { DBOrgPremiumTier } from "../../../../clients/database/db-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import {
+  invalidateCustomDomainCache,
+  normalizeCustomDomain,
+} from "../../../util/allowed-origins.js"
 
 const knex = () => getKnex()
 
@@ -125,9 +129,14 @@ adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res)
       return
     }
 
-    if (custom_domain && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(custom_domain)) {
-      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid domain format"))
-      return
+    let normalizedDomain: string | null | undefined = custom_domain
+    if (custom_domain) {
+      const checked = normalizeCustomDomain(custom_domain)
+      if (!checked.ok) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, checked.reason))
+        return
+      }
+      normalizedDomain = checked.domain
     }
 
     const contractorId = await resolveContractorId(req.params.id)
@@ -147,7 +156,7 @@ adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res)
       granted_at: new Date(),
       revoked_at: null,
     }
-    if (custom_domain !== undefined) updateData.custom_domain = custom_domain
+    if (custom_domain !== undefined) updateData.custom_domain = normalizedDomain || null
 
     if (existing) {
       await knex()("org_premium_tiers")
@@ -167,8 +176,9 @@ adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res)
       actorId: user.user_id,
       subjectType: "contractor",
       subjectId: contractorId,
-      metadata: { tier, custom_domain: custom_domain ?? null },
+      metadata: { tier, custom_domain: normalizedDomain ?? null },
     })
+    invalidateCustomDomainCache()
 
     res.json(createResponse(result))
   } catch (err: any) {
@@ -189,9 +199,14 @@ adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (
       return
     }
 
-    if (custom_domain && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(custom_domain)) {
-      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid domain format"))
-      return
+    let normalizedDomain: string | null | undefined = custom_domain
+    if (custom_domain) {
+      const checked = normalizeCustomDomain(custom_domain)
+      if (!checked.ok) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, checked.reason))
+        return
+      }
+      normalizedDomain = checked.domain
     }
 
     const contractorId = await resolveContractorId(req.params.id)
@@ -203,7 +218,7 @@ adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (
     const updated = await knex()("org_premium_tiers")
       .where({ contractor_id: contractorId })
       .whereNull("revoked_at")
-      .update({ custom_domain: custom_domain ?? null })
+      .update({ custom_domain: normalizedDomain || null })
 
     if (!updated) {
       res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.id))
@@ -217,8 +232,9 @@ adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (
       actorId: (req.user as User).user_id,
       subjectType: "contractor",
       subjectId: contractorId,
-      metadata: { custom_domain: custom_domain ?? null },
+      metadata: { custom_domain: normalizedDomain ?? null },
     })
+    invalidateCustomDomainCache()
 
     res.json(createResponse(result))
   } catch (err: any) {
@@ -242,7 +258,9 @@ adminPremiumRouter.delete("/:id", adminAuthorized, writeRateLimit, async (req, r
     const updated = await knex()("org_premium_tiers")
       .where({ contractor_id: contractorId })
       .whereNull("revoked_at")
-      .update({ revoked_at: new Date() })
+      // Clear the domain too: re-granting the tier must not silently bring
+      // an old (possibly lapsed and re-registered) domain back into CORS.
+      .update({ revoked_at: new Date(), custom_domain: null })
 
     if (!updated) {
       res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.id))
@@ -255,6 +273,7 @@ adminPremiumRouter.delete("/:id", adminAuthorized, writeRateLimit, async (req, r
       subjectType: "contractor",
       subjectId: contractorId,
     })
+    invalidateCustomDomainCache()
 
     res.json(createResponse({ message: "Premium tier revoked" }))
   } catch (err) {

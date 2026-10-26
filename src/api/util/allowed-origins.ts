@@ -63,12 +63,36 @@ export function customDomainOrigins(domains: string[]): string[] {
     .map((d) => `https://${d}`)
 }
 
-// Cache of custom domains from DB
+/**
+ * Origins of the main site itself (frontend and API hosts), as opposed to
+ * shop custom domains and PREMIUM_HOSTS. Requests from any other origin are
+ * "custom origin" requests (see middleware/custom-origin.ts).
+ */
+export const mainSiteOrigins: string[] = buildStaticAllowlist({
+  backendUrl: new URL(env.BACKEND_URL || "http://localhost:7000"),
+  frontendUrl: new URL(env.FRONTEND_URL || "http://localhost:5173"),
+  production: env.NODE_ENV === "production",
+})
+
+export function isMainSiteOrigin(origin: string): boolean {
+  return mainSiteOrigins.includes(origin)
+}
+
+// Cache of custom domains from DB.
+//
+// Fails closed: if a refresh fails, the custom domains are dropped (only the
+// static origins stay allowed) until a refresh succeeds, and a cache older
+// than MAX_STALENESS is never used. A revoked domain therefore stops working
+// within CACHE_TTL, and immediately in this process when an admin handler
+// calls invalidateCustomDomainCache().
 let customDomainCache: string[] = []
 let cacheTimestamp = 0
+let inflight: Promise<void> | null = null
 const CACHE_TTL = 60_000
+const RETRY_AFTER_FAILURE = 10_000
+const MAX_STALENESS = 5 * 60_000
 
-export async function refreshCustomDomainCache(): Promise<void> {
+async function loadCustomDomains(): Promise<void> {
   try {
     const { getKnex } = await import("../../clients/database/knex-db.js")
     const rows = await getKnex()<DBOrgPremiumTier>("org_premium_tiers")
@@ -80,12 +104,29 @@ export async function refreshCustomDomainCache(): Promise<void> {
     )
     cacheTimestamp = Date.now()
   } catch {
-    // DB not ready — keep existing cache
+    customDomainCache = []
+    // Retry soon rather than on every request.
+    cacheTimestamp = Date.now() - CACHE_TTL + RETRY_AFTER_FAILURE
   }
 }
 
+/** Reload the custom domains from the DB (single-flight). */
+export function refreshCustomDomainCache(): Promise<void> {
+  if (!inflight) {
+    inflight = loadCustomDomains().finally(() => {
+      inflight = null
+    })
+  }
+  return inflight
+}
+
+/** Make the next check reload from the DB (call after changing a domain). */
+export function invalidateCustomDomainCache(): void {
+  cacheTimestamp = 0
+}
+
 export function getCustomDomainCache(): string[] {
-  return customDomainCache
+  return Date.now() - cacheTimestamp > MAX_STALENESS ? [] : customDomainCache
 }
 
 export function isCacheStale(): boolean {
@@ -95,8 +136,7 @@ export function isCacheStale(): boolean {
 /** Check if an origin is in the static allowlist or the custom domain cache. */
 export function isOriginAllowed(origin: string): boolean {
   if (staticAllowlist.includes(origin)) return true
-  if (customDomainCache.includes(origin)) return true
-  return false
+  return getCustomDomainCache().includes(origin)
 }
 
 /** Async version that refreshes cache if stale before checking. */
@@ -105,5 +145,43 @@ export async function isOriginAllowedAsync(origin: string): Promise<boolean> {
   if (isCacheStale()) {
     await refreshCustomDomainCache()
   }
-  return customDomainCache.includes(origin)
+  return getCustomDomainCache().includes(origin)
+}
+
+const HOSTNAME_RE =
+  /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/
+const IPV4_RE = /^\d{1,3}(\.\d{1,3}){3}$/
+
+/**
+ * Validate and normalize a shop custom domain before it is stored (and so
+ * becomes a credentialed CORS origin). Lower-cases it and rejects anything
+ * that is not a public multi-label hostname: IPs, localhost, single labels,
+ * and the main site's own hosts.
+ */
+export function normalizeCustomDomain(
+  input: string,
+): { ok: true; domain: string } | { ok: false; reason: string } {
+  const domain = input.trim().toLowerCase().replace(/\.$/, "")
+  if (domain.length === 0 || domain.length > 253) {
+    return { ok: false, reason: "Invalid domain format" }
+  }
+  if (IPV4_RE.test(domain)) {
+    return { ok: false, reason: "IP addresses are not allowed" }
+  }
+  if (!HOSTNAME_RE.test(domain)) {
+    return { ok: false, reason: "Invalid domain format" }
+  }
+  if (domain === "localhost" || domain.endsWith(".localhost")) {
+    return { ok: false, reason: "localhost is not allowed" }
+  }
+  const mainHosts = mainSiteOrigins.map((o) => new URL(o).hostname)
+  const mainZones = new Set(
+    mainHosts.map((h) => h.split(".").slice(-2).join(".")),
+  )
+  for (const zone of mainZones) {
+    if (domain === zone || domain.endsWith(`.${zone}`)) {
+      return { ok: false, reason: "The main site's domains are not allowed" }
+    }
+  }
+  return { ok: true, domain }
 }

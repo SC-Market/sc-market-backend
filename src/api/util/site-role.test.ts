@@ -98,21 +98,33 @@ describe("no inline site-admin role checks", () => {
 describe("consolidated admin gates keep their behaviour", () => {
   beforeEach(() => vi.resetModules())
 
-  it("has_permission short-circuits to true for a site admin only", async () => {
-    vi.doMock("../routes/v1/profiles/database.js", () => ({
-      getUser: async ({ user_id }: { user_id: string }) => ({
-        user_id,
-        role: user_id === "admin-1" ? "admin" : "user",
-      }),
-    }))
+  it("has_permission short-circuits to true for the requesting site admin only", async () => {
     vi.doMock("../routes/v1/contractors/database.js", () => ({
       getMemberRoles: async () => [],
       getContractorMembers: async () => [],
     }))
     const { has_permission } = await import("../routes/v1/util/permissions.js")
-    expect(await has_permission("c1", "admin-1", "manage_orders")).toBe(true)
-    expect(await has_permission("c1", "user-1", "manage_orders")).toBe(false)
-    vi.doUnmock("../routes/v1/profiles/database.js")
+    const { withRequestContext } = await import("./request-context.js")
+    const as = (user: object) => ({ user }) as unknown as Request
+    const admin = { user_id: "admin-1", role: "admin" }
+    const user = { user_id: "user-1", role: "user" }
+
+    await expect(
+      withRequestContext(as(admin), () =>
+        has_permission("c1", "admin-1", "manage_orders"),
+      ),
+    ).resolves.toBe(true)
+    await expect(
+      withRequestContext(as(user), () =>
+        has_permission("c1", "user-1", "manage_orders"),
+      ),
+    ).resolves.toBe(false)
+    // An admin acting does not make other users admins.
+    await expect(
+      withRequestContext(as(admin), () =>
+        has_permission("c1", "user-1", "manage_orders"),
+      ),
+    ).resolves.toBe(false)
     vi.doUnmock("../routes/v1/contractors/database.js")
   })
 

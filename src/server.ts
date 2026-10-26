@@ -91,27 +91,28 @@ const discord_bot_url = new URL(env.DISCORD_BOT_URL || "http://localhost:8081")
 import {
   isOriginAllowed,
   isOriginAllowedAsync,
-  isCacheStale,
-  refreshCustomDomainCache,
 } from "./api/util/allowed-origins.js"
 import { csrfProtection } from "./api/middleware/csrf.js"
 import { createSocketAllowRequest } from "./api/middleware/socket-origin.js"
+import { customOriginGuard } from "./api/middleware/custom-origin.js"
+import { applySiteRolePolicy } from "./api/util/site-admin-policy.js"
 
 const corsOptions = function (
   req: Request,
   callback: (arg0: Error | null, arg1: CorsOptions) => void,
 ) {
-  // Refresh domain cache if stale
-  if (isCacheStale()) {
-    refreshCustomDomainCache().catch(() => {})
-  }
-
   const origin = req.header("Origin")
-  if (!origin || isOriginAllowed(origin)) {
+  if (!origin) {
     callback(null, { origin: true, credentials: true })
-  } else {
-    callback(null, { origin: false })
+    return
   }
+  // Awaits a refresh when the custom-domain cache is stale, so a revoked
+  // domain is not judged against the old list.
+  isOriginAllowedAsync(origin).then(
+    (allowed) =>
+      callback(null, allowed ? { origin: true, credentials: true } : { origin: false }),
+    () => callback(null, { origin: false }),
+  )
 }
 
 const rootApp = express()
@@ -252,6 +253,9 @@ app.use(cors(corsOptions))
 // After cors() so a rejection still carries CORS headers for allowed origins
 // and the frontend can read the error.
 app.use(csrfProtection({ isOriginAllowed: isOriginAllowedAsync }))
+// Sensitive routes (tokens, sessions, admin, account, email/links, transfers)
+// are main-site only: a shop custom domain's JavaScript is the org's.
+app.use(customOriginGuard)
 app.use(track500Responses)
 app.use(i18nMiddleware)
 
@@ -393,6 +397,7 @@ io.engine.use(
             const user = await profileDb.getUser({ user_id: payload.sub })
             if (user && !user.banned) {
               req.user = user
+              applySiteRolePolicy(req)
               return next()
             }
           } catch { /* fall through to session */ }
@@ -401,6 +406,7 @@ io.engine.use(
     }
     // Fall back to session auth
     if (req.user) {
+      applySiteRolePolicy(req)
       return next()
     }
     next(new Error("Unauthorized"))

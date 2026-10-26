@@ -22,14 +22,25 @@ import {
   verifyAccessToken,
 } from "../util/jwt.js"
 import logger from "../../logger/logger.js"
+import { applySiteRolePolicy } from "../util/site-admin-policy.js"
+import { runInRequestContext } from "../util/request-context.js"
 
 export async function populateUser(
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction,
 ): Promise<void> {
+  await resolveUser(req)
+  // Decide whether a site admin may use the role on this request, then run
+  // the rest of the chain in a request context so has_permission() sees the
+  // same effective user as req.user.
+  applySiteRolePolicy(req)
+  runInRequestContext(req, res, next)
+}
+
+async function resolveUser(req: Request): Promise<void> {
   // 1. Session already populated by passport.session() — nothing to do
-  if (req.user) return next()
+  if (req.user) return
 
   try {
     // 2. Bearer token
@@ -95,6 +106,4 @@ export async function populateUser(
   } catch (err) {
     logger.error("[populateUser] unexpected error", { error: err })
   }
-
-  next()
 }
