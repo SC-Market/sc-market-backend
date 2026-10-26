@@ -57,6 +57,7 @@ import {
   getLanguageName,
 } from "../../../../constants/languages.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { canKickMember } from "./member-rules.js"
 
 export const post_auth_link: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -1463,15 +1464,32 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
       return
     }
 
-    const outranked = await outranks(
-      contractor.contractor_id,
-      target.user_id,
-      user.user_id,
-    )
+    const allowed = canKickMember({
+      actorId: user.user_id,
+      targetId: target.user_id,
+      actorIsOwner: await contractorDb.isContractorOwner(
+        user.user_id,
+        contractor.contractor_id,
+      ),
+      actorRoles: await contractorDb.getMemberRoles(
+        contractor.contractor_id,
+        user.user_id,
+      ),
+      targetRoles: await contractorDb.getMemberRoles(
+        contractor.contractor_id,
+        target.user_id,
+      ),
+    })
 
-    if (outranked) {
-      // You are outranked or equal
-      res.status(403).json(createErrorResponse({ message: "No permissions" }))
+    if (!allowed) {
+      res.status(403).json(
+        createErrorResponse({
+          message:
+            target.user_id === user.user_id
+              ? "You can't kick yourself. Leave the organization instead."
+              : "You can only kick members ranked below you",
+        }),
+      )
       return
     }
 
