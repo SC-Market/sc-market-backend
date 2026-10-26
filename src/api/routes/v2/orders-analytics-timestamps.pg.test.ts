@@ -319,6 +319,13 @@ describe.skipIf(!PG_TEST_URL)("v2 orders + seller-stats on real Postgres", () =>
       expect(res.orders.map((o) => o.order_id)).toEqual([ORDER(4)])
     })
 
+    it("role=customer is the buyer, as in /offers and V1", async () => {
+      const customer = await list(4, { role: "customer" })
+      const buyer = await list(4, { role: "buyer" })
+      expect(customer.orders.map((o) => o.order_id)).toEqual([ORDER(4)])
+      expect(customer).toEqual(buyer)
+    })
+
     it("role=seller: the user's shops' orders and orders assigned to them, each once", async () => {
       const res = await list(2, { role: "seller" })
       // 1 and 3 (two lines in 1), V1-era 5 found through orders.shop_id alone,

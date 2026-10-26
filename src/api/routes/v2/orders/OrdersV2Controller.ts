@@ -280,13 +280,16 @@ export class OrdersV2Controller extends BaseController {
    *
    * @summary Get orders list
    * @param status Only orders with this status, as orders store it
+   * @param role buyer: orders the user placed; customer: the same (the word
+   *   /offers and the V1 API use for the buyer); seller: orders of the user's
+   *   shops or assigned to them. Omitted: both.
    * @param request Express request for authentication
    * @returns Orders list with pagination metadata
    */
   @Get()
   public async getOrders(
     @Query() status?: 'not-started' | 'in-progress' | 'fulfilled' | 'cancelled',
-    @Query() role?: 'buyer' | 'seller',
+    @Query() role?: 'buyer' | 'customer' | 'seller',
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,
     @Query() page?: number,
@@ -359,7 +362,7 @@ export class OrdersV2Controller extends BaseController {
       }
 
       // Apply role filter
-      if (role === 'buyer') {
+      if (role === 'buyer' || role === 'customer') {
         query = query.where("orders.customer_id", userId)
       } else if (role === 'seller') {
         query = query.where(sellsOrder)

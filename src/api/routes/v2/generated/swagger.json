@@ -14383,6 +14383,7 @@
 						}
 					},
 					{
+						"description": "buyer: orders the user placed; customer: the same (the word\n/offers and the V1 API use for the buyer); seller: orders of the user's\nshops or assigned to them. Omitted: both.",
 						"in": "query",
 						"name": "role",
 						"required": false,
@@ -14390,6 +14391,7 @@
 							"type": "string",
 							"enum": [
 								"buyer",
+								"customer",
 								"seller"
 							]
 						}

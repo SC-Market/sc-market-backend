@@ -65,6 +65,10 @@ describe("GET /api/v2/orders query validation", () => {
     expect(param("status").schema.enum).toEqual(["not-started", "in-progress", "fulfilled", "cancelled"])
   })
 
+  it("role accepts customer, the buyer's name in /offers and V1", () => {
+    expect(param("role").schema.enum).toEqual(["buyer", "customer", "seller"])
+  })
+
   it.each([
     ["status", "completed"],
     ["status", "pending"],
