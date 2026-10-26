@@ -81,7 +81,6 @@ describe("order_create (1)", () => {
         "discord POST /channels/900000000000000001/messages",
         "webhook shop-hook SC Market - Order Placed",
         "shadow  order.created ok",
-        "ERROR   Query error",
       ]
     `)
     expect(obs).toMatchSnapshot()

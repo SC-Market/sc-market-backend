@@ -182,7 +182,7 @@ async function getOfferItemFields(offerId: string): Promise<{ name: string; valu
 async function getOrderItemFields(orderId: string): Promise<{ name: string; value: string }[]> {
   try {
     const { getKnex } = await import("../../../../clients/database/knex-db.js")
-    const orderListings = await getKnex()("market_listing_orders")
+    const orderListings = await getKnex()("market_orders")
       .where({ order_id: orderId })
       .select()
     if (!orderListings.length) return []

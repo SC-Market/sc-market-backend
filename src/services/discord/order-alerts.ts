@@ -115,7 +115,7 @@ export async function postOrderAlert(order: DBOrder): Promise<void> {
     const avatar = await cdn.getFileLinkResource(customer.avatar)
 
     // Get market listing details from V1 or V2
-    const orderListings = await knex()("market_listing_orders")
+    const orderListings = await knex()("market_orders")
       .where({ order_id: order.order_id })
       .select()
       .catch(() => [] as { listing_id: string; quantity: number }[])

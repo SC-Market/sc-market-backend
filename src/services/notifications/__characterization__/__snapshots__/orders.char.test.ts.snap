@@ -568,9 +568,7 @@ https://sc-market.space/settings?tab&#x3D;email",
       "type": "notification_email",
     },
   ],
-  "errors": [
-    "Query error",
-  ],
+  "errors": [],
   "in_app": [
     {
       "action": "order_create",

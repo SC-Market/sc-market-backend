@@ -85,7 +85,6 @@ describe("Discord bot reply queue", () => {
       {
         "summary": [
           "discord POST /channels/thread:t1/messages",
-          "ERROR   Query error",
         ],
         "thread_id": "800000000000000201",
       }
