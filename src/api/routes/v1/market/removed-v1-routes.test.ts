@@ -13,6 +13,18 @@ vi.hoisted(() => {
   process.env.B2_APP_KEY ||= "test"
 })
 
+// The routers build their Postgres-backed rate limiters at import; keep them
+// in memory so nothing tries to reach a database.
+vi.mock("rate-limiter-flexible", async (importOriginal) => {
+  const original = await importOriginal<typeof import("rate-limiter-flexible")>()
+  class RateLimiterPostgres extends original.RateLimiterMemory {
+    constructor(opts: { points?: number; duration?: number }) {
+      super({ points: opts.points, duration: opts.duration })
+    }
+  }
+  return { ...original, RateLimiterPostgres }
+})
+
 type Layer = {
   route?: { path: string; methods: Record<string, boolean> }
   handle?: { stack?: Layer[] }
