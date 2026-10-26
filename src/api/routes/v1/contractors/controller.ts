@@ -504,6 +504,16 @@ export const get_spectrum_id_members_csv: RequestHandler = async (
   res,
   next,
 ) => {
+  // The roster export is for the org's own members (and site admins).
+  const user = req.user as User
+  if (
+    !isSiteAdmin(user) &&
+    !(await is_member(req.contractor!.contractor_id, user.user_id))
+  ) {
+    res.status(403).json(createForbiddenErrorResponse("Unauthorized"))
+    return
+  }
+
   const members = await contractorDb.getContractorMembersUsernamesAndID({
     "contractor_members.contractor_id": req.contractor!.contractor_id,
   })
