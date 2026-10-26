@@ -864,6 +864,8 @@ export interface DBDiscordChannelSetup {
   owner_id: string
   threads: boolean
   alerts: boolean
+  /** The public contract feed (/setup contracts). */
+  contracts: boolean
   created_by_discord_id: string | null
   created_at: Date
   updated_at: Date

@@ -88,6 +88,8 @@ export async function user(
     push?: number
     role?: "user" | "admin"
     locale?: string
+    /** A test account (accounts.is_test is fixed at creation). */
+    isTest?: boolean
   } = {},
 ): Promise<SeededUser> {
   const db = getKnex()
@@ -101,6 +103,7 @@ export async function user(
     role: opts.role ?? "user",
     locale: opts.locale ?? "en",
     discord_id,
+    ...(opts.isTest ? { is_test: true } : {}),
   })
   labels.set(String(discord_id), `discord:${name}`)
   if (discord_id) {

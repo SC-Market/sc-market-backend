@@ -26,6 +26,7 @@ export const CATEGORIES = {
   org: { orgScoped: false, mandatory: false },
   announcements: { orgScoped: false, mandatory: false },
   reminders: { orgScoped: false, mandatory: false },
+  contracts: { orgScoped: true, mandatory: false },
   account: { orgScoped: false, mandatory: true },
 } as const
 export type CategoryId = keyof typeof CATEGORIES
@@ -79,6 +80,8 @@ export const CATALOG = {
   "admin.alert": event("announcements", "admin_alert", IN_APP_PUSH),
   "reminder.unread_messages": event("reminders", "dm_reminder", ["email"]),
   "watchlist.price_alert": event("watchlist", "price_alert", ["in_app", "push", "email", "discord_dm"]),
+  // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
+  "contract.public_created": event("contracts", "public_contract_create", IN_APP_PUSH),
 } as const satisfies Record<string, EventDefinition>
 
 export type EventKey = keyof typeof CATALOG

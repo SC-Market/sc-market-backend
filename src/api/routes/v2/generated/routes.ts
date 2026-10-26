@@ -64,6 +64,8 @@ import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DashboardV2Controller } from './../dashboard/DashboardV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ContractAlertsV2Controller } from './../contract-alerts/ContractAlertsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CartV2Controller } from './../cart/CartV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BuyOrdersV2Controller } from './../buy-orders/BuyOrdersV2Controller.js';
@@ -3403,6 +3405,49 @@ const models: TsoaRoute.Models = {
             "owner_type": {"ref":"DashboardOwnerType","required":true},
             "owner_id": {"dataType":"string","required":true},
             "config": {"ref":"DashboardConfig","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ContractKind": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Support"]},{"dataType":"enum","enums":["Escort"]},{"dataType":"enum","enums":["Transport"]},{"dataType":"enum","enums":["Construction"]},{"dataType":"enum","enums":["Resource Acquisition"]},{"dataType":"enum","enums":["Rental"]},{"dataType":"enum","enums":["Delivery"]},{"dataType":"enum","enums":["Medical"]},{"dataType":"enum","enums":["Intelligence Services"]},{"dataType":"enum","enums":["Misc"]},{"dataType":"enum","enums":["Custom"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ContractAlertSubscription": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "kinds": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"ContractKind"}},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ContractAlertScope": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ContractAlertsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "subscriptions": {"dataType":"array","array":{"dataType":"refObject","ref":"ContractAlertSubscription"},"required":true},
+            "scopes": {"dataType":"array","array":{"dataType":"refObject","ref":"ContractAlertScope"},"required":true},
+            "kinds": {"dataType":"array","array":{"dataType":"refAlias","ref":"ContractKind"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateContractAlertRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "enabled": {"dataType":"boolean","required":true},
+            "kinds": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refAlias","ref":"ContractKind"}},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
     },
@@ -8839,6 +8884,69 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'saveLayout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsContractAlertsV2Controller_getContractAlerts: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/contract-alerts',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ContractAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ContractAlertsV2Controller.prototype.getContractAlerts)),
+
+            async function ContractAlertsV2Controller_getContractAlerts(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsContractAlertsV2Controller_getContractAlerts, request, response });
+
+                const controller = new ContractAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getContractAlerts',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsContractAlertsV2Controller_updateContractAlert: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateContractAlertRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.put('/contract-alerts',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ContractAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ContractAlertsV2Controller.prototype.updateContractAlert)),
+
+            async function ContractAlertsV2Controller_updateContractAlert(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsContractAlertsV2Controller_updateContractAlert, request, response });
+
+                const controller = new ContractAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateContractAlert',
                 controller,
                 response,
                 next,

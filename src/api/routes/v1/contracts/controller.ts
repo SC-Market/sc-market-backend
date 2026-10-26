@@ -1,3 +1,4 @@
+import { notifyPublicContractCreated } from "../../../../services/contracts/public-contract-alerts.js"
 import {
   hiddenFromRealViewers,
   notTestUser,
@@ -37,6 +38,8 @@ export const contracts_post_root: RequestHandler = async (req, res) => {
   })
 
   res.status(201).json(createResponse({ contract_id: contract.id }))
+  // Feeds and opt-in alerts; never throws, never delays the response.
+  void notifyPublicContractCreated(contract)
   return
 }
 

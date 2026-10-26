@@ -2,9 +2,9 @@
  * The bot's /setup routes: what a Discord channel gets from SC Market (order
  * threads, order alerts) and for whom (an org, or the member themselves).
  *
- *   POST   /channel-setups              set up threads or alerts in a channel
+ *   POST   /channel-setups              set up threads, alerts or the contract feed in a channel
  *   GET    /channel-setups/:channel_id  what a channel is set up for (/setup status)
- *   DELETE /channel-setups/:channel_id  turn threads or alerts off (/setup remove)
+ *   DELETE /channel-setups/:channel_id  turn one of them off (/setup remove)
  *
  * The bot checks the member's Discord permission (Manage Channels); these
  * routes check the SC Market side.
@@ -21,7 +21,7 @@ import {
   ChannelSetupView,
   DiscordSetupKind,
   DiscordSetupOwner,
-  addAlertChannel,
+  addFeedChannel,
   getSetup,
   listChannel,
   removeKind,
@@ -32,7 +32,7 @@ import { getKnex } from "../database/knex-db.js"
 export const channelSetupRouter = express.Router()
 
 const DISCORD_ID = /^[0-9]{15,22}$/
-const KINDS: DiscordSetupKind[] = ["threads", "alerts"]
+const KINDS: DiscordSetupKind[] = ["threads", "alerts", "contracts"]
 
 const NOT_LINKED =
   "Your Discord account isn't linked to SC Market. Log in at https://sc-market.space with Discord " +
@@ -42,14 +42,17 @@ const NOT_LINKED =
 const ORG_PERMISSIONS: Record<DiscordSetupKind, (keyof DBContractorRole)[]> = {
   threads: ["manage_webhooks"],
   alerts: ["manage_orders", "manage_webhooks"],
+  contracts: ["manage_orders", "manage_webhooks"],
 }
 const ORG_PERMISSION_LABELS: Record<DiscordSetupKind, string> = {
   threads: "Manage Webhooks",
   alerts: "Manage Orders or Manage Webhooks",
+  contracts: "Manage Orders or Manage Webhooks",
 }
 const KIND_LABELS: Record<DiscordSetupKind, string> = {
   threads: "order threads",
   alerts: "order alerts",
+  contracts: "the public contract feed",
 }
 
 class SetupError extends Error {
@@ -89,7 +92,7 @@ function parseKind(value: unknown): DiscordSetupKind {
   if (typeof value === "string" && (KINDS as string[]).includes(value)) {
     return value as DiscordSetupKind
   }
-  throw new SetupError(400, "kind must be threads or alerts")
+  throw new SetupError(400, "kind must be threads, alerts or contracts")
 }
 
 function requireDiscordId(value: unknown, name: string): string {
@@ -153,7 +156,7 @@ channelSetupRouter.post("/", async (req, res) => {
     if (kind === "threads") {
       moved_from = await setThreadChannel(owner, { guild_id, channel_id }, discord_id)
     } else {
-      await addAlertChannel(owner, { guild_id, channel_id }, discord_id)
+      await addFeedChannel(owner, { guild_id, channel_id }, discord_id, kind)
     }
 
     logger.info("Discord channel setup saved", {

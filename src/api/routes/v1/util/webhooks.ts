@@ -557,6 +557,11 @@ export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) 
   }
 }
 
+/** Post a prepared body to one webhook (same SSRF and timeout rules). */
+export async function sendWebhookBody(body: unknown, webhook: DBNotificationWebhook) {
+  return sendWebhook(body, webhook)
+}
+
 async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
   // Test accounts own no webhooks, so any webhook a test account's action
   // would fire belongs to a real user (services/test-accounts).

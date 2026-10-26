@@ -10515,6 +10515,117 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ContractKind": {
+				"type": "string",
+				"enum": [
+					"Support",
+					"Escort",
+					"Transport",
+					"Construction",
+					"Resource Acquisition",
+					"Rental",
+					"Delivery",
+					"Medical",
+					"Intelligence Services",
+					"Misc",
+					"Custom"
+				],
+				"description": "The contract kinds the site offers (frontend orderIcons)."
+			},
+			"ContractAlertSubscription": {
+				"properties": {
+					"contractor_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "null: personal; otherwise an org the user belongs to."
+					},
+					"kinds": {
+						"items": {
+							"$ref": "#/components/schemas/ContractKind"
+						},
+						"type": "array",
+						"nullable": true,
+						"description": "Only these kinds; null: every kind."
+					}
+				},
+				"required": [
+					"contractor_id",
+					"kinds"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ContractAlertScope": {
+				"properties": {
+					"contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"contractor_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ContractAlertsResponse": {
+				"properties": {
+					"subscriptions": {
+						"items": {
+							"$ref": "#/components/schemas/ContractAlertSubscription"
+						},
+						"type": "array",
+						"description": "Alerts are off unless a subscription exists for the scope."
+					},
+					"scopes": {
+						"items": {
+							"$ref": "#/components/schemas/ContractAlertScope"
+						},
+						"type": "array"
+					},
+					"kinds": {
+						"items": {
+							"$ref": "#/components/schemas/ContractKind"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"subscriptions",
+					"scopes",
+					"kinds"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateContractAlertRequest": {
+				"properties": {
+					"contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"enabled": {
+						"type": "boolean"
+					},
+					"kinds": {
+						"items": {
+							"$ref": "#/components/schemas/ContractKind"
+						},
+						"type": "array",
+						"nullable": true,
+						"description": "Only these kinds; omit or null for every kind."
+					}
+				},
+				"required": [
+					"enabled"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CartListingInfo": {
 				"description": "Listing information for cart items",
 				"properties": {
@@ -20291,6 +20402,70 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/UpdateDashboardLayoutRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/contract-alerts": {
+			"get": {
+				"operationId": "GetContractAlerts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ContractAlertsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the current user's public contract alert subscriptions",
+				"summary": "Get contract alerts",
+				"tags": [
+					"Notifications"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "UpdateContractAlert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ContractAlertsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Turn the public contract alert on or off for one scope, or change its kinds",
+				"summary": "Update contract alerts",
+				"tags": [
+					"Notifications"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateContractAlertRequest"
 							}
 						}
 					}

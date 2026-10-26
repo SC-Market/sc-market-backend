@@ -1,0 +1,136 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`contract.public_created > feeds (webhooks + Discord channels) and opt-in alerts with kind filters 2`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "color": 1095809,
+            "description": "Two fighters needed",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Escort",
+              },
+              {
+                "inline": true,
+                "name": "Payment",
+                "value": "one-time",
+              },
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "150,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "New public contract: Escort a Hull C to Pyro",
+            "url": "https://sc-market.space/contracts/public/contract:c1",
+          },
+        ],
+      },
+      "method": "post",
+      "route": "/channels/900000000000000401/messages",
+    },
+  ],
+  "discord_queue": [],
+  "email": [],
+  "email_queue": [],
+  "errors": [],
+  "in_app": [
+    {
+      "action": "public_contract_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "contract:c1",
+      "to": "user:pilot",
+    },
+    {
+      "action": "public_contract_create",
+      "actors": [
+        "user:customer",
+      ],
+      "entity": "contract:c1",
+      "to": "user:boss",
+    },
+  ],
+  "push": [
+    {
+      "payload": {
+        "body": "Escort a Hull C to Pyro (Escort, 150,000 aUEC)",
+        "data": {
+          "entityId": "contract:c1",
+          "type": "public_contract_create",
+          "url": "https://sc-market.space/contracts/public/contract:c1",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "tag": "public-contract-contract:c1",
+        "title": "New public contract",
+      },
+      "to": "push:boss",
+    },
+    {
+      "payload": {
+        "body": "Escort a Hull C to Pyro (Escort, 150,000 aUEC)",
+        "data": {
+          "entityId": "contract:c1",
+          "type": "public_contract_create",
+          "url": "https://sc-market.space/contracts/public/contract:c1",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "tag": "public-contract-contract:c1",
+        "title": "New public contract",
+      },
+      "to": "push:pilot",
+    },
+  ],
+  "shadow": [],
+  "warnings": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "color": 1095809,
+            "description": "Two fighters needed",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Escort",
+              },
+              {
+                "inline": true,
+                "name": "Payment",
+                "value": "one-time",
+              },
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "150,000 aUEC",
+              },
+            ],
+            "timestamp": "<ts>",
+            "title": "New public contract: Escort a Hull C to Pyro",
+            "url": "https://sc-market.space/contracts/public/contract:c1",
+          },
+        ],
+        "username": "SC Market - New Public Contract",
+      },
+      "method": "POST",
+      "url": "https://discord.com/api/webhooks/contract-feed/token",
+    },
+  ],
+  "websocket": [],
+}
+`;

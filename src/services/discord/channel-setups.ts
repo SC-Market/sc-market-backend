@@ -6,6 +6,8 @@
  *   the shop's channel, else the org's, else the assigned user's
  *   (`DiscordService.resolveThreadConfig`).
  * - Alerts: any number of channels per owner (`order-alerts.ts`).
+ * - Contracts: the site-wide public contract feed, any number of channels
+ *   (`services/contracts/public-contract-alerts.ts`).
  */
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
@@ -17,7 +19,9 @@ import {
 const TABLE = "discord_channel_setups"
 const knex = () => getKnex()
 
-export type DiscordSetupKind = "threads" | "alerts"
+export type DiscordSetupKind = "threads" | "alerts" | "contracts"
+
+const ALL_KINDS: DiscordSetupKind[] = ["threads", "alerts", "contracts"]
 
 export interface DiscordSetupOwner {
   owner_type: DiscordSetupOwnerType
@@ -87,16 +91,26 @@ export async function addAlertChannel(
   channel: DiscordChannelRef,
   created_by_discord_id: string,
 ): Promise<void> {
+  await addFeedChannel(owner, channel, created_by_discord_id, "alerts")
+}
+
+/** Turn on a multi-channel kind (order alerts or the contract feed) in `channel`. */
+export async function addFeedChannel(
+  owner: DiscordSetupOwner,
+  channel: DiscordChannelRef,
+  created_by_discord_id: string,
+  kind: "alerts" | "contracts",
+): Promise<void> {
   await knex()(TABLE)
     .insert({
       ...owner,
       channel_id: channel.channel_id,
       guild_id: channel.guild_id,
-      alerts: true,
+      [kind]: true,
       created_by_discord_id,
     })
     .onConflict(["channel_id", "owner_type", "owner_id"])
-    .merge({ alerts: true, created_by_discord_id, updated_at: knex().fn.now() })
+    .merge({ [kind]: true, created_by_discord_id, updated_at: knex().fn.now() })
 }
 
 /** The owner's setup in this channel, or undefined. */
@@ -112,10 +126,10 @@ export async function getSetup(
 /** Turn one kind off for `row`; the row goes away when it has nothing left. */
 export async function removeKind(
   db: Knex | Knex.Transaction,
-  row: Pick<DBDiscordChannelSetup, "id" | "threads" | "alerts">,
+  row: Pick<DBDiscordChannelSetup, "id" | "threads" | "alerts"> & { contracts?: boolean },
   kind: DiscordSetupKind,
 ): Promise<void> {
-  const remaining = kind === "threads" ? row.alerts : row.threads
+  const remaining = ALL_KINDS.some((k) => k !== kind && !!row[k])
   if (remaining) {
     await db(TABLE).where({ id: row.id }).update({ [kind]: false, updated_at: db.fn.now() })
   } else {
@@ -170,6 +184,7 @@ export interface ChannelSetupView {
   guild_id: string
   threads: boolean
   alerts: boolean
+  contracts: boolean
   created_by_discord_id: string | null
 }
 
@@ -193,6 +208,7 @@ export async function listChannel(channel_id: string): Promise<ChannelSetupView[
       "d.guild_id",
       "d.threads",
       "d.alerts",
+      "d.contracts",
       "d.created_by_discord_id",
       "c.name as org_name",
       "c.spectrum_id",
@@ -213,6 +229,7 @@ export async function listChannel(channel_id: string): Promise<ChannelSetupView[
     guild_id: r.guild_id,
     threads: r.threads,
     alerts: r.alerts,
+    contracts: r.contracts,
     created_by_discord_id: r.created_by_discord_id,
   }))
 }

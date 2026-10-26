@@ -1,3 +1,5 @@
+import * as contractDb from "../contracts/database.js"
+import { serializePublicContract } from "../contracts/serializers.js"
 import { deliverableRecipients } from "../../../../services/test-accounts/isolation.js"
 /**
  * Notification-related database operations.
@@ -511,6 +513,11 @@ export async function getEntityByType(
     case "order": {
       const order = await orderDb.getOrder({ order_id: entity_id })
       return serializeOrderDetails(order, null)
+    }
+    case "public_contracts": {
+      const [contract] = await contractDb.getPublicContract({ id: entity_id })
+      if (!contract) throw new Error(`Public contract not found: ${entity_id}`)
+      return serializePublicContract(contract)
     }
     case "offer_sessions": {
       const offers = await offerDb.getOfferSessions({ id: entity_id })

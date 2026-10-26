@@ -27,6 +27,7 @@ describe("matrix", () => {
         "org: in_app=on(locked) push=on",
         "announcements: in_app=on(locked) push=on",
         "reminders: email=off",
+        "contracts: in_app=on(locked) push=on",
       ]
     `)
   })
@@ -97,6 +98,7 @@ describe("matrix", () => {
           "offer_messages: in_app=on(locked) push=on email=off",
           "market: in_app=on(locked) push=on",
           "reviews: in_app=on(locked) push=on email=off",
+          "contracts: in_app=on(locked) push=on",
         ],
         "personalOrders": "orders: in_app=on(locked) push=on email=off",
       }
