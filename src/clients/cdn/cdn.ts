@@ -4,7 +4,7 @@ import { BackBlazeCDN } from "../backblaze/backblaze.js"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 
 export const external_resource_pattern =
-  /^https?:\/\/(www\.)?(((media|cdn)\.)?robertsspaceindustries\.com|(media\.)?starcitizen\.tools|i\.imgur\.com|cstone\.space)([\/?#][-a-zA-Z0-9()@:%_+.~#?&\/=]*)?$/
+  /^https:\/\/(www\.)?(((media|cdn)\.)?robertsspaceindustries\.com|(media\.)?starcitizen\.tools|i\.imgur\.com|cstone\.space)([\/?#][-a-zA-Z0-9()@:%_+.~#?&\/=]*)?$/
 
 export const valid_domains = [
   "media.robertsspaceindustries.com",
@@ -19,6 +19,20 @@ export const valid_domains = [
 ]
 
 export const external_resource_regex = new RegExp(external_resource_pattern)
+
+/**
+ * External image URLs must be https on an allowed host. Checking only the
+ * host let `http:` (mixed content, MITM-able) and other schemes through.
+ */
+export function isAllowedExternalImageUrl(external_url: string): boolean {
+  let url: URL
+  try {
+    url = new URL(external_url)
+  } catch {
+    return false
+  }
+  return url.protocol === "https:" && valid_domains.includes(url.hostname)
+}
 
 export interface CDN {
   uploadFile(
@@ -64,9 +78,7 @@ export class ExternalCDN implements CDN {
   }
 
   verifyExternalResource(external_url: string) {
-    const url = new URL(external_url)
-
-    return valid_domains.includes(url.hostname)
+    return isAllowedExternalImageUrl(external_url)
   }
 
   async createExternalResource(

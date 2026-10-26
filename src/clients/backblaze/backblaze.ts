@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import { database } from "../database/knex-db.js"
 import { DBImageResource } from "../database/db-models.js"
-import { CDN, CDNError, valid_domains } from "../cdn/cdn.js"
+import { CDN, CDNError, isAllowedExternalImageUrl } from "../cdn/cdn.js"
 import { env } from "../../config/env.js"
 import { S3, S3ClientConfig } from "@aws-sdk/client-s3"
 import logger from "../../logger/logger.js"
@@ -135,14 +135,7 @@ export class BackBlazeCDN implements CDN {
   }
 
   verifyExternalResource(external_url: string) {
-    const url = new URL(external_url)
-
-    if (!valid_domains.includes(url.hostname)) {
-      // if (!external_url.match(external_resource_regex))
-      return false
-    }
-
-    return true
+    return isAllowedExternalImageUrl(external_url)
   }
 
   async createExternalResource(
