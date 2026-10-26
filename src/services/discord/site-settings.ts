@@ -2,7 +2,6 @@
  * How the website shows and sets a thread channel (user and org settings,
  * data export). The bot sets them with /setup; see channel-setups.ts.
  */
-import { DBDiscordChannelSetup } from "../../clients/database/db-models.js"
 import logger from "../../logger/logger.js"
 import { DiscordChannelRef } from "./channel-setups.js"
 import { discordService } from "./discord.service.js"
@@ -72,20 +71,4 @@ export async function describeThreadChannel(
     logger.debug(`Could not fetch Discord channel ${ref.channel_id}: ${error}`)
   }
   return result
-}
-
-/** Data-export lines for an owner's Discord channels. */
-export function formatDiscordSetups(rows: DBDiscordChannelSetup[]): string {
-  if (!rows.length) return "Discord channels: none\n"
-  return (
-    "Discord channels:\n" +
-    rows
-      .map((r) => {
-        const kinds = [r.threads && "order threads", r.alerts && "order alerts"]
-          .filter(Boolean)
-          .join(", ")
-        return `- Server ${r.guild_id}, channel ${r.channel_id}: ${kinds}\n`
-      })
-      .join("")
-  )
 }

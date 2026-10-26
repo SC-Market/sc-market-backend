@@ -380,3 +380,35 @@ export const authSessionsLimit = createRateLimit({
   authenticated: { points: 1 }, // 500/min per user (generous)
   admin: { points: 1 }, // 300/min
 })
+
+// Personal-data export (GET /api/profile/my_data): a full read of the
+// account, so its own bucket, keyed like the others (user id when logged in):
+// 5 exports per hour.
+const dataExportLimiter = createRateLimiter({
+  points: 5,
+  duration: 3600,
+  keyPrefix: "scmarket:data-export",
+})
+
+export async function dataExportRateLimit(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const userTier = detectUserTier(req)
+  const key = generateRateLimitKey(req, userTier)
+  try {
+    const rateLimiterRes = await dataExportLimiter.consume(key, 1)
+    setRateLimitHeaders(res, rateLimiterRes, 5)
+    next()
+  } catch (rejection) {
+    // consume() rejects with a RateLimiterRes when over the limit, or with an
+    // Error when the store fails.
+    if (rejection instanceof Error) return next(rejection)
+    const rateLimiterRes = rejection as RateLimiterRes
+    const body = createRateLimitResponse(rateLimiterRes, userTier, req.path, 5)
+    setRateLimitHeaders(res, rateLimiterRes, 5)
+    res.set("X-RateLimit-Retry-After", body.retryAfter.toString())
+    res.status(429).json(body)
+  }
+}

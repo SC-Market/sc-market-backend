@@ -8,6 +8,7 @@ import {
   criticalRateLimit,
   writeRateLimit,
   readRateLimit,
+  dataExportRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 import { singlePhotoUpload, photoUpload, removeUploadsWhenDone } from "../util/upload.js"
 
@@ -224,6 +225,7 @@ profileRouter.get(
   "/my_data",
   readRateLimit,
   userAuthorized,
+  dataExportRateLimit,
   requireProfileRead,
   profile_get_my_data,
 )

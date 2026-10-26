@@ -5,13 +5,13 @@ import {
 } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
-import { database as database } from "../../../../clients/database/knex-db.js"
+import {
+  database as database,
+  getKnex,
+} from "../../../../clients/database/knex-db.js"
 import * as profileDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
 import * as notificationDb from "../notifications/database.js"
-import * as orderDb from "../orders/database.js"
-import * as chatDb from "../chats/database.js"
-import * as commentDb from "../comments/database.js"
 import { cdn as cdn } from "../../../../clients/cdn/cdn.js"
 import { AvailabilityBody as AvailabilityBody } from "../../../../clients/database/db-models.js"
 import { getUserRating as getUserRating } from "../util/formatting.js"
@@ -19,13 +19,11 @@ import { createNotificationWebhook as createNotificationWebhook } from "../util/
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 import {
   getThreadChannel,
-  listOwner,
   setThreadChannel,
 } from "../../../../services/discord/channel-setups.js"
 import {
   OFFICIAL_THREAD_CHANNEL,
   describeThreadChannel,
-  formatDiscordSetups,
 } from "../../../../services/discord/site-settings.js"
 import { authorizeProfile as authorizeProfile } from "./helpers.js"
 import { get_sentinel as get_sentinel } from "./helpers.js"
@@ -41,6 +39,7 @@ import { ErrorCode } from "../util/error-codes.js"
 import { randomUUID as randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
+import { writeUserDataExport } from "../../../../services/data-export/user-data-export.js"
 import {
   SUPPORTED_LANGUAGES,
   validateLanguageCodes,
@@ -1046,151 +1045,48 @@ export const profile_put_links_provider_type_primary: RequestHandler = async (
   }
 }
 
+/**
+ * GET /api/profile/my_data: the user's personal-data export, streamed as one
+ * JSON file. Contents: src/services/data-export/user-data-export.ts.
+ */
 export const profile_get_my_data: RequestHandler = async (req, res) => {
   const user = req.user as User
-  res.set({ "Content-Disposition": 'attachment; filename="data.txt"' })
-  let content = ""
-  content += `RSI Handle: ${user.username}\n`
-  const discordId = await profileDb.getUserDiscordId(user.user_id)
-  if (discordId) {
-    content += `Discord ID: ${discordId}\n`
-  }
-  content += `Display Name: ${user.display_name}\n`
-  content += `Profile Description: ${user.profile_description}\n`
-  content += `Avatar URL: ${await cdn.getFileLinkResource(user.avatar)}\n`
-  content += `Banner URL: ${await cdn.getFileLinkResource(user.banner)}\n`
-  content += formatDiscordSetups(
-    await listOwner({ owner_type: "user", owner_id: user.user_id }),
-  )
-  content += "\n"
-  content += "Contractors:\n"
-
-  content += "Orders:\n"
-  const orders = await orderDb.getOrders({
-    customer_id: user.user_id,
+  const date = new Date().toISOString().slice(0, 10)
+  res.status(200).set({
+    "Content-Type": "application/json; charset=utf-8",
+    "Content-Disposition": `attachment; filename="sc-market-data-${date}.json"`,
+    "Cache-Control": "no-store",
   })
-  orders.push(
-    ...(await orderDb.getOrders({
-      assigned_id: user.user_id,
-    })),
-  )
-
-  for (const order of orders) {
-    content += `${order.title} - ${order.timestamp}:\n`
-    content += `Rush: ${order.rush}\n`
-    content += `Departure: ${order.departure}\n`
-    content += `Destination: ${order.destination}\n`
-    content += `Kind: ${order.kind}\n`
-    content += `Cost: ${order.cost}\n`
-    content += `Collateral: ${order.collateral}\n`
-    content += `Description: ${order.description}\n`
-    content += `Status: ${order.status}\n`
-    content += `Payment Type: ${order.payment_type}\n`
-    content += `Discord Thread: ${order.thread_id}\n`
+  const closed = () => new Error("Client closed the connection")
+  const sink = {
+    write: (chunk: string) =>
+      new Promise<void>((resolve, reject) => {
+        if (res.destroyed) return reject(closed())
+        if (res.write(chunk)) return resolve()
+        const onDrain = () => {
+          res.off("close", onClose)
+          resolve()
+        }
+        const onClose = () => {
+          res.off("drain", onDrain)
+          reject(closed())
+        }
+        res.once("drain", onDrain)
+        res.once("close", onClose)
+      }),
   }
-
-  const contractors = await contractorDb.getUserContractorRoles({
-    user_id: user.user_id,
-  })
-  for (const role_details of contractors) {
-    content += `${role_details.spectrum_id}: ${role_details.role}\n`
-    if (role_details.role === "owner") {
-      const contractor = await contractorDb.getContractor({
-        spectrum_id: role_details.spectrum_id,
-      })
-      content += `Spectrum ID: ${contractor.spectrum_id}\n`
-      content += `Name: ${contractor.name}\n`
-      content += `Name: ${contractor.description}\n`
-      content += `Avatar URL: ${await cdn.getFileLinkResource(
-        contractor.avatar,
-      )}\n`
-      content += `Banner URL: ${await cdn.getFileLinkResource(
-        contractor.banner,
-      )}\n`
-      content += `Size: ${contractor.size}\n`
-      content += formatDiscordSetups(
-        await listOwner({ owner_type: "org", owner_id: contractor.contractor_id }),
-      )
-      const fields = await contractorDb.getContractorFields({
-        "contractors.contractor_id": contractor.contractor_id,
-      })
-      content += `Fields: ${fields.map((f) => f.field).join(", ")}\n`
-      content += `Roles:\n\n`
-
-      const roles = await contractorDb.getContractorRoles({
-        contractor_id: contractor.contractor_id,
-      })
-      for (const role of roles) {
-        content += `${role.name}\n`
-        content += `Position ${role.position}\n`
-        content += `Manage Roles ${role.manage_roles}\n`
-        content += `Manage Orders ${role.manage_orders}\n`
-        content += `Kick Members ${role.kick_members}\n`
-        content += `Manage Invites ${role.manage_invites}\n`
-        content += `Manage Org Details ${role.manage_org_details}\n`
-        content += `Manage Theme ${role.manage_theme}\n`
-        content += `Manage Blocklist ${role.manage_blocklist}\n`
-        content += `Claim Orders ${role.claim_orders}\n`
-        content += `Manage Stock ${role.manage_stock}\n`
-        content += `Manage Market ${role.manage_market}\n`
-        content += `Manage Recruiting ${role.manage_recruiting}\n`
-        content += `Manage Webhooks ${role.manage_webhooks}\n\n`
-      }
-
-      content += "Orders:\n\n"
-      const orders = await orderDb.getOrders({
-        contractor_id: contractor.contractor_id,
-      })
-
-      for (const order of orders) {
-        content += `${order.title} - ${order.timestamp}:\n`
-        content += `Rush: ${order.rush}\n`
-        content += `Departure: ${order.departure}\n`
-        content += `Destination: ${order.destination}\n`
-        content += `Kind: ${order.kind}\n`
-        content += `Cost: ${order.cost}\n`
-        content += `Collateral: ${order.collateral}\n`
-        content += `Description: ${order.description}\n`
-        content += `Status: ${order.status}\n`
-        content += `Payment Type: ${order.payment_type}\n`
-        content += `Discord Thread: ${order.thread_id}\n\n`
-      }
-
-      content += "Reviews:\n\n"
-      const reviews = await orderDb.getOrderReviews({
-        contractor_author: contractor.contractor_id,
-      })
-      for (const review of reviews) {
-        content += `${review.order_id}: ${review.rating}/5 \`${review.content}\` at ${review.timestamp} as ${review.role}\n`
-      }
-      content += "\n"
-    }
+  try {
+    await writeUserDataExport(user.user_id, sink, {
+      knex: getKnex(),
+      resolveImage: (id) => cdn.getFileLinkResource(id ?? undefined),
+    })
+    res.end()
+  } catch (error) {
+    logger.error("Data export failed", { error, user_id: user.user_id })
+    // Headers (and maybe part of the body) are already sent: cut the
+    // response so the client sees a failed download, not a truncated file.
+    res.destroy(error instanceof Error ? error : undefined)
   }
-
-  content += "Messages:\n\n"
-  const messages = await chatDb.getMessages({ author: user.user_id })
-  for (const message of messages) {
-    content += `${message.message_id}: \`${message.content}\` in ${message.chat_id} at ${message.timestamp}\n`
-  }
-  content += "\n"
-
-  content += "Comments:\n\n"
-  const comments = await commentDb.getComments({ author: user.user_id })
-  for (const comment of comments) {
-    content += `${comment.comment_id}: \`${comment.content}\` at ${comment.timestamp}\n`
-  }
-  content += "\n"
-
-  content += "Reviews:\n\n"
-  const reviews = await orderDb.getOrderReviews({
-    user_author: user.user_id,
-  })
-  for (const review of reviews) {
-    content += `${review.order_id}: ${review.rating}/5 \`${review.content}\` at ${review.timestamp} as ${review.role}\n`
-  }
-  content += "\n"
-
-  res.json(content)
 }
 
 export const profile_get_blocklist: RequestHandler = async (req, res) => {
