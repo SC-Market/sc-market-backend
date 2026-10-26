@@ -56,9 +56,13 @@ export function listingVisibleTo(
   }
 }
 
-export interface PubliclyListedColumns extends ListingVisibilityColumns {
+export interface PubliclyListedColumns {
   /** Column holding the listing's status ('active' | 'inactive' | ...). */
   status: string
+  /** Column holding the listing's visibility ('public' | 'private' | 'unlisted'). */
+  visibility: string
+  /** Not needed: the anonymous rule has no org-member exception. */
+  ownerContractorId?: string
 }
 
 /**
@@ -67,16 +71,17 @@ export interface PubliclyListedColumns extends ListingVisibilityColumns {
  * of the market grid (the `listingVisibleTo(db, undefined, ...)` rule, i.e.
  * visibility = 'public'). Used for alerts to strangers (watchlist, buy-order
  * matches) and for viewer-independent public aggregates (wiki market stats,
- * mining prices, price history, sitemap).
+ * mining prices, price history, sitemap). It works on any table with the two
+ * columns, including `listings` queries that don't join `shops`.
  */
 export function listingPubliclyListed(
-  db: Knex,
+  _db: Knex,
   columns: PubliclyListedColumns,
 ): (this: Knex.QueryBuilder) => void {
   return function () {
-    this.where(columns.status, "active").where(
-      listingVisibleTo(db, undefined, columns),
-    )
+    this.where(columns.status, "active").where(function () {
+      this.where(columns.visibility, "public")
+    })
   }
 }
 
@@ -102,4 +107,16 @@ export function visibleActiveListingCountQuery(
         ownerContractorId: "ls.shop_owner_contractor_id",
       }),
     )
+}
+
+/**
+ * SQL-text form of `listingPubliclyListed` for subqueries written as raw SQL
+ * (listing photo lookups, the price-history snapshot). `alias` is the listings
+ * table alias in that SQL: a code literal, never user input.
+ */
+export function publiclyListedSql(alias: string): string {
+  if (!/^[a-z_][a-z0-9_]*$/i.test(alias)) {
+    throw new Error(`publiclyListedSql: invalid table alias ${alias}`)
+  }
+  return `${alias}.status = 'active' AND ${alias}.visibility = 'public'`
 }

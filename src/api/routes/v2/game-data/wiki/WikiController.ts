@@ -22,6 +22,7 @@ import {
   WikiManufacturerDetail,
 } from "./wiki.types.js"
 import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../util/short-slug.js"
+import { listingPubliclyListed, publiclyListedSql } from "../../util/listing-visibility.js"
 import {
   loadManufacturerNameLookup,
   lookupManufacturerName,
@@ -216,7 +217,7 @@ export class WikiController extends BaseController {
           knex.raw(`(
             SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
             FROM listing_items li
-            JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
+            JOIN listings l ON l.listing_id = li.listing_id AND ${publiclyListedSql("l")}
             JOIN listing_photos_v2 lp ON lp.listing_id = l.listing_id
             JOIN image_resources ir ON lp.resource_id = ir.resource_id
             WHERE li.game_item_id::text = gi.id::text
@@ -432,11 +433,13 @@ export class WikiController extends BaseController {
         blueprint_name: row.blueprint_name,
       }))
 
-      // Get market listing statistics
+      // Market listing statistics: publicly listed listings only, so the counts
+      // and prices match what an anonymous visitor of the item's market page
+      // can see (no org-internal or link-only listings).
       const marketStatsRow = await knex("listings as l")
         .join("listing_items as li", "l.listing_id", "li.listing_id")
         .where("li.game_item_id", resolvedItemId)
-        .where("l.status", "active")
+        .where(listingPubliclyListed(knex, { status: "l.status", visibility: "l.visibility" }))
         .select<ItemMarketStatsRow>(
           knex.raw("COUNT(DISTINCT l.listing_id) as listing_count"),
           knex.raw("MIN(li.base_price) as min_price"),

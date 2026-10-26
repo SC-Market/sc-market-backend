@@ -10,6 +10,7 @@ import { pushNotificationService } from "../services/push-notifications/push-not
 import fs from "node:fs"
 import path from "node:path"
 import logger from "../logger/logger.js"
+import { publiclyListedSql } from "../api/routes/v2/util/listing-visibility.js"
 
 export async function process_auction(auction: DBAuctionDetails) {
   const complete = await marketDb.getMarketListingComplete(auction.listing_id)
@@ -253,7 +254,8 @@ export async function snapshot_price_history_v2() {
     const hasTable = await knex.schema.hasTable("price_history_v2")
     if (!hasTable) return
 
-    // Snapshot current active listing prices into price_history_v2.
+    // Snapshot current publicly listed prices into price_history_v2 (the
+    // public price-history chart): never org-internal or unlisted listings.
     // Handles both unified pricing (base_price on listing_items) and
     // per-variant pricing (price on variant_pricing).
     const result = await knex.raw(`
@@ -277,7 +279,7 @@ export async function snapshot_price_history_v2() {
           li.listing_id,
           l.created_at
         FROM listing_items li
-        JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
+        JOIN listings l ON l.listing_id = li.listing_id AND ${publiclyListedSql("l")}
         JOIN listing_item_lots lil ON lil.item_id = li.item_id AND lil.listed = true AND lil.quantity_total > 0
         JOIN item_variants iv ON iv.variant_id = lil.variant_id
         LEFT JOIN variant_pricing vp ON vp.item_id = li.item_id AND vp.variant_id = lil.variant_id

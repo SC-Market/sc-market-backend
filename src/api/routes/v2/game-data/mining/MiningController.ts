@@ -25,6 +25,11 @@ import {
 } from "./mining.types.js"
 import logger from "../../../../../logger/logger.js"
 import { LISTING_MARKET_PRICE, excludePlaceholderPrices } from "./market-price.js"
+import { listingPubliclyListed } from "../../util/listing-visibility.js"
+
+// Market prices come from publicly listed listings only: org-internal
+// (private) and link-only (unlisted) listings must not set a public price.
+const PUBLIC_LISTING = { status: "l.status", visibility: "l.visibility" }
 
 const MINING_METHOD_PATTERN: Record<string, string> = {
   ship: "SpaceShip",
@@ -235,7 +240,7 @@ export class MiningController extends BaseController {
         .join("listing_items as li", "li.game_item_id", "gi.id")
         .join("listings as l", "li.listing_id", "l.listing_id")
         .select(knex.raw(LISTING_MARKET_PRICE), "me2.element_id")
-        .where("l.status", "active")
+        .where(listingPubliclyListed(knex, PUBLIC_LISTING))
         .where(excludePlaceholderPrices)
         .whereNotNull("me2.game_item_id")
         .groupBy("me2.element_id")
@@ -379,7 +384,7 @@ export class MiningController extends BaseController {
         const priceRow = await knex("listing_items as li")
           .join("listings as l", "li.listing_id", "l.listing_id")
           .select(knex.raw(LISTING_MARKET_PRICE))
-          .where("l.status", "active")
+          .where(listingPubliclyListed(knex, PUBLIC_LISTING))
           .where(excludePlaceholderPrices)
           .where("li.game_item_id", element.game_item_id)
           .first()
@@ -586,7 +591,7 @@ export class MiningController extends BaseController {
           .join("listing_items as li", "li.game_item_id", "gi.id")
           .join("listings as l", "li.listing_id", "l.listing_id")
           .select("gi.name", knex.raw(LISTING_MARKET_PRICE))
-          .where("l.status", "active")
+          .where(listingPubliclyListed(knex, PUBLIC_LISTING))
           .where(excludePlaceholderPrices)
           .where(function () {
             for (const rn of resourceNames) {

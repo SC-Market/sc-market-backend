@@ -23,7 +23,7 @@ import {
   getShopsForUser,
   type Shop,
 } from "../../../../services/shops/shop-permissions.service.js"
-import { visibleActiveListingCountQuery } from "../util/listing-visibility.js"
+import { publiclyListedSql, visibleActiveListingCountQuery } from "../util/listing-visibility.js"
 import { isUuid } from "../util/short-slug.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
@@ -581,7 +581,7 @@ export class ShopsV2Controller extends BaseController {
       // Can't use correlated subquery aliases in ORDER BY — repeat expressions
       const direction2 = direction === "ASC" ? "ASC" : "DESC"
       query = query.orderByRaw(
-        `(CASE WHEN EXISTS(SELECT 1 FROM listings l WHERE l.shop_id = s.shop_id AND l.status = 'active')
+        `(CASE WHEN EXISTS(SELECT 1 FROM listings l WHERE l.shop_id = s.shop_id AND ${publiclyListedSql("l")})
                OR EXISTS(SELECT 1 FROM services sv WHERE sv.shop_id = s.shop_id AND sv.status = 'active')
                THEN 0 ELSE 1 END) ASC, ` +
         `COALESCE((SELECT SUM(sr.rating) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) ${direction2}`,

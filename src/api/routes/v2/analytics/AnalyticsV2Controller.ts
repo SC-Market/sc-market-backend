@@ -14,6 +14,7 @@ import {
   getShopById,
 } from "../../../../services/shops/shop-permissions.service.js"
 import { BaseController } from "../base/BaseController.js"
+import { listingPubliclyListed } from "../util/listing-visibility.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
   GetPriceHistoryRequest,
@@ -224,6 +225,14 @@ export class AnalyticsV2Controller extends BaseController {
         )
         .where("ph.game_item_id", game_item_id)
         .whereBetween("ph.recorded_at", [startDate, endDate])
+        // Public chart: only prices of public listings (sold or expired ones
+        // included), never org-internal (private) or link-only (unlisted) ones.
+        .whereExists(function () {
+          this.select(knex.raw("1"))
+            .from("listings as l")
+            .whereRaw("l.listing_id = ph.listing_id")
+            .where("l.visibility", "public")
+        })
         .modify((queryBuilder) => {
           if (quality_tier !== undefined) {
             queryBuilder.where("ph.quality_tier", quality_tier)
@@ -385,7 +394,7 @@ export class AnalyticsV2Controller extends BaseController {
           knex.raw(`MAX(COALESCE(vp.price, li.base_price)) as max_price`),
         )
         .where("li.game_item_id", game_item_id)
-        .where("l.status", "active")
+        .where(listingPubliclyListed(knex, { status: "l.status", visibility: "l.visibility" }))
         .where("lil.listed", true)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .modify((queryBuilder) => {

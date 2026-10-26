@@ -9,7 +9,7 @@
 
 import { Controller, Get, Route, Tags, Query, Path, Request } from "tsoa"
 import { Request as ExpressRequest } from "express"
-import { listingVisibleTo } from "../util/listing-visibility.js"
+import { listingVisibleTo, publiclyListedSql } from "../util/listing-visibility.js"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { buildPrefixTsquery } from "../../../../util/full-text-search.js"
@@ -542,7 +542,7 @@ export class GameItemsV2Controller extends BaseController {
           db.raw(`(
             SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
             FROM listing_items li2
-            JOIN listings l2 ON l2.listing_id = li2.listing_id AND l2.status = 'active'
+            JOIN listings l2 ON l2.listing_id = li2.listing_id AND ${publiclyListedSql("l2")}
             JOIN listing_photos_v2 lp ON lp.listing_id = l2.listing_id
             JOIN image_resources ir ON lp.resource_id = ir.resource_id
             WHERE li2.game_item_id::text = ls.game_item_id::text

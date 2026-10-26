@@ -1,9 +1,11 @@
 /**
  * Resolve game item images from listing photos when no icon_url exists.
- * Checks active listings linked to the game item for the most recent photo.
+ * Checks publicly listed listings linked to the game item for the most recent
+ * photo (never an org-internal or unlisted listing's photo).
  */
 
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { publiclyListedSql } from "./listing-visibility.js"
 
 const FALLBACK_URLS = new Set([
   "https://cdn.robertsspaceindustries.com/static/images/Temp/default-image.png",
@@ -27,7 +29,7 @@ export async function resolveGameItemImages(
       li.game_item_id,
       COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url
     FROM listing_items li
-    JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
+    JOIN listings l ON l.listing_id = li.listing_id AND ${publiclyListedSql("l")}
     JOIN listing_photos_v2 lp ON lp.listing_id = l.listing_id
     JOIN image_resources ir ON lp.resource_id = ir.resource_id
     WHERE li.game_item_id = ANY(?)

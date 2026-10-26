@@ -10,6 +10,7 @@ import { Writable } from "node:stream"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import { formatShortSlug } from "../../api/routes/v2/util/short-slug.js"
+import { listingPubliclyListed } from "../../api/routes/v2/util/listing-visibility.js"
 import * as recruitingDb from "../../api/routes/v1/recruiting/database.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
@@ -136,13 +137,11 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   await collectSection(sections, "market", async () => {
     const market_listings: { listing_id: string; title: string }[] = await db("listing_search")
       .select("listing_id", "title")
-      .where("status", "active")
-      .where("visibility", "public")
+      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility" }))
 
     const aggregateItems: { game_item_id: string; game_item_name: string }[] = await db("listing_search")
       .select("game_item_id", "game_item_name")
-      .where("status", "active")
-      .where("visibility", "public")
+      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility" }))
       .whereNotNull("game_item_id")
       .groupBy("game_item_id", "game_item_name")
 
