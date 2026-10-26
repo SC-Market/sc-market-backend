@@ -31,6 +31,7 @@ import {
   truncateUserAgent,
 } from "./listing-view-privacy.js"
 import * as addColumns from "../../../migrations/20261027010000_listing_views_hashed_ip.js"
+import * as dropRaw from "../../../migrations/20261027020000_listing_views_drop_raw_ip.js"
 
 describe("hashViewerIp", () => {
   const day = new Date("2026-10-26T12:00:00Z")
@@ -139,7 +140,7 @@ describe.skipIf(!PG_TEST_URL)("listing_views migrations and purge", () => {
       )
     ).rows.map((r: { column_name: string }) => r.column_name)
 
-  it("adds the hash/origin columns, idempotently", async () => {
+  it("adds the hash/origin columns, then drops the raw ones; both idempotent", async () => {
     const db = state.db!
     await db.transaction((trx) => addColumns.up(trx))
     await db.transaction((trx) => addColumns.up(trx))
@@ -151,6 +152,30 @@ describe.skipIf(!PG_TEST_URL)("listing_views migrations and purge", () => {
         "referrer_origin",
       ]),
     )
+
+    await db.transaction((trx) => dropRaw.up(trx))
+    await db.transaction((trx) => dropRaw.up(trx))
+    const after = await columns()
+    expect(after).toEqual(
+      expect.arrayContaining([
+        "viewer_ip_hash",
+        "referrer_origin",
+        "user_agent",
+      ]),
+    )
+    expect(after).not.toContain("viewer_ip")
+    expect(after).not.toContain("referrer")
+    // The stats view survives.
+    const [{ total_views }] = (
+      await db.raw("SELECT total_views FROM listing_view_stats")
+    ).rows
+    expect(Number(total_views)).toBe(1)
+
+    await db.transaction((trx) => dropRaw.down(trx))
+    expect(await columns()).toEqual(
+      expect.arrayContaining(["viewer_ip", "referrer"]),
+    )
+    await db.transaction((trx) => dropRaw.up(trx))
   })
 
   it("purges only logged-out views past retention, in batches", async () => {
