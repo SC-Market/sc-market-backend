@@ -7,7 +7,9 @@
  * Requirements: 38.1-38.12
  */
 
-import { Controller, Get, Route, Tags, Query, Path } from "tsoa"
+import { Controller, Get, Route, Tags, Query, Path, Request } from "tsoa"
+import { Request as ExpressRequest } from "express"
+import { listingVisibleTo } from "../util/listing-visibility.js"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { buildPrefixTsquery } from "../../../../util/full-text-search.js"
@@ -180,8 +182,16 @@ export class GameItemsV2Controller extends BaseController {
     @Query() sort_order?: "asc" | "desc",
     @Query() page?: number,
     @Query() page_size?: number,
+    @Request() request?: ExpressRequest,
   ): Promise<GetGameItemListingsResponse> {
+    if (request) this.request = request
     const knex = getKnex()
+    // Private listings are internal to the owning org; same rule as the
+    // market grid (listing-visibility.ts).
+    const visible = listingVisibleTo(knex, this.tryGetUserId(), {
+      visibility: "l.visibility",
+      ownerContractorId: "s.owner_contractor_id",
+    })
 
     // Validate game_item_id
     if (!id) {
@@ -257,6 +267,7 @@ export class GameItemsV2Controller extends BaseController {
         .join("item_variants as iv", "lil.variant_id", "iv.variant_id")
         .join("listing_items as li", "lil.item_id", "li.item_id")
         .join("listings as l", "li.listing_id", "l.listing_id")
+        .join("shops as s", "l.shop_id", "s.shop_id")
         .leftJoin("variant_pricing as vp", function () {
           this.on("vp.item_id", "=", "li.item_id").andOn(
             "vp.variant_id",
@@ -278,6 +289,7 @@ export class GameItemsV2Controller extends BaseController {
         .where("li.game_item_id", gameItemId)
         .where("l.status", "active")
         .where("lil.listed", true)
+        .where(visible)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
         // orderByRaw is the typed equivalent of orderBy(knex.raw(...)) — knex's
@@ -359,6 +371,7 @@ export class GameItemsV2Controller extends BaseController {
         .where("li.game_item_id", gameItemId)
         .where("l.status", "active")
         .where("lil.listed", true)
+        .where(visible)
         .groupBy(
           "l.listing_id",
           "lil.variant_id",
@@ -501,7 +514,9 @@ export class GameItemsV2Controller extends BaseController {
     @Query() sort_order?: "asc" | "desc",
     @Query() page?: number,
     @Query() page_size?: number,
+    @Request() request?: ExpressRequest,
   ): Promise<SearchGameItemAggregatesResponse> {
+    if (request) this.request = request
     const db = getKnex()
     const validatedPage = Math.max(1, page || 1)
     const validatedPageSize = Math.min(100, Math.max(1, page_size || 24))
@@ -511,6 +526,12 @@ export class GameItemsV2Controller extends BaseController {
       let query = db("listing_search as ls")
         .leftJoin("game_items as gi", db.raw("ls.game_item_id::text = gi.id::text"))
         .where("ls.status", "active")
+        .where(
+          listingVisibleTo(db, this.tryGetUserId(), {
+            visibility: "ls.visibility",
+            ownerContractorId: "ls.shop_owner_contractor_id",
+          }),
+        )
         .whereNotNull("ls.game_item_id")
         .groupBy("ls.game_item_id", "gi.name", "gi.type", "gi.image_url", "ls.title", "ls.game_item_type")
         .select(
