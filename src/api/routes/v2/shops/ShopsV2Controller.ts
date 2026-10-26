@@ -17,6 +17,7 @@ import {
 } from "../../../../services/discord/channel-setups.js"
 import {
   canManageShop,
+  canTransferShop,
   getShopById,
   getShopBySlug,
   getShopsForUser,
@@ -25,6 +26,7 @@ import {
 import { visibleActiveListingCountQuery } from "../util/listing-visibility.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { has_permission, is_member } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { createNotificationWebhook } from "../../v1/util/webhooks.js"
@@ -955,9 +957,11 @@ export class ShopsV2Controller extends BaseController {
   /**
    * Transfer shop ownership to a user or an org.
    *
-   * Supports all directions (user↔user, user↔org, org↔org). The requester must
-   * currently be able to manage the shop. When transferring to an org, the
+   * Supports all directions (user↔user, user↔org, org↔org). Only the shop's
+   * owner may transfer it: the owning user, or the owner of the owning org
+   * (manage_market alone is not enough). When transferring to an org, the
    * requester must also have manage_market in the target org (auto-accept).
+   * Every transfer is recorded in the audit log of the orgs involved.
    *
    * After transfer, active order/offer assignments held by people no longer
    * associated with the new owner are cleared so the new owner can reclaim them,
@@ -979,8 +983,9 @@ export class ShopsV2Controller extends BaseController {
     const shop = await getShopById(shopId)
     if (!shop) this.throwNotFound("Shop", shopId)
 
-    // Requester must currently be able to manage the shop
-    if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
+    // Giving the shop away is an owner action. manage_market lets a member run
+    // an org's shop, but must not let them transfer it to themselves.
+    if (!this.isAdmin() && !(await canTransferShop(shop, userId))) {
       this.throwForbidden("Only the shop owner can transfer ownership")
     }
 
@@ -1031,6 +1036,28 @@ export class ShopsV2Controller extends BaseController {
         updated_at: db.fn.now(),
       })
       .returning("*")
+
+    const transferMetadata = {
+      shop_id: shopId,
+      shop_slug: shop.slug,
+      from_user_id: shop.owner_user_id,
+      from_contractor_id: shop.owner_contractor_id,
+      to_user_id: newOwnerUserId,
+      to_contractor_id: newOwnerContractorId,
+    }
+    // One entry per org involved, so it shows up in each org's audit log.
+    const orgs = [shop.owner_contractor_id, newOwnerContractorId].filter(
+      (id, i, all): id is string => !!id && all.indexOf(id) === i,
+    )
+    for (const contractor_id of orgs.length ? orgs : [null]) {
+      await auditLogService.record({
+        action: "shop.transferred",
+        actorId: userId,
+        subjectType: "shop",
+        subjectId: shopId,
+        metadata: contractor_id ? { ...transferMetadata, contractor_id } : transferMetadata,
+      })
+    }
 
     // Reassign orphaned data + recompute owner-derived badges
     await reassignShopDataAfterTransfer(db, shopId, newOwnerUserId, newOwnerContractorId)

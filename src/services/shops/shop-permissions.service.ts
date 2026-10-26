@@ -1,5 +1,6 @@
 import { getKnex } from "../../clients/database/knex-db.js"
 import { has_permission, is_member } from "../../api/routes/v1/util/permissions.js"
+import { isContractorOwner } from "../../api/routes/v1/contractors/database.js"
 
 export interface Shop {
   shop_id: string
@@ -41,6 +42,26 @@ export async function canManageShop(
     return has_permission(shop.owner_contractor_id, userId, "manage_market")
   }
 
+  return false
+}
+
+/**
+ * Check if a user may give a shop away (transfer ownership).
+ *
+ * Stricter than canManageShop: a manage_market member can run an org's shop
+ * but must not be able to hand it to themselves. Only the owning user, or the
+ * owner of the owning org, may transfer. (Site admins are handled by callers.)
+ */
+export async function canTransferShop(
+  shop: Pick<Shop, "shop_id" | "owner_user_id" | "owner_contractor_id">,
+  userId: string,
+): Promise<boolean> {
+  if (shop.owner_user_id) {
+    return shop.owner_user_id === userId
+  }
+  if (shop.owner_contractor_id) {
+    return isContractorOwner(userId, shop.owner_contractor_id)
+  }
   return false
 }
 
