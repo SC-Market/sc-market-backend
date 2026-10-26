@@ -46,6 +46,30 @@ export function listingVisibleTo(
   }
 }
 
+export interface PubliclyListedColumns extends ListingVisibilityColumns {
+  /** Column holding the listing's status ('active' | 'inactive' | ...). */
+  status: string
+}
+
+/**
+ * Returns a `where` callback restricting a listings query to listings that may
+ * be broadcast to anyone: active, visible to an anonymous visitor of the public
+ * market grid (the `listingVisibleTo(db, undefined, ...)` rule), and not
+ * 'unlisted'. Unlisted listings are reachable by link only, so pushing them to
+ * strangers (watchlist alerts) would leak them even though the anonymous grid
+ * rule alone lets them through.
+ */
+export function listingPubliclyListed(
+  db: Knex,
+  columns: PubliclyListedColumns,
+): (this: Knex.QueryBuilder) => void {
+  return function () {
+    this.where(columns.status, "active")
+      .where(listingVisibleTo(db, undefined, columns))
+      .where(columns.visibility, "public")
+  }
+}
+
 /**
  * Builds the query that counts a shop's active listings visible to the viewer.
  * It uses the same `listing_search` view and filters as the market grid

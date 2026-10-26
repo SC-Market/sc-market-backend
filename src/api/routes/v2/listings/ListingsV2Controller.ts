@@ -309,12 +309,7 @@ export class ListingsV2Controller extends BaseController {
       auditService.log({ entity_type: "listing", entity_id: result.listing_id, action: "created", actor_id: userId, details: { title: requestBody.title } })
 
       // Check watchlist matches for the new listing (fire-and-forget)
-      checkWatchlistMatches({
-        listing_id: result.listing_id,
-        title: requestBody.title,
-        price: requestBody.base_price || requestBody.lots?.[0]?.price || 0,
-        quantity: requestBody.lots.reduce((sum, l) => sum + l.quantity, 0),
-      }).catch(() => {})
+      void checkWatchlistMatches(result.listing_id)
 
       // Check buy order matches (fire-and-forget)
       checkBuyOrderMatches({
@@ -1522,6 +1517,10 @@ export class ListingsV2Controller extends BaseController {
 
     const db = getKnex()
 
+    // Set inside the transaction; watchlists are checked once it has committed,
+    // because the check reads the listing's visibility and price from the DB.
+    let mayTriggerPriceAlerts = false
+
     try {
       // Use database transaction for atomicity (Requirement 17.11)
       await withTransaction(async (trx) => {
@@ -1554,6 +1553,13 @@ export class ListingsV2Controller extends BaseController {
             ],
           )
         }
+
+        // A new price, or the listing becoming active/public, can satisfy watchlists.
+        mayTriggerPriceAlerts =
+          requestBody.base_price !== undefined ||
+          (requestBody.variant_prices?.length ?? 0) > 0 ||
+          (requestBody.status === "active" && listing.status !== "active") ||
+          (requestBody.visibility === "public" && listing.visibility !== "public")
 
         // 3. Update listing metadata (title, description) (Requirement 17.2)
         const listingUpdates: any = {
@@ -1761,13 +1767,6 @@ export class ListingsV2Controller extends BaseController {
             basePrice: requestBody.base_price,
           })
 
-          // Check watchlist matches for the new price (fire-and-forget)
-          checkWatchlistMatches({
-            listing_id: id,
-            title: listing.title,
-            price: requestBody.base_price,
-            quantity: 1,
-          }).catch(() => {})
         }
 
         // Update bulk discount tiers
@@ -1927,6 +1926,10 @@ export class ListingsV2Controller extends BaseController {
         listingId: id,
         userId,
       })
+
+      if (mayTriggerPriceAlerts) {
+        void checkWatchlistMatches(id)
+      }
 
       // 8. Return updated listing with variant breakdown (Requirement 17.9)
       // TODO: Invalidate cache after updates (Requirement 17.12)

@@ -28,6 +28,7 @@ import * as marketDb from "../market/database.js"
 import * as offerDb from "../offers/database.js"
 import * as adminDb from "../admin/database.js"
 import logger from "../../../../logger/logger.js"
+import { listingPubliclyListed } from "../../v2/util/listing-visibility.js"
 
 /**
  * Get a Knex query builder instance.
@@ -482,6 +483,28 @@ export async function getEntityByType(
         throw new Error(`Offer session not found: ${entity_id}`)
       }
       return await serializeOfferSession(offers[0])
+    }
+    case "listings": {
+      // V2 listing (price alerts). Only while it is still publicly listed, so a
+      // listing made private later doesn't leak through an old notification.
+      const listing = await knex()("listing_search as ls")
+        .where("ls.listing_id", entity_id)
+        .where(
+          listingPubliclyListed(knex(), {
+            status: "ls.status",
+            visibility: "ls.visibility",
+            ownerContractorId: "ls.shop_owner_contractor_id",
+          }),
+        )
+        .orderBy("ls.price_min", "asc")
+        .first("ls.listing_id", "ls.title", "ls.price_min", "ls.photo")
+      if (!listing) throw new Error(`Listing not publicly listed: ${entity_id}`)
+      return {
+        listing_id: listing.listing_id,
+        title: listing.title,
+        price: Number(listing.price_min),
+        photo: listing.photo,
+      }
     }
     case "admin_alerts": {
       const alerts = await adminDb.getAdminAlerts({ alert_id: entity_id })

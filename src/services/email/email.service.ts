@@ -626,6 +626,21 @@ class SESEmailService implements EmailService {
           )
           break
 
+        case "price_alert":
+          if (!data.listing || !data.watch) {
+            logger.warn(
+              `Missing listing or watch data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatPriceAlertEmailData(
+            data.listing as payloadFormatters.PriceAlertEmailListing,
+            data.watch as payloadFormatters.PriceAlertEmailWatch,
+            userId,
+          )
+          break
+
         case "order_comment":
           // Obsolete but handle gracefully
           logger.debug(

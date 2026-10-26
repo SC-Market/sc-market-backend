@@ -454,3 +454,38 @@ export async function formatAdminAlertEmailData(
     },
   } as EmailTemplateData
 }
+
+/** Listing and watchlist item carried by a `price_alert` email. */
+export interface PriceAlertEmailListing {
+  listing_id: string
+  title: string
+  price: number
+  quantity: number
+  seller_name: string | null
+}
+
+export interface PriceAlertEmailWatch {
+  query: string
+  max_price: number
+}
+
+/**
+ * Format watchlist price alert email data
+ */
+export async function formatPriceAlertEmailData(
+  listing: PriceAlertEmailListing,
+  watch: PriceAlertEmailWatch,
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, "price_alert")
+  const price = listing.price.toLocaleString("en-US")
+
+  return {
+    ...baseData,
+    notificationTitle: `Price Alert: ${listing.title} is ${price} aUEC`,
+    notificationBody: `${listing.title} is listed at ${price} aUEC, at or below your target of ${watch.max_price.toLocaleString("en-US")} aUEC.`,
+    actionUrl: `${getBaseUrl()}/market/${listing.listing_id}`,
+    listing,
+    watch,
+  } as EmailTemplateData
+}

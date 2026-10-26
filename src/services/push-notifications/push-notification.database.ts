@@ -135,6 +135,9 @@ export async function getPushPreferences(
     .where({ user_id: userId })
     .orderBy("contractor_id", "asc")
     .orderBy("action_type_id", "asc")
+    // Newest first, so a lookup that takes the first match per action gets the
+    // current choice (see getPushPreference on duplicate NULL-contractor rows).
+    .orderBy("updated_at", "desc")
     .select("*")
 }
 
@@ -200,7 +203,10 @@ export async function getPushPreference(
     query.where("contractor_id", contractorId)
   }
 
-  const result = await query.first()
+  // The unique constraint (user_id, action_type_id, contractor_id) treats NULL
+  // contractor_ids as distinct, so every individual-preference upsert inserts
+  // another row. The newest row is the user's current choice.
+  const result = await query.orderBy("updated_at", "desc").first()
 
   return result || null
 }

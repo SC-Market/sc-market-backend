@@ -90,6 +90,7 @@ function seed() {
       { item_id: "i-personal", listing_id: "l-personal", game_item_id: null, pricing_mode: "unified", base_price: 100 },
       { item_id: "i-org", listing_id: "l-org", game_item_id: null, pricing_mode: "unified", base_price: 100 },
     ],
+    game_items: [{ id: "58891d96-ea38-4141-831d-eae17e17f7cf", name: "Medical Supplies" }],
     listing_item_lots: [
       { lot_id: "lot-personal", item_id: "i-personal", quantity_total: 10, listed: true },
       { lot_id: "lot-org", item_id: "i-org", quantity_total: 10, listed: true },
@@ -196,9 +197,8 @@ describe("POST /threads/market/price", () => {
     expect(res.status).toBe(200)
     expect(res.body).toEqual({ result: "Success" })
     expect(state.db.tables.listing_items.find((i) => i.item_id === "i-personal")?.base_price).toBe(250)
-    expect(checkWatchlistMatches).toHaveBeenCalledWith(
-      expect.objectContaining({ listing_id: "l-personal", title: "Widget", price: 250 }),
-    )
+    // Eligibility (visibility, price) is read from the DB after the commit.
+    expect(checkWatchlistMatches).toHaveBeenCalledWith("l-personal")
   })
 
   it("403s for a user without manage_market on the org shop", async () => {
@@ -272,5 +272,55 @@ describe("POST /threads/market/create shop resolution", () => {
       .send({ ...body, discord_id: "d-owner", contractor_spectrum_id: "NOPE" })
 
     expect(res.status).toBe(404)
+  })
+})
+
+describe("POST /threads/watchlist/add", () => {
+  const ITEM_ID = "58891d96-ea38-4141-831d-eae17e17f7cf"
+
+  it("stores the picked game item and uses its name as the query", async () => {
+    const res = await request(app())
+      .post("/threads/watchlist/add")
+      .send({ discord_id: "d-owner", query: ITEM_ID, game_item_id: ITEM_ID, max_price: 25000 })
+
+    expect(res.status).toBe(200)
+    expect(state.db.tables.watchlist_items).toEqual([
+      expect.objectContaining({
+        user_id: OWNER.user_id,
+        query: "Medical Supplies",
+        game_item_id: ITEM_ID,
+        max_price: 25000,
+      }),
+    ])
+    expect(res.body.item).toMatchObject({ query: "Medical Supplies", game_item_id: ITEM_ID })
+  })
+
+  it("stores a free-text query as a text watch", async () => {
+    const res = await request(app())
+      .post("/threads/watchlist/add")
+      .send({ discord_id: "d-owner", query: "  Medical Supplies ", max_price: 25000 })
+
+    expect(res.status).toBe(200)
+    expect(state.db.tables.watchlist_items[0]).toMatchObject({
+      query: "Medical Supplies",
+      game_item_id: null,
+    })
+  })
+
+  it("400s for an unknown or malformed game item id", async () => {
+    for (const game_item_id of ["11111111-1111-1111-1111-111111111111", "not-a-uuid"]) {
+      const res = await request(app())
+        .post("/threads/watchlist/add")
+        .send({ discord_id: "d-owner", query: "x", game_item_id, max_price: 10 })
+      expect(res.status).toBe(400)
+    }
+    expect(state.db.tables.watchlist_items ?? []).toHaveLength(0)
+  })
+
+  it("400s for a non-positive target price", async () => {
+    const res = await request(app())
+      .post("/threads/watchlist/add")
+      .send({ discord_id: "d-owner", query: "Medical Supplies", max_price: 0 })
+    expect(res.status).toBe(400)
   })
 })

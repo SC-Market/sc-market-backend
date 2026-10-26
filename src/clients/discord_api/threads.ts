@@ -16,7 +16,11 @@ import { chatServer } from "../messaging/websocket.js"
 import logger from "../../logger/logger.js"
 import { withTransaction } from "../database/transaction.js"
 import { getOrCreateVariant } from "../../services/market-v2/variant.service.js"
-import { checkWatchlistMatches } from "../../services/watchlist/watchlist.service.js"
+import { isUuid } from "../../api/routes/v2/util/short-slug.js"
+import {
+  alertableListingFilter,
+  checkWatchlistMatches,
+} from "../../services/watchlist/watchlist.service.js"
 import { canManageShop } from "../../services/shops/shop-permissions.service.js"
 import {
   ListingQuickEditError,
@@ -477,11 +481,10 @@ threadRouter.post("/market/price", async (req, res) => {
     return
   }
 
-  let title: string
   try {
-    ;({ title } = await withTransaction((trx) =>
+    await withTransaction((trx) =>
       updateListingPrice(trx, { listingId: listing_id, userId: user.user_id, price }),
-    ))
+    )
   } catch (err: unknown) {
     if (err instanceof ListingQuickEditError) {
       res.status(err.status).json({ error: err.message })
@@ -496,12 +499,7 @@ threadRouter.post("/market/price", async (req, res) => {
   }
 
   // Check watchlist matches for the new price
-  checkWatchlistMatches({
-    listing_id,
-    title,
-    price,
-    quantity: 1,
-  }).catch(() => {})
+  void checkWatchlistMatches(listing_id)
 
   res.json({ result: "Success" })
 })
@@ -571,12 +569,7 @@ threadRouter.post("/market/create", async (req, res) => {
     })
 
     // Check watchlist matches for the new listing
-    checkWatchlistMatches({
-      listing_id: result.listing_id,
-      title,
-      price,
-      quantity,
-    }).catch(() => {})
+    void checkWatchlistMatches(result.listing_id)
 
     res.json({ result: "Success", listing_id: result.listing_id })
   } catch (err: unknown) {
@@ -802,10 +795,21 @@ threadRouter.post("/market/import-uex", async (req, res) => {
 // ============================================================================
 
 threadRouter.post("/watchlist/add", async (req, res) => {
-  const { discord_id, query, max_price } = req.body as {
+  const { discord_id, query, max_price, game_item_id } = req.body as {
     discord_id: string
-    query: string
+    query?: string
     max_price: number
+    /** Set when the user picked a game item from the bot's autocomplete. */
+    game_item_id?: string
+  }
+
+  if (!Number.isInteger(max_price) || max_price <= 0) {
+    res.status(400).json({ error: "max_price must be a positive whole number of aUEC" })
+    return
+  }
+  if (!game_item_id && !query?.trim()) {
+    res.status(400).json({ error: "query or game_item_id is required" })
+    return
   }
 
   const user = await profileDb.getUserByDiscordId(discord_id)
@@ -817,14 +821,30 @@ threadRouter.post("/watchlist/add", async (req, res) => {
   try {
     const db = getKnex()
 
-    await db("watchlist_items").insert({
-      user_id: user.user_id,
-      query,
-      max_price,
-      created_at: new Date(),
-    })
+    // An item watch matches that exact game item; its query is the item name.
+    let watchedQuery = query?.trim() ?? ""
+    if (game_item_id) {
+      const item = isUuid(game_item_id)
+        ? await db("game_items").where("id", game_item_id).first("id", "name")
+        : undefined
+      if (!item) {
+        res.status(400).json({ error: "Unknown game item" })
+        return
+      }
+      watchedQuery = item.name
+    }
 
-    res.json({ result: "Success" })
+    const [row] = await db("watchlist_items")
+      .insert({
+        user_id: user.user_id,
+        query: watchedQuery,
+        game_item_id: game_item_id ?? null,
+        max_price,
+        created_at: new Date(),
+      })
+      .returning(["id", "query", "game_item_id", "max_price"])
+
+    res.json({ result: "Success", item: row })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to add watchlist item"
     logger.error("Error adding watchlist item", { error: message })
@@ -879,17 +899,25 @@ threadRouter.get("/watchlist/:discord_id", async (req, res) => {
     const items = await db("watchlist_items")
       .where("user_id", user.user_id)
       .orderBy("created_at", "desc")
-      .select("id", "query", "max_price", "created_at")
+      .select("id", "query", "game_item_id", "max_price", "created_at")
 
-    // For each item, check if there's a current listing below the price
+    // Current lowest public, in-stock offer that the item would alert on
     const enrichedItems = await Promise.all(
       items.map(async (item) => {
-        const lowestListing = await db("listing_search")
-          .whereRaw("search_vector @@ plainto_tsquery('english', ?)", [item.query])
-          .where("status", "active")
-          .where("quantity_available", ">", 0)
-          .orderBy("price_min", "asc")
-          .first("price_min")
+        const lowestListing = await db("listing_search as ls")
+          .where(alertableListingFilter(db))
+          .where(function () {
+            if (item.game_item_id) {
+              this.where("ls.game_item_id", item.game_item_id)
+            } else {
+              this.whereRaw("to_tsvector('english', ls.title) @@ phraseto_tsquery('english', ?)", [
+                item.query,
+              ])
+            }
+          })
+          .where("ls.quantity_available", ">", 0)
+          .orderBy("ls.price_min", "asc")
+          .first("ls.price_min")
 
         return {
           ...item,

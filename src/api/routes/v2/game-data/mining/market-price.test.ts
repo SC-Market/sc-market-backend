@@ -1,10 +1,7 @@
 import { describe, it, expect } from "vitest"
 import knexFactory from "knex"
-import {
-  LISTING_MARKET_PRICE,
-  PLACEHOLDER_PRICE_MAX,
-  excludePlaceholderPrices,
-} from "./market-price.js"
+import { LISTING_MARKET_PRICE, excludePlaceholderPrices } from "./market-price.js"
+import { PLACEHOLDER_PRICE_MAX } from "../../util/placeholder-price.js"
 
 // SQL is only compiled, never run: no connection is needed for toSQL().
 const knex = knexFactory({ client: "pg" })

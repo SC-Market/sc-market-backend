@@ -1865,6 +1865,54 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PriceAlertPreferences": {
+				"description": "Price alert (watchlist) notification preferences: one toggle per channel.",
+				"properties": {
+					"site": {
+						"type": "boolean",
+						"description": "In-app notification on the site. Default: on."
+					},
+					"push": {
+						"type": "boolean",
+						"description": "Web push to the user's subscribed browsers / installed PWA. Default: on."
+					},
+					"email": {
+						"type": "boolean",
+						"description": "Email to the user's verified primary address. Default: off (opt-in)."
+					},
+					"discord": {
+						"type": "boolean",
+						"description": "Direct message from the SC Market Discord bot. Default: on."
+					}
+				},
+				"required": [
+					"site",
+					"push",
+					"email",
+					"discord"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdatePriceAlertPreferencesRequest": {
+				"description": "Channels to change; omitted channels keep their current setting.",
+				"properties": {
+					"site": {
+						"type": "boolean"
+					},
+					"push": {
+						"type": "boolean"
+					},
+					"email": {
+						"type": "boolean"
+					},
+					"discord": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OrderVariantDetail": {
 				"description": "Variant details for orders (separate from listings to avoid TSOA conflicts)",
 				"properties": {
@@ -13740,6 +13788,70 @@
 						}
 					}
 				]
+			}
+		},
+		"/price-alerts/preferences": {
+			"get": {
+				"operationId": "GetPriceAlertPreferences",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PriceAlertPreferences"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the current user's price alert channel preferences",
+				"summary": "Get price alert preferences",
+				"tags": [
+					"Price Alerts"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "UpdatePriceAlertPreferences",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PriceAlertPreferences"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update the current user's price alert channel preferences",
+				"summary": "Update price alert preferences",
+				"tags": [
+					"Price Alerts"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdatePriceAlertPreferencesRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/orders": {

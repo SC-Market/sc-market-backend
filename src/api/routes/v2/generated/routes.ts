@@ -14,6 +14,8 @@ import { ShopsV2Controller } from './../shops/ShopsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RequisitionsV2Controller } from './../requisitions/RequisitionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PriceAlertsV2Controller } from './../price-alerts/PriceAlertsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrdersV2Controller } from './../orders/OrdersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OnboardingV2Controller } from './../onboarding/OnboardingV2Controller.js';
@@ -703,6 +705,28 @@ const models: TsoaRoute.Models = {
         "properties": {
             "offer_id": {"dataType":"string","required":true},
             "items": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferRequisitionItemInput"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceAlertPreferences": {
+        "dataType": "refObject",
+        "properties": {
+            "site": {"dataType":"boolean","required":true},
+            "push": {"dataType":"boolean","required":true},
+            "email": {"dataType":"boolean","required":true},
+            "discord": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdatePriceAlertPreferencesRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "site": {"dataType":"boolean"},
+            "push": {"dataType":"boolean"},
+            "email": {"dataType":"boolean"},
+            "discord": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -5040,6 +5064,69 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOfferRequisitionItems',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPriceAlertsV2Controller_getPriceAlertPreferences: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/price-alerts/preferences',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(PriceAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(PriceAlertsV2Controller.prototype.getPriceAlertPreferences)),
+
+            async function PriceAlertsV2Controller_getPriceAlertPreferences(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPriceAlertsV2Controller_getPriceAlertPreferences, request, response });
+
+                const controller = new PriceAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getPriceAlertPreferences',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPriceAlertsV2Controller_updatePriceAlertPreferences: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"UpdatePriceAlertPreferencesRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.put('/price-alerts/preferences',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(PriceAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(PriceAlertsV2Controller.prototype.updatePriceAlertPreferences)),
+
+            async function PriceAlertsV2Controller_updatePriceAlertPreferences(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPriceAlertsV2Controller_updatePriceAlertPreferences, request, response });
+
+                const controller = new PriceAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updatePriceAlertPreferences',
                 controller,
                 response,
                 next,

@@ -1,0 +1,12 @@
+Price Alert
+
+Hello {{userDisplayName}}, a listing on your watchlist hit your target price:
+
+{{listing.title}}
+Price: {{formatCurrency listing.price}} aUEC
+Your target: {{formatCurrency watch.max_price}} aUEC ({{watch.query}})
+Quantity: {{listing.quantity}}
+{{#if listing.seller_name}}Seller: {{listing.seller_name}}{{/if}}
+
+View Listing:
+{{actionUrl}}

@@ -8,9 +8,7 @@
  * cheapest real offer, but not decided by a single outlier listing.
  */
 import type { Knex } from "knex"
-
-/** Prices at or below this many aUEC are placeholders, not real offers. */
-export const PLACEHOLDER_PRICE_MAX = 1
+import { PLACEHOLDER_PRICE_MAX } from "../../util/placeholder-price.js"
 
 /** Which percentile of real listing prices to show (0.1 = 10th percentile). */
 export const MARKET_PRICE_PERCENTILE = 0.1

@@ -127,7 +127,10 @@ export async function getEmailPreference(
     query.where("contractor_id", contractorId)
   }
 
-  const result = await query.first()
+  // The unique constraint (user_id, action_type_id, contractor_id) treats NULL
+  // contractor_ids as distinct, so every individual-preference upsert inserts
+  // another row. The newest row is the user's current choice.
+  const result = await query.orderBy("updated_at", "desc").first()
 
   return result || null
 }
