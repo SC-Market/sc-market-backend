@@ -6189,6 +6189,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"WikiItemShop": {
+				"description": "An in-game NPC shop that sells and/or buys an item (Data.p4k shop inventories)",
+				"properties": {
+					"shop_id": {
+						"type": "string"
+					},
+					"shop_name": {
+						"type": "string"
+					},
+					"shop_location": {
+						"type": "string"
+					},
+					"buy_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Price the shop sells the item to players for, in aUEC; null if it doesn't sell it"
+					},
+					"sell_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Price the shop pays players for the item, in aUEC; null if it doesn't buy it"
+					}
+				},
+				"required": [
+					"shop_id",
+					"shop_name",
+					"shop_location",
+					"buy_price",
+					"sell_price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiItemShopsResponse": {
+				"properties": {
+					"shops": {
+						"items": {
+							"$ref": "#/components/schemas/WikiItemShop"
+						},
+						"type": "array",
+						"description": "Shops that stock the item, cheapest first; empty when no shop does"
+					}
+				},
+				"required": [
+					"shops"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"WikiShipSearchResult": {
 				"properties": {
 					"id": {
@@ -17132,6 +17183,40 @@
 				"parameters": [
 					{
 						"description": "Game item UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/wiki/items/{id}/shops": {
+			"get": {
+				"operationId": "GetItemShops",
+				"responses": {
+					"200": {
+						"description": "Shops stocking the item, cheapest buy price first",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WikiItemShopsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "In-game NPC shops that sell or buy an item\n\nFrom the Data.p4k shop inventories (game_shops / game_shop_items). An item\nno shop stocks returns an empty list, not a 404.",
+				"summary": "Get in-game shops for an item",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID (resolve short slugs with GET /game-data/wiki/items/{id} first)",
 						"in": "path",
 						"name": "id",
 						"required": true,

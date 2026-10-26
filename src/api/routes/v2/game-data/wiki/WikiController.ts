@@ -14,6 +14,7 @@ import {
   SearchWikiItemsRequest,
   SearchWikiItemsResponse,
   WikiItemDetail,
+  WikiItemShopsResponse,
   WikiShipSearchResult,
   WikiShipDetail,
   WikiCommoditySearchResult,
@@ -142,6 +143,14 @@ interface WikiManufacturerRow {
 }
 
 /** Row shape of the manufacturer item-count aggregate */
+interface GameShopItemRow {
+  shop_id: string
+  shop_name: string
+  shop_location: string
+  buy_price: string | number | null
+  sell_price: string | number | null
+}
+
 interface ManufacturerCountRow {
   mfr_lower: string
   item_count: string
@@ -500,6 +509,51 @@ export class WikiController extends BaseController {
       })
 
       throw error
+    }
+  }
+
+  /**
+   * In-game NPC shops that sell or buy an item
+   *
+   * From the Data.p4k shop inventories (game_shops / game_shop_items). An item
+   * no shop stocks returns an empty list, not a 404.
+   *
+   * @summary Get in-game shops for an item
+   * @param id Game item UUID (resolve short slugs with GET /game-data/wiki/items/{id} first)
+   * @returns Shops stocking the item, cheapest buy price first
+   */
+  @Get("items/{id}/shops")
+  public async getItemShops(@Path() id: string): Promise<WikiItemShopsResponse> {
+    if (!isUuid(id)) this.throwNotFound("Item", id)
+
+    const knex = getKnex()
+    const item = await knex("game_items").where("id", id).first("id")
+    if (!item) this.throwNotFound("Item", id)
+
+    const rows = await knex("game_shop_items as gsi")
+      .join("game_shops as gs", "gs.id", "gsi.shop_id")
+      .where("gsi.game_item_id", id)
+      .select<GameShopItemRow[]>(
+        "gs.id as shop_id",
+        "gs.name as shop_name",
+        "gs.location as shop_location",
+        "gsi.buy_price",
+        "gsi.sell_price",
+      )
+      .orderByRaw("gsi.buy_price asc nulls last")
+
+    // decimal columns arrive as strings from pg
+    const price = (value: string | number | null): number | null =>
+      value == null ? null : Number(value)
+
+    return {
+      shops: rows.map((row) => ({
+        shop_id: row.shop_id,
+        shop_name: row.shop_name,
+        shop_location: row.shop_location,
+        buy_price: price(row.buy_price),
+        sell_price: price(row.sell_price),
+      })),
     }
   }
 

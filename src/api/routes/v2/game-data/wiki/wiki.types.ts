@@ -51,6 +51,22 @@ export interface WikiItemSearchResult {
   display_type?: string
 }
 
+/** An in-game NPC shop that sells and/or buys an item (Data.p4k shop inventories) */
+export interface WikiItemShop {
+  shop_id: string
+  shop_name: string
+  shop_location: string
+  /** Price the shop sells the item to players for, in aUEC; null if it doesn't sell it */
+  buy_price: number | null
+  /** Price the shop pays players for the item, in aUEC; null if it doesn't buy it */
+  sell_price: number | null
+}
+
+export interface WikiItemShopsResponse {
+  /** Shops that stock the item, cheapest first; empty when no shop does */
+  shops: WikiItemShop[]
+}
+
 export interface WikiItemDetail {
   id: string
   name: string

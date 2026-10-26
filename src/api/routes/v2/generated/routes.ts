@@ -2066,6 +2066,26 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiItemShop": {
+        "dataType": "refObject",
+        "properties": {
+            "shop_id": {"dataType":"string","required":true},
+            "shop_name": {"dataType":"string","required":true},
+            "shop_location": {"dataType":"string","required":true},
+            "buy_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sell_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiItemShopsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "shops": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiItemShop"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "WikiShipSearchResult": {
         "dataType": "refObject",
         "properties": {
@@ -7163,6 +7183,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getItemDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getItemShops: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/game-data/wiki/items/:id/shops',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getItemShops)),
+
+            async function WikiController_getItemShops(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getItemShops, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getItemShops',
                 controller,
                 response,
                 next,
