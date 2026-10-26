@@ -6,6 +6,8 @@ import { env } from "../../config/env.js"
 import {
   validateRedirectPath,
   createSignedStateToken,
+  createSignedState,
+  stateNonceMatches,
   verifySignedStateToken,
   resolveSameOriginRedirect,
 } from "../util/oauth-state.js"
@@ -62,6 +64,18 @@ type AuthCallbackInfo = object | string | Array<string | undefined> | undefined
  * Setup authentication routes
  */
 export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
+  const DISCORD_STATE_COOKIE = "scmarket.dstate"
+  function discordStateCookieOptions(withMaxAge = true) {
+    const prod = app.get("env") === "production"
+    return {
+      httpOnly: true,
+      secure: prod,
+      sameSite: prod ? ("none" as const) : ("lax" as const),
+      path: "/auth/discord",
+      ...(withMaxAge ? { maxAge: 10 * 60 * 1000 } : {}),
+    }
+  }
+
   /**
    * Complete login: issue JWT cookies (if enabled) or save session, then redirect.
    */
@@ -132,7 +146,8 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
     async (req: Request, res: Response, next: NextFunction) => {
       const query = req.query as { path?: string; action?: string; origin?: string }
       const path = query.path || ""
-      const action = query.action === "signup" ? "signup" : "signin"
+      const action =
+        query.action === "signup" ? "signup" : query.action === "link" ? "link" : "signin"
       const origin = query.origin || ""
 
       // Validate the redirect path
@@ -140,11 +155,15 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
         return res.status(400).json({ error: "Invalid redirect path" })
       }
 
-      // Store action in session for use in strategy callback
+      // Linking attaches the Discord account to whoever is logged in, so it
+      // must start from a logged-in browser.
+      if (action === "link" && !req.user) {
+        return res.status(401).json({ error: "You must be logged in to link Discord" })
+      }
+
       if (!req.session) {
         return res.status(500).json({ error: "Session not available" })
       }
-      req.session.discord_auth_action = action
 
       // Create a signed state token that includes both CSRF protection and the redirect path
       if (!env.SESSION_SECRET) {
@@ -152,12 +171,17 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
       }
 
       const sessionSecret = env.SESSION_SECRET
-      let signedStateToken: string
+      let signedState: { token: string; nonce: string }
       try {
-        signedStateToken = createSignedStateToken(path, sessionSecret, action, origin)
+        signedState = createSignedState(path, sessionSecret, action, origin)
       } catch (error) {
         return res.status(400).json({ error: "Failed to create state token" })
       }
+
+      // Bind the state to this browser: the callback only accepts a state whose
+      // nonce matches this cookie. Without it, a callback URL (code + state)
+      // minted by an attacker could be replayed in a victim's browser.
+      res.cookie(DISCORD_STATE_COOKIE, signedState.nonce, discordStateCookieOptions())
 
       // Save session before redirecting to Discord OAuth
       req.session.save((saveErr) => {
@@ -166,7 +190,7 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
         }
         return passport.authenticate("discord", {
           session: true,
-          state: signedStateToken,
+          state: signedState.token,
         })(req, res, next)
       })
     },
@@ -189,12 +213,16 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
         sessionSecret,
       )
 
-      if (!verified) {
-        // Invalid or missing state - potential CSRF attack or tampering
+      const browserNonce = req.cookies?.[DISCORD_STATE_COOKIE] as string | undefined
+      res.clearCookie(DISCORD_STATE_COOKIE, discordStateCookieOptions(false))
+
+      if (!verified || !stateNonceMatches(browserNonce, verified.csrfToken)) {
+        // Invalid or missing state, or a state minted in another browser -
+        // potential CSRF / account-linking attack or tampering
         logger.error("[Auth] State verification failed", {
           hasState: !!receivedState,
-          stateLength: receivedState?.length,
-          statePreview: receivedState ? receivedState.substring(0, 50) + "..." : "none",
+          signatureValid: !!verified,
+          hasBrowserNonce: !!browserNonce,
         })
         // Redirect to frontend home page on failure
         return res.redirect(frontendUrl.toString())
@@ -210,7 +238,8 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
       // Resolve redirect base from origin in state
       const redirectBase = getRedirectBase(verified.origin)
 
-      // Ensure action is stored in session
+      // Hand the (now browser-bound) intent to the verify callback. Only
+      // "link" may attach Discord to the logged-in account.
       if (req.session) {
         req.session.discord_auth_action = action
       }

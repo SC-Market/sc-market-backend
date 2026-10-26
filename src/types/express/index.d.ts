@@ -18,7 +18,7 @@ declare module "express-session" {
   // Auth-flow scratch data written by the /auth routes and read back by the
   // passport verify callbacks (src/api/util/passport-strategies.ts).
   interface SessionData {
-    discord_auth_action?: "signup" | "signin"
+    discord_auth_action?: "signup" | "signin" | "link"
     citizenid_auth_action?: "signup" | "signin"
     citizenid_redirect_path?: string
     citizenid_origin?: string

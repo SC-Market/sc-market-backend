@@ -52,20 +52,61 @@ export function validateRedirectPath(path: string): boolean {
 }
 
 /**
+ * What the user asked for when starting an OAuth flow. "link" attaches the
+ * provider to the account that started the flow; it is only honoured when the
+ * state is bound to the browser (see stateNonceMatches) and a user is logged in.
+ */
+export type OAuthAction = "signup" | "signin" | "link"
+
+function isOAuthAction(action: string): action is OAuthAction {
+  return action === "signup" || action === "signin" || action === "link"
+}
+
+/**
+ * Creates a signed state token plus the nonce embedded in it. The caller must
+ * store the nonce in the browser (an httpOnly cookie) and compare it on the
+ * callback with stateNonceMatches, so a callback URL minted in someone else's
+ * browser is rejected.
+ */
+export function createSignedState(
+  path: string,
+  secret: string,
+  action: OAuthAction = "signin",
+  origin: string = "",
+): { token: string; nonce: string } {
+  const token = createSignedStateToken(path, secret, action, origin)
+  const nonce = Buffer.from(token.split(":")[0], "base64url")
+    .toString("utf-8")
+    .split(":")[0]
+  return { token, nonce }
+}
+
+/** Constant-time comparison of the browser-held nonce with the state's nonce. */
+export function stateNonceMatches(
+  browserNonce: string | undefined | null,
+  stateNonce: string | undefined | null,
+): boolean {
+  if (!browserNonce || !stateNonce) return false
+  const a = Buffer.from(browserNonce)
+  const b = Buffer.from(stateNonce)
+  return a.length === b.length && timingSafeEqual(a, b)
+}
+
+/**
  * Creates a signed state token that includes CSRF protection, redirect path, action, and origin
  * Format: base64(csrfToken:path:action:origin):signature
  */
 export function createSignedStateToken(
   path: string,
   secret: string,
-  action: "signup" | "signin" = "signin",
+  action: OAuthAction = "signin",
   origin: string = "",
 ): string {
   if (!validateRedirectPath(path)) {
     throw new Error("Invalid redirect path")
   }
-  if (action !== "signup" && action !== "signin") {
-    throw new Error("Invalid action, must be 'signup' or 'signin'")
+  if (!isOAuthAction(action)) {
+    throw new Error("Invalid action, must be 'signup', 'signin' or 'link'")
   }
 
   const csrfToken = randomBytes(32).toString("hex")
@@ -83,7 +124,7 @@ export function createSignedStateToken(
 export function verifySignedStateToken(
   signedToken: string,
   secret: string,
-): { csrfToken: string; path: string; action: "signup" | "signin"; origin: string } | null {
+): { csrfToken: string; path: string; action: OAuthAction; origin: string } | null {
   if (!signedToken) {
     return null
   }
@@ -129,8 +170,7 @@ export function verifySignedStateToken(
     return null
   }
 
-  const validatedAction: "signup" | "signin" =
-    action === "signup" || action === "signin" ? action : "signin"
+  const validatedAction: OAuthAction = isOAuthAction(action) ? action : "signin"
 
   return { csrfToken, path, action: validatedAction, origin: origin || "" }
 }

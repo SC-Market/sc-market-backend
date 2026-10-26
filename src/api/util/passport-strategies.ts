@@ -80,9 +80,25 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
       cb: oauth2.VerifyCallback,
     ) => {
       try {
-        // Check if user is logged in (linking scenario)
-        if (req.isAuthenticated()) {
-          const currentUser = req.user as User
+        // The intent comes from the browser-bound state (auth-routes sets it
+        // from the verified state on the callback). Read and clear it first.
+        const intent = req.session?.discord_auth_action || "signin"
+        if (req.session) {
+          delete req.session.discord_auth_action
+        }
+
+        // Linking needs BOTH an explicit "link" intent and a logged-in user.
+        // Being logged in alone is not enough: that let a replayed callback
+        // attach someone else's Discord to the victim's account.
+        if (intent === "link") {
+          const currentUser = req.user as User | undefined
+          if (!currentUser) {
+            const error = new Error(
+              "You must be logged in to link your Discord account",
+            ) as Error & { code?: string }
+            error.code = AuthErrorCodes.ACCOUNT_NOT_FOUND
+            return cb(error)
+          }
 
           // Link Discord to existing account
           // Discord tokens typically expire in 7 days (604800 seconds)
@@ -109,14 +125,7 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
           return cb(null, updatedUser)
         }
 
-        // Get action from session (set by route handler)
-        const action: "signup" | "signin" =
-          req.session?.discord_auth_action || "signin"
-
-        // Clear action from session after reading
-        if (req.session) {
-          delete req.session.discord_auth_action
-        }
+        const action: "signup" | "signin" = intent === "signup" ? "signup" : "signin"
 
         // New login/signup - find or create user based on action
         let user = await profileDb.getUserByProvider("discord", profile.id)
