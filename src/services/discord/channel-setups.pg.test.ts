@@ -55,6 +55,7 @@ vi.mock("../../logger/logger.js", () => ({
 }))
 
 import { up, down } from "../../../migrations/20261026030000_discord_channel_setups.js"
+import { up as upContracts } from "../../../migrations/20261026130000_public_contract_alerts.js"
 import { discordService } from "./discord.service.js"
 import { getAlertChannels, getThreadChannel, setThreadChannel } from "./channel-setups.js"
 import { channelSetupRouter } from "../../clients/discord_api/channel-setups.js"
@@ -75,7 +76,7 @@ const SHOP = (n: number) => uuid("c", n)
 async function createLegacySchema(db: Knex) {
   await db.raw(`
     DROP TABLE IF EXISTS discord_channel_setups, order_alert_subscriptions, account_integrations,
-      orders, shops, contractors, accounts CASCADE;
+      orders, shops, contractors, accounts, notification_actions, contract_alert_subscriptions CASCADE;
     CREATE TABLE accounts (
       user_id UUID PRIMARY KEY, username TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user',
       discord_id TEXT, official_server_id BIGINT, discord_thread_channel_id BIGINT,
@@ -106,6 +107,9 @@ async function createLegacySchema(db: Knex) {
     CREATE TABLE orders (
       order_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       shop_id UUID, contractor_id UUID, assigned_id UUID);
+    -- read by the later public-contract migration (discord_channel_setups.contracts)
+    CREATE TABLE notification_actions (
+      action_type_id INTEGER PRIMARY KEY, action TEXT NOT NULL, entity TEXT NOT NULL);
   `)
 }
 
@@ -243,6 +247,7 @@ describe.skipIf(!PG_TEST_URL)("discord_channel_setups on Postgres", () => {
     await createLegacySchema(state.db)
     await seed(state.db)
     await up(state.db)
+    await upContracts(state.db)
   })
 
   afterAll(async () => {
@@ -325,6 +330,7 @@ describe.skipIf(!PG_TEST_URL)("discord_channel_setups on Postgres", () => {
       expect(await state.db!.schema.hasTable("discord_channel_setups")).toBe(false)
       expect((await state.db!("order_alert_subscriptions").count("* as n"))[0].n).toBe("4")
       await up(state.db!)
+      await upContracts(state.db!)
       expect((await state.db!("discord_channel_setups").count("* as n"))[0].n).toBe("14")
     })
   })

@@ -37,7 +37,7 @@ describe("contract.public_created", () => {
     const pilot = await w.user("pilot")
     const boss = await w.user("boss")
     const hauler = await w.user("hauler")
-    const tester = await w.user("tester", { isTest: true })
+    const tester = await w.user("~tester", { isTest: true })
     const acme = await w.org("acme", [{ user: boss, perms: "owner" }])
     const shop = await w.shop("acme-shop", { org: acme })
     await w.webhook("contract-feed", shop, ["public_contract_create"])
@@ -67,7 +67,7 @@ describe("contract.public_created", () => {
   })
 
   it("a contract opened by a test account reaches nobody", async () => {
-    const tester = await w.user("tester", { isTest: true })
+    const tester = await w.user("~tester", { isTest: true })
     const pilot = await w.user("pilot")
     const acme = await w.org("acme", [{ user: pilot, perms: "owner" }])
     const shop = await w.shop("acme-shop", { org: acme })
