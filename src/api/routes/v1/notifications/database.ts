@@ -509,7 +509,6 @@ export async function getEntityByType(
       return serializeOrderDetails(order, null)
     }
     case "order": {
-      // Same as orders (for public_order_create)
       const order = await orderDb.getOrder({ order_id: entity_id })
       return serializeOrderDetails(order, null)
     }

@@ -574,16 +574,6 @@ class SESEmailService implements EmailService {
           )
           break
 
-        case "public_order_create":
-          // Same as order_create
-          templateData =
-            await payloadFormatters.formatOrderNotificationEmailData(
-              data.order as DBOrder,
-              "order_create",
-              userId,
-            )
-          break
-
         case "order_contractor_applied":
           // Same as order_create (entity is the order)
           templateData =

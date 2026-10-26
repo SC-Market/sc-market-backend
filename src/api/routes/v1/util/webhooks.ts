@@ -115,19 +115,6 @@ export async function sendOrderWebhooks(order: DBOrder) {
     )
   }
 
-  // "Public Order Created" is a site-wide feed: every webhook subscribed to
-  // it, whoever owns it, gets the order. Only open public orders (no shop,
-  // nobody assigned yet) go there; an assigned shop-less order (e.g. an
-  // accepted contract) is private to its parties.
-  if (!order.shop_id && !order.assigned_id) {
-    webhooks.push(
-      ...(await notificationDb.getNotificationWebhooksByAction(
-        {},
-        "public_order_create",
-      )),
-    )
-  }
-
   for (const webhook of webhooks) {
     try {
       await sendOrderWebhook(order, webhook)

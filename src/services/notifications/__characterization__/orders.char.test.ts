@@ -65,7 +65,6 @@ describe("order_create (1)", () => {
     await w.emailOptIn(boss, ["order_create"], acme)
     await w.emailOptIn(clerk, ["order_create"])
     await w.webhook("shop-hook", shop, ["order_create"])
-    await w.webhook("public-hook", { org: acme }, ["public_order_create"])
     await w.discordSetup({ owner: shop, channel: "900000000000000001", alerts: true })
 
     const session = await w.offerSession("s1", { customer, org: acme, shop })
@@ -113,11 +112,11 @@ describe("order_create (1)", () => {
     expect(obs).toMatchSnapshot()
   })
 
-  it("unassigned order without a shop: public_order_create webhooks fire", async () => {
+  it("unassigned order without a shop: no site-wide webhook feed (public_order_create retired)", async () => {
     const customer = await w.user("customer")
     const boss = await w.user("boss")
     const acme = await w.org("acme", [{ user: boss, perms: "owner" }])
-    await w.webhook("public-hook", { org: acme }, ["public_order_create"])
+    await w.webhook("org-hook", { org: acme }, ["order_create"])
     const order = await w.order("o3", { customer, org: acme })
 
     await notificationService.createOrderNotification(order)
@@ -128,7 +127,6 @@ describe("order_create (1)", () => {
       [
         "in_app  user:boss order_create (order:o3)",
         "push    push:boss [order] New Order Created",
-        "webhook public-hook SC Market - Order Placed",
         "shadow  order.created ok",
       ]
     `)

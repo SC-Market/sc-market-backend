@@ -108,17 +108,9 @@ describe("shop webhook events", () => {
     expect(postedTo().sort()).toEqual(["seller-order_assigned", "shop-1-order_assigned"])
   })
 
-  it("the site-wide Public Order Created feed only gets open public orders", async () => {
-    const publicOrder = { ...(order as object), shop_id: null } as never
-    await webhookUtil.sendOrderWebhooks(publicOrder)
+  it("there is no site-wide Public Order Created feed (retired)", async () => {
+    await webhookUtil.sendOrderWebhooks({ ...(order as object), shop_id: null, assigned_id: null } as never)
     expect(notificationDb.getNotificationWebhooksByAction).not.toHaveBeenCalledWith(
-      {},
-      "public_order_create",
-    )
-
-    vi.clearAllMocks()
-    await webhookUtil.sendOrderWebhooks({ ...(publicOrder as object), assigned_id: null } as never)
-    expect(notificationDb.getNotificationWebhooksByAction).toHaveBeenCalledWith(
       {},
       "public_order_create",
     )

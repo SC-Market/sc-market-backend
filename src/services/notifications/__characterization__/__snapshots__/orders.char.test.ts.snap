@@ -893,7 +893,7 @@ https://sc-market.space/settings?tab&#x3D;email",
 }
 `;
 
-exports[`order_create (1) > unassigned order without a shop: public_order_create webhooks fire 2`] = `
+exports[`order_create (1) > unassigned order without a shop: no site-wide webhook feed (public_order_create retired) 2`] = `
 {
   "discord": [],
   "discord_queue": [],
@@ -977,51 +977,7 @@ exports[`order_create (1) > unassigned order without a shop: public_order_create
     },
   ],
   "warnings": [],
-  "webhooks": [
-    {
-      "body": {
-        "allowed_mentions": {
-          "parse": [],
-        },
-        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
-        "embeds": [
-          {
-            "author": {
-              "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
-              "name": "Customer",
-              "url": "https://sc-market.space/profile/customer",
-            },
-            "color": 1120296,
-            "description": "Description of o3",
-            "fields": [
-              {
-                "name": "Offer",
-                "value": "25,000 aUEC",
-              },
-              {
-                "name": "Kind",
-                "value": "Delivery",
-              },
-              {
-                "name": "Rush",
-                "value": "False",
-              },
-              {
-                "name": "Collateral",
-                "value": "25,000 aUEC",
-              },
-            ],
-            "timestamp": "<ts>",
-            "title": "Order o3",
-            "url": "https://sc-market.space/contract/order:o3",
-          },
-        ],
-        "username": "SC Market - Order Placed",
-      },
-      "method": "POST",
-      "url": "https://discord.com/api/webhooks/public-hook/token",
-    },
-  ],
+  "webhooks": [],
   "websocket": [],
 }
 `;
