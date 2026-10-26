@@ -1,7 +1,13 @@
 /**
  * Stock Lot Routes
  *
- * Defines HTTP routes for stock lot management
+ * Defines HTTP routes for stock lot management.
+ *
+ * Only the routes the current frontend still calls are mounted: listing lots
+ * (order allocation view), locations (inventory page) and order allocations.
+ * The other V1 lot routes (search, create/update/delete/transfer, simple
+ * stock, org-wide allocations) had no caller and were removed; V2
+ * /api/v2/stock-lots replaces them.
  */
 
 import express from "express"
@@ -14,49 +20,16 @@ import {
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
+import { can_manage_market_listing } from "./middleware.js"
 import {
-  can_manage_market_listing,
-  can_manage_stock_lot,
-} from "./middleware.js"
-import { valid_contractor } from "../contractors/middleware.js"
-import { validate_optional_username_body } from "../profiles/middleware.js"
-import { validate_optional_spectrum_id } from "../contractors/middleware.js"
-import {
-  updateSimpleStock,
   getListingLots,
-  createLot,
-  updateLot,
-  deleteLot,
-  transferLot,
   getLocations,
   createLocation,
   getOrderAllocations,
-  getContractorAllocations,
   manualAllocateOrder,
-  searchLots,
 } from "./stock-lots.controller.js"
 
 export const stockLotsRouter = express.Router()
-
-// Search all lots
-stockLotsRouter.get(
-  "/lots",
-  userAuthorized,
-  requireMarketRead,
-  readRateLimit,
-  validate_optional_spectrum_id("contractor_spectrum_id"),
-  searchLots,
-)
-
-// Simple stock management
-stockLotsRouter.put(
-  "/listings/:listing_id/stock",
-  userAuthorized,
-  requireMarketWrite,
-  can_manage_market_listing,
-  writeRateLimit,
-  updateSimpleStock,
-)
 
 // Lot listing and management
 stockLotsRouter.get(
@@ -66,44 +39,6 @@ stockLotsRouter.get(
   can_manage_market_listing,
   readRateLimit,
   getListingLots,
-)
-
-stockLotsRouter.post(
-  "/listings/:listing_id/lots",
-  userAuthorized,
-  requireMarketWrite,
-  can_manage_market_listing,
-  validate_optional_username_body("owner_username"),
-  writeRateLimit,
-  createLot,
-)
-
-stockLotsRouter.patch(
-  "/lots/:lot_id",
-  userAuthorized,
-  requireMarketWrite,
-  can_manage_stock_lot,
-  writeRateLimit,
-  updateLot,
-)
-
-stockLotsRouter.delete(
-  "/lots/:lot_id",
-  userAuthorized,
-  requireMarketWrite,
-  can_manage_stock_lot,
-  writeRateLimit,
-  deleteLot,
-)
-
-// Lot transfer
-stockLotsRouter.post(
-  "/lots/:lot_id/transfer",
-  userAuthorized,
-  requireMarketWrite,
-  can_manage_stock_lot,
-  writeRateLimit,
-  transferLot,
 )
 
 // Location management
@@ -140,16 +75,4 @@ allocationRouter.post(
   requireMarketWrite,
   writeRateLimit,
   manualAllocateOrder,
-)
-
-// Contractor allocations router
-export const contractorAllocationsRouter = express.Router()
-
-contractorAllocationsRouter.get(
-  "/:spectrum_id/allocations",
-  userAuthorized,
-  requireMarketRead,
-  readRateLimit,
-  valid_contractor,
-  getContractorAllocations,
 )
