@@ -212,52 +212,9 @@ describe("V2 order push (order_create_v2, no action row)", () => {
   })
 })
 
-describe("order created through OrdersV2Controller.createOrder", () => {
-  it("records what the V2 create-order route does today", async () => {
+describe("V2 create-order route (removed upstream in a80fedc53)", () => {
+  it("POST /api/v2/orders is gone, so its duplicate order push is too", async () => {
     const { OrdersV2Controller } = await import("../../../api/routes/v2/orders/OrdersV2Controller.js")
-    const { getKnex } = await import("../../../clients/database/knex-db.js")
-    const profileDb = await import("../../../api/routes/v1/profiles/database.js")
-    const buyer = await w.user("buyer")
-    const seller = await w.user("seller")
-    const shop = await w.shop("seller-shop", { user: seller })
-    const item = await w.gameItem("Quantanium")
-    const { listing_id } = await w.listing("ore", {
-      shop,
-      seller: { user: seller },
-      title: "Quantanium",
-      price: 10000,
-      gameItem: item,
-    })
-    const db = getKnex()
-    const [variant] = await db("item_variants")
-      .insert({ game_item_id: item.id, attributes: { quality_tier: 4 }, attributes_hash: "t4", display_name: "Tier 4", short_name: "T4" })
-      .returning("variant_id")
-    const li = await db("listing_items").where({ listing_id }).first()
-    await db("listing_item_lots").insert({ item_id: li.item_id, variant_id: variant.variant_id, quantity_total: 10, owner_id: seller.user_id, listed: true })
-    w.nameId(variant.variant_id, "variant:t4")
-
-    let outcome: string
-    try {
-      const res = await new OrdersV2Controller().createOrder(
-        { items: [{ listing_id, variant_id: variant.variant_id, quantity: 2 }] } as never,
-        { user: await profileDb.getUser({ user_id: buyer.user_id }) } as never,
-      )
-      w.nameId(res.order_id, "order:v2")
-      outcome = "created"
-    } catch (e) {
-      outcome = `throws: ${(e as Error).message.split(" - ").pop()}`
-    }
-
-    const obs = await w.observe()
-    expect({ outcome, summary: w.summary(obs) }).toMatchInlineSnapshot(`
-      {
-        "outcome": "throws: column "created_at" of relation "orders" does not exist",
-        "summary": [
-          "ERROR   Query error",
-          "ERROR   Transaction error - rolled back",
-          "ERROR   Failed to create V2 order",
-        ],
-      }
-    `)
+    expect("createOrder" in OrdersV2Controller.prototype).toBe(false)
   })
 })
