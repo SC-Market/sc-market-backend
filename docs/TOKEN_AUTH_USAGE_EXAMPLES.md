@@ -178,13 +178,13 @@ Authorization: Bearer <session_token>
 ```bash
 # Using a token instead of session
 curl -H "Authorization: Bearer scm_live_abc123def456" \
-     https://api.scmarket.com/api/market/mine
+     https://api.scmarket.com/api/v2/listings/mine
 ```
 
 ### With JavaScript
 
 ```javascript
-const response = await fetch("/api/market/mine", {
+const response = await fetch("/api/v2/listings/mine", {
   headers: {
     Authorization: "Bearer scm_live_abc123def456",
   },

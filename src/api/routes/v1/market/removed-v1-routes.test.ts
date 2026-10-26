@@ -67,6 +67,10 @@ describe("removed V1 market routes", () => {
     expect(market).not.toContain(route)
   })
 
+  it("GET /mine is gone (?contractor_id= listed any org's listings)", () => {
+    expect(market).not.toContain("GET /mine")
+  })
+
   it("org-wide allocations are gone", () => {
     expect(contractors).not.toContain("GET /:spectrum_id/allocations")
   })

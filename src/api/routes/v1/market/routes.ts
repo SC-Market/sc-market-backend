@@ -43,7 +43,6 @@ import {
   get_aggregate_details,
   get_multiple_details,
   create_contractor_multiple,
-  get_my_listings,
   get_buy_orders,
   get_aggregate_history,
   update_aggregate,
@@ -76,7 +75,6 @@ import {
   market_post_listings_spec,
   market_post_listing_listing_id_photos_spec,
   market_post_listings_listing_id_views_spec,
-  market_get_mine_spec,
   market_get_listings_spec,
   market_get_user_username_spec,
   market_get_contractor_spectrum_id_spec,
@@ -219,15 +217,6 @@ marketRouter.post(
   market_post_listings_listing_id_views_spec,
   writeRateLimit,
   handle_listing_view,
-)
-
-marketRouter.get(
-  "/mine",
-  userAuthorized,
-  requireMarketRead,
-  market_get_mine_spec,
-  readRateLimit,
-  get_my_listings,
 )
 
 marketRouter.get(

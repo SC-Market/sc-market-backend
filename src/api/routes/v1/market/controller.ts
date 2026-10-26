@@ -15,7 +15,6 @@ import {
   formatMarketAggregateComplete,
   formatMarketMultipleComplete,
   formatPriceHistory,
-  formatPrivateSearchResult,
   serializeListingStats,
 } from "../util/formatting.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
@@ -41,8 +40,6 @@ import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
 import {
-  MarketSearchQuery,
-  MarketSearchQueryArguments,
   AttributeFilter,
 } from "./types.js"
 import {
@@ -1494,64 +1491,6 @@ export const handle_listing_view: RequestHandler = async (req, res) => {
       listing_id: req.params.listing_id,
     })
     res.status(500).json({ message: "Internal server error" })
-  }
-}
-
-export const get_my_listings: RequestHandler = async (req, res) => {
-  try {
-    const user = req.user as User
-    const contractorId = req.query.contractor_id as string
-    const searchQuery = await convertQuery(
-      req.query as Partial<MarketSearchQueryArguments>,
-    )
-
-    // Use the unified market search approach
-    const marketSearchQuery: MarketSearchQuery = {
-      query: searchQuery.query || "",
-      statuses: searchQuery.statuses || null,
-      sale_type: searchQuery.sale_type || null,
-      item_type: searchQuery.item_type || null,
-      listing_type: searchQuery.listing_type || null,
-      minCost: searchQuery.minCost || 0,
-      maxCost: searchQuery.maxCost || null,
-      quantityAvailable: searchQuery.quantityAvailable || 0,
-      sort: searchQuery.sort,
-      reverseSort: searchQuery.reverseSort,
-      index: searchQuery.index,
-      page_size: searchQuery.page_size,
-      rating: null,
-      seller_rating: 0,
-    }
-
-    // Add seller filter
-    if (contractorId) {
-      // Look up contractor_id from spectrum_id
-      const contractor = await contractorDb.getContractor({
-        spectrum_id: contractorId,
-      })
-      marketSearchQuery.contractor_seller_id = contractor.contractor_id
-    } else {
-      marketSearchQuery.user_seller_id = user.user_id
-    }
-
-    // Get unified results from unmaterialized view for real-time data
-    const searchResults =
-      await marketDb.searchMarketUnmaterialized(marketSearchQuery)
-
-    // Format listings using the same approach as market search
-    const formattedListings = await Promise.all(
-      searchResults.map((listing) => formatPrivateSearchResult(listing)),
-    )
-
-    // Extract total count from the first result (if any)
-    const total = searchResults.length > 0 ? searchResults[0].full_count : 0
-
-    res.json(createResponse({ listings: formattedListings, total }))
-  } catch (error) {
-    logger.error("Error in /mine:", error)
-    res
-      .status(500)
-      .json(createErrorResponse({ error: "Internal server error" }))
   }
 }
 
