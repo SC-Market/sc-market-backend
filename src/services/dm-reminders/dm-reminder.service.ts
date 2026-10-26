@@ -6,6 +6,8 @@ import logger from "../../logger/logger.js"
 
 const DM_REMINDER_ACTION_TYPE_ID = 82
 const UNREAD_THRESHOLD_HOURS = 24
+/** At most one reminder per user per this many hours. */
+export const REMINDER_INTERVAL_HOURS = 24
 
 interface UnreadDMUser {
   user_id: string
@@ -18,6 +20,11 @@ interface UnreadDMUser {
 /**
  * Process daily DM reminders for users who have unread messages older than 24h.
  * Respects email_notification_preferences for action_type_id 82 (dm_reminder).
+ *
+ * A user is reminded at most once per REMINDER_INTERVAL_HOURS, and only about
+ * unread conversations with activity since their last reminder, so a message
+ * left unread does not trigger a reminder every day forever. Sends are
+ * recorded in dm_reminder_log.
  */
 export async function processDmReminders(): Promise<void> {
   const knex = getKnex()
@@ -52,6 +59,7 @@ export async function processDmReminders(): Promise<void> {
         )
         .andOn("enp.enabled", "=", knex.raw("true"))
     })
+    .leftJoin("dm_reminder_log as drl", "drl.user_id", "a.user_id")
     .where("n.read", false)
     .whereIn("na.action", ["order_message", "offer_message"])
     .where(
@@ -59,6 +67,15 @@ export async function processDmReminders(): Promise<void> {
       "<",
       knex.raw(`NOW() - INTERVAL '${UNREAD_THRESHOLD_HOURS} hours'`),
     )
+    .where(function () {
+      this.whereNull("drl.last_reminded_at").orWhere(function () {
+        this.where(
+          "drl.last_reminded_at",
+          "<",
+          knex.raw(`NOW() - INTERVAL '${REMINDER_INTERVAL_HOURS} hours'`),
+        ).where("no.timestamp", ">", knex.ref("drl.last_reminded_at"))
+      })
+    })
     .whereNull("a.deleted_at")
     .where("a.is_tombstone", false)
     .groupBy("a.user_id", "a.username", "a.display_name", "ue.email")
@@ -101,12 +118,18 @@ export async function processDmReminders(): Promise<void> {
         "txt",
       )
 
-      await emailService.sendEmail({
+      const result = await emailService.sendEmail({
         to: user.email,
         subject: `You have ${user.unread_count} unread message${user.unread_count > 1 ? "s" : ""} on SC Market`,
         html,
         text,
       })
+      if (result.status === "sent") {
+        await knex("dm_reminder_log")
+          .insert({ user_id: user.user_id, last_reminded_at: knex.fn.now() })
+          .onConflict("user_id")
+          .merge({ last_reminded_at: knex.fn.now() })
+      }
     } catch (error) {
       logger.error("DM reminder: failed to send email", {
         userId: user.user_id,
