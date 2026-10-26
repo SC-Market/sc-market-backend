@@ -4,6 +4,8 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { WatchlistV2Controller } from './../watchlist/WatchlistV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { VariantTypesV2Controller } from './../variant-types/VariantTypesV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SuppliersV2Controller } from './../suppliers/SuppliersV2Controller.js';
@@ -85,6 +87,49 @@ const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "WatchlistItem": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "query": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "item_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "item_image_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "max_price": {"dataType":"double","required":true},
+            "current_lowest": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "last_notified_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WatchlistResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"WatchlistItem"},"required":true},
+            "max_items": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AddWatchlistItemRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string"},
+            "query": {"dataType":"string"},
+            "max_price": {"dataType":"integer","required":true,"validators":{"minimum":{"value":2},"maximum":{"value":2147483647}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateWatchlistItemRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "max_price": {"dataType":"integer","required":true,"validators":{"minimum":{"value":2},"maximum":{"value":2147483647}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "VariantType": {
         "dataType": "refObject",
         "properties": {
@@ -3924,6 +3969,134 @@ export function RegisterRoutes(app: Router) {
 
 
     
+        const argsWatchlistV2Controller_getWatchlist: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/watchlist',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller.prototype.getWatchlist)),
+
+            async function WatchlistV2Controller_getWatchlist(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWatchlistV2Controller_getWatchlist, request, response });
+
+                const controller = new WatchlistV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getWatchlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWatchlistV2Controller_addWatchlistItem: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"AddWatchlistItemRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/watchlist',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller.prototype.addWatchlistItem)),
+
+            async function WatchlistV2Controller_addWatchlistItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWatchlistV2Controller_addWatchlistItem, request, response });
+
+                const controller = new WatchlistV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'addWatchlistItem',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWatchlistV2Controller_updateWatchlistItem: Record<string, TsoaRoute.ParameterSchema> = {
+                watchlist_id: {"in":"path","name":"watchlist_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateWatchlistItemRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.patch('/watchlist/:watchlist_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller.prototype.updateWatchlistItem)),
+
+            async function WatchlistV2Controller_updateWatchlistItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWatchlistV2Controller_updateWatchlistItem, request, response });
+
+                const controller = new WatchlistV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateWatchlistItem',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWatchlistV2Controller_removeWatchlistItem: Record<string, TsoaRoute.ParameterSchema> = {
+                watchlist_id: {"in":"path","name":"watchlist_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.delete('/watchlist/:watchlist_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(WatchlistV2Controller.prototype.removeWatchlistItem)),
+
+            async function WatchlistV2Controller_removeWatchlistItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWatchlistV2Controller_removeWatchlistItem, request, response });
+
+                const controller = new WatchlistV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'removeWatchlistItem',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsVariantTypesV2Controller_getVariantTypes: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/variant-types',

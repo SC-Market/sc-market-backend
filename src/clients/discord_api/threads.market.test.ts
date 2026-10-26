@@ -317,10 +317,47 @@ describe("POST /threads/watchlist/add", () => {
     expect(state.db.tables.watchlist_items ?? []).toHaveLength(0)
   })
 
-  it("400s for a non-positive target price", async () => {
+  it("400s for a target price of 1 aUEC or less", async () => {
+    for (const max_price of [0, 1]) {
+      const res = await request(app())
+        .post("/threads/watchlist/add")
+        .send({ discord_id: "d-owner", query: "Medical Supplies", max_price })
+      expect(res.status).toBe(400)
+    }
+  })
+
+  it("409s when the item is already watched, like the site", async () => {
+    const body = { discord_id: "d-owner", game_item_id: ITEM_ID, max_price: 25000 }
+    expect((await request(app()).post("/threads/watchlist/add").send(body)).status).toBe(200)
+    const res = await request(app()).post("/threads/watchlist/add").send(body)
+    expect(res.status).toBe(409)
+    expect(res.body.error).toMatch(/already watch/)
+    expect(state.db.tables.watchlist_items).toHaveLength(1)
+  })
+})
+
+describe("POST /threads/watchlist/remove", () => {
+  const WATCH = "aaaaaaaa-0000-4000-8000-000000000001"
+
+  beforeEach(() => {
+    state.db.tables.watchlist_items = [
+      { id: WATCH, user_id: STRANGER.user_id, query: "Medical Supplies", game_item_id: null, max_price: 10 },
+    ]
+  })
+
+  it("404s for another user's item and keeps it", async () => {
     const res = await request(app())
-      .post("/threads/watchlist/add")
-      .send({ discord_id: "d-owner", query: "Medical Supplies", max_price: 0 })
-    expect(res.status).toBe(400)
+      .post("/threads/watchlist/remove")
+      .send({ discord_id: "d-owner", watchlist_id: WATCH })
+    expect(res.status).toBe(404)
+    expect(state.db.tables.watchlist_items).toHaveLength(1)
+  })
+
+  it("removes the caller's own item", async () => {
+    const res = await request(app())
+      .post("/threads/watchlist/remove")
+      .send({ discord_id: "d-stranger", watchlist_id: WATCH })
+    expect(res.status).toBe(200)
+    expect(state.db.tables.watchlist_items).toHaveLength(0)
   })
 })

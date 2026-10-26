@@ -2,8 +2,8 @@
  * Tiny in-memory stand-in for knex, for route/service tests that only need
  * equality filters over a handful of tables.
  *
- * Supported: db(table).where({...} | col, val).first(...) / .select(...) /
- * .forUpdate() / .update({...}) / .del() / .insert(row | rows).returning("*"), awaiting
+ * Supported: db(table).where({...} | col, val).whereIn(col, vals).orderBy(col, dir)
+ * .first(...) / .select(...) / .forUpdate() / .update({...}) / .del() / .insert(row | rows).returning("*"), awaiting
  * a builder yields the matching rows. Anything else is undefined on the
  * builder and fails loudly, so a query shape the fake doesn't model can't
  * pass a test vacuously.
@@ -28,6 +28,8 @@ const PRIMARY_KEYS: Record<string, string> = {
 
 class FakeBuilder implements PromiseLike<Row[]> {
   private criteria: Row = {}
+  private inCriteria: Array<[string, unknown[]]> = []
+  private order: Array<[string, "asc" | "desc"]> = []
   private pendingInsert: Row[] | null = null
 
   constructor(
@@ -44,6 +46,16 @@ class FakeBuilder implements PromiseLike<Row[]> {
     return this
   }
 
+  whereIn(column: string, values: unknown[]): this {
+    this.inCriteria.push([column, values])
+    return this
+  }
+
+  orderBy(column: string, direction: "asc" | "desc" = "asc"): this {
+    this.order.push([column, direction])
+    return this
+  }
+
   select(..._cols: unknown[]): this {
     return this
   }
@@ -53,9 +65,20 @@ class FakeBuilder implements PromiseLike<Row[]> {
   }
 
   private hits(): Row[] {
-    return this.rows.filter((r) =>
-      Object.entries(this.criteria).every(([k, v]) => r[k] === v),
+    const hits = this.rows.filter(
+      (r) =>
+        Object.entries(this.criteria).every(([k, v]) => r[k] === v) &&
+        this.inCriteria.every(([k, vs]) => vs.includes(r[k])),
     )
+    for (const [col, dir] of [...this.order].reverse()) {
+      hits.sort((a, b) => {
+        const x = a[col] as number | string | Date
+        const y = b[col] as number | string | Date
+        const cmp = x < y ? -1 : x > y ? 1 : 0
+        return dir === "desc" ? -cmp : cmp
+      })
+    }
+    return hits
   }
 
   async first(..._cols: unknown[]): Promise<Row | undefined> {

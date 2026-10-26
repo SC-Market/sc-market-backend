@@ -7,6 +7,128 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"WatchlistItem": {
+				"description": "One watched item.",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Watchlist item id"
+					},
+					"query": {
+						"type": "string",
+						"description": "What is watched: the game item's name for item watches, otherwise the\ntext matched as a phrase in listing titles."
+					},
+					"game_item_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Set for item watches: only listings of exactly this game item match."
+					},
+					"item_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Name of the watched game item (item watches only)."
+					},
+					"item_image_url": {
+						"type": "string",
+						"nullable": true,
+						"description": "Image of the watched game item (item watches only)."
+					},
+					"max_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Alert when a public listing is at or below this price (aUEC)."
+					},
+					"current_lowest": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Lowest public, in-stock price this watch would alert on now; null if none."
+					},
+					"last_notified_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When the last alert for this item was sent; alerts have a 1 hour cooldown."
+					},
+					"created_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"query",
+					"game_item_id",
+					"item_name",
+					"item_image_url",
+					"max_price",
+					"current_lowest",
+					"last_notified_at",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WatchlistResponse": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/WatchlistItem"
+						},
+						"type": "array"
+					},
+					"max_items": {
+						"type": "number",
+						"format": "double",
+						"description": "Most items one user may watch."
+					}
+				},
+				"required": [
+					"items",
+					"max_items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddWatchlistItemRequest": {
+				"description": "Watch a game item (preferred) or a text query.",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Watch exactly this game item."
+					},
+					"query": {
+						"type": "string",
+						"description": "Free text matched as a phrase in listing titles; used when game_item_id is absent."
+					},
+					"max_price": {
+						"type": "integer",
+						"format": "int32",
+						"description": "Target price in aUEC: a whole number above 1 (1 aUEC listings are\nplaceholders and never alert).",
+						"minimum": 2,
+						"maximum": 2147483647
+					}
+				},
+				"required": [
+					"max_price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateWatchlistItemRequest": {
+				"properties": {
+					"max_price": {
+						"type": "integer",
+						"format": "int32",
+						"description": "New target price in aUEC.",
+						"minimum": 2,
+						"maximum": 2147483647
+					}
+				},
+				"required": [
+					"max_price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"VariantType": {
 				"description": "Variant type definition with validation rules",
 				"properties": {
@@ -12096,6 +12218,160 @@
 		"contact": {}
 	},
 	"paths": {
+		"/watchlist": {
+			"get": {
+				"operationId": "GetWatchlist",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WatchlistResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "List the current user's watched items with their current lowest price",
+				"summary": "List my watchlist",
+				"tags": [
+					"Watchlist"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "AddWatchlistItem",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WatchlistItem"
+								}
+							}
+						}
+					}
+				},
+				"description": "Watch a game item (or a text query) with a target price",
+				"summary": "Add a watchlist item",
+				"tags": [
+					"Watchlist"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddWatchlistItemRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/watchlist/{watchlist_id}": {
+			"patch": {
+				"operationId": "UpdateWatchlistItem",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WatchlistItem"
+								}
+							}
+						}
+					}
+				},
+				"description": "Change the target price of a watched item",
+				"summary": "Update a watchlist item",
+				"tags": [
+					"Watchlist"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "watchlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateWatchlistItemRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveWatchlistItem",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Stop watching an item",
+				"summary": "Remove a watchlist item",
+				"tags": [
+					"Watchlist"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "watchlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/variant-types": {
 			"get": {
 				"operationId": "GetVariantTypes",

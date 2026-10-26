@@ -16,11 +16,13 @@ import { chatServer } from "../messaging/websocket.js"
 import logger from "../../logger/logger.js"
 import { withTransaction } from "../database/transaction.js"
 import { getOrCreateVariant } from "../../services/market-v2/variant.service.js"
-import { isUuid } from "../../api/routes/v2/util/short-slug.js"
+import { checkWatchlistMatches } from "../../services/watchlist/watchlist.service.js"
 import {
-  alertableListingFilter,
-  checkWatchlistMatches,
-} from "../../services/watchlist/watchlist.service.js"
+  addWatchlistItem,
+  listWatchlistItems,
+  removeWatchlistItem,
+  WatchlistError,
+} from "../../services/watchlist/watchlist-items.service.js"
 import { canManageShop } from "../../services/shops/shop-permissions.service.js"
 import {
   ListingQuickEditError,
@@ -794,6 +796,17 @@ threadRouter.post("/market/import-uex", async (req, res) => {
 // Watchlist
 // ============================================================================
 
+/** Send a watchlist rejection the user can act on, or a 500. */
+function sendWatchlistError(res: express.Response, err: unknown, fallback: string): void {
+  if (err instanceof WatchlistError) {
+    res.status(err.status).json({ error: err.message })
+    return
+  }
+  const message = err instanceof Error ? err.message : fallback
+  logger.error(fallback, { error: message })
+  res.status(500).json({ error: fallback })
+}
+
 threadRouter.post("/watchlist/add", async (req, res) => {
   const { discord_id, query, max_price, game_item_id } = req.body as {
     discord_id: string
@@ -803,15 +816,6 @@ threadRouter.post("/watchlist/add", async (req, res) => {
     game_item_id?: string
   }
 
-  if (!Number.isInteger(max_price) || max_price <= 0) {
-    res.status(400).json({ error: "max_price must be a positive whole number of aUEC" })
-    return
-  }
-  if (!game_item_id && !query?.trim()) {
-    res.status(400).json({ error: "query or game_item_id is required" })
-    return
-  }
-
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.status(404).json({ error: USER_NOT_LINKED })
@@ -819,36 +823,22 @@ threadRouter.post("/watchlist/add", async (req, res) => {
   }
 
   try {
-    const db = getKnex()
-
-    // An item watch matches that exact game item; its query is the item name.
-    let watchedQuery = query?.trim() ?? ""
-    if (game_item_id) {
-      const item = isUuid(game_item_id)
-        ? await db("game_items").where("id", game_item_id).first("id", "name")
-        : undefined
-      if (!item) {
-        res.status(400).json({ error: "Unknown game item" })
-        return
-      }
-      watchedQuery = item.name
-    }
-
-    const [row] = await db("watchlist_items")
-      .insert({
-        user_id: user.user_id,
-        query: watchedQuery,
-        game_item_id: game_item_id ?? null,
-        max_price,
-        created_at: new Date(),
-      })
-      .returning(["id", "query", "game_item_id", "max_price"])
-
-    res.json({ result: "Success", item: row })
+    const item = await addWatchlistItem(getKnex(), user.user_id, {
+      query,
+      game_item_id,
+      max_price,
+    })
+    res.json({
+      result: "Success",
+      item: {
+        id: item.id,
+        query: item.query,
+        game_item_id: item.game_item_id,
+        max_price: item.max_price,
+      },
+    })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to add watchlist item"
-    logger.error("Error adding watchlist item", { error: message })
-    res.status(500).json({ error: message })
+    sendWatchlistError(res, err, "Failed to add watchlist item")
   }
 })
 
@@ -865,22 +855,10 @@ threadRouter.post("/watchlist/remove", async (req, res) => {
   }
 
   try {
-    const db = getKnex()
-
-    const deleted = await db("watchlist_items")
-      .where({ id: watchlist_id, user_id: user.user_id })
-      .delete()
-
-    if (!deleted) {
-      res.status(404).json({ error: "Watchlist item not found" })
-      return
-    }
-
+    await removeWatchlistItem(getKnex(), user.user_id, watchlist_id)
     res.json({ result: "Success" })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to remove watchlist item"
-    logger.error("Error removing watchlist item", { error: message })
-    res.status(500).json({ error: message })
+    sendWatchlistError(res, err, "Failed to remove watchlist item")
   }
 })
 
@@ -894,43 +872,19 @@ threadRouter.get("/watchlist/:discord_id", async (req, res) => {
   }
 
   try {
-    const db = getKnex()
-
-    const items = await db("watchlist_items")
-      .where("user_id", user.user_id)
-      .orderBy("created_at", "desc")
-      .select("id", "query", "game_item_id", "max_price", "created_at")
-
-    // Current lowest public, in-stock offer that the item would alert on
-    const enrichedItems = await Promise.all(
-      items.map(async (item) => {
-        const lowestListing = await db("listing_search as ls")
-          .where(alertableListingFilter(db))
-          .where(function () {
-            if (item.game_item_id) {
-              this.where("ls.game_item_id", item.game_item_id)
-            } else {
-              this.whereRaw("to_tsvector('english', ls.title) @@ phraseto_tsquery('english', ?)", [
-                item.query,
-              ])
-            }
-          })
-          .where("ls.quantity_available", ">", 0)
-          .orderBy("ls.price_min", "asc")
-          .first("ls.price_min")
-
-        return {
-          ...item,
-          current_lowest: lowestListing?.price_min ? parseInt(lowestListing.price_min) : null,
-        }
-      }),
-    )
-
-    res.json({ items: enrichedItems })
+    const items = await listWatchlistItems(getKnex(), user.user_id)
+    res.json({
+      items: items.map((item) => ({
+        id: item.id,
+        query: item.query,
+        game_item_id: item.game_item_id,
+        max_price: item.max_price,
+        created_at: item.created_at,
+        current_lowest: item.current_lowest,
+      })),
+    })
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to fetch watchlist"
-    logger.error("Error fetching watchlist", { error: message })
-    res.status(500).json({ error: message })
+    sendWatchlistError(res, err, "Failed to fetch watchlist")
   }
 })
 
