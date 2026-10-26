@@ -570,29 +570,6 @@ export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) 
   }
 }
 
-export async function sendUserOfferWebhook(order: DBOfferSession) {
-  if (await involvesTestParty(orderParties(order))) return
-  let webhooks
-  if (order.assigned_id) {
-    webhooks = await notificationDb.getNotificationWebhooksByAction(
-      { user_id: order.assigned_id },
-      "order_assigned",
-    )
-  } else {
-    throw Error("Invalid order, no assignee")
-  }
-
-  for (const webhook of webhooks) {
-    try {
-      await sendOfferWebhook(order, webhook)
-    } catch (e) {
-      logger.error(
-        `Failed to send user offer webhook ${webhook.webhook_id}: ${e}`,
-      )
-    }
-  }
-}
-
 async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
   // Test accounts own no webhooks, so any webhook a test account's action
   // would fire belongs to a real user (services/test-accounts).

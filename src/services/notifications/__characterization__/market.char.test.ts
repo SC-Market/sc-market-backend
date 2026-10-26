@@ -151,9 +151,9 @@ describe("market_item_bid (10), V2 auctions", () => {
 })
 
 describe("market_item_offer (11)", () => {
-  it("has no caller: createMarketOfferNotification and createMarketOfferNotificationV2 are never invoked", () => {
-    expect(typeof notificationService.createMarketOfferNotification).toBe("function")
-    expect(typeof notificationService.createMarketOfferNotificationV2).toBe("function")
+  it("has no sender: the uncalled createMarketOfferNotification(V2) were deleted", () => {
+    expect("createMarketOfferNotification" in notificationService).toBe(false)
+    expect("createMarketOfferNotificationV2" in notificationService).toBe(false)
   })
 })
 
@@ -206,8 +206,8 @@ describe("V2 order push (order_create_v2, no action row)", () => {
     expect(obs.push).toMatchSnapshot()
   })
 
-  it("createOrderStatusNotificationV2 has no caller", () => {
-    expect(typeof notificationService.createOrderStatusNotificationV2).toBe("function")
+  it("createOrderStatusNotificationV2 (no caller) was deleted", () => {
+    expect("createOrderStatusNotificationV2" in notificationService).toBe(false)
   })
 })
 

@@ -2,9 +2,7 @@ import {
   DBAdminAlert,
   DBContractorInvite,
   DBMarketBid,
-  DBMarketListing,
   DBMarketListingComplete,
-  DBMarketOffer,
   DBMessage,
   DBOfferSession,
   DBOrder,
@@ -38,10 +36,6 @@ export type NotificationServiceInputs = {
   createMarketBidNotification: {
     listing: DBMarketListingComplete
     bid: DBMarketBid
-  }
-  createMarketOfferNotification: {
-    listing: DBMarketListing
-    offer: DBMarketOffer
   }
   createContractorInviteNotification: { invite: DBContractorInvite }
   createAdminAlertNotification: { alert: DBAdminAlert }

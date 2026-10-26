@@ -140,51 +140,6 @@ export function formatMarketBidNotificationPayloadV2(
 }
 
 /**
- * Format market offer notification payload for V2 listings
- * Requirement 43.6: Provide formatMarketOfferNotificationPayloadV2 function
- * Requirement 43.7: Include variant details if bid/offer is for specific variant
- */
-export function formatMarketOfferNotificationPayloadV2(
-  listing: GetListingDetailResponse,
-  offerAmount: number,
-  variantId?: string,
-): PushNotificationPayload {
-  // Requirement 43.4: Link to V2 listing detail page when feature flag is V2
-  const url = `${getBaseUrl()}/market/${listing.listing.listing_id}`
-  
-  let body = `A new offer of ${offerAmount} aUEC has been made on "${listing.listing.title}"`
-  
-  // Requirement 43.7: Include variant details if offer is for specific variant
-  if (variantId && listing.items.length > 0) {
-    const item = listing.items[0]
-    const variant = item.variants.find(v => v.variant_id === variantId)
-    
-    if (variant) {
-      const variantInfo = formatVariantInfo(variant)
-      if (variantInfo) {
-        body += ` - ${variantInfo}`
-      }
-    }
-  }
-  
-  return {
-    title: "New Offer",
-    body,
-    icon: getNotificationIcon(),
-    badge: getNotificationBadge(),
-    data: {
-      url,
-      type: "market_listing_v2",
-      entityId: listing.listing.listing_id,
-      action: "market_item_offer_v2",
-      variantId: variantId || undefined,
-    },
-    tag: `market-offer-v2-${listing.listing.listing_id}`,
-    requireInteraction: false,
-  }
-}
-
-/**
  * Format new order notification payload for V2 orders
  * Requirement 43.8: Notify sellers of new orders with variant information
  */
@@ -223,76 +178,6 @@ export function formatNewOrderNotificationPayloadV2(
       action: "order_create_v2",
     },
     tag: `order-v2-${order.order_id}`,
-    requireInteraction: false,
-  }
-}
-
-/**
- * Format order status change notification payload for V2 orders
- * Requirement 43.9: Notify buyers of order status changes
- */
-export function formatOrderStatusNotificationPayloadV2(
-  order: GetOrderDetailResponse,
-  newStatus: string,
-): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${order.order_id}`
-  
-  // Map status to user-friendly messages
-  const statusMessages: Record<string, { title: string; body: string }> = {
-    pending: {
-      title: "Order Pending",
-      body: "Your order is pending confirmation",
-    },
-    confirmed: {
-      title: "Order Confirmed",
-      body: "Your order has been confirmed",
-    },
-    in_progress: {
-      title: "Order In Progress",
-      body: "Your order is being prepared",
-    },
-    ready: {
-      title: "Order Ready",
-      body: "Your order is ready for pickup",
-    },
-    completed: {
-      title: "Order Completed",
-      body: "Your order has been completed",
-    },
-    cancelled: {
-      title: "Order Cancelled",
-      body: "Your order has been cancelled",
-    },
-  }
-  
-  const message = statusMessages[newStatus] || {
-    title: "Order Status Updated",
-    body: `Your order status has been updated to ${newStatus}`,
-  }
-  
-  // Add variant information from first item
-  let body = message.body
-  if (order.items.length > 0) {
-    const firstItem = order.items[0]
-    const variantInfo = formatVariantInfo(firstItem.variant)
-    
-    if (variantInfo) {
-      body += ` - ${variantInfo}`
-    }
-  }
-  
-  return {
-    title: message.title,
-    body,
-    icon: getNotificationIcon(),
-    badge: getNotificationBadge(),
-    data: {
-      url,
-      type: "order_v2",
-      entityId: order.order_id,
-      action: `order_status_${newStatus}_v2`,
-    },
-    tag: `order-status-v2-${order.order_id}`,
     requireInteraction: false,
   }
 }

@@ -2,9 +2,7 @@ import {
   DBAdminAlert,
   DBContractorInvite,
   DBMarketBid,
-  DBMarketListing,
   DBMarketListingComplete,
-  DBMarketOffer,
   DBMessage,
   DBOfferSession,
   DBOrder,
@@ -73,10 +71,6 @@ export interface NotificationService {
     listing: DBMarketListingComplete,
     bid: DBMarketBid,
   ): Promise<void>
-  createMarketOfferNotification(
-    listing: DBMarketListing,
-    offer: DBMarketOffer,
-  ): Promise<void>
 
   // V2 Market notifications
   // Requirement 43.1-43.10: V2 notification system integration
@@ -87,19 +81,9 @@ export interface NotificationService {
     bidId: string,
     variantId?: string,
   ): Promise<void>
-  createMarketOfferNotificationV2(
-    listing: GetListingDetailResponse,
-    offerAmount: number,
-    variantId?: string,
-  ): Promise<void>
   createNewOrderNotificationV2(
     order: CreateOrderResponse | GetOrderDetailResponse,
     sellerId: string,
-  ): Promise<void>
-  createOrderStatusNotificationV2(
-    order: GetOrderDetailResponse,
-    newStatus: string,
-    buyerId: string,
   ): Promise<void>
 
   // Other notifications
@@ -1242,62 +1226,6 @@ class DatabaseNotificationService implements NotificationService {
     await webhookService.sendBidWebhooks(listing, bid)
   }
 
-  async createMarketOfferNotification(
-    listing: DBMarketListing,
-    offer: DBMarketOffer,
-  ): Promise<void> {
-    const recipients: string[] = []
-
-    if (listing.contractor_seller_id) {
-      const admins = await contractorDb.getMembersWithMatchingRole(
-        listing.contractor_seller_id,
-        { manage_market: true },
-      )
-
-      if (offer.buyer_user_id) {
-        recipients.push(...admins.map((u) => u.user_id))
-        await this.createMarketUpdateNotification(
-          offer.buyer_user_id,
-          offer.offer_id,
-          "market_item_offer",
-          admins.map((u) => u.user_id),
-        )
-      }
-    }
-
-    if (listing.user_seller_id) {
-      if (offer.buyer_user_id) {
-        recipients.push(listing.user_seller_id)
-        await this.createMarketUpdateNotification(
-          offer.buyer_user_id,
-          offer.offer_id,
-          "market_item_offer",
-          [listing.user_seller_id],
-        )
-      }
-    }
-
-    // Send push notifications to all recipients
-    if (recipients.length > 0) {
-      try {
-        const payload = payloadFormatters.formatMarketOfferNotificationPayload(
-          listing,
-          offer,
-        )
-        await pushNotificationService.sendPushNotifications(
-          recipients,
-          payload,
-          "market_item_offer",
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send push notifications for market offer:`,
-          error,
-        )
-      }
-    }
-  }
-
   /**
    * Helper method to create market update notifications (bids/offers).
    */
@@ -1626,57 +1554,6 @@ class DatabaseNotificationService implements NotificationService {
   }
 
   /**
-   * Create market offer notification for V2 listing
-   * Requirement 43.6: Provide formatMarketOfferNotificationPayloadV2 function
-   * Requirement 43.2: Include variant information in notifications
-   * Requirement 43.3: Show quality tier in notification text
-   */
-  async createMarketOfferNotificationV2(
-    listing: GetListingDetailResponse,
-    offerAmount: number,
-    variantId?: string,
-  ): Promise<void> {
-    try {
-      // Resolve seller from shop
-      const shopId = listing.listing.shop_id
-      let sellerId: string | null = null
-      if (shopId) {
-        const shop = await getKnex()("shops").where("shop_id", shopId).first()
-        sellerId = shop?.owner_user_id || null
-        if (shop?.owner_contractor_id) {
-          const admins = await contractorDb.getMembersWithMatchingRole(shop.owner_contractor_id, { manage_market: true })
-          if (admins.length > 0) sellerId = admins[0].user_id
-        }
-      }
-
-      if (!sellerId) return
-
-      // Format and send push notification
-      const payload = payloadFormattersV2.formatMarketOfferNotificationPayloadV2(
-        listing,
-        offerAmount,
-        variantId,
-      )
-
-      await pushNotificationService.sendPushNotification(
-        sellerId,
-        payload,
-        "market_item_offer_v2",
-      )
-
-      logger.info("Created V2 market offer notification", {
-        listing_id: listing.listing.listing_id,
-        shop_id: shopId,
-        offer_amount: offerAmount,
-        variant_id: variantId,
-      })
-    } catch (error) {
-      logger.error("Failed to create V2 market offer notification:", error)
-      throw error
-    }
-  }
-
-  /**
    * Create new order notification for V2 order
    * Requirement 43.8: Notify sellers of new orders with variant information
    */
@@ -1726,38 +1603,6 @@ class DatabaseNotificationService implements NotificationService {
     }
   }
 
-  /**
-   * Create order status change notification for V2 order
-   * Requirement 43.9: Notify buyers of order status changes
-   */
-  async createOrderStatusNotificationV2(
-    order: GetOrderDetailResponse,
-    newStatus: string,
-    buyerId: string,
-  ): Promise<void> {
-    try {
-      // Format and send push notification to buyer
-      const payload = payloadFormattersV2.formatOrderStatusNotificationPayloadV2(
-        order,
-        newStatus,
-      )
-
-      await pushNotificationService.sendPushNotification(
-        buyerId,
-        payload,
-        `order_status_${newStatus}_v2`,
-      )
-
-      logger.info("Created V2 order status notification", {
-        order_id: order.order_id,
-        buyer_id: buyerId,
-        new_status: newStatus,
-      })
-    } catch (error) {
-      logger.error("Failed to create V2 order status notification:", error)
-      throw error
-    }
-  }
 }
 
 /**
