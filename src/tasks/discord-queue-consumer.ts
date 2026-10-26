@@ -14,13 +14,15 @@ import { serializeMessage } from "../api/routes/v1/chats/serializers.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
-  type: "status_update" | "message_received" | "thread_created"
+  type: "status_update" | "message_received" | "thread_created" | "error"
   payload: any
   metadata: {
     discord_message_id?: string
     created_at: string
     original_order_id?: string
+    original_type?: string
     entity_type?: string
+    entity_id?: string
   }
 }
 
@@ -70,6 +72,9 @@ export async function processDiscordQueue() {
           case "thread_created":
             await handleThreadCreated(body.payload, body.metadata)
             break
+          case "error":
+            handleBotError(body.payload, body.metadata)
+            break
           default:
             logger.warn("Unknown message type:", body.type)
         }
@@ -88,6 +93,23 @@ export async function processDiscordQueue() {
   } catch (error) {
     logger.error("Error receiving Discord queue messages:", error)
   }
+}
+
+/**
+ * The bot could not carry out a command (today: create_thread). It replies with
+ * the error instead of a result; nothing is retried, so record it where it can
+ * be seen.
+ */
+function handleBotError(
+  payload: { error?: string },
+  metadata: BackendQueueMessage["metadata"],
+) {
+  logger.error("Discord bot failed to process a queued command", {
+    command: metadata.original_type ?? "unknown",
+    entity_type: metadata.entity_type,
+    entity_id: metadata.original_order_id ?? metadata.entity_id,
+    bot_error: payload?.error ?? "unknown error",
+  })
 }
 
 async function handleStatusUpdate(payload: any) {

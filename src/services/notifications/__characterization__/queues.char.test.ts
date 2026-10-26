@@ -83,7 +83,7 @@ describe("Discord bot reply queue", () => {
     expect(obs.discord).toMatchSnapshot()
   })
 
-  it("error reply (thread creation failed): discarded as an unknown type", async () => {
+  it("error reply (thread creation failed): logged as an error with the command, entity and bot error", async () => {
     const customer = await w.user("customer")
     const order = await w.order("t2", { customer })
     await sendMessage(w.BACKEND_QUEUE(), {
@@ -98,13 +98,24 @@ describe("Discord bot reply queue", () => {
       deleted: r.sqs.deleted.length,
       warnings: obs.warnings,
       errors: obs.errors,
+      meta: w.normalize(r.logs.filter((l) => l.level === "error").map((l) => l.meta)),
     }).toMatchInlineSnapshot(`
       {
         "deleted": 1,
-        "errors": [],
-        "warnings": [
-          "Unknown message type:",
+        "errors": [
+          "Discord bot failed to process a queued command",
         ],
+        "meta": [
+          [
+            {
+              "bot_error": "Missing Access",
+              "command": "create_thread",
+              "entity_id": "order:t2",
+              "entity_type": "order",
+            },
+          ],
+        ],
+        "warnings": [],
       }
     `)
   })
