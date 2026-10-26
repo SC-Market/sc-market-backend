@@ -24,6 +24,7 @@ import {
   type Shop,
 } from "../../../../services/shops/shop-permissions.service.js"
 import { visibleActiveListingCountQuery } from "../util/listing-visibility.js"
+import { isUuid } from "../util/short-slug.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
@@ -43,8 +44,14 @@ export interface CreateShopRequest {
   description?: string
   banner?: string
   logo?: string
-  /** If set, shop is owned by this org. User must have manage_market in the org. */
+  /**
+   * If set, shop is owned by this org: its contractor_id (UUID), not its
+   * spectrum_id. User must have manage_market in the org.
+   */
   contractor_id?: string
+  supported_languages?: string[]
+  tags?: string[]
+  accepts_custom_orders?: boolean
 }
 
 export interface QuickCreateShopRequest {
@@ -297,6 +304,15 @@ export class ShopsV2Controller extends BaseController {
     let ownerContractorId: string | null = null
 
     if (body.contractor_id) {
+      if (!isUuid(body.contractor_id)) {
+        this.throwValidationError("contractor_id must be the org's id (a UUID), not its Spectrum ID", [
+          { field: "contractor_id", message: "Must be the org's contractor_id (UUID)" },
+        ])
+      }
+      const org = await db("contractors")
+        .where("contractor_id", body.contractor_id)
+        .first("contractor_id", "archived")
+      if (!org || org.archived) this.throwNotFound("Organization", body.contractor_id)
       const hasPerm = await has_permission(body.contractor_id, userId, "manage_market")
       if (!hasPerm) {
         this.throwForbidden("You do not have manage_market permission in this org")
@@ -339,6 +355,9 @@ export class ShopsV2Controller extends BaseController {
         logo: body.logo || null,
         owner_user_id: ownerUserId,
         owner_contractor_id: ownerContractorId,
+        ...(body.supported_languages !== undefined && { supported_languages: body.supported_languages }),
+        ...(body.tags !== undefined && { tags: body.tags }),
+        ...(body.accepts_custom_orders !== undefined && { accepts_custom_orders: body.accepts_custom_orders }),
       })
       .returning("*")
 

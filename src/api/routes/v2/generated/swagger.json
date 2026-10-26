@@ -906,7 +906,22 @@
 					},
 					"contractor_id": {
 						"type": "string",
-						"description": "If set, shop is owned by this org. User must have manage_market in the org."
+						"description": "If set, shop is owned by this org: its contractor_id (UUID), not its\nspectrum_id. User must have manage_market in the org."
+					},
+					"supported_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accepts_custom_orders": {
+						"type": "boolean"
 					}
 				},
 				"required": [
