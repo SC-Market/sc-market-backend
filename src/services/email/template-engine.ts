@@ -53,6 +53,10 @@ function registerHelpers(): void {
     return num.toLocaleString("en-US")
   })
 
+  // Numeric comparison, for subexpressions such as {{#if (gt count 1)}}
+  // (dm-reminder pluralises with it).
+  Handlebars.registerHelper("gt", (a: unknown, b: unknown) => Number(a) > Number(b))
+
   // Conditional helper
   Handlebars.registerHelper(
     "ifEquals",

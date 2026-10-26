@@ -118,7 +118,7 @@ describe("dm_reminder (82)", () => {
     await db("notification").insert({ notification_object_id: obj.notification_object_id, notifier_id: recipient.user_id, read: false })
   }
 
-  it("opted-in user with a >24 h unread message: one email per run (rendering today)", async () => {
+  it("opted-in user with a verified email and a >24 h unread message gets one reminder", async () => {
     const author = await w.user("author")
     const optedIn = await w.user("optedin")
     const notOptedIn = await w.user("quiet")
@@ -138,14 +138,13 @@ describe("dm_reminder (82)", () => {
         "in_app  user:optedin order_message (order:recent)",
         "in_app  user:quiet order_message (order:quiet)",
         "in_app  user:unverified order_message (order:unv)",
-        "ERROR   Failed to render email template: dm-reminder",
-        "ERROR   DM reminder: failed to send email",
+        "email   optedin@example.test You have 1 unread message on SC Market",
       ]
     `)
     expect(first).toMatchSnapshot()
   })
 
-  it("runs every 6 h: a second run re-sends to the same user", async () => {
+  it("runs every 6 h: the next runs don't re-send; new unread activity a day later does", async () => {
     const author = await w.user("author")
     const optedIn = await w.user("optedin")
     await w.emailOptIn(optedIn, ["dm_reminder"])
@@ -153,11 +152,22 @@ describe("dm_reminder (82)", () => {
 
     await processDmReminders()
     await processDmReminders()
+    const afterTwoRuns = (await w.observe()).email.length
+    // A day later, nothing new: still no reminder about the same message.
+    await getKnex()("dm_reminder_log").update({ last_reminded_at: getKnex().raw(`NOW() - INTERVAL '25 hours'`) })
+    await processDmReminders()
+    const afterADay = (await w.observe()).email.length
+    // A new message (now older than 24 h) arrived after that reminder.
+    await getKnex()("dm_reminder_log").update({ last_reminded_at: getKnex().raw(`NOW() - INTERVAL '40 hours'`) })
+    await unreadMessage("newer", optedIn, author, 30)
+    await processDmReminders()
     const obs = await w.observe()
-    expect({ errors: obs.errors.length, emails: obs.email.length }).toMatchInlineSnapshot(`
+    expect({ errors: obs.errors.length, afterTwoRuns, afterADay, total: obs.email.length }).toMatchInlineSnapshot(`
       {
-        "emails": 0,
-        "errors": 4,
+        "afterADay": 1,
+        "afterTwoRuns": 1,
+        "errors": 0,
+        "total": 2,
       }
     `)
   })

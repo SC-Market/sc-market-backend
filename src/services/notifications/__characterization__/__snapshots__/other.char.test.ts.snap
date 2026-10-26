@@ -115,16 +115,44 @@ exports[`contractor_invite (9) > invitee gets in-app + push; email is never sent
 }
 `;
 
-exports[`dm_reminder (82) > opted-in user with a >24 h unread message: one email per run (rendering today) 2`] = `
+exports[`dm_reminder (82) > opted-in user with a verified email and a >24 h unread message gets one reminder 2`] = `
 {
   "discord": [],
   "discord_queue": [],
-  "email": [],
-  "email_queue": [],
-  "errors": [
-    "Failed to render email template: dm-reminder",
-    "DM reminder: failed to send email",
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "You have 1 unread message on SC Market",
+      "text": "SC Market
+https://sc-market.space
+
+Unread Messages
+
+Hello Optedin,
+
+You have 1 unread message(s) waiting for you on SC Market.
+
+Don't leave your trading partners hanging — check your messages and respond when you can.
+
+View Messages:
+https://sc-market.space/messaging
+
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/settings?tab&#x3D;email
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "optedin@example.test",
+      ],
+    },
   ],
+  "email_queue": [],
+  "errors": [],
   "in_app": [
     {
       "action": "order_message",
