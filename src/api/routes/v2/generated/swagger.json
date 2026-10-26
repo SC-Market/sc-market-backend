@@ -15577,7 +15577,7 @@
 						}
 					},
 					{
-						"description": "Only 'active' is served (the default); other statuses return no results",
+						"description": "Only 'active' is served (the default); other statuses return no results, except to site admins",
 						"in": "query",
 						"name": "status",
 						"required": false,

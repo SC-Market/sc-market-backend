@@ -539,7 +539,7 @@ export class ListingsV2Controller extends BaseController {
    * @param page Page number for pagination (default: 1)
    * @param page_size Number of results per page (default: 20, max: 100)
    * @param sort_by Sort field (default: created_at)
-   * @param status Only 'active' is served (the default); other statuses return no results
+   * @param status Only 'active' is served (the default); other statuses return no results, except to site admins
    * @param sort_order Sort order (default: desc)
    * @returns Search results with pagination metadata
    */
@@ -765,11 +765,17 @@ export class ListingsV2Controller extends BaseController {
 
       // The public search only ever serves active listings. Inactive, sold,
       // expired and archived listings are not public: their owners manage them
-      // through GET /listings/mine. Any other requested status matches nothing.
-      if (status && status !== 'active') {
-        query = query.whereRaw('false')
+      // through GET /listings/mine, and site admins read them here (the admin
+      // Market page's status tabs). For anyone else a non-active status
+      // matches nothing.
+      if (status && status !== 'active' && this.isAdmin()) {
+        query = query.where('ls.status', status);
+      } else {
+        if (status && status !== 'active') {
+          query = query.whereRaw('false')
+        }
+        query = query.where('ls.status', 'active');
       }
-      query = query.where('ls.status', 'active');
 
       // Filter by item type.
       //

@@ -39,7 +39,7 @@ beforeEach(() => {
 
 type SearchArgs = Parameters<InstanceType<typeof ListingsV2Controller>["searchListings"]>
 
-function search(status: string | undefined, user?: { user_id: string }) {
+function search(status: string | undefined, user?: { user_id: string; role?: string }) {
   const args = new Array(23).fill(undefined) as SearchArgs
   args[8] = 1 // page
   args[9] = 20 // page_size
@@ -89,4 +89,43 @@ describe("market search visibility", () => {
       }
     },
   )
+
+  // Regression: the admin Market page's inactive/expired/sold/cancelled tabs
+  // read this search with ?status= and went empty when non-active statuses
+  // were closed to everyone.
+  it.each(["inactive", "sold", "expired", "cancelled"])(
+    "serves %s listings to site admins",
+    async (status) => {
+      await search(status, { user_id: "admin", role: "admin" })
+      const queries = gridQueries()
+      expect(queries.length).toBe(2)
+      for (const q of queries) {
+        expect(q.sql).not.toMatch(/\bfalse\b/)
+        expect(q.bindings).toContain(status)
+        expect(q.bindings).not.toContain("active")
+        // Visibility and test-shop rules still apply.
+        expect(q.sql).toContain("NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test)")
+        expect(q.bindings).not.toContain("unlisted")
+      }
+    },
+  )
+
+  it.each(["inactive", "expired"])(
+    "still never lists %s listings to non-admin users",
+    async (status) => {
+      await search(status, { user_id: "member", role: "user" })
+      for (const q of gridQueries()) {
+        expect(q.sql).toContain("false")
+        expect(q.bindings).not.toContain(status)
+      }
+    },
+  )
+
+  it("an admin test account is not an admin: no non-active listings", async () => {
+    await search("inactive", { user_id: "t", role: "admin", is_test: true } as never)
+    for (const q of gridQueries()) {
+      expect(q.sql).toContain("false")
+      expect(q.bindings).not.toContain("inactive")
+    }
+  })
 })
