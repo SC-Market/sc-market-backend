@@ -86,6 +86,22 @@ describe("buildLogRecord", () => {
     expect(record.error).toEqual({ stack: "Error: boom\n    at x" })
   })
 
+  it("pairs an error message string with its stack", () => {
+    const record = buildLogRecord(
+      {
+        level: "error",
+        message: "x",
+        error: "boom",
+        stack: "Error: boom\n at y",
+      },
+      undefined,
+    )
+    expect(record.error).toEqual({
+      message: "boom",
+      stack: "Error: boom\n at y",
+    })
+  })
+
   it("redacts secret metadata, tokens and codes", () => {
     const record = buildLogRecord(
       {

@@ -244,6 +244,9 @@ function buildError(info: LogInfo, seen: WeakSet<object>): unknown | undefined {
       if (!e.stack) e.stack = scrubString(info.stack)
     } else if (error === undefined) {
       error = { stack: scrubString(info.stack) }
+    } else if (typeof error === "string") {
+      // logger.error("...", { error: err.message, stack: err.stack })
+      error = { message: error, stack: scrubString(info.stack) }
     } else {
       error = { value: error, stack: scrubString(info.stack) }
     }
