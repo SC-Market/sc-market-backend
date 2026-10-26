@@ -127,10 +127,10 @@ class DatabaseNotificationService implements NotificationService {
     // Handle assigned user notifications
     if (order.assigned_id) {
       await this.createOrderAssignedNotification(order)
-    } else {
-      // Send webhooks for unassigned orders
-      await webhookService.sendOrderWebhooks(order)
     }
+
+    // "Order Created" webhooks fire for every new order, assigned or not
+    await webhookService.sendOrderWebhooks(order)
   }
 
   /**
@@ -275,6 +275,9 @@ class DatabaseNotificationService implements NotificationService {
     if (!order.assigned_id) {
       return
     }
+
+    // "Order Assigned" webhooks: the shop's and the assignee's own
+    await webhookService.sendOrderAssignedWebhooks(order)
 
     const action =
       await notificationDb.getNotificationActionByName("order_assigned")
@@ -621,6 +624,8 @@ class DatabaseNotificationService implements NotificationService {
 
   async createOrderReviewNotification(review: DBReview): Promise<void> {
     const order = await orderDb.getOrder({ order_id: review.order_id })
+
+    await webhookService.sendOrderReviewWebhooks(order, review)
 
     if (!order.assigned_id) {
       return

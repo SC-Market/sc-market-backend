@@ -4,6 +4,7 @@ import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as orderDb from "../../api/routes/v1/orders/database.js"
 import { has_permission, is_member } from "../../api/routes/v1/util/permissions.js"
 import logger from "../../logger/logger.js"
+import { webhookService } from "../../services/webhooks/webhook.service.js"
 
 const knex = () => getKnex()
 
@@ -32,8 +33,12 @@ claimRouter.post("/order", async (req, res) => {
     if (!(await is_member(order.contractor_id, user.user_id))) { res.json({ success: false, error: "You are not a member of this organization" }); return }
     if (!(await has_permission(order.contractor_id, user.user_id, "claim_orders"))) { res.json({ success: false, error: "You don't have permission to claim orders for this organization" }); return }
 
-    await knex()("orders").where({ order_id }).update({ assigned_id: user.user_id })
+    const [claimed] = await knex()("orders")
+      .where({ order_id })
+      .update({ assigned_id: user.user_id })
+      .returning("*")
     logger.info(`Order ${order_id} claimed by ${user.username} via Discord`)
+    if (claimed) await webhookService.sendOrderAssignedWebhooks(claimed)
     res.json({ success: true, display_name: user.display_name, remove_button: true })
   } catch (err) {
     logger.error("Failed to process order claim", { error: err })

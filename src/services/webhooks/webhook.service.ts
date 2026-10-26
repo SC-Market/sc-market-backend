@@ -14,6 +14,7 @@ import {
   DBOfferSession,
   DBOrder,
   DBOrderComment,
+  DBReview,
 } from "../../clients/database/db-models.js"
 import * as webhookUtil from "../../api/routes/v1/util/webhooks.js"
 import logger from "../../logger/logger.js"
@@ -33,6 +34,8 @@ export interface WebhookService {
     order: DBOrder,
     comment: DBOrderComment,
   ): Promise<void>
+  sendOrderAssignedWebhooks(order: DBOrder): Promise<void>
+  sendOrderReviewWebhooks(order: DBOrder, review: DBReview): Promise<void>
 
   // Offer webhooks
   sendOfferWebhooks(
@@ -99,6 +102,28 @@ class DatabaseWebhookService implements WebhookService {
         { error },
       )
       // Don't throw - webhook failures shouldn't break the main flow
+    }
+  }
+
+  async sendOrderAssignedWebhooks(order: DBOrder): Promise<void> {
+    try {
+      await webhookUtil.sendOrderAssignedWebhooks(order)
+    } catch (error) {
+      logger.error(
+        `Failed to send order assigned webhooks for order ${order.order_id}:`,
+        { error },
+      )
+    }
+  }
+
+  async sendOrderReviewWebhooks(order: DBOrder, review: DBReview): Promise<void> {
+    try {
+      await webhookUtil.sendOrderReviewWebhooks(order, review)
+    } catch (error) {
+      logger.error(
+        `Failed to send order review webhooks for order ${order.order_id}:`,
+        { error },
+      )
     }
   }
 

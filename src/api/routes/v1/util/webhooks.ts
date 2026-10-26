@@ -5,6 +5,7 @@ import {
   DBOfferSession,
   DBOrder,
   DBOrderComment,
+  DBReview,
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import * as profileDb from "../profiles/database.js"
@@ -104,8 +105,6 @@ export async function sendOrderWebhooks(order: DBOrder) {
       )),
     )
   }
-
-  await sendOrderDM(order)
 
   for (const webhook of webhooks) {
     try {
@@ -403,33 +402,6 @@ export async function generateAssignedMessage(order: DBOrder, assigned: User) {
   }
 }
 
-export async function sendOrderDM(order: DBOrder) {
-  const customer = order.customer_id
-    ? await profileDb.getUser({ user_id: order.customer_id })
-    : null
-  if (!customer) {
-    return
-  }
-
-  const assigned = order.assigned_id
-    ? await profileDb.getUser({ user_id: order.assigned_id })
-    : null
-
-  const people = [assigned]
-
-  for (const person of people) {
-    if (person) {
-      const discordId = await profileDb.getUserDiscordId(person.user_id)
-      if (discordId) {
-        await discordService.sendDirectMessage(
-          discordId,
-          await generateNewOrderMessage(order, customer, assigned),
-        )
-      }
-    }
-  }
-}
-
 export async function sendOfferDM(offer: DBOfferSession) {
   const customer = offer.customer_id
     ? await profileDb.getUser({ user_id: offer.customer_id })
@@ -457,24 +429,117 @@ export async function sendOfferDM(offer: DBOfferSession) {
   }
 }
 
-export async function sendAssignedWebhook(order: DBOrder) {
-  let webhooks
-  if (order.assigned_id) {
-    webhooks = await notificationDb.getNotificationWebhooksByAction(
-      { user_id: order.assigned_id },
-      "order_assigned",
-    )
-  } else {
+/**
+ * "Order Assigned": an order is assigned to (or claimed by) a member. Goes to
+ * the order's shop webhooks and to the assignee's own webhooks.
+ */
+export async function sendOrderAssignedWebhooks(order: DBOrder) {
+  if (!order.assigned_id) {
     throw Error("Invalid order, no assignee")
   }
 
+  const webhooks: DBNotificationWebhook[] = []
+  if (order.shop_id) {
+    webhooks.push(
+      ...(await notificationDb.getNotificationWebhooksByAction(
+        { "notification_webhooks.shop_id": order.shop_id },
+        "order_assigned",
+      )),
+    )
+  }
+  webhooks.push(
+    ...(await notificationDb.getNotificationWebhooksByAction(
+      { "notification_webhooks.user_id": order.assigned_id },
+      "order_assigned",
+    )),
+  )
+  if (!webhooks.length) return
+
+  const assignee = await profileDb.getMinimalUser({ user_id: order.assigned_id })
   for (const webhook of webhooks) {
     try {
-      await sendOrderWebhook(order, webhook)
+      await sendWebhook(
+        {
+          username: "SC Market - Order Assigned",
+          avatar_url: getLogoUrl(),
+          allowed_mentions: { parse: [] },
+          embeds: [
+            {
+              color: 0x111828,
+              author: {
+                name: assignee.display_name,
+                url: `https://sc-market.space/profile/${assignee.username}`,
+                icon_url: assignee.avatar,
+              },
+              title: order.title,
+              url: `https://sc-market.space/contract/${order.order_id}`,
+              fields: [{ name: "Assigned to", value: assignee.display_name }],
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        },
+        webhook,
+      )
     } catch (e) {
       logger.error(
         `Failed to send assigned webhook ${webhook.webhook_id}: ${e}`,
       )
+    }
+  }
+}
+
+/**
+ * "Order Review": someone leaves a review on one of the shop's orders.
+ */
+export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) {
+  if (!order.shop_id) return
+  const webhooks = await notificationDb.getNotificationWebhooksByAction(
+    { "notification_webhooks.shop_id": order.shop_id },
+    "order_review",
+  )
+  if (!webhooks.length) return
+
+  const author = review.user_author
+    ? await profileDb.getMinimalUser({ user_id: review.user_author })
+    : null
+  const stars = Math.max(0, Math.min(5, Math.round(+review.rating)))
+  for (const webhook of webhooks) {
+    try {
+      await sendWebhook(
+        {
+          username: "SC Market - Order Review",
+          avatar_url: getLogoUrl(),
+          allowed_mentions: { parse: [] },
+          embeds: [
+            {
+              color: 0x111828,
+              ...(author && {
+                author: {
+                  name: author.display_name,
+                  url: `https://sc-market.space/profile/${author.username}`,
+                  icon_url: author.avatar,
+                },
+              }),
+              title: order.title,
+              url: `https://sc-market.space/contract/${order.order_id}`,
+              fields: [
+                {
+                  name: "Rating",
+                  value: `${"★".repeat(stars)}${"☆".repeat(5 - stars)} (${review.rating}/5)`,
+                },
+                {
+                  name: review.role === "customer" ? "Buyer's review" : "Seller's review",
+                  value: (review.content || "(no text)").slice(0, 1024),
+                },
+              ],
+              timestamp: new Date(review.timestamp).toISOString(),
+            },
+          ],
+        },
+        webhook,
+      )
+    } catch (e) {
+      logger.error(`Failed to send review webhook ${webhook.webhook_id}: ${e}`)
     }
   }
 }
