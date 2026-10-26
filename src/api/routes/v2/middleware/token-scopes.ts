@@ -17,9 +17,10 @@
  * Granularity (decided with the maintainer — "hybride"):
  *   - Domains that already have a v1 scope equivalent are enforced at
  *     `domain:level` (e.g. listings → market:read / market:write).
- *   - v2-only domains with no v1 precedent are enforced at the read/write LEVEL
- *     only: any read scope may read, any write scope may write. We do not invent
- *     an unfounded domain mapping for these.
+ *   - Routes with no mapping (public catalog / game data) are enforced at the
+ *     read LEVEL only: any read scope may read. Writes to an unmapped route
+ *     fail closed (`full` / `admin` only), so a new route that is missing
+ *     from the table can't be written with an unrelated scope.
  *   - Admin routes FAIL CLOSED: only the literal `admin` scope is accepted.
  *     `full` / `readonly` explicitly do not grant admin (mirrors v1
  *     `isAdminScope`). The admin *role* is still separately enforced inside the
@@ -54,6 +55,20 @@ const DOMAIN_PREFIXES: Array<{ prefix: string; domain: string }> = [
   { prefix: "offers", domain: "offers" },
   // Profile / account
   { prefix: "accounts", domain: "profile" },
+  // v2 domains whose v1 precedent is clear
+  { prefix: "shops", domain: "market" },
+  { prefix: "buy-orders", domain: "market" },
+  { prefix: "auctions", domain: "market" },
+  { prefix: "inventory", domain: "market" },
+  { prefix: "images", domain: "market" },
+  { prefix: "suppliers", domain: "market" },
+  { prefix: "cart", domain: "orders" },
+  { prefix: "requisitions", domain: "orders" },
+  { prefix: "availability", domain: "profile" },
+  { prefix: "onboarding", domain: "profile" },
+  { prefix: "dashboard", domain: "profile" },
+  { prefix: "game-data/wishlists", domain: "profile" },
+  { prefix: "my-domain", domain: "contractors" },
 ]
 
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"])
@@ -142,14 +157,16 @@ export function tokenSatisfiesScope(
     return false
   }
 
-  // v2-only route → level-only enforcement.
+  // Unmapped route (public catalog / game data reads). Reads need any read
+  // scope. Writes FAIL CLOSED: only `full` / `admin`. Accepting any `*:write`
+  // here let e.g. a `comments:write` token edit shops or check out a cart
+  // whenever a write route was missing from DOMAIN_PREFIXES.
   if (userScopes.includes("admin") || userScopes.includes("full")) return true
   if (level === "read") {
     if (userScopes.includes("readonly")) return true
     return userScopes.some((s) => s.endsWith(":read") && !isAdminScope(s))
   }
-  // write
-  return userScopes.some((s) => s.endsWith(":write") && !isAdminScope(s))
+  return false
 }
 
 /**

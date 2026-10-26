@@ -34,22 +34,29 @@ describe("v2 token scope enforcement", () => {
       expect(requiredScope("POST", "/admin/imports/x").domain).toBe("admin")
     })
 
-    it("returns null domain for v2-only routes (level-only enforcement)", () => {
-      for (const p of [
-        "/dashboard",
-        "/cart",
-        "/inventory",
-        "/auctions",
-        "/buy-orders",
-        "/requisitions",
-        "/suppliers",
-        "/availability",
-        "/onboarding",
-        "/images",
-        "/debug",
-        "/integrations/scmdb/ingest",
-        "/game-data/wishlists",
-      ]) {
+    it("maps the v2 write surfaces to a v1 domain", () => {
+      const expected: Record<string, string> = {
+        "/shops/abc": "market",
+        "/buy-orders": "market",
+        "/auctions": "market",
+        "/inventory": "market",
+        "/images": "market",
+        "/suppliers": "market",
+        "/cart/checkout": "orders",
+        "/requisitions": "orders",
+        "/availability": "profile",
+        "/onboarding": "profile",
+        "/dashboard": "profile",
+        "/game-data/wishlists": "profile",
+        "/my-domain": "contractors",
+      }
+      for (const [p, domain] of Object.entries(expected)) {
+        expect(requiredScope("POST", p).domain).toBe(domain)
+      }
+    })
+
+    it("returns null domain for unmapped catalog routes", () => {
+      for (const p of ["/game-items/x", "/game-data/wiki/items", "/debug", "/integrations/scmdb/ingest"]) {
         expect(requiredScope("GET", p).domain).toBeNull()
       }
     })
@@ -162,16 +169,43 @@ describe("v2 token scope enforcement", () => {
       ).toBe(false) // write-only scope can't read
     })
 
-    it("any write scope satisfies a write", () => {
+    it("writes to an unmapped route fail closed (full/admin only)", () => {
       expect(
         tokenSatisfiesScope(["orders:write"], { domain: null, level: "write" }),
-      ).toBe(true)
+      ).toBe(false)
+      expect(
+        tokenSatisfiesScope(["comments:write"], { domain: null, level: "write" }),
+      ).toBe(false)
       expect(
         tokenSatisfiesScope(["market:read"], { domain: null, level: "write" }),
       ).toBe(false)
       expect(
         tokenSatisfiesScope(["full"], { domain: null, level: "write" }),
       ).toBe(true)
+    })
+
+    it("an unrelated write scope cannot edit a shop or check out a cart", () => {
+      expect(() =>
+        enforceTokenScopes(
+          { id: "t", name: "t", scopes: ["comments:write"] },
+          "PUT",
+          "/shops/abc",
+        ),
+      ).toThrow(/insufficient/i)
+      expect(() =>
+        enforceTokenScopes(
+          { id: "t", name: "t", scopes: ["comments:write"] },
+          "POST",
+          "/cart/checkout",
+        ),
+      ).toThrow(/insufficient/i)
+      expect(() =>
+        enforceTokenScopes(
+          { id: "t", name: "t", scopes: ["market:write"] },
+          "PUT",
+          "/shops/abc",
+        ),
+      ).not.toThrow()
     })
 
     it("admin:* alone does not satisfy non-admin v2-only routes", () => {
