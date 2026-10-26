@@ -10,11 +10,8 @@ The following scopes can only be assigned by admin users:
 
 ### Admin Scopes
 
-- `admin` - Full admin access
-- `admin:read` - Read admin endpoints
-- `admin:write` - Write admin endpoints
-- `admin:spectrum` - Spectrum migration access
-- `admin:stats` - Access to stats/metrics endpoints (Prometheus, Grafana)
+- `admin` - Admin access. This is the only admin scope; every admin route
+  requires it (v1 `adminAuthorized`, v2 `tokenSatisfiesScope`).
 
 ### Moderation Scopes
 
@@ -44,10 +41,6 @@ const allScopes = [
   // ... other scopes
   "moderation:read",
   "moderation:write",
-  "admin:read",
-  "admin:write",
-  "admin:spectrum",
-  "admin:stats",
   "admin",
 ]
 
@@ -56,7 +49,6 @@ const availableScopes =
     ? allScopes
     : allScopes.filter(
         (scope) =>
-          !scope.startsWith("admin:") &&
           scope !== "admin" &&
           scope !== "moderation:read" &&
           scope !== "moderation:write",
@@ -107,16 +99,11 @@ const ScopeSelector: React.FC<ScopeSelectorProps> = ({
     // Admin-only scopes
     "moderation:read",
     "moderation:write",
-    "admin:read",
-    "admin:write",
-    "admin:spectrum",
-    "admin:stats",
     "admin",
   ]
 
   const isAdminOnly = (scope: string) => {
     return (
-      scope.startsWith("admin:") ||
       scope === "admin" ||
       scope === "moderation:read" ||
       scope === "moderation:write"
@@ -183,7 +170,7 @@ To test scope restrictions:
    curl -X POST /api/v1/tokens \
      -H "Authorization: Bearer <non-admin-token>" \
      -H "Content-Type: application/json" \
-     -d '{"name": "Test", "scopes": ["admin:stats"]}'
+     -d '{"name": "Test", "scopes": ["admin"]}'
    # Should return 403 Forbidden
    ```
 
@@ -192,6 +179,6 @@ To test scope restrictions:
    curl -X POST /api/v1/tokens \
      -H "Authorization: Bearer <admin-token>" \
      -H "Content-Type: application/json" \
-     -d '{"name": "Test", "scopes": ["admin:stats"]}'
+     -d '{"name": "Test", "scopes": ["admin"]}'
    # Should succeed
    ```

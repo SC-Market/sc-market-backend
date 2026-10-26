@@ -14,7 +14,6 @@ import { recruitingRouter } from "./recruiting/routes.js"
 import { commentRouter } from "./comments/routes.js"
 import { wikiRouter } from "./wiki/routes.js"
 import { adminRouter } from "./admin/routes.js"
-import { prometheusRouter } from "./prometheus/routes.js"
 import { offerRouter, offersRouter } from "./offers/routes.js"
 import { servicesRouter } from "./services/routes.js"
 import { contractsRouter } from "./contracts/routes.js"
@@ -26,8 +25,6 @@ import { attributesRouter } from "./attributes/routes.js"
 export const apiRouter = express.Router()
 
 apiRouter.use("/admin", adminRouter)
-apiRouter.use("/prometheus/api/v1", prometheusRouter)
-apiRouter.use("/prometheus", prometheusRouter)
 apiRouter.use("/starmap", starmapRouter)
 apiRouter.use("/commodities", commodityRouter)
 apiRouter.use("/profile", profileRouter)

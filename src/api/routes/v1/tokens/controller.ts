@@ -46,14 +46,26 @@ const VALID_SCOPES = [
   "comments:write",
   "moderation:read",
   "moderation:write",
-  "admin:read",
-  "admin:write",
-  "admin:spectrum",
-  "admin:stats",
   "readonly",
   "full",
   "admin",
 ] as const
+
+/**
+ * Scopes only site admins may put on a token. `admin` is the only admin
+ * scope: every admin route requires exactly it (v1 adminAuthorized, v2
+ * tokenSatisfiesScope). The old admin:read/write/spectrum/stats sub-scopes
+ * never satisfied any route and were removed.
+ */
+const ADMIN_ONLY_SCOPES: readonly string[] = [
+  "admin",
+  "moderation:read",
+  "moderation:write",
+]
+
+export function isAdminOnlyScope(scope: string): boolean {
+  return ADMIN_ONLY_SCOPES.includes(scope)
+}
 
 /**
  * Helper function to convert contractor Spectrum IDs to database contractor IDs
@@ -179,7 +191,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
 
     // Check for admin scopes (only admins can create admin tokens)
     const hasAdminScopes = uniqueScopes.some(
-      (scope: string) => scope.startsWith("admin:") || scope === "admin",
+      (scope: string) => scope === "admin",
     )
     if (hasAdminScopes && !isSiteAdmin(user)) {
       res
@@ -469,7 +481,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
 
       // Check for admin scopes
       const hasAdminScopes = uniqueScopes.some(
-        (scope: string) => scope.startsWith("admin:") || scope === "admin",
+        (scope: string) => scope === "admin",
       )
       if (hasAdminScopes && !isSiteAdmin(user)) {
         res
@@ -782,11 +794,7 @@ export async function getAvailableScopes(
       isSiteAdmin(user)
         ? allScopes
         : allScopes.filter(
-            (scope) =>
-              !scope.startsWith("admin:") &&
-              scope !== "admin" &&
-              scope !== "moderation:read" &&
-              scope !== "moderation:write",
+            (scope) => !isAdminOnlyScope(scope),
           )
 
     res.json(createResponse({ scopes: availableScopes }))

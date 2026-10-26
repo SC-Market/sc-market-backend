@@ -8,7 +8,6 @@ import * as marketDb from "./database.js"
 import * as orderDb from "../orders/database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
-import * as adminUtil from "../admin/grafana-formatter.js"
 import {
   formatBuyOrderChartDetails,
   formatListing,
@@ -782,20 +781,6 @@ function getWeekOrderValueFloor(): number {
 
 export const get_order_stats: RequestHandler = async (req, res) => {
   const order_stats = await orderDb.getOrderStats()
-
-  // Check if Grafana format is requested
-  if (req.query.format === "grafana") {
-    const grafanaData = adminUtil.convertStatsToGrafana(order_stats)
-    res.json(grafanaData)
-    return
-  }
-
-  // Check if Prometheus format is requested
-  if (req.query.format === "prometheus") {
-    const prometheusData = adminUtil.convertStatsToPrometheus(order_stats)
-    res.json(prometheusData)
-    return
-  }
 
   // Apply display floors for the public-facing response
   const displayStats = {

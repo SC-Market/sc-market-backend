@@ -954,18 +954,6 @@ FROM (
 ) stats;
 ```
 
-### Grafana Dashboard (if available)
-
-**Panels to Add**:
-1. Search latency (p50, p95, p99) - line chart
-2. Error rate by endpoint - bar chart
-3. Active listings count - single stat
-4. Database CPU usage - gauge
-5. Connection pool usage - gauge
-6. Slow queries (>50ms) - table
-
----
-
 ## Emergency Procedures
 
 ### Emergency Rollback to V1

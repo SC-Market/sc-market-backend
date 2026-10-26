@@ -130,7 +130,6 @@ SELECT pg_reload_conf();
 ```
 
 **✅ Monitoring Dashboard** (if available)
-- Grafana dashboard configured
 - Database metrics visible
 - API metrics visible
 

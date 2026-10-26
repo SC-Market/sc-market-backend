@@ -354,54 +354,13 @@ adminOapi.schema("MembershipAnalyticsResponse", {
   required: ["daily_totals", "weekly_totals", "monthly_totals", "summary"],
 })
 
-adminOapi.schema("GrafanaTimeSeries", {
-  type: "object",
-  title: "GrafanaTimeSeries",
-  properties: {
-    target: {
-      type: "string",
-      description: "Metric name/series identifier",
-      example: "daily_activity",
-    },
-    datapoints: {
-      type: "array",
-      description: "Array of [value, timestamp_in_ms] pairs",
-      items: {
-        type: "array",
-        items: {
-          type: "number",
-        },
-        minItems: 2,
-        maxItems: 2,
-      },
-      example: [
-        [10, 1704067200000],
-        [15, 1704153600000],
-      ],
-    },
-  },
-  required: ["target", "datapoints"],
-})
 
 export const admin_get_activity_spec = adminOapi.validPath({
   summary: "Get platform activity statistics",
   description:
-    "Returns daily, weekly, and monthly activity counts for the platform. Use format=grafana to get Grafana-compatible time series format.",
+    "Returns daily, weekly, and monthly activity counts for the platform.",
   operationId: "getPlatformActivity",
   tags: ["Admin"],
-  parameters: [
-    {
-      name: "format",
-      in: "query",
-      description:
-        "Response format - use 'grafana' for Grafana JSON datasource format",
-      required: false,
-      schema: {
-        type: "string",
-        enum: ["grafana"],
-      },
-    },
-  ],
   responses: {
     "200": {
       description: "Activity statistics retrieved successfully",
@@ -480,22 +439,9 @@ export const admin_get_activity_spec = adminOapi.validPath({
 export const admin_get_orders_analytics_spec = adminOapi.validPath({
   summary: "Get comprehensive order analytics",
   description:
-    "Returns detailed order statistics including time-series data, top performers, and summary metrics for the admin panel. Use format=grafana to get Grafana-compatible time series format.",
+    "Returns detailed order statistics including time-series data, top performers, and summary metrics for the admin panel.",
   operationId: "getOrderAnalytics",
   tags: ["Admin"],
-  parameters: [
-    {
-      name: "format",
-      in: "query",
-      description:
-        "Response format - use 'grafana' for Grafana JSON datasource format",
-      required: false,
-      schema: {
-        type: "string",
-        enum: ["grafana"],
-      },
-    },
-  ],
   responses: {
     "200": {
       description: "Order analytics data retrieved successfully",
@@ -881,26 +827,13 @@ export const admin_get_users_spec = adminOapi.validPath({
 export const admin_get_membership_analytics_spec = adminOapi.validPath({
   summary: "Get membership analytics over time",
   description:
-    "Returns detailed membership growth statistics including time-series data and summary metrics for the admin panel. Use format=grafana to get Grafana-compatible time series format.",
+    "Returns detailed membership growth statistics including time-series data and summary metrics for the admin panel.",
   operationId: "getMembershipAnalytics",
   tags: ["Admin"],
-  parameters: [
-    {
-      name: "format",
-      in: "query",
-      description:
-        "Response format - use 'grafana' for Grafana JSON datasource format",
-      required: false,
-      schema: {
-        type: "string",
-        enum: ["grafana"],
-      },
-    },
-  ],
   responses: {
     "200": {
       description:
-        "Membership analytics data retrieved successfully. Returns Grafana format if format=grafana is specified.",
+        "Membership analytics data retrieved successfully.",
       content: {
         "application/json": {
           schema: {

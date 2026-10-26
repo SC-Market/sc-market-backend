@@ -121,31 +121,6 @@ oapi.schema("SellerInfo", {
   },
 })
 
-oapi.schema("GrafanaTimeSeries", {
-  type: "object",
-  title: "GrafanaTimeSeries",
-  properties: {
-    target: {
-      type: "string",
-      description: "Metric name/series identifier",
-      example: "total_orders",
-    },
-    datapoints: {
-      type: "array",
-      description: "Array of [value, timestamp_in_ms] pairs",
-      items: {
-        type: "array",
-        items: {
-          type: "number",
-        },
-        minItems: 2,
-        maxItems: 2,
-      },
-      example: [[150, 1704067200000]],
-    },
-  },
-  required: ["target", "datapoints"],
-})
 
 oapi.schema("OrderStats", {
   type: "object",
@@ -1310,40 +1285,14 @@ oapi.schema("GameItemDescription", {
 export const market_get_stats_spec = oapi.validPath({
   tags: ["Market"],
   summary: "Get market order statistics",
-  description:
-    "Returns statistics about orders including total count and value. Use format=grafana to get Grafana-compatible format.",
-  parameters: [
-    {
-      name: "format",
-      in: "query",
-      description:
-        "Response format - use 'grafana' for Grafana JSON datasource format",
-      required: false,
-      schema: {
-        type: "string",
-        enum: ["grafana"],
-      },
-    },
-  ],
+  description: "Returns statistics about orders including total count and value.",
   responses: {
     "200": {
-      description:
-        "Successfully retrieved order statistics. Returns Grafana format if format=grafana is specified.",
+      description: "Successfully retrieved order statistics.",
       content: {
         "application/json": {
           schema: {
-            oneOf: [
-              {
-                type: "array",
-                description: "Grafana format - array of time series objects",
-                items: {
-                  $ref: "#/components/schemas/GrafanaTimeSeries",
-                },
-              },
-              {
-                $ref: "#/components/schemas/OrderStats",
-              },
-            ],
+            $ref: "#/components/schemas/OrderStats",
           },
         },
       },

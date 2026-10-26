@@ -15,7 +15,6 @@ import { recruitingRouter } from "./recruiting/routes.js"
 import { commentRouter } from "./comments/routes.js"
 import { wikiRouter } from "./wiki/routes.js"
 import { adminRouter } from "./admin/routes.js"
-import { prometheusRouter } from "./prometheus/routes.js"
 import { offerRouter, offersRouter } from "./offers/routes.js"
 import { servicesRouter } from "./services/routes.js"
 import { contractsRouter } from "./contracts/routes.js"
@@ -42,8 +41,6 @@ export const apiV1Router = express.Router()
 
 // Mount all existing route modules on v1 router
 apiV1Router.use("/admin", adminRouter)
-apiV1Router.use("/prometheus/api/v1", prometheusRouter)
-apiV1Router.use("/prometheus", prometheusRouter)
 apiV1Router.use("/starmap", starmapRouter)
 apiV1Router.use("/commodities", commodityRouter)
 apiV1Router.use("/profile", profileRouter)
