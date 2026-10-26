@@ -71,6 +71,13 @@ describe("removed V1 market routes", () => {
     expect(market).not.toContain("GET /mine")
   })
 
+  it.each(["POST /purchase", "POST /buyorder/:buy_order_id/fulfill"])(
+    "%s is gone (no blocklist, leaked errors)",
+    (route) => {
+      expect(market).not.toContain(route)
+    },
+  )
+
   it("org-wide allocations are gone", () => {
     expect(contractors).not.toContain("GET /:spectrum_id/allocations")
   })

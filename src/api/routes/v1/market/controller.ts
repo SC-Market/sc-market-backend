@@ -23,7 +23,6 @@ import {
   isImageAlreadyAssociated,
   isSCMarketsCDN,
   validateMarketListingPhotos,
-  verify_listings,
 } from "./helpers.js"
 import { StockLotService } from "../../../../services/stock-lot/stock-lot.service.js"
 import { InvalidQuantityError } from "../../../../services/stock-lot/errors.js"
@@ -31,11 +30,6 @@ import moment from "moment/moment.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
-import {
-  createOffer,
-  validateAvailabilityRequirement,
-  validateOrderLimits,
-} from "../orders/helpers.js"
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -44,7 +38,6 @@ import {
 } from "./types.js"
 import {
   DBMarketListing,
-  DBContractor,
   DBMultipleListingComplete,
   DBUniqueListing,
 } from "../../../../clients/database/db-models.js"
@@ -1048,174 +1041,6 @@ export const get_linked_orders: RequestHandler = async (req, res) => {
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
-  }
-}
-
-export const purchase_listings: RequestHandler = async (req, res) => {
-  try {
-    const user = req.user as User
-
-    const {
-      items,
-      note,
-      offer,
-      v2_variant_items,
-    }: {
-      items: {
-        listing_id: string
-        quantity: number
-      }[]
-      note: string
-      offer?: number
-      v2_variant_items?: {
-        listing_id: string
-        variant_id: string
-        quantity: number
-        price_per_unit: number
-      }[]
-    } = req.body
-
-    if (!items || !items.length) {
-      res
-        .status(400)
-        .json(createErrorResponse({ message: "Missing required fields" }))
-      return
-    }
-
-    const listings = await verify_listings(res, items, user)
-    if (listings === undefined || listings === null) {
-      return // Response handled by verify_listings
-    }
-
-    let total = 0
-    for (const { quantity, listing } of listings) {
-      total += quantity * +listing.listing.price
-    }
-
-    // Use only the buyer's note as the description
-    const message = note || ""
-
-    // Check if user is blocked by the seller (all items are from same seller)
-    const firstListing = listings[0].listing.listing
-
-    // Check contractor blocking
-    if (firstListing.contractor_seller_id) {
-      const isBlockedByContractor = await profileDb.isUserBlocked(
-        firstListing.contractor_seller_id,
-        user.user_id,
-        "contractor",
-      )
-      if (isBlockedByContractor) {
-        res.status(403).json(
-          createErrorResponse({
-            message:
-              "You are blocked from creating offers with this contractor",
-          }),
-        )
-        return
-      }
-    }
-
-    // Check user blocking
-    if (firstListing.user_seller_id) {
-      const isBlockedByUser = await profileDb.isUserBlocked(
-        firstListing.user_seller_id,
-        user.user_id,
-        "user",
-      )
-      if (isBlockedByUser) {
-        res.status(403).json(
-          createErrorResponse({
-            message: "You are blocked from creating offers with this user",
-          }),
-        )
-        return
-      }
-    }
-
-    // Check availability requirement
-    const seller_contractor_id = firstListing.contractor_seller_id ?? null
-    const seller_user_id = firstListing.user_seller_id ?? null
-
-    try {
-      await validateAvailabilityRequirement(
-        user.user_id,
-        seller_contractor_id,
-        seller_user_id,
-      )
-    } catch (error) {
-      res.status(400).json(
-        createErrorResponse({
-          message:
-            error instanceof Error
-              ? error.message
-              : "Availability is required to submit this offer. Please set your availability first.",
-          code: "AVAILABILITY_REQUIRED",
-        }),
-      )
-      return
-    }
-
-    // Validate order limits
-    // Calculate offer size (sum of quantities)
-    const offerSize = listings.reduce((sum, item) => sum + item.quantity, 0)
-    const offerValue = offer || total
-
-    try {
-      await validateOrderLimits(
-        seller_contractor_id,
-        seller_user_id,
-        offerSize,
-        offerValue,
-      )
-    } catch (error) {
-      res.status(400).json(
-        createErrorResponse({
-          message:
-            error instanceof Error
-              ? error.message
-              : "Order does not meet size or value requirements",
-          code: "ORDER_LIMIT_VIOLATION",
-        }),
-      )
-      return
-    }
-
-    const {
-      offer: offer_obj,
-      session,
-      discord_invite,
-    } = await createOffer(
-      {
-        customer_id: user.user_id,
-        assigned_id: listings[0].listing.listing.user_seller_id,
-        contractor_id: listings[0].listing.listing.contractor_seller_id,
-        shop_id: listings[0].listing.listing.shop_id,
-      },
-      {
-        actor_id: user.user_id,
-        kind: "Delivery",
-        cost: (offer || total).toString(),
-        title: `Items Sold to ${user.username}`,
-        description: message,
-      },
-      listings,
-      v2_variant_items,
-    )
-
-    res.json(
-      createResponse({
-        result: "Success",
-        offer_id: offer_obj.id,
-        session_id: session.id,
-        discord_invite: discord_invite,
-      }),
-    )
-  } catch (e) {
-    logger.error("Error in purchase_listings:", e)
-    const errorMessage =
-      e instanceof Error ? e.message : "Failed to create purchase offer"
-    res.status(500).json(createErrorResponse({ message: errorMessage }))
   }
 }
 
@@ -2291,121 +2116,6 @@ export const create_buy_order: RequestHandler = async (req, res) => {
     })
 
     res.json(createResponse(orders[0]))
-    return
-  } catch (e) {
-    logger.error("Error in market operation", { error: e })
-    res
-      .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
-    return
-  }
-}
-
-export const fulfill_buy_order: RequestHandler = async (req, res) => {
-  try {
-    const { contractor_spectrum_id, agreed_price } = req.body as {
-      contractor_spectrum_id?: string | null
-      agreed_price?: number | null
-    }
-
-    const user = req.user as User
-    const buy_order_id = req.params["buy_order_id"]
-
-    let contractor: DBContractor | null = null
-    if (contractor_spectrum_id) {
-      contractor = await contractorDb.getContractor({
-        spectrum_id: contractor_spectrum_id,
-      })
-      if (!contractor) {
-        throw new Error("Invalid contractor!")
-      }
-      if (
-        !(await has_permission(
-          contractor.contractor_id,
-          user.user_id,
-          "manage_orders",
-        ))
-      ) {
-        res.status(400).json({ error: "No permissions" })
-        return
-      }
-    }
-
-    const buy_order = await marketDb.getBuyOrder({ buy_order_id })
-    if (
-      !buy_order ||
-      buy_order.fulfilled_timestamp ||
-      buy_order.expiry < new Date()
-    ) {
-      res.status(400).json({ error: "Invalid buy order" })
-      return
-    }
-
-    if (buy_order.buyer_id === user.user_id && !contractor) {
-      res.status(400).json({ error: "Can't fulfill own order" })
-      return
-    }
-
-    const pricePerUnit =
-      buy_order.negotiable && agreed_price != null && agreed_price >= 1
-        ? agreed_price
-        : buy_order.price
-    if (pricePerUnit == null || pricePerUnit < 1) {
-      res.status(400).json(
-        createErrorResponse({
-          message: buy_order.negotiable
-            ? "Negotiable orders require an agreed_price when fulfilling"
-            : "Invalid buy order price",
-        }),
-      )
-      return
-    }
-
-    const buyer = await profileDb.getUser({ user_id: buy_order.buyer_id })
-    const listing = await marketDb.getMarketAggregateComplete(
-      buy_order.game_item_id,
-      {},
-    )
-
-    await marketDb.updateBuyOrder(
-      {
-        buy_order_id,
-      },
-      { fulfilled_timestamp: new Date() },
-    )
-
-    const total = buy_order.quantity * pricePerUnit
-    let message = `Complete buy order for [${buyer.username}](https://sc-market.space/user/${buyer.username})\n`
-
-    message += `- [${listing.details.title}](https://sc-market.space/market/${
-      listing.game_item_id
-    }) (${(+pricePerUnit).toLocaleString(
-      "en-us",
-    )} aUEC x${buy_order.quantity.toLocaleString("en-us")})\n`
-    message += `- Total: ${total.toLocaleString("en-us")} aUEC\n`
-
-    const sellerShop = contractor
-      ? await database.knex("shops").where("owner_contractor_id", contractor.contractor_id).where("status", "active").first("shop_id")
-      : await database.knex("shops").where("owner_user_id", user.user_id).where("status", "active").first("shop_id")
-
-    const { offer, session, discord_invite } = await createOffer(
-      {
-        customer_id: buy_order.buyer_id,
-        assigned_id: contractor ? null : user.user_id,
-        contractor_id: contractor ? contractor.contractor_id : null,
-        shop_id: sellerShop?.shop_id || null,
-      },
-      {
-        actor_id: user.user_id,
-        kind: "Delivery",
-        cost: total.toString(),
-        title: `Complete Buy Order for ${buyer.username}`,
-        description: message,
-      },
-      [],
-    )
-
-    res.json({ offer, session, discord_invite })
     return
   } catch (e) {
     logger.error("Error in market operation", { error: e })

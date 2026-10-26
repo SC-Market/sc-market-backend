@@ -1898,63 +1898,6 @@ export const market_get_listing_listing_id_orders_spec = oapi.validPath({
   },
 })
 
-export const market_post_purchase_spec = oapi.validPath({
-  summary: "Purchase market listings",
-  description: "Create a purchase offer for one or more market listings",
-  tags: ["Market"],
-  requestBody: {
-    required: true,
-    content: {
-      "application/json": {
-        schema: {
-          $ref: "#/components/schemas/PurchaseRequest",
-        },
-      },
-    },
-  },
-  responses: {
-    "200": {
-      description: "Purchase offer created successfully",
-      content: {
-        "application/json": {
-          schema: {
-            properties: {
-              data: {
-                type: "object",
-                properties: {
-                  result: {
-                    type: "string",
-                    enum: ["Success"],
-                  },
-                  offer_id: {
-                    type: "string",
-                  },
-                  session_id: {
-                    type: "string",
-                  },
-                  discord_invite: {
-                    type: "string",
-                    nullable: true,
-                  },
-                },
-                required: [
-                  "result",
-                  "offer_id",
-                  "session_id",
-                  "discord_invite",
-                ],
-              },
-            },
-            required: ["data"],
-          },
-        },
-      },
-    },
-    "400": Response400,
-    "429": Response429Critical,
-  },
-})
-
 export const market_post_listings_listing_id_bids_spec = oapi.validPath({
   summary: "Place a bid on an auction listing",
   description: "Place or update a bid on an auction listing",

@@ -30,7 +30,6 @@ import {
   batch_update_listings,
   batch_update_listings_quantity,
   get_order_stats,
-  purchase_listings,
   refresh_listing,
   update_listing_quantity,
   create_listing,
@@ -49,7 +48,6 @@ import {
   create_multiple,
   update_multiple,
   create_buy_order,
-  fulfill_buy_order,
   cancel_buy_order,
   export_Listings,
   get_category_details,
@@ -70,7 +68,6 @@ import {
   market_post_listing_listing_id_refresh_spec,
   market_get_listings_listing_id_spec,
   market_get_listing_listing_id_orders_spec,
-  market_post_purchase_spec,
   market_post_listings_listing_id_bids_spec,
   market_post_listings_spec,
   market_post_listing_listing_id_photos_spec,
@@ -168,15 +165,6 @@ marketRouter.get(
   market_get_listing_listing_id_orders_spec,
   readRateLimit,
   get_linked_orders,
-)
-
-marketRouter.post(
-  "/purchase",
-  userAuthorized,
-  requireMarketWrite,
-  criticalRateLimit,
-  market_post_purchase_spec,
-  purchase_listings,
 )
 
 marketRouter.post(
@@ -315,14 +303,6 @@ marketRouter.post(
   requireMarketWrite,
   criticalRateLimit,
   create_buy_order,
-)
-
-marketRouter.post(
-  "/buyorder/:buy_order_id/fulfill",
-  userAuthorized,
-  requireMarketWrite,
-  criticalRateLimit,
-  fulfill_buy_order,
 )
 
 marketRouter.post(
