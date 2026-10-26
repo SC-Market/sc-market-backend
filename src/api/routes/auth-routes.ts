@@ -40,6 +40,7 @@ import {
   authLogoutLimit,
   authSessionsLimit,
 } from "../middleware/enhanced-ratelimiting.js"
+import { isKnownSiteRole } from "../util/site-role.js"
 
 /**
  * Errors surfaced through the passport `authenticate` callbacks. The verify
@@ -685,7 +686,7 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
       !!user &&
       !user.banned &&
       !user.is_tombstone &&
-      (user.role === "user" || user.role === "admin")
+      isKnownSiteRole(user.role)
     )
   }
 

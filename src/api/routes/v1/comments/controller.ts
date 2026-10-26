@@ -8,6 +8,7 @@ import {
   createForbiddenErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export const post_comment_id_reply: RequestHandler = async function (req, res) {
   const comment_id = req.params["comment_id"]
@@ -51,7 +52,7 @@ export const post_comment_id_delete: RequestHandler = async function (
     return
   }
 
-  if (comment.author !== user.user_id && user.role !== "admin") {
+  if (comment.author !== user.user_id && !isSiteAdmin(user)) {
     res.status(403).json(createForbiddenErrorResponse("No permissions"))
     return
   }
@@ -75,7 +76,7 @@ export const post_comment_id_update: RequestHandler = async function (
     return
   }
 
-  if (comment.author !== user.user_id && user.role !== "admin") {
+  if (comment.author !== user.user_id && !isSiteAdmin(user)) {
     res.status(403).json(createForbiddenErrorResponse("No permissions"))
     return
   }

@@ -5,6 +5,7 @@ import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { DBOrderAlertSubscription } from "../../clients/database/db-models.js"
 import logger from "../../logger/logger.js"
+import { isSiteAdmin } from "../../api/util/site-role.js"
 
 const knex = () => getKnex()
 
@@ -38,7 +39,7 @@ async function canRemoveSubscription(
 
   if (sub.contractor_id) return canManageOrgAlerts(sub.contractor_id, user.user_id)
 
-  return sub.user_id === user.user_id || user.role === "admin"
+  return sub.user_id === user.user_id || isSiteAdmin(user)
 }
 
 // POST /alert-subscriptions — create subscription

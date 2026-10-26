@@ -16,6 +16,7 @@ import {
 import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import * as contractorDb from "../routes/v1/contractors/database.js"
 import logger from "../../logger/logger.js"
+import { isKnownSiteRole, isSiteAdmin } from "../util/site-role.js"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ export async function userAuthorized(
     res.status(418).json(createErrorResponse({ message: "Internal server error" }))
     return
   }
-  if (user.role !== "user" && user.role !== "admin") {
+  if (!isKnownSiteRole(user.role)) {
     res.status(403).json(createForbiddenErrorResponse())
     return
   }
@@ -149,7 +150,7 @@ export async function adminAuthorized(
     res.status(418).json(createErrorResponse({ message: "Internal server error" }))
     return
   }
-  if (user.role !== "admin") {
+  if (!isSiteAdmin(user)) {
     res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
     return
   }

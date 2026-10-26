@@ -1,5 +1,6 @@
 import type { Request } from "express"
 import type { User } from "../../v1/api-models.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export const V2_DEBUG_OPENAPI_TAG = "Debug V2"
 
@@ -13,7 +14,7 @@ export function canViewV2DebugInternals(req: Request): boolean {
     return true
   }
   const user = req.user as User | undefined
-  return user?.role === "admin"
+  return isSiteAdmin(user)
 }
 
 type OpenApiLike = {

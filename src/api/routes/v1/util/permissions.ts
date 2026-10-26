@@ -5,6 +5,7 @@ import {
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export async function has_permission(
   contractor_id: string,
@@ -13,7 +14,7 @@ export async function has_permission(
 ) {
   // let roles = await database.getContractorRoles({contractor_id})
   const user = await profileDb.getUser({ user_id })
-  if (user.role === "admin") {
+  if (isSiteAdmin(user)) {
     return true
   }
 

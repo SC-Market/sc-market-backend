@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import { User } from "../api-models.js"
 import * as profileDb from "../profiles/database.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export async function adminOverride(
   req: Request,
@@ -10,7 +11,7 @@ export async function adminOverride(
 ): Promise<void> {
   if (req.isAuthenticated()) {
     const user = req.user as User
-    if (user.role === "admin") {
+    if (isSiteAdmin(user)) {
       const override = req.query.admin_override as string | undefined
       if (override) {
         try {

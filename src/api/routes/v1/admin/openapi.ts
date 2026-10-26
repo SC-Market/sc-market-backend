@@ -1,4 +1,5 @@
 import { adminOapi as adminOapi } from "../openapi.js"
+import { SITE_ROLES } from "../../../util/site-role.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
@@ -754,7 +755,7 @@ export const admin_get_users_spec = adminOapi.validPath({
       required: false,
       schema: {
         type: "string",
-        enum: ["user", "admin"],
+        enum: [...SITE_ROLES],
       },
     },
     {
@@ -827,7 +828,7 @@ export const admin_get_users_spec = adminOapi.validPath({
                         user_id: { type: "string", format: "uuid" },
                         display_name: { type: "string" },
                         profile_description: { type: "string" },
-                        role: { type: "string", enum: ["user", "admin"] },
+                        role: { type: "string", enum: [...SITE_ROLES] },
                         banned: { type: "boolean" },
                         username: { type: "string" },
                         avatar: { type: "string" },

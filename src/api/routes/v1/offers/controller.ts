@@ -33,6 +33,7 @@ import {
 import { is_member, has_permission } from "../util/permissions.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { OfferMergeError } from "./errors.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export const offer_get_session_id: RequestHandler = async (req, res) => {
   res.json(createResponse(await serializeOfferSession(req.offer_session!)))
@@ -367,7 +368,7 @@ export const get_search: RequestHandler = async (req, res) => {
   const user = req.user as User
   const args = await convert_offer_search_query(req)
   if (!(args.contractor_id || args.assigned_id || args.customer_id || args.shop_id)) {
-    if (user.role !== "admin") {
+    if (!isSiteAdmin(user)) {
       res
         .status(403)
         .json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
@@ -386,7 +387,7 @@ export const get_search: RequestHandler = async (req, res) => {
         res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
         return
       }
-    } else if (shop.owner_user_id !== user.user_id && user.role !== "admin") {
+    } else if (shop.owner_user_id !== user.user_id && !isSiteAdmin(user)) {
       res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }

@@ -9,6 +9,7 @@ import {
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 const MAX_TOKENS_PER_USER = 25
 
@@ -180,7 +181,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     const hasAdminScopes = uniqueScopes.some(
       (scope: string) => scope.startsWith("admin:") || scope === "admin",
     )
-    if (hasAdminScopes && user.role !== "admin") {
+    if (hasAdminScopes && !isSiteAdmin(user)) {
       res
         .status(403)
         .json(
@@ -197,7 +198,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       (scope: string) =>
         scope === "moderation:read" || scope === "moderation:write",
     )
-    if (hasModerationScopes && user.role !== "admin") {
+    if (hasModerationScopes && !isSiteAdmin(user)) {
       res
         .status(403)
         .json(
@@ -470,7 +471,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       const hasAdminScopes = uniqueScopes.some(
         (scope: string) => scope.startsWith("admin:") || scope === "admin",
       )
-      if (hasAdminScopes && user.role !== "admin") {
+      if (hasAdminScopes && !isSiteAdmin(user)) {
         res
           .status(403)
           .json(
@@ -487,7 +488,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         (scope: string) =>
           scope === "moderation:read" || scope === "moderation:write",
       )
-      if (hasModerationScopes && user.role !== "admin") {
+      if (hasModerationScopes && !isSiteAdmin(user)) {
         res
           .status(403)
           .json(
@@ -778,7 +779,7 @@ export async function getAvailableScopes(
 
     // Filter scopes based on user role
     const availableScopes =
-      user.role === "admin"
+      isSiteAdmin(user)
         ? allScopes
         : allScopes.filter(
             (scope) =>

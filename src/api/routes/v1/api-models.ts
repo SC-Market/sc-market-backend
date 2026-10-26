@@ -1,5 +1,7 @@
+import type { SiteRole } from "../../util/site-role.js"
+
 export interface ProfileBody {
-  role?: "user" | "admin"
+  role?: SiteRole
   user_id?: string
   display_name?: string
   profile_description?: string
@@ -13,7 +15,7 @@ export interface User {
   user_id: string
   display_name: string
   profile_description: string
-  role: "user" | "admin"
+  role: SiteRole
   banned: boolean
   username: string
   avatar: string

@@ -6,6 +6,7 @@ import * as offerDb from "./database.js"
 import { createErrorResponse } from "../util/response.js"
 import { has_permission } from "../util/permissions.js"
 import { can_respond_to_offer_helper } from "./helpers.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export async function related_to_offer(
   req: Request,
@@ -26,7 +27,7 @@ export async function related_to_offer(
 
   const assigned = offer.assigned_id === user.user_id
   const customer = offer.customer_id === user.user_id
-  let unrelated = !customer && !assigned && user.role !== "admin"
+  let unrelated = !customer && !assigned && !isSiteAdmin(user)
   if (offer.contractor_id) {
     unrelated =
       unrelated &&

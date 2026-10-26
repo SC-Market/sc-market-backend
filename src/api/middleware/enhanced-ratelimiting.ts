@@ -7,6 +7,7 @@ import {
 import { database } from "../../clients/database/knex-db.js"
 import { User } from "../routes/v1/api-models.js"
 import logger from "../../logger/logger.js"
+import { isSiteAdmin } from "../util/site-role.js"
 
 // User tier types
 export type UserTier = "anonymous" | "authenticated" | "admin"
@@ -130,7 +131,7 @@ export function detectUserTier(req: Request): UserTier {
   }
 
   // Check if user is admin based on role
-  if (user.role === "admin") {
+  if (isSiteAdmin(user)) {
     return "admin"
   }
 

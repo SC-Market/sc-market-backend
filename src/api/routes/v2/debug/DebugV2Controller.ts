@@ -15,6 +15,7 @@ import {
   SetFeatureFlagResponse,
 } from "../types/debug.types.js"
 import logger from "../../../../logger/logger.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 @Route("debug")
 @Tags("Debug V2")
@@ -53,7 +54,7 @@ export class DebugV2Controller extends BaseController {
 
     const userId = user.user_id
     const isDeveloper =
-      user.role === "admin" || process.env.NODE_ENV === "development"
+      isSiteAdmin(user) || process.env.NODE_ENV === "development"
 
     logger.info("Getting feature flag", { userId, isDeveloper })
 

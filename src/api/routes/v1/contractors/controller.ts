@@ -45,6 +45,7 @@ import {
   validateLanguageCodes,
   getLanguageName,
 } from "../../../../constants/languages.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export const post_auth_link: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -127,7 +128,7 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
     return
   }
 
-  if (user.role !== "admin") {
+  if (!isSiteAdmin(user)) {
     const roles = await contractorDb.getMemberRoles(
       contractor.contractor_id,
       user.user_id,
@@ -1198,7 +1199,7 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   }
 
   // Verify requester is the current owner
-  if (user.role !== "admin") {
+  if (!isSiteAdmin(user)) {
     const roles = await contractorDb.getMemberRoles(
       contractor.contractor_id,
       user.user_id,

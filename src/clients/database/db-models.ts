@@ -1,3 +1,4 @@
+import type { SiteRole } from "../../api/util/site-role.js"
 import { PaymentTypes } from "../../api/routes/v1/types/payment-types.js"
 
 export type OrderStatus =
@@ -11,7 +12,7 @@ export interface DBUser {
   user_id: string
   display_name: string
   profile_description: string
-  role: "user" | "admin"
+  role: SiteRole
   banned: boolean
   verified: boolean
   username: string

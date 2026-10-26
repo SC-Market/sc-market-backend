@@ -8,6 +8,7 @@ import { has_permission } from "../util/permissions.js"
 import { User } from "../api-models.js"
 import { StockLotRepository } from "../../../../services/stock-lot/repository.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 const stockLotRepo = new StockLotRepository(getKnex())
 
@@ -99,7 +100,7 @@ export async function can_manage_market_listing(
       return
     }
 
-    if (user.role !== "admin") {
+    if (!isSiteAdmin(user)) {
       if (listing.contractor_seller_id) {
         const contractor = await contractorDb.getContractor({
           contractor_id: listing.contractor_seller_id,
@@ -313,7 +314,7 @@ export async function can_manage_stock_lot(
     }
 
     // Check permissions (same as can_manage_market_listing)
-    if (user.role !== "admin") {
+    if (!isSiteAdmin(user)) {
       if (listing.contractor_seller_id) {
         const contractor = await contractorDb.getContractor({
           contractor_id: listing.contractor_seller_id,

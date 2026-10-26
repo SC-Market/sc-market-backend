@@ -9,6 +9,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
 import { User } from "../../v1/api-models.js"
 import { enforceTokenScopes, isAdminPath, TokenInfo } from "./token-scopes.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export async function expressAuthentication(
   request: Request,
@@ -41,7 +42,7 @@ export async function expressAuthentication(
     // requireAdmin() — so a demoted user whose token still carries the `admin`
     // scope is rejected, and a future admin controller that forgets its guard
     // is still protected. The token scope check below is a second gate.
-    if (isAdminPath(request.path) && user.role !== "admin") {
+    if (isAdminPath(request.path) && !isSiteAdmin(user)) {
       const err = new Error("Admin access required") as Error & {
         status: number
       }

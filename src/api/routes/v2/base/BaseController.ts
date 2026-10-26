@@ -15,6 +15,7 @@ import {
 } from "../../v1/util/errors.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { ValidationError as ValidationErrorType } from "../../v1/util/response.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 /**
  * Base controller class with common functionality
@@ -84,7 +85,7 @@ export abstract class BaseController extends Controller {
    */
   protected isAdmin(): boolean {
     const user = this.request?.user as User | undefined
-    return user?.role === "admin"
+    return isSiteAdmin(user)
   }
 
   /**

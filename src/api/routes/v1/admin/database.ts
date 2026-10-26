@@ -5,6 +5,7 @@
  */
 
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { SiteRole } from "../../../util/site-role.js"
 import {
   DBAdminAlert,
   DBContentReport,
@@ -206,9 +207,12 @@ export async function getMembershipAnalytics(options?: {
   const totalMembers = await knex()("accounts")
     .select(
       knex().raw("COUNT(*) as total_members"),
-      knex().raw("COUNT(CASE WHEN role = 'admin' THEN 1 END) as admin_members"),
+      knex().raw("COUNT(CASE WHEN role = ? THEN 1 END) as admin_members", [
+        SiteRole.Admin,
+      ]),
       knex().raw(
-        "COUNT(CASE WHEN role = 'user' THEN 1 END) as regular_members",
+        "COUNT(CASE WHEN role = ? THEN 1 END) as regular_members",
+        [SiteRole.User],
       ),
       knex().raw(
         "COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as rsi_confirmed_members",
@@ -279,7 +283,7 @@ export async function getUsersForAlertTarget(
 
     case "admins_only":
       // Only admin users
-      query = query.where("role", "admin").where("banned", false)
+      query = query.where("role", SiteRole.Admin).where("banned", false)
       break
 
     case "specific_org":

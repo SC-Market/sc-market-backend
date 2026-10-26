@@ -29,12 +29,13 @@ import { DBOrder } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 import { serializeOrderDetails } from "./serializers.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export const search_orders: RequestHandler = async (req, res) => {
   const user = req.user as User
   const args = await convert_order_search_query(req)
   if (!(args.contractor_id || args.assigned_id || args.customer_id || args.shop_id)) {
-    if (user.role !== "admin") {
+    if (!isSiteAdmin(user)) {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
     }
@@ -51,7 +52,7 @@ export const search_orders: RequestHandler = async (req, res) => {
         res.status(400).json(createErrorResponse("Missing permissions."))
         return
       }
-    } else if (shop.owner_user_id !== user.user_id && user.role !== "admin") {
+    } else if (shop.owner_user_id !== user.user_id && !isSiteAdmin(user)) {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
     }

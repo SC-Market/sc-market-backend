@@ -52,6 +52,7 @@ import {
   DBMultipleListingComplete,
   DBUniqueListing,
 } from "../../../../clients/database/db-models.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export const get_listing_stats: RequestHandler = async (req, res) => {
   try {
@@ -177,7 +178,7 @@ export const update_listing: RequestHandler = async (req, res) => {
       return
     }
 
-    if (listing.sale_type === "auction" && user.role !== "admin") {
+    if (listing.sale_type === "auction" && !isSiteAdmin(user)) {
       res.status(400).json({ error: "Cannot update auction listings" })
       return
     }
@@ -404,7 +405,7 @@ async function assertUserCanManageListingForBatch(
   user: User,
   listing: DBMarketListing,
 ): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
-  if (user.role === "admin") {
+  if (isSiteAdmin(user)) {
     return { ok: true }
   }
 
@@ -521,7 +522,7 @@ export const batch_update_listings: RequestHandler = async (req, res) => {
         )
         return
       }
-      if (listing.sale_type === "auction" && user.role !== "admin") {
+      if (listing.sale_type === "auction" && !isSiteAdmin(user)) {
         res
           .status(400)
           .json(createErrorResponse({ message: "Cannot update auction listings" }))
@@ -644,7 +645,7 @@ export const batch_update_listings_quantity: RequestHandler = async (
         )
         return
       }
-      if (listing.sale_type === "auction" && user.role !== "admin") {
+      if (listing.sale_type === "auction" && !isSiteAdmin(user)) {
         res
           .status(400)
           .json(createErrorResponse({ message: "Cannot update auction listings" }))
@@ -1014,7 +1015,7 @@ export const get_listing_details: RequestHandler = async (req, res) => {
           (c) => c.contractor_id === listing.contractor_seller_id,
         ) ||
         listing.user_seller_id === user.user_id ||
-        user.role === "admin"
+        isSiteAdmin(user)
       ) {
         res.json(createResponse(await formatListing(listing, true)))
         return

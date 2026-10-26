@@ -5,6 +5,7 @@ import { DBOrder } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as orderDb from "./database.js"
 import { User } from "../api-models.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 export async function related_to_order(
   req: Request,
@@ -25,7 +26,7 @@ export async function related_to_order(
 
   const assigned = order.assigned_id === user.user_id
   const customer = order.customer_id === user.user_id
-  let unrelated = !customer && !assigned && user.role !== "admin"
+  let unrelated = !customer && !assigned && !isSiteAdmin(user)
   if (order.contractor_id && unrelated) {
     // claim_orders members need access to self-claim; finer-grained checks
     // (status changes, assigning others) happen in the handlers.

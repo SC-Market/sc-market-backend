@@ -4,6 +4,7 @@
  */
 
 import { v4 as uuidv4 } from "uuid"
+import type { SiteRole } from "../api/util/site-role.js"
 import {
   setupMockTableData,
   getMockTableData,
@@ -22,7 +23,7 @@ export interface TestUser {
   discord_id?: string
   spectrum_id?: string
   balance?: number
-  role?: "user" | "admin"
+  role?: SiteRole
   banned?: boolean
   rsi_confirmed?: boolean
 }

@@ -14,12 +14,13 @@ import crypto from "node:crypto"
 import { Response, Request } from "express"
 import { env } from "../../config/env.js"
 import { getKnex } from "../../clients/database/knex-db.js"
+import type { SiteRole } from "./site-role.js"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export interface JWTPayload {
   sub: string       // user_id
-  role: string      // "user" | "admin"
+  role: SiteRole
   username: string
   iat: number
   exp: number
@@ -38,7 +39,7 @@ export interface RefreshTokenRecord {
 
 export interface UserForJWT {
   user_id: string
-  role: string
+  role: SiteRole
   username: string
 }
 

@@ -40,6 +40,7 @@ import {
   OrderSearchSortMethod,
   OrderSearchStatus,
 } from "./types.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 
 // =============================================================================
 // AVAILABILITY REQUIREMENT HELPER FUNCTIONS
@@ -848,7 +849,7 @@ export async function is_related_to_order(order: DBOrder, user: User) {
     contractors.filter((c) => c.contractor_id === order.contractor_id).length >=
       1 || // not the contractor
     order.assigned_id === user.user_id || // not assigned
-    ["admin"].includes(user.role)
+    isSiteAdmin(user)
   ) // Not a site admin
 }
 
@@ -877,7 +878,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     }
 
     if (
-      user.role !== "admin" &&
+      !isSiteAdmin(user) &&
       (order.status.includes("cancelled") || order.status.includes("fulfilled"))
     ) {
       res
@@ -895,7 +896,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
       if (
         ["fulfilled", "in-progress", "not-started"].includes(status) &&
         order.assigned_id !== user.user_id &&
-        user.role !== "admin"
+        !isSiteAdmin(user)
       ) {
         res
           .status(403)
