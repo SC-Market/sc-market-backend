@@ -123,3 +123,36 @@ export function self_member_role_removal_forbidden(
 
   return false
 }
+
+/** Every grantable org role permission flag. */
+export const ORG_ROLE_PERMISSIONS = [
+  "manage_roles",
+  "manage_orders",
+  "kick_members",
+  "manage_invites",
+  "manage_org_details",
+  "manage_stock",
+  "manage_market",
+  "manage_recruiting",
+  "manage_webhooks",
+  "manage_blocklist",
+  "claim_orders",
+  "manage_theme",
+] as const satisfies readonly (keyof DBContractorRole)[]
+
+/**
+ * Permissions in `granted` that none of the actor's roles hold.
+ *
+ * Someone with manage_roles may only hand out permissions they have
+ * themselves, whether by creating/editing a role or by assigning one
+ * (including to themselves). Otherwise manage_roles alone escalates to every
+ * permission in the org. Callers exempt site admins.
+ */
+export function permissionsBeyond(
+  actorRoles: DBContractorRole[],
+  granted: Partial<Record<keyof DBContractorRole, unknown>>,
+): string[] {
+  return ORG_ROLE_PERMISSIONS.filter(
+    (p) => !!granted[p] && !actorRoles.some((r) => r[p]),
+  )
+}

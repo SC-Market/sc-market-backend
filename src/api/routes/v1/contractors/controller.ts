@@ -29,6 +29,7 @@ import logger from "../../../../logger/logger.js"
 import {
   DBContractor,
   DBContractorMemberRole,
+  DBContractorRole,
 } from "../../../../clients/database/db-models.js"
 import { contractorDetails } from "../util/formatting.js"
 import {
@@ -37,6 +38,8 @@ import {
   has_permission,
   is_member,
   outranks,
+  permissionsBeyond,
+  ORG_ROLE_PERMISSIONS,
   self_member_role_removal_forbidden,
 } from "../util/permissions.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
@@ -684,6 +687,20 @@ export const get_spectrum_id_members: RequestHandler = async (
   }
 }
 
+/**
+ * Permissions in `granted` the acting user can't hand out in this org (see
+ * permissionsBeyond). Site admins can grant anything.
+ */
+async function grantsBeyondActor(
+  contractor_id: string,
+  actor: User,
+  granted: Partial<Record<keyof DBContractorRole, unknown>>,
+): Promise<string[]> {
+  if (isSiteAdmin(actor)) return []
+  const actorRoles = await contractorDb.getMemberRoles(contractor_id, actor.user_id)
+  return permissionsBeyond(actorRoles, granted)
+}
+
 export const post_spectrum_id_roles: RequestHandler = async (
   req,
   res,
@@ -726,6 +743,20 @@ export const post_spectrum_id_roles: RequestHandler = async (
   })
 
   const user = req.user as User
+  const beyond = await grantsBeyondActor(
+    contractor.contractor_id,
+    user,
+    req.body,
+  )
+  if (beyond.length) {
+    res.status(403).json(
+      createErrorResponse({
+        message: `You cannot grant permissions you don't have: ${beyond.join(", ")}`,
+      }),
+    )
+    return
+  }
+
   const newRoles = await contractorDb.insertContractorRole({
     contractor_id: contractor.contractor_id,
     manage_roles: manage_roles,
@@ -832,6 +863,27 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
       (await get_min_position(contractor.contractor_id, user.user_id)) >=
       position
     ) {
+      res.status(403).json(
+        createErrorResponse({ message: "A role cannot be moved above your own." }),
+      )
+      return
+    }
+
+    // Only permissions this edit turns on count; keeping existing ones is fine.
+    const newlyGranted = Object.fromEntries(
+      ORG_ROLE_PERMISSIONS.map((p) => [p, !!req.body?.[p] && !role[p]]),
+    )
+    const beyond = await grantsBeyondActor(
+      contractor.contractor_id,
+      user,
+      newlyGranted,
+    )
+    if (beyond.length) {
+      res.status(403).json(
+        createErrorResponse({
+          message: `You cannot grant permissions you don't have: ${beyond.join(", ")}`,
+        }),
+      )
       return
     }
 
@@ -1065,6 +1117,22 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
       ))
     ) {
       res.status(403).json(createErrorResponse({ message: "No permissions" }))
+      return
+    }
+
+    // Assigning a role hands out its permissions: same subset rule as
+    // creating one (this also stops self-assigning a stronger lower role).
+    const beyond = await grantsBeyondActor(
+      contractor.contractor_id,
+      user,
+      role,
+    )
+    if (beyond.length) {
+      res.status(403).json(
+        createErrorResponse({
+          message: `You cannot assign a role with permissions you don't have: ${beyond.join(", ")}`,
+        }),
+      )
       return
     }
 
