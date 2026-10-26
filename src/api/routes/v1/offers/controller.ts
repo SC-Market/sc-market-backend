@@ -1,4 +1,5 @@
 import { RequestHandler } from "express"
+import { validateCounterOfferItems } from "./counter-offer-items.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../profiles/database.js"
 import * as offerDb from "./database.js"
@@ -162,20 +163,19 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       return
     }
 
-    // Validate V2 variant items against the V2 listings table
-    if (body.v2_variant_items?.length) {
+    // Every item must be the session seller's own: V1 listings by seller,
+    // V2 listings by shop, and each variant must belong to its listing.
+    {
       const db = (await import("../../../../clients/database/knex-db.js")).getKnex()
-      for (const item of body.v2_variant_items) {
-        const listing = await db("listings").where({ listing_id: item.listing_id }).first()
-        if (!listing || listing.status !== "active") {
-          res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid V2 listing"))
-          return
-        }
-        const variant = await db("item_variants").where({ variant_id: item.variant_id }).first()
-        if (!variant) {
-          res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid variant"))
-          return
-        }
+      const problem = await validateCounterOfferItems(
+        db,
+        session,
+        listings,
+        body.v2_variant_items || [],
+      )
+      if (problem) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, problem))
+        return
       }
     }
 
