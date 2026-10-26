@@ -1253,6 +1253,16 @@ export const get_spectrum_id_audit_logs_spec = oapi.validPath({
       },
     },
     {
+      name: "actor_username",
+      in: "query",
+      description:
+        "Filter by the actor's username. An unknown username matches nothing.",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+    {
       name: "start_date",
       in: "query",
       description: "Filter logs after this date (ISO 8601 format)",

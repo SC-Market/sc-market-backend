@@ -58,6 +58,7 @@ import {
 } from "../../../../constants/languages.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
 import { canKickMember } from "./member-rules.js"
+import { filterAuditLogsByActor } from "./audit-log-filters.js"
 
 export const post_auth_link: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -215,6 +216,7 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
     )
     const action = req.query.action as string | undefined
     const actorId = req.query.actor_id as string | undefined
+    const actorUsername = req.query.actor_username as string | undefined
     const startDate = req.query.start_date as string | undefined
     const endDate = req.query.end_date as string | undefined
 
@@ -241,9 +243,10 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
     if (action) {
       query = query.where("action", action)
     }
-    if (actorId) {
-      query = query.where("actor_id", actorId)
-    }
+    query = filterAuditLogsByActor(query, database.knex, {
+      actorId,
+      actorUsername,
+    })
     if (startDate) {
       query = query.where("created_at", ">=", startDate)
     }
