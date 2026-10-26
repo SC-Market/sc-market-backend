@@ -61,6 +61,7 @@ describe("offer_create (19)", () => {
         "discord POST /channels/900000000000000101/invites",
         "dqueue  create_thread",
         "webhook shop-hook SC Market - Offer Received",
+        "shadow  offer.created ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -88,6 +89,7 @@ describe("offer_create (19)", () => {
         "email   seller@example.test New Offer Created",
         "discord POST /channels/900000000000000102/messages",
         "webhook shop-hook SC Market - Offer Received",
+        "shadow  offer.created ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -108,6 +110,7 @@ describe("offer_create (19)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:seller offer_create (session:o3)",
+        "shadow  offer.created ok",
       ]
     `)
   })
@@ -143,6 +146,7 @@ describe("counter_offer_create (20)", () => {
         "email   seller@example.test Counter Offer Received",
         "discord POST /channels/thread:c1/messages",
         "webhook shop-hook SC Market - Counter Offer Received",
+        "shadow  offer.countered ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -214,6 +218,8 @@ describe("offer_message (18)", () => {
         "discord POST /channels/thread:m1/messages",
         "ws      {"message_id":"uuid#1","content":"hello","author":"seller","",
         "ws      {"message_id":"uuid#2","content":"are you there?","author":"",
+        "shadow  offer.message ok",
+        "shadow  offer.message ok",
       ]
     `)
     expect(obs).toMatchSnapshot()

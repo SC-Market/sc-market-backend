@@ -18,6 +18,7 @@ import * as unsubscribeDb from "../../api/routes/v1/email/unsubscribe-database.j
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import logger from "../../logger/logger.js"
+import { currentTrace } from "../notify/trace.js"
 import { emailQueueService } from "./email-queue.service.js"
 import {
   EmailService,
@@ -329,6 +330,14 @@ class SESEmailService implements EmailService {
     skipQueue: boolean = false,
     contractorId?: string | null,
   ): Promise<boolean> {
+    // Shadow-mode parity (services/notify/shadow.ts). The queue consumer
+    // checks preferences with the contractor id found in the data.
+    currentTrace()?.email.push({
+      userId,
+      action: notificationType,
+      contractorId: readContractorId(data.order) ?? readContractorId(data.offer) ?? null,
+    })
+
     // A test account's actions never reach a real user (services/test-accounts).
     if ((await deliverableRecipients([userId])).length === 0) return false
 

@@ -5,6 +5,7 @@ import { deliverableRecipients } from "../../../../services/test-accounts/isolat
  */
 
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { currentTrace } from "../../../../services/notify/trace.js"
 import {
   DBNotificationWebhook,
   DBWebhookActions,
@@ -143,9 +144,14 @@ export async function getNotificationWebhook(
 export async function insertNotificationObjects(
   items: Partial<DBNotificationObject>[],
 ): Promise<DBNotificationObject[]> {
-  return knex()<DBNotificationObject>("notification_object")
+  const rows = await knex()<DBNotificationObject>("notification_object")
     .insert(items)
     .returning("*")
+  const trace = currentTrace()
+  if (trace) {
+    for (const r of rows) trace.objects.set(r.notification_object_id, Number(r.action_type_id))
+  }
+  return rows
 }
 
 /**
@@ -166,6 +172,16 @@ export async function removeNotificationObjects(
 export async function insertNotifications(
   items: Partial<DBNotification>[],
 ): Promise<DBNotification[]> {
+  // Shadow-mode parity (services/notify/shadow.ts): what the legacy code
+  // meant to write, before test-account isolation.
+  const trace = currentTrace()
+  if (trace) {
+    for (const i of items) {
+      if (i.notifier_id && i.notification_object_id) {
+        trace.inApp.push({ userId: i.notifier_id, objectId: i.notification_object_id })
+      }
+    }
+  }
   // Never notify a real user because of a test account: the current request's
   // user, or the actor recorded on the notification object
   // (services/test-accounts/isolation.ts).

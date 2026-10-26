@@ -14,6 +14,7 @@ import { env } from "../../config/env.js"
 import * as pushNotificationDb from "./push-notification.database.js"
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import logger from "../../logger/logger.js"
+import { currentTrace } from "../notify/trace.js"
 import {
   PushSubscriptionData,
   PushSubscription,
@@ -261,6 +262,25 @@ class WebPushNotificationService implements PushNotificationService {
       action_type: actionType,
       notification_title: notification.title,
     })
+
+    // Shadow-mode parity (services/notify/shadow.ts): record the preference
+    // decision before anything else can short-circuit.
+    const trace = currentTrace()
+    if (trace) {
+      let enabled = true
+      if (actionType) {
+        const action = await notificationDb.getNotificationActionByName(actionType)
+        if (action) {
+          const pref = await pushNotificationDb.getPushPreference(
+            userId,
+            action.action_type_id,
+            contractorId ?? null,
+          )
+          enabled = pref?.enabled ?? true
+        }
+      }
+      trace.push.push({ userId, action: actionType ?? null, contractorId: contractorId ?? null, enabled })
+    }
 
     // A test account's actions never reach a real user (services/test-accounts).
     if ((await deliverableRecipients([userId])).length === 0) return

@@ -84,6 +84,7 @@ exports[`market_item_bid (10), V1 route > org seller: manage_market members get 
       "to": "push:trader",
     },
   ],
+  "shadow": [],
   "warnings": [],
   "webhooks": [
     {
@@ -165,6 +166,7 @@ exports[`market_item_bid (10), V2 auctions > org shop: manage_market members; sh
       "to": "push:trader",
     },
   ],
+  "shadow": [],
   "warnings": [],
   "webhooks": [
     {

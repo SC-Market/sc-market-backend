@@ -433,6 +433,8 @@ export interface Observed {
   discord_queue: unknown[]
   webhooks: unknown[]
   websocket: unknown[]
+  /** Shadow-mode parity lines (services/notify/shadow.ts), one per shadowed event. */
+  shadow: unknown[]
   errors: unknown[]
   warnings: unknown[]
 }
@@ -466,8 +468,11 @@ export async function observe(opts: { drainEmail?: boolean } = {}): Promise<Obse
     discord_queue: r.sqs.sent.filter((m) => m.queueUrl === DISCORD_QUEUE()).map((m) => m.body),
     webhooks: r.fetch,
     websocket: r.websocket,
+    shadow: r.logs.filter((l) => l.message === "notify.shadow").map((l) => l.meta[0]),
     errors: r.logs.filter((l) => l.level === "error").map((l) => l.message),
-    warnings: r.logs.filter((l) => l.level === "warn").map((l) => l.message),
+    warnings: r.logs
+      .filter((l) => l.level === "warn" && l.message !== "notify.shadow")
+      .map((l) => l.message),
   })
 }
 
@@ -497,6 +502,13 @@ export function summary(o: Observed) {
     lines.push(`webhook ${w.url.replace("https://discord.com/api/webhooks/", "").replace("/token", "")} ${w.body?.username ?? ""}`.trim())
   }
   for (const w of o.websocket) lines.push(`ws      ${JSON.stringify(w).slice(0, 60)}`)
+  for (const sh of o.shadow as { event: string; match: boolean; missing: string[]; extra: string[] }[]) {
+    lines.push(
+      sh.match
+        ? `shadow  ${sh.event} ok`
+        : `shadow  ${sh.event} MISMATCH missing=${sh.missing.join(",")} extra=${sh.extra.join(",")}`,
+    )
+  }
   for (const e of o.errors as string[]) lines.push(`ERROR   ${e}`)
   return lines
 }

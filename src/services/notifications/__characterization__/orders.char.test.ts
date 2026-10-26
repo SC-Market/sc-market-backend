@@ -80,6 +80,7 @@ describe("order_create (1)", () => {
         "email   boss@example.test New Order Created",
         "discord POST /channels/900000000000000001/messages",
         "webhook shop-hook SC Market - Order Placed",
+        "shadow  order.created ok",
         "ERROR   Query error",
       ]
     `)
@@ -107,6 +108,7 @@ describe("order_create (1)", () => {
         "webhook seller-shop-hook SC Market - Order Assigned",
         "webhook seller-hook SC Market - Order Assigned",
         "webhook seller-shop-hook SC Market - Order Placed",
+        "shadow  order.assigned ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -128,6 +130,7 @@ describe("order_create (1)", () => {
         "in_app  user:boss order_create (order:o3)",
         "push    push:boss [order] New Order Created",
         "webhook public-hook SC Market - Order Placed",
+        "shadow  order.created ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -155,6 +158,7 @@ describe("order_create (1)", () => {
         "in_app  user:boss order_create (order:o4)",
         "push    push:boss [order] New Order Created",
         "push    push:boss [order] New Order Created",
+        "shadow  order.created ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -186,6 +190,7 @@ describe("order_assigned (2)", () => {
         "discord PUT /channels/thread:o5/thread-members/discord:clerk",
         "webhook shop-hook SC Market - Order Assigned",
         "webhook clerk-hook SC Market - Order Assigned",
+        "shadow  order.assigned ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -206,6 +211,7 @@ describe("order_assigned (2)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:clerk order_assigned (order:o6)",
+        "shadow  order.assigned ok",
       ]
     `)
   })
@@ -250,6 +256,7 @@ describe("order_status_* (4-7)", () => {
         "discord POST /channels/thread:st-in-progress/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
+        "shadow  order.status.in_progress ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -266,6 +273,7 @@ describe("order_status_* (4-7)", () => {
         "discord PATCH /channels/thread:st-fulfilled",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
+        "shadow  order.status.fulfilled ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -282,6 +290,7 @@ describe("order_status_* (4-7)", () => {
         "discord PATCH /channels/thread:st-cancelled",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
+        "shadow  order.status.cancelled ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -297,6 +306,7 @@ describe("order_status_* (4-7)", () => {
         "discord POST /channels/thread:st-not-started/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
+        "shadow  order.status.not_started ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -321,6 +331,7 @@ describe("order_status_* (4-7)", () => {
         "push    push:clerk [order] Order Cancelled",
         "email   clerk@example.test Order Cancelled",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
+        "shadow  order.status.cancelled ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -356,6 +367,8 @@ describe("order_message (81)", () => {
         "discord POST /channels/thread:chat/messages",
         "ws      {"message_id":"uuid#1","content":"first message","author":"c",
         "ws      {"message_id":"uuid#2","content":"second message","author":"",
+        "shadow  order.message ok",
+        "shadow  order.message ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -383,6 +396,8 @@ describe("order_message (81)", () => {
         "push    push:seller [order] customer: two",
         "ws      {"message_id":"uuid#1","content":"one","author":"customer","",
         "ws      {"message_id":"uuid#2","content":"two","author":"customer","",
+        "shadow  order.message ok",
+        "shadow  order.message ok",
       ]
     `)
   })

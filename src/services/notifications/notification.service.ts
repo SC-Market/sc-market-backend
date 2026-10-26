@@ -25,6 +25,18 @@ import * as payloadFormatters from "./notification-payload-formatters.js"
 import * as payloadFormattersV2 from "./notification-payload-formatters-v2.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { notify } from "../notify/dispatcher.js"
+import { withShadow, type ShadowPlan } from "../notify/shadow.js"
+import * as plans from "../notify/plans.js"
+
+/** Shadow plans never break the legacy send: a planning error means no shadow. */
+async function shadowPlans(build: () => Promise<ShadowPlan[]>): Promise<ShadowPlan[]> {
+  try {
+    return await build()
+  } catch (err) {
+    logger.warn("notify.shadow plan failed", { error: err instanceof Error ? err.message : String(err) })
+    return []
+  }
+}
 import type {
   GetListingDetailResponse,
 } from "../../api/routes/v2/types/listings.types.js"
@@ -103,7 +115,59 @@ export interface NotificationService {
  * be integrated in later phases.
  */
 class DatabaseNotificationService implements NotificationService {
+  // Orders, offers and chat messages still deliver through the legacy code
+  // below; notify() runs alongside in shadow mode (services/notify/shadow.ts)
+  // until real traffic shows parity.
+
   async createOrderNotification(order: DBOrder): Promise<void> {
+    return withShadow(await shadowPlans(() => plans.orderCreatedPlans(order)), () =>
+      this.legacyOrderNotification(order),
+    )
+  }
+
+  async createOrderAssignedNotification(order: DBOrder): Promise<void> {
+    return withShadow(await shadowPlans(async () => plans.orderAssignedPlans(order)), () =>
+      this.legacyOrderAssignedNotification(order),
+    )
+  }
+
+  async createOrderStatusNotification(
+    order: DBOrder,
+    newStatus: string,
+    actorId: string,
+  ): Promise<void> {
+    return withShadow(
+      await shadowPlans(async () => plans.orderStatusPlans(order, newStatus, actorId)),
+      () => this.legacyOrderStatusNotification(order, newStatus, actorId),
+    )
+  }
+
+  async createOrderMessageNotification(order: DBOrder, message: DBMessage): Promise<void> {
+    return withShadow(
+      await shadowPlans(async () => plans.chatMessagePlans({ kind: "order", order }, message)),
+      () => this.legacyOrderMessageNotification(order, message),
+    )
+  }
+
+  async createOfferNotification(
+    offer: DBOfferSession,
+    type: "create" | "counteroffer",
+  ): Promise<void> {
+    return withShadow(await shadowPlans(() => plans.offerPlans(offer, type)), () =>
+      this.legacyOfferNotification(offer, type),
+    )
+  }
+
+  async createOfferMessageNotification(
+    session: DBOfferSession,
+    message: DBMessage,
+  ): Promise<void> {
+    return withShadow(
+      await shadowPlans(async () => plans.chatMessagePlans({ kind: "offer", session }, message)),
+      () => this.legacyOfferMessageNotification(session, message),
+    )
+  }
+  private async legacyOrderNotification(order: DBOrder): Promise<void> {
     // Handle contractor notifications
     if (order.contractor_id) {
       await this.createOrderContractorNotification(order)
@@ -256,7 +320,7 @@ class DatabaseNotificationService implements NotificationService {
     }
   }
 
-  async createOrderAssignedNotification(order: DBOrder): Promise<void> {
+  private async legacyOrderAssignedNotification(order: DBOrder): Promise<void> {
     if (!order.assigned_id) {
       return
     }
@@ -336,7 +400,7 @@ class DatabaseNotificationService implements NotificationService {
     }
   }
 
-  async createOrderMessageNotification(
+  private async legacyOrderMessageNotification(
     order: DBOrder,
     message: DBMessage,
   ): Promise<void> {
@@ -630,7 +694,7 @@ class DatabaseNotificationService implements NotificationService {
     )
   }
 
-  async createOrderStatusNotification(
+  private async legacyOrderStatusNotification(
     order: DBOrder,
     newStatus: string,
     actorId: string,
@@ -759,7 +823,7 @@ class DatabaseNotificationService implements NotificationService {
     await webhookService.sendOrderStatusWebhooks(order, newStatus, actorId)
   }
 
-  async createOfferNotification(
+  private async legacyOfferNotification(
     offer: DBOfferSession,
     type: "create" | "counteroffer",
   ): Promise<void> {
@@ -961,7 +1025,7 @@ class DatabaseNotificationService implements NotificationService {
     }
   }
 
-  async createOfferMessageNotification(
+  private async legacyOfferMessageNotification(
     session: DBOfferSession,
     message: DBMessage,
   ): Promise<void> {
