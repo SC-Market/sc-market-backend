@@ -30,6 +30,7 @@ import logger from "../../../../logger/logger.js"
 import { serializeOrderDetails } from "./serializers.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
 
 export const search_orders: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -474,6 +475,13 @@ export const post_root: RequestHandler = async (req, res, next) => {
     : assigned_user
       ? await database.knex("shops").where("owner_user_id", assigned_user.user_id).where("status", "active").first("shop_id")
       : null
+
+  if (orderShop && (await isBlockedFromShop(orderShop.shop_id, user.user_id))) {
+    res
+      .status(403)
+      .json(createForbiddenErrorResponse("You are blocked from ordering from this shop"))
+    return
+  }
 
   const { session, discord_invite } = await createOffer(
     {

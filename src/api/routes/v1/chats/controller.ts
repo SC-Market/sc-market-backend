@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express"
+import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
 import { User } from "../api-models.js"
 import * as chatDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
@@ -85,6 +86,20 @@ export async function sendMessage(
   }
 
   const chat = req.chat!
+
+  // A customer the shop has blocked can't keep messaging it about an
+  // order/offer.
+  const thread = req.order || req.offer_session
+  if (
+    thread?.shop_id &&
+    thread.customer_id === user.user_id &&
+    (await isBlockedFromShop(thread.shop_id, user.user_id))
+  ) {
+    res
+      .status(403)
+      .json(createErrorResponse(ErrorCode.FORBIDDEN, "You are blocked from this shop"))
+    return
+  }
 
   const message = await chatDb.insertMessage({
     chat_id: chat.chat_id,

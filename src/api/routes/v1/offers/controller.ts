@@ -1,4 +1,5 @@
 import { RequestHandler } from "express"
+import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
 import { validateCounterOfferItems } from "./counter-offer-items.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../profiles/database.js"
@@ -152,6 +153,18 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     const user = req.user as User
     const customer = await profileDb.getUser({ user_id: session.customer_id })
     const body = req.body as CounterOfferBody
+
+    // A customer the shop has blocked can't keep negotiating.
+    if (
+      session.shop_id &&
+      user.user_id === session.customer_id &&
+      (await isBlockedFromShop(session.shop_id, user.user_id))
+    ) {
+      res
+        .status(403)
+        .json(createErrorResponse(ErrorCode.FORBIDDEN, "You are blocked from this shop"))
+      return
+    }
 
     // Separate V1 and V2 listing IDs
     const v2ListingIds = new Set((body.v2_variant_items || []).map((i) => i.listing_id))
