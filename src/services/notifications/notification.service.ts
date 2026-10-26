@@ -1179,7 +1179,9 @@ class DatabaseNotificationService implements NotificationService {
     listing: DBMarketListingComplete,
     bid: DBMarketBid,
   ): Promise<void> {
-    const recipients: string[] = []
+    // Push audiences: org members are checked against their preference for
+    // the selling org, a personal seller against their personal preference.
+    const audiences: { userIds: string[]; contractorId: string | null }[] = []
 
     if (listing.listing.contractor_seller_id) {
       const admins = await contractorDb.getMembersWithMatchingRole(
@@ -1188,7 +1190,10 @@ class DatabaseNotificationService implements NotificationService {
       )
 
       if (bid.user_bidder_id) {
-        recipients.push(...admins.map((u) => u.user_id))
+        audiences.push({
+          userIds: admins.map((u) => u.user_id),
+          contractorId: listing.listing.contractor_seller_id,
+        })
         await this.createMarketUpdateNotification(
           bid.user_bidder_id,
           bid.bid_id,
@@ -1200,7 +1205,7 @@ class DatabaseNotificationService implements NotificationService {
 
     if (listing.listing.user_seller_id) {
       if (bid.user_bidder_id) {
-        recipients.push(listing.listing.user_seller_id)
+        audiences.push({ userIds: [listing.listing.user_seller_id], contractorId: null })
         await this.createMarketUpdateNotification(
           bid.user_bidder_id,
           bid.bid_id,
@@ -1211,16 +1216,18 @@ class DatabaseNotificationService implements NotificationService {
     }
 
     // Send push notifications to all recipients
-    if (recipients.length > 0) {
+    for (const { userIds, contractorId } of audiences) {
+      if (userIds.length === 0) continue
       try {
         const payload = payloadFormatters.formatMarketBidNotificationPayload(
           listing,
           bid,
         )
         await pushNotificationService.sendPushNotifications(
-          recipients,
+          userIds,
           payload,
           "market_item_bid",
+          contractorId,
         )
       } catch (error) {
         logger.error(`Failed to send push notifications for market bid:`, {
@@ -1513,7 +1520,8 @@ class DatabaseNotificationService implements NotificationService {
         requester_id: requester.user_id,
       })
 
-      // Send push notifications to all recipients
+      // Send push notifications to all recipients (org-scoped preferences
+      // when the review was written on behalf of an org)
       try {
         const payload =
           payloadFormatters.formatOrderReviewRevisionNotificationPayload(review)
@@ -1521,6 +1529,7 @@ class DatabaseNotificationService implements NotificationService {
           recipients,
           payload,
           "order_review_revision_requested",
+          review.user_author ? null : (review.contractor_author ?? null),
         )
       } catch (error) {
         logger.debug(
@@ -1550,10 +1559,12 @@ class DatabaseNotificationService implements NotificationService {
     try {
       // Resolve notification recipients from shop
       const recipients: string[] = []
+      let recipientOrgId: string | null = null
       const shopId = listing.listing.shop_id
       if (shopId) {
         const shop = await getKnex()("shops").where("shop_id", shopId).first()
         if (shop?.owner_contractor_id) {
+          recipientOrgId = shop.owner_contractor_id
           const admins = await contractorDb.getMembersWithMatchingRole(
             shop.owner_contractor_id,
             { manage_market: true },
@@ -1591,6 +1602,7 @@ class DatabaseNotificationService implements NotificationService {
         recipients,
         payload,
         "market_item_bid",
+        recipientOrgId,
       )
 
       logger.info("Created V2 market bid notification", {

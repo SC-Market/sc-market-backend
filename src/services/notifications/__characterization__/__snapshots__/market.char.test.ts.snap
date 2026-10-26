@@ -81,7 +81,7 @@ exports[`market_item_bid (10), V1 route > org seller: manage_market members get 
         "tag": "market-bid-bid:b1",
         "title": "New Bid",
       },
-      "to": "push:boss",
+      "to": "push:trader",
     },
   ],
   "warnings": [],
@@ -147,23 +147,6 @@ exports[`market_item_bid (10), V2 auctions > org shop: manage_market members; sh
     },
   ],
   "push": [
-    {
-      "payload": {
-        "badge": "https://sc-market.space/android-chrome-192x192.png",
-        "body": "A new bid of 1200000 aUEC has been placed on "Prospector auction"",
-        "data": {
-          "action": "market_item_bid_v2",
-          "entityId": "listing:auction",
-          "type": "market_listing_v2",
-          "url": "https://sc-market.space/market/listing:auction",
-        },
-        "icon": "https://sc-market.space/android-chrome-192x192.png",
-        "requireInteraction": false,
-        "tag": "market-bid-v2-listing:auction",
-        "title": "New Bid",
-      },
-      "to": "push:boss",
-    },
     {
       "payload": {
         "badge": "https://sc-market.space/android-chrome-192x192.png",

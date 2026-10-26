@@ -68,7 +68,7 @@ describe("market_item_bid (10), V1 route", () => {
       [
         "in_app  user:boss market_item_bid (bid:b1)",
         "in_app  user:trader market_item_bid (bid:b1)",
-        "push    push:boss [market_listing] New Bid",
+        "push    push:trader [market_listing] New Bid",
         "webhook org-hook SC Market - Bid Received",
       ]
     `)
@@ -141,7 +141,6 @@ describe("market_item_bid (10), V2 auctions", () => {
       [
         "in_app  user:boss market_item_bid (bid:b3)",
         "in_app  user:trader market_item_bid (bid:b3)",
-        "push    push:boss [market_listing_v2] New Bid",
         "push    push:trader [market_listing_v2] New Bid",
         "webhook shop-hook SC Market - Bid Received",
         "webhook org-hook SC Market - Bid Received",

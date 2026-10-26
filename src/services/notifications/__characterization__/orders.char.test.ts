@@ -442,7 +442,7 @@ describe("order_review_revision_requested (22)", () => {
     expect(obs).toMatchSnapshot()
   })
 
-  it("org-authored review: managers notified; push ignores the org-scoped preference (bulk path)", async () => {
+  it("org-authored review: managers notified; push follows each member's org-scoped preference", async () => {
     const { customer, boss, clerk, acme } = await orgShop()
     await w.pushPref(boss, "order_review_revision_requested", false, acme)
     await w.pushPref(clerk, "order_review_revision_requested", false)
@@ -469,7 +469,7 @@ describe("order_review_revision_requested (22)", () => {
       [
         "in_app  user:boss order_review_revision_requested (review:rr2)",
         "in_app  user:clerk order_review_revision_requested (review:rr2)",
-        "push    push:boss [order_review] Review Revision Requested",
+        "push    push:clerk [order_review] Review Revision Requested",
       ]
     `)
   })

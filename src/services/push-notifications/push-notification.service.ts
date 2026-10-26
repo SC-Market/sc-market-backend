@@ -66,6 +66,7 @@ export interface PushNotificationService {
     userIds: string[],
     notification: PushNotificationPayload,
     actionType?: string,
+    contractorId?: string | null,
   ): Promise<void>
 
   // Cleanup
@@ -576,12 +577,15 @@ class WebPushNotificationService implements PushNotificationService {
   }
 
   /**
-   * Send push notifications to multiple users (batch operation)
+   * Send push notifications to multiple users (batch operation).
+   * `contractorId` selects each user's org-scoped preference for org events,
+   * exactly as sendPushNotification does for a single user.
    */
   async sendPushNotifications(
     userIds: string[],
     notification: PushNotificationPayload,
     actionType?: string,
+    contractorId?: string | null,
   ): Promise<void> {
     // Check if VAPID keys are configured - silently fail if not
     if (!this.isConfigured()) {
@@ -601,7 +605,7 @@ class WebPushNotificationService implements PushNotificationService {
     // Send to all users in parallel
     const results = await Promise.allSettled(
       userIds.map((userId) =>
-        this.sendPushNotification(userId, notification, actionType).catch(
+        this.sendPushNotification(userId, notification, actionType, contractorId).catch(
           (error) => {
             logger.error(
               `Failed to send push notification to user ${userId}:`,
