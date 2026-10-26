@@ -17,6 +17,10 @@ import { getKnex } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
+  canManageShopOrders,
+  getShopIdsWithOrderAccess,
+} from "../../../../services/shops/shop-permissions.service.js"
+import {
   CreateOrderRequest,
   CreateOrderResponse,
   GetOrderDetailResponse,
@@ -56,8 +60,11 @@ const ORDER_CREATED_AT_SQL = `orders."timestamp"`
  * GREATEST ignores NULLs, so unfulfilled orders report their creation time.
  */
 const ORDER_UPDATED_AT_SQL = `GREATEST(orders."timestamp", orders.fulfilled_at)`
-/** Same total the list returns: the sum of the order's V2 line items. */
-const ORDER_TOTAL_PRICE_SQL = `(SELECT COALESCE(SUM(omi.price_per_unit * omi.quantity), 0) FROM order_market_items_v2 omi WHERE omi.order_id = orders.order_id)`
+/**
+ * Order total, as the detail endpoint computes it: the sum of the order's V2
+ * line items, or orders.cost for orders without any (V1-era orders, services).
+ */
+const ORDER_TOTAL_PRICE_SQL = `COALESCE((SELECT SUM(omi.price_per_unit * omi.quantity) FROM order_market_items_v2 omi WHERE omi.order_id = orders.order_id), orders.cost)`
 
 @Route("orders")
 @Tags("Orders V2")
@@ -384,25 +391,22 @@ export class OrdersV2Controller extends BaseController {
         .select("user_id", "username", "display_name", "avatar")
         .first()
 
-      // Seller — resolve shop from listing
-      const orderShop = await knex("market_orders")
-        .join("listings", "market_orders.listing_id", "listings.listing_id")
-        .join("shops", "listings.shop_id", "shops.shop_id")
-        .where({ "market_orders.order_id": orderId })
-        .select("shops.shop_id", "shops.name as shop_name", "shops.slug as shop_slug", "shops.logo", "shops.owner_user_id", "shops.owner_contractor_id")
-        .first()
+      // Seller: the order's shop (orders.shop_id; market_orders rows do not
+      // exist for cart checkouts, so they cannot identify it)
+      const orderShop = order.shop_id
+        ? await knex("shops")
+            .where({ shop_id: order.shop_id })
+            .select("shop_id", "name as shop_name", "slug as shop_slug", "logo", "owner_user_id", "owner_contractor_id")
+            .first()
+        : undefined
 
       if (!buyer) throw this.throwNotFound("Order buyer", orderId)
 
-      // Auth check — buyer, shop owner/member, or assignee
+      // Auth check — buyer, the shop's order managers, or assignee
       const isBuyer = userId === buyer.user_id
       const isAssigned = order.assigned_id === userId
-      let isShopMember = false
-      if (orderShop) {
-        const { canManageShop } = await import("../../../../services/shops/shop-permissions.service.js")
-        isShopMember = await canManageShop(orderShop, userId)
-      }
-      if (!isBuyer && !isShopMember && !isAssigned) {
+      const isShopSeller = orderShop ? await canManageShopOrders(orderShop, userId) : false
+      if (!isBuyer && !isShopSeller && !isAssigned) {
         throw this.throwForbidden("You do not have permission to view this order")
       }
 
@@ -603,41 +607,36 @@ export class OrdersV2Controller extends BaseController {
           knex.raw(`${ORDER_CREATED_AT_SQL} as created_at`),
           knex.raw(`${ORDER_UPDATED_AT_SQL} as updated_at`),
           "orders.customer_id",
+          "orders.title",
+          knex.raw(`${ORDER_TOTAL_PRICE_SQL} as total_price`),
           "buyer.username as buyer_username",
           "buyer.avatar as buyer_avatar",
+          "seller_shop.name as shop_name",
+          "seller_shop.slug as shop_slug",
+          "seller_shop.logo as shop_logo",
         )
         .leftJoin("accounts as buyer", "orders.customer_id", "buyer.user_id")
+        .leftJoin("shops as seller_shop", "orders.shop_id", "seller_shop.shop_id")
 
-      // Orders containing a listing from one of the user's shops (personal
-      // shops, or shops of orgs they belong to). An EXISTS rather than a join
-      // keeps one row per order, so the count query below stays a plain count.
-      const userShopIds = knex("shops").where("owner_user_id", userId).select("shop_id")
-      const orgShopIds = knex("shops")
-        .whereIn("owner_contractor_id", knex("contractor_members").where("user_id", userId).select("contractor_id"))
-        .select("shop_id")
-      const sellsInUserShop = (subquery: Knex.QueryBuilder) => {
-        subquery
-          .select(knex.raw("1"))
-          .from("market_orders")
-          .join("listings", "market_orders.listing_id", "listings.listing_id")
-          .whereRaw("market_orders.order_id = orders.order_id")
-          .where((qb) => {
-            qb.whereIn("listings.shop_id", userShopIds)
-              .orWhereIn("listings.shop_id", orgShopIds)
-          })
+      // The user sells an order when it belongs to a shop whose orders they
+      // manage (their own shops, and org shops where they hold manage_market
+      // or manage_orders), or when it is assigned to them. orders.shop_id is
+      // set on every order, V1-era ones included; market_orders rows are not
+      // (cart checkouts never write them), so it is the only reliable link.
+      const sellerShopIds = await getShopIdsWithOrderAccess(userId)
+      const sellsOrder = (qb: Knex.QueryBuilder) => {
+        qb.where("orders.assigned_id", userId)
+        if (sellerShopIds.length) qb.orWhereIn("orders.shop_id", sellerShopIds)
       }
 
       // Apply role filter
       if (role === 'buyer') {
         query = query.where("orders.customer_id", userId)
       } else if (role === 'seller') {
-        query = query.whereExists(sellsInUserShop)
+        query = query.where(sellsOrder)
       } else {
-        // No role: buyer OR seller (via shop ownership)
         query = query.where((builder) => {
-          builder
-            .where("orders.customer_id", userId)
-            .orWhereExists(sellsInUserShop)
+          builder.where("orders.customer_id", userId).orWhere(sellsOrder)
         })
       }
 
@@ -668,27 +667,16 @@ export class OrdersV2Controller extends BaseController {
       // Enrich orders with additional information
       const enrichedOrders = await Promise.all(
         orders.map(async (order) => {
-          // Get shop information for the seller
-          const sellerShop = await knex("market_orders")
-            .join("listings", "market_orders.listing_id", "listings.listing_id")
-            .join("shops", "listings.shop_id", "shops.shop_id")
-            .where({ "market_orders.order_id": order.order_id })
-            .select("shops.name as shop_name", "shops.slug as shop_slug", "shops.logo as shop_logo")
-            .first()
-
           // Get order items with variant details
           const orderItems = await knex("order_market_items_v2")
             .where({ order_id: order.order_id })
             .select("*")
 
-          // Calculate total price and quality tier range
-          let totalPrice = 0
+          // Quality tier range
           let qualityTierMin: number | undefined
           let qualityTierMax: number | undefined
 
           for (const item of orderItems) {
-            totalPrice += item.price_per_unit * item.quantity
-
             // Get variant to extract quality tier
             const variant = await knex("item_variants")
               .where({ variant_id: item.variant_id })
@@ -713,28 +701,21 @@ export class OrdersV2Controller extends BaseController {
             return null // Filter out this order
           }
 
-          // Get title from first listing
-          const firstListing = await knex("market_orders")
-            .join("listings", "market_orders.listing_id", "listings.listing_id")
-            .where({ "market_orders.order_id": order.order_id })
-            .select("listings.title")
-            .first()
-
           return {
             order_id: order.order_id,
-            title: firstListing?.title || "Order",
-            total_price: totalPrice,
+            title: order.title,
+            total_price: Number(order.total_price),
             status: order.status,
             created_at: order.created_at.toISOString(),
             updated_at: order.updated_at.toISOString(),
             buyer_username: order.buyer_username,
-            shop_name: sellerShop?.shop_name || "Unknown",
-            shop_slug: sellerShop?.shop_slug || "",
+            shop_name: order.shop_name ?? "Unknown",
+            shop_slug: order.shop_slug ?? "",
             item_count: orderItems.length,
             quality_tier_min: qualityTierMin,
             quality_tier_max: qualityTierMax,
             buyer_avatar: order.buyer_avatar ? await cdn.getFileLinkResource(order.buyer_avatar) : null,
-            shop_logo: sellerShop?.shop_logo || null,
+            shop_logo: order.shop_logo ?? null,
           }
         }),
       )

@@ -48,6 +48,39 @@ export async function canManageShop(
 }
 
 /**
+ * Check if a user handles a shop's orders as its seller: the owning user, or
+ * an org member with manage_market or manage_orders.
+ */
+export async function canManageShopOrders(
+  shop: Pick<Shop, "shop_id" | "owner_user_id" | "owner_contractor_id">,
+  userId: string,
+): Promise<boolean> {
+  if (shop.owner_user_id) return shop.owner_user_id === userId
+  if (!shop.owner_contractor_id) return false
+  return (
+    (await has_permission(shop.owner_contractor_id, userId, "manage_market")) ||
+    has_permission(shop.owner_contractor_id, userId, "manage_orders")
+  )
+}
+
+/**
+ * IDs of every shop (active or not) whose orders the user handles as the
+ * seller, per canManageShopOrders.
+ */
+export async function getShopIdsWithOrderAccess(userId: string): Promise<string[]> {
+  const db = getKnex()
+  const shops: Pick<Shop, "shop_id" | "owner_user_id" | "owner_contractor_id">[] = await db("shops")
+    .where("owner_user_id", userId)
+    .orWhereIn(
+      "owner_contractor_id",
+      db("contractor_members").select("contractor_id").where("user_id", userId),
+    )
+    .select("shop_id", "owner_user_id", "owner_contractor_id")
+  const allowed = await Promise.all(shops.map((shop) => canManageShopOrders(shop, userId)))
+  return shops.filter((_, i) => allowed[i]).map((shop) => shop.shop_id)
+}
+
+/**
  * Check if a user may give a shop away (transfer ownership).
  *
  * Stricter than canManageShop: a manage_market member can run an org's shop

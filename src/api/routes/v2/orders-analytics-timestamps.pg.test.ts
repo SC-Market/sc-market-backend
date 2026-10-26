@@ -42,12 +42,19 @@ vi.mock("../../../services/notifications/notification.service.js", () => ({
 vi.mock("../../../services/allocation/allocation-mode.service.js", () => ({
   getShopAllocationMode: vi.fn(),
 }))
-vi.mock("../../../services/shops/shop-permissions.service.js", () => ({
-  getShopById: vi.fn(async (shop_id: string) =>
-    (await state.db!("shops").where({ shop_id }).first()) ?? null,
+// Org permissions: "<contractor_id>:<user_id>:<permission>" entries in perms.
+// The shop permission service itself is real.
+const perms = new Set<string>()
+vi.mock("../v1/util/permissions.js", () => ({
+  has_permission: vi.fn(async (contractor_id: string, user_id: string, permission: string) =>
+    perms.has(`${contractor_id}:${user_id}:${permission}`),
   ),
-  canViewShopPrivate: vi.fn(async () => true),
+  is_member: vi.fn(
+    async (contractor_id: string, user_id: string) =>
+      !!(await state.db!("contractor_members").where({ contractor_id, user_id }).first()),
+  ),
 }))
+vi.mock("../v1/contractors/database.js", () => ({ isContractorOwner: vi.fn(async () => false) }))
 vi.mock("../../../logger/logger.js", () => ({
   default: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }))
@@ -71,12 +78,13 @@ const asUser = (user_id: string) => ({ user: { user_id, role: "user" } }) as nev
 async function createSchema(db: Knex) {
   await db.raw(`
     DROP TABLE IF EXISTS order_market_items_v2, variant_pricing, listing_item_lots,
-      item_variants, listing_items, market_orders, listings, orders,
+      item_variants, listing_items, listing_photos_v2, image_resources, market_orders, listings, orders,
       contractor_members, shops, accounts CASCADE;
 
     CREATE TABLE accounts (
       user_id uuid PRIMARY KEY,
       username character varying(100) NOT NULL,
+      display_name character varying(100) DEFAULT 'Display Name'::character varying NOT NULL,
       avatar uuid DEFAULT '5226c767-0599-419b-ae71-a7303c441db0'::uuid NOT NULL
     );
     CREATE TABLE shops (
@@ -85,7 +93,8 @@ async function createSchema(db: Knex) {
       name character varying(100) NOT NULL,
       logo uuid,
       owner_user_id uuid,
-      owner_contractor_id uuid
+      owner_contractor_id uuid,
+      status character varying(20) DEFAULT 'active' NOT NULL
     );
     CREATE TABLE contractor_members (
       contractor_id uuid NOT NULL,
@@ -114,6 +123,17 @@ async function createSchema(db: Knex) {
       created_at timestamptz DEFAULT now() NOT NULL,
       updated_at timestamptz DEFAULT now() NOT NULL,
       shop_id uuid
+    );
+    CREATE TABLE image_resources (
+      resource_id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+      filename text NOT NULL,
+      external_url text
+    );
+    CREATE TABLE listing_photos_v2 (
+      photo_id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+      listing_id uuid NOT NULL,
+      resource_id uuid NOT NULL,
+      display_order integer DEFAULT 0 NOT NULL
     );
     CREATE TABLE market_orders (
       order_id uuid,
@@ -158,12 +178,18 @@ async function createSchema(db: Knex) {
 }
 
 /**
- * Users: 1 buyer, 2 personal-shop seller, 3 org member (org shop), 4 unrelated.
- * Orders (buyer 1):
- *   1  shop 1 (user 2), two lines, fulfilled
- *   2  shop 2 (org of user 3), one line, in-progress
- *   3  shop 1, one line, cancelled
- *   4  shop 3 (user 4), one line, bought by user 4 themselves
+ * Users: 1 buyer, 2 personal-shop seller, 3 org member with manage_orders
+ * (org shop), 4 unrelated (owns shop 3), 5 org member without order
+ * permissions, 6 a second buyer.
+ * Orders:
+ *   1  buyer 1, shop 1 (user 2), two V2 lines, fulfilled
+ *   2  buyer 1, shop 2 (org of user 3), one line, in-progress
+ *   3  buyer 1, shop 1, one line, cancelled
+ *   4  buyer 4, shop 3 (user 4), one line, bought by user 4 themselves
+ *   5  buyer 6, shop 1, V1-era: no market_orders row, no V2 lines, only cost
+ *   6  buyer 6, shop 4 (an org nobody here is in), assigned to user 2
+ * Like production's cart-checkout orders, none of them needs a market_orders
+ * row to be found: orders.shop_id and orders.assigned_id say who sells.
  */
 async function seed(db: Knex) {
   await db("accounts").insert([
@@ -171,13 +197,20 @@ async function seed(db: Knex) {
     { user_id: USER(2), username: "seller" },
     { user_id: USER(3), username: "orgmember" },
     { user_id: USER(4), username: "other" },
+    { user_id: USER(5), username: "plainmember" },
+    { user_id: USER(6), username: "buyer2" },
   ])
   await db("shops").insert([
     { shop_id: SHOP(1), slug: "s1", name: "Seller Shop", owner_user_id: USER(2) },
     { shop_id: SHOP(2), slug: "s2", name: "Org Shop", owner_contractor_id: ORG(1) },
     { shop_id: SHOP(3), slug: "s3", name: "Other Shop", owner_user_id: USER(4) },
+    { shop_id: SHOP(4), slug: "s4", name: "Far Org Shop", owner_contractor_id: ORG(2) },
   ])
-  await db("contractor_members").insert({ contractor_id: ORG(1), user_id: USER(3), role: "member" })
+  await db("contractor_members").insert([
+    { contractor_id: ORG(1), user_id: USER(3), role: "member" },
+    { contractor_id: ORG(1), user_id: USER(5), role: "member" },
+  ])
+  perms.add(`${ORG(1)}:${USER(3)}:manage_orders`)
 
   await db("listings").insert([
     { listing_id: LISTING(1), title: "Quantanium", shop_id: SHOP(1), created_at: "2026-10-01T00:00:00Z" },
@@ -199,21 +232,26 @@ async function seed(db: Knex) {
   ])
   await db("variant_pricing").insert({ item_id: ITEM(1), variant_id: VARIANT(3), price: 1500 })
 
-  const order = (n: number, customer: string, status: string, ts: string, fulfilled?: string) => ({
-    order_id: ORDER(n), kind: "Delivery", cost: 0, customer_id: customer, status,
-    timestamp: ts, fulfilled_at: fulfilled ?? null,
+  const order = (
+    n: number,
+    customer: string,
+    shop: string,
+    status: string,
+    ts: string,
+    extra: Record<string, unknown> = {},
+  ) => ({
+    order_id: ORDER(n), kind: "Delivery", cost: 0, customer_id: customer, shop_id: shop, status,
+    title: `Order ${n}`, timestamp: ts, fulfilled_at: null, ...extra,
   })
   await db("orders").insert([
-    order(1, USER(1), "fulfilled", "2026-10-02 00:00:00", "2026-10-05T00:00:00Z"),
-    order(2, USER(1), "in-progress", "2026-10-03 00:00:00"),
-    order(3, USER(1), "cancelled", "2026-10-04 00:00:00"),
-    order(4, USER(4), "not-started", "2026-10-06 00:00:00"),
-  ])
-  await db("market_orders").insert([
-    { order_id: ORDER(1), listing_id: LISTING(1), quantity: 5 },
-    { order_id: ORDER(2), listing_id: LISTING(2), quantity: 1 },
-    { order_id: ORDER(3), listing_id: LISTING(1), quantity: 2 },
-    { order_id: ORDER(4), listing_id: LISTING(3), quantity: 1 },
+    order(1, USER(1), SHOP(1), "fulfilled", "2026-10-02 00:00:00", { fulfilled_at: "2026-10-05T00:00:00Z" }),
+    order(2, USER(1), SHOP(2), "in-progress", "2026-10-03 00:00:00"),
+    order(3, USER(1), SHOP(1), "cancelled", "2026-10-04 00:00:00"),
+    order(4, USER(4), SHOP(3), "not-started", "2026-10-06 00:00:00"),
+    order(5, USER(6), SHOP(1), "in-progress", "2025-01-01 00:00:00", {
+      cost: 50000, title: "Items Sold to buyer2",
+    }),
+    order(6, USER(6), SHOP(4), "not-started", "2025-01-02 00:00:00", { assigned_id: USER(2) }),
   ])
   const line = (o: number, l: number, v: number, quantity: number, price_per_unit: number) => ({
     order_id: ORDER(o), listing_id: LISTING(l), item_id: ITEM(l), variant_id: VARIANT(v),
@@ -281,16 +319,45 @@ describe.skipIf(!PG_TEST_URL)("v2 orders + seller-stats on real Postgres", () =>
       expect(res.orders.map((o) => o.order_id)).toEqual([ORDER(4)])
     })
 
-    it("role=seller counts each order once, including multi-line orders", async () => {
+    it("role=seller: the user's shops' orders and orders assigned to them, each once", async () => {
       const res = await list(2, { role: "seller" })
-      expect(res.total).toBe(2)
-      expect(res.orders.map((o) => o.order_id).sort()).toEqual([ORDER(1), ORDER(3)])
+      // 1 and 3 (two lines in 1), V1-era 5 found through orders.shop_id alone,
+      // 6 because it is assigned to user 2.
+      expect(res.total).toBe(4)
+      expect(res.orders.map((o) => o.order_id).sort()).toEqual(
+        [ORDER(1), ORDER(3), ORDER(5), ORDER(6)].sort(),
+      )
     })
 
-    it("role=seller includes shops of orgs the user belongs to", async () => {
+    it("a V1-era order (no market_orders, no V2 lines) shows its own title, cost and shop", async () => {
+      const res = await list(2, { role: "seller" })
+      const v1 = res.orders.find((o) => o.order_id === ORDER(5))!
+      expect(v1).toMatchObject({
+        title: "Items Sold to buyer2",
+        total_price: 50000,
+        shop_name: "Seller Shop",
+        shop_slug: "s1",
+        buyer_username: "buyer2",
+        item_count: 0,
+      })
+    })
+
+    it("role=seller includes org shops whose orders the user manages", async () => {
       const res = await list(3, { role: "seller" })
       expect(res.total).toBe(1)
       expect(res.orders.map((o) => o.order_id)).toEqual([ORDER(2)])
+    })
+
+    it("role=seller excludes org shops the user is only a member of", async () => {
+      const res = await list(5, { role: "seller" })
+      expect(res.total).toBe(0)
+    })
+
+    it("no role: bought or sold", async () => {
+      const res = await list(4)
+      expect(res.orders.map((o) => o.order_id)).toEqual([ORDER(4)])
+      const seller = await list(2)
+      expect(seller.total).toBe(4)
     })
 
     it("sorts by updated_at (the admin supplier dashboard's sort)", async () => {
@@ -302,6 +369,31 @@ describe.skipIf(!PG_TEST_URL)("v2 orders + seller-stats on real Postgres", () =>
     it("sorts by total_price", async () => {
       const res = await list(1, { sort_by: "total_price", sort_order: "asc" })
       expect(res.orders.map((o) => o.total_price)).toEqual([2000, 6000, 9000])
+    })
+  })
+
+  describe("GET /orders/{id}", () => {
+    const detail = (user: number, order: number) =>
+      new OrdersV2Controller().getOrderDetail(ORDER(order), asUser(USER(user)))
+
+    it("names the seller from orders.shop_id, for the shop's owner", async () => {
+      const res = await detail(2, 5)
+      expect(res.seller).toEqual({ shop_id: SHOP(1), name: "Seller Shop", slug: "s1" })
+      expect(res.total_price).toBe(50000)
+    })
+
+    it("lets an org member with manage_orders open the org shop's order", async () => {
+      const res = await detail(3, 2)
+      expect(res.seller.shop_id).toBe(SHOP(2))
+    })
+
+    it("refuses an org member without order permissions", async () => {
+      await expect(detail(5, 2)).rejects.toMatchObject({ code: "FORBIDDEN" })
+    })
+
+    it("lets the assignee open an order of a shop they are not in", async () => {
+      const res = await detail(2, 6)
+      expect(res.seller.name).toBe("Far Org Shop")
     })
   })
 
