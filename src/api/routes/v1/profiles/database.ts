@@ -411,6 +411,11 @@ export async function createUserWithProvider(
   const username =
     providerData.metadata?.username ||
     `user_${providerData.provider_id.substring(0, 8)}`
+  // "~" names are reserved for test accounts (services/test-accounts); RSI
+  // and Discord handles never contain it, so refuse anything that does.
+  if (username.startsWith("~")) {
+    throw new Error("Usernames starting with ~ are reserved")
+  }
   const displayName =
     providerData.metadata?.displayName ||
     providerData.metadata?.username ||
@@ -715,6 +720,11 @@ export async function decrementUserBalance(
  * Update user by where clause.
  */
 export async function updateUser(where: any, values: Partial<DBUser>) {
+  // Renames (RSI verification, unlink) never produce a reserved "~" name:
+  // those belong to test accounts (services/test-accounts; a DB CHECK too).
+  if (typeof values.username === "string" && values.username.startsWith("~")) {
+    throw new Error("Usernames starting with ~ are reserved")
+  }
   return knex()<DBUser>("accounts").where(where).update(values).returning("*")
 }
 

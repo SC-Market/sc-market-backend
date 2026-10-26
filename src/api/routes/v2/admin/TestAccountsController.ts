@@ -26,9 +26,10 @@ import { isTestLoginEnabled } from "../../../../services/test-accounts/config.js
 
 export interface CreateTestAccountRequest {
   /**
-   * Must start with "test" (e.g. test-buyer).
+   * "test" followed by a name (e.g. test-buyer). Saved with a reserved "~"
+   * prefix (~test-buyer) that real usernames can't have.
    * @minLength 6
-   * @maxLength 40
+   * @maxLength 41
    */
   username: string
   /**

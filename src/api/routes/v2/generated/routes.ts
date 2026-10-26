@@ -3837,7 +3837,7 @@ const models: TsoaRoute.Models = {
     "CreateTestAccountRequest": {
         "dataType": "refObject",
         "properties": {
-            "username": {"dataType":"string","required":true,"validators":{"minLength":{"value":6},"maxLength":{"value":40}}},
+            "username": {"dataType":"string","required":true,"validators":{"minLength":{"value":6},"maxLength":{"value":41}}},
             "display_name": {"dataType":"string","required":true,"validators":{"minLength":{"value":1},"maxLength":{"value":100}}},
         },
         "additionalProperties": false,

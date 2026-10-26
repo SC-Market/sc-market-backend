@@ -46,6 +46,11 @@ vi.mock("../../../logger/logger.js", () => {
 import { up as mfaUp } from "../../../../migrations/20261026000000_create_user_mfa.js"
 import { up, down } from "../../../../migrations/20261026100000_test_accounts.js"
 import {
+  up as prefixUp,
+  down as prefixDown,
+} from "../../../../migrations/20261027010000_reserved_username_prefix.js"
+import { up as validatePrefixUp } from "../../../../migrations/20261027010100_validate_reserved_username_prefix.js"
+import {
   assertSameRealm,
   deliverableRecipients,
   hiddenFromRealViewers,
@@ -198,8 +203,8 @@ async function seed(knex: Knex) {
     { user_id: REAL_USER, username: "alice" },
     { user_id: REAL_USER_2, username: "bob" },
     { user_id: REAL_ADMIN, username: "boss", role: "admin" },
-    { user_id: TEST_USER, username: "test-buyer", is_test: true, rsi_confirmed: true },
-    { user_id: TEST_USER_2, username: "test-seller", is_test: true, rsi_confirmed: true },
+    { user_id: TEST_USER, username: "~test-buyer", is_test: true, rsi_confirmed: true },
+    { user_id: TEST_USER_2, username: "~test-seller", is_test: true, rsi_confirmed: true },
   ])
   await knex("contractors").insert([
     { contractor_id: ORG(1), spectrum_id: "REALORG", name: "Real Org" },
@@ -239,10 +244,15 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
     await createBaseSchema(db())
     await mfaUp(db())
     await up(db())
+    // A test account from before the reserved prefix, renamed by the migration.
+    await db()("accounts").insert({ user_id: USER(19), username: "test-legacy", is_test: true })
+    await db().transaction((trx) => prefixUp(trx))
+    await validatePrefixUp(db())
     await seed(db())
   })
 
   afterAll(async () => {
+    await db().transaction((trx) => prefixDown(trx))
     await down(db())
     await db().destroy()
     await dropTestDatabase(DB)
@@ -250,10 +260,23 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
 
   describe("schema rules", () => {
     it("a test account can never be an admin (CHECK), whether inserted or promoted", async () => {
-      expect(await sqlstate(db()("accounts").insert({ username: "test-admin", role: "admin", is_test: true }))).toBe("23514")
+      expect(await sqlstate(db()("accounts").insert({ username: "~test-admin", role: "admin", is_test: true }))).toBe("23514")
       expect(await sqlstate(db()("accounts").where({ user_id: TEST_USER }).update({ role: "admin" }))).toBe("23514")
       expect(await sqlstate(db()("accounts").where({ user_id: TEST_USER }).update({ role: "moderator" }))).toBe("23514")
       expect((await db()("accounts").where({ user_id: TEST_USER }).first()).role).toBe("user")
+    })
+
+    it('test usernames carry the reserved "~" prefix, and only they do', async () => {
+      expect((await db()("accounts").where({ user_id: USER(19) }).first()).username).toBe("~test-legacy")
+      const v = await db().raw(`SELECT convalidated FROM pg_constraint WHERE conname = 'accounts_test_username_prefix'`)
+      expect(v.rows[0].convalidated).toBe(true)
+      expect(await sqlstate(db()("accounts").insert({ username: "~sneaky" }))).toBe("23514")
+      expect(await sqlstate(db()("accounts").insert({ username: "test-noprefix", is_test: true }))).toBe("23514")
+      expect(await sqlstate(db()("accounts").where({ user_id: REAL_USER }).update({ username: "~alice" }))).toBe("23514")
+      expect(await sqlstate(db()("accounts").where({ user_id: TEST_USER }).update({ username: "plain" }))).toBe("23514")
+      // Running the migration again changes nothing.
+      await db().transaction((trx) => prefixUp(trx))
+      expect((await db()("accounts").where({ user_id: USER(19) }).first()).username).toBe("~test-legacy")
     })
 
     it("accounts.is_test and contractors.is_test cannot change", async () => {
@@ -458,7 +481,7 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
         "../../../api/routes/v1/contractors/database.js",
       )
       expect((await searchUsers("test")).map((u) => u.username)).toEqual([])
-      expect((await searchUsers("test", true)).map((u) => u.username).sort()).toEqual(["test-buyer", "test-seller"])
+      expect((await searchUsers("test", true)).map((u) => u.username).sort()).toEqual(["~test-buyer", "~test-legacy", "~test-seller"])
       expect((await searchUsers("ali")).map((u) => u.username)).toEqual(["alice"])
       expect((await searchContractors("ORG")).map((c) => c.spectrum_id)).toEqual(["REALORG"])
       expect((await searchContractors("ORG", undefined, true)).map((c) => c.spectrum_id).sort()).toEqual(["REALORG", "~TESTORG"])
@@ -551,14 +574,14 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
       )
       secret = created.secret
       expect(created.otpauth_uri).toContain(`secret=${secret}`)
-      const row = await db()("accounts").where({ username: "test-agent" }).first()
+      const row = await db()("accounts").where({ username: "~test-agent" }).first()
       expect(row).toMatchObject({ is_test: true, role: "user", rsi_confirmed: true, discord_id: null })
       const [factor] = await db()("user_mfa_factors").where({ user_id: row.user_id })
       expect(factor.confirmed_at).not.toBeNull()
       expect(JSON.stringify(factor)).not.toContain(secret)
       const listed = await listTestAccounts()
-      expect(listed.map((a) => a.username)).toContain("test-agent")
-      expect(listed.find((a) => a.username === "test-agent")?.has_authenticator).toBe(true)
+      expect(listed.map((a) => a.username)).toContain("~test-agent")
+      expect(listed.find((a) => a.username === "~test-agent")?.has_authenticator).toBe(true)
       // Only test-prefixed usernames, never a taken one.
       await expect(createTestAccount({ username: "agent", display_name: "x" }, REAL_ADMIN, { ip: null, userAgent: null })).rejects.toMatchObject({ code: "VALIDATION_ERROR" })
       await expect(createTestAccount({ username: "TEST-AGENT", display_name: "x" }, REAL_ADMIN, { ip: null, userAgent: null })).rejects.toMatchObject({ code: "CONFLICT" })
@@ -566,13 +589,13 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
 
     it("logs a test account in with its code and issues the normal session cookies", async () => {
       acceptedCode = codeFor(secret)
-      const res = await login("test-agent", acceptedCode)
+      const res = await login("~test-agent", acceptedCode)
       expect(res.status).toBe(200)
-      expect(res.body).toEqual({ success: true, username: "test-agent" })
+      expect(res.body).toEqual({ success: true, username: "~test-agent" })
       const cookies = String(res.headers["set-cookie"])
       expect(cookies).toContain("scmarket.access=")
       expect(cookies).toContain("scmarket.refresh=")
-      const user = await db()("accounts").where({ username: "test-agent" }).first()
+      const user = await db()("accounts").where({ username: "~test-agent" }).first()
       expect(await db()("refresh_tokens").where({ user_id: user.user_id }).whereNull("revoked_at").count("* as n")).toEqual([{ n: "1" }])
     })
 
@@ -585,9 +608,9 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
       const b32 = (d: { display: Record<string, string> }) => d.display.manual_key.replace(/\s+/g, "")
 
       const outcomes = [
-        await login("test-agent", acceptedCode), // replay
-        await login("test-agent", codeFor(secret, 3)),
-        await login("test-agent", "12345"),
+        await login("~test-agent", acceptedCode), // replay
+        await login("~test-agent", codeFor(secret, 3)),
+        await login("~test-agent", "12345"),
         await login("alice", codeFor(b32(realFactor))),
         await login("boss", codeFor(b32(adminFactor))),
         await login("nobody-at-all", "123456"),
@@ -604,12 +627,12 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
     })
 
     it("refuses custom-domain origins and requests without an origin", async () => {
-      const custom = await login("test-agent", codeFor(secret, 1), "https://shop.example.com")
+      const custom = await login("~test-agent", codeFor(secret, 1), "https://shop.example.com")
       expect(custom.status).toBe(403)
       expect(custom.body.error.details).toEqual({ reason: "custom_domain_restricted" })
-      const foreign = await login("test-agent", codeFor(secret, 1), "https://evil.example")
+      const foreign = await login("~test-agent", codeFor(secret, 1), "https://evil.example")
       expect(foreign.status).toBe(403)
-      const none = await request(app).post("/api/auth/test-login").send({ username: "test-agent", code: codeFor(secret, 1) })
+      const none = await request(app).post("/api/auth/test-login").send({ username: "~test-agent", code: codeFor(secret, 1) })
       expect(none.status).toBe(403)
     })
 
@@ -629,21 +652,21 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
       for (const value of [undefined, "", "1", "TRUE", "yes"]) {
         if (value === undefined) delete process.env.TEST_LOGIN_ENABLED
         else process.env.TEST_LOGIN_ENABLED = value
-        const res = await login("test-agent", codeFor(secret, 1))
+        const res = await login("~test-agent", codeFor(secret, 1))
         expect(res.status).toBe(404)
       }
       process.env.TEST_LOGIN_ENABLED = "true"
     })
 
     it("deletes a test account with its orgs, shops, listings and orders, and never a real account", async () => {
-      const user = await db()("accounts").where({ username: "test-agent" }).first()
+      const user = await db()("accounts").where({ username: "~test-agent" }).first()
       const [org] = await db()("contractors").insert({ spectrum_id: "~TESTAGENT", name: "Agent Org", is_test: true }).returning("*")
       await db()("contractor_members").insert({ contractor_id: org.contractor_id, user_id: user.user_id })
       const [shop] = await db()("shops").insert({ slug: "agent", name: "Agent", owner_contractor_id: org.contractor_id }).returning("*")
       await db()("listings").insert({ shop_id: shop.shop_id })
       await db()("orders").insert({ customer_id: TEST_USER, shop_id: shop.shop_id })
 
-      expect(await deleteTestAccount("test-agent", REAL_ADMIN)).toEqual({ mode: "deleted", orgs: 1, shops: 1 })
+      expect(await deleteTestAccount("~test-agent", REAL_ADMIN)).toEqual({ mode: "deleted", orgs: 1, shops: 1 })
       expect(await db()("accounts").where({ user_id: user.user_id }).first()).toBeUndefined()
       expect(await db()("contractors").where({ contractor_id: org.contractor_id }).first()).toBeUndefined()
       expect(await db()("shops").where({ shop_id: shop.shop_id }).first()).toBeUndefined()

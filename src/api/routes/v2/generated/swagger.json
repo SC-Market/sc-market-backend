@@ -11807,9 +11807,9 @@
 				"properties": {
 					"username": {
 						"type": "string",
-						"description": "Must start with \"test\" (e.g. test-buyer).",
+						"description": "\"test\" followed by a name (e.g. test-buyer). Saved with a reserved \"~\"\nprefix (~test-buyer) that real usernames can't have.",
 						"minLength": 6,
-						"maxLength": 40
+						"maxLength": 41
 					},
 					"display_name": {
 						"type": "string",

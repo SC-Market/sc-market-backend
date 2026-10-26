@@ -21,8 +21,21 @@ import { auditLogService } from "../audit-log/audit-log.service.js"
 import { getMfaService } from "../mfa/instance.js"
 import type { ReqCtx } from "../mfa/service.js"
 
-/** Test usernames start with "test" so they are recognisable everywhere. */
-export const TEST_USERNAME_RE = /^test[a-z0-9_-]{2,36}$/i
+/**
+ * Test usernames are "~" + "test" + a name (e.g. ~test-buyer). RSI and
+ * Discord handles never contain "~", so no real user can take or collide
+ * with one; a DB CHECK ties is_test to the prefix
+ * (migration 20261027010000_reserved_username_prefix).
+ */
+export const TEST_USERNAME_PREFIX = "~"
+/** What an admin types (the prefix is optional and added): "test" + 2-36 of [a-z0-9_-]. */
+export const TEST_NAME_RE = /^test[a-z0-9_-]{2,36}$/i
+
+/** "test-buyer" or "~test-buyer" -> "~test-buyer", or null when invalid. */
+export function testUsernameFor(input: string): string | null {
+  const name = (input ?? "").trim().replace(/^~/, "")
+  return TEST_NAME_RE.test(name) ? `${TEST_USERNAME_PREFIX}${name}` : null
+}
 
 export interface CreatedTestAccount {
   user_id: string
@@ -48,12 +61,12 @@ export interface TestAccountSummary {
 }
 
 export function validateTestAccountInput(username: string, displayName: string) {
-  const u = (username ?? "").trim()
+  const u = testUsernameFor(username)
   const d = (displayName ?? "").trim()
-  if (!TEST_USERNAME_RE.test(u)) {
+  if (!u) {
     throw new BusinessLogicError(
       ErrorCode.VALIDATION_ERROR,
-      'Username must start with "test", then 2-36 letters, digits, "-" or "_"',
+      'Username must be "test" followed by 2-36 letters, digits, "-" or "_" (e.g. test-buyer); it is saved as ~test-buyer',
     )
   }
   if (d.length < 1 || d.length > 100) {
