@@ -2158,9 +2158,16 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
     message: string
   } = req.body
 
+  if (!Array.isArray(usernames) || usernames.length === 0) {
+    res
+      .status(400)
+      .json(createErrorResponse({ message: "Pick at least one user" }))
+    return
+  }
+
   // Do checks first
   const users = []
-  for (const username of usernames) {
+  for (const username of new Set(usernames)) {
     try {
       users.push(await profileDb.getUser({ username }))
     } catch {
@@ -2206,7 +2213,11 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
     })
   }
 
-  await notificationService.createContractorInviteNotification(invites[0])
+  // Every invitee gets their own notification. The notification is also what
+  // shows them the Join Organization button on the org page.
+  for (const invite of invites) {
+    await notificationService.createContractorInviteNotification(invite)
+  }
 
   res.json(createResponse({ result: "Success" }))
 }
