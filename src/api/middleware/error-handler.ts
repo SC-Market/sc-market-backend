@@ -92,7 +92,6 @@ function notifyBugsnag(err: Error, req: Request) {
         event.addMetadata("request", {
           path: req.path,
           method: req.method,
-          user_id: req.user?.user_id,
           request_id: req.requestId,
         })
       })

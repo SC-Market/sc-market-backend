@@ -13,6 +13,33 @@ const bugsnag = isDevelopment
       apiKey: process.env.BUGSNAG_API_KEY || "",
       plugins: [BugsnagPluginExpress],
       enabledReleaseStages: ["production", "staging"],
+      // Error reports are anonymous (the privacy policy says so, and the
+      // cookie banner calls them "anonymous error reports"): no log
+      // breadcrumbs, because log lines can carry user ids.
+      enabledBreadcrumbTypes: ["error", "manual"],
+      onError: (event: {
+        request: Record<string, unknown>
+        getMetadata: (section: string) => Record<string, unknown> | undefined
+        clearMetadata: (section: string) => void
+        addMetadata: (section: string, values: Record<string, unknown>) => void
+      }) => {
+        // plugin-express copies the client IP, headers (user agent,
+        // CF-Connecting-IP, X-Forwarded-For), query, body and referer into
+        // every event. Keep the method and the path only.
+        const url = event.request.url
+        event.request = {
+          httpMethod: event.request.httpMethod,
+          url: typeof url === "string" ? url.split(/[?#]/)[0] : undefined,
+        }
+        const meta = event.getMetadata("request")
+        if (meta) {
+          event.clearMetadata("request")
+          event.addMetadata("request", {
+            path: meta.path,
+            httpMethod: meta.httpMethod,
+          })
+        }
+      },
       // Never ship MFA codes, secrets or credentials in error reports.
       redactedKeys: [
         /code/i,
