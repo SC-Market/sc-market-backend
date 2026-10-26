@@ -433,6 +433,26 @@ export async function up(knex: Knex): Promise<void> {
   `);
 
   // ============================================================================
+  // LISTING_PHOTOS_V2 TABLE
+  // ============================================================================
+  // Created before the listing_search view, which reads it. It used to be
+  // created at the end of this migration, so on an empty database the view
+  // failed with "relation listing_photos_v2 does not exist". Databases that
+  // already ran this migration never run it again (knex keys on the file
+  // name), so moving the statement only affects fresh databases.
+  await knex.raw(`
+    CREATE TABLE IF NOT EXISTS listing_photos_v2 (
+      photo_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      listing_id UUID NOT NULL REFERENCES listings(listing_id) ON DELETE CASCADE,
+      resource_id UUID NOT NULL REFERENCES image_resources(resource_id) ON DELETE CASCADE,
+      display_order INTEGER NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_listing_photos_v2_listing ON listing_photos_v2(listing_id, display_order);
+  `);
+
+  // ============================================================================
   // LISTING_SEARCH VIEW
   // ============================================================================
   // Denormalized view for fast search queries
@@ -490,7 +510,9 @@ export async function up(knex: Knex): Promise<void> {
       setweight(to_tsvector('english', COALESCE(gi.name, '')), 'C') AS search_vector
     FROM listings l
     JOIN listing_items li ON l.listing_id = li.listing_id
-    LEFT JOIN game_items gi ON li.game_item_id = gi.game_item_id
+    -- game_items' key is "id"; it has no game_item_id column. Same join as
+    -- every later rebuild of this view.
+    LEFT JOIN game_items gi ON li.game_item_id::text = gi.id::text
   `);
 
   await knex.raw(`
@@ -817,20 +839,7 @@ export async function up(knex: Knex): Promise<void> {
     CREATE INDEX idx_buy_orders_v2_desired_attributes ON buy_orders_v2 USING GIN (desired_attributes)
   `);
 
-  // ============================================================================
-  // LISTING_PHOTOS_V2 TABLE
-  // ============================================================================
-  await knex.raw(`
-    CREATE TABLE IF NOT EXISTS listing_photos_v2 (
-      photo_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-      listing_id UUID NOT NULL REFERENCES listings(listing_id) ON DELETE CASCADE,
-      resource_id UUID NOT NULL REFERENCES image_resources(resource_id) ON DELETE CASCADE,
-      display_order INTEGER NOT NULL DEFAULT 0,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX idx_listing_photos_v2_listing ON listing_photos_v2(listing_id, display_order);
-  `);
+  // listing_photos_v2 is created above, before the listing_search view that reads it.
 
 
 }

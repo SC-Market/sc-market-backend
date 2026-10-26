@@ -3,16 +3,15 @@
  * characterization suite: the legacy SQL files in config/postgres, then every
  * knex migration, each in its own transaction.
  *
- * The repo's history does not replay cleanly on an empty database (production
- * was patched by hand along the way), so a few shims are applied. They are
- * listed in SCHEMA_SHIMS and EXPECTED_FAILURES so drift is visible: a new
- * migration that fails here fails the suite's global setup.
+ * Production has objects no file creates (PRE_SQL). Every migration must apply
+ * on an empty database: one that fails here fails the suite's global setup
+ * unless it is listed in EXPECTED_FAILURES.
  */
 import { execFileSync } from "node:child_process"
 import { readdirSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
-import knexFactory, { type Knex } from "knex"
+import knexFactory from "knex"
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../..")
 
@@ -23,36 +22,6 @@ const PRE_SQL = `
   -- item_variants.attributes_hash is computed with pgcrypto's digest().
   CREATE EXTENSION IF NOT EXISTS pgcrypto;
 `
-
-/**
- * SQL run after the legacy files and before the migrations.
- * - 20260417100000_market_v2_fresh_schema joins `gi.game_item_id`, a column
- *   game_items never had in the repo's SQL (production's view was fixed in
- *   place; later migrations recreate it with `gi.id`).
- */
-const MID_SQL = `
-  ALTER TABLE game_items ADD COLUMN IF NOT EXISTS game_item_id uuid GENERATED ALWAYS AS (id) STORED;
-`
-
-/**
- * Per-migration shims: SQL to run inside the migration's transaction right
- * before a raw statement that matches `before`.
- */
-const SCHEMA_SHIMS: Record<string, { before: RegExp; sql: string }[]> = {
-  // The listing_search view reads listing_photos_v2, which the same migration
-  // only creates further down.
-  "20260417100000_market_v2_fresh_schema.ts": [
-    {
-      before: /CREATE VIEW listing_search AS/,
-      sql: `CREATE TABLE IF NOT EXISTS listing_photos_v2 (
-        photo_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-        listing_id UUID NOT NULL REFERENCES listings(listing_id) ON DELETE CASCADE,
-        resource_id UUID NOT NULL REFERENCES image_resources(resource_id) ON DELETE CASCADE,
-        display_order INTEGER NOT NULL DEFAULT 0,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`,
-    },
-  ],
-}
 
 /** Migrations known not to apply on an empty database. Keep this empty if possible. */
 export const EXPECTED_FAILURES = new Set<string>([])
@@ -82,23 +51,6 @@ function psqlCommand(target: PgTarget, sql: string) {
   )
 }
 
-function withShims(trx: Knex.Transaction, shims: { before: RegExp; sql: string }[]): Knex {
-  if (!shims.length) return trx
-  const raw = trx.raw.bind(trx)
-  const pending = [...shims]
-  return new Proxy(trx, {
-    get(target, prop, receiver) {
-      if (prop !== "raw") return Reflect.get(target, prop, receiver)
-      return (sql: string, ...rest: unknown[]) => {
-        const i = pending.findIndex((s) => typeof sql === "string" && s.before.test(sql))
-        if (i < 0) return (raw as (...a: unknown[]) => unknown)(sql, ...rest)
-        const [shim] = pending.splice(i, 1)
-        return raw(shim.sql).then(() => (raw as (...a: unknown[]) => unknown)(sql, ...rest))
-      }
-    },
-  }) as Knex
-}
-
 export async function buildSchema(target: PgTarget): Promise<{ failed: string[] }> {
   psqlCommand(target, PRE_SQL)
 
@@ -107,8 +59,6 @@ export async function buildSchema(target: PgTarget): Promise<{ failed: string[] 
     .filter((f) => f.endsWith(".sql"))
     .sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
   for (const f of sqlFiles) psqlFile(target, path.join(sqlDir, f))
-
-  psqlCommand(target, MID_SQL)
 
   const db = knexFactory({
     client: "pg",
@@ -127,7 +77,7 @@ export async function buildSchema(target: PgTarget): Promise<{ failed: string[] 
           await mod.up(db)
         } else {
           await db.transaction(async (trx) => {
-            await mod.up(withShims(trx, SCHEMA_SHIMS[f] ?? []))
+            await mod.up(trx)
           })
         }
         await db.raw(
