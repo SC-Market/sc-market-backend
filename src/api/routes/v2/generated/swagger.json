@@ -2050,199 +2050,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"OrderVariantDetail": {
-				"description": "Variant details for orders (separate from listings to avoid TSOA conflicts)",
-				"properties": {
-					"variant_id": {
-						"type": "string",
-						"description": "UUID of the variant"
-					},
-					"attributes": {
-						"$ref": "#/components/schemas/VariantAttributes",
-						"description": "Variant attributes (quality_tier, quality_value, crafted_source, etc)"
-					},
-					"display_name": {
-						"type": "string",
-						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
-					},
-					"short_name": {
-						"type": "string",
-						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
-					}
-				},
-				"required": [
-					"variant_id",
-					"attributes",
-					"display_name",
-					"short_name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OrderItemDetail": {
-				"description": "Detailed information about an order item\nRequirement 25.9: Create order_market_items_v2 entries for each item",
-				"properties": {
-					"order_item_id": {
-						"type": "string",
-						"description": "UUID of the order item"
-					},
-					"listing_id": {
-						"type": "string",
-						"description": "UUID of the listing"
-					},
-					"item_id": {
-						"type": "string",
-						"description": "UUID of the listing item"
-					},
-					"listing_title": {
-						"type": "string",
-						"description": "Listing title"
-					},
-					"variant": {
-						"$ref": "#/components/schemas/OrderVariantDetail",
-						"description": "Variant details with quality attributes"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double",
-						"description": "Quantity purchased"
-					},
-					"price_per_unit": {
-						"type": "number",
-						"format": "double",
-						"description": "Price per unit at time of purchase (snapshot)"
-					},
-					"subtotal": {
-						"type": "number",
-						"format": "double",
-						"description": "Subtotal for this item (quantity * price_per_unit)"
-					}
-				},
-				"required": [
-					"order_item_id",
-					"listing_id",
-					"item_id",
-					"listing_title",
-					"variant",
-					"quantity",
-					"price_per_unit",
-					"subtotal"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateOrderResponse": {
-				"description": "Response from creating an order\nRequirement 25.10: Return order_id and order details on success",
-				"properties": {
-					"order_id": {
-						"type": "string",
-						"description": "UUID of the created order"
-					},
-					"buyer_id": {
-						"type": "string",
-						"description": "UUID of the buyer"
-					},
-					"shop_id": {
-						"type": "string",
-						"description": "Shop ID of the seller"
-					},
-					"total_price": {
-						"type": "number",
-						"format": "double",
-						"description": "Total price in aUEC (atomic units)"
-					},
-					"status": {
-						"type": "string",
-						"description": "Order status"
-					},
-					"created_at": {
-						"type": "string",
-						"description": "ISO 8601 timestamp of order creation"
-					},
-					"items": {
-						"items": {
-							"$ref": "#/components/schemas/OrderItemDetail"
-						},
-						"type": "array",
-						"description": "Array of order items with variant details"
-					},
-					"allocation_result": {
-						"properties": {
-							"total_allocated": {
-								"type": "number",
-								"format": "double"
-							},
-							"total_requested": {
-								"type": "number",
-								"format": "double"
-							},
-							"has_partial_allocations": {
-								"type": "boolean"
-							}
-						},
-						"required": [
-							"total_allocated",
-							"total_requested",
-							"has_partial_allocations"
-						],
-						"type": "object",
-						"description": "Stock allocation result summary"
-					}
-				},
-				"required": [
-					"order_id",
-					"buyer_id",
-					"shop_id",
-					"total_price",
-					"status",
-					"created_at",
-					"items"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OrderItemInput": {
-				"description": "Individual item in an order request",
-				"properties": {
-					"listing_id": {
-						"type": "string",
-						"description": "UUID of the listing"
-					},
-					"variant_id": {
-						"type": "string",
-						"description": "UUID of the specific variant to purchase"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double",
-						"description": "Quantity to purchase (must be > 0)"
-					}
-				},
-				"required": [
-					"listing_id",
-					"variant_id",
-					"quantity"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateOrderRequest": {
-				"description": "Request to create an order with variant-specific items\nRequirement 25.2: Accept array of items with listing_id, variant_id, and quantity",
-				"properties": {
-					"items": {
-						"items": {
-							"$ref": "#/components/schemas/OrderItemInput"
-						},
-						"type": "array",
-						"description": "Array of items to purchase"
-					}
-				},
-				"required": [
-					"items"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"OrderMarketListingV1": {
 				"description": "V1 market listing in an order",
 				"properties": {
@@ -2343,6 +2150,87 @@
 					"title",
 					"price",
 					"v2_variants"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderVariantDetail": {
+				"description": "Variant details for orders (separate from listings to avoid TSOA conflicts)",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the variant"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes (quality_tier, quality_value, crafted_source, etc)"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderItemDetail": {
+				"description": "Detailed information about an order item\nRequirement 25.9: Create order_market_items_v2 entries for each item",
+				"properties": {
+					"order_item_id": {
+						"type": "string",
+						"description": "UUID of the order item"
+					},
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing"
+					},
+					"item_id": {
+						"type": "string",
+						"description": "UUID of the listing item"
+					},
+					"listing_title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/OrderVariantDetail",
+						"description": "Variant details with quality attributes"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity purchased"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double",
+						"description": "Price per unit at time of purchase (snapshot)"
+					},
+					"subtotal": {
+						"type": "number",
+						"format": "double",
+						"description": "Subtotal for this item (quantity * price_per_unit)"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"listing_id",
+					"item_id",
+					"listing_title",
+					"variant",
+					"quantity",
+					"price_per_unit",
+					"subtotal"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -14415,23 +14303,23 @@
 				}
 			}
 		},
-		"/orders": {
-			"post": {
-				"operationId": "CreateOrder",
+		"/orders/{orderId}": {
+			"get": {
+				"operationId": "GetOrderDetail",
 				"responses": {
 					"200": {
-						"description": "Created order with order_id and item details",
+						"description": "Order details with buyer/seller info and variant details",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CreateOrderResponse"
+									"$ref": "#/components/schemas/GetOrderDetailResponse"
 								}
 							}
 						}
 					}
 				},
-				"description": "Create a new order with variant-specific items\n\nCreates an order by:\n1. Validating variant availability for each item\n2. Creating order record in V1 orders table\n3. Creating market_orders entries (V1 compatibility)\n4. Creating order_market_items_v2 entries with variant tracking\n5. Snapshotting variant prices at purchase time\n6. Allocating stock from variant-specific lots\n7. Notifying seller of new order\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation uses listing_item_lots directly (V2).\n\nRequirements:\n- 25.1: POST /api/v2/orders endpoint\n- 25.2: Accept array of items with listing_id, variant_id, quantity\n- 25.3: Validate variant availability before order creation\n- 25.4: Use variant-specific pricing in order calculations\n- 25.5: Allocate stock from correct variant's stock lots\n- 25.6: Use database transaction for atomicity\n- 25.7: Snapshot variant prices at time of order creation\n- 25.8: Prevent ordering unavailable variants with descriptive error\n- 25.9: Create order_market_items_v2 entries for each item\n- 25.10: Return order_id and order details on success\n- 25.11: Notify seller of new order\n- 25.12: Log order creation to Audit_Trail",
-				"summary": "Create order",
+				"description": "Get order details with variant information\n\nRetrieves complete order information including:\n1. Order metadata (status, timestamps, total price)\n2. Buyer and seller information (username, display_name, avatar)\n3. Array of order items with variant details\n4. Quality tier, variant attributes, and display_name for each item\n5. Price per unit snapshot from time of purchase\n\nAuthorization: User must be either the buyer or seller of the order.\n\nRequirements:\n- 26.1: GET /api/v2/orders/:id endpoint\n- 26.2: Return order metadata with buyer and seller information\n- 26.3: Return array of order items with variant details\n- 26.4: Include quality_tier for each order item\n- 26.5: Include variant attributes for each item\n- 26.6: Include variant display_name for each item\n- 26.7: Include price_per_unit snapshot from time of purchase\n- 26.8: Calculate order totals with per-variant pricing\n- 26.9: Include order status and timestamps\n- 26.10: Return 404 if order not found\n- 26.11: Validate user authorization to view order\n- 26.12: Include fulfillment status per item",
+				"summary": "Get order detail",
 				"tags": [
 					"Orders V2"
 				],
@@ -14440,20 +14328,20 @@
 						"loggedin": []
 					}
 				],
-				"parameters": [],
-				"requestBody": {
-					"description": "Order creation request with items array",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateOrderRequest",
-								"description": "Order creation request with items array"
-							}
+				"parameters": [
+					{
+						"description": "UUID of the order to retrieve",
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
-				}
-			},
+				]
+			}
+		},
+		"/orders": {
 			"get": {
 				"operationId": "GetOrders",
 				"responses": {
@@ -14563,44 +14451,6 @@
 								"asc",
 								"desc"
 							]
-						}
-					}
-				]
-			}
-		},
-		"/orders/{orderId}": {
-			"get": {
-				"operationId": "GetOrderDetail",
-				"responses": {
-					"200": {
-						"description": "Order details with buyer/seller info and variant details",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/GetOrderDetailResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get order details with variant information\n\nRetrieves complete order information including:\n1. Order metadata (status, timestamps, total price)\n2. Buyer and seller information (username, display_name, avatar)\n3. Array of order items with variant details\n4. Quality tier, variant attributes, and display_name for each item\n5. Price per unit snapshot from time of purchase\n\nAuthorization: User must be either the buyer or seller of the order.\n\nRequirements:\n- 26.1: GET /api/v2/orders/:id endpoint\n- 26.2: Return order metadata with buyer and seller information\n- 26.3: Return array of order items with variant details\n- 26.4: Include quality_tier for each order item\n- 26.5: Include variant attributes for each item\n- 26.6: Include variant display_name for each item\n- 26.7: Include price_per_unit snapshot from time of purchase\n- 26.8: Calculate order totals with per-variant pricing\n- 26.9: Include order status and timestamps\n- 26.10: Return 404 if order not found\n- 26.11: Validate user authorization to view order\n- 26.12: Include fulfillment status per item",
-				"summary": "Get order detail",
-				"tags": [
-					"Orders V2"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [
-					{
-						"description": "UUID of the order to retrieve",
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"type": "string"
 						}
 					}
 				]

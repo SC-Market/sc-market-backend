@@ -10,29 +10,6 @@
 import { VariantAttributes } from './listings.types.js';
 
 /**
- * Request to create an order with variant-specific items
- * Requirement 25.2: Accept array of items with listing_id, variant_id, and quantity
- */
-export interface CreateOrderRequest {
-  /** Array of items to purchase */
-  items: OrderItemInput[];
-}
-
-/**
- * Individual item in an order request
- */
-export interface OrderItemInput {
-  /** UUID of the listing */
-  listing_id: string;
-  
-  /** UUID of the specific variant to purchase */
-  variant_id: string;
-  
-  /** Quantity to purchase (must be > 0) */
-  quantity: number;
-}
-
-/**
  * Response from creating an order
  * Requirement 25.10: Return order_id and order details on success
  */
