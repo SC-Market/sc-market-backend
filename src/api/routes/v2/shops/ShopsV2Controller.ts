@@ -27,6 +27,7 @@ import { visibleActiveListingCountQuery } from "../util/listing-visibility.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import { verifyDiscordThreadTarget } from "../../../../services/discord/verify-discord-target.js"
 import { has_permission, is_member } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { createNotificationWebhook } from "../../v1/util/webhooks.js"
@@ -749,6 +750,26 @@ export class ShopsV2Controller extends BaseController {
       this.throwValidationError("Enter both the Discord server ID and the channel ID, or leave both empty", [
         { field: "discord_thread_channel_id", message: "Discord IDs are numbers, e.g. 123456789012345678" },
       ])
+    }
+    // A new thread target must be a server the bot is in and the user
+    // administers, or the bot would create threads (and hand out invites) in
+    // someone else's server. Clearing it, or saving it unchanged, is fine.
+    if (typeof threadChannel === "object") {
+      const current = await getThreadChannel({ owner_type: "shop", owner_id: shopId })
+      const changed =
+        !current ||
+        current.guild_id !== threadChannel.guild_id ||
+        current.channel_id !== threadChannel.channel_id
+      if (changed) {
+        const problem = await verifyDiscordThreadTarget(
+          userId,
+          threadChannel.guild_id,
+          threadChannel.channel_id,
+        )
+        if (problem) {
+          this.throwValidationError(problem, [{ field: "discord_thread_channel_id", message: problem }])
+        }
+      }
     }
 
     const [updated] = await db("shops").where("shop_id", shopId).update(updates).returning("*")

@@ -2,6 +2,7 @@ import { REST } from "@discordjs/rest"
 import {
   APIChannel,
   APIGuild,
+  APIGuildMember,
   APITextChannel,
   APIInvite,
   RESTPostAPIChannelMessageJSONBody,
@@ -72,6 +73,8 @@ export interface DiscordService {
   // Utility
   fetchGuild(guildId: string): Promise<APIGuild>
   fetchChannel(channelId: string): Promise<APITextChannel>
+  /** The member, or null when the user is not in the guild. */
+  fetchGuildMember(guildId: string, userId: string): Promise<APIGuildMember | null>
   createInvite(
     channelId: string,
     options?: DiscordInviteOptions,
@@ -416,6 +419,17 @@ class RestDiscordService implements DiscordService {
 
   async fetchChannel(channelId: string): Promise<APITextChannel> {
     return (await this.rest.get(Routes.channel(channelId))) as APITextChannel
+  }
+
+  async fetchGuildMember(
+    guildId: string,
+    userId: string,
+  ): Promise<APIGuildMember | null> {
+    try {
+      return (await this.rest.get(Routes.guildMember(guildId, userId))) as APIGuildMember
+    } catch {
+      return null
+    }
   }
 
   async createInvite(
