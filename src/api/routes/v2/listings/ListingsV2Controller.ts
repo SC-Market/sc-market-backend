@@ -14,6 +14,11 @@ import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { canModifyListing } from "../util/listing-permissions.js"
+import { is_member } from "../../v1/util/permissions.js"
+import {
+  canViewShopPrivate,
+  getShopById,
+} from "../../../../services/shops/shop-permissions.service.js"
 import { isUuid } from "../util/short-slug.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
@@ -1021,6 +1026,23 @@ export class ListingsV2Controller extends BaseController {
           message: "Status must be one of: active, sold, expired, cancelled",
         },
       ])
+    }
+
+    // shop_id / spectrum_id scope the list to someone else's shops, which
+    // includes private and unlisted listings: only the shop's managers or
+    // the org's members may read them.
+    if (!this.isAdmin()) {
+      if (shop_id) {
+        const shop = await getShopById(shop_id)
+        if (!shop || !(await canViewShopPrivate(shop, userId))) {
+          this.throwForbidden("You cannot view this shop's listings")
+        }
+      } else if (spectrum_id) {
+        const org = await db("contractors").where({ spectrum_id }).first("contractor_id")
+        if (org && !(await is_member(org.contractor_id, userId))) {
+          this.throwForbidden("You are not a member of this organization")
+        }
+      }
     }
 
     logger.info("Fetching my listings", {
