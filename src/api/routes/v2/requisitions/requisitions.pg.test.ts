@@ -91,6 +91,8 @@ describe.skipIf(!PG_TEST_URL)("Requisition orders on the full schema", () => {
       customer_id: BUYER,
       assigned_id: SUPPLIER,
       offer_session_id: res.offer_session_id,
+      // The supplier's shop, so the seller's v2 order list finds it.
+      shop_id: SHOP,
     })
   })
 

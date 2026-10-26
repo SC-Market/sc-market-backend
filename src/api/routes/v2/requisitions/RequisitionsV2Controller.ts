@@ -198,6 +198,9 @@ export class RequisitionsV2Controller extends BaseController {
           customer_id: userId,
           assigned_id: supplierId,
           contractor_id: supplierContractorId,
+          // The supplier's shop, as on the session: the seller's v2 order list
+          // (role=seller) finds orders by orders.shop_id.
+          shop_id: supplierShop?.shop_id ?? null,
           kind: "requisition",
           cost: totalPrice,
           collateral: 0,
