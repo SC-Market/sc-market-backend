@@ -19,21 +19,49 @@
 import { env } from "../../config/env.js"
 import type { DBOrgPremiumTier } from "../../clients/database/db-models.js"
 
-const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
-const frontend_url = new URL(env.FRONTEND_URL || "http://localhost:5173")
+const LOOPBACK_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"])
+
+/**
+ * Origins a credentialed request may come from.
+ *
+ * https only. Plain http is accepted solely for loopback hosts outside
+ * production (local dev on http://localhost:5173), because a credentialed
+ * http origin can be spoofed by anyone on the network path.
+ */
+export function buildStaticAllowlist(config: {
+  backendUrl: URL
+  frontendUrl: URL
+  premiumHosts?: string
+  production: boolean
+}): string[] {
+  const origins = new Set<string>()
+  for (const url of [config.backendUrl, config.frontendUrl]) {
+    origins.add(`https://${url.host}`)
+    if (!config.production && LOOPBACK_HOSTNAMES.has(url.hostname)) {
+      origins.add(`http://${url.host}`)
+    }
+  }
+  for (const host of (config.premiumHosts || "").split(",")) {
+    if (host.trim()) origins.add(`https://${host.trim().toLowerCase()}`)
+  }
+  return [...origins]
+}
 
 /** Static origins that are always allowed. */
-export const staticAllowlist: string[] = [
-  `http://${backend_url.host}`,
-  `https://${backend_url.host}`,
-  `http://${frontend_url.host}`,
-  `https://${frontend_url.host}`,
-  "https://discord.com",
-  ...(env.PREMIUM_HOSTS || "")
-    .split(",")
-    .filter((h) => h.trim())
-    .map((h) => `https://${h.trim()}`),
-]
+export const staticAllowlist: string[] = buildStaticAllowlist({
+  backendUrl: new URL(env.BACKEND_URL || "http://localhost:7000"),
+  frontendUrl: new URL(env.FRONTEND_URL || "http://localhost:5173"),
+  premiumHosts: env.PREMIUM_HOSTS,
+  production: env.NODE_ENV === "production",
+})
+
+/** `https://<domain>` for a registered shop custom domain (https only). */
+export function customDomainOrigins(domains: string[]): string[] {
+  return domains
+    .map((d) => d.trim().toLowerCase())
+    .filter((d) => d !== "")
+    .map((d) => `https://${d}`)
+}
 
 // Cache of custom domains from DB
 let customDomainCache: string[] = []
@@ -47,10 +75,9 @@ export async function refreshCustomDomainCache(): Promise<void> {
       .whereNotNull("custom_domain")
       .whereNull("revoked_at")
       .select("custom_domain")
-    customDomainCache = rows.flatMap((r) => [
-      `https://${r.custom_domain}`,
-      `http://${r.custom_domain}`,
-    ])
+    customDomainCache = customDomainOrigins(
+      rows.map((r) => r.custom_domain as string),
+    )
     cacheTimestamp = Date.now()
   } catch {
     // DB not ready — keep existing cache

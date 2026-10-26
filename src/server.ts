@@ -89,11 +89,13 @@ const discord_backend_url = new URL(env.DISCORD_BACKEND_URL)
 const discord_bot_url = new URL(env.DISCORD_BOT_URL || "http://localhost:8081")
 
 import {
-  staticAllowlist,
   isOriginAllowed,
+  isOriginAllowedAsync,
   isCacheStale,
   refreshCustomDomainCache,
 } from "./api/util/allowed-origins.js"
+import { csrfProtection } from "./api/middleware/csrf.js"
+import { createSocketAllowRequest } from "./api/middleware/socket-origin.js"
 
 const corsOptions = function (
   req: Request,
@@ -246,6 +248,10 @@ app.options("/api/v2/integrations/scmdb/ingest/*", cors({ origin: "https://scmdb
 app.post("/api/v2/integrations/scmdb/ingest/*", cors({ origin: "https://scmdb.net" }))
 
 app.use(cors(corsOptions))
+// CSRF: unsafe methods need an allowed Origin and a JSON body (see csrf.ts).
+// After cors() so a rejection still carries CORS headers for allowed origins
+// and the frontend can read the error.
+app.use(csrfProtection({ isOriginAllowed: isOriginAllowedAsync }))
 app.use(track500Responses)
 app.use(i18nMiddleware)
 
@@ -334,12 +340,12 @@ app.use(errorHandler)
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   path: "/ws",
-  // Socket.IO handles /ws before Express, so it needs its own guard.
-  ...(enforceCloudflareOrigin && {
-    allowRequest: (req, callback) => {
-      const ok = isRequestFromCloudflare(req)
-      callback(ok ? null : "Direct origin access is not allowed", ok)
-    },
+  // Socket.IO handles /ws before Express, so it needs its own guards
+  // (Cloudflare-only, and Origin: see socket-origin.ts).
+  allowRequest: createSocketAllowRequest({
+    enforceCloudflare: enforceCloudflareOrigin,
+    isFromCloudflare: isRequestFromCloudflare,
+    isOriginAllowed: isOriginAllowedAsync,
   }),
   cors: {
     credentials: true,
