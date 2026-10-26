@@ -24,6 +24,7 @@ import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import { buyOrderFulfillmentProblem } from "./fulfillment-rules.js"
 import {
   CreateBuyOrderRequest,
   CreateBuyOrderResponse,
@@ -875,6 +876,15 @@ export class BuyOrdersV2Controller extends BaseController {
         const vp = await trx('variant_pricing').where({ item_id: listingItem.item_id, variant_id: body.variant_id }).first()
         price = vp ? vp.price : listingItem.base_price
       }
+
+      const problem = await buyOrderFulfillmentProblem(
+        trx,
+        buyOrder,
+        sellerId,
+        Number(price),
+        variant.attributes,
+      )
+      if (problem) throw this.throwValidationError(problem.message, [problem])
 
       // Create order
       const [order] = await trx('orders').insert({
