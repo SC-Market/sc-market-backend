@@ -204,8 +204,8 @@ export async function serializeOfferSession(session: DBOfferSession) {
     .where({ session_id: session.id })
     .first()
 
-  const { official_server_id: discord_server_id } =
-    await discordService.resolveThreadConfig(session)
+  const discord_server_id =
+    (await discordService.resolveThreadConfig(session))?.guild_id ?? null
 
   // Check if there's an order associated with this offer session (when status is "Accepted")
   let order_id = undefined

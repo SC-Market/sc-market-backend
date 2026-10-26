@@ -56,9 +56,8 @@ import { userAuthorized } from "./api/middleware/auth.js"
 import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
 import { bodyParsers } from "./api/middleware/body-parsers.js"
-import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
-import { subscriptionRouter } from "./clients/discord_api/subscriptions.js"
+import { channelSetupRouter } from "./clients/discord_api/channel-setups.js"
 import { claimRouter } from "./clients/discord_api/claim.js"
 import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
@@ -455,9 +454,8 @@ discord_app.use(
   }),
 )
 discord_app.use(express.json({ limit: "2.5mb" }))
-discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
-discord_app.use("/alert-subscriptions", subscriptionRouter)
+discord_app.use("/channel-setups", channelSetupRouter)
 discord_app.use("/claim", claimRouter)
 // discord_app has no caller authentication: it trusts the discord_id in the
 // request body. It must therefore only be reachable by the bot, which shares

@@ -65,16 +65,6 @@ oapi.schema("GetCurrentUserProfileSuccess", {
       format: "date-time",
       description: "Account creation timestamp",
     },
-    official_server_id: {
-      type: "string",
-      nullable: true,
-      description: "Discord official server ID",
-    },
-    discord_thread_channel_id: {
-      type: "string",
-      nullable: true,
-      description: "Discord thread channel ID",
-    },
     market_order_template: {
       type: "string",
       description: "Default market order template",

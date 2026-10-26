@@ -3,6 +3,7 @@ import { DBUser } from "../../clients/database/db-models.js"
 import { BusinessLogicError } from "../../api/routes/v1/util/errors.js"
 import { ErrorCode } from "../../api/routes/v1/util/error-codes.js"
 import logger from "../../logger/logger.js"
+import { deleteOwner } from "../discord/channel-setups.js"
 
 export interface DeletionBlocker {
   type: string
@@ -306,6 +307,9 @@ async function convertToTombstone(userId: string): Promise<void> {
       .where("seller_type", "user")
       .whereIn("status", ["active", "inactive"])
       .update({ status: "expired" })
+
+    // Stop order threads and alerts for this account in Discord
+    await deleteOwner({ owner_type: "user", owner_id: userId }, trx)
 
     // Wipe PII on the account row (keep the row for FK integrity)
     const tombstoneUsername = `[deleted_${userId.replace(/-/g, "").slice(0, 8)}]`

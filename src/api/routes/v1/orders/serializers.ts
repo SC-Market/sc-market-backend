@@ -157,8 +157,8 @@ export async function serializeOrderDetails(
     user_id: order.customer_id,
   })
 
-  const { official_server_id: discord_server_id } =
-    await discordService.resolveThreadConfig(order)
+  const discord_server_id =
+    (await discordService.resolveThreadConfig(order))?.guild_id ?? null
 
   // Get discord_invite from offer_session if available
   let discord_invite: string | null = null

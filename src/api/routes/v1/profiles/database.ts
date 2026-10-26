@@ -536,41 +536,6 @@ export async function getUserIntegrations(
 }
 
 /**
- * Get Discord integration settings with fallback to old columns
- * This provides backward compatibility during migration
- */
-export async function getDiscordIntegrationSettings(userId: string): Promise<{
-  official_server_id: string | null
-  discord_thread_channel_id: string | null
-}> {
-  // Try new integration table first
-  const integration = await getUserIntegration(userId, "discord")
-  if (integration && integration.settings) {
-    return {
-      official_server_id:
-        integration.settings.official_server_id?.toString() || null,
-      discord_thread_channel_id:
-        integration.settings.discord_thread_channel_id?.toString() || null,
-    }
-  }
-
-  // Fallback to old columns
-  const user = await getUser({ user_id: userId })
-  if (user) {
-    return {
-      official_server_id: user.official_server_id?.toString() || null,
-      discord_thread_channel_id:
-        user.discord_thread_channel_id?.toString() || null,
-    }
-  }
-
-  return {
-    official_server_id: null,
-    discord_thread_channel_id: null,
-  }
-}
-
-/**
  * Get user by where clause.
  * @throws Error if user not found
  */
@@ -600,8 +565,6 @@ export async function getUser(
     spectrum_user_id: user.spectrum_user_id,
     discord_access_token: user.discord_access_token,
     discord_refresh_token: user.discord_refresh_token,
-    official_server_id: user.official_server_id,
-    discord_thread_channel_id: user.discord_thread_channel_id,
     market_order_template: user.market_order_template,
     locale: user.locale,
     deleted_at: user.deleted_at,
@@ -639,8 +602,6 @@ export async function findUser(
     spectrum_user_id: user.spectrum_user_id,
     discord_access_token: user.discord_access_token,
     discord_refresh_token: user.discord_refresh_token,
-    official_server_id: user.official_server_id,
-    discord_thread_channel_id: user.discord_thread_channel_id,
     market_order_template: user.market_order_template,
     locale: user.locale,
     deleted_at: user.deleted_at,

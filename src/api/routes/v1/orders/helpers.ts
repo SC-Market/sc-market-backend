@@ -9,7 +9,7 @@ import {
   DBOrderSetting,
   DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
-import { database, getKnex } from "../../../../clients/database/knex-db.js"
+import { database } from "../../../../clients/database/knex-db.js"
 import * as chatDb from "../chats/database.js"
 import * as contractorDb from "../contractors/database.js"
 import * as profileDb from "../profiles/database.js"
@@ -652,33 +652,9 @@ export async function createOffer(
   let discord_invite: string | null = null
   if (session.contractor_id || session.assigned_id) {
     try {
-      const contractor = session.contractor_id
-        ? await contractorDb.getContractor({
-            contractor_id: session.contractor_id,
-          })
-        : null
-      const assigned = session.assigned_id
-        ? await profileDb.getUser({ user_id: session.assigned_id })
-        : null
-
-      // Prefer the shop's per-shop Discord config when the session has a shop_id.
-      let channel_id: string | null = null
-      if (session.shop_id) {
-        const shop = await getKnex()("shops")
-          .where("shop_id", session.shop_id)
-          .first("official_server_id", "discord_thread_channel_id")
-        if (shop?.official_server_id && shop?.discord_thread_channel_id) {
-          channel_id = shop.discord_thread_channel_id?.toString() || null
-        }
-      }
-
-      // Fall back to contractor/user config when the shop has no Discord config set
-      if (!channel_id) {
-        channel_id =
-          (contractor
-            ? contractor?.discord_thread_channel_id
-            : assigned?.discord_thread_channel_id) ?? null
-      }
+      // Invite the buyer to the server that will hold the thread.
+      const channel_id =
+        (await discordService.resolveThreadConfig(session))?.channel_id ?? null
 
       if (channel_id) {
         discord_invite = await discordService.createInvite(channel_id)

@@ -817,12 +817,12 @@
 					"official_server_id": {
 						"type": "string",
 						"nullable": true,
-						"description": "Discord server (guild) ID where order/offer threads are created for this shop"
+						"description": "Discord server (guild) ID of this shop's own order-thread channel; null uses the owner's"
 					},
 					"discord_thread_channel_id": {
 						"type": "string",
 						"nullable": true,
-						"description": "Discord channel ID under which order/offer threads are created for this shop"
+						"description": "Discord channel ID where this shop's order and offer threads are created; null uses the owner's"
 					},
 					"badge_ids": {
 						"items": {
@@ -1144,12 +1144,12 @@
 					"official_server_id": {
 						"type": "string",
 						"nullable": true,
-						"description": "Discord server (guild) ID where order/offer threads are created for this shop"
+						"description": "Discord server (guild) ID of this shop's order-thread channel. Send it with\ndiscord_thread_channel_id; send both as null to use the owner's channel."
 					},
 					"discord_thread_channel_id": {
 						"type": "string",
 						"nullable": true,
-						"description": "Discord channel ID under which order/offer threads are created for this shop"
+						"description": "Discord channel ID where this shop's order and offer threads are created"
 					}
 				},
 				"type": "object",

@@ -10,6 +10,12 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
+  DiscordChannelRef,
+  clearThreadChannel,
+  getThreadChannel,
+  setThreadChannel,
+} from "../../../../services/discord/channel-setups.js"
+import {
   canManageShop,
   getShopById,
   getShopBySlug,
@@ -55,9 +61,12 @@ export interface UpdateShopRequest {
   default_pickup_method?: string | null
   tags?: string[]
   accepts_custom_orders?: boolean
-  /** Discord server (guild) ID where order/offer threads are created for this shop */
+  /**
+   * Discord server (guild) ID of this shop's order-thread channel. Send it with
+   * discord_thread_channel_id; send both as null to use the owner's channel.
+   */
   official_server_id?: string | null
-  /** Discord channel ID under which order/offer threads are created for this shop */
+  /** Discord channel ID where this shop's order and offer threads are created */
   discord_thread_channel_id?: string | null
 }
 
@@ -105,9 +114,9 @@ export interface ShopResponse {
   created_at: string
   updated_at: string
   banner_url: string | null
-  /** Discord server (guild) ID where order/offer threads are created for this shop */
+  /** Discord server (guild) ID of this shop's own order-thread channel; null uses the owner's */
   official_server_id: string | null
-  /** Discord channel ID under which order/offer threads are created for this shop */
+  /** Discord channel ID where this shop's order and offer threads are created; null uses the owner's */
   discord_thread_channel_id: string | null
   /** Seller reputation badges, computed server-side from shop metrics + owner data */
   badge_ids: string[]
@@ -732,10 +741,20 @@ export class ShopsV2Controller extends BaseController {
     if (body.default_pickup_method !== undefined) updates.default_pickup_method = body.default_pickup_method
     if (body.tags !== undefined) updates.tags = body.tags
     if (body.accepts_custom_orders !== undefined) updates.accepts_custom_orders = body.accepts_custom_orders
-    if (body.official_server_id !== undefined) updates.official_server_id = body.official_server_id
-    if (body.discord_thread_channel_id !== undefined) updates.discord_thread_channel_id = body.discord_thread_channel_id
+
+    const threadChannel = parseShopThreadChannel(body)
+    if (threadChannel === "invalid") {
+      this.throwValidationError("Enter both the Discord server ID and the channel ID, or leave both empty", [
+        { field: "discord_thread_channel_id", message: "Discord IDs are numbers, e.g. 123456789012345678" },
+      ])
+    }
 
     const [updated] = await db("shops").where("shop_id", shopId).update(updates).returning("*")
+    if (threadChannel === "clear") {
+      await clearThreadChannel({ owner_type: "shop", owner_id: shopId })
+    } else if (threadChannel !== "unchanged") {
+      await setThreadChannel({ owner_type: "shop", owner_id: shopId }, threadChannel, null)
+    }
     return await shopToResponse(updated)
   }
 
@@ -1414,6 +1433,7 @@ async function reassignShopDataAfterTransfer(
 
 async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_orders?: boolean }): Promise<ShopResponse> {
   const db = getKnex()
+  const threadChannel = await getThreadChannel({ owner_type: "shop", owner_id: shop.shop_id })
 
   // Resolve contractor spectrum_id for V1 API compatibility
   let ownerContractorSpectrumId: string | null = null
@@ -1444,10 +1464,26 @@ async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_ord
     updated_at: shop.updated_at,
     banner_url: await resolveImageUrl(db, shop.banner),
     logo_url: await resolveImageUrl(db, shop.logo),
-    official_server_id: shop.official_server_id ?? null,
-    discord_thread_channel_id: shop.discord_thread_channel_id ?? null,
+    official_server_id: threadChannel?.guild_id ?? null,
+    discord_thread_channel_id: threadChannel?.channel_id ?? null,
     badge_ids: shop.badge_ids || [],
   }
+}
+
+const DISCORD_ID = /^[0-9]{15,22}$/
+
+/** What an update asks for the shop's own thread channel. */
+function parseShopThreadChannel(
+  body: Pick<UpdateShopRequest, "official_server_id" | "discord_thread_channel_id">,
+): DiscordChannelRef | "clear" | "unchanged" | "invalid" {
+  if (body.official_server_id === undefined && body.discord_thread_channel_id === undefined) {
+    return "unchanged"
+  }
+  const guild_id = (body.official_server_id ?? "").trim()
+  const channel_id = (body.discord_thread_channel_id ?? "").trim()
+  if (!guild_id && !channel_id) return "clear"
+  if (!DISCORD_ID.test(guild_id) || !DISCORD_ID.test(channel_id)) return "invalid"
+  return { guild_id, channel_id }
 }
 
 async function resolveImageUrl(db: ReturnType<typeof getKnex>, resourceId: string | null): Promise<string | null> {

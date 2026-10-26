@@ -1,5 +1,5 @@
 /**
- * Offer alerts posted to /subscribe alert channels. The Claim button only
+ * Offer alerts posted to the channels set up with /setup alerts. The Claim button only
  * works for org offers (claim_orders is an org permission), so personal alert
  * channels must not show one: it could only ever reply "cannot be claimed".
  */
@@ -13,6 +13,15 @@ const state: { db: FakeKnex } = { db: createFakeKnex() }
 vi.mock("../../clients/database/knex-db.js", () => ({
   getKnex: () => state.db,
   database: {},
+}))
+vi.mock("./channel-setups.js", () => ({
+  getAlertChannels: vi.fn(
+    async (target: { shop_id?: string | null; contractor_id?: string | null; user_id?: string | null }) => {
+      if (target.contractor_id === "org-1") return ["chan-org"]
+      if (target.user_id === "seller-1") return ["chan-me"]
+      return []
+    },
+  ),
 }))
 vi.mock("../../services/discord/discord.service.js", () => ({
   discordService: { postChannelMessage: vi.fn(async () => undefined) },
@@ -48,6 +57,7 @@ vi.mock("../../logger/logger.js", () => ({
 
 import { postOfferAlert } from "./order-alerts.js"
 import { discordService } from "../../services/discord/discord.service.js"
+import { getAlertChannels } from "./channel-setups.js"
 import type { DBOfferSession } from "../../clients/database/db-models.js"
 
 const postChannelMessage = discordService.postChannelMessage as unknown as Mock
@@ -66,17 +76,17 @@ function session(overrides: Partial<DBOfferSession>): DBOfferSession {
 describe("postOfferAlert", () => {
   beforeEach(() => {
     postChannelMessage.mockClear()
-    state.db = createFakeKnex({
-      order_alert_subscriptions: [
-        { id: "s-org", channel_id: "chan-org", guild_id: "g", contractor_id: "org-1", user_id: null },
-        { id: "s-me", channel_id: "chan-me", guild_id: "g", contractor_id: null, user_id: "seller-1" },
-      ],
-    })
+    state.db = createFakeKnex()
   })
 
   it("adds a Claim Offer button for an org offer", async () => {
-    await postOfferAlert(session({ contractor_id: "org-1" }))
+    await postOfferAlert(session({ contractor_id: "org-1", shop_id: "shop-1" }))
 
+    expect(getAlertChannels).toHaveBeenLastCalledWith({
+      shop_id: "shop-1",
+      contractor_id: "org-1",
+      user_id: null,
+    })
     expect(postChannelMessage).toHaveBeenCalledTimes(1)
     const [channel, message] = postChannelMessage.mock.calls[0]
     expect(channel).toBe("chan-org")

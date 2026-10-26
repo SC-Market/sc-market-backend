@@ -1,4 +1,12 @@
 import { RequestHandler } from "express"
+import {
+  getThreadChannel,
+  setThreadChannel,
+} from "../../../../services/discord/channel-setups.js"
+import {
+  OFFICIAL_THREAD_CHANNEL,
+  describeThreadChannel,
+} from "../../../../services/discord/site-settings.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as notificationDb from "../notifications/database.js"
 import * as profileDb from "../profiles/database.js"
@@ -36,7 +44,6 @@ import { notificationService } from "../../../../services/notifications/notifica
 import { fetchRSIOrgDirect } from "../../../../clients/rsi/scraper.js"
 import { authorizeProfile } from "../profiles/helpers.js"
 import { convertQuery } from "../recruiting/controller.js"
-import { discordService } from "../../../../services/discord/discord.service.js"
 import { archiveContractor } from "../../../../services/contractors/archive-contractor.service.js"
 import { MinimalUser } from "../../../../clients/database/db-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
@@ -2431,33 +2438,13 @@ export const get_spectrum_id_settings_discord: RequestHandler = async (
   res,
   next,
 ) => {
-  const user = req.user as User
-  const spectrum_id = req.params["spectrum_id"]
-
   const contractor = req.contractor!
-
-  let guild
-  let avatar
-  if (contractor.official_server_id) {
-    guild = await discordService.fetchGuild(contractor.official_server_id)
-    avatar = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=240`
-  }
-
-  let channel
-  if (contractor.discord_thread_channel_id) {
-    channel = await discordService.fetchChannel(
-      contractor.discord_thread_channel_id,
-    )
-  }
-
   res.json(
-    createResponse({
-      guild_avatar: avatar,
-      guild_name: guild?.name,
-      channel_name: channel?.name,
-      official_server_id: contractor.official_server_id,
-      discord_thread_channel_id: contractor.discord_thread_channel_id,
-    }),
+    createResponse(
+      await describeThreadChannel(
+        await getThreadChannel({ owner_type: "org", owner_id: contractor.contractor_id }),
+      ),
+    ),
   )
 }
 
@@ -2465,16 +2452,15 @@ export const post_spectrum_id_settings_discord_use_official: RequestHandler =
   async (req, res, next) => {
     const user = req.user as User
     const contractor = req.contractor!
-    const oldContractor = await contractorDb.getContractor({
-      contractor_id: contractor.contractor_id,
+    const previous = await getThreadChannel({
+      owner_type: "org",
+      owner_id: contractor.contractor_id,
     })
 
-    await contractorDb.updateContractor(
-      { contractor_id: contractor.contractor_id },
-      {
-        official_server_id: "1003056231591727264",
-        discord_thread_channel_id: "1072580369251041330",
-      },
+    await setThreadChannel(
+      { owner_type: "org", owner_id: contractor.contractor_id },
+      OFFICIAL_THREAD_CHANNEL,
+      null,
     )
 
     // Log Discord linking
@@ -2486,11 +2472,10 @@ export const post_spectrum_id_settings_discord_use_official: RequestHandler =
       metadata: {
         contractor_id: contractor.contractor_id,
         spectrum_id: contractor.spectrum_id,
-        official_server_id: "1003056231591727264",
-        discord_thread_channel_id: "1072580369251041330",
-        previous_official_server_id: oldContractor.official_server_id || null,
-        previous_discord_thread_channel_id:
-          oldContractor.discord_thread_channel_id || null,
+        guild_id: OFFICIAL_THREAD_CHANNEL.guild_id,
+        channel_id: OFFICIAL_THREAD_CHANNEL.channel_id,
+        previous_guild_id: previous?.guild_id ?? null,
+        previous_channel_id: previous?.channel_id ?? null,
       },
     })
 

@@ -203,8 +203,8 @@ export class OffersV2Controller extends BaseController {
     const availability = await formatOrderAvailability(session)
 
     // Discord
-    const { official_server_id: discord_server_id } =
-      await discordService.resolveThreadConfig(session)
+    const discord_server_id =
+      (await discordService.resolveThreadConfig(session))?.guild_id ?? null
 
     // Resolve shop slug
     let shop_slug: string | null = null

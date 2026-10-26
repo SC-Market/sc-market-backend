@@ -12,7 +12,16 @@ import { AvailabilityBody as AvailabilityBody } from "../../../../clients/databa
 import { getUserRating as getUserRating } from "../util/formatting.js"
 import { createNotificationWebhook as createNotificationWebhook } from "../util/webhooks.js"
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
-import { discordService } from "../../../../services/discord/discord.service.js"
+import {
+  getThreadChannel,
+  listOwner,
+  setThreadChannel,
+} from "../../../../services/discord/channel-setups.js"
+import {
+  OFFICIAL_THREAD_CHANNEL,
+  describeThreadChannel,
+  formatDiscordSetups,
+} from "../../../../services/discord/site-settings.js"
 import { authorizeProfile as authorizeProfile } from "./helpers.js"
 import { get_sentinel as get_sentinel } from "./helpers.js"
 import { syncRSIHandle as syncRSIHandle } from "./helpers.js"
@@ -803,53 +812,22 @@ export const profile_get_settings_discord: RequestHandler = async (
   res,
 ) => {
   const user = req.user as User
-  let guild
-  let avatar
-  if (user.official_server_id) {
-    guild = await discordService.fetchGuild(user.official_server_id)
-    avatar = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=240`
-  }
-
-  let channel
-  if (user.discord_thread_channel_id) {
-    channel = await discordService.fetchChannel(user.discord_thread_channel_id)
-  }
-
-  res.json({
-    guild_avatar: avatar,
-    guild_name: guild?.name,
-    channel_name: channel?.name,
-    official_server_id: user.official_server_id,
-    discord_thread_channel_id: user.discord_thread_channel_id,
-  })
+  res.json(
+    await describeThreadChannel(
+      await getThreadChannel({ owner_type: "user", owner_id: user.user_id }),
+    ),
+  )
   return
 }
 
 export const profile_post_settings_discord_use_official: RequestHandler =
   async (req, res, next) => {
     const user = req.user as User
-    const serverId = "1003056231591727264"
-    const channelId = "1072580369251041330"
-
-    // Update using new integration system
-    await profileDb.upsertIntegration(user.user_id, {
-      integration_type: "discord",
-      settings: {
-        official_server_id: serverId,
-        discord_thread_channel_id: channelId,
-      },
-      enabled: true,
-    })
-
-    // Also update old columns for backward compatibility
-    await profileDb.updateUser(
-      { user_id: user.user_id },
-      {
-        official_server_id: serverId,
-        discord_thread_channel_id: channelId,
-      },
+    await setThreadChannel(
+      { owner_type: "user", owner_id: user.user_id },
+      OFFICIAL_THREAD_CHANNEL,
+      null,
     )
-
     res.json({ result: "Success" })
     return
   }
@@ -1074,8 +1052,10 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
   content += `Profile Description: ${user.profile_description}\n`
   content += `Avatar URL: ${await cdn.getFileLinkResource(user.avatar)}\n`
   content += `Banner URL: ${await cdn.getFileLinkResource(user.banner)}\n`
-  content += `Linked Discord Server ID: ${user.official_server_id}\n`
-  content += `Linked Discord Thread ID: ${user.discord_thread_channel_id}\n\n`
+  content += formatDiscordSetups(
+    await listOwner({ owner_type: "user", owner_id: user.user_id }),
+  )
+  content += "\n"
   content += "Contractors:\n"
 
   content += "Orders:\n"
@@ -1121,8 +1101,9 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
         contractor.banner,
       )}\n`
       content += `Size: ${contractor.size}\n`
-      content += `Linked Discord Server ID: ${contractor.official_server_id}\n`
-      content += `Linked Discord Thread ID: ${contractor.discord_thread_channel_id}\n`
+      content += formatDiscordSetups(
+        await listOwner({ owner_type: "org", owner_id: contractor.contractor_id }),
+      )
       const fields = await contractorDb.getContractorFields({
         "contractors.contractor_id": contractor.contractor_id,
       })

@@ -2709,15 +2709,15 @@ export const get_spectrum_id_settings_discord_spec = oapi.validPath({
                 nullable: true,
                 description: "Discord channel name",
               },
-              official_server_id: {
+              guild_id: {
                 type: "string",
                 nullable: true,
-                description: "Official Discord server ID",
+                description: "Discord server ID of the org's order-thread channel",
               },
-              discord_thread_channel_id: {
+              channel_id: {
                 type: "string",
                 nullable: true,
-                description: "Discord thread channel ID",
+                description: "Discord channel ID where the org's order threads are created",
               },
             },
           },

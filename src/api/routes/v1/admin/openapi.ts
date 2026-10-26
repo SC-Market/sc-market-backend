@@ -783,14 +783,6 @@ export const admin_get_users_spec = adminOapi.validPath({
                         created_at: { type: "string", format: "date-time" },
                         locale: { type: "string" },
                         rsi_confirmed: { type: "boolean" },
-                        official_server_id: {
-                          type: "string",
-                          nullable: true,
-                        },
-                        discord_thread_channel_id: {
-                          type: "string",
-                          nullable: true,
-                        },
                         market_order_template: { type: "string" },
                       },
                     },

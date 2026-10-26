@@ -26,8 +26,6 @@ export interface DBUser {
   spectrum_user_id: string | null
   discord_access_token?: string | null
   discord_refresh_token?: string | null
-  official_server_id: string | null
-  discord_thread_channel_id: string | null
   // discord_invite: string | null,
 
   market_order_template: string
@@ -198,8 +196,6 @@ export interface DBContractor {
   balance: string
   default_role: string
   owner_role: string
-  official_server_id: string | null
-  discord_thread_channel_id: string | null
   // discord_invite: string | null,
   banner: string
   market_order_template: string
@@ -853,14 +849,20 @@ export interface DBUserEmail {
   verified_at: Date | null
 }
 
-export interface DBOrderAlertSubscription {
+export type DiscordSetupOwnerType = "shop" | "org" | "user"
+
+/** A Discord channel that gets order threads and/or order alerts for one owner. */
+export interface DBDiscordChannelSetup {
   id: string
   channel_id: string
   guild_id: string
-  contractor_id: string | null
-  user_id: string | null
-  created_by_discord_id: string
+  owner_type: DiscordSetupOwnerType
+  owner_id: string
+  threads: boolean
+  alerts: boolean
+  created_by_discord_id: string | null
   created_at: Date
+  updated_at: Date
 }
 
 export interface DBOrgPremiumTier {

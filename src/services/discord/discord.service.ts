@@ -11,7 +11,6 @@ import {
 import { DBOfferSession, DBOrder } from "../../clients/database/db-models.js"
 import { User } from "../../api/routes/v1/api-models.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
-import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 import {
   generateAssignedMessage,
   generateOfferStatusUpdateMessage,
@@ -21,12 +20,11 @@ import logger from "../../logger/logger.js"
 import { env } from "../../config/env.js"
 import { sendMessage } from "../../clients/aws/sqs.js"
 import { checkDiscordSQSConfiguration } from "../../clients/aws/sqs-config.js"
-import { getKnex } from "../../clients/database/knex-db.js"
 import {
-  DiscordIntegrationSettings,
   DiscordInviteOptions,
   ThreadCreationResult,
 } from "./discord.service.types.js"
+import { DiscordChannelRef, getThreadChannel } from "./channel-setups.js"
 
 /**
  * Service interface for Discord operations.
@@ -66,16 +64,10 @@ export interface DiscordService {
     content: string,
   ): Promise<void>
 
-  // Integration settings
+  // Where order and offer threads go
   resolveThreadConfig(
     object: Pick<DBOrder, "shop_id" | "contractor_id" | "assigned_id">,
-  ): Promise<DiscordIntegrationSettings>
-  getDiscordIntegrationSettings(
-    userId: string,
-  ): Promise<DiscordIntegrationSettings>
-  getDiscordIntegrationSettingsForContractor(
-    contractorId: string,
-  ): Promise<DiscordIntegrationSettings>
+  ): Promise<DiscordChannelRef | null>
 
   // Utility
   fetchGuild(guildId: string): Promise<APIGuild>
@@ -135,12 +127,9 @@ class RestDiscordService implements DiscordService {
       ? await profileDb.getUser({ user_id: object.customer_id })
       : null
 
-    const {
-      official_server_id: server_id,
-      discord_thread_channel_id: channel_id,
-    } = await this.resolveThreadConfig(object)
+    const threadChannel = await this.resolveThreadConfig(object)
 
-    if (!server_id || !channel_id) {
+    if (!threadChannel) {
       const entityId = "order_id" in object ? object.order_id : object.id
       logger.debug(
         `Discord not configured for ${"order_id" in object ? "order" : "offer session"} ${entityId}`,
@@ -162,8 +151,8 @@ class RestDiscordService implements DiscordService {
     const messageBody = {
       type: "create_thread",
       payload: {
-        server_id: server_id,
-        channel_id: channel_id,
+        server_id: threadChannel.guild_id,
+        channel_id: threadChannel.channel_id,
         members: [assignedDiscordId, customerDiscordId].filter(
           (o): o is string => o !== null && o !== undefined,
         ),
@@ -398,57 +387,27 @@ class RestDiscordService implements DiscordService {
   }
 
   /**
-   * Resolve the Discord server/channel that order & offer threads live in.
-   * Prefers the shop's per-shop config, falling back to the owning org, then
-   * the assigned user. Both values come from the same source so a thread link
-   * always points at the server the thread was created in.
+   * The Discord server and channel that an order's or offer's threads live in
+   * (and that thread links point at): the shop's thread channel, else the
+   * org's for org work, else the assigned user's. Null when none is set up.
    */
   async resolveThreadConfig(
     object: Pick<DBOrder, "shop_id" | "contractor_id" | "assigned_id">,
-  ): Promise<DiscordIntegrationSettings> {
+  ): Promise<DiscordChannelRef | null> {
     if (object.shop_id) {
-      const shop = await getKnex()("shops")
-        .where("shop_id", object.shop_id)
-        .first("official_server_id", "discord_thread_channel_id")
-      if (shop?.official_server_id && shop?.discord_thread_channel_id) {
-        return {
-          official_server_id: shop.official_server_id.toString(),
-          discord_thread_channel_id: shop.discord_thread_channel_id.toString(),
-        }
-      }
+      const shop = await getThreadChannel({ owner_type: "shop", owner_id: object.shop_id })
+      if (shop) return shop
     }
 
     if (object.contractor_id) {
-      return this.getDiscordIntegrationSettingsForContractor(
-        object.contractor_id,
-      )
+      return getThreadChannel({ owner_type: "org", owner_id: object.contractor_id })
     }
 
     if (object.assigned_id) {
-      return this.getDiscordIntegrationSettings(object.assigned_id)
+      return getThreadChannel({ owner_type: "user", owner_id: object.assigned_id })
     }
 
-    return { official_server_id: null, discord_thread_channel_id: null }
-  }
-
-  async getDiscordIntegrationSettings(
-    userId: string,
-  ): Promise<DiscordIntegrationSettings> {
-    return await profileDb.getDiscordIntegrationSettings(userId)
-  }
-
-  async getDiscordIntegrationSettingsForContractor(
-    contractorId: string,
-  ): Promise<DiscordIntegrationSettings> {
-    const contractor = await contractorDb.getContractor({
-      contractor_id: contractorId,
-    })
-
-    return {
-      official_server_id: contractor.official_server_id?.toString() || null,
-      discord_thread_channel_id:
-        contractor.discord_thread_channel_id?.toString() || null,
-    }
+    return null
   }
 
   async fetchGuild(guildId: string): Promise<APIGuild> {
