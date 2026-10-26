@@ -49,6 +49,10 @@ import {
   AttributeFilter,
 } from "./types.js"
 import logger from "../../../../logger/logger.js"
+import {
+  BACKGROUND_STATEMENT_TIMEOUT,
+  withStatementTimeout,
+} from "../../../../clients/database/session-settings.js"
 
 /**
  * Get a Knex query builder instance.
@@ -2137,9 +2141,10 @@ export async function getListingViewStats(
  */
 export async function rebuildMarket(): Promise<void> {
   try {
-    await knex().schema.refreshMaterializedView(
-      "market_search_materialized",
-      true,
+    // Runs every 5 minutes for longer than a request may: lift the pool's
+    // statement_timeout for this transaction only.
+    await withStatementTimeout(knex(), BACKGROUND_STATEMENT_TIMEOUT, (trx) =>
+      trx.schema.refreshMaterializedView("market_search_materialized", true),
     )
   } catch (error) {
     logger.error(
@@ -2162,8 +2167,8 @@ export async function refreshBadgeView(): Promise<void> {
   try {
     // Use CONCURRENTLY to allow reads during refresh (requires unique index)
     // This is slower than non-concurrent but doesn't block reads
-    await knex().raw(
-      "REFRESH MATERIALIZED VIEW CONCURRENTLY user_badges_materialized",
+    await withStatementTimeout(knex(), BACKGROUND_STATEMENT_TIMEOUT, (trx) =>
+      trx.raw("REFRESH MATERIALIZED VIEW CONCURRENTLY user_badges_materialized"),
     )
   } catch (error) {
     logger.error(
@@ -2183,7 +2188,9 @@ export async function refreshBadgeView(): Promise<void> {
  * Update price history.
  */
 export async function updatePriceHistpry(): Promise<void> {
-  await knex().raw("CALL upsert_daily_price_history()")
+  await withStatementTimeout(knex(), BACKGROUND_STATEMENT_TIMEOUT, (trx) =>
+    trx.raw("CALL upsert_daily_price_history()"),
+  )
 }
 
 /**

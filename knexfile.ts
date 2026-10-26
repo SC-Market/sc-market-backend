@@ -1,5 +1,9 @@
 import type { Knex } from "knex"
 import { env } from "./src/config/env.js"
+import {
+  afterCreateWithTimeouts,
+  MIGRATION_SESSION_TIMEOUTS,
+} from "./src/clients/database/session-settings.js"
 
 // Parse database configuration from environment
 let dbConfig: {
@@ -12,6 +16,23 @@ try {
   }
 } catch (error) {
   console.warn("Failed to parse DATABASE_PASS, using individual env variables")
+}
+
+/**
+ * Every migration connection gets lock_timeout / statement_timeout from
+ * MIGRATION_SESSION_TIMEOUTS (afterCreate below), so a migration that can't
+ * take its lock quickly fails and aborts the deploy instead of queueing the
+ * site's queries behind it. See docs/migrations.md.
+ */
+const migrations: Knex.MigratorConfig = {
+  directory: "./migrations",
+  extension: "ts",
+  tableName: "knex_migrations",
+  // A row whose file this image doesn't have is a migration from a NEWER
+  // image (two deploys racing). Knex would refuse to run ("migration
+  // directory is corrupt"); skip the check so an older image still boots.
+  // Never delete such rows: that makes the newer image re-run the migration.
+  disableMigrationsListValidation: true,
 }
 
 const config: { [key: string]: Knex.Config } = {
@@ -30,15 +51,9 @@ const config: { [key: string]: Knex.Config } = {
     pool: {
       min: 0,
       max: 5,
-      afterCreate: (conn: any, done: (err?: Error) => void) => {
-        conn.query(`SET TIME ZONE 'UTC'; SET search_path TO "$user", public;`, done)
-      },
+      afterCreate: afterCreateWithTimeouts(MIGRATION_SESSION_TIMEOUTS),
     },
-    migrations: {
-      directory: "./migrations",
-      extension: "ts",
-      tableName: "knex_migrations",
-    },
+    migrations,
   },
 
   production: {
@@ -53,18 +68,15 @@ const config: { [key: string]: Knex.Config } = {
         (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
       ssl: { rejectUnauthorized: false },
     },
+    // Only the migration CLI (docker-entrypoint.sh) uses this config in
+    // production; the server builds its own pool in knex-db.ts. Knex holds
+    // at most two connections while migrating (the lock and the migration).
     pool: {
-      min: 2,
-      max: 20,
-      afterCreate: (conn: any, done: (err?: Error) => void) => {
-        conn.query(`SET TIME ZONE 'UTC'; SET search_path TO "$user", public;`, done)
-      },
+      min: 0,
+      max: 2,
+      afterCreate: afterCreateWithTimeouts(MIGRATION_SESSION_TIMEOUTS),
     },
-    migrations: {
-      directory: "./migrations",
-      extension: "ts",
-      tableName: "knex_migrations",
-    },
+    migrations,
   },
 }
 

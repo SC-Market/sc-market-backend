@@ -11,6 +11,10 @@ import fs from "node:fs"
 import path from "node:path"
 import logger from "../logger/logger.js"
 import { publiclyListedSql } from "../api/routes/v2/util/listing-visibility.js"
+import {
+  BACKGROUND_STATEMENT_TIMEOUT,
+  withStatementTimeout,
+} from "../clients/database/session-settings.js"
 
 export async function process_auction(auction: DBAuctionDetails) {
   const complete = await marketDb.getMarketListingComplete(auction.listing_id)
@@ -258,7 +262,7 @@ export async function snapshot_price_history_v2() {
     // public price-history chart): never org-internal or unlisted listings.
     // Handles both unified pricing (base_price on listing_items) and
     // per-variant pricing (price on variant_pricing).
-    const result = await knex.raw(`
+    const result = await withStatementTimeout(knex, BACKGROUND_STATEMENT_TIMEOUT, (trx) => trx.raw(`
       INSERT INTO price_history_v2 (game_item_id, variant_id, price, quality_tier, listing_id, event_type)
       SELECT DISTINCT ON (sub.game_item_id, sub.variant_id)
         sub.game_item_id,
@@ -287,7 +291,7 @@ export async function snapshot_price_history_v2() {
       ) sub
       WHERE sub.price IS NOT NULL AND sub.price > 0
       ORDER BY sub.game_item_id, sub.variant_id, sub.created_at DESC
-    `)
+    `))
 
     const count = result?.rowCount || 0
     if (count > 0) {

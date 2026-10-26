@@ -11,12 +11,68 @@ import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as tokenRefreshUtil from "../../api/util/token-refresh.js"
 import logger from "../../logger/logger.js"
 import { enableQueryMonitoring } from "./query-monitor.js"
+import {
+  afterCreateWithTimeouts,
+  APP_SESSION_TIMEOUTS,
+  type SessionTimeouts,
+} from "./session-settings.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
 
 const dbConfig: {
   [key: string]: string
 } = JSON.parse(env.DATABASE_PASS!)
+
+function connectionConfig(): KnexClass.PgConnectionConfig {
+  return {
+    host: dbConfig.host || env.DATABASE_HOST || "localhost",
+    user: dbConfig.username || env.DATABASE_USER || "postgres",
+    password: dbConfig.password || env.DATABASE_PASS || "",
+    database: dbConfig.dbname || env.DATABASE_TARGET || "postgres",
+    port:
+      (dbConfig.port as unknown as number) ||
+      (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
+    ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  }
+}
+
+/**
+ * The server's pool. max: see docs/migrations.md "Connection budget" before
+ * raising it. Every connection gets statement/lock/idle-in-transaction
+ * timeouts so a blocked query fails instead of holding a pool slot.
+ */
+function appKnexConfig(): KnexClass.Config {
+  return {
+    asyncStackTraces: true,
+    client: "pg",
+    connection: connectionConfig(),
+    pool: {
+      min: 0,
+      max: 15,
+      afterCreate: afterCreateWithTimeouts(APP_SESSION_TIMEOUTS),
+    },
+  }
+}
+
+/**
+ * A separate small pool with its own timeouts, for an admin job that runs
+ * far longer than a request (the game-data import). Counts against the
+ * connection budget while it exists; `destroy()` it when the job ends.
+ */
+export function createDedicatedKnex(
+  timeouts: SessionTimeouts,
+  maxConnections = 2,
+): KnexClass {
+  return Knex({
+    client: "pg",
+    connection: connectionConfig(),
+    pool: {
+      min: 0,
+      max: maxConnections,
+      afterCreate: afterCreateWithTimeouts(timeouts),
+    },
+  })
+}
 
 export interface CachedDiscordUser {
   id: string
@@ -30,29 +86,7 @@ export class KnexDatabase implements Database {
   discord_profile_cache: LRUCache<string, CachedDiscordUser, void>
   ratelimiter: RateLimiterPostgres
 
-  constructor(
-    databaseConfig: KnexClass.Config | string = {
-      asyncStackTraces: true,
-      client: "pg",
-      connection: {
-        host: dbConfig.host || env.DATABASE_HOST || "localhost",
-        user: dbConfig.username || env.DATABASE_USER || "postgres",
-        password: dbConfig.password || env.DATABASE_PASS || "",
-        database: dbConfig.dbname || env.DATABASE_TARGET || "postgres",
-        port:
-          (dbConfig.port as unknown as number) ||
-          (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
-        ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-      },
-      pool: {
-        min: 0,
-        max: 5,
-        afterCreate: (conn: pg.Client, done: (err?: Error) => void) => {
-          conn.query(`SET TIME ZONE 'UTC'; SET search_path TO "$user", public;`, done)
-        },
-      },
-    },
-  ) {
+  constructor(databaseConfig: KnexClass.Config | string = appKnexConfig()) {
     this.knex = Knex(databaseConfig)
 
     // Enable query performance monitoring

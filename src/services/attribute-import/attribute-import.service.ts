@@ -5,6 +5,10 @@
 
 import logger from "../../logger/logger.js"
 import { database } from "../../clients/database/knex-db.js"
+import {
+  BACKGROUND_STATEMENT_TIMEOUT,
+  withStatementTimeout,
+} from "../../clients/database/session-settings.js"
 import { upsertGameItemAttribute } from "../../api/routes/v1/attributes/database.js"
 import { AttributeImporter, AttributeRecord } from "./attribute-import.types.js"
 import { CStoneImporter } from "./cstone-importer.js"
@@ -203,8 +207,10 @@ export class AttributeImportService {
     logger.info("Refreshing market search materialized view")
 
     try {
-      await database.knex.raw(
-        "REFRESH MATERIALIZED VIEW market_search_materialized",
+      // CONCURRENTLY (as the 5-minute rebuild does) so search reads aren't
+      // locked out while it runs; it may take longer than a request.
+      await withStatementTimeout(database.knex, BACKGROUND_STATEMENT_TIMEOUT, (trx) =>
+        trx.raw("REFRESH MATERIALIZED VIEW CONCURRENTLY market_search_materialized"),
       )
 
       logger.info("Successfully refreshed materialized view")

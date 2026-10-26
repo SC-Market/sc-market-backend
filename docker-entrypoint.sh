@@ -2,57 +2,17 @@
 set -e
 cd /app
 
-# Clean up stale V2 migration records that no longer have corresponding files.
-# This handles the case where old V2 migrations were replaced with new ones.
-node -e "
-const knex = require('knex');
-const fs = require('fs');
-const path = require('path');
-const dbConfig = JSON.parse(process.env.DATABASE_PASS || '{}');
-const db = knex({
-  client: 'pg',
-  connection: {
-    host: dbConfig.host || 'localhost',
-    user: dbConfig.username || 'postgres',
-    password: dbConfig.password || '',
-    database: dbConfig.dbname || 'postgres',
-    port: dbConfig.port || 5432,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-  },
-});
-(async () => {
-  try {
-    const hasTable = await db.schema.hasTable('knex_migrations');
-    if (!hasTable) { await db.destroy(); return; }
-    const rows = await db('knex_migrations').select('name');
-    const migDir = path.join(__dirname, 'migrations');
-    const files = fs.readdirSync(migDir).map(f => f.replace(/\.[^.]+$/, ''));
-    const stale = rows.filter(r => !files.some(f => r.name.replace(/\.[^.]+$/, '') === f));
-    if (stale.length > 0) {
-      const names = stale.map(r => r.name);
-      await db('knex_migrations').whereIn('name', names).del();
-      console.log('Cleaned up ' + names.length + ' stale migration records:', names);
-    }
-
-    // Also re-run feature flag migrations if their tables are missing
-    const ffMigrations = [
-      '20260416030903_market_v2_feature_flags.ts',
-      '20260416160700_feature_flag_config.ts',
-    ];
-    for (const mig of ffMigrations) {
-      const tableName = mig.includes('feature_flags') ? 'user_preferences' : 'feature_flag_config';
-      const exists = await db.schema.hasTable(tableName);
-      if (!exists) {
-        await db('knex_migrations').where('name', mig).del();
-        console.log('Reset migration ' + mig + ' (table ' + tableName + ' missing)');
-      }
-    }
-  } catch (e) { console.error('Migration cleanup warning:', e.message); }
-  await db.destroy();
-})();
-"
-
-# Apply pending DB migrations before serving
+# Apply pending DB migrations before serving. If a migration fails (for
+# example it can't take its lock within MIGRATION_LOCK_TIMEOUT, see
+# src/clients/database/session-settings.ts), `set -e` stops the container
+# here, before it serves, so the Lightsail deploy fails and the previous
+# image keeps running.
+#
+# Never delete knex_migrations rows here. A row without a file in this image
+# can belong to a NEWER image (two deploys racing); deleting it makes the
+# newer image run that migration again. knexfile.ts sets
+# disableMigrationsListValidation so such rows don't stop an older image
+# from booting. See docs/migrations.md.
 npm run migrate:latest
 
 exec node dist/src/server.js

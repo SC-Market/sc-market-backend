@@ -5,7 +5,7 @@
 import { Controller, Post, Get, Route, Tags, Request, Security, Path } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
-import { getKnex } from "../../../../clients/database/knex-db.js"
+import { createDedicatedKnex, getKnex } from "../../../../clients/database/knex-db.js"
 import logger from "../../../../logger/logger.js"
 import { ImportGameDataResponse, ImportErrorResponse } from "./admin.types.js"
 import { gameDataImportService, GameDataPayload } from "../../../../services/game-data/import.service.js"
@@ -166,8 +166,20 @@ export class AdminController extends BaseController {
       job.status = "importing"
       job.progress = `Importing ${gameData.items.length} items...`
 
-      const knex = getKnex()
-      const stats = await gameDataImportService.importGameData(knex, gameData)
+      // Its own small pool: an import runs batch statements, transactions
+      // and a REINDEX for far longer than the server pool's 15s
+      // statement_timeout allows, and must not hold the server's slots.
+      const importKnex = createDedicatedKnex({
+        statement_timeout: "30min",
+        lock_timeout: "10s",
+        idle_in_transaction_session_timeout: "5min",
+      })
+      let stats
+      try {
+        stats = await gameDataImportService.importGameData(importKnex, gameData)
+      } finally {
+        await importKnex.destroy()
+      }
 
       job.status = "completed"
       job.completedAt = new Date().toISOString()
