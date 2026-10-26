@@ -73,6 +73,7 @@ import {
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
+import { requestContext } from "./logger/log-context.js"
 import {
   cloudflareOnly,
   isRequestFromCloudflare,
@@ -139,6 +140,11 @@ const app = enableWS(rootApp).app
 if (app.get("env") === "production") {
   app.set("trust proxy", 2) // trust first and second proxy
 }
+
+// Request id (X-Request-Id in and out) and the logging context, so every log
+// line of a request carries request_id, route and user_id. First, so even
+// requests rejected by the guards below are correlated.
+app.use(requestContext)
 
 // Reject requests that reached the origin without passing through Cloudflare
 // (e.g. via the *.cs.amazonlightsail.com URL, where X-Forwarded-For is
@@ -299,6 +305,9 @@ setupPassportStrategies(backend_url)
 
 app.use(passport.initialize())
 app.use(passport.session())
+// Re-enter the logging context: the session store's callbacks may not carry
+// it (see logger/log-context.ts).
+app.use(requestContext)
 
 // Global auth: populate req.user on ALL requests (including public ones).
 // Checks Bearer token, JWT cookie, then session (passport already ran).

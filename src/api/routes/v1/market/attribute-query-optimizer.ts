@@ -1,5 +1,6 @@
 import { Knex } from "knex"
 import { AttributeFilter } from "./types.js"
+import logger from "../../../../logger/logger.js"
 
 /**
  * Optimized attribute filter query builder.
@@ -26,10 +27,7 @@ export function applyAttributeFilters<T extends {}>(
     return query
   }
 
-  console.log(
-    "[ATTR FILTER] Applying filters:",
-    JSON.stringify(attributes, null, 2),
-  )
+  logger.debug("[ATTR FILTER] Applying filters", { attributes })
 
   // Apply each attribute filter as an EXISTS subquery
   // This ensures AND logic across different attributes
@@ -41,10 +39,10 @@ export function applyAttributeFilters<T extends {}>(
             AND game_item_attributes.attribute_name = ?
             AND game_item_attributes.attribute_value IN (${attributeFilter.values.map(() => "?").join(",")})
         )`
-    console.log("[ATTR FILTER] SQL:", sql, "Params:", [
-      attributeFilter.name,
-      ...attributeFilter.values,
-    ])
+    logger.debug("[ATTR FILTER] SQL", {
+      sql,
+      params: [attributeFilter.name, ...attributeFilter.values],
+    })
 
     query = query.andWhereRaw(
       knex.raw(sql, [attributeFilter.name, ...attributeFilter.values]),

@@ -224,7 +224,7 @@ export const update_listing: RequestHandler = async (req, res) => {
       } else {
         const item = await marketDb.getGameItem({ name: item_name })
         if (!item) {
-          console.error(`[Market Update] Invalid item name: ${item_name}`, {
+          logger.warn(`[Market Update] Invalid item name: ${item_name}`, {
             listing_id,
             user_id: user.user_id,
             item_name,
@@ -281,7 +281,7 @@ export const update_listing: RequestHandler = async (req, res) => {
           { title, description, item_type, game_item_id },
         )
       } catch (error) {
-        console.error('[Market Update] Failed to update listing details:', error)
+        logger.error("[Market Update] Failed to update listing details", { error })
         res.status(400).json({ 
           error: "Failed to update listing. Please check that the item type is valid." 
         })
@@ -346,7 +346,7 @@ export const update_listing: RequestHandler = async (req, res) => {
           { resource_id: resource.resource_id },
         ])
       } catch (error) {
-        console.error(`[Market Update] Failed to process photo`, {
+        logger.error(`[Market Update] Failed to process photo`, {
           listing_id,
           photo,
           error: error instanceof Error ? error.message : String(error),
@@ -364,7 +364,7 @@ export const update_listing: RequestHandler = async (req, res) => {
           // Use CDN removeResource to ensure both database and CDN cleanup
           await cdn.removeResource(p.resource_id)
         } catch (error) {
-          console.error(`[Market Update] Failed to remove old photo`, {
+          logger.error(`[Market Update] Failed to remove old photo`, {
             listing_id,
             resource_id: p.resource_id,
             error: error instanceof Error ? error.message : String(error),
@@ -376,11 +376,10 @@ export const update_listing: RequestHandler = async (req, res) => {
 
   res.json({ result: "Success" })
   } catch (error) {
-    console.error(`[Market Update] Unexpected error updating listing`, {
+    logger.error(`[Market Update] Unexpected error updating listing`, {
       listing_id,
       user_id: user.user_id,
-      error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
+      error,
     })
     res.status(500).json({ error: "Failed to update listing" })
   }
@@ -2012,7 +2011,7 @@ export const search_game_items: RequestHandler = async (req, res) => {
 export const get_or_create_aggregate: RequestHandler = async (req, res) => {
   const { game_item_id } = req.params
   
-  console.log('[Market] get_or_create_aggregate called with:', game_item_id)
+  logger.debug("[Market] get_or_create_aggregate called", { game_item_id })
   
   if (!game_item_id) {
     res.status(400).json(createErrorResponse({ error: "Game item ID required" }))
@@ -2023,21 +2022,21 @@ export const get_or_create_aggregate: RequestHandler = async (req, res) => {
     // Check if game item exists
     const gameItem = await marketDb.getGameItem({ id: game_item_id })
     if (!gameItem) {
-      console.log('[Market] Game item not found:', game_item_id)
+      logger.debug("[Market] Game item not found", { game_item_id })
       res.status(404).json(createErrorResponse({ error: "Game item not found" }))
       return
     }
     
-    console.log('[Market] Found game item:', gameItem.name)
+    logger.debug("[Market] Found game item", { name: gameItem.name })
     
     // Try to get existing aggregate
     try {
       const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
-      console.log('[Market] Successfully got existing aggregate')
+      logger.debug("[Market] Successfully got existing aggregate")
       res.json(createResponse(aggregate))
     } catch (error) {
       // Aggregate doesn't exist - create it
-      console.log('[Market] No aggregate exists, creating one')
+      logger.debug("[Market] No aggregate exists, creating one")
       
       // Create listing details for the aggregate
       const [details] = await database.knex<any>('market_listing_details')
@@ -2056,11 +2055,11 @@ export const get_or_create_aggregate: RequestHandler = async (req, res) => {
       
       // Now fetch the complete aggregate
       const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
-      console.log('[Market] Successfully created aggregate')
+      logger.debug("[Market] Successfully created aggregate")
       res.json(createResponse(aggregate))
     }
   } catch (error) {
-    console.error('[Market] Failed to get/create aggregate:', error)
+    logger.error("[Market] Failed to get/create aggregate", { error })
     res.status(500).json(createErrorResponse({ 
       error: "Failed to get/create aggregate for this item" 
     }))

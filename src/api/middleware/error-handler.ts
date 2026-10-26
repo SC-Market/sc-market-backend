@@ -89,6 +89,7 @@ function notifyBugsnag(err: Error, req: Request) {
           path: req.path,
           method: req.method,
           user_id: req.user?.user_id,
+          request_id: req.requestId,
         })
       })
     } catch { /* ignore */ }

@@ -44,6 +44,9 @@ declare global {
       adminLocked?: import("../../api/util/site-admin-policy.js").AdminLockReason
       // How this request authenticated, with its MFA claims (populate-user).
       auth?: import("../../services/mfa/policy.js").RequestAuth
+      // Correlation id for log lines and the X-Request-Id response header
+      // (src/logger/log-context.ts).
+      requestId?: string
       contractor?: DBContractor
       order?: DBOrder
       offer_session?: DBOfferSession

@@ -1490,7 +1490,7 @@ export class GameDataImportService {
         imported++
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        logger.warn("Manufacturer import failed", { code: mfr.code, error: message })
+        logger.warn("Manufacturer import failed", { manufacturer_code: mfr.code, error: message })
         stats.errors.push(`Manufacturer ${mfr.code}: ${message}`)
       }
     }
