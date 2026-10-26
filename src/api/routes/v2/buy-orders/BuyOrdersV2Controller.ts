@@ -44,6 +44,7 @@ import { VariantAttributes } from "../types/listings.types.js"
 import { resolveGameItemImages } from "../util/resolve-game-item-images.js"
 import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
+import { buyOrderVisibleTo } from "./buy-order-visibility.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { canManageShop } from "../../../../services/shops/shop-permissions.service.js"
 import {
@@ -514,29 +515,9 @@ export class BuyOrdersV2Controller extends BaseController {
       .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
       .where('bo.status', 'active');
 
-    // Visibility: public always shown; roster_only if user is on buyer's supplier roster
-    if (userId) {
-      query = query.where(function () {
-        this.where('bo.visibility', 'public')
-          .orWhere(function () {
-            this.where('bo.visibility', 'roster_only')
-              .whereExists(function () {
-                this.select(db.raw('1'))
-                  .from('supplier_relationships as sr')
-                  .where('sr.status', 'active')
-                  .whereRaw('sr.aggregator_id = bo.buyer_id')
-                  .where(function () {
-                    this.where('sr.supplier_id', userId)
-                      .orWhereIn('sr.supplier_contractor_id',
-                        db('contractor_members').select('contractor_id').where('user_id', userId),
-                      )
-                  })
-              })
-          })
-      })
-    } else {
-      query = query.where('bo.visibility', 'public')
-    }
+    // Visibility: public, plus roster_only / private orders this viewer is a
+    // supplier for, plus their own (buy-order-visibility.ts).
+    query = query.where(buyOrderVisibleTo(db, userId))
 
     if (text && text.trim().length > 0) {
       query = query.whereRaw("gi.name ILIKE ?", [`%${text.trim()}%`])
@@ -602,25 +583,9 @@ export class BuyOrdersV2Controller extends BaseController {
       .where('bo.status', 'active')
       .whereNot('bo.buyer_id', sellerId)
       .whereIn('bo.game_item_id', sellerItemIds)
-      // Only show public + roster_only (if seller is on roster)
-      .where(function () {
-        this.where('bo.visibility', 'public')
-          .orWhere(function () {
-            this.where('bo.visibility', 'roster_only')
-              .whereExists(function () {
-                this.select(db.raw('1'))
-                  .from('supplier_relationships as sr')
-                  .where('sr.status', 'active')
-                  .whereRaw('sr.aggregator_id = bo.buyer_id')
-                  .where(function () {
-                    this.where('sr.supplier_id', sellerId)
-                      .orWhereIn('sr.supplier_contractor_id',
-                        db('contractor_members').select('contractor_id').where('user_id', sellerId),
-                      )
-                  })
-              })
-          })
-      })
+      // Orders this seller may see (and so fulfill): public, roster_only if
+      // on the buyer's roster, private if directed at them.
+      .where(buyOrderVisibleTo(db, sellerId))
 
     const [{ count }] = await query.clone().clearSelect().clearOrder().count('* as count')
     const total = parseInt(String(count), 10)
@@ -688,10 +653,15 @@ export class BuyOrdersV2Controller extends BaseController {
     // Postgres throw (22P02) — answer 404 instead.
     if (!isUuid(id)) this.throwNotFound('Buy order', id)
 
+    // Roster-only and private (directed) orders are 404 to everyone they
+    // are not for; site admins see every order.
     const row = await db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
       .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
       .where('bo.buy_order_id', id)
+      .modify((q) => {
+        if (!this.isAdmin()) q.where(buyOrderVisibleTo(db, this.tryGetUserId()))
+      })
       .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
       .first()
 
@@ -797,7 +767,10 @@ export class BuyOrdersV2Controller extends BaseController {
     if (!isUuid(id)) this.throwNotFound('Buy order', id)
 
     const db = getKnex()
-    const buyOrder = await db('buy_orders_v2').where('buy_order_id', id).first()
+    const buyOrder = await db('buy_orders_v2 as bo')
+      .where('bo.buy_order_id', id)
+      .where(buyOrderVisibleTo(db, userId))
+      .first('bo.*')
     if (!buyOrder) this.throwNotFound('Buy order', id)
 
     const shopIds = await getFulfillingShopIds(userId)
