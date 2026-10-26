@@ -24,6 +24,7 @@ import { emailService } from "../email/email.service.js"
 import * as payloadFormatters from "./notification-payload-formatters.js"
 import * as payloadFormattersV2 from "./notification-payload-formatters-v2.js"
 import { getKnex } from "../../clients/database/knex-db.js"
+import { notify } from "../notify/dispatcher.js"
 import type {
   GetListingDetailResponse,
 } from "../../api/routes/v2/types/listings.types.js"
@@ -615,67 +616,18 @@ class DatabaseNotificationService implements NotificationService {
       return
     }
 
-    const action =
-      await notificationDb.getNotificationActionByName("order_review")
-    const notif_objects = await notificationDb.insertNotificationObjects([
+    await notify(
+      "order.review",
+      [{ userId: order.assigned_id, contractorId: order.contractor_id ?? null }],
       {
-        action_type_id: action.action_type_id,
-        entity_id: review.review_id,
-      },
-    ])
-
-    await notificationDb.insertNotificationChange([
-      {
-        notification_object_id: notif_objects[0].notification_object_id,
-        actor_id: order.customer_id,
-      },
-    ])
-
-    await notificationDb.insertNotifications([
-      {
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: order.assigned_id,
-      },
-    ])
-
-    // Send push notification
-    try {
-      const payload =
-        payloadFormatters.formatOrderReviewNotificationPayload(review)
-      await pushNotificationService.sendPushNotification(
-        order.assigned_id,
-        payload,
-        "order_review",
-        order.contractor_id ?? null, // contractorId for org-scoped preferences
-      )
-    } catch (error) {
-      logger.error(`Failed to send push notification for order review:`, {
-        error,
-        user_id: order.assigned_id,
-        order_id: order.order_id,
-        contractor_id: order.contractor_id,
-      })
-    }
-
-    // Send email notification
-    try {
-      await emailService.sendNotificationEmail(
-        order.assigned_id,
-        "order_review",
-        {
-          review,
+        entityId: review.review_id,
+        actorId: order.customer_id,
+        messages: {
+          push: payloadFormatters.formatOrderReviewNotificationPayload(review),
+          email: { data: { review } },
         },
-        false, // skipQueue
-        order.contractor_id ?? null, // contractorId for org-scoped preferences
-      )
-    } catch (error) {
-      logger.error(`Failed to send email notification for order review:`, {
-        error,
-        user_id: order.assigned_id,
-        order_id: order.order_id,
-        contractor_id: order.contractor_id,
-      })
-    }
+      },
+    )
   }
 
   async createOrderStatusNotification(
@@ -1163,312 +1115,134 @@ class DatabaseNotificationService implements NotificationService {
     listing: DBMarketListingComplete,
     bid: DBMarketBid,
   ): Promise<void> {
-    // Push audiences: org members are checked against their preference for
-    // the selling org, a personal seller against their personal preference.
-    const audiences: { userIds: string[]; contractorId: string | null }[] = []
-
-    if (listing.listing.contractor_seller_id) {
-      const admins = await contractorDb.getMembersWithMatchingRole(
-        listing.listing.contractor_seller_id,
-        { manage_market: true },
-      )
-
-      if (bid.user_bidder_id) {
-        audiences.push({
-          userIds: admins.map((u) => u.user_id),
-          contractorId: listing.listing.contractor_seller_id,
-        })
-        await this.createMarketUpdateNotification(
-          bid.user_bidder_id,
-          bid.bid_id,
-          "market_item_bid",
-          admins.map((u) => u.user_id),
+    // Org members are checked against their preferences for the selling org,
+    // a personal seller against their personal preferences. Only user bids
+    // notify.
+    const recipients: { userId: string; contractorId: string | null }[] = []
+    if (bid.user_bidder_id) {
+      if (listing.listing.contractor_seller_id) {
+        const admins = await contractorDb.getMembersWithMatchingRole(
+          listing.listing.contractor_seller_id,
+          { manage_market: true },
         )
+        for (const a of admins) {
+          recipients.push({ userId: a.user_id, contractorId: listing.listing.contractor_seller_id })
+        }
+      }
+      if (listing.listing.user_seller_id) {
+        recipients.push({ userId: listing.listing.user_seller_id, contractorId: null })
       }
     }
 
-    if (listing.listing.user_seller_id) {
-      if (bid.user_bidder_id) {
-        audiences.push({ userIds: [listing.listing.user_seller_id], contractorId: null })
-        await this.createMarketUpdateNotification(
-          bid.user_bidder_id,
-          bid.bid_id,
-          "market_item_bid",
-          [listing.listing.user_seller_id],
-        )
-      }
-    }
-
-    // Send push notifications to all recipients
-    for (const { userIds, contractorId } of audiences) {
-      if (userIds.length === 0) continue
-      try {
-        const payload = payloadFormatters.formatMarketBidNotificationPayload(
-          listing,
-          bid,
-        )
-        await pushNotificationService.sendPushNotifications(
-          userIds,
-          payload,
-          "market_item_bid",
-          contractorId,
-        )
-      } catch (error) {
-        logger.error(`Failed to send push notifications for market bid:`, {
-          error,
-          listing_id: listing.listing.listing_id,
-          bid_id: bid.bid_id,
-        })
-      }
+    if (recipients.length > 0) {
+      await notify("market.bid", recipients, {
+        entityId: bid.bid_id,
+        actorId: bid.user_bidder_id,
+        // As before: a member bidding on their own org's listing is notified too.
+        notifyActor: true,
+        messages: {
+          push: payloadFormatters.formatMarketBidNotificationPayload(listing, bid),
+        },
+      })
     }
 
     // Send webhooks for market bids
     await webhookService.sendBidWebhooks(listing, bid)
   }
 
-  /**
-   * Helper method to create market update notifications (bids/offers).
-   */
-  private async createMarketUpdateNotification(
-    actorId: string,
-    entityId: string,
-    actionName: string,
-    recipients: string[],
-  ): Promise<void> {
-    if (recipients.length === 0) {
-      return
-    }
-
-    const action = await notificationDb.getNotificationActionByName(actionName)
-    const notif_objects = await notificationDb.insertNotificationObjects([
-      {
-        action_type_id: action.action_type_id,
-        entity_id: entityId,
-      },
-    ])
-
-    await notificationDb.insertNotificationChange([
-      {
-        notification_object_id: notif_objects[0].notification_object_id,
-        actor_id: actorId,
-      },
-    ])
-
-    await notificationDb.insertNotifications(
-      recipients.map((u) => ({
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: u,
-      })),
-    )
-
-    // TODO: Phase 5 - Send push notifications
-    // for (const recipient of recipients) {
-    //   await pushNotificationService.sendPushNotification(recipient, ...)
-    // }
-  }
-
   async createContractorInviteNotification(
     invite: DBContractorInvite,
   ): Promise<void> {
-    const action =
-      await notificationDb.getNotificationActionByName("contractor_invite")
-    const notif_objects = await notificationDb.insertNotificationObjects([
-      {
-        action_type_id: action.action_type_id,
-        entity_id: invite.invite_id,
+    await notify("org.invite", [{ userId: invite.user_id }], {
+      entityId: invite.invite_id,
+      // Invites record no actor on the in-app row.
+      actorId: null,
+      messages: {
+        push: payloadFormatters.formatContractorInviteNotificationPayload(invite),
       },
-    ])
-
-    await notificationDb.insertNotifications([
-      {
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: invite.user_id,
-      },
-    ])
-
-    // Send push notification
-    try {
-      const payload =
-        payloadFormatters.formatContractorInviteNotificationPayload(invite)
-      await pushNotificationService.sendPushNotification(
-        invite.user_id,
-        payload,
-        "contractor_invite",
-      )
-    } catch (error) {
-      logger.debug(
-        `Failed to send push notification for contractor invite:`,
-        error,
-      )
-    }
+    })
   }
 
   async createAdminAlertNotification(alert: DBAdminAlert): Promise<void> {
-    try {
-      // Get the admin_alert notification action
-      const action =
-        await notificationDb.getNotificationActionByName("admin_alert")
+    // Get target users based on alert target type
+    const targetUserIds = await adminDb.getUsersForAlertTarget(
+      alert.target_type,
+      alert.target_contractor_id || undefined,
+    )
 
-      // Create notification object
-      const notif_objects = await notificationDb.insertNotificationObjects([
-        {
-          action_type_id: action.action_type_id,
-          entity_id: alert.alert_id,
-        },
-      ])
-
-      // Add the admin who created the alert as the actor
-      await notificationDb.insertNotificationChange([
-        {
-          notification_object_id: notif_objects[0].notification_object_id,
-          actor_id: alert.created_by,
-        },
-      ])
-
-      // Get target users based on alert target type
-      const targetUserIds = await adminDb.getUsersForAlertTarget(
-        alert.target_type,
-        alert.target_contractor_id || undefined,
-      )
-
-      if (targetUserIds.length === 0) {
-        logger.warn(
-          `No users found for admin alert target: ${alert.target_type}`,
-        )
-        return
-      }
-
-      // Create notifications for all target users
-      const notifications = targetUserIds.map((userId: string) => ({
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: userId,
-      }))
-
-      await notificationDb.insertNotifications(notifications)
-
-      logger.info(
-        `Created admin alert notifications for ${targetUserIds.length} users`,
-        {
-          alertId: alert.alert_id,
-          targetType: alert.target_type,
-          targetContractorId: alert.target_contractor_id,
-        },
-      )
-
-      // Send push notifications to all target users
-      try {
-        const payload =
-          payloadFormatters.formatAdminAlertNotificationPayload(alert)
-        await pushNotificationService.sendPushNotifications(
-          targetUserIds,
-          payload,
-          "admin_alert",
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send push notifications for admin alert:`,
-          error,
-        )
-      }
-    } catch (error) {
-      logger.error("Failed to create admin alert notifications:", error)
-      throw error
+    if (targetUserIds.length === 0) {
+      logger.warn(`No users found for admin alert target: ${alert.target_type}`)
+      return
     }
+
+    // Admin alerts are site-wide: personal preferences, and the admin who
+    // posted it is included when targeted.
+    await notify(
+      "admin.alert",
+      targetUserIds.map((userId: string) => ({ userId })),
+      {
+        entityId: alert.alert_id,
+        actorId: alert.created_by,
+        notifyActor: true,
+        messages: {
+          push: payloadFormatters.formatAdminAlertNotificationPayload(alert),
+        },
+      },
+    )
+
+    logger.info(
+      `Created admin alert notifications for ${targetUserIds.length} users`,
+      {
+        alertId: alert.alert_id,
+        targetType: alert.target_type,
+        targetContractorId: alert.target_contractor_id,
+      },
+    )
   }
 
   async createOrderReviewRevisionNotification(
     review: DBReview,
     requester: User,
   ): Promise<void> {
-    try {
-      // Determine notification recipients
-      const recipients: string[] = []
-
-      if (review.user_author) {
-        // Individual review author
-        recipients.push(review.user_author)
-      } else if (review.contractor_author) {
-        // Organization review - notify all members with manage_orders permission
-        const members = await contractorDb.getContractorMembers({
-          contractor_id: review.contractor_author,
-        })
-
-        for (const member of members) {
-          const hasPermission = await has_permission(
-            review.contractor_author,
-            member.user_id,
-            "manage_orders",
-          )
-          if (hasPermission) {
-            recipients.push(member.user_id)
-          }
+    // The review's author: the user, or for an org review every member with
+    // manage_orders (checked against their preferences for that org).
+    const recipients: { userId: string; contractorId: string | null }[] = []
+    if (review.user_author) {
+      recipients.push({ userId: review.user_author, contractorId: null })
+    } else if (review.contractor_author) {
+      const members = await contractorDb.getContractorMembers({
+        contractor_id: review.contractor_author,
+      })
+      for (const member of members) {
+        if (await has_permission(review.contractor_author, member.user_id, "manage_orders")) {
+          recipients.push({ userId: member.user_id, contractorId: review.contractor_author })
         }
       }
-
-      if (recipients.length === 0) {
-        logger.warn("No recipients found for review revision notification", {
-          review_id: review.review_id,
-          user_author: review.user_author,
-          contractor_author: review.contractor_author,
-        })
-        return
-      }
-
-      // Get notification action
-      const action = await notificationDb.getNotificationActionByName(
-        "order_review_revision_requested",
-      )
-
-      // Create notification object
-      const notif_objects = await notificationDb.insertNotificationObjects([
-        {
-          action_type_id: action.action_type_id,
-          entity_id: review.review_id,
-        },
-      ])
-
-      await notificationDb.insertNotificationChange([
-        {
-          notification_object_id: notif_objects[0].notification_object_id,
-          actor_id: requester.user_id,
-        },
-      ])
-
-      // Create notifications for all recipients
-      const notifications = recipients.map((recipient_id) => ({
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: recipient_id,
-      }))
-
-      await notificationDb.insertNotifications(notifications)
-
-      logger.info("Created review revision notifications", {
-        review_id: review.review_id,
-        recipient_count: recipients.length,
-        requester_id: requester.user_id,
-      })
-
-      // Send push notifications to all recipients (org-scoped preferences
-      // when the review was written on behalf of an org)
-      try {
-        const payload =
-          payloadFormatters.formatOrderReviewRevisionNotificationPayload(review)
-        await pushNotificationService.sendPushNotifications(
-          recipients,
-          payload,
-          "order_review_revision_requested",
-          review.user_author ? null : (review.contractor_author ?? null),
-        )
-      } catch (error) {
-        logger.debug(
-          `Failed to send push notifications for review revision:`,
-          error,
-        )
-      }
-    } catch (error) {
-      logger.error("Failed to create review revision notification:", error)
-      throw error
     }
+
+    if (recipients.length === 0) {
+      logger.warn("No recipients found for review revision notification", {
+        review_id: review.review_id,
+        user_author: review.user_author,
+        contractor_author: review.contractor_author,
+      })
+      return
+    }
+
+    await notify("order.review_revision_requested", recipients, {
+      entityId: review.review_id,
+      actorId: requester.user_id,
+      notifyActor: true,
+      messages: {
+        push: payloadFormatters.formatOrderReviewRevisionNotificationPayload(review),
+      },
+    })
+
+    logger.info("Created review revision notifications", {
+      review_id: review.review_id,
+      recipient_count: recipients.length,
+      requester_id: requester.user_id,
+    })
   }
 
   /**
@@ -1486,52 +1260,37 @@ class DatabaseNotificationService implements NotificationService {
   ): Promise<void> {
     try {
       // Resolve notification recipients from shop
-      const recipients: string[] = []
-      let recipientOrgId: string | null = null
+      const recipients: { userId: string; contractorId: string | null }[] = []
       const shopId = listing.listing.shop_id
       if (shopId) {
         const shop = await getKnex()("shops").where("shop_id", shopId).first()
         if (shop?.owner_contractor_id) {
-          recipientOrgId = shop.owner_contractor_id
           const admins = await contractorDb.getMembersWithMatchingRole(
             shop.owner_contractor_id,
             { manage_market: true },
           )
-          recipients.push(...admins.map((u) => u.user_id))
+          for (const a of admins) {
+            recipients.push({ userId: a.user_id, contractorId: shop.owner_contractor_id })
+          }
         } else if (shop?.owner_user_id) {
-          recipients.push(shop.owner_user_id)
+          recipients.push({ userId: shop.owner_user_id, contractorId: null })
         }
       }
 
-      // Create in-app notification
       if (recipients.length > 0) {
-        const action = await notificationDb.getNotificationActionByName("market_item_bid")
-        const notif_objects = await notificationDb.insertNotificationObjects([
-          { action_type_id: action.action_type_id, entity_id: bidId },
-        ])
-        await notificationDb.insertNotificationChange([
-          { notification_object_id: notif_objects[0].notification_object_id, actor_id: bidderId },
-        ])
-        await notificationDb.insertNotifications(
-          recipients.map((u) => ({
-            notification_object_id: notif_objects[0].notification_object_id,
-            notifier_id: u,
-          })),
-        )
+        await notify("market.bid", recipients, {
+          entityId: bidId,
+          actorId: bidderId,
+          notifyActor: true,
+          messages: {
+            push: payloadFormattersV2.formatMarketBidNotificationPayloadV2(
+              listing,
+              bidAmount,
+              variantId,
+            ),
+          },
+        })
       }
-
-      // Send V2 push notification
-      const payload = payloadFormattersV2.formatMarketBidNotificationPayloadV2(
-        listing,
-        bidAmount,
-        variantId,
-      )
-      await pushNotificationService.sendPushNotifications(
-        recipients,
-        payload,
-        "market_item_bid",
-        recipientOrgId,
-      )
 
       logger.info("Created V2 market bid notification", {
         listing_id: listing.listing.listing_id,
