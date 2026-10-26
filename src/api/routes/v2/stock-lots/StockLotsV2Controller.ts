@@ -887,14 +887,14 @@ export class StockLotsV2Controller extends BaseController {
     if (!lot) throw this.throwNotFound("Stock lot", id)
     if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) throw this.throwForbidden("You do not own this stock lot")
 
-    // Check if lot is allocated to pending orders
+    // Check if lot is allocated to open orders. stock_allocation_log has
+    // order_id (no order_item_id column: joining on one made every delete 500).
     const hasTable = await db.schema.hasTable("stock_allocation_log")
     if (hasTable) {
       const pendingAlloc = await db("stock_allocation_log as sal")
-        .join("order_market_items_v2 as oi", "sal.order_item_id", "oi.order_item_id")
-        .join("orders as o", "oi.order_id", "o.order_id")
+        .join("orders as o", "sal.order_id", "o.order_id")
         .where("sal.lot_id", id)
-        .whereIn("o.status", ["pending", "processing"])
+        .whereNotIn("o.status", ["fulfilled", "cancelled"])
         .first()
 
       if (pendingAlloc) {
