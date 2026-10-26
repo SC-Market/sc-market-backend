@@ -52,7 +52,7 @@ const STRING_SCRUBBERS: Array<[RegExp, string]> = [
   // JWTs.
   [/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, REDACTED],
   // Routes with a bearer token in the path (scmdb ingest, unsubscribe).
-  [/(\/(?:ingest|unsubscribe)\/)[^/?\s"']+/g, `$1${REDACTED}`],
+  [/(\/(?:ingest|unsubscribe)\/)[^/?\s"':]+/g, `$1${REDACTED}`],
 ]
 
 export function scrubString(value: string): string {

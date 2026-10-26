@@ -34,6 +34,7 @@ import {
 } from "../../services/stock-lot/errors.js"
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
+import { scrubBugsnagEvent } from "../../logger/bugsnag-scrub.js"
 
 /**
  * The subset of the Bugsnag client this module uses. Declared locally (rather
@@ -94,6 +95,9 @@ function notifyBugsnag(err: Error, req: Request) {
           method: req.method,
           request_id: req.requestId,
         })
+        // Per-call callbacks run after the config onError, so scrub here
+        // too (req.path can hold a token: /ingest/{token}).
+        scrubBugsnagEvent(event)
       })
     } catch { /* ignore */ }
   }).catch(() => {})

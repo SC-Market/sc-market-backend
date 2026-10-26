@@ -4,6 +4,7 @@ import { createRequire } from "module"
 const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js")
 import BugsnagPluginExpress from "@bugsnag/plugin-express"
+import { scrubBugsnagEvent } from "./logger/bugsnag-scrub.js"
 
 const isDevelopment = process.env.NODE_ENV === "development"
 
@@ -39,6 +40,9 @@ const bugsnag = isDevelopment
             httpMethod: meta.httpMethod,
           })
         }
+        // The path can hold a token (/ingest/{token}, /unsubscribe/:token);
+        // scrub it and messages/breadcrumbs with the log redaction.
+        scrubBugsnagEvent(event)
       },
       // Never ship MFA codes, secrets or credentials in error reports.
       redactedKeys: [
@@ -50,6 +54,8 @@ const bugsnag = isDevelopment
         /recovery/i,
         "authorization",
         "cookie",
+        /token/i,
+        /password/i,
       ],
     })
 
