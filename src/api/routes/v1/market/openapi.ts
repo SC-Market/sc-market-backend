@@ -2022,42 +2022,6 @@ export const market_post_listings_spec = oapi.validPath({
   },
 })
 
-export const market_post_listing_listing_id_photos_spec = oapi.validPath({
-  summary: "Upload photos for a market listing",
-  description:
-    "Upload up to 5 photos for a specific market listing. Photos are stored in CDN and linked to the listing. If the total number of photos would exceed 5, the oldest photos will be automatically removed to maintain the limit.",
-  operationId: "uploadListingPhotos",
-  tags: ["Market"],
-  parameters: [
-    {
-      name: "listing_id",
-      in: "path",
-      required: true,
-      description: "ID of the listing to upload photos for",
-      schema: {
-        type: "string",
-      },
-    },
-  ],
-  responses: {
-    "200": {
-      description: "Photos uploaded successfully",
-      content: {
-        "application/json": {
-          schema: {
-            $ref: "#/components/schemas/PhotoUploadResponse",
-          },
-        },
-      },
-    },
-    "400": Response400,
-    "401": Response401,
-    "403": Response403,
-    "404": Response404,
-    "500": Response500,
-  },
-})
-
 export const market_post_listings_listing_id_views_spec = oapi.validPath({
   summary: "Track a view on a market listing",
   description: "Records a view on a market listing for analytics purposes",

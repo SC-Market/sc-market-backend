@@ -78,6 +78,10 @@ describe("removed V1 market routes", () => {
     },
   )
 
+  it("POST /listing/:listing_id/photos is gone (left multer temp files)", () => {
+    expect(market).not.toContain("POST /listing/:listing_id/photos")
+  })
+
   it("org-wide allocations are gone", () => {
     expect(contractors).not.toContain("GET /:spectrum_id/allocations")
   })

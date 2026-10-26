@@ -20,7 +20,6 @@ import {
 import { org_permission, valid_contractor } from "../contractors/middleware.js"
 import { stockLotsRouter } from "./stock-lots.routes.js"
 
-import { multiplePhotoUpload } from "../util/upload.js"
 import {
   update_listing,
   get_linked_orders,
@@ -33,7 +32,6 @@ import {
   refresh_listing,
   update_listing_quantity,
   create_listing,
-  add_listing_photos,
   handle_listing_view,
   search_listings,
   get_active_listings_by_user,
@@ -70,7 +68,6 @@ import {
   market_get_listing_listing_id_orders_spec,
   market_post_listings_listing_id_bids_spec,
   market_post_listings_spec,
-  market_post_listing_listing_id_photos_spec,
   market_post_listings_listing_id_views_spec,
   market_get_listings_spec,
   market_get_user_username_spec,
@@ -184,18 +181,6 @@ marketRouter.post(
   criticalRateLimit,
   market_post_listings_spec,
   create_listing,
-)
-
-// Upload photos for a market listing (multipart/form-data)
-marketRouter.post(
-  "/listing/:listing_id/photos",
-  userAuthorized,
-  requireMarketWrite,
-  can_manage_market_listing,
-  multiplePhotoUpload.array("photos", 5),
-  market_post_listing_listing_id_photos_spec,
-  writeRateLimit,
-  add_listing_photos,
 )
 
 // Track a view on a market listing
