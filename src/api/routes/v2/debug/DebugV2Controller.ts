@@ -104,6 +104,11 @@ export class DebugV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
 
+    // Admins switching flags need a fresh MFA step-up.
+    if (process.env.NODE_ENV !== "development" && this.isAdmin()) {
+      await this.requireStepUp()
+    }
+
     // Allow switching if: dev mode, admin, or user has an existing override
     if (process.env.NODE_ENV !== "development" && !this.isAdmin()) {
       const hasOvr = await featureFlagService.hasOverride(userId)

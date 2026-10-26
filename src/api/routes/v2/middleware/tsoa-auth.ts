@@ -10,6 +10,14 @@ import { NextFunction, Request, RequestHandler, Response } from "express"
 import { User } from "../../v1/api-models.js"
 import { enforceTokenScopes, isAdminPath, TokenInfo } from "./token-scopes.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { adminLockError } from "../../../util/site-admin-policy.js"
+
+const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa"]
+
+export function isSessionOnlyPath(path: string): boolean {
+  const clean = path.replace(/^\/+/, "").toLowerCase()
+  return SESSION_ONLY_PREFIXES.some((p) => clean === p || clean.startsWith(p + "/"))
+}
 
 export async function expressAuthentication(
   request: Request,
@@ -43,7 +51,19 @@ export async function expressAuthentication(
     // scope is rejected, and a future admin controller that forgets its guard
     // is still protected. The token scope check below is a second gate.
     if (isAdminPath(request.path) && !isSiteAdmin(user)) {
+      const locked = adminLockError(request)
+      if (locked) throw locked
       const err = new Error("Admin access required") as Error & {
+        status: number
+      }
+      err.status = 403
+      throw err
+    }
+
+    // Two-factor endpoints are browser-session only: an API token can never
+    // enroll, verify or step up.
+    if (isSessionOnlyPath(request.path) && request.__tokenInfo) {
+      const err = new Error("API tokens cannot use this endpoint") as Error & {
         status: number
       }
       err.status = 403

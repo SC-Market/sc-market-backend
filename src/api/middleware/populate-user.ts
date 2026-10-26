@@ -24,6 +24,7 @@ import {
 import logger from "../../logger/logger.js"
 import { applySiteRolePolicy } from "../util/site-admin-policy.js"
 import { runInRequestContext } from "../util/request-context.js"
+import type { RequestAuth } from "../../services/mfa/policy.js"
 
 export async function populateUser(
   req: Request,
@@ -34,13 +35,27 @@ export async function populateUser(
   // Decide whether a site admin may use the role on this request, then run
   // the rest of the chain in a request context so has_permission() sees the
   // same effective user as req.user.
-  applySiteRolePolicy(req)
+  await applySiteRolePolicy(req)
   runInRequestContext(req, res, next)
 }
 
+/** MFA claims of a valid JWT access cookie, if it belongs to `userId`. */
+export function jwtAuthFor(req: Request, userId: string): RequestAuth | null {
+  if (!isJWTAuthEnabled()) return null
+  const accessToken = getAccessTokenFromRequest(req)
+  const payload = accessToken ? verifyAccessToken(accessToken) : null
+  if (!payload || payload.sub !== userId) return null
+  return { method: "jwt", sid: payload.sid, mfaAt: payload.mfa_at, amr: payload.amr }
+}
+
 async function resolveUser(req: Request): Promise<void> {
-  // 1. Session already populated by passport.session() — nothing to do
-  if (req.user) return
+  // 1. Session already populated by passport.session(). Legacy passport
+  // sessions carry no MFA; a JWT cookie for the same user (set by every login
+  // since JWT auth shipped) supplies the session's MFA claims.
+  if (req.user) {
+    req.auth = jwtAuthFor(req, req.user.user_id) ?? { method: "session" }
+    return
+  }
 
   try {
     // 2. Bearer token
@@ -75,6 +90,11 @@ async function resolveUser(req: Request): Promise<void> {
               expires_at: tokenRecord.expires_at,
               contractor_ids: tokenRecord.contractor_ids || [],
             }
+            req.auth = {
+              method: "token",
+              tokenMfaAt: tokenRecord.mfa_at ?? null,
+              tokenScopes: tokenRecord.scopes,
+            }
             // Fire-and-forget last_used update
             database
               .knex("api_tokens")
@@ -96,6 +116,12 @@ async function resolveUser(req: Request): Promise<void> {
             const user = await profileDb.getUser({ user_id: payload.sub })
             if (user && !user.banned && !user.is_tombstone) {
               req.user = user
+              req.auth = {
+                method: "jwt",
+                sid: payload.sid,
+                mfaAt: payload.mfa_at,
+                amr: payload.amr,
+              }
             }
           } catch {
             // user not found — continue unauthenticated

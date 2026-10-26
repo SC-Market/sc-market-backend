@@ -16,6 +16,8 @@ import {
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { ValidationError as ValidationErrorType } from "../../v1/util/response.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { adminLockError } from "../../../util/site-admin-policy.js"
+import { assertStepUp, stepUpError } from "../../../util/step-up.js"
 
 /**
  * Base controller class with common functionality
@@ -95,11 +97,22 @@ export abstract class BaseController extends Controller {
   protected requireAdmin(): void {
     this.requireAuth()
     if (!this.isAdmin()) {
+      const locked = this.request ? adminLockError(this.request) : null
+      if (locked) throw locked
       throw new BusinessLogicError(
         ErrorCode.FORBIDDEN,
         "Admin access required",
       )
     }
+  }
+
+  /**
+   * Require a fresh MFA step-up for a sensitive action
+   * (src/api/util/step-up.ts). No-op while admin MFA enforcement is off.
+   */
+  protected async requireStepUp(): Promise<void> {
+    if (!this.request) throw stepUpError()
+    await assertStepUp(this.request)
   }
 
   /**

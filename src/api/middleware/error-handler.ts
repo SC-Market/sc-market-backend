@@ -244,7 +244,20 @@ function getStatusCodeForErrorCode(code: ErrorCode | string): number {
     case ErrorCode.CONFLICT:
       return 409
     case ErrorCode.RATE_LIMIT_EXCEEDED:
+    case ErrorCode.MFA_LOCKED:
       return 429
+    case ErrorCode.MFA_REQUIRED:
+    case ErrorCode.MFA_ENROLLMENT_REQUIRED:
+    case ErrorCode.MFA_STEP_UP_REQUIRED:
+      // 403, not 401: on 401 the frontend refreshes the session and retries,
+      // which does nothing for MFA.
+      return 403
+    case ErrorCode.MFA_INVALID_CODE:
+      return 400
+    case ErrorCode.MFA_SESSION_UNSUPPORTED:
+      return 409
+    case ErrorCode.MFA_NOT_CONFIGURED:
+      return 503
     case ErrorCode.INTERNAL_SERVER_ERROR:
     case ErrorCode.DATABASE_ERROR:
     case ErrorCode.SERVICE_UNAVAILABLE:
@@ -314,7 +327,12 @@ export async function errorHandler(
     err instanceof CharacterLimitError ||
     err instanceof ConcurrentModificationError ||
     (err instanceof BusinessLogicError &&
-      [ErrorCode.UNAUTHORIZED, ErrorCode.FORBIDDEN, ErrorCode.VALIDATION_ERROR, ErrorCode.NOT_FOUND, ErrorCode.CONFLICT].includes(err.code as ErrorCode))
+      [
+        ErrorCode.UNAUTHORIZED, ErrorCode.FORBIDDEN, ErrorCode.VALIDATION_ERROR, ErrorCode.NOT_FOUND, ErrorCode.CONFLICT,
+        ErrorCode.RATE_LIMIT_EXCEEDED, ErrorCode.MFA_REQUIRED, ErrorCode.MFA_ENROLLMENT_REQUIRED,
+        ErrorCode.MFA_STEP_UP_REQUIRED, ErrorCode.MFA_INVALID_CODE, ErrorCode.MFA_LOCKED,
+        ErrorCode.MFA_SESSION_UNSUPPORTED,
+      ].includes(err.code as ErrorCode))
 
   // Safety net for endpoints that bind an unvalidated id to a uuid column.
   // Endpoints should validate ids themselves (isUuid -> 404/400); anything that

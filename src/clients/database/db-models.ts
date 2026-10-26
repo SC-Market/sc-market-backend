@@ -828,6 +828,8 @@ export interface DBApiToken {
   revoked_at: Date | null
   created_at: Date
   updated_at: Date
+  /** Set when admin/moderation scopes were granted under an MFA step-up. */
+  mfa_at?: Date | null
 }
 
 export interface DBAccountIntegration {

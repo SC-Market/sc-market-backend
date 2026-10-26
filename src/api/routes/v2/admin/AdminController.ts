@@ -206,6 +206,7 @@ export class AdminController extends BaseController {
   ): Promise<{ affected: number }> {
     this.request = request
     this.requireAdmin()
+    await this.requireStepUp()
     const knex = getKnex()
 
     const result = await knex("listings")

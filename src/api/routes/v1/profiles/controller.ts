@@ -885,6 +885,10 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
 
     res.json({
       ...user,
+      // Present only for a site admin whose role is held back on this request
+      // (two-factor not set up / not verified, or a custom-domain origin), so
+      // the frontend can prompt instead of hiding admin features silently.
+      ...(req.adminLocked && { admin_locked: req.adminLocked }),
       balance: +user.balance!,
       contractors: await (async () => {
         // Group contractors by spectrum_id to collect all roles with details

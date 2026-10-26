@@ -1,3 +1,4 @@
+import { requireStepUp } from "../../../util/step-up.js"
 import express from "express"
 import {
   adminAuthorized,
@@ -466,6 +467,7 @@ contractorsRouter.post(
 contractorsRouter.post(
   "/admin/express_verify",
   adminAuthorized,
+  requireStepUp,
   bulkRateLimit,
   post_admin_express_verify,
 )

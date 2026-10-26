@@ -1,3 +1,4 @@
+import { requireStepUp } from "../../../util/step-up.js"
 import express from "express"
 import {
   userAuthorized,
@@ -59,6 +60,7 @@ moderationRouter.get(
 moderationRouter.put(
   "/admin/reports/:report_id",
   adminAuthorized,
+  requireStepUp,
   requireModerationWrite,
   moderation_put_admin_reports_report_id_spec,
   criticalRateLimit,

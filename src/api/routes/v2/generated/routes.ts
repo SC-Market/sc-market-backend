@@ -20,6 +20,10 @@ import { OnboardingV2Controller } from './../onboarding/OnboardingV2Controller.j
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OffersV2Controller } from './../offers/OffersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MfaController } from './../mfa/MfaController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminMfaController } from './../mfa/MfaController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { InventoryV2Controller } from './../inventory/InventoryV2Controller.js';
@@ -1098,6 +1102,117 @@ const models: TsoaRoute.Models = {
             "shop_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
             "availability": {"dataType":"union","subSchemas":[{"ref":"OfferAvailability"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaFactorSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "label": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "last_used_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaStatusResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "enforcement": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["enforce"]},{"dataType":"enum","enums":["off"]},{"dataType":"enum","enums":["unconfigured"]}],"required":true},
+            "required": {"dataType":"boolean","required":true},
+            "enrolled": {"dataType":"boolean","required":true},
+            "factors": {"dataType":"array","array":{"dataType":"refObject","ref":"MfaFactorSummary"},"required":true},
+            "recovery_codes_remaining": {"dataType":"double","required":true},
+            "elevated_until": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "stepup_until": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "admin_locked": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TotpEnrollResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "factor_id": {"dataType":"string","required":true},
+            "otpauth_uri": {"dataType":"string","required":true},
+            "qr_data_url": {"dataType":"string","required":true},
+            "manual_key": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TotpEnrollRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "label": {"dataType":"string","validators":{"maxLength":{"value":60}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RecoveryCodesResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "recovery_codes": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "elevated_until": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TotpConfirmRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "factor_id": {"dataType":"string","required":true},
+            "code": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^\\d{6}$"}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaVerifyResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["totp"]},{"dataType":"enum","enums":["recovery_code"]}],"required":true},
+            "elevated_until": {"dataType":"string","required":true},
+            "stepup_until": {"dataType":"string","required":true},
+            "recovery_codes_remaining": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaVerifyRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "code": {"dataType":"string"},
+            "recovery_code": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaReauthRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "code": {"dataType":"string"},
+            "recovery_code": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaResetResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "factors": {"dataType":"double","required":true},
+            "sessions": {"dataType":"double","required":true},
+            "tokens": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MfaResetRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "reason": {"dataType":"string","required":true,"validators":{"minLength":{"value":3},"maxLength":{"value":500}}},
         },
         "additionalProperties": false,
     },
@@ -5188,6 +5303,230 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOfferSession',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMfaController_getMfaStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/auth/mfa/status',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MfaController)),
+            ...(fetchMiddlewares<RequestHandler>(MfaController.prototype.getMfaStatus)),
+
+            async function MfaController_getMfaStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMfaController_getMfaStatus, request, response });
+
+                const controller = new MfaController();
+
+              await templateService.apiHandler({
+                methodName: 'getMfaStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMfaController_startTotpEnrollment: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"TotpEnrollRequest"},
+        };
+        app.post('/auth/mfa/totp/enroll',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MfaController)),
+            ...(fetchMiddlewares<RequestHandler>(MfaController.prototype.startTotpEnrollment)),
+
+            async function MfaController_startTotpEnrollment(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMfaController_startTotpEnrollment, request, response });
+
+                const controller = new MfaController();
+
+              await templateService.apiHandler({
+                methodName: 'startTotpEnrollment',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMfaController_confirmTotpEnrollment: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"TotpConfirmRequest"},
+        };
+        app.post('/auth/mfa/totp/confirm',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MfaController)),
+            ...(fetchMiddlewares<RequestHandler>(MfaController.prototype.confirmTotpEnrollment)),
+
+            async function MfaController_confirmTotpEnrollment(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMfaController_confirmTotpEnrollment, request, response });
+
+                const controller = new MfaController();
+
+              await templateService.apiHandler({
+                methodName: 'confirmTotpEnrollment',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMfaController_verifyMfa: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"MfaVerifyRequest"},
+        };
+        app.post('/auth/mfa/verify',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MfaController)),
+            ...(fetchMiddlewares<RequestHandler>(MfaController.prototype.verifyMfa)),
+
+            async function MfaController_verifyMfa(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMfaController_verifyMfa, request, response });
+
+                const controller = new MfaController();
+
+              await templateService.apiHandler({
+                methodName: 'verifyMfa',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMfaController_regenerateMfaRecoveryCodes: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/auth/mfa/recovery-codes/regenerate',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MfaController)),
+            ...(fetchMiddlewares<RequestHandler>(MfaController.prototype.regenerateMfaRecoveryCodes)),
+
+            async function MfaController_regenerateMfaRecoveryCodes(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMfaController_regenerateMfaRecoveryCodes, request, response });
+
+                const controller = new MfaController();
+
+              await templateService.apiHandler({
+                methodName: 'regenerateMfaRecoveryCodes',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMfaController_removeMfaFactor: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                factorId: {"in":"path","name":"factorId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"MfaReauthRequest"},
+        };
+        app.delete('/auth/mfa/factors/:factorId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MfaController)),
+            ...(fetchMiddlewares<RequestHandler>(MfaController.prototype.removeMfaFactor)),
+
+            async function MfaController_removeMfaFactor(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMfaController_removeMfaFactor, request, response });
+
+                const controller = new MfaController();
+
+              await templateService.apiHandler({
+                methodName: 'removeMfaFactor',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminMfaController_resetUserMfa: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                username: {"in":"path","name":"username","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"MfaResetRequest"},
+        };
+        app.post('/admin/mfa/users/:username/reset',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminMfaController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminMfaController.prototype.resetUserMfa)),
+
+            async function AdminMfaController_resetUserMfa(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminMfaController_resetUserMfa, request, response });
+
+                const controller = new AdminMfaController();
+
+              await templateService.apiHandler({
+                methodName: 'resetUserMfa',
                 controller,
                 response,
                 next,

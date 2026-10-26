@@ -17,6 +17,7 @@ import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import * as contractorDb from "../routes/v1/contractors/database.js"
 import logger from "../../logger/logger.js"
 import { isKnownSiteRole, isSiteAdmin } from "../util/site-role.js"
+import { adminLockResponse } from "../util/site-admin-policy.js"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -151,7 +152,9 @@ export async function adminAuthorized(
     return
   }
   if (!isSiteAdmin(user)) {
-    res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
+    res
+      .status(403)
+      .json(adminLockResponse(req) ?? createErrorResponse({ message: "Unauthorized" }))
     return
   }
   // For token auth, also require admin scope

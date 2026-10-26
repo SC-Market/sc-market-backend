@@ -3188,6 +3188,258 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MfaFactorSummary": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"last_used_at": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"type",
+					"label",
+					"created_at",
+					"last_used_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MfaStatusResponse": {
+				"properties": {
+					"enforcement": {
+						"type": "string",
+						"enum": [
+							"enforce",
+							"off",
+							"unconfigured"
+						],
+						"description": "\"enforce\": admin MFA is required; \"off\": rolled back; \"unconfigured\": on, but the server has no encryption key yet."
+					},
+					"required": {
+						"type": "boolean",
+						"description": "Whether this account must use two-factor authentication for admin features."
+					},
+					"enrolled": {
+						"type": "boolean"
+					},
+					"factors": {
+						"items": {
+							"$ref": "#/components/schemas/MfaFactorSummary"
+						},
+						"type": "array"
+					},
+					"recovery_codes_remaining": {
+						"type": "number",
+						"format": "double"
+					},
+					"elevated_until": {
+						"type": "string",
+						"nullable": true,
+						"description": "When this session's admin verification lapses (ISO), or null if not verified."
+					},
+					"stepup_until": {
+						"type": "string",
+						"nullable": true,
+						"description": "When this session's step-up lapses (ISO), or null."
+					},
+					"admin_locked": {
+						"type": "string",
+						"nullable": true,
+						"description": "Why admin features are held back on this request, if they are."
+					}
+				},
+				"required": [
+					"enforcement",
+					"required",
+					"enrolled",
+					"factors",
+					"recovery_codes_remaining",
+					"elevated_until",
+					"stepup_until",
+					"admin_locked"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TotpEnrollResponse": {
+				"properties": {
+					"factor_id": {
+						"type": "string"
+					},
+					"otpauth_uri": {
+						"type": "string"
+					},
+					"qr_data_url": {
+						"type": "string",
+						"description": "data: URL of an SVG QR code for otpauth_uri."
+					},
+					"manual_key": {
+						"type": "string",
+						"description": "The secret in base32, grouped by 4 for manual entry."
+					}
+				},
+				"required": [
+					"factor_id",
+					"otpauth_uri",
+					"qr_data_url",
+					"manual_key"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TotpEnrollRequest": {
+				"properties": {
+					"label": {
+						"type": "string",
+						"maxLength": 60
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RecoveryCodesResponse": {
+				"properties": {
+					"recovery_codes": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Shown once."
+					},
+					"elevated_until": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"recovery_codes",
+					"elevated_until"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TotpConfirmRequest": {
+				"properties": {
+					"factor_id": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string",
+						"pattern": "^\\d{6}$"
+					}
+				},
+				"required": [
+					"factor_id",
+					"code"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MfaVerifyResponse": {
+				"properties": {
+					"method": {
+						"type": "string",
+						"enum": [
+							"totp",
+							"recovery_code"
+						]
+					},
+					"elevated_until": {
+						"type": "string"
+					},
+					"stepup_until": {
+						"type": "string"
+					},
+					"recovery_codes_remaining": {
+						"type": "number",
+						"format": "double",
+						"description": "Present after a recovery code was used."
+					}
+				},
+				"required": [
+					"method",
+					"elevated_until",
+					"stepup_until"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MfaVerifyRequest": {
+				"properties": {
+					"code": {
+						"type": "string",
+						"description": "6-digit authenticator code."
+					},
+					"recovery_code": {
+						"type": "string",
+						"description": "One of the recovery codes (XXXXX-XXXXX)."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MfaReauthRequest": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"recovery_code": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MfaResetResponse": {
+				"properties": {
+					"factors": {
+						"type": "number",
+						"format": "double"
+					},
+					"sessions": {
+						"type": "number",
+						"format": "double"
+					},
+					"tokens": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"factors",
+					"sessions",
+					"tokens"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MfaResetRequest": {
+				"properties": {
+					"reason": {
+						"type": "string",
+						"minLength": 3,
+						"maxLength": 500
+					}
+				},
+				"required": [
+					"reason"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateListingResponse": {
 				"description": "Response for creating a listing",
 				"properties": {
@@ -13883,6 +14135,278 @@
 						}
 					}
 				]
+			}
+		},
+		"/auth/mfa/status": {
+			"get": {
+				"operationId": "GetMfaStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MfaStatusResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Two-factor status for the current session.",
+				"summary": "Get two-factor status",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/auth/mfa/totp/enroll": {
+			"post": {
+				"operationId": "StartTotpEnrollment",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TotpEnrollResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Start enrolling an authenticator app. Replacing an existing one needs a\nfresh step-up. The secret is only ever returned here.",
+				"summary": "Start authenticator enrollment",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TotpEnrollRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/mfa/totp/confirm": {
+			"post": {
+				"operationId": "ConfirmTotpEnrollment",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RecoveryCodesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Confirm enrollment with the first code. Verifies this session and returns\nthe recovery codes once.",
+				"summary": "Confirm authenticator enrollment",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TotpConfirmRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/mfa/verify": {
+			"post": {
+				"operationId": "VerifyMfa",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MfaVerifyResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Verify (or step up) this session with an authenticator or recovery code.",
+				"summary": "Verify two-factor code",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MfaVerifyRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/mfa/recovery-codes/regenerate": {
+			"post": {
+				"operationId": "RegenerateMfaRecoveryCodes",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RecoveryCodesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Replace the recovery codes (the old ones stop working). Needs a fresh\nstep-up.",
+				"summary": "Regenerate recovery codes",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/auth/mfa/factors/{factorId}": {
+			"delete": {
+				"operationId": "RemoveMfaFactor",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"removed": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"removed"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove a factor. Needs a current code and a fresh step-up. While admin\nMFA is enforced, an admin cannot remove their last factor (enroll the\nreplacement first; it replaces the old one on confirmation).",
+				"summary": "Remove a two-factor method",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "factorId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MfaReauthRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/mfa/users/{username}/reset": {
+			"post": {
+				"operationId": "ResetUserMfa",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MfaResetResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Reset another admin's or user's two-factor authentication: deletes their\nfactors and recovery codes, revokes their sessions and admin-scoped API\ntokens. Needs a fresh step-up; not allowed on yourself (use the\nbreak-glass script).",
+				"summary": "Reset a user's two-factor authentication",
+				"tags": [
+					"Two-factor auth"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "username",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MfaResetRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/listings": {

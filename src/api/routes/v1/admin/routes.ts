@@ -1,5 +1,6 @@
 import express from "express"
 import { adminAuthorized } from "../../../middleware/auth.js"
+import { requireStepUp } from "../../../util/step-up.js"
 import {
   criticalRateLimit,
   readRateLimit,
@@ -94,6 +95,7 @@ adminRouter.get(
 adminRouter.post(
   "/users/:username/unlink",
   adminAuthorized,
+  requireStepUp,
   criticalRateLimit,
   admin_post_users_username_unlink_spec,
   admin_post_users_username_unlink,

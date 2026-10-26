@@ -81,6 +81,7 @@ export class FeatureFlagAdminController extends BaseController {
   ): Promise<FeatureFlagConfig> {
     this.request = request
     this.requireAdmin()
+    await this.requireStepUp()
 
     if (body.rollout_percentage !== undefined) {
       if (body.rollout_percentage < 0 || body.rollout_percentage > 100) {
@@ -187,6 +188,7 @@ export class FeatureFlagAdminController extends BaseController {
   ): Promise<{ message: string }> {
     this.request = request
     this.requireAdmin()
+    await this.requireStepUp()
 
     const db = getKnex()
     const user = await db("accounts").where("username", body.username).first("user_id")
@@ -220,6 +222,7 @@ export class FeatureFlagAdminController extends BaseController {
   ): Promise<{ message: string }> {
     this.request = request
     this.requireAdmin()
+    await this.requireStepUp()
 
     const db = getKnex()
     const user = await db("accounts").where("username", username).first("user_id")

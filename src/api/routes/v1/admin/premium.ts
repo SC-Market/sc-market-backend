@@ -1,5 +1,6 @@
 import express from "express"
 import { adminAuthorized } from "../../../middleware/auth.js"
+import { requireStepUp } from "../../../util/step-up.js"
 import {
   readRateLimit,
   writeRateLimit,
@@ -110,7 +111,7 @@ adminPremiumRouter.get("/:id", adminAuthorized, readRateLimit, async (req, res) 
 })
 
 // PUT /api/admin/premium/:id — set/update premium tier
-adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res) => {
+adminPremiumRouter.put("/:id", adminAuthorized, requireStepUp, writeRateLimit, async (req, res) => {
   try {
     const { tier, custom_domain } = req.body
     if (!tier || typeof tier !== "string") {
@@ -191,7 +192,7 @@ adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res)
 })
 
 // PATCH /api/admin/premium/:id/domain — update custom domain only
-adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (req, res) => {
+adminPremiumRouter.patch("/:id/domain", adminAuthorized, requireStepUp, writeRateLimit, async (req, res) => {
   try {
     const { custom_domain } = req.body
     if (custom_domain !== undefined && custom_domain !== null && typeof custom_domain !== "string") {
@@ -247,7 +248,7 @@ adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (
 })
 
 // DELETE /api/admin/premium/:id — revoke premium tier
-adminPremiumRouter.delete("/:id", adminAuthorized, writeRateLimit, async (req, res) => {
+adminPremiumRouter.delete("/:id", adminAuthorized, requireStepUp, writeRateLimit, async (req, res) => {
   try {
     const contractorId = await resolveContractorId(req.params.id)
     if (!contractorId) {

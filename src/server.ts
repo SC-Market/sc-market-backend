@@ -13,6 +13,17 @@ const bugsnag = isDevelopment
       apiKey: process.env.BUGSNAG_API_KEY || "",
       plugins: [BugsnagPluginExpress],
       enabledReleaseStages: ["production", "staging"],
+      // Never ship MFA codes, secrets or credentials in error reports.
+      redactedKeys: [
+        /code/i,
+        /secret/i,
+        /otpauth/i,
+        /qr_data_url/i,
+        /manual_key/i,
+        /recovery/i,
+        "authorization",
+        "cookie",
+      ],
     })
 
 import express, {
@@ -96,6 +107,7 @@ import { csrfProtection } from "./api/middleware/csrf.js"
 import { createSocketAllowRequest } from "./api/middleware/socket-origin.js"
 import { customOriginGuard } from "./api/middleware/custom-origin.js"
 import { applySiteRolePolicy } from "./api/util/site-admin-policy.js"
+import { getMfaEnforcement } from "./services/mfa/config.js"
 
 const corsOptions = function (
   req: Request,
@@ -397,7 +409,13 @@ io.engine.use(
             const user = await profileDb.getUser({ user_id: payload.sub })
             if (user && !user.banned) {
               req.user = user
-              applySiteRolePolicy(req)
+              req.auth = {
+                method: "jwt",
+                sid: payload.sid,
+                mfaAt: payload.mfa_at,
+                amr: payload.amr,
+              }
+              await applySiteRolePolicy(req)
               return next()
             }
           } catch { /* fall through to session */ }
@@ -406,7 +424,8 @@ io.engine.use(
     }
     // Fall back to session auth
     if (req.user) {
-      applySiteRolePolicy(req)
+      req.auth = { method: "session" }
+      await applySiteRolePolicy(req)
       return next()
     }
     next(new Error("Unauthorized"))
@@ -420,6 +439,9 @@ import { attributeDefinitionCache } from "./api/routes/v1/attributes/cache.js"
 attributeDefinitionCache.warmUp().catch((error) => {
   logger.error("Failed to warm up attribute definition cache", { error })
 })
+
+// Admin MFA enforcement state (logs an error if on but not configured).
+logger.info(`Admin MFA enforcement: ${getMfaEnforcement()}`)
 
 // Start the app
 logger.info(`server up on port ${hostname()}:${backend_port}`)

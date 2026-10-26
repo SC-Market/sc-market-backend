@@ -13,6 +13,7 @@ import {
 } from "../routes/v1/util/response.js"
 import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import logger from "../../logger/logger.js"
+import { BusinessLogicError } from "../routes/v1/util/errors.js"
 
 /**
  * Transform TSOA ValidateError to v1 validation error format
@@ -56,6 +57,14 @@ export function tsoaErrorHandler(
   res: Response,
   next: NextFunction,
 ): void {
+  // Coded errors (e.g. MFA_REQUIRED thrown by expressAuthentication, which
+  // TSOA decorates with status 401) keep their own code and status: the main
+  // error handler maps them.
+  if (err instanceof BusinessLogicError) {
+    next(err)
+    return
+  }
+
   // TSOA validation errors
   if (err instanceof ValidateError) {
     logger.warn("TSOA validation error", {

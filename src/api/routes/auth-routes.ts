@@ -73,9 +73,9 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
     provider: string,
   ): Promise<void> {
     if (isJWTAuthEnabled()) {
-      const accessToken = generateAccessToken(user)
       const refreshToken = generateRefreshToken()
-      await saveRefreshToken(user.user_id, refreshToken, req)
+      const sid = await saveRefreshToken(user.user_id, refreshToken, req)
+      const accessToken = generateAccessToken(user, { sid })
       setAuthCookies(res, accessToken, refreshToken)
       logger.info(`[Auth] ${provider} JWT login successful`, { userId: user.user_id })
       res.redirect(redirectUrl)
@@ -642,7 +642,11 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
         return { ok: false, status: 403, error: "Account suspended" }
       }
 
-      const accessToken = generateAccessToken(user)
+      const accessToken = generateAccessToken(user, {
+        sid: rotation.tokenId,
+        mfaAt: rotation.mfaAt,
+        amr: rotation.amr,
+      })
       setAuthCookies(res, accessToken, rotation.newRawToken)
       return { ok: true, user }
     } catch {

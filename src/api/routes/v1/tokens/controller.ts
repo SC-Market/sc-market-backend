@@ -9,6 +9,10 @@ import {
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
+import { getMfaEnforcement } from "../../../../services/mfa/config.js"
+import { getMfaService } from "../../../../services/mfa/instance.js"
+import { isStepUpFresh, stepUpError } from "../../../util/step-up.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
 
 const MAX_TOKENS_PER_USER = 25
@@ -65,6 +69,66 @@ const ADMIN_ONLY_SCOPES: readonly string[] = [
 
 export function isAdminOnlyScope(scope: string): boolean {
   return ADMIN_ONLY_SCOPES.includes(scope)
+}
+
+export const ADMIN_TOKEN_MAX_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000
+
+/**
+ * Rules for tokens that carry admin power, while admin MFA is enforced
+ * (admin-2fa-design.md section 6): granting or extending them needs a fresh
+ * step-up, they must expire within 30 days, and they record the step-up time
+ * (api_tokens.mfa_at) that makes them count as MFA-backed. Returns the
+ * mfa_at to store, or sends the error and returns undefined.
+ */
+async function adminTokenGrant(
+  req: Request,
+  res: Response,
+  scopes: string[],
+  expiresAt: Date | null,
+): Promise<{ mfaAt: Date | null } | undefined> {
+  if (!scopes.some(isAdminOnlyScope) || getMfaEnforcement() !== "enforce") {
+    return { mfaAt: null }
+  }
+  if (!(await isStepUpFresh(req))) {
+    const err = stepUpError()
+    res.status(403).json(createErrorResponse(err.code, err.message))
+    return undefined
+  }
+  if (!expiresAt || expiresAt.getTime() - Date.now() > ADMIN_TOKEN_MAX_LIFETIME_MS) {
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Tokens with admin or moderation scopes must expire within 30 days",
+        ),
+      )
+    return undefined
+  }
+  return { mfaAt: new Date() }
+}
+
+async function recordAdminTokenGrant(
+  req: Request,
+  tokenId: string,
+  action: "created" | "updated" | "extended",
+  scopes: string[],
+  expiresAt: Date | null,
+) {
+  const user = req.user as User
+  const metadata = { token_id: tokenId, action, scopes, expires_at: expiresAt }
+  await getMfaService().recordAdminTokenEvent(
+    user.user_id,
+    { ip: req.ip || null, userAgent: req.headers["user-agent"] || null },
+    metadata,
+  )
+  await auditLogService.record({
+    action: "admin_token_created",
+    actorId: user.user_id,
+    subjectType: "api_token",
+    subjectId: tokenId,
+    metadata,
+  })
 }
 
 /**
@@ -296,6 +360,9 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       }
     }
 
+    const grant = await adminTokenGrant(req, res, uniqueScopes, expiresAt)
+    if (!grant) return
+
     // Insert token into database
     const [tokenRecord] = await database
       .knex("api_tokens")
@@ -307,10 +374,15 @@ export async function createToken(req: Request, res: Response): Promise<void> {
         scopes: uniqueScopes,
         contractor_ids: validatedContractorIds,
         expires_at: expiresAt,
+        mfa_at: grant.mfaAt,
         created_at: new Date(),
         updated_at: new Date(),
       })
       .returning("*")
+
+    if (grant.mfaAt) {
+      await recordAdminTokenGrant(req, tokenRecord.id, "created", uniqueScopes, expiresAt)
+    }
 
     // Convert contractor IDs back to Spectrum IDs for response
     const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
@@ -585,6 +657,16 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       }
     }
 
+    const nextScopes =
+      scopes !== undefined
+        ? [...new Set(scopes as string[])]
+        : (existingToken.scopes as string[])
+    const grant =
+      scopes !== undefined || expires_at !== undefined
+        ? await adminTokenGrant(req, res, nextScopes, expiresAt)
+        : { mfaAt: undefined }
+    if (!grant) return
+
     // Update token
     const [updatedToken] = await database
       .knex("api_tokens")
@@ -597,9 +679,14 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           contractor_ids: validatedContractorIds,
         }),
         ...(expires_at !== undefined && { expires_at: expiresAt }),
+        ...(grant.mfaAt !== undefined && { mfa_at: grant.mfaAt }),
         updated_at: new Date(),
       })
       .returning("*")
+
+    if (grant.mfaAt) {
+      await recordAdminTokenGrant(req, updatedToken.id, "updated", nextScopes, expiresAt)
+    }
 
     const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
       updatedToken.contractor_ids || [],
@@ -713,10 +800,17 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
       return
     }
 
+    const grant = await adminTokenGrant(req, res, token.scopes, expiresAt)
+    if (!grant) return
+
     await database.knex("api_tokens").where("id", tokenId).update({
       expires_at: expiresAt,
+      mfa_at: grant.mfaAt,
       updated_at: new Date(),
     })
+    if (grant.mfaAt) {
+      await recordAdminTokenGrant(req, tokenId, "extended", token.scopes, expiresAt)
+    }
 
     res.json(createResponse({ message: "Token expiration extended" }))
   } catch (error) {

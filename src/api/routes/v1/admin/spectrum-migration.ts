@@ -1,5 +1,6 @@
 import express from "express"
 import { adminAuthorized } from "../../../middleware/auth.js"
+import { requireStepUp } from "../../../util/step-up.js"
 import {
   migrateExistingUsersToSpectrumIds,
   simulateSpectrumMigration,
@@ -272,6 +273,7 @@ spectrumMigrationRouter.post(
     security: [],
   }),
   adminAuthorized,
+  requireStepUp,
   async (req, res) => {
     try {
       const {
@@ -386,6 +388,7 @@ spectrumMigrationRouter.post(
     security: [],
   }),
   adminAuthorized,
+  requireStepUp,
   async (req, res) => {
     try {
       const { confirm } = req.body as { confirm: boolean }
