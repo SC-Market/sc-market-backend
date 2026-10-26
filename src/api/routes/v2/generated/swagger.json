@@ -14356,7 +14356,7 @@
 						}
 					}
 				},
-				"description": "Get orders list with filtering and pagination\n\nRetrieves a list of orders for the current user with:\n1. Role-based filtering (buyer or seller)\n2. Status filtering (pending, completed, cancelled)\n3. Quality tier filtering (min and max)\n4. Pagination support\n5. Sorting options\n\nReturns order previews with quality tier information visible.\n\nRequirements:\n- 45.1: Provide OrderListV2 React component (backend support)\n- 45.2: Maintain visual parity with V1 OrderList component\n- 45.3: Use RTK_Query_Client for API calls\n- 45.4: Show quality tier in order preview\n- 45.5: Filter orders by quality tier",
+				"description": "Get orders list with filtering and pagination\n\nRetrieves a list of orders for the current user with:\n1. Role-based filtering (buyer or seller)\n2. Status filtering, by the statuses orders store\n   (not-started, in-progress, fulfilled, cancelled)\n3. Quality tier filtering (min and max)\n4. Pagination support\n5. Sorting options\n\nReturns order previews with quality tier information visible.\n\nRequirements:\n- 45.1: Provide OrderListV2 React component (backend support)\n- 45.2: Maintain visual parity with V1 OrderList component\n- 45.3: Use RTK_Query_Client for API calls\n- 45.4: Show quality tier in order preview\n- 45.5: Filter orders by quality tier",
 				"summary": "Get orders list",
 				"tags": [
 					"Orders V2"
@@ -14368,14 +14368,16 @@
 				],
 				"parameters": [
 					{
+						"description": "Only orders with this status, as orders store it",
 						"in": "query",
 						"name": "status",
 						"required": false,
 						"schema": {
 							"type": "string",
 							"enum": [
-								"pending",
-								"completed",
+								"not-started",
+								"in-progress",
+								"fulfilled",
 								"cancelled"
 							]
 						}

@@ -19,7 +19,6 @@ import {
 } from "../../../../services/shops/shop-permissions.service.js"
 import {
   GetOrderDetailResponse,
-  GetOrdersRequest,
   GetOrdersResponse,
   OrderItemDetail,
   OrderMarketListingV1,
@@ -264,7 +263,8 @@ export class OrdersV2Controller extends BaseController {
    *
    * Retrieves a list of orders for the current user with:
    * 1. Role-based filtering (buyer or seller)
-   * 2. Status filtering (pending, completed, cancelled)
+   * 2. Status filtering, by the statuses orders store
+   *    (not-started, in-progress, fulfilled, cancelled)
    * 3. Quality tier filtering (min and max)
    * 4. Pagination support
    * 5. Sorting options
@@ -279,12 +279,13 @@ export class OrdersV2Controller extends BaseController {
    * - 45.5: Filter orders by quality tier
    *
    * @summary Get orders list
+   * @param status Only orders with this status, as orders store it
    * @param request Express request for authentication
    * @returns Orders list with pagination metadata
    */
   @Get()
   public async getOrders(
-    @Query() status?: 'pending' | 'completed' | 'cancelled',
+    @Query() status?: 'not-started' | 'in-progress' | 'fulfilled' | 'cancelled',
     @Query() role?: 'buyer' | 'seller',
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,

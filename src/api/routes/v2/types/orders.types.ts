@@ -181,36 +181,6 @@ export interface OrderVariantItem {
 }
 
 /**
- * Request parameters for getting orders list
- * Requirement 45.1-45.5: Filter orders by quality tier with pagination
- */
-export interface GetOrdersRequest {
-  /** Filter by order status */
-  status?: 'pending' | 'completed' | 'cancelled';
-  
-  /** Filter by role (buyer or seller) */
-  role?: 'buyer' | 'seller';
-  
-  /** Minimum quality tier (1-5) */
-  quality_tier_min?: number;
-  
-  /** Maximum quality tier (1-5) */
-  quality_tier_max?: number;
-  
-  /** Page number for pagination (default: 1) */
-  page?: number;
-  
-  /** Number of results per page (default: 20, max: 100) */
-  page_size?: number;
-  
-  /** Sort field (default: created_at) */
-  sort_by?: 'created_at' | 'updated_at' | 'total_price';
-  
-  /** Sort order (default: desc) */
-  sort_order?: 'asc' | 'desc';
-}
-
-/**
  * Order preview item for list display
  */
 export interface OrderPreview {

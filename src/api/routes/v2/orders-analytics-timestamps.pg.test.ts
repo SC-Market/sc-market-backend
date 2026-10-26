@@ -360,6 +360,17 @@ describe.skipIf(!PG_TEST_URL)("v2 orders + seller-stats on real Postgres", () =>
       expect(seller.total).toBe(4)
     })
 
+    it.each([
+      ["fulfilled", [ORDER(1)]],
+      ["in-progress", [ORDER(2)]],
+      ["cancelled", [ORDER(3)]],
+      ["not-started", []],
+    ])("status=%s matches the stored status", async (status, expected) => {
+      const res = await list(1, { status })
+      expect(res.orders.map((o) => o.order_id)).toEqual(expected)
+      expect(res.total).toBe(expected.length)
+    })
+
     it("sorts by updated_at (the admin supplier dashboard's sort)", async () => {
       const res = await list(1, { sort_by: "updated_at", sort_order: "desc" })
       // order 1 was fulfilled on the 5th, after orders 2 and 3 were placed.

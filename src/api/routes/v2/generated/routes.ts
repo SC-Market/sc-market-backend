@@ -5418,7 +5418,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsOrdersV2Controller_getOrders: Record<string, TsoaRoute.ParameterSchema> = {
-                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["pending"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["cancelled"]}]},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["not-started"]},{"dataType":"enum","enums":["in-progress"]},{"dataType":"enum","enums":["fulfilled"]},{"dataType":"enum","enums":["cancelled"]}]},
                 role: {"in":"query","name":"role","dataType":"union","subSchemas":[{"dataType":"enum","enums":["buyer"]},{"dataType":"enum","enums":["seller"]}]},
                 quality_tier_min: {"in":"query","name":"quality_tier_min","dataType":"double"},
                 quality_tier_max: {"in":"query","name":"quality_tier_max","dataType":"double"},
