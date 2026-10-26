@@ -6,9 +6,11 @@ afterEach(() => vi.unstubAllGlobals())
 
 describe("starmap getObject", () => {
   it("encodes the identifier as a single path segment", async () => {
-    const fetchMock = vi.fn(async () => ({
-      json: async () => ({ data: { resultset: [] } }),
-    }))
+    const fetchMock = vi.fn(async () =>
+      new Response(JSON.stringify({ data: { resultset: [] } }), {
+        headers: { "content-type": "application/json" },
+      }),
+    )
     vi.stubGlobal("fetch", fetchMock)
     await getObject("../../account/settings?x=1")
     const url = (fetchMock.mock.calls[0] as unknown[])[0] as string
