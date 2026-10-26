@@ -54,14 +54,21 @@ export async function can_view_chat(
     ;[session] = await offerDb.getOfferSessions({ id: chat.session_id })
   }
 
-  if (!participants.includes(user.user_id)) {
-    if (order && !(await is_related_to_order(order, user))) {
-      return { result: false }
-    }
+  // Deny by default. Participants may view; a non-participant only through a
+  // relationship to the chat's order or offer session. A chat with neither
+  // (a plain DM) is visible to its participants only.
+  if (participants.includes(user.user_id)) {
+    return { result: true, order, offer_session: session }
+  }
 
-    if (session && !(await is_related_to_offer(user.user_id, session))) {
-      return { result: false }
-    }
+  if (!order && !session) {
+    return { result: false }
+  }
+  if (order && !(await is_related_to_order(order, user))) {
+    return { result: false }
+  }
+  if (session && !(await is_related_to_offer(user.user_id, session))) {
+    return { result: false }
   }
 
   return { result: true, order, offer_session: session }
@@ -79,6 +86,7 @@ export async function related_to_chat(
 
   if (!result.result) {
     res.status(403).json(createErrorResponse({ error: "Not authorized" }))
+    return
   }
 
   req.order = result.order || undefined
