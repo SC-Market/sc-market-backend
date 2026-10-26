@@ -51,7 +51,12 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     const user = req.user as User
     const hasManage = await has_permission(session.contractor_id, user.user_id, "manage_orders")
     if (!hasManage) {
-      const isSelfClaim = req.body.assigned_to === user.username && !session.assigned_id
+      // Same rule as the Discord Claim button (clients/discord_api/claim.ts):
+      // an active, unassigned offer, claimed for yourself, with claim_orders.
+      const isSelfClaim =
+        req.body.assigned_to === user.username &&
+        !session.assigned_id &&
+        session.status === "active"
       const hasClaim = isSelfClaim && await has_permission(session.contractor_id, user.user_id, "claim_orders")
       if (!hasClaim) {
         res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "No permission to assign this offer"))

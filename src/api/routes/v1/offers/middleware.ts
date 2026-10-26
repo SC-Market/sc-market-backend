@@ -28,14 +28,17 @@ export async function related_to_offer(
   const assigned = offer.assigned_id === user.user_id
   const customer = offer.customer_id === user.user_id
   let unrelated = !customer && !assigned && !isSiteAdmin(user)
-  if (offer.contractor_id) {
+  if (offer.contractor_id && unrelated) {
+    // Same rule as related_to_order and the Discord Claim button
+    // (clients/discord_api/claim.ts): claim_orders members need access to
+    // self-claim. What they may do is checked in the handlers.
     unrelated =
-      unrelated &&
       !(await has_permission(
         offer.contractor_id,
         user.user_id,
         "manage_orders",
-      ))
+      )) &&
+      !(await has_permission(offer.contractor_id, user.user_id, "claim_orders"))
   }
 
   if (unrelated) {
@@ -67,6 +70,13 @@ export async function can_respond_to_offer(
 
   if (req.body.status === "cancelled") {
     return next() // anyone can cancel if they are related
+  }
+
+  // Assigning/claiming isn't a response to the offer: whose turn it is doesn't
+  // matter. offer_put_session_id checks manage_orders, or claim_orders for a
+  // self-claim of an unassigned active offer.
+  if (req.body.assigned_to !== undefined) {
+    return next()
   }
 
   if (!related) {
