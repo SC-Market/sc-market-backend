@@ -7,7 +7,12 @@
  * Requirements: 46.1-46.5
  */
 
-import { Controller, Get, Route, Tags, Query } from "tsoa"
+import { Controller, Get, Route, Tags, Query, Request, Security } from "tsoa"
+import { Request as ExpressRequest } from "express"
+import {
+  canViewShopPrivate,
+  getShopById,
+} from "../../../../services/shops/shop-permissions.service.js"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
@@ -100,6 +105,20 @@ interface ListingMetaRow {
 @Route("analytics")
 @Tags("Analytics V2")
 export class AnalyticsV2Controller extends BaseController {
+  /**
+   * Shop analytics (sales, views, conversion, inventory by tier) are private
+   * shop data: only the shop's managers, the owning org's members, or site
+   * admins may read them. The only callers are the seller dashboard widgets.
+   */
+  private async requireShopAnalyticsAccess(shopId: string): Promise<void> {
+    if (this.isAdmin()) return
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+    if (!(await canViewShopPrivate(shop, this.getUserId()))) {
+      this.throwForbidden("You cannot view this shop's analytics")
+    }
+  }
+
   /**
    * Get price history for a game item with optional quality tier filtering
    *
@@ -452,9 +471,12 @@ export class AnalyticsV2Controller extends BaseController {
    * @returns Shop analytics with sales and inventory breakdown
    */
   @Get("seller-stats")
+  @Security("loggedin")
   public async getSellerStats(
     @Query() shop_id?: string,
+    @Request() request?: ExpressRequest,
   ): Promise<GetSellerStatsResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     if (!shop_id) {
@@ -465,6 +487,7 @@ export class AnalyticsV2Controller extends BaseController {
         },
       ])
     }
+    await this.requireShopAnalyticsAccess(shop_id)
 
     logger.info("Fetching shop stats", { shop_id })
 
@@ -669,10 +692,13 @@ export class AnalyticsV2Controller extends BaseController {
    * @returns Per-listing view/conversion metrics with shop-level totals
    */
   @Get("listing-stats")
+  @Security("loggedin")
   public async getListingStats(
     @Query() shop_id?: string,
     @Query() limit?: number,
+    @Request() request?: ExpressRequest,
   ): Promise<GetListingStatsResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     if (!shop_id) {
@@ -680,6 +706,7 @@ export class AnalyticsV2Controller extends BaseController {
         { field: "shop_id", message: "Shop ID is required" },
       ])
     }
+    await this.requireShopAnalyticsAccess(shop_id)
 
     const pageSize = Math.min(Math.max(limit ?? 20, 1), 100)
 
