@@ -20,7 +20,7 @@ import {
   org_permission,
   valid_contractor,
 } from "./middleware.js"
-import { singlePhotoUpload, photoUpload } from "../util/upload.js"
+import { singlePhotoUpload, photoUpload, removeUploadsWhenDone } from "../util/upload.js"
 import { contractorThemeRouter } from "./theme.js"
 
 import {
@@ -350,9 +350,10 @@ contractorsRouter.post(
   requireContractorsWrite,
   valid_contractor,
   org_permission("manage_org_details"),
+  writeRateLimit,
+  removeUploadsWhenDone,
   singlePhotoUpload.single("avatar"),
   contractors_post_spectrum_id_avatar_spec,
-  writeRateLimit,
   contractors_post_spectrum_id_avatar,
 )
 
@@ -362,9 +363,10 @@ contractorsRouter.post(
   requireContractorsWrite,
   valid_contractor,
   org_permission("manage_org_details"),
+  writeRateLimit,
+  removeUploadsWhenDone,
   photoUpload.single("banner"),
   contractors_post_spectrum_id_banner_spec,
-  writeRateLimit,
   contractors_post_spectrum_id_banner,
 )
 

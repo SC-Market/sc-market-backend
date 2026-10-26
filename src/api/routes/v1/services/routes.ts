@@ -10,7 +10,7 @@ import {
 } from "../../../middleware/auth.js"
 
 import { valid_contractor } from "../contractors/middleware.js"
-import { multiplePhotoUpload } from "../util/upload.js"
+import { multiplePhotoUpload, removeUploadsWhenDone } from "../util/upload.js"
 
 import {
   services_post_root,
@@ -92,9 +92,10 @@ servicesRouter.post(
   "/:service_id/photos",
   userAuthorized,
   requireServicesWrite,
+  writeRateLimit,
+  removeUploadsWhenDone,
   multiplePhotoUpload.array("photos", 5),
   services_post_service_id_photos_spec,
-  writeRateLimit,
   services_post_service_id_photos,
 )
 

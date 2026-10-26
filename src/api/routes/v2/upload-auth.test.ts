@@ -75,6 +75,19 @@ vi.mock("../v1/util/upload.js", async (importOriginal) => {
   }
 })
 
+// The upload routes are rate limited before multer. The real limiter keeps
+// its counters in Postgres; record that it ran instead.
+vi.mock("../../middleware/tsoa-ratelimit.js", () => ({
+  tsoaWriteRateLimit: (
+    _req: express.Request,
+    _res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    h.calls.push("tsoaWriteRateLimit")
+    next()
+  },
+}))
+
 function makeUser(overrides: Partial<User> = {}): User {
   return {
     user_id: "00000000-0000-0000-0000-000000000001",
@@ -170,22 +183,25 @@ describe("v2 upload routes: auth runs before multer", () => {
 
   // Positive controls: with a permitted caller multer does run and does write a
   // temp file, so the "nothing written" assertions above are meaningful.
+  // The photo routes delete multer's temp files when the response ends; the
+  // admin import keeps its zip (its job reads it after responding).
   it.each([
-    ["admin", UPLOAD_ROUTES[0], "gameDataZipUpload.single(file)"],
-    ["user", UPLOAD_ROUTES[1], "multiplePhotoUpload.array(photos)"],
-    ["user", UPLOAD_ROUTES[2], "multiplePhotoUpload.single(photo)"],
+    ["admin", UPLOAD_ROUTES[0], "gameDataZipUpload.single(file)", 1],
+    ["user", UPLOAD_ROUTES[1], "multiplePhotoUpload.array(photos)", 0],
+    ["user", UPLOAD_ROUTES[2], "multiplePhotoUpload.single(photo)", 0],
   ] as const)(
-    "%s caller reaches multer on %s",
-    async (who, { path, field, name }, label) => {
+    "%s caller is rate limited, then reaches multer on %s",
+    async (who, { path, field, name }, label, filesLeft) => {
       const res = await request(app)
         .post(path)
         .set("x-test-user", who)
         .attach(field, filePayload, name)
 
       expect(res.status).toBe(202)
-      expect(h.calls).toEqual([label])
+      expect(h.calls).toEqual(["tsoaWriteRateLimit", label])
       expect(res.body.files).toHaveLength(1)
-      expect(fs.readdirSync(h.dest)).toHaveLength(1)
+      await new Promise((r) => setTimeout(r, 50))
+      expect(fs.readdirSync(h.dest)).toHaveLength(filesLeft)
     },
   )
 

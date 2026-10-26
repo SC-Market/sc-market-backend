@@ -15,7 +15,12 @@ import {
   canViewV2DebugInternals,
   filterV2DebugFromOpenApiSpec,
 } from "./util/openapi-debug-visibility.js"
-import { gameDataZipUpload, multiplePhotoUpload } from "../v1/util/upload.js"
+import {
+  gameDataZipUpload,
+  multiplePhotoUpload,
+  removeUploadsWhenDone,
+} from "../v1/util/upload.js"
+import { tsoaWriteRateLimit } from "../../middleware/tsoa-ratelimit.js"
 import { requireSecurity } from "./middleware/tsoa-auth.js"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -66,7 +71,11 @@ apiV2Router.use(
 // Import and register routes like this:
 import { RegisterRoutes } from "./generated/routes.js"
 
-// Multipart upload routes. multer must run before the TSOA handler (it
+// Multipart upload routes. Each one is authenticated and rate limited before
+// multer parses anything, and (except the admin import) its temp files are
+// deleted when the response ends, on every exit path.
+//
+// multer must run before the TSOA handler (it
 // populates req.file / req.files), but it must NOT run before authentication:
 // it parses the body and writes it to disk. So each upload route runs the same
 // @Security check TSOA runs (requireSecurity -> expressAuthentication) first,
@@ -82,6 +91,9 @@ import { RegisterRoutes } from "./generated/routes.js"
 apiV2Router.post(
   "/admin/import-game-data",
   requireSecurity("loggedin"),
+  tsoaWriteRateLimit,
+  // No removeUploadsWhenDone: the import job reads the zip after responding
+  // and deletes it itself.
   gameDataZipUpload.single("file"),
 )
 
@@ -89,6 +101,8 @@ apiV2Router.post(
 apiV2Router.post(
   "/listings/:id/photos",
   requireSecurity("loggedin"),
+  tsoaWriteRateLimit,
+  removeUploadsWhenDone,
   multiplePhotoUpload.array("photos", 5),
 )
 
@@ -96,6 +110,8 @@ apiV2Router.post(
 apiV2Router.post(
   "/images/upload",
   requireSecurity("loggedin"),
+  tsoaWriteRateLimit,
+  removeUploadsWhenDone,
   multiplePhotoUpload.single("photo"),
 )
 

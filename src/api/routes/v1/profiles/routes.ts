@@ -9,7 +9,7 @@ import {
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
-import { singlePhotoUpload, photoUpload } from "../util/upload.js"
+import { singlePhotoUpload, photoUpload, removeUploadsWhenDone } from "../util/upload.js"
 
 import {
   profile_post_auth_link,
@@ -115,9 +115,10 @@ profileRouter.post(
   "/avatar",
   userAuthorized,
   requireProfileWrite,
+  writeRateLimit,
+  removeUploadsWhenDone,
   singlePhotoUpload.single("avatar"),
   profile_post_avatar_spec,
-  writeRateLimit,
   profile_post_avatar,
 )
 
@@ -125,9 +126,10 @@ profileRouter.post(
   "/banner",
   userAuthorized,
   requireProfileWrite,
+  writeRateLimit,
+  removeUploadsWhenDone,
   photoUpload.single("banner"),
   profile_post_banner_spec,
-  writeRateLimit,
   profile_post_banner,
 )
 
