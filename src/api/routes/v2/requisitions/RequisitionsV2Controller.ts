@@ -8,7 +8,8 @@
  *   1. Buyer POSTs /requisitions  → creates order (kind='requisition') + offer_session + requisition_items
  *   2. Supplier sees the order, creates/accepts via the existing offer negotiation flow
  *   3. Supplier optionally uses offer_requisition_items to propose specific listing-prices
- *   4. On accept: order proceeds through standard status lifecycle (pending → assigned → completed)
+ *   4. The order starts as not-started and follows the standard order status lifecycle
+ *      (not-started → in-progress → fulfilled, or cancelled)
  *
  * Routes:
  *   POST   /requisitions              — create requisition order
@@ -35,6 +36,7 @@ import {
 } from "../types/requisitions.types.js"
 import logger from "../../../../logger/logger.js"
 import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
+import type { OrderStatus } from "../../../../clients/database/db-models.js"
 
 /** Row shape of the `game_items` id/name lookup used to snapshot item names */
 interface GameItemNameRow {
@@ -201,7 +203,8 @@ export class RequisitionsV2Controller extends BaseController {
           collateral: 0,
           title: body.title,
           description: body.description || "",
-          status: "pending",
+          // An order status, like every other order (column default too).
+          status: "not-started" satisfies OrderStatus,
           offer_session_id: session.id,
         }).returning("*")
 
@@ -255,7 +258,7 @@ export class RequisitionsV2Controller extends BaseController {
   public async getRequisitions(
     @Request() request: ExpressRequest,
     @Query() role?: "buyer" | "supplier",
-    @Query() status?: "pending" | "assigned" | "completed" | "cancelled",
+    @Query() status?: "not-started" | "in-progress" | "fulfilled" | "cancelled",
     @Query() page?: number,
     @Query() page_size?: number,
   ): Promise<GetRequisitionsResponse> {

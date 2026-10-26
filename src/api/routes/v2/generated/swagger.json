@@ -14083,9 +14083,9 @@
 						"schema": {
 							"type": "string",
 							"enum": [
-								"pending",
-								"assigned",
-								"completed",
+								"not-started",
+								"in-progress",
+								"fulfilled",
 								"cancelled"
 							]
 						}

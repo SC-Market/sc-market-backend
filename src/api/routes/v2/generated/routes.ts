@@ -5194,7 +5194,7 @@ export function RegisterRoutes(app: Router) {
         const argsRequisitionsV2Controller_getRequisitions: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 role: {"in":"query","name":"role","dataType":"union","subSchemas":[{"dataType":"enum","enums":["buyer"]},{"dataType":"enum","enums":["supplier"]}]},
-                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["pending"]},{"dataType":"enum","enums":["assigned"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["cancelled"]}]},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["not-started"]},{"dataType":"enum","enums":["in-progress"]},{"dataType":"enum","enums":["fulfilled"]},{"dataType":"enum","enums":["cancelled"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
         };
