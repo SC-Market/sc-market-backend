@@ -2729,6 +2729,12 @@ export const get_spectrum_id_settings_discord_spec = oapi.validPath({
                 nullable: true,
                 description: "Discord channel ID where the org's order threads are created",
               },
+              bot_can_see_channel: {
+                type: "boolean",
+                nullable: true,
+                description:
+                  "false when the SC Market bot can't see the channel (Missing Access or deleted); null when there is no channel or Discord couldn't be asked",
+              },
             },
           },
         },

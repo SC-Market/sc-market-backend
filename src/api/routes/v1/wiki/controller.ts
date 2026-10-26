@@ -2,6 +2,7 @@ import { RequestHandler } from "express"
 import logger from "../../../../logger/logger.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
+import { readJsonResponse, UpstreamResponseError } from "../../../../util/fetch-json.js"
 
 export const wiki_get_imagesearch_query: RequestHandler = async function (
   req,
@@ -57,8 +58,21 @@ export const wiki_get_itemsearch_query: RequestHandler = async function (
     return
   }
 
-  const result = await wikiItemSearch(query)
-  res.json(createResponse(result))
+  try {
+    const result = await wikiItemSearch(query)
+    res.json(createResponse(result))
+  } catch (error) {
+    if (!(error instanceof UpstreamResponseError)) throw error
+    // The wiki answers with an HTML page when it's down or rate limiting.
+    logger.warn("Wiki item search failed", {
+      status: error.status,
+      contentType: error.contentType,
+      bodyPreview: error.bodyPreview,
+    })
+    res
+      .status(502)
+      .json(createErrorResponse(ErrorCode.SERVICE_UNAVAILABLE, "The wiki is unavailable right now"))
+  }
 }
 const example_image_resp = {
   pages: [
@@ -108,7 +122,7 @@ async function wikiImageSearch(
       }),
   )
 
-  return (await resp.json()) as typeof example_image_resp
+  return readJsonResponse<typeof example_image_resp>(resp, "Wiki title search")
 }
 
 async function wikiItemSearch(query: string) {
@@ -129,7 +143,7 @@ async function wikiItemSearch(query: string) {
         explaintext: "true",
       }),
   )
-  return await resp.json()
+  return readJsonResponse(resp, "Wiki item search")
 }
 
 async function wikiImageDetails(url: string) {
@@ -150,7 +164,7 @@ async function wikiImageDetails(url: string) {
           iiurlwidth: "200",
         }),
     )
-    return (await resp.json()) as any
+    return await readJsonResponse<any>(resp, "Wiki image details")
   } catch (e) {
     return {}
   }

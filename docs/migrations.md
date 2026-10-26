@@ -59,7 +59,8 @@ newer than `20261026100000`:
 - **Indexes on hot tables: `CREATE INDEX CONCURRENTLY`** in a migration with
   `export const config = { transaction: false }`. Run the statements on one
   pinned connection if you change session settings, and handle the INVALID
-  index a failed build leaves behind (drop it and build again).
+  index a failed build leaves behind (see
+  `migrations/20261027000000_order_lookup_indexes.ts`).
 - **Make migrations idempotent** (`IF NOT EXISTS`, `IF EXISTS`, checks before
   adding constraints). A migration can be run twice, for example if a deploy
   is rolled back to an image from before it.

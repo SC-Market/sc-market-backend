@@ -1,27 +1,62 @@
-import { RequestHandler } from "express"
+import { RequestHandler, Response } from "express"
+import logger from "../../../../logger/logger.js"
+import { readJsonResponse, UpstreamResponseError } from "../../../../util/fetch-json.js"
+import { createErrorResponse } from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
+
+const SOURCE = "RSI starmap"
+
+/**
+ * The RSI starmap API sometimes answers with an HTML page (errors, Cloudflare
+ * challenges). Answer 502 instead of letting the parse error become a 500.
+ */
+function upstreamUnavailable(res: Response, error: unknown): boolean {
+  if (!(error instanceof UpstreamResponseError)) return false
+  logger.warn("RSI starmap request failed", {
+    status: error.status,
+    contentType: error.contentType,
+    bodyPreview: error.bodyPreview,
+  })
+  res
+    .status(502)
+    .json(createErrorResponse(ErrorCode.SERVICE_UNAVAILABLE, "The RSI starmap is unavailable right now"))
+  return true
+}
 
 export const starmap_get_route_from_to: RequestHandler = async function (
   req,
   res,
 ) {
-  const route = await getRoute(req.params.from, req.params.to)
-  res.json(route)
+  try {
+    const route = await getRoute(req.params.from, req.params.to)
+    res.json(route)
+  } catch (error) {
+    if (!upstreamUnavailable(res, error)) throw error
+  }
 }
 
 export const starmap_get_route_identifier: RequestHandler = async function (
   req,
   res,
 ) {
-  const route = await getObject(req.params.identifier)
-  res.json(route)
+  try {
+    const route = await getObject(req.params.identifier)
+    res.json(route)
+  } catch (error) {
+    if (!upstreamUnavailable(res, error)) throw error
+  }
 }
 
 export const starmap_get_search_query: RequestHandler = async function (
   req,
   res,
 ) {
-  const results = await search(req.params.query)
-  res.json(results)
+  try {
+    const results = await search(req.params.query)
+    res.json(results)
+  } catch (error) {
+    if (!upstreamUnavailable(res, error)) throw error
+  }
 }
 export async function getRoute(from: string, to: string, ship_size?: string) {
   const resp = await fetch(
@@ -50,7 +85,7 @@ export async function getRoute(from: string, to: string, ship_size?: string) {
       // "mode": "cors"
     },
   )
-  const js = (await resp.json()) as { data: any }
+  const js = await readJsonResponse<{ data: any }>(resp, SOURCE)
   return js.data
 }
 
@@ -79,7 +114,7 @@ export async function search(query: string) {
       // "mode": "cors"
     },
   )
-  const js = (await resp.json()) as any
+  const js = await readJsonResponse<any>(resp, SOURCE)
   return js.data
 }
 
@@ -107,6 +142,6 @@ export async function getObject(identifier: string) {
       // "mode": "cors"
     },
   )
-  const js = (await resp.json()) as any
+  const js = await readJsonResponse<any>(resp, SOURCE)
   return js.data.resultset
 }
