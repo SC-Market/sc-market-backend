@@ -1,6 +1,7 @@
 /**
  * Buy-order fulfillment: which of a seller's listings/variants can fill a
- * standing buy order, and the order row a fulfillment creates.
+ * standing buy order. The order row a fulfillment creates is shopOrderRow
+ * (services/checkout/shop-order-row.ts).
  *
  * Used by BuyOrdersV2Controller (POST /buy-orders/{id}/fulfill and
  * GET /buy-orders/{id}/fulfillment-options). Whether fulfill accepts an
@@ -11,38 +12,6 @@
 import type { Knex } from "knex"
 import type { VariantAttributes } from "../../api/routes/v2/types/listings.types.js"
 import { getShopsForUser } from "../shops/shop-permissions.service.js"
-
-/** The shop columns that decide who a fulfillment order belongs to. */
-export interface FulfillingShop {
-  shop_id: string
-  owner_user_id: string | null
-  owner_contractor_id: string | null
-}
-
-/**
- * Columns for the `orders` row a fulfillment creates: linked to the selling
- * shop like any other shop order (shop_id; contractor_id for an org shop;
- * the owner as assignee for a personal shop, unassigned for an org shop so a
- * member can claim it), with the buyer as customer.
- */
-export function fulfillmentOrderColumns(
-  shop: FulfillingShop,
-  buyerId: string,
-  pricePerUnit: number,
-  quantity: number,
-  now: Date = new Date(),
-) {
-  return {
-    customer_id: buyerId,
-    shop_id: shop.shop_id,
-    contractor_id: shop.owner_contractor_id,
-    assigned_id: shop.owner_contractor_id ? null : shop.owner_user_id,
-    cost: pricePerUnit * quantity,
-    status: "pending",
-    created_at: now,
-    updated_at: now,
-  }
-}
 
 /** One listing variant a seller can fill the buy order from. */
 export interface FulfillmentOptionRow {

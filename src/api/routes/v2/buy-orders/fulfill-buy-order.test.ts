@@ -46,7 +46,15 @@ function makeTrx() {
       },
       insert(row: Row) {
         pendingInsert = { ...row }
-        if (table === "orders") pendingInsert.order_id = `order-${nextId++}`
+        // orders' column defaults: the id, "timestamp" = now(), status = 'not-started'
+        if (table === "orders") {
+          pendingInsert = {
+            order_id: `order-${nextId++}`,
+            timestamp: new Date(),
+            status: "not-started",
+            ...pendingInsert,
+          }
+        }
         if (table === "order_market_items_v2") pendingInsert.order_item_id = `oi-${nextId++}`
         rows.push(pendingInsert)
         return b
@@ -116,6 +124,7 @@ function seed() {
         quality_value_max: null,
       },
     ],
+    accounts: [{ user_id: "buyer", username: "buyer" }],
     listings: [{ listing_id: LISTING, shop_id: "shop-1", status: "active" }],
     shops: [{ shop_id: "shop-1", owner_user_id: "seller", owner_contractor_id: null, status: "active" }],
     listing_items: [
@@ -152,13 +161,16 @@ describe("POST /buy-orders/{id}/fulfill", () => {
     expect(result.total_price).toBe(800)
     const [order] = h.tables.orders
     expect(order).toMatchObject({
+      kind: "Delivery",
+      title: "Items Sold to buyer",
       customer_id: "buyer",
       shop_id: "shop-1",
       assigned_id: "seller",
       contractor_id: null,
       cost: 800,
-      status: "pending",
+      status: "not-started",
     })
+    expect(order).not.toHaveProperty("created_at")
     expect(h.tables.order_market_items_v2[0]).toMatchObject({
       order_id: order.order_id,
       listing_id: LISTING,

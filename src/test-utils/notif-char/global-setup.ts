@@ -16,7 +16,7 @@ import { existsSync, mkdtempSync, readdirSync, rmSync } from "node:fs"
 import path from "node:path"
 import pg from "pg"
 import type { TestProject } from "vitest/node"
-import { buildSchema } from "./schema.js"
+import { buildSchema } from "../full-schema.js"
 import { PG_TEST_URL, pgTestConnection, type PgConnection } from "../pg-test-db.js"
 
 const TEMPLATE = "notif_char_template"

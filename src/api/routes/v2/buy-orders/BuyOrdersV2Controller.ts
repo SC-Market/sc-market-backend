@@ -48,8 +48,8 @@ import { buyOrderVisibleTo } from "./buy-order-visibility.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { canManageShop } from "../../../../services/shops/shop-permissions.service.js"
 import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
+import { shopOrderRow } from "../../../../services/checkout/shop-order-row.js"
 import {
-  fulfillmentOrderColumns,
   getFulfillingShopIds,
   queryFulfillmentOptionRows,
   rankFulfillmentOptions,
@@ -126,11 +126,10 @@ export class BuyOrdersV2Controller extends BaseController {
    * 2. Validates variant exists and belongs to listing
    * 3. Checks variant availability (sufficient stock)
    * 4. Snapshots variant price at purchase time
-   * 5. Creates order record in V1 orders table
-   * 6. Creates market_orders entry (V1 compatibility)
-   * 7. Creates order_market_items_v2 entry with variant tracking
-   * 8. Allocates stock from variant-specific lots
-   * 9. Returns order details with purchase summary
+   * 5. Creates the orders row for the shop (shopOrderRow)
+   * 6. Creates order_market_items_v2 entry with variant tracking
+   * 7. Allocates stock from variant-specific lots
+   * 8. Returns order details with purchase summary
    *
    * Uses database transaction for atomicity to ensure all-or-nothing behavior.
    * Stock allocation uses listing_item_lots directly (V2).
@@ -285,15 +284,9 @@ export class BuyOrdersV2Controller extends BaseController {
         if (!purchaseShop) this.throwNotFound("Shop", shopId)
         await this.assertBuyerMayCheckout(userId, purchaseShop, requestBody.quantity, totalPrice)
 
-        // Step 6: Create order record in V1 orders table
+        // Step 6: Create the order
         const [order] = await trx("orders")
-          .insert({
-            customer_id: userId,
-            contractor_id: null, // V2 orders are user-to-user by default
-            status: "pending",
-            created_at: new Date(),
-            updated_at: new Date(),
-          })
+          .insert(shopOrderRow(purchaseShop, this.getUser(), totalPrice))
           .returning("*")
 
         logger.info("Created order record for direct purchase", {
@@ -302,19 +295,9 @@ export class BuyOrdersV2Controller extends BaseController {
           totalPrice,
         })
 
-        // Step 7: Create market_orders entry for V1 compatibility
-        await trx("market_orders").insert({
-          order_id: order.order_id,
-          listing_id: requestBody.listing_id,
-          quantity: requestBody.quantity,
-        })
-
-        logger.info("Created market_orders entry", {
-          orderId: order.order_id,
-          listingId: requestBody.listing_id,
-        })
-
-        // Step 8: Create order_market_items_v2 entry with variant tracking
+        // Step 7: Create order_market_items_v2 entry with variant tracking.
+        // No market_orders row: its listing_id references V1 market_listings,
+        // and cart checkout orders have none either.
         const [orderItem] = await trx("order_market_items_v2")
           .insert({
             order_id: order.order_id,
@@ -332,7 +315,7 @@ export class BuyOrdersV2Controller extends BaseController {
           orderItemId: orderItem.order_item_id,
         })
 
-        // Step 9: Allocate stock from variant-specific lots (V2 direct)
+        // Step 8: Allocate stock from variant-specific lots (V2 direct)
         const allocationMode = await getShopAllocationMode(listing.shop_id)
 
         if (allocationMode === "auto") {
@@ -389,7 +372,7 @@ export class BuyOrdersV2Controller extends BaseController {
           shop_id: shopId,
           total_price: totalPrice,
           status: order.status,
-          created_at: order.created_at.toISOString(),
+          created_at: order.timestamp.toISOString(),
           item: itemDetail,
           allocation_result: {
             has_partial_allocations: false,
@@ -927,8 +910,9 @@ export class BuyOrdersV2Controller extends BaseController {
       await assertSameRealm({ users: [buyOrder.buyer_id, sellerId], shops: [shop.shop_id] }, trx)
 
       // Create the order, linked to the selling shop
+      const buyer = await trx('accounts').where('user_id', buyOrder.buyer_id).first('user_id', 'username')
       const [order] = await trx('orders')
-        .insert(fulfillmentOrderColumns(shop, buyOrder.buyer_id, price, quantity))
+        .insert(shopOrderRow(shop, buyer, price * quantity))
         .returning('*')
 
       // Create order item
@@ -939,9 +923,6 @@ export class BuyOrdersV2Controller extends BaseController {
         variant_id: body.variant_id,
         quantity,
         price_per_unit: price,
-        variant_attributes: variant.attributes,
-        variant_display_name: variant.display_name || 'Standard',
-        created_at: new Date(),
       }).returning('*')
 
       // Allocate stock
@@ -998,7 +979,7 @@ export class BuyOrdersV2Controller extends BaseController {
         shop_id: fulfillmentShopId,
         total_price: price * quantity,
         status: order.status,
-        created_at: order.created_at.toISOString(),
+        created_at: order.timestamp.toISOString(),
         item: {
           order_item_id: orderItem.order_item_id,
           listing_id: body.listing_id,

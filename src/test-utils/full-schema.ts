@@ -1,21 +1,22 @@
 /**
- * Builds the SC Market schema in a throwaway Postgres for the notification
- * characterization suite, the way production got it: scripts/ci/pre-legacy.sql
+ * Builds the full SC Market schema in a throwaway Postgres (for the
+ * notification characterization suite and real-schema *.pg.test.ts files),
+ * the way production got it: scripts/ci/pre-legacy.sql
  * (objects production has that no file creates), the legacy SQL files in
  * config/postgres, then knex's migrate.latest over every migration.
  *
  * The same sequence runs in CI as scripts/ci/schema-from-empty.sh. Every
  * migration must apply on an empty database; one that doesn't fails the
- * suite's global setup.
+ * build.
  */
 import { execFileSync } from "node:child_process"
 import { readdirSync } from "node:fs"
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 import knexFactory, { type Knex } from "knex"
-import type { PgConnection } from "../pg-test-db.js"
+import type { PgConnection } from "./pg-test-db.js"
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../..")
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../..")
 
 function psqlEnv(target: PgConnection) {
   return {
