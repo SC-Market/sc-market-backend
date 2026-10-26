@@ -4,6 +4,7 @@
  */
 
 import { getKnex, database } from "../../../../clients/database/knex-db.js"
+import type { Knex } from "knex"
 import { getNotificationActionByName } from "../notifications/database.js"
 import { getContractorTransactions as getContractorTransactionsFromTransactions } from "../transactions/database.js"
 import { RecruitingSearchQuery } from "../recruiting/controller.js"
@@ -317,6 +318,31 @@ export async function updateInviteCodes(
   return knex()<DBContractorInviteCode>("contractor_invite_codes")
     .where(where)
     .update(body)
+    .returning("*")
+}
+
+/**
+ * Atomically use one slot of an invite code. Returns the updated row, or null
+ * when the code does not exist or is used up (max_uses = 0 means unlimited).
+ * The condition lives in the UPDATE so concurrent accepts cannot overshoot.
+ */
+export async function consumeInviteCode(
+  invite_id: string,
+  contractor_id: string,
+): Promise<DBContractorInviteCode | null> {
+  const [row] = await consumeInviteCodeQuery(knex(), invite_id, contractor_id)
+  return row || null
+}
+
+export function consumeInviteCodeQuery(
+  k: Knex,
+  invite_id: string,
+  contractor_id: string,
+) {
+  return k<DBContractorInviteCode>("contractor_invite_codes")
+    .where({ invite_id, contractor_id })
+    .andWhere((qb) => qb.where("max_uses", 0).orWhereRaw("times_used < max_uses"))
+    .update({ times_used: k.raw("times_used + 1") } as never)
     .returning("*")
 }
 

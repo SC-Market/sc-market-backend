@@ -34,6 +34,7 @@ import { contractorDetails } from "../util/formatting.js"
 import {
   can_manage_role,
   get_min_position,
+  has_permission,
   is_member,
   outranks,
   self_member_role_removal_forbidden,
@@ -190,6 +191,19 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
 ) => {
   try {
     const contractor = req.contractor!
+    // Audit entries carry invite codes (invite.* subject ids) and member and
+    // role history, so only org managers (or site admins) may read them.
+    const viewer = req.user as User
+    if (
+      !(await has_permission(
+        contractor.contractor_id,
+        viewer.user_id,
+        "manage_org_details",
+      ))
+    ) {
+      res.status(403).json(createForbiddenErrorResponse("Unauthorized"))
+      return
+    }
     const page = Math.max(1, parseInt(req.query.page as string) || 1)
     const pageSize = Math.min(
       100,
@@ -394,13 +408,20 @@ export const post_invites_invite_id_accept: RequestHandler = async (
     return
   }
 
-  await contractorDb.updateInviteCodes(
-    {
+  const consumed = await contractorDb.consumeInviteCode(
+    invite_id,
+    contractor.contractor_id,
+  )
+  if (!consumed) {
+    res.status(409).json(createConflictErrorResponse("Invite has been used up"))
+    return
+  }
+  if (consumed.max_uses > 0 && consumed.times_used >= consumed.max_uses) {
+    await contractorDb.deleteInviteCodes({
       invite_id,
       contractor_id: contractor.contractor_id,
-    },
-    { times_used: invite.times_used + 1 },
-  )
+    })
+  }
 
   await contractorDb.removeContractorInvites(
     user.user_id,
@@ -2220,15 +2241,18 @@ export const post_spectrum_id_accept: RequestHandler = async (
         return
       }
 
-      const codes = await contractorDb.updateInviteCodes(
-        {
-          invite_id,
-          contractor_id: contractor.contractor_id,
-        },
-        { times_used: invites[0].times_used + 1 },
+      const consumed = await contractorDb.consumeInviteCode(
+        invite_id,
+        contractor.contractor_id,
       )
+      if (!consumed) {
+        res
+          .status(409)
+          .json(createConflictErrorResponse("Invite has been used up"))
+        return
+      }
 
-      if (codes[0].times_used >= codes[0].max_uses) {
+      if (consumed.max_uses > 0 && consumed.times_used >= consumed.max_uses) {
         await contractorDb.deleteInviteCodes({
           invite_id,
           contractor_id: contractor.contractor_id,
