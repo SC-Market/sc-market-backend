@@ -18,6 +18,11 @@ import {
   generateStatusUpdateMessage,
 } from "../../api/routes/v1/util/webhooks.js"
 import logger from "../../logger/logger.js"
+import {
+  actingAsTestAccount,
+  involvesTestParty,
+  orderParties,
+} from "../test-accounts/isolation.js"
 import { env } from "../../config/env.js"
 import { sendMessage } from "../../clients/aws/sqs.js"
 import { checkDiscordSQSConfiguration } from "../../clients/aws/sqs-config.js"
@@ -104,6 +109,9 @@ class RestDiscordService implements DiscordService {
     userId: string,
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void> {
+    // Test accounts have no Discord; any DM caused by one would reach a real
+    // user (services/test-accounts).
+    if (actingAsTestAccount()) return
     try {
       const channel: APIChannel = (await this.rest.post(Routes.userChannels(), {
         body: {
@@ -123,6 +131,10 @@ class RestDiscordService implements DiscordService {
   async queueThreadCreation(
     object: DBOfferSession | DBOrder,
   ): Promise<ThreadCreationResult> {
+    // Never post test-account activity to Discord (services/test-accounts).
+    if (await involvesTestParty(orderParties(object))) {
+      return { status: "failed", message: "Discord is not used for test accounts" }
+    }
     const assigned = object.assigned_id
       ? await profileDb.getUser({ user_id: object.assigned_id })
       : null
@@ -260,6 +272,7 @@ class RestDiscordService implements DiscordService {
     threadId: string,
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void> {
+    if (actingAsTestAccount()) return // services/test-accounts
     if (!threadId) {
       return
     }
@@ -279,6 +292,7 @@ class RestDiscordService implements DiscordService {
     order: DBOrder,
     newStatus: string,
   ): Promise<void> {
+    if (actingAsTestAccount()) return // services/test-accounts
     if (!order.thread_id) {
       return
     }
@@ -303,6 +317,7 @@ class RestDiscordService implements DiscordService {
     status: "Rejected" | "Accepted" | "Counter-Offered",
     user?: User,
   ): Promise<void> {
+    if (actingAsTestAccount()) return // services/test-accounts
     if (!offer.thread_id) {
       return
     }
@@ -326,6 +341,7 @@ class RestDiscordService implements DiscordService {
     order: DBOrder,
     assigned: User,
   ): Promise<void> {
+    if (actingAsTestAccount()) return // services/test-accounts
     if (!order.thread_id) {
       return
     }
@@ -362,6 +378,7 @@ class RestDiscordService implements DiscordService {
     author: User,
     content: string,
   ): Promise<void> {
+    if (actingAsTestAccount()) return // services/test-accounts
     const threadId = "thread_id" in order ? order.thread_id : null
 
     if (!threadId) {
@@ -465,6 +482,7 @@ class RestDiscordService implements DiscordService {
     channelId: string,
     body: RESTPostAPIChannelMessageJSONBody,
   ): Promise<unknown> {
+    if (actingAsTestAccount()) return undefined // services/test-accounts
     try {
       const result = await this.rest.post(Routes.channelMessages(channelId), {
         body,

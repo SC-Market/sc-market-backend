@@ -34,6 +34,7 @@ import {
   OfferRequisitionItem,
 } from "../types/requisitions.types.js"
 import logger from "../../../../logger/logger.js"
+import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 
 /** Row shape of the `game_items` id/name lookup used to snapshot item names */
 interface GameItemNameRow {
@@ -151,6 +152,9 @@ export class RequisitionsV2Controller extends BaseController {
       if (!c) throw this.throwNotFound("Supplier contractor", body.target_contractor_id)
       supplierContractorId = body.target_contractor_id
     }
+
+    // Test and real accounts never trade (services/test-accounts/isolation.ts).
+    await assertSameRealm({ users: [userId, supplierId], contractors: [supplierContractorId] })
 
     // Snapshot game item names
     const gameItemIds = body.items.map((i) => i.game_item_id)

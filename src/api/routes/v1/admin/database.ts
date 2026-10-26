@@ -1,3 +1,4 @@
+import { notTestUser } from "../../../../services/test-accounts/isolation.js"
 /**
  * Admin-related database operations.
  * This module contains all database queries specific to admin analytics,
@@ -98,6 +99,7 @@ export async function getMembershipAnalytics(options?: {
   // Get daily new members
   // If no time range provided, default to last 30 days for backward compatibility
   let dailyQuery = knex()("accounts")
+    .where("accounts.is_test", false)
     .select(
       knex().raw("DATE(created_at) as date"),
       knex().raw("COUNT(*) as new_members"),
@@ -134,6 +136,7 @@ export async function getMembershipAnalytics(options?: {
   // Get weekly new members
   // If no time range provided, default to last 12 weeks for backward compatibility
   let weeklyQuery = knex()("accounts")
+    .where("accounts.is_test", false)
     .select(
       knex().raw("DATE_TRUNC('week', created_at) as date"),
       knex().raw("COUNT(*) as new_members"),
@@ -170,6 +173,7 @@ export async function getMembershipAnalytics(options?: {
   // Get monthly new members
   // If no time range provided, default to last 12 months for backward compatibility
   let monthlyQuery = knex()("accounts")
+    .where("accounts.is_test", false)
     .select(
       knex().raw("DATE_TRUNC('month', created_at) as date"),
       knex().raw("COUNT(*) as new_members"),
@@ -205,6 +209,7 @@ export async function getMembershipAnalytics(options?: {
 
   // Get overall membership statistics
   const totalMembers = await knex()("accounts")
+    .where("accounts.is_test", false)
     .select(
       knex().raw("COUNT(*) as total_members"),
       knex().raw("COUNT(CASE WHEN role = ? THEN 1 END) as admin_members", [
@@ -447,6 +452,10 @@ export async function deleteContentReport(
 /**
  * Get offer analytics (mirrors getOrderAnalytics for offer_sessions).
  */
+// Admin analytics leave test accounts out (services/test-accounts): every
+// party of an offer is in one realm, so the customer decides.
+const REAL_OFFER = notTestUser("offer_sessions.customer_id")
+
 export async function getOfferAnalytics() {
   // The offer_sessions.status is only 'active' or 'closed'.
   // The real resolved status (accepted/rejected) comes from get_offer_status(),
@@ -470,7 +479,7 @@ export async function getOfferAnalytics() {
         COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted,
         COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected
       FROM offer_sessions
-      WHERE timestamp >= NOW() - INTERVAL '30 days'
+      WHERE ${REAL_OFFER} AND timestamp >= NOW() - INTERVAL '30 days'
       GROUP BY DATE(timestamp)
     ) o ON d.date = o.date
     ORDER BY d.date ASC
@@ -493,7 +502,7 @@ export async function getOfferAnalytics() {
         COUNT(CASE WHEN ${resolvedStatus} = 'accepted' THEN 1 END) as accepted,
         COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected
       FROM offer_sessions
-      WHERE timestamp >= DATE_TRUNC('week', NOW() - INTERVAL '12 weeks')
+      WHERE ${REAL_OFFER} AND timestamp >= DATE_TRUNC('week', NOW() - INTERVAL '12 weeks')
       GROUP BY DATE_TRUNC('week', timestamp)
     ) o ON d.date = o.date
     ORDER BY d.date ASC
@@ -518,7 +527,7 @@ export async function getOfferAnalytics() {
         COUNT(CASE WHEN ${resolvedStatus} = 'rejected' THEN 1 END) as rejected,
         COALESCE(AVG(CASE WHEN ${resolvedStatus} = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) END), 0) as average_accepted_value
       FROM offer_sessions
-      WHERE timestamp >= DATE_TRUNC('month', NOW() - INTERVAL '12 months')
+      WHERE ${REAL_OFFER} AND timestamp >= DATE_TRUNC('month', NOW() - INTERVAL '12 months')
       GROUP BY DATE_TRUNC('month', timestamp)
     ) o ON d.date = o.date
     ORDER BY d.date ASC
@@ -531,6 +540,7 @@ export async function getOfferAnalytics() {
     .join("orders as o", "os.id", "o.offer_session_id")
     .join("shops as s", "o.shop_id", "s.shop_id")
     .whereNotNull("o.shop_id")
+    .where("s.is_test", false)
     .select(
       "s.name",
       "s.slug",
@@ -546,6 +556,7 @@ export async function getOfferAnalytics() {
   const userResolvedStatus = `get_offer_status(os.id, os.customer_id, os.status)`
   const topUsers = await knex()("offer_sessions as os")
     .join("accounts as a", "os.customer_id", "a.user_id")
+    .where("a.is_test", false)
     .select(
       "a.username",
       knex().raw(`COUNT(CASE WHEN ${userResolvedStatus} = 'accepted' THEN 1 END) as accepted_offers`),
@@ -558,6 +569,7 @@ export async function getOfferAnalytics() {
 
   // Summary
   const summary = await knex()("offer_sessions")
+    .whereRaw(REAL_OFFER)
     .select(
       knex().raw("COUNT(*) as total_offers"),
       knex().raw(`COUNT(CASE WHEN ${resolvedStatus} IN ('to-customer', 'to-seller') THEN 1 END) as active_offers`),

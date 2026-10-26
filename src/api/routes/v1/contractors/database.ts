@@ -1103,10 +1103,10 @@ export async function getAllContractorsPaginated(
   searchQuery: RecruitingSearchQuery,
 ): Promise<DBContractor[]> {
   const knexInstance = knex()
-  let query = knex()<DBContractor>("contractors").where(
-    "contractors.archived",
-    false,
-  )
+  let query = knex()<DBContractor>("contractors")
+    .where("contractors.archived", false)
+    // Test orgs never appear in the public directory (services/test-accounts).
+    .where("contractors.is_test", false)
 
   switch (searchQuery.sorting) {
     case "name":
@@ -1190,10 +1190,10 @@ export async function getAllContractorsCount(
   searchQuery: RecruitingSearchQuery,
 ): Promise<{ count: number }[]> {
   const knexInstance = knex()
-  let query = knex()<DBContractor>("contractors").where(
-    "contractors.archived",
-    false,
-  )
+  let query = knex()<DBContractor>("contractors")
+    .where("contractors.archived", false)
+    // Test orgs never appear in the public directory (services/test-accounts).
+    .where("contractors.is_test", false)
 
   if (searchQuery.rating) {
     query = query.where(
@@ -1348,9 +1348,14 @@ export async function getContractorBadges(contractor_id: string): Promise<{
 export async function searchContractors(
   query: string,
   language_codes?: string[],
+  /** Test viewers also find test orgs; everyone else only real ones. */
+  includeTest = false,
 ): Promise<DBContractor[]> {
   let dbQuery = knex()<DBContractor>("contractors")
     .where({ archived: false })
+    .modify((qb) => {
+      if (!includeTest) qb.where("contractors.is_test", false)
+    })
     .andWhere((qb) => {
       qb.where("spectrum_id", "ilike", `%${query}%`).orWhere(
         "name",

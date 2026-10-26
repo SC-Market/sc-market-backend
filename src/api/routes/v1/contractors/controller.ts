@@ -1,3 +1,9 @@
+import {
+  canViewTestEntity,
+  isTestUser,
+  rejectMixedRealm,
+  rejectTestUser,
+} from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import {
   getThreadChannel,
@@ -99,6 +105,20 @@ export const post_root: RequestHandler = async (req, res) => {
       banner: string
       language_codes?: string[]
     }
+
+  // Test orgs live in their own namespace so they never take a real org's
+  // identifier (services/test-accounts/isolation.ts).
+  if (isTestUser(user) && !/^TEST/i.test(identifier || "")) {
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "A test account's org identifier must start with TEST",
+        ),
+      )
+    return
+  }
 
   try {
     const cobj = await contractorDb.getContractor({
@@ -335,6 +355,7 @@ export const get_search_query: RequestHandler = async (req, res, next) => {
   const contractors = await contractorDb.searchContractors(
     query,
     language_codes,
+    isTestUser(req.user),
   )
 
   res.json(
@@ -402,6 +423,16 @@ export const post_invites_invite_id_accept: RequestHandler = async (
         status: "error",
       }),
     )
+    return
+  }
+
+  // Test accounts join only test orgs, real ones only real orgs.
+  if (
+    await rejectMixedRealm(res, {
+      users: [user.user_id],
+      contractors: [contractor.contractor_id],
+    })
+  ) {
     return
   }
 
@@ -603,6 +634,11 @@ export const get_spectrum_id_reviews: RequestHandler = async (
 
 export const get_spectrum_id: RequestHandler = async (req, res, next) => {
   const user = req.user as User
+  // Test orgs' pages: test accounts and admins only.
+  if (req.contractor!.is_test && !canViewTestEntity(user)) {
+    res.status(404).json(createNotFoundErrorResponse("Contractor", req.params["spectrum_id"]))
+    return
+  }
 
   res.json(createResponse(await contractorDetails(req.contractor!, user)))
 }
@@ -1972,6 +2008,12 @@ export const post_spectrum_id_webhooks: RequestHandler = async (
   next,
 ) => {
   const contractor = req.contractor!
+  if (
+    rejectTestUser(res, req.user, "Test accounts cannot use webhooks") ||
+    rejectTestUser(res, contractor, "Test orgs cannot use webhooks")
+  ) {
+    return
+  }
 
   const {
     webhook_url,
@@ -2207,6 +2249,16 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
     }
   }
 
+  // Test orgs invite only test accounts, real orgs only real accounts.
+  if (
+    await rejectMixedRealm(res, {
+      users: users.map((u) => u.user_id),
+      contractors: [contractor.contractor_id],
+    })
+  ) {
+    return
+  }
+
   for (const target of users) {
     const role = await contractorDb.getContractorRoleLegacy(
       target.user_id,
@@ -2322,6 +2374,15 @@ export const post_spectrum_id_accept: RequestHandler = async (
 
     const contractor = req.contractor!
     let acceptedInviteId: string | undefined
+
+    if (
+      await rejectMixedRealm(res, {
+        users: [user.user_id],
+        contractors: [contractor.contractor_id],
+      })
+    ) {
+      return
+    }
 
     if (contractor.archived) {
       res

@@ -21,8 +21,6 @@ import logger from "../../logger/logger.js"
 import {
   isJWTAuthEnabled,
   generateAccessToken,
-  generateRefreshToken,
-  saveRefreshToken,
   setAuthCookies,
   clearAuthCookies,
   getRefreshTokenFromRequest,
@@ -43,6 +41,8 @@ import {
   authSessionsLimit,
 } from "../middleware/enhanced-ratelimiting.js"
 import { isKnownSiteRole } from "../util/site-role.js"
+import { issueLoginCookies } from "../util/login-session.js"
+import { testLoginHandler } from "../../services/test-accounts/test-login.js"
 
 /**
  * Errors surfaced through the passport `authenticate` callbacks. The verify
@@ -87,10 +87,7 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
     provider: string,
   ): Promise<void> {
     if (isJWTAuthEnabled()) {
-      const refreshToken = generateRefreshToken()
-      const sid = await saveRefreshToken(user.user_id, refreshToken, req)
-      const accessToken = generateAccessToken(user, { sid })
-      setAuthCookies(res, accessToken, refreshToken)
+      await issueLoginCookies(req, res, user)
       logger.info(`[Auth] ${provider} JWT login successful`, { userId: user.user_id })
       res.redirect(redirectUrl)
     } else {
@@ -771,6 +768,12 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
       }
     },
   )
+
+  // Test accounts only, off unless TEST_LOGIN_ENABLED=true
+  // (src/services/test-accounts/test-login.ts).
+  app.post("/api/auth/test-login", (req: Request, res: Response, next: NextFunction) => {
+    testLoginHandler(req, res).catch(next)
+  })
 
   // JWT logout — revoke refresh token + clear cookies
   app.post("/auth/jwt-logout", authLogoutLimit, async (req: Request, res: Response) => {

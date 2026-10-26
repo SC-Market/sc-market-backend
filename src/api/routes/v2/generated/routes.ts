@@ -72,6 +72,8 @@ import { AuctionsV2Controller } from './../auctions/AuctionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AnalyticsV2Controller } from './../analytics/AnalyticsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TestAccountsController } from './../admin/TestAccountsController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminController } from './../admin/AdminController.js';
@@ -3823,6 +3825,63 @@ const models: TsoaRoute.Models = {
             "shop_id": {"dataType":"string","required":true},
             "listings": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingConversionStat"},"required":true},
             "totals": {"ref":"ListingStatsTotals","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TestAccountSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "banned": {"dataType":"boolean","required":true},
+            "has_authenticator": {"dataType":"boolean","required":true},
+            "last_login_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "failed_logins_24h": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TestAccountListResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "login_enabled": {"dataType":"boolean","required":true},
+            "accounts": {"dataType":"array","array":{"dataType":"refObject","ref":"TestAccountSummary"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateTestAccountResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "otpauth_uri": {"dataType":"string","required":true},
+            "secret": {"dataType":"string","required":true},
+            "manual_key": {"dataType":"string","required":true},
+            "qr_data_url": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateTestAccountRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "username": {"dataType":"string","required":true,"validators":{"minLength":{"value":6},"maxLength":{"value":40}}},
+            "display_name": {"dataType":"string","required":true,"validators":{"minLength":{"value":1},"maxLength":{"value":100}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DeleteTestAccountResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["deleted"]},{"dataType":"enum","enums":["disabled"]}],"required":true},
+            "orgs": {"dataType":"double","required":true},
+            "shops": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -9445,6 +9504,101 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getListingStats',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTestAccountsController_listTestAccounts: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/test-accounts',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(TestAccountsController)),
+            ...(fetchMiddlewares<RequestHandler>(TestAccountsController.prototype.listTestAccounts)),
+
+            async function TestAccountsController_listTestAccounts(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTestAccountsController_listTestAccounts, request, response });
+
+                const controller = new TestAccountsController();
+
+              await templateService.apiHandler({
+                methodName: 'listTestAccounts',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTestAccountsController_createTestAccount: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"CreateTestAccountRequest"},
+        };
+        app.post('/admin/test-accounts',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(TestAccountsController)),
+            ...(fetchMiddlewares<RequestHandler>(TestAccountsController.prototype.createTestAccount)),
+
+            async function TestAccountsController_createTestAccount(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTestAccountsController_createTestAccount, request, response });
+
+                const controller = new TestAccountsController();
+
+              await templateService.apiHandler({
+                methodName: 'createTestAccount',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTestAccountsController_deleteTestAccount: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                username: {"in":"path","name":"username","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/test-accounts/:username',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(TestAccountsController)),
+            ...(fetchMiddlewares<RequestHandler>(TestAccountsController.prototype.deleteTestAccount)),
+
+            async function TestAccountsController_deleteTestAccount(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTestAccountsController_deleteTestAccount, request, response });
+
+                const controller = new TestAccountsController();
+
+              await templateService.apiHandler({
+                methodName: 'deleteTestAccount',
                 controller,
                 response,
                 next,

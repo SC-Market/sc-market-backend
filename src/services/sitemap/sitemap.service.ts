@@ -137,11 +137,11 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   await collectSection(sections, "market", async () => {
     const market_listings: { listing_id: string; title: string }[] = await db("listing_search")
       .select("listing_id", "title")
-      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility" }))
+      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility", shopId: "shop_id" }))
 
     const aggregateItems: { game_item_id: string; game_item_name: string }[] = await db("listing_search")
       .select("game_item_id", "game_item_name")
-      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility" }))
+      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility", shopId: "shop_id" }))
       .whereNotNull("game_item_id")
       .groupBy("game_item_id", "game_item_name")
 
@@ -163,9 +163,12 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
     return marketPages
   })
 
+  // Test accounts, orgs and shops are never listed
+  // (services/test-accounts/isolation.ts).
+
   // ── Contractors ──
   await collectSection(sections, "contractors", async () => {
-    const contractors = await contractorDb.getContractorListings({})
+    const contractors = await contractorDb.getContractorListings({ is_test: false })
     const contractorPages: SitemapItemLoose[] = []
     for (const contractor of contractors) {
       contractorPages.push(
@@ -181,6 +184,7 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
     const shops: { slug: string }[] = await db("shops")
       .select("slug")
       .where("status", "active")
+      .where("is_test", false)
       .whereNot("slug", "")
     const shopPages: SitemapItemLoose[] = []
     for (const shop of shops) {
@@ -277,7 +281,7 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
 
   // ── Users (last — lowest priority) ──
   await collectSection(sections, "users", async () => {
-    const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
+    const users = await profileDb.getUsersWhere({ rsi_confirmed: true, is_test: false })
     const userPages: SitemapItemLoose[] = []
     for (const user of users) {
       userPages.push(

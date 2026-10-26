@@ -47,6 +47,7 @@ import { isUuid } from "../util/short-slug.js"
 import { buyOrderVisibleTo } from "./buy-order-visibility.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { canManageShop } from "../../../../services/shops/shop-permissions.service.js"
+import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 import {
   fulfillmentOrderColumns,
   getFulfillingShopIds,
@@ -444,6 +445,12 @@ export class BuyOrdersV2Controller extends BaseController {
     const expiresAt = body.expires_in_days
       ? new Date(Date.now() + body.expires_in_days * 86400000)
       : new Date(Date.now() + 30 * 86400000);
+
+    // A directed buy order only targets a supplier in the buyer's realm.
+    await assertSameRealm({
+      users: [userId, (body as CreateTargetedBuyOrderRequest).target_supplier_id],
+      contractors: [(body as CreateTargetedBuyOrderRequest).target_supplier_contractor_id],
+    })
 
     const [order] = await db('buy_orders_v2').insert({
       game_item_id: body.game_item_id,
@@ -916,6 +923,8 @@ export class BuyOrdersV2Controller extends BaseController {
         variant.attributes,
       )
       if (problem) throw this.throwValidationError(problem.message, [problem])
+      // Test and real parties never trade (services/test-accounts/isolation.ts).
+      await assertSameRealm({ users: [buyOrder.buyer_id, sellerId], shops: [shop.shop_id] }, trx)
 
       // Create the order, linked to the selling shop
       const [order] = await trx('orders')

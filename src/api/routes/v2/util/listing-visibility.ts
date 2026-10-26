@@ -17,12 +17,22 @@
  */
 
 import type { Knex } from "knex"
+import {
+  hiddenFromRealViewers,
+  notTestShop,
+} from "../../../../services/test-accounts/isolation.js"
 
 export interface ListingVisibilityColumns {
   /** Column holding the listing's visibility ('public' | 'private' | 'unlisted'). */
   visibility: string
   /** Column holding the owning org (contractor) id of the listing's shop. */
   ownerContractorId: string
+  /**
+   * Column holding the listing's shop id. Listings of test shops
+   * (shops.is_test, src/services/test-accounts/isolation.ts) are only visible
+   * to test accounts.
+   */
+  shopId: string
 }
 
 /**
@@ -37,11 +47,14 @@ export function listingVisibleTo(
   columns: ListingVisibilityColumns,
 ): (this: Knex.QueryBuilder) => void {
   return function () {
+    // Test shops' listings: test viewers only (services/test-accounts).
+    this.whereRaw(hiddenFromRealViewers(db, notTestShop(columns.shopId), viewerUserId))
     if (!viewerUserId) {
       this.where(columns.visibility, "public")
       return
     }
-    this.where(columns.visibility, "public").orWhere(function () {
+    this.where(function () {
+      this.where(columns.visibility, "public").orWhere(function () {
       this.where(columns.visibility, "private")
         .whereNotNull(columns.ownerContractorId)
         .whereExists(function () {
@@ -51,7 +64,8 @@ export function listingVisibleTo(
               columns.ownerContractorId,
             ])
             .where("contractor_members.user_id", viewerUserId)
-        })
+          })
+      })
     })
   }
 }
@@ -63,6 +77,8 @@ export interface PubliclyListedColumns {
   visibility: string
   /** Not needed: the anonymous rule has no org-member exception. */
   ownerContractorId?: string
+  /** Column holding the listing's shop id: test shops are never publicly listed. */
+  shopId: string
 }
 
 /**
@@ -79,9 +95,11 @@ export function listingPubliclyListed(
   columns: PubliclyListedColumns,
 ): (this: Knex.QueryBuilder) => void {
   return function () {
-    this.where(columns.status, "active").where(function () {
-      this.where(columns.visibility, "public")
-    })
+    this.where(columns.status, "active")
+      .where(function () {
+        this.where(columns.visibility, "public")
+      })
+      .whereRaw(notTestShop(columns.shopId))
   }
 }
 
@@ -105,6 +123,7 @@ export function visibleActiveListingCountQuery(
       listingVisibleTo(db, viewerUserId, {
         visibility: "ls.visibility",
         ownerContractorId: "ls.shop_owner_contractor_id",
+        shopId: "ls.shop_id",
       }),
     )
 }
@@ -112,11 +131,12 @@ export function visibleActiveListingCountQuery(
 /**
  * SQL-text form of `listingPubliclyListed` for subqueries written as raw SQL
  * (listing photo lookups, the price-history snapshot). `alias` is the listings
- * table alias in that SQL: a code literal, never user input.
+ * table alias in that SQL: a code literal, never user input. Excludes test
+ * shops' listings.
  */
 export function publiclyListedSql(alias: string): string {
   if (!/^[a-z_][a-z0-9_]*$/i.test(alias)) {
     throw new Error(`publiclyListedSql: invalid table alias ${alias}`)
   }
-  return `${alias}.status = 'active' AND ${alias}.visibility = 'public'`
+  return `${alias}.status = 'active' AND ${alias}.visibility = 'public' AND ${notTestShop(`${alias}.shop_id`)}`
 }

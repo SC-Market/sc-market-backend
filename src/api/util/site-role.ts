@@ -22,6 +22,8 @@ export const SITE_ROLES: readonly SiteRole[] = Object.values(SiteRole)
 /** Anything carrying a site role (DBUser, User, JWT payload, test fixtures). */
 export interface HasSiteRole {
   role?: string | null
+  /** Test accounts are never admins (accounts.is_test, DB CHECK on role). */
+  is_test?: boolean | null
 }
 
 /**
@@ -29,9 +31,11 @@ export interface HasSiteRole {
  *
  * Callers pass `req.user`, so when admin MFA enforcement masks the role of a
  * non-elevated admin, every caller sees the masked value.
+ * A test account is never an admin, whatever its row says (the DB also
+ * refuses that combination).
  */
 export function isSiteAdmin(user: HasSiteRole | null | undefined): boolean {
-  return user?.role === SiteRole.Admin
+  return user?.role === SiteRole.Admin && user.is_test !== true
 }
 
 /** Whether `role` is one of the known site roles (user or admin). */

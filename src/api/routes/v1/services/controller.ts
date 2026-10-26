@@ -213,6 +213,7 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     contractor_id,
     user_id,
     shop_id: shopId as string | undefined,
+    viewer_user_id: (req.user as User | undefined)?.user_id,
   }
 
   const result = await serviceDb.getServicesPaginated(params)

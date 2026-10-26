@@ -5,13 +5,18 @@
  *                   (supplier_relationships, as a user or through an org);
  * - 'private'     — the one supplier it is directed at (target_supplier_id,
  *                   or a member of target_supplier_contractor_id).
- * The buyer always sees their own orders.
+ * The buyer always sees their own orders. A test account's orders are only
+ * visible to test accounts (services/test-accounts/isolation.ts).
  *
  * The same rule decides who may fulfill (fulfillment-rules.ts), so a supplier
  * who can fulfill an order can also find and open it.
  */
 
 import type { Knex } from "knex"
+import {
+  hiddenFromRealViewers,
+  notTestUser,
+} from "../../../../services/test-accounts/isolation.js"
 
 /** `where` callback over `buy_orders_v2 as bo`. */
 export function buyOrderVisibleTo(
@@ -19,6 +24,7 @@ export function buyOrderVisibleTo(
   viewerUserId: string | undefined,
 ): (this: Knex.QueryBuilder) => void {
   return function () {
+    this.whereRaw(hiddenFromRealViewers(db, notTestUser("bo.buyer_id"), viewerUserId))
     if (!viewerUserId) {
       this.where("bo.visibility", "public")
       return
@@ -26,6 +32,7 @@ export function buyOrderVisibleTo(
     const viewerOrgs = db("contractor_members")
       .select("contractor_id")
       .where("user_id", viewerUserId)
+    this.where(function () {
     this.where("bo.visibility", "public")
       .orWhere("bo.buyer_id", viewerUserId)
       .orWhere(function () {
@@ -50,5 +57,6 @@ export function buyOrderVisibleTo(
           )
         })
       })
+    })
   }
 }

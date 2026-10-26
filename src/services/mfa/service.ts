@@ -205,6 +205,44 @@ export class MfaService {
     return { recoveryCodes, changedAt }
   }
 
+  /**
+   * Create an already-confirmed factor for `user` on behalf of `actorId`
+   * (test accounts: an admin creates the account and its authenticator in
+   * one step, src/services/test-accounts/admin.ts). Returns the display
+   * material once; the secret is only stored sealed. No recovery codes.
+   */
+  async enrollConfirmedFactor(
+    user: UserRef,
+    type: FactorType,
+    label: string,
+    actorId: string,
+    ctx: ReqCtx,
+  ): Promise<{ factor_id: string; display: Record<string, string> }> {
+    const keyring = this.requireKeyring()
+    const provider = getProvider(type)
+    const material = await provider.beginEnrollment(user, label)
+    const id = crypto.randomUUID()
+    const sealed = material.secret
+      ? seal(material.secret, aadFor(id, user.user_id, type), keyring)
+      : null
+    await this.repo.insertFactor({
+      id,
+      user_id: user.user_id,
+      type,
+      label,
+      secret_ciphertext: sealed?.ciphertext ?? null,
+      secret_key_id: sealed?.kid ?? null,
+      public_data: material.publicData,
+    })
+    await this.repo.confirmFactor(user.user_id, id, type, null)
+    await this.repo.bumpMfaChangedAt(user.user_id, this.now())
+    await this.event(user.user_id, "enroll_confirmed", ctx, {
+      actor: actorId,
+      metadata: { type, by_admin: true },
+    })
+    return { factor_id: id, display: material.display }
+  }
+
   private async issueRecoveryCodes(userId: string): Promise<string[]> {
     const codes = Array.from({ length: RECOVERY_CODE_COUNT }, generateRecoveryCode)
     const hashes = await Promise.all(codes.map(hashRecoveryCode))

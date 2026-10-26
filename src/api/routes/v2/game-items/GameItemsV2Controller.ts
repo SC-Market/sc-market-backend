@@ -191,6 +191,7 @@ export class GameItemsV2Controller extends BaseController {
     const visible = listingVisibleTo(knex, this.tryGetUserId(), {
       visibility: "l.visibility",
       ownerContractorId: "s.owner_contractor_id",
+      shopId: "l.shop_id",
     })
 
     // Validate game_item_id
@@ -530,6 +531,7 @@ export class GameItemsV2Controller extends BaseController {
           listingVisibleTo(db, this.tryGetUserId(), {
             visibility: "ls.visibility",
             ownerContractorId: "ls.shop_owner_contractor_id",
+            shopId: "ls.shop_id",
           }),
         )
         .whereNotNull("ls.game_item_id")

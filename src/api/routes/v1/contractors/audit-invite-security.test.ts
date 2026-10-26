@@ -10,6 +10,11 @@ import knexFactory from "knex"
  *   single conditional UPDATE, and a used-up code is refused.
  */
 
+// Every party here is a real account (test-utils/isolation-noop.ts).
+vi.mock("../../../../services/test-accounts/isolation.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import("../../../../test-utils/isolation-noop.js")).allPartiesReal,
+}))
 vi.mock("../../../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn() },
   external_resource_regex: /^$/,

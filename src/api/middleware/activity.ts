@@ -14,7 +14,8 @@ export async function trackActivity(
       const user = req.user as User
       const knex = getKnex()
       await Promise.all([
-        marketDb.upsertDailyActivity(user.user_id),
+        // Test accounts don't count as active users (services/test-accounts).
+        user.is_test ? Promise.resolve() : marketDb.upsertDailyActivity(user.user_id),
         knex("accounts")
           .where({ user_id: user.user_id })
           .update({ last_seen: knex.fn.now() }),

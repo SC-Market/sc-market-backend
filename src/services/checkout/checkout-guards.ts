@@ -6,6 +6,7 @@
  */
 
 import { isBlockedFromShop } from "../shops/shop-permissions.service.js"
+import { assertSameRealm } from "../test-accounts/isolation.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import {
   validateAvailabilityRequirement,
@@ -55,8 +56,9 @@ export async function isBuyerBlocked(
 }
 
 /**
- * Self-purchase, blocklists (shop + owner), availability requirement and the
- * seller's order size/value limits. Throws CheckoutRejectedError.
+ * Self-purchase, test/real isolation, blocklists (shop + owner), availability
+ * requirement and the seller's order size/value limits. Throws
+ * CheckoutRejectedError (isolation: the 403 from testIsolationError).
  */
 export async function assertBuyerMayCheckout(
   userId: string,
@@ -70,6 +72,9 @@ export async function assertBuyerMayCheckout(
       "shop",
     )
   }
+  // Test accounts buy only from test shops, real ones only from real shops
+  // (403, services/test-accounts/isolation.ts).
+  await assertSameRealm({ users: [userId], shops: [shop.shop_id] })
   if (await isBuyerBlocked(userId, shop)) {
     throw new CheckoutRejectedError(
       "You are blocked from purchasing from this shop",

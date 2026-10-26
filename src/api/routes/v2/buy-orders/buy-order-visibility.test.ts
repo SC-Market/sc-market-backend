@@ -20,8 +20,17 @@ const sql = (viewer: string | undefined) =>
 describe("buyOrderVisibleTo", () => {
   it("anonymous visitors see public orders only", () => {
     const q = sql(undefined)
-    expect(q.sql).toBe('select * from "buy_orders_v2" as "bo" where ("bo"."visibility" = ?)')
+    expect(q.sql).toBe(
+      'select * from "buy_orders_v2" as "bo" where ((NOT EXISTS (SELECT 1 FROM accounts _ta WHERE _ta.user_id = bo.buyer_id AND _ta.is_test)) and "bo"."visibility" = ?)',
+    )
     expect(q.bindings).toEqual(["public"])
+  })
+
+  it("test accounts' buy orders are visible to test viewers only", () => {
+    const q = sql("u1")
+    expect(q.sql).toContain(
+      "((NOT EXISTS (SELECT 1 FROM accounts _ta WHERE _ta.user_id = bo.buyer_id AND _ta.is_test)) OR EXISTS (SELECT 1 FROM accounts _tv WHERE _tv.user_id = ? AND _tv.is_test))",
+    )
   })
 
   it("signed-in viewers also see their own, roster-only (on the roster) and private orders directed at them", () => {

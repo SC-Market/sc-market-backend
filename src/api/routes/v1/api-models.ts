@@ -33,6 +33,8 @@ export interface User {
   deleted_at?: Date | null
   is_tombstone?: boolean
   onboarding_completed_at?: Date | null
+  /** Test account (src/services/test-accounts). Never an admin. */
+  is_test?: boolean
 }
 
 export interface PostBody {

@@ -11813,6 +11813,155 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"TestAccountSummary": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"banned": {
+						"type": "boolean"
+					},
+					"has_authenticator": {
+						"type": "boolean"
+					},
+					"last_login_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"failed_logins_24h": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"created_at",
+					"banned",
+					"has_authenticator",
+					"last_login_at",
+					"failed_logins_24h"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TestAccountListResponse": {
+				"properties": {
+					"login_enabled": {
+						"type": "boolean",
+						"description": "Whether POST /api/auth/test-login is switched on (TEST_LOGIN_ENABLED)."
+					},
+					"accounts": {
+						"items": {
+							"$ref": "#/components/schemas/TestAccountSummary"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"login_enabled",
+					"accounts"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTestAccountResponse": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"otpauth_uri": {
+						"type": "string",
+						"description": "otpauth:// URI of the account's authenticator. Shown once."
+					},
+					"secret": {
+						"type": "string",
+						"description": "Base32 TOTP secret, no spaces. Shown once."
+					},
+					"manual_key": {
+						"type": "string",
+						"description": "The secret grouped by 4, for manual entry."
+					},
+					"qr_data_url": {
+						"type": "string",
+						"description": "data: URL of an SVG QR code for otpauth_uri."
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"otpauth_uri",
+					"secret",
+					"manual_key",
+					"qr_data_url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTestAccountRequest": {
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "Must start with \"test\" (e.g. test-buyer).",
+						"minLength": 6,
+						"maxLength": 40
+					},
+					"display_name": {
+						"type": "string",
+						"minLength": 1,
+						"maxLength": 100
+					}
+				},
+				"required": [
+					"username",
+					"display_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DeleteTestAccountResponse": {
+				"properties": {
+					"mode": {
+						"type": "string",
+						"enum": [
+							"deleted",
+							"disabled"
+						]
+					},
+					"orgs": {
+						"type": "number",
+						"format": "double"
+					},
+					"shops": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"mode",
+					"orgs",
+					"shops"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MarketVersion": {
 				"type": "string",
 				"enum": [
@@ -21036,6 +21185,107 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/admin/test-accounts": {
+			"get": {
+				"operationId": "ListTestAccounts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TestAccountListResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "List test accounts.",
+				"summary": "List test accounts",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateTestAccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateTestAccountResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a test account with an authenticator. The secret is returned only\nhere, once. Needs a fresh two-factor step-up.",
+				"summary": "Create a test account",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTestAccountRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/test-accounts/{username}": {
+			"delete": {
+				"operationId": "DeleteTestAccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteTestAccountResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete a test account and its test orgs, shops, listings and orders.\nOnly accounts marked as test accounts can be deleted here. Needs a fresh\ntwo-factor step-up.",
+				"summary": "Delete a test account",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "username",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

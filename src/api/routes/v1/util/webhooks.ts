@@ -1,4 +1,10 @@
 import {
+  actingAsTestAccount,
+  involvesTestParty,
+  orderParties,
+  testRestrictedError,
+} from "../../../../services/test-accounts/isolation.js"
+import {
   DBMarketBid,
   DBMarketListingComplete,
   DBNotificationWebhook,
@@ -37,6 +43,17 @@ export async function createNotificationWebhook(
   user_id?: string,
   shop_id?: string,
 ) {
+  // Test accounts, orgs and shops never post to external URLs
+  // (services/test-accounts/isolation.ts).
+  if (
+    await involvesTestParty({
+      users: [user_id],
+      contractors: [contractor_id],
+      shops: [shop_id],
+    })
+  ) {
+    throw testRestrictedError("Test accounts cannot use webhooks")
+  }
   let webhooks
   if (shop_id && !contractor_id && !user_id) {
     webhooks = await notificationDb.createNotificationWebhook({
@@ -86,6 +103,7 @@ export async function createNotificationWebhook(
 }
 
 export async function sendOrderWebhooks(order: DBOrder) {
+  if (await involvesTestParty(orderParties(order))) return
   const webhooks: DBNotificationWebhook[] = []
 
   if (order.shop_id) {
@@ -123,6 +141,7 @@ export async function sendOfferWebhooks(
   offer: DBOfferSession,
   type: "offer_create" | "counter_offer_create" = "offer_create",
 ) {
+  if (await involvesTestParty(orderParties(offer))) return
   logger.debug("Sending offer webhooks!")
   const webhooks: DBNotificationWebhook[] = []
 
@@ -407,6 +426,7 @@ export async function generateAssignedMessage(order: DBOrder, assigned: User) {
 }
 
 export async function sendOfferDM(offer: DBOfferSession) {
+  if (await involvesTestParty(orderParties(offer))) return
   const customer = offer.customer_id
     ? await profileDb.getUser({ user_id: offer.customer_id })
     : null
@@ -438,6 +458,7 @@ export async function sendOfferDM(offer: DBOfferSession) {
  * the order's shop webhooks and to the assignee's own webhooks.
  */
 export async function sendOrderAssignedWebhooks(order: DBOrder) {
+  if (await involvesTestParty(orderParties(order))) return
   if (!order.assigned_id) {
     throw Error("Invalid order, no assignee")
   }
@@ -496,6 +517,7 @@ export async function sendOrderAssignedWebhooks(order: DBOrder) {
  * "Order Review": someone leaves a review on one of the shop's orders.
  */
 export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) {
+  if (await involvesTestParty(orderParties(order))) return
   if (!order.shop_id) return
   const webhooks = await notificationDb.getNotificationWebhooksByAction(
     { "notification_webhooks.shop_id": order.shop_id },
@@ -549,6 +571,7 @@ export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) 
 }
 
 export async function sendUserOfferWebhook(order: DBOfferSession) {
+  if (await involvesTestParty(orderParties(order))) return
   let webhooks
   if (order.assigned_id) {
     webhooks = await notificationDb.getNotificationWebhooksByAction(
@@ -571,6 +594,9 @@ export async function sendUserOfferWebhook(order: DBOfferSession) {
 }
 
 async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
+  // Test accounts own no webhooks, so any webhook a test account's action
+  // would fire belongs to a real user (services/test-accounts).
+  if (actingAsTestAccount()) return
   // SSRF defense: only send to allowlisted Discord webhook hosts. This guards
   // pre-existing bad rows created before creation-time validation existed. On
   // failure we skip sending and log rather than throwing, so a single bad row
@@ -834,6 +860,7 @@ export async function sendBidWebhooksV2(
   bidAmount: number,
   bidderId: string,
 ) {
+  if (await involvesTestParty({ users: [bidderId], shops: [listing.shop_id] })) return
   // Resolve shop owner to find webhooks
   const { getKnex } = await import("../../../../clients/database/knex-db.js")
   const shop = await getKnex()("shops").where("shop_id", listing.shop_id).first()
@@ -911,6 +938,7 @@ export async function sendOrderCommentWebhooks(
   order: DBOrder,
   comment: DBOrderComment,
 ) {
+  if (await involvesTestParty(orderParties(order))) return
   const webhooks: DBNotificationWebhook[] = []
 
   if (order.shop_id) {
@@ -1011,6 +1039,7 @@ export async function sendOrderStatusWebhooks(
   new_status: string,
   actor_id: string,
 ) {
+  if (await involvesTestParty(orderParties(order))) return
   const webhooks: DBNotificationWebhook[] = []
   const action = status_actions.get(new_status) || "order_status_not_started"
 

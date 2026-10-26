@@ -1,3 +1,4 @@
+import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 import { Knex } from "knex"
 import {
   DBAggregateListingComplete,
@@ -553,6 +554,14 @@ export async function createOffer(
     price_per_unit: number
   }[],
 ) {
+  // Every offer path (v1 orders, contract offers, cart checkout, merges,
+  // auction wins) comes through here: test and real parties never meet
+  // (services/test-accounts/isolation.ts; DB triggers back it up).
+  await assertSameRealm({
+    users: [session_details.customer_id, session_details.assigned_id, offer_details.actor_id],
+    contractors: [session_details.contractor_id],
+    shops: [session_details.shop_id],
+  })
   // Wrap critical database operations in a transaction
   const { session, offer } = await withTransaction(async (trx) => {
     // Create session

@@ -35,6 +35,12 @@ import { createNotificationWebhook } from "../../v1/util/webhooks.js"
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 import * as notificationDb from "../../v1/notifications/database.js"
 import * as orderDb from "../../v1/orders/database.js"
+import {
+  assertSameRealm,
+  canViewTestEntity,
+  denyTestUser,
+  hiddenFromRealViewers,
+} from "../../../../services/test-accounts/isolation.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -552,6 +558,8 @@ export class ShopsV2Controller extends BaseController {
         db.raw("COALESCE(uir.external_url, CASE WHEN uir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || uir.filename END, cir.external_url, CASE WHEN cir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || cir.filename END) as owner_avatar_url"),
       )
       .where("s.status", "active")
+      // Test shops: test viewers only (services/test-accounts/isolation.ts).
+      .whereRaw(hiddenFromRealViewers(db, "NOT s.is_test", viewerUserId))
 
     if (tag) {
       query = query.whereRaw("? = ANY(s.tags)", [tag])
@@ -564,7 +572,9 @@ export class ShopsV2Controller extends BaseController {
       })
     }
 
-    const countQuery = db("shops as s").where("s.status", "active")
+    const countQuery = db("shops as s")
+      .where("s.status", "active")
+      .whereRaw(hiddenFromRealViewers(db, "NOT s.is_test", viewerUserId))
     if (tag) countQuery.whereRaw("? = ANY(s.tags)", [tag])
     if (search && search.trim()) {
       countQuery.where(function () {
@@ -641,6 +651,7 @@ export class ShopsV2Controller extends BaseController {
     const db = getKnex()
     const shop = await getShopBySlug(slug)
     if (!shop) this.throwNotFound("Shop", slug)
+    if (shop.is_test && !canViewTestEntity(request?.user)) this.throwNotFound("Shop", slug)
 
     const ratingResult = await db("shop_ratings")
       .where("shop_id", shop.shop_id)
@@ -936,6 +947,9 @@ export class ShopsV2Controller extends BaseController {
     if (!this.isAdmin() && !(await canManageShop(shop, userId))) {
       this.throwForbidden()
     }
+    // Test accounts and test shops never post to external URLs.
+    denyTestUser(request.user, "Test accounts cannot use webhooks")
+    if (shop.is_test) this.throwForbidden("Test shops cannot use webhooks")
 
     const webhookValidation = validateWebhookUrl(body.webhook_url)
     if (!webhookValidation.valid) {
@@ -1067,6 +1081,14 @@ export class ShopsV2Controller extends BaseController {
         { field: "target_type", message: 'target_type must be "user" or "contractor"' },
       ])
     }
+
+    // A test shop only moves between test owners, a real one between real
+    // owners (services/test-accounts/isolation.ts; a DB trigger also refuses).
+    await assertSameRealm({
+      shops: [shopId],
+      users: [newOwnerUserId],
+      contractors: [newOwnerContractorId],
+    })
 
     const [updated] = await db("shops")
       .where("shop_id", shopId)

@@ -39,6 +39,8 @@ export interface DBUser {
   is_tombstone: boolean
   deletion_reason: string | null
   onboarding_completed_at: Date | null
+  /** Test account (src/services/test-accounts). DB CHECK: role is always "user". */
+  is_test?: boolean
 }
 
 export interface DBAccountSettings {
@@ -202,6 +204,8 @@ export interface DBContractor {
   locale: string
   archived: boolean
   supported_languages: string[] | null // Array of ISO 639-1 language codes (default ['en'])
+  /** Test org (created by a test account). Cannot change. */
+  is_test?: boolean
 }
 
 export interface DBContractorArchiveDetails {

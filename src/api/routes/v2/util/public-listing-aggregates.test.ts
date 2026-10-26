@@ -51,7 +51,9 @@ const all = () => [
 
 describe("publiclyListedSql", () => {
   it("is active + public", () => {
-    expect(publiclyListedSql("l")).toBe("l.status = 'active' AND l.visibility = 'public'")
+    expect(publiclyListedSql("l")).toBe(
+      "l.status = 'active' AND l.visibility = 'public' AND NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = l.shop_id AND _ts.is_test)",
+    )
   })
 
   it("only takes a plain table alias", () => {
@@ -76,7 +78,7 @@ describe("public listing aggregates", () => {
   it("the public price-history chart only reads public listings' prices", async () => {
     await new AnalyticsV2Controller().getPriceHistory(ITEM).catch(() => undefined)
     const q = all().find((x) => x.sql.includes("price_history_v2"))
-    expect(q?.sql).toMatch(/exists \(select 1 from "listings" as "l" where l\.listing_id = ph\.listing_id and "l"\."visibility" = (\?|\$\d+)\)/)
+    expect(q?.sql).toMatch(/exists \(select 1 from "listings" as "l" where l\.listing_id = ph\.listing_id and "l"\."visibility" = (\?|\$\d+) and NOT EXISTS \(SELECT 1 FROM shops _ts WHERE _ts\.shop_id = l\.shop_id AND _ts\.is_test\)\)/)
     expect(q?.bindings).toContain("public")
   })
 

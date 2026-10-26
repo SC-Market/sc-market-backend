@@ -850,6 +850,7 @@ export class ListingsV2Controller extends BaseController {
         listingVisibleTo(db, this.tryGetUserId(), {
           visibility: "ls.visibility",
           ownerContractorId: "ls.shop_owner_contractor_id",
+          shopId: "ls.shop_id",
         }),
       )
 

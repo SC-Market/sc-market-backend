@@ -31,6 +31,7 @@ import {
   ListingConversionStat,
 } from "../types/analytics.types.js"
 import logger from "../../../../logger/logger.js"
+import { notTestShop } from "../../../../services/test-accounts/isolation.js"
 
 /**
  * Aggregated row of the `price_history_v2` time-bucket query. `price` is a
@@ -232,6 +233,8 @@ export class AnalyticsV2Controller extends BaseController {
             .from("listings as l")
             .whereRaw("l.listing_id = ph.listing_id")
             .where("l.visibility", "public")
+            // Never test shops' prices (services/test-accounts).
+            .whereRaw(notTestShop("l.shop_id"))
         })
         .modify((queryBuilder) => {
           if (quality_tier !== undefined) {
@@ -394,7 +397,7 @@ export class AnalyticsV2Controller extends BaseController {
           knex.raw(`MAX(COALESCE(vp.price, li.base_price)) as max_price`),
         )
         .where("li.game_item_id", game_item_id)
-        .where(listingPubliclyListed(knex, { status: "l.status", visibility: "l.visibility" }))
+        .where(listingPubliclyListed(knex, { status: "l.status", visibility: "l.visibility", shopId: "l.shop_id" }))
         .where("lil.listed", true)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .modify((queryBuilder) => {

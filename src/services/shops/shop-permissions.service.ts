@@ -20,6 +20,8 @@ export interface Shop {
   created_at: string
   updated_at: string
   badge_ids: string[]
+  /** Test shop (owner is a test account or test org). Set by a DB trigger. */
+  is_test?: boolean
 }
 
 /**

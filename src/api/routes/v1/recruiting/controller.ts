@@ -1,3 +1,4 @@
+import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as recruitingDb from "./database.js"
@@ -291,6 +292,15 @@ export const post_posts_post_id_upvote: RequestHandler = async function (
       .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post"))
     return
   }
+  // Test accounts vote and comment only on test orgs' posts, and back.
+  if (
+    await rejectMixedRealm(res, {
+      users: [user.user_id],
+      contractors: [post.contractor_id],
+    })
+  ) {
+    return
+  }
 
   const vote = await recruitingDb.getRecruitingPostVoteWithinWeek({
     actor_id: user.user_id,
@@ -319,6 +329,15 @@ export const post_posts_post_id_comment: RequestHandler = async function (
     res
       .status(400)
       .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post"))
+    return
+  }
+  // Test accounts vote and comment only on test orgs' posts, and back.
+  if (
+    await rejectMixedRealm(res, {
+      users: [user.user_id],
+      contractors: [post.contractor_id],
+    })
+  ) {
     return
   }
 

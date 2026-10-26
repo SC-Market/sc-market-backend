@@ -31,7 +31,9 @@ export async function getAllRecruitingPostsPaginated(
     "recruiting_posts.contractor_id",
     knex()("contractors")
       .select("contractor_id")
-      .where("contractors.archived", false),
+      .where("contractors.archived", false)
+      // Test orgs never recruit publicly (services/test-accounts).
+      .where("contractors.is_test", false),
   )
 
   switch (searchQuery.sorting) {
@@ -179,7 +181,8 @@ export async function getRecruitingPostCount() {
       "recruiting_posts.contractor_id",
       knex()("contractors")
         .select("contractor_id")
-        .where("contractors.archived", false),
+        .where("contractors.archived", false)
+        .where("contractors.is_test", false),
     )
     .count()
 }
@@ -261,7 +264,13 @@ export async function getRecruitingPostVoteCounts(where: any) {
  * Get all recruiting posts (simple, no pagination).
  */
 export async function getAllRecruitingPosts(): Promise<DBRecruitingPost[]> {
-  return knex()<DBRecruitingPost>("recruiting_posts").select()
+  // Real orgs only: the sitemap is the only caller (services/test-accounts).
+  return knex()<DBRecruitingPost>("recruiting_posts")
+    .whereNotIn(
+      "recruiting_posts.contractor_id",
+      knex()("contractors").select("contractor_id").where("contractors.is_test", true),
+    )
+    .select()
 }
 
 /**

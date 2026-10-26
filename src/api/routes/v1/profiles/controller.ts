@@ -1,3 +1,8 @@
+import {
+  canViewTestEntity,
+  isTestUser,
+  rejectTestUser,
+} from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
@@ -188,7 +193,7 @@ export const profile_get_search_query: RequestHandler = async (req, res) => {
   //   return
   // }
 
-  const users = await profileDb.searchUsers(query)
+  const users = await profileDb.searchUsers(query, isTestUser(req.user))
 
   res.json(await Promise.all(users.map((u) => serializePublicProfile(u))))
 }
@@ -585,6 +590,7 @@ export const profile_post_banner: RequestHandler = async (req, res) => {
 
 export const profile_post_webhook_create: RequestHandler = async (req, res) => {
   const user = req.user as User
+  if (rejectTestUser(res, user, "Test accounts cannot use webhooks")) return
 
   const {
     webhook_url,
@@ -700,7 +706,8 @@ export const profile_get_user_username: RequestHandler = async (req, res) => {
       { username: username },
       { noBalance: true },
     )
-    if (!user) {
+    // Test accounts' profiles: test accounts and admins only.
+    if (!user || (user.is_test && !canViewTestEntity(requester))) {
       res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }

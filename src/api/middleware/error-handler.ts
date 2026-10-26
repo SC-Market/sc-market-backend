@@ -17,6 +17,10 @@ import {
 } from "../routes/v1/util/response.js"
 import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import {
+  isTestIsolationDbError,
+  testIsolationError,
+} from "../../services/test-accounts/isolation.js"
+import {
   ValidationError,
   NotFoundError,
   BusinessLogicError,
@@ -354,6 +358,20 @@ export async function errorHandler(
           "Invalid identifier or value format in request",
         ),
       )
+  }
+
+  // A test-account isolation trigger refused a row mixing test and real
+  // parties (migration 20261026100000_test_accounts). Same 403 as the
+  // application-level check.
+  if (isTestIsolationDbError(err)) {
+    logger.warn("Test-account isolation refused a write", {
+      path: req.path,
+      method: req.method,
+      user_id: req.user?.user_id,
+    })
+    if (res.headersSent) return next(err)
+    const e = testIsolationError()
+    return res.status(403).json(createErrorResponse(e.code, e.message, e.details))
   }
 
   if (!isClientError) {

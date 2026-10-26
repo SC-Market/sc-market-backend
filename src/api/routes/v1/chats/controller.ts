@@ -1,3 +1,4 @@
+import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { Request, Response, NextFunction } from "express"
 import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
 import { User } from "../api-models.js"
@@ -199,6 +200,9 @@ export async function createChat(
     selfUser.user_id,
     ...otherUsers.map((u) => u!.user_id),
   ])
+
+  // Test accounts chat only with test accounts (services/test-accounts).
+  if (await rejectMixedRealm(res, { users: [...allUserIds] })) return
 
   const chats = await chatDb.getChatByParticipant(selfUser.user_id)
 

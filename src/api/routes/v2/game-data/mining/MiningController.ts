@@ -29,7 +29,7 @@ import { listingPubliclyListed } from "../../util/listing-visibility.js"
 
 // Market prices come from publicly listed listings only: org-internal
 // (private) and link-only (unlisted) listings must not set a public price.
-const PUBLIC_LISTING = { status: "l.status", visibility: "l.visibility" }
+const PUBLIC_LISTING = { status: "l.status", visibility: "l.visibility", shopId: "l.shop_id" }
 
 const MINING_METHOD_PATTERN: Record<string, string> = {
   ship: "SpaceShip",

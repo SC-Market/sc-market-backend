@@ -32,7 +32,7 @@ export async function checkBuyOrderMatches(listing: ListingMatchInfo): Promise<v
   try {
     const publiclyListed = await db("listings as l")
       .where("l.listing_id", listing.listing_id)
-      .where(listingPubliclyListed(db, { status: "l.status", visibility: "l.visibility" }))
+      .where(listingPubliclyListed(db, { status: "l.status", visibility: "l.visibility", shopId: "l.shop_id" }))
       .first("l.listing_id", "l.title")
     if (!publiclyListed) return
 

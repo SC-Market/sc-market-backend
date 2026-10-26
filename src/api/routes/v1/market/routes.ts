@@ -1,3 +1,6 @@
+import { isTestUser } from "../../../../services/test-accounts/isolation.js"
+import { createErrorResponse } from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import express from "express"
 import {
   adminAuthorized,
@@ -79,6 +82,37 @@ import {
 } from "./openapi.js"
 
 export const marketRouter = express.Router()
+
+// Test accounts use the v2 market only: nothing they do may land in the v1
+// tables, whose search and aggregates are not test-aware
+// (services/test-accounts/isolation.ts).
+const V1_MARKET_TEST_DENIED: readonly RegExp[] = [
+  /^\/listings$/,
+  /^\/listings\/[^/]+\/bids$/,
+  /^\/multiple\/create$/,
+  /^\/multiple\/contractor\/[^/]+\/create$/,
+  /^\/buyorder\/create$/,
+  /^\/aggregate\/[^/]+\/update$/,
+]
+marketRouter.use((req, res, next) => {
+  if (
+    req.method === "POST" &&
+    isTestUser(req.user) &&
+    V1_MARKET_TEST_DENIED.some((re) => re.test(req.path))
+  ) {
+    res
+      .status(403)
+      .json(
+        createErrorResponse(
+          ErrorCode.FORBIDDEN,
+          "Test accounts can only use the v2 market",
+          { reason: "test_account_restricted" },
+        ),
+      )
+    return
+  }
+  next()
+})
 
 // Mount stock lots routes
 marketRouter.use("/", stockLotsRouter)

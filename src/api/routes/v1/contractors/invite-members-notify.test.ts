@@ -8,6 +8,11 @@ import type { Request, Response } from "express"
  * on the org page. Every invitee must get their own notification.
  */
 
+// Every party here is a real account (test-utils/isolation-noop.ts).
+vi.mock("../../../../services/test-accounts/isolation.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import("../../../../test-utils/isolation-noop.js")).allPartiesReal,
+}))
 vi.mock("../../../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn() },
   external_resource_regex: /^$/,

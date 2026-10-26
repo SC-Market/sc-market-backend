@@ -570,6 +570,7 @@ export async function getUser(
     deleted_at: user.deleted_at,
     is_tombstone: user.is_tombstone,
     onboarding_completed_at: user.onboarding_completed_at,
+    is_test: user.is_test === true,
   } as User
 }
 
@@ -607,6 +608,7 @@ export async function findUser(
     deleted_at: user.deleted_at,
     is_tombstone: user.is_tombstone,
     onboarding_completed_at: user.onboarding_completed_at,
+    is_test: user.is_test === true,
   } as User
 }
 
@@ -1080,10 +1082,22 @@ export async function getUserReviews(user_id: string): Promise<DBReview[]> {
 /**
  * Search users by username or display name.
  */
-export async function searchUsers(query: string): Promise<DBUser[]> {
+export async function searchUsers(
+  query: string,
+  /** Test viewers also find test accounts; everyone else only real ones. */
+  includeTest = false,
+): Promise<DBUser[]> {
   return knex()<DBUser>("accounts")
-    .where("username", "ilike", `%${query}%`)
-    .or.where("display_name", "ilike", `%${query}%`)
+    .where(function () {
+      this.where("username", "ilike", `%${query}%`).orWhere(
+        "display_name",
+        "ilike",
+        `%${query}%`,
+      )
+    })
+    .modify((qb) => {
+      if (!includeTest) qb.where("accounts.is_test", false)
+    })
     .limit(25)
     .select()
 }

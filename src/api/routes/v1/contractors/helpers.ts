@@ -1,3 +1,4 @@
+import { isTestUserId } from "../../../../services/test-accounts/isolation.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import * as contractorDb from "./database.js"
 import { get_sentinel } from "../profiles/helpers.js"
@@ -58,6 +59,9 @@ export async function createContractor(options: {
   }
 
   const contractor = await contractorDb.insertContractor({
+    // An org created by a test account is a test org, for good
+    // (services/test-accounts/isolation.ts).
+    is_test: await isTestUserId(owner_id),
     spectrum_id: spectrum_id.toUpperCase(),
     name: name || spectrum_id.toUpperCase(),
     kind: "contractor",

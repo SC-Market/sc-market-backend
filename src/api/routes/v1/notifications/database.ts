@@ -1,3 +1,4 @@
+import { deliverableRecipients } from "../../../../services/test-accounts/isolation.js"
 /**
  * Notification-related database operations.
  * This module contains all database queries specific to notifications, notification objects, and notification webhooks.
@@ -165,7 +166,26 @@ export async function removeNotificationObjects(
 export async function insertNotifications(
   items: Partial<DBNotification>[],
 ): Promise<DBNotification[]> {
-  return knex()<DBNotification>("notification").insert(items).returning("*")
+  // Never notify a real user because of a test account: the current request's
+  // user, or the actor recorded on the notification object
+  // (services/test-accounts/isolation.ts).
+  const objectIds = [
+    ...new Set(items.map((i) => i.notification_object_id).filter(Boolean)),
+  ] as string[]
+  const actors = objectIds.length
+    ? await knex()("notification_change")
+        .whereIn("notification_object_id", objectIds)
+        .pluck("actor_id")
+    : []
+  const allowed = new Set(
+    await deliverableRecipients(
+      items.map((i) => i.notifier_id).filter(Boolean) as string[],
+      actors,
+    ),
+  )
+  const deliverable = items.filter((i) => i.notifier_id && allowed.has(i.notifier_id))
+  if (deliverable.length === 0) return []
+  return knex()<DBNotification>("notification").insert(deliverable).returning("*")
 }
 
 /**
@@ -494,6 +514,7 @@ export async function getEntityByType(
             status: "ls.status",
             visibility: "ls.visibility",
             ownerContractorId: "ls.shop_owner_contractor_id",
+            shopId: "ls.shop_id",
           }),
         )
         .orderBy("ls.price_min", "asc")

@@ -20,6 +20,7 @@ import {
   PushNotificationPayload,
   PushNotificationPreferences,
 } from "./push-notification.service.types.js"
+import { deliverableRecipients } from "../test-accounts/isolation.js"
 
 /** A subscription request the server refuses (bad endpoint, owned elsewhere). */
 export class PushSubscriptionRejectedError extends Error {
@@ -259,6 +260,9 @@ class WebPushNotificationService implements PushNotificationService {
       action_type: actionType,
       notification_title: notification.title,
     })
+
+    // A test account's actions never reach a real user (services/test-accounts).
+    if ((await deliverableRecipients([userId])).length === 0) return
 
     // Check if VAPID keys are configured - silently fail if not
     if (!this.isConfigured()) {
@@ -584,6 +588,9 @@ class WebPushNotificationService implements PushNotificationService {
       logger.debug("Push notifications not configured, skipping batch send")
       return
     }
+    // A test account's actions never reach a real user (services/test-accounts).
+    userIds = await deliverableRecipients(userIds)
+    if (userIds.length === 0) return
 
     logger.debug(`Sending push notifications to ${userIds.length} users`, {
       user_count: userIds.length,

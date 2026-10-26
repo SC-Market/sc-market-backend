@@ -1,3 +1,4 @@
+import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../profiles/database.js"
@@ -225,6 +226,17 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
     message?: string
   } = req.body
 
+  // Test accounts apply only to test orders, real ones only to real orders
+  // (services/test-accounts/isolation.ts).
+  if (
+    await rejectMixedRealm(res, {
+      users: [order.customer_id, user.user_id],
+      shops: [order.shop_id],
+    })
+  ) {
+    return
+  }
+
   if (!contractor) {
     const apps = await orderDb.getOrderApplicants({
       user_applicant_id: user.user_id,
@@ -254,6 +266,15 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
       res
         .status(400)
         .json(createErrorResponse({ message: "Invalid contractor" }))
+      return
+    }
+
+    if (
+      await rejectMixedRealm(res, {
+        users: [order.customer_id],
+        contractors: [contractor_obj.contractor_id],
+      })
+    ) {
       return
     }
 

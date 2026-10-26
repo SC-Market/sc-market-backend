@@ -62,6 +62,11 @@ function makeTrx() {
   return trx
 }
 
+// Every party here is a real account (test-utils/isolation-noop.ts).
+vi.mock("../../../../services/test-accounts/isolation.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import("../../../../test-utils/isolation-noop.js")).allPartiesReal,
+}))
 vi.mock("../../../../clients/database/transaction.js", () => ({
   withTransaction: (fn: (trx: unknown) => unknown) => fn(makeTrx()),
 }))

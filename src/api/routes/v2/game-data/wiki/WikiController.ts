@@ -448,7 +448,7 @@ export class WikiController extends BaseController {
       const marketStatsRow = await knex("listings as l")
         .join("listing_items as li", "l.listing_id", "li.listing_id")
         .where("li.game_item_id", resolvedItemId)
-        .where(listingPubliclyListed(knex, { status: "l.status", visibility: "l.visibility" }))
+        .where(listingPubliclyListed(knex, { status: "l.status", visibility: "l.visibility", shopId: "l.shop_id" }))
         .select<ItemMarketStatsRow>(
           knex.raw("COUNT(DISTINCT l.listing_id) as listing_count"),
           knex.raw("MIN(li.base_price) as min_price"),

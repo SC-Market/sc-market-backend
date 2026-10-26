@@ -10,6 +10,11 @@ import { createFakeKnex, type FakeKnex } from "../../test-utils/fake-knex-tables
 
 const state: { db: FakeKnex } = { db: createFakeKnex() }
 
+// Every party here is a real account (test-utils/isolation-noop.ts).
+vi.mock("../../services/test-accounts/isolation.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...(await import("../../test-utils/isolation-noop.js")).allPartiesReal,
+}))
 vi.mock("../../clients/database/knex-db.js", () => ({
   getKnex: () => state.db,
   database: {},

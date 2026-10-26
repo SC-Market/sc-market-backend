@@ -1,3 +1,7 @@
+import {
+  hiddenFromRealViewers,
+  notTestUser,
+} from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { createOffer as createOffer } from "../orders/helpers.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
@@ -196,6 +200,14 @@ export const contracts_get_root: RequestHandler = async (req, res, next) => {
   const contracts = await database
     .knex<DBPublicContract>("public_contracts")
     .where({ status: "active" })
+    // Test accounts' contracts: test viewers only (services/test-accounts).
+    .whereRaw(
+      hiddenFromRealViewers(
+        database.knex,
+        notTestUser("public_contracts.customer_id"),
+        (req.user as User | undefined)?.user_id,
+      ),
+    )
     .orderBy("timestamp", "DESC")
     .select()
 

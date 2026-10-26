@@ -1,3 +1,4 @@
+import { rejectTestUser } from "../../../../services/test-accounts/isolation.js"
 import express from "express"
 import { userAuthorized, requireContractorsWrite } from "../../../middleware/auth.js"
 import { readRateLimit, writeRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
@@ -46,6 +47,7 @@ whitelabelConfigRouter.put(
       const contractor = req.contractor!
       const user = req.user as User
       const { focus_mode, homepage_path, require_membership, drawer_style } = req.body
+      if (rejectTestUser(res, contractor, "Test orgs cannot use white-label settings")) return
 
       if (focus_mode && !["public", "internal"].includes(focus_mode)) {
         res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "focus_mode must be 'public' or 'internal'"))

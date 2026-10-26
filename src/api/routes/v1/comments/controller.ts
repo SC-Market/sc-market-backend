@@ -1,3 +1,4 @@
+import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import * as commentDb from "./database.js"
 import { formatComment } from "../util/formatting.js"
@@ -19,6 +20,10 @@ export const post_comment_id_reply: RequestHandler = async function (req, res) {
     res
       .status(400)
       .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
+    return
+  }
+  // Test accounts interact only with test accounts' comments, and back.
+  if (await rejectMixedRealm(res, { users: [user.user_id, comment.author] })) {
     return
   }
 
@@ -112,6 +117,10 @@ export const post_comment_id_upvote: RequestHandler = async function (
       .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
     return
   }
+  // Test accounts interact only with test accounts' comments, and back.
+  if (await rejectMixedRealm(res, { users: [user.user_id, comment.author] })) {
+    return
+  }
 
   const vote = await commentDb.getCommentVote({
     actor_id: user.user_id,
@@ -141,6 +150,10 @@ export const post_comment_id_downvote: RequestHandler = async function (
     res
       .status(400)
       .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
+    return
+  }
+  // Test accounts interact only with test accounts' comments, and back.
+  if (await rejectMixedRealm(res, { users: [user.user_id, comment.author] })) {
     return
   }
 

@@ -14,6 +14,7 @@ import { withTransaction } from "../../../../clients/database/transaction.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { ListingsV2Controller } from "../listings/ListingsV2Controller.js"
+import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 
 /**
  * Row shape of the auction-detail bid query: `bids_v2.*` joined with the
@@ -150,6 +151,8 @@ export class AuctionsV2Controller extends BaseController {
 
       // 2. Validate bidder is not the seller (check shop ownership)
       const listing = await trx("listings").where({ listing_id: listingId }).first()
+      // Test accounts bid only on test shops' auctions, real ones on real ones.
+      await assertSameRealm({ users: [userId], shops: [listing?.shop_id] }, trx)
       const { canModifyListing } = await import("../util/listing-permissions.js")
       if (await canModifyListing({ shop_id: listing.shop_id }, userId)) {
         throw this.throwValidationError("Cannot bid on your own listing", [

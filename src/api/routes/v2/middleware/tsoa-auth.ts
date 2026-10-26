@@ -14,7 +14,7 @@ import { adminLockError } from "../../../util/site-admin-policy.js"
 import { enforceTokenOrgAccess } from "./token-org-access.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 
-const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa"]
+const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts"]
 
 export function isSessionOnlyPath(path: string): boolean {
   const clean = path.replace(/^\/+/, "").toLowerCase()

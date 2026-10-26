@@ -41,6 +41,7 @@ import {
   DBContractorInvite,
   DBAdminAlert,
 } from "../../clients/database/db-models.js"
+import { deliverableRecipients } from "../test-accounts/isolation.js"
 
 /**
  * NotificationEmailData is an open bag of caller-supplied entities, so its
@@ -328,6 +329,9 @@ class SESEmailService implements EmailService {
     skipQueue: boolean = false,
     contractorId?: string | null,
   ): Promise<boolean> {
+    // A test account's actions never reach a real user (services/test-accounts).
+    if ((await deliverableRecipients([userId])).length === 0) return false
+
     // If queue is enabled and not skipping queue, queue the email instead of sending directly
     if (this.isQueueEnabled() && !skipQueue) {
       try {

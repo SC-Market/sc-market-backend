@@ -1,3 +1,9 @@
+import {
+  hiddenFromRealViewers,
+  notTestContractor,
+  notTestShop,
+  notTestUser,
+} from "../../../../services/test-accounts/isolation.js"
 /**
  * Service-related database operations.
  * This module contains all database queries specific to services and service images.
@@ -41,6 +47,8 @@ export async function getServicesPaginated(params: {
   contractor_id?: string
   user_id?: string
   shop_id?: string
+  /** Test accounts' services are only shown to test viewers. */
+  viewer_user_id?: string
 }): Promise<{
   services: DBService[]
   pagination: {
@@ -67,11 +75,25 @@ export async function getServicesPaginated(params: {
     contractor_id,
     user_id,
     shop_id,
+    viewer_user_id,
   } = params
 
   // Build base query with filters
   let query = knex()<DBService>("services")
   let countQuery = knex()<DBService>("services")
+
+  // Test accounts, orgs and shops: test viewers only (services/test-accounts).
+  const realProvider = hiddenFromRealViewers(
+    knex(),
+    [
+      notTestUser("services.user_id"),
+      notTestContractor("services.contractor_id"),
+      notTestShop("services.shop_id"),
+    ].join(" AND "),
+    viewer_user_id,
+  )
+  query = query.whereRaw(realProvider)
+  countQuery = countQuery.whereRaw(realProvider)
 
   // Apply status filter
   query = query.where("status", status)

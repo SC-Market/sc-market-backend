@@ -54,6 +54,7 @@ const LS_PUBLIC_COLUMNS = {
   status: "ls.status",
   visibility: "ls.visibility",
   ownerContractorId: "ls.shop_owner_contractor_id",
+  shopId: "ls.shop_id",
 }
 
 /**

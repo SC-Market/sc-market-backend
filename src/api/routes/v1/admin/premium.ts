@@ -1,3 +1,4 @@
+import { involvesTestParty } from "../../../../services/test-accounts/isolation.js"
 import express from "express"
 import { adminAuthorized } from "../../../middleware/auth.js"
 import { requireStepUp } from "../../../util/step-up.js"
@@ -145,6 +146,14 @@ adminPremiumRouter.put("/:id", adminAuthorized, requireStepUp, writeRateLimit, a
       res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
       return
     }
+    // Test orgs never get premium features or a custom domain
+    // (services/test-accounts/isolation.ts).
+    if (await involvesTestParty({ contractors: [contractorId] })) {
+      res
+        .status(403)
+        .json(createErrorResponse(ErrorCode.FORBIDDEN, "Test orgs cannot have premium features or custom domains"))
+      return
+    }
 
     const user = req.user as User
     const existing = await knex()<DBOrgPremiumTier>("org_premium_tiers")
@@ -213,6 +222,14 @@ adminPremiumRouter.patch("/:id/domain", adminAuthorized, requireStepUp, writeRat
     const contractorId = await resolveContractorId(req.params.id)
     if (!contractorId) {
       res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
+      return
+    }
+    // Test orgs never get premium features or a custom domain
+    // (services/test-accounts/isolation.ts).
+    if (await involvesTestParty({ contractors: [contractorId] })) {
+      res
+        .status(403)
+        .json(createErrorResponse(ErrorCode.FORBIDDEN, "Test orgs cannot have premium features or custom domains"))
       return
     }
 

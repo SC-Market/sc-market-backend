@@ -10,6 +10,7 @@ import { env } from "../../config/env.js"
 import { checkEmailSQSConfiguration } from "../../clients/aws/sqs-config.js"
 import logger from "../../logger/logger.js"
 import { NotificationEmailData } from "./email.service.types.js"
+import { deliverableRecipients } from "../test-accounts/isolation.js"
 
 /**
  * Email queue message types
@@ -137,6 +138,8 @@ class SQSEmailQueueService implements EmailQueueService {
     data: NotificationEmailData,
     priority: "high" | "normal" | "low" = "normal",
   ): Promise<void> {
+    // A test account's actions never reach a real user (services/test-accounts).
+    if ((await deliverableRecipients([userId])).length === 0) return
     const queueUrl = this.getQueueUrl()
     if (!queueUrl) {
       logger.debug("EMAIL_QUEUE_URL not configured - skipping email queue", {

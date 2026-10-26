@@ -47,6 +47,7 @@ export const CUSTOM_ORIGIN_DENYLIST: readonly SensitiveRoute[] = [
   // POST returns a raw scm_ token; listing/reading exposes token metadata.
   { pattern: new RegExp(`${V1}/tokens(?:/|$)`), why: "api tokens" },
   { pattern: /^\/auth\/sessions(?:\/|$)/, why: "session management" },
+  { pattern: /^\/api\/auth\/test-login$/, why: "test-account login" },
   { pattern: new RegExp(`${V1}/admin(?:/|$)`), why: "admin" },
   { pattern: /^\/api\/v2\/admin(?:\/|$)/, why: "admin" },
   {

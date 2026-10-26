@@ -12,7 +12,12 @@ const knex = knexFactory({ client: "pg" })
 const LS_COLUMNS = {
   visibility: "ls.visibility",
   ownerContractorId: "ls.shop_owner_contractor_id",
+  shopId: "ls.shop_id",
 }
+
+// Test shops (services/test-accounts) are hidden from everyone but test accounts.
+const NOT_TEST_SHOP =
+  "(NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test))"
 
 describe("listing visibility", () => {
   // Regression: /market showed unlisted (link-only) listings to anonymous
@@ -22,9 +27,19 @@ describe("listing visibility", () => {
       .where(listingVisibleTo(knex, undefined, LS_COLUMNS))
       .toSQL()
     expect(q.sql).toBe(
-      'select * from "listing_search" as "ls" where ("ls"."visibility" = ?)',
+      `select * from "listing_search" as "ls" where (${NOT_TEST_SHOP} and "ls"."visibility" = ?)`,
     )
     expect(q.bindings).toEqual(["public"])
+  })
+
+  it("shows test shops' listings to test viewers only", () => {
+    const q = knex("listing_search as ls")
+      .where(listingVisibleTo(knex, "user-1", LS_COLUMNS))
+      .toSQL()
+    expect(q.sql).toContain(
+      "((NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test)) OR EXISTS (SELECT 1 FROM accounts _tv WHERE _tv.user_id = ? AND _tv.is_test))",
+    )
+    expect(q.bindings[0]).toBe("user-1")
   })
 
   it("lets a signed-in viewer see private listings only of orgs they belong to, never unlisted ones", () => {
@@ -36,7 +51,7 @@ describe("listing visibility", () => {
     )
     expect(q.sql).toContain('contractor_members.contractor_id = "ls"."shop_owner_contractor_id"')
     expect(q.sql).toContain('"contractor_members"."user_id" = ?')
-    expect(q.bindings).toEqual(["public", "private", "user-1"])
+    expect(q.bindings).toEqual(["user-1", "public", "private", "user-1"])
     expect(q.bindings).not.toContain("unlisted")
   })
 
@@ -45,7 +60,7 @@ describe("listing visibility", () => {
       .where(listingPubliclyListed(knex, { ...LS_COLUMNS, status: "ls.status" }))
       .toSQL()
     expect(q.sql).toBe(
-      'select * from "listing_search" as "ls" where ("ls"."status" = ? and ("ls"."visibility" = ?))',
+      'select * from "listing_search" as "ls" where ("ls"."status" = ? and ("ls"."visibility" = ?) and NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test))',
     )
     expect(q.bindings).toEqual(["active", "public"])
   })
@@ -60,7 +75,7 @@ describe("visibleActiveListingCountQuery (shop header / shop card count)", () =>
       .count("* as count")
       .toSQL()
     expect(q.sql).toBe(
-      'select count(*) as "count" from "listing_search" as "ls" where "ls"."shop_id" = ? and "ls"."status" = ? and ("ls"."visibility" = ?)',
+      `select count(*) as "count" from "listing_search" as "ls" where "ls"."shop_id" = ? and "ls"."status" = ? and (${NOT_TEST_SHOP} and "ls"."visibility" = ?)`,
     )
     expect(q.bindings).toEqual(["shop-1", "active", "public"])
   })
@@ -82,7 +97,7 @@ describe("visibleActiveListingCountQuery (shop header / shop card count)", () =>
       .as("listing_count")
     const q = knex("shops as s").select("s.shop_id", sub).toSQL()
     expect(q.sql).toContain(
-      '(select COUNT(*)::integer from "listing_search" as "ls" where "ls"."shop_id" = "s"."shop_id" and "ls"."status" = ? and ("ls"."visibility" = ?)) as "listing_count"',
+      `(select COUNT(*)::integer from "listing_search" as "ls" where "ls"."shop_id" = "s"."shop_id" and "ls"."status" = ? and (${NOT_TEST_SHOP} and "ls"."visibility" = ?)) as "listing_count"`,
     )
   })
 })

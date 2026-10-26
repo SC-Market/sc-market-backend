@@ -1,3 +1,4 @@
+import { notTestUser } from "../../../../services/test-accounts/isolation.js"
 /**
  * Order-related database operations.
  * This module contains all database queries specific to orders,
@@ -260,15 +261,47 @@ export async function getOrderStats() {
     week_order_value: number
   }>("order_week_stats").first()
 
+  // Leave test accounts' orders out of the public numbers
+  // (services/test-accounts/isolation.ts). Every party of an order is in one
+  // realm, so "the customer is a test account" finds them all; the formulas
+  // mirror the order_stats / order_week_stats views.
+  const [test] = await knex()("orders")
+    .whereIn(
+      "customer_id",
+      knex()("accounts").select("user_id").where("is_test", true),
+    )
+    .select(
+      knex().raw("COUNT(*)::bigint AS total_orders"),
+      knex().raw(
+        "COALESCE(SUM(cost) FILTER (WHERE status = 'fulfilled'), 0) AS total_order_value",
+      ),
+      knex().raw(
+        `COUNT(*) FILTER (WHERE "timestamp" > NOW() - INTERVAL '7 days')::bigint AS week_orders`,
+      ),
+      knex().raw(
+        `COALESCE(SUM(cost) FILTER (WHERE status <> 'cancelled' AND "timestamp" > NOW() - INTERVAL '7 days'), 0) AS week_order_value`,
+      ),
+    )
+  const minus = (value: unknown, sub: unknown) =>
+    Math.max(0, Number(value || 0) - Number(sub || 0))
+
   return {
     ...order_stats,
     ...order_week_stats,
+    total_orders: minus(order_stats?.total_orders, test?.total_orders),
+    total_order_value: minus(order_stats?.total_order_value, test?.total_order_value),
+    week_orders: minus(order_week_stats?.week_orders, test?.week_orders),
+    week_order_value: minus(order_week_stats?.week_order_value, test?.week_order_value),
   }
 }
 
 /**
  * Get order analytics with optional time range.
  */
+// Admin analytics leave test accounts' orders out (services/test-accounts):
+// every party of an order is in one realm, so the customer decides.
+const REAL_ORDER = notTestUser("orders.customer_id")
+
 export async function getOrderAnalytics(options?: {
   startTime?: number
   endTime?: number
@@ -313,7 +346,7 @@ export async function getOrderAnalytics(options?: {
         COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
         COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
       FROM orders
-      WHERE timestamp >= ${dailyStart} AND timestamp <= ${dailyEnd} + INTERVAL '1 day'
+      WHERE ${REAL_ORDER} AND timestamp >= ${dailyStart} AND timestamp <= ${dailyEnd} + INTERVAL '1 day'
       GROUP BY DATE(timestamp)
     ) o ON d.date = o.date
     ORDER BY d.date ASC
@@ -345,7 +378,7 @@ export async function getOrderAnalytics(options?: {
         COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
         COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
       FROM orders
-      WHERE timestamp >= ${weeklyStart} AND timestamp <= ${weeklyEnd} + INTERVAL '1 week'
+      WHERE ${REAL_ORDER} AND timestamp >= ${weeklyStart} AND timestamp <= ${weeklyEnd} + INTERVAL '1 week'
       GROUP BY DATE_TRUNC('week', timestamp)
     ) o ON d.date = o.date
     ORDER BY d.date ASC
@@ -379,7 +412,7 @@ export async function getOrderAnalytics(options?: {
         COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started,
         COALESCE(AVG(CASE WHEN status = 'fulfilled' THEN cost END), 0) as average_fulfilled_value
       FROM orders
-      WHERE timestamp >= ${monthlyStart} AND timestamp <= ${monthlyEnd} + INTERVAL '1 month'
+      WHERE ${REAL_ORDER} AND timestamp >= ${monthlyStart} AND timestamp <= ${monthlyEnd} + INTERVAL '1 month'
       GROUP BY DATE_TRUNC('month', timestamp)
     ) o ON d.date = o.date
     ORDER BY d.date ASC
@@ -389,6 +422,7 @@ export async function getOrderAnalytics(options?: {
   const topShops = await knex()("orders as o")
     .join("shops as s", "o.shop_id", "s.shop_id")
     .whereNotNull("o.shop_id")
+    .whereRaw(notTestUser("o.customer_id"))
     .select(
       "s.name",
       "s.slug",
@@ -405,6 +439,7 @@ export async function getOrderAnalytics(options?: {
   // Get top users by fulfilled orders
   const topUsers = await knex()("orders as o")
     .join("accounts as a", "o.customer_id", "a.user_id")
+    .where("a.is_test", false)
     .select(
       "a.username",
       knex().raw(
@@ -419,6 +454,7 @@ export async function getOrderAnalytics(options?: {
 
   // Get summary stats
   const summary = await knex()("orders")
+    .whereRaw(REAL_ORDER)
     .select(
       knex().raw("COUNT(*) as total_orders"),
       knex().raw(

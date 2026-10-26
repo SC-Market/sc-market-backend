@@ -1,3 +1,4 @@
+import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
@@ -102,6 +103,16 @@ export const transaction_post_create: RequestHandler = async (
     user_recipient_id: string | null | undefined
     note: string | null | undefined
   } = req.body
+
+  // Test accounts pay only test accounts (services/test-accounts).
+  if (
+    await rejectMixedRealm(res, {
+      users: [user.user_id, user_recipient_id],
+      contractors: [contractor_recipient_id],
+    })
+  ) {
+    return
+  }
 
   if (!amount || (!contractor_recipient_id && !user_recipient_id)) {
     res
@@ -294,6 +305,15 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
       contractor_recipient_id: string | null | undefined
       user_recipient_id: string | null | undefined
     } = req.body
+
+    if (
+      await rejectMixedRealm(res, {
+        users: [user_recipient_id],
+        contractors: [contractor.contractor_id, contractor_recipient_id],
+      })
+    ) {
+      return
+    }
 
     if (!amount || (!contractor_recipient_id && !user_recipient_id)) {
       res

@@ -4,6 +4,7 @@
 import { getKnex } from "../../clients/database/knex-db.js"
 import { DBOfferSession, DBOrder } from "../../clients/database/db-models.js"
 import { discordService } from "../../services/discord/discord.service.js"
+import { involvesTestParty, orderParties } from "../test-accounts/isolation.js"
 import { getAlertChannels } from "./channel-setups.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as offerDb from "../../api/routes/v1/offers/database.js"
@@ -35,6 +36,7 @@ async function buildMarketListingFields(offerId: string): Promise<{ name: string
  * Post alert to subscribed channels when a new offer is received.
  */
 export async function postOfferAlert(session: DBOfferSession): Promise<void> {
+  if (await involvesTestParty(orderParties(session))) return
   const channels = await getAlertChannels({
     shop_id: session.shop_id,
     contractor_id: session.contractor_id,
@@ -99,6 +101,7 @@ export async function postOfferAlert(session: DBOfferSession): Promise<void> {
  */
 export async function postOrderAlert(order: DBOrder): Promise<void> {
   if (order.assigned_id) return // Already assigned, no need for claim button
+  if (await involvesTestParty(orderParties(order))) return
 
   // Personal orders always have an assignee, so only shop and org channels apply.
   const channels = await getAlertChannels({

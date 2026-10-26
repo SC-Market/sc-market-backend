@@ -59,7 +59,9 @@ describe("market search visibility", () => {
     expect(queries.length).toBe(2) // count + page
     for (const q of queries) {
       expect(q.sql).toMatch(/"ls"\."status" = (\?|\$\d+)/)
-      expect(q.sql).toMatch(/\("ls"\."visibility" = (\?|\$\d+)\)/)
+      expect(q.sql).toMatch(/and "ls"\."visibility" = (\?|\$\d+)\)/)
+      // Test shops' listings are never shown to anonymous visitors.
+      expect(q.sql).toContain("NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test)")
       expect(q.bindings).toContain("active")
       expect(q.bindings).toContain("public")
       expect(q.bindings).not.toContain("private")

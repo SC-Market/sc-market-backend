@@ -28,6 +28,7 @@ import {
   SupplierTier,
   SupplierStatus,
 } from "../types/suppliers.types.js"
+import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 
 /**
  * The aggregator side of a roster row: exactly one of the two columns is
@@ -153,6 +154,9 @@ export class SuppliersV2Controller extends BaseController {
       const org = await knex("contractors").where({ contractor_id: body.supplier_contractor_id }).first()
       if (!org) throw this.throwNotFound("Contractor", body.supplier_contractor_id!)
     }
+
+    // Rosters never mix test and real accounts (services/test-accounts).
+    await assertSameRealm({ users: [userId, body.supplier_id], contractors: [body.supplier_contractor_id] })
 
     const [row]: SupplierRelationshipRow[] = await knex("supplier_relationships").insert({
       aggregator_id: userId,
