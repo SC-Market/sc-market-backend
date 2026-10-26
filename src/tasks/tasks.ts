@@ -11,6 +11,7 @@ import {
   clear_uploads_folder,
   cleanup_push_subscriptions,
   process_account_deletions,
+  purge_anonymous_listing_views,
 } from "./timers.js"
 import { processDmReminders } from "../services/dm-reminders/dm-reminder.service.js"
 import { pruneDeliveries } from "../services/notify/deliveries.js"
@@ -130,6 +131,12 @@ export function start_tasks() {
     safe(pruneDeliveries, "pruneDeliveries")
     setInterval(() => safe(pruneDeliveries, "pruneDeliveries"), 24 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 100_000)
+
+  // Delete logged-out listing views older than 90 days, daily
+  setTimeout(() => {
+    safe(purge_anonymous_listing_views, "purge_anonymous_listing_views")
+    setInterval(() => safe(purge_anonymous_listing_views, "purge_anonymous_listing_views"), 24 * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 110_000)
 
   // Recompute shop badges daily to pick up time-based badges (early adopter,
   // consistency tiers, donor duration) that aren't triggered by order events

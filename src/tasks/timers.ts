@@ -351,3 +351,21 @@ export async function process_account_deletions() {
     logger.error("Failed to process account deletions", { error })
   }
 }
+
+/**
+ * Delete logged-out listing views past their retention window
+ * (ANONYMOUS_VIEW_RETENTION_DAYS), in batches.
+ */
+export async function purge_anonymous_listing_views() {
+  try {
+    const { purgeAnonymousListingViews } = await import(
+      "../services/listing-views/listing-view-privacy.js"
+    )
+    const count = await purgeAnonymousListingViews()
+    if (count > 0) {
+      logger.info("Purged anonymous listing views", { count })
+    }
+  } catch (error) {
+    logger.error("Failed to purge anonymous listing views", { error })
+  }
+}

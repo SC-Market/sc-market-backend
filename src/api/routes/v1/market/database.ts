@@ -50,6 +50,11 @@ import {
 } from "./types.js"
 import logger from "../../../../logger/logger.js"
 import {
+  hashViewerIp,
+  referrerOrigin,
+  truncateUserAgent,
+} from "../../../../services/listing-views/listing-view-privacy.js"
+import {
   BACKGROUND_STATEMENT_TIMEOUT,
   withStatementTimeout,
 } from "../../../../clients/database/session-settings.js"
@@ -2058,6 +2063,7 @@ export async function trackListingView(data: {
   referrer?: string
   session_id?: string | null
 }): Promise<void> {
+  // The raw IP and full Referer are never stored; see listing-view-privacy.ts.
   // Don't track views from the seller themselves
   if (data.viewer_id) {
     if (data.listing_type === "market") {
@@ -2111,9 +2117,9 @@ export async function trackListingView(data: {
       listing_type: data.listing_type,
       listing_id: data.listing_id,
       viewer_id: data.viewer_id,
-      viewer_ip: data.viewer_ip,
-      user_agent: data.user_agent,
-      referrer: data.referrer,
+      viewer_ip_hash: hashViewerIp(data.viewer_ip),
+      user_agent: truncateUserAgent(data.user_agent),
+      referrer_origin: referrerOrigin(data.referrer),
       session_id: data.session_id || null,
       is_unique: true,
     })
