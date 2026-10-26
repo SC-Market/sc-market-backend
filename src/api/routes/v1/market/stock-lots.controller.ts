@@ -20,6 +20,7 @@ import { getKnex } from "../../../../clients/database/knex-db.js"
 import { formatUniqueListingComplete } from "../util/formatting.js"
 import type { FormattedUniqueListing } from "../market/types.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
+import { canManageOrderStock, lotsOutsideOrder } from "./order-stock-access.js"
 
 const stockLotService = new StockLotService()
 const locationService = new LocationService()
@@ -339,6 +340,12 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
       )
     }
 
+    if (!(await canManageOrderStock(order, req.user as User))) {
+      return res.status(403).json(
+        createErrorResponse({ message: "You cannot view this order's allocations" }),
+      )
+    }
+
     // Get listing IDs from V1 market_orders and V2 order_market_items_v2
     const v1MarketOrders = await getKnex()("market_orders").where({ order_id }).select("listing_id")
     const v2OrderItems = await getKnex()("order_market_items_v2").where({ order_id }).select("listing_id")
@@ -495,7 +502,12 @@ export const manualAllocateOrder: RequestHandler = async (req, res) => {
 
     // Validate each allocation
     for (const alloc of allocations) {
-      if (!alloc.lot_id || typeof alloc.quantity !== "number") {
+      if (
+        !alloc.lot_id ||
+        typeof alloc.lot_id !== "string" ||
+        !Number.isInteger(alloc.quantity) ||
+        alloc.quantity < 0
+      ) {
         res.status(400).json(
           createErrorResponse({
             message: "Each allocation must have a valid lot_id and quantity",
@@ -503,6 +515,30 @@ export const manualAllocateOrder: RequestHandler = async (req, res) => {
         )
         return
       }
+    }
+
+    const order = await getKnex()("orders").where({ order_id }).first()
+    if (!order) {
+      res.status(404).json(createErrorResponse({ message: "Order not found" }))
+      return
+    }
+    if (!(await canManageOrderStock(order, req.user as User))) {
+      res.status(403).json(
+        createErrorResponse({ message: "You cannot allocate stock for this order" }),
+      )
+      return
+    }
+    const foreign = await lotsOutsideOrder(
+      order_id,
+      allocations.map((a) => a.lot_id),
+    )
+    if (foreign.length) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "Lots must belong to a listing in this order",
+        }),
+      )
+      return
     }
 
     // Perform manual allocation
