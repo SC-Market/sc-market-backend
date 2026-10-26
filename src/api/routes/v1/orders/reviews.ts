@@ -4,7 +4,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import * as orderDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
-import { has_permission } from "../util/permissions.js"
+import { has_permission, is_member } from "../util/permissions.js"
 import {
   createResponse,
   createErrorResponse,
@@ -277,6 +277,31 @@ async function canEditReview(review: DBReview, user: User): Promise<boolean> {
   return false
 }
 
+/**
+ * Whether the order's customer is also on its seller side: the assigned
+ * seller, a member of the selling org, or the owner / an owning-org member of
+ * the order's shop.
+ */
+export async function customerIsSeller(
+  order: Pick<DBOrder, "customer_id" | "assigned_id" | "contractor_id" | "shop_id">,
+): Promise<boolean> {
+  const customer = order.customer_id
+  if (!customer) return false
+  if (order.assigned_id === customer) return true
+  if (order.contractor_id && (await is_member(order.contractor_id, customer))) return true
+  if (order.shop_id) {
+    const shop = await database
+      .knex("shops")
+      .where("shop_id", order.shop_id)
+      .first("owner_user_id", "owner_contractor_id")
+    if (shop?.owner_user_id === customer) return true
+    if (shop?.owner_contractor_id && (await is_member(shop.owner_contractor_id, customer))) {
+      return true
+    }
+  }
+  return false
+}
+
 export const post_order_review: RequestHandler = async (req, res, next) => {
   const order_id = req.params["order_id"]
   let order: DBOrder
@@ -338,6 +363,15 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
           "You are not authorized to review this order!",
         ),
       )
+    return
+  }
+
+  // Reviewing an order you are on both sides of (buying from your own shop
+  // or org) would let sellers rate themselves.
+  if (await customerIsSeller(order)) {
+    res
+      .status(403)
+      .json(createForbiddenErrorResponse("You cannot review your own order"))
     return
   }
 
