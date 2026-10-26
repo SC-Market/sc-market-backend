@@ -20,6 +20,8 @@ import { PriceAlertsV2Controller } from './../price-alerts/PriceAlertsV2Controll
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrdersV2Controller } from './../orders/OrdersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrderAllocationsV2Controller } from './../orders/OrderAllocationsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OnboardingV2Controller } from './../onboarding/OnboardingV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OffersV2Controller } from './../offers/OffersV2Controller.js';
@@ -934,6 +936,89 @@ const models: TsoaRoute.Models = {
         "properties": {
             "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingOrderSummary"},"required":true},
             "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingOfferSummary"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderAllocationLot": {
+        "dataType": "refObject",
+        "properties": {
+            "lot_id": {"dataType":"string","required":true},
+            "quantity_available": {"dataType":"double","required":true},
+            "listed": {"dataType":"boolean","required":true},
+            "location": {"dataType":"union","subSchemas":[{"ref":"LocationInfo"},{"dataType":"enum","enums":[null]}],"required":true},
+            "owner": {"dataType":"union","subSchemas":[{"ref":"OwnerInfo"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderAllocation": {
+        "dataType": "refObject",
+        "properties": {
+            "allocation_id": {"dataType":"string","required":true},
+            "order_item_id": {"dataType":"string","required":true},
+            "lot_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "quantity": {"dataType":"double","required":true},
+            "allocated_by": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+            "lot": {"dataType":"union","subSchemas":[{"ref":"OrderAllocationLot"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderAllocationLine": {
+        "dataType": "refObject",
+        "properties": {
+            "order_item_id": {"dataType":"string","required":true},
+            "listing_id": {"dataType":"string","required":true},
+            "listing_title": {"dataType":"string","required":true},
+            "listing_photo": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "variant": {"ref":"StockLotVariant","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "quantity_allocated": {"dataType":"double","required":true},
+            "allocations": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderAllocation"},"required":true},
+            "available_lots": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderAllocationLot"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderAllocationsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "order_id": {"dataType":"string","required":true},
+            "order_status": {"dataType":"string","required":true},
+            "allocation_mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["auto"]},{"dataType":"enum","enums":["manual"]},{"dataType":"enum","enums":["none"]}],"required":true},
+            "editable": {"dataType":"boolean","required":true},
+            "lines": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderAllocationLine"},"required":true},
+            "total_requested": {"dataType":"double","required":true},
+            "total_allocated": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ManualOrderAllocationInput": {
+        "dataType": "refObject",
+        "properties": {
+            "lot_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+            "order_item_id": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ManualOrderAllocationRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "allocations": {"dataType":"array","array":{"dataType":"refObject","ref":"ManualOrderAllocationInput"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReleaseOrderAllocationsRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "allocation_ids": {"dataType":"array","array":{"dataType":"string"}},
         },
         "additionalProperties": false,
     },
@@ -5609,6 +5694,136 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOrdersByListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrderAllocationsV2Controller_getOrderAllocations: Record<string, TsoaRoute.ParameterSchema> = {
+                orderId: {"in":"path","name":"orderId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/orders/:orderId/allocations',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller.prototype.getOrderAllocations)),
+
+            async function OrderAllocationsV2Controller_getOrderAllocations(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrderAllocationsV2Controller_getOrderAllocations, request, response });
+
+                const controller = new OrderAllocationsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrderAllocations',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrderAllocationsV2Controller_autoAllocateOrderStock: Record<string, TsoaRoute.ParameterSchema> = {
+                orderId: {"in":"path","name":"orderId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/orders/:orderId/allocations/auto',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller.prototype.autoAllocateOrderStock)),
+
+            async function OrderAllocationsV2Controller_autoAllocateOrderStock(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrderAllocationsV2Controller_autoAllocateOrderStock, request, response });
+
+                const controller = new OrderAllocationsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'autoAllocateOrderStock',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrderAllocationsV2Controller_manualAllocateOrderStock: Record<string, TsoaRoute.ParameterSchema> = {
+                orderId: {"in":"path","name":"orderId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"ManualOrderAllocationRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/orders/:orderId/allocations/manual',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller.prototype.manualAllocateOrderStock)),
+
+            async function OrderAllocationsV2Controller_manualAllocateOrderStock(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrderAllocationsV2Controller_manualAllocateOrderStock, request, response });
+
+                const controller = new OrderAllocationsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'manualAllocateOrderStock',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrderAllocationsV2Controller_releaseOrderStock: Record<string, TsoaRoute.ParameterSchema> = {
+                orderId: {"in":"path","name":"orderId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"ReleaseOrderAllocationsRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/orders/:orderId/allocations/release',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrderAllocationsV2Controller.prototype.releaseOrderStock)),
+
+            async function OrderAllocationsV2Controller_releaseOrderStock(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrderAllocationsV2Controller_releaseOrderStock, request, response });
+
+                const controller = new OrderAllocationsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'releaseOrderStock',
                 controller,
                 response,
                 next,

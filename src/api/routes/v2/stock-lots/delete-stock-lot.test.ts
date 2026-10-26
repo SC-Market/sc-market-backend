@@ -1,15 +1,14 @@
 /**
  * DELETE /stock-lots/{id} returned 500 for every lot: the allocation check
  * joined stock_allocation_log on a non-existent `order_item_id` column. The
- * table has `order_id` (migrations/20260418200100_offer_market_items_v2_and_extras.ts).
+ * check now reads the V2 allocations (order_stock_allocations_v2): a lot with
+ * units held for an open order can't be deleted.
  *
  * Named without "Controller" so it is not swept up by the vitest exclusion for
  * DB-backed v2 controller tests.
  */
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import type { Request as ExpressRequest } from "express"
-
-const STOCK_ALLOCATION_LOG_COLUMNS = ["allocation_id", "order_id", "lot_id", "quantity_allocated", "allocated_by", "allocated_at"]
 
 const h = vi.hoisted(() => ({
   deleted: [] as string[],
@@ -19,20 +18,19 @@ const h = vi.hoisted(() => ({
 vi.mock("../../../../clients/database/knex-db.js", () => {
   const knex: any = (table: string) => {
     const b: any = {
-      join: (_t: string, left: string) => {
-        const [alias, col] = left.split(".")
-        if (alias === "sal" && !STOCK_ALLOCATION_LOG_COLUMNS.includes(col)) {
-          throw new Error(`column sal.${col} does not exist`)
-        }
-        return b
-      },
+      join: () => b,
       where: () => b,
       whereIn: () => b,
       whereNotIn: () => b,
+      groupBy: () => b,
       select: () => b,
+      then(resolve: (v: unknown) => void, reject: (e: unknown) => void) {
+        // SUM of active allocations per lot
+        const rows = table === "order_stock_allocations_v2" && h.openAllocation ? [{ lot_id: "lot-1", allocated: 2 }] : []
+        return Promise.resolve(rows).then(resolve, reject)
+      },
       first: async () => {
         if (table.startsWith("listing_item_lots")) return { lot_id: "lot-1", shop_id: "shop-1" }
-        if (table.startsWith("stock_allocation_log")) return h.openAllocation ? { allocation_id: "a" } : undefined
         return undefined
       },
       delete: async () => {
@@ -43,6 +41,7 @@ vi.mock("../../../../clients/database/knex-db.js", () => {
     return b
   }
   knex.schema = { hasTable: async () => true }
+  knex.raw = (sql: string) => sql
   return { getKnex: () => knex, database: { knex } }
 })
 vi.mock("../util/listing-permissions.js", () => ({ canModifyListing: async () => true }))

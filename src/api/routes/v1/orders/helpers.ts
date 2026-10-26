@@ -34,6 +34,11 @@ import { Request } from "express"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
+  autoAllocateOrder,
+  markOrderAllocationsFulfilled,
+  releaseOrderAllocations,
+} from "../../../../services/allocation/v2-order-allocation.service.js"
+import {
   OrderSearchQuery,
   OrderSearchQueryArguments,
   OrderSearchSortMethod,
@@ -395,49 +400,20 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
     // V2 orders use order_market_items_v2 only — no market_orders entries needed
     // Order list counts should use order_market_items_v2 for V2 orders
 
-    // Allocate stock based on allocation_mode setting
+    // Allocate stock based on the selling shop's allocation_mode setting
+    // (createOrder resolved shop_id if the session had none).
     if (v2OfferItems.length > 0) {
-      // V2 orders: directly decrement listing_item_lots (no stock_allocations FK issue)
-      // The selling shop's setting (createOrder resolved shop_id if the
-      // session had none).
       const allocationMode = await getShopAllocationMode(createdOrder.shop_id)
 
       if (allocationMode === "auto") {
-        for (const vi of v2OfferItems) {
-          const listingItem = await trx("listing_items")
-            .where({ listing_id: vi.listing_id })
-            .first("item_id")
-          if (!listingItem) continue
-
-          // Find a listed lot with enough stock for this variant
-          const lot = await trx("listing_item_lots")
-            .where({
-              item_id: listingItem.item_id,
-              variant_id: vi.variant_id,
-              listed: true,
-            })
-            .where("quantity_total", ">=", vi.quantity)
-            .first()
-
-          if (lot) {
-            await trx("listing_item_lots")
-              .where({ lot_id: lot.lot_id })
-              .decrement("quantity_total", vi.quantity)
-
-            logger.info("V2 stock decremented", {
-              order_id: createdOrder.order_id,
-              lot_id: lot.lot_id,
-              variant_id: vi.variant_id,
-              quantity: vi.quantity,
-            })
-          } else {
-            logger.warn("V2 stock insufficient for auto-allocation", {
-              order_id: createdOrder.order_id,
-              listing_id: vi.listing_id,
-              variant_id: vi.variant_id,
-              quantity: vi.quantity,
-            })
-          }
+        // Not strict: the seller accepted the offer, so lines get what is
+        // listed and the rest can be allocated by hand later.
+        const allocation = await autoAllocateOrder(trx, createdOrder.order_id, { strict: false })
+        if (allocation.has_partial_allocations) {
+          logger.warn("V2 stock insufficient for full auto-allocation", {
+            order_id: createdOrder.order_id,
+            ...allocation,
+          })
         }
       } else {
         logger.info("Skipping V2 auto-allocation due to mode", {
@@ -715,6 +691,21 @@ export async function createOffer(
 }
 
 export async function cancelOrderMarketItems(order: DBOrder) {
+  // V2 lines: put the units the order holds back into the lots they came
+  // from. Only recorded allocations are returned (order_stock_allocations_v2);
+  // an order that never allocated (manual/none mode, or created before
+  // allocations were recorded) holds nothing to return. Not caught: if it
+  // fails, the cancellation fails and can be retried, rather than the stock
+  // being lost.
+  const released = await withTransaction((trx) => releaseOrderAllocations(trx, order.order_id))
+  if (released > 0) {
+    logger.info("V2 stock released on order cancellation", {
+      order_id: order.order_id,
+      quantity_released: released,
+    })
+  }
+
+  // V1 market_orders below.
   // Check if stock was actually subtracted
   // If setting is "dont_subtract", stock was never subtracted, so don't restore it
   let shouldRestoreStock = true
@@ -782,42 +773,6 @@ export async function cancelOrderMarketItems(order: DBOrder) {
       old_quantity: oldQuantity,
       new_quantity: newQuantity,
     })
-  }
-
-  // V2: Restore listing_item_lots quantities for V2 order items
-  const v2Items = await database.knex("order_market_items_v2")
-    .where({ order_id: order.order_id })
-    .select("listing_id", "variant_id", "quantity")
-
-  if (v2Items.length > 0) {
-    for (const item of v2Items) {
-      const listingItem = await database.knex("listing_items")
-        .where({ listing_id: item.listing_id })
-        .first("item_id")
-      if (!listingItem) continue
-
-      // Find the matching lot and restore quantity
-      const lot = await database.knex("listing_item_lots")
-        .where({
-          item_id: listingItem.item_id,
-          variant_id: item.variant_id,
-          listed: true,
-        })
-        .first()
-
-      if (lot) {
-        await database.knex("listing_item_lots")
-          .where({ lot_id: lot.lot_id })
-          .increment("quantity_total", item.quantity)
-
-        logger.info("V2 stock restored on order cancellation", {
-          order_id: order.order_id,
-          lot_id: lot.lot_id,
-          variant_id: item.variant_id,
-          quantity_restored: item.quantity,
-        })
-      }
-    }
   }
 }
 
@@ -953,6 +908,9 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         req.user.user_id,
       )
     } else if (status === "fulfilled") {
+      // V2: the allocated units leave with the order (already out of the lots)
+      await markOrderAllocationsFulfilled(database.knex, order.order_id)
+
       // Consume stock allocations when order is fulfilled
       // Requirements: 6.5, 10.5
       try {

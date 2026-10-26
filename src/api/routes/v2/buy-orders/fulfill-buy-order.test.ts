@@ -91,6 +91,16 @@ vi.mock("../../../../services/shops/shop-permissions.service.js", () => ({
 vi.mock("../../../../services/allocation/allocation-mode.service.js", () => ({
   getShopAllocationMode: async () => h.mode,
 }))
+// What allocating does to the lots (locks, FIFO, the allocation rows) runs on
+// real Postgres in orders/order-allocations.pg.test.ts; here only whether
+// fulfilment asks for it.
+const autoAllocateOrder = vi.hoisted(() =>
+  vi.fn(async () => ({ has_partial_allocations: false, total_requested: 0, total_allocated: 0 })),
+)
+vi.mock("../../../../services/allocation/v2-order-allocation.service.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  autoAllocateOrder,
+}))
 // price_max / quality / targeting / self-fulfil rules: tested in fulfillment-rules.test.ts
 vi.mock("./fulfillment-rules.js", () => ({
   buyOrderFulfillmentProblem: async () => h.problem,
@@ -149,6 +159,7 @@ function fulfill(userId: string, body: Row) {
 describe("POST /buy-orders/{id}/fulfill", () => {
   beforeEach(() => {
     seed()
+    autoAllocateOrder.mockClear()
     h.canManage = (shop, userId) => shop.owner_user_id === userId
     h.mode = "auto"
     h.problem = null
@@ -178,7 +189,8 @@ describe("POST /buy-orders/{id}/fulfill", () => {
       quantity: 4,
       price_per_unit: 200,
     })
-    expect(h.tables.listing_item_lots[0].quantity_total).toBe(4)
+    // Auto mode: the whole order is allocated, or the fulfilment fails
+    expect(autoAllocateOrder).toHaveBeenCalledWith(expect.anything(), order.order_id, { strict: true })
     expect(h.tables.buy_orders_v2[0]).toMatchObject({ quantity_fulfilled: 4, status: "active" })
   })
 
@@ -195,6 +207,7 @@ describe("POST /buy-orders/{id}/fulfill", () => {
   it("leaves stock alone when the shop allocates manually", async () => {
     h.mode = "manual"
     await fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 2 })
+    expect(autoAllocateOrder).not.toHaveBeenCalled()
     expect(h.tables.listing_item_lots[0].quantity_total).toBe(8)
   })
 

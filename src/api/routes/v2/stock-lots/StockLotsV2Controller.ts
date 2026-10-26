@@ -28,6 +28,7 @@ import {
 } from "../types/stock-lots.types.js"
 import { VariantAttributes } from "../types/listings.types.js"
 import logger from "../../../../logger/logger.js"
+import { activeAllocatedByLot } from "../../../../services/allocation/v2-order-allocation.service.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 
 /**
@@ -66,11 +67,6 @@ interface StockLotRow {
  * Row shape of the per-lot active allocation sum. The `SUM(quantity)` is cast
  * `::integer` in SQL.
  */
-interface StockAllocationSumRow {
-  lot_id: string
-  allocated: number
-}
-
 /** Columns of `listing_item_lots` that the update endpoints may write */
 interface StockLotUpdate {
   updated_at: Date
@@ -357,14 +353,8 @@ export class StockLotsV2Controller extends BaseController {
 
       // Fetch allocations for all lots in one query
       const lotIds = results.map((r) => r.lot_id)
-      const allocationRows: StockAllocationSumRow[] = lotIds.length > 0
-        ? await knex("stock_allocations")
-            .whereIn("lot_id", lotIds)
-            .where("status", "active")
-            .groupBy("lot_id")
-            .select("lot_id", knex.raw("SUM(quantity)::integer as allocated"))
-        : []
-      const allocationMap = new Map(allocationRows.map((r) => [r.lot_id, r.allocated]))
+      // Units held by open orders (V2 allocations; already out of quantity_total)
+      const allocationMap = await activeAllocatedByLot(knex, lotIds)
 
       // Transform results to match response type (Requirements 20.8, 20.9, 20.12)
       const lots: StockLotDetail[] = await Promise.all(results.map(async (row) => ({
@@ -616,12 +606,7 @@ export class StockLotsV2Controller extends BaseController {
       }
 
       // Fetch allocation for this lot
-      const allocRow = await knex2("stock_allocations")
-        .where("lot_id", id)
-        .where("status", "active")
-        .sum("quantity as allocated")
-        .first()
-      const quantityAllocated = Number(allocRow?.allocated || 0)
+      const quantityAllocated = (await activeAllocatedByLot(knex2, [id])).get(id) ?? 0
 
       const lot: StockLotDetail = {
         lot_id: lotResult.lot_id,
@@ -898,21 +883,11 @@ export class StockLotsV2Controller extends BaseController {
     if (!lot) throw this.throwNotFound("Stock lot", id)
     if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) throw this.throwForbidden("You do not own this stock lot")
 
-    // Check if lot is allocated to open orders. stock_allocation_log has
-    // order_id (no order_item_id column: joining on one made every delete 500).
-    const hasTable = await db.schema.hasTable("stock_allocation_log")
-    if (hasTable) {
-      const pendingAlloc = await db("stock_allocation_log as sal")
-        .join("orders as o", "sal.order_id", "o.order_id")
-        .where("sal.lot_id", id)
-        .whereNotIn("o.status", ["fulfilled", "cancelled"])
-        .first()
-
-      if (pendingAlloc) {
-        throw this.throwValidationError("Cannot delete lot allocated to pending orders", [
-          { field: "lot_id", message: "Lot has pending order allocations" },
-        ])
-      }
+    // Units held for open orders would have nowhere to go back to.
+    if ((await activeAllocatedByLot(db, [id])).get(id)) {
+      throw this.throwValidationError("Cannot delete lot allocated to pending orders", [
+        { field: "lot_id", message: "Lot has pending order allocations" },
+      ])
     }
 
     await db("listing_item_lots").where("lot_id", id).delete()
@@ -961,12 +936,7 @@ export class StockLotsV2Controller extends BaseController {
       this.throwNotFound("Stock lot", lotId)
     }
 
-    const allocRow = await db("stock_allocations")
-      .where("lot_id", lotId)
-      .where("status", "active")
-      .sum("quantity as allocated")
-      .first()
-    const quantityAllocated = Number(allocRow?.allocated || 0)
+    const quantityAllocated = (await activeAllocatedByLot(db, [lotId])).get(lotId) ?? 0
 
     return {
       lot_id: row.lot_id,

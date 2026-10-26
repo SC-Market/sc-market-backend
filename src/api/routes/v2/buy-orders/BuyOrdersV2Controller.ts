@@ -24,6 +24,12 @@ import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import {
+  V2InsufficientStockError,
+  autoAllocateOrder,
+  type V2AllocationTotals,
+} from "../../../../services/allocation/v2-order-allocation.service.js"
+import type { Knex } from "knex"
 import { buyOrderFulfillmentProblem } from "./fulfillment-rules.js"
 import {
   CreateBuyOrderRequest,
@@ -315,35 +321,19 @@ export class BuyOrdersV2Controller extends BaseController {
           orderItemId: orderItem.order_item_id,
         })
 
-        // Step 8: Allocate stock from variant-specific lots (V2 direct)
+        // Step 8: Allocate stock from the variant's lots. Strict: under the
+        // lots' row locks the full quantity must still be there, or the
+        // purchase fails (two buyers can't get the same units).
         const allocationMode = await getShopAllocationMode(listing.shop_id)
-
-        if (allocationMode === "auto") {
-          const listingItem = await trx("listing_items")
-            .where({ listing_id: requestBody.listing_id })
-            .first("item_id")
-
-          if (listingItem) {
-            const lot = await trx("listing_item_lots")
-              .where({
-                item_id: listingItem.item_id,
-                variant_id: requestBody.variant_id,
-                listed: true,
-              })
-              .where("quantity_total", ">=", requestBody.quantity)
-              .first()
-
-            if (lot) {
-              await trx("listing_item_lots")
-                .where({ lot_id: lot.lot_id })
-                .decrement("quantity_total", requestBody.quantity)
-            }
-          }
-        }
+        const allocationResult =
+          allocationMode === "auto"
+            ? await this.allocateOrFail(trx, order.order_id)
+            : { has_partial_allocations: false, total_requested: requestBody.quantity, total_allocated: 0 }
 
         logger.info("Stock allocated for direct purchase", {
           orderId: order.order_id,
           allocationMode,
+          ...allocationResult,
         })
 
         // Build variant detail for response
@@ -375,9 +365,9 @@ export class BuyOrdersV2Controller extends BaseController {
           created_at: order.timestamp.toISOString(),
           item: itemDetail,
           allocation_result: {
-            has_partial_allocations: false,
-            total_requested: 0,
-            total_allocated: 0,
+            has_partial_allocations: allocationResult.has_partial_allocations,
+            total_requested: allocationResult.total_requested,
+            total_allocated: allocationResult.total_allocated,
           },
         }
       })
@@ -925,24 +915,9 @@ export class BuyOrdersV2Controller extends BaseController {
         price_per_unit: price,
       }).returning('*')
 
-      // Allocate stock
-      const allocationMode = await getShopAllocationMode(listing.shop_id)
-
-      if (allocationMode === "auto") {
-        const lot = await trx("listing_item_lots")
-          .where({
-            item_id: listingItem.item_id,
-            variant_id: body.variant_id,
-            listed: true,
-          })
-          .where("quantity_total", ">=", quantity)
-          .first()
-
-        if (lot) {
-          await trx("listing_item_lots")
-            .where({ lot_id: lot.lot_id })
-            .decrement("quantity_total", quantity)
-        }
+      // Allocate stock (strict, as Buy now: the seller offered listed stock)
+      if ((await getShopAllocationMode(listing.shop_id)) === "auto") {
+        await this.allocateOrFail(trx, order.order_id)
       }
 
       // Record fulfillment and update buy order
@@ -1094,6 +1069,23 @@ private formatBuyOrderRow(r: BuyOrderJoinedRow): StandingBuyOrder {
    * First checks buy_order_photos for user-uploaded images,
    * then falls back to resolveGameItemImages for items without user photos.
    */
+  /**
+   * Allocates the whole order from its lots or fails the request (and so the
+   * transaction): the availability checked earlier was read without locks.
+   */
+  private async allocateOrFail(trx: Knex.Transaction, orderId: string): Promise<V2AllocationTotals> {
+    try {
+      return await autoAllocateOrder(trx, orderId, { strict: true })
+    } catch (error) {
+      if (error instanceof V2InsufficientStockError) {
+        this.throwValidationError("Insufficient stock", [
+          { field: "quantity", message: `Only ${error.available} available, requested ${error.requested}` },
+        ])
+      }
+      throw error
+    }
+  }
+
   private async attachPhotos(buyOrders: StandingBuyOrder[]): Promise<void> {
     if (!buyOrders.length) return
     const db = getKnex()

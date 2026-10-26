@@ -583,12 +583,12 @@
 					"quantity_total": {
 						"type": "number",
 						"format": "double",
-						"description": "Total quantity in this lot"
+						"description": "Units in this lot that are free: not allocated to any order"
 					},
 					"quantity_allocated": {
 						"type": "number",
 						"format": "double",
-						"description": "Quantity currently allocated to active orders"
+						"description": "Units taken from this lot for orders that are still open. They are\nalready out of quantity_total (allocating moves them out), so the lot\nheld quantity_total + quantity_allocated before those orders."
 					},
 					"location": {
 						"allOf": [
@@ -2572,6 +2572,256 @@
 					"orders",
 					"offers"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderAllocationLot": {
+				"description": "A lot, as shown next to an allocation or as a candidate for one.",
+				"properties": {
+					"lot_id": {
+						"type": "string"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Units still free in the lot (not held by any order)"
+					},
+					"listed": {
+						"type": "boolean",
+						"description": "Whether the lot is listed for sale. Unlisted lots can still be allocated by hand."
+					},
+					"location": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/LocationInfo"
+							}
+						],
+						"nullable": true
+					},
+					"owner": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OwnerInfo"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"lot_id",
+					"quantity_available",
+					"listed",
+					"location",
+					"owner"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderAllocation": {
+				"description": "Units of one lot held for an order line.",
+				"properties": {
+					"allocation_id": {
+						"type": "string"
+					},
+					"order_item_id": {
+						"type": "string"
+					},
+					"lot_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Null if the lot has been deleted since"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"allocated_by": {
+						"type": "string",
+						"nullable": true,
+						"description": "User who allocated by hand; null for automatic allocation"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					},
+					"lot": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OrderAllocationLot"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"allocation_id",
+					"order_item_id",
+					"lot_id",
+					"quantity",
+					"allocated_by",
+					"created_at",
+					"updated_at",
+					"lot"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderAllocationLine": {
+				"description": "One V2 line of the order with its allocations.",
+				"properties": {
+					"order_item_id": {
+						"type": "string"
+					},
+					"listing_id": {
+						"type": "string"
+					},
+					"listing_title": {
+						"type": "string"
+					},
+					"listing_photo": {
+						"type": "string",
+						"nullable": true
+					},
+					"variant": {
+						"$ref": "#/components/schemas/StockLotVariant"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Units the line requires"
+					},
+					"quantity_allocated": {
+						"type": "number",
+						"format": "double",
+						"description": "Units currently held for the line"
+					},
+					"allocations": {
+						"items": {
+							"$ref": "#/components/schemas/OrderAllocation"
+						},
+						"type": "array"
+					},
+					"available_lots": {
+						"items": {
+							"$ref": "#/components/schemas/OrderAllocationLot"
+						},
+						"type": "array",
+						"description": "Lots of the same listing item and variant with free units, oldest first"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"listing_id",
+					"listing_title",
+					"listing_photo",
+					"variant",
+					"quantity",
+					"quantity_allocated",
+					"allocations",
+					"available_lots"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderAllocationsResponse": {
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"order_status": {
+						"type": "string"
+					},
+					"allocation_mode": {
+						"type": "string",
+						"enum": [
+							"auto",
+							"manual",
+							"none"
+						],
+						"description": "The selling shop's allocation mode: auto, manual or none"
+					},
+					"editable": {
+						"type": "boolean",
+						"description": "False once the order is cancelled or fulfilled"
+					},
+					"lines": {
+						"items": {
+							"$ref": "#/components/schemas/OrderAllocationLine"
+						},
+						"type": "array"
+					},
+					"total_requested": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_allocated": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"order_id",
+					"order_status",
+					"allocation_mode",
+					"editable",
+					"lines",
+					"total_requested",
+					"total_allocated"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ManualOrderAllocationInput": {
+				"properties": {
+					"lot_id": {
+						"type": "string",
+						"description": "Lot to allocate from (UUID)"
+					},
+					"quantity": {
+						"type": "integer",
+						"format": "int32",
+						"description": "Units of this lot the order should hold after the request (not a delta).\n0 releases the lot's allocation.",
+						"minimum": 0
+					},
+					"order_item_id": {
+						"type": "string",
+						"description": "Order line, needed only when the lot matches several lines"
+					}
+				},
+				"required": [
+					"lot_id",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ManualOrderAllocationRequest": {
+				"properties": {
+					"allocations": {
+						"items": {
+							"$ref": "#/components/schemas/ManualOrderAllocationInput"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"allocations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReleaseOrderAllocationsRequest": {
+				"properties": {
+					"allocation_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Allocations to release; omit to release all of the order's allocations"
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -14887,6 +15137,178 @@
 						}
 					}
 				]
+			}
+		},
+		"/orders/{orderId}/allocations": {
+			"get": {
+				"operationId": "GetOrderAllocations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderAllocationsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The order's V2 lines, the lots their units are allocated from, and the\nlots that could be allocated.",
+				"summary": "Get an order's stock allocations",
+				"tags": [
+					"Orders V2",
+					"Stock Lots V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}/allocations/auto": {
+			"post": {
+				"operationId": "AutoAllocateOrderStock",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderAllocationsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allocates every line's unallocated units from its listed lots, oldest lot\nfirst. Lines get what is available; the rest stays unallocated.",
+				"summary": "Auto-allocate an order's stock",
+				"tags": [
+					"Orders V2",
+					"Stock Lots V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}/allocations/manual": {
+			"post": {
+				"operationId": "ManualAllocateOrderStock",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderAllocationsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Sets how many units each given lot holds for the order. `quantity` is\nthe lot's new total for the order, not a delta: higher takes units from\nthe lot, lower puts them back, 0 releases it. A lot must hold the item\nand variant of one of the order's lines.",
+				"summary": "Allocate stock to an order from specific lots",
+				"tags": [
+					"Orders V2",
+					"Stock Lots V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ManualOrderAllocationRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/{orderId}/allocations/release": {
+			"post": {
+				"operationId": "ReleaseOrderStock",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderAllocationsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Puts allocated units back into their lots: the given allocations, or all\nof the order's allocations when allocation_ids is omitted.",
+				"summary": "Release an order's stock allocations",
+				"tags": [
+					"Orders V2",
+					"Stock Lots V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReleaseOrderAllocationsRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/onboarding/status": {

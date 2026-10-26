@@ -8,6 +8,7 @@
 import { Post, Get, Put, Delete, Route, Tags, Body, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { activeAllocatedByLot } from "../../../../services/allocation/v2-order-allocation.service.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import logger from "../../../../logger/logger.js"
@@ -275,6 +276,12 @@ export class InventoryV2Controller extends BaseController {
 
     const lot = await knex("listing_item_lots").where({ lot_id: lotId, owner_id: userId }).first()
     if (!lot) throw this.throwNotFound("Inventory lot", lotId)
+    // Units held for open orders would have nowhere to go back to.
+    if ((await activeAllocatedByLot(knex, [lotId])).get(lotId)) {
+      throw this.throwValidationError("Cannot delete lot allocated to pending orders", [
+        { field: "lot_id", message: "Lot has pending order allocations" },
+      ])
+    }
 
     await knex("listing_item_lots").where({ lot_id: lotId }).delete()
     auditService.log({ entity_type: "inventory_lot", entity_id: lotId, action: "deleted", actor_id: userId })

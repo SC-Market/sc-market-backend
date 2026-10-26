@@ -86,10 +86,14 @@ export interface StockLotDetail {
   /** Variant information */
   variant: StockLotVariant;
   
-  /** Total quantity in this lot */
+  /** Units in this lot that are free: not allocated to any order */
   quantity_total: number;
 
-  /** Quantity currently allocated to active orders */
+  /**
+   * Units taken from this lot for orders that are still open. They are
+   * already out of quantity_total (allocating moves them out), so the lot
+   * held quantity_total + quantity_allocated before those orders.
+   */
   quantity_allocated: number;
 
   /** Location information (null if unspecified) */
