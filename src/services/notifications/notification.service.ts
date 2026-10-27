@@ -1263,6 +1263,19 @@ class DatabaseNotificationService implements NotificationService {
     order: CreateOrderResponse | GetOrderDetailResponse,
     shopId: string,
   ): Promise<void> {
+    // Buy now: shadow-plans the normal order notification (owner decision).
+    return withShadow(
+      await shadowPlans(async () =>
+        plans.buyNowOrderPlans(await orderDb.getOrder({ order_id: order.order_id })),
+      ),
+      () => this.legacyNewOrderNotificationV2(order, shopId),
+    )
+  }
+
+  private async legacyNewOrderNotificationV2(
+    order: CreateOrderResponse | GetOrderDetailResponse,
+    shopId: string,
+  ): Promise<void> {
     try {
       // Resolve recipients from shop owner
       const shop = await getKnex()("shops").where("shop_id", shopId).first()

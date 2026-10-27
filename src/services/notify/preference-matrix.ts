@@ -46,7 +46,10 @@ export interface MatrixCategory {
 }
 
 function eventsOf(category: CategoryId): EventKey[] {
-  return (Object.keys(CATALOG) as EventKey[]).filter((k) => CATALOG[k].category === category)
+  // Shadow-only events (the owner-approved merges) appear at cutover.
+  return (Object.keys(CATALOG) as EventKey[]).filter(
+    (k) => CATALOG[k].category === category && !(CATALOG[k] as EventDefinition).shadowOnly,
+  )
 }
 
 export async function getMatrix(userId: string, contractorId: string | null): Promise<MatrixCategory[]> {
@@ -131,7 +134,9 @@ export async function setPreferences(
     const events = u.event ? [u.event] : u.category ? eventsOf(u.category) : []
     if (!events.length) throw new PreferenceUpdateError("Each update needs a known category or event")
     if (u.category && !(u.category in CATEGORIES)) throw new PreferenceUpdateError(`Unknown category ${u.category}`)
-    if (u.event && !(u.event in CATALOG)) throw new PreferenceUpdateError(`Unknown event ${u.event}`)
+    if (u.event && (!(u.event in CATALOG) || (CATALOG[u.event] as EventDefinition).shadowOnly)) {
+      throw new PreferenceUpdateError(`Unknown event ${u.event}`)
+    }
     for (const event of events) {
       if (!editableChannels(event).includes(u.channel)) {
         if (u.event) throw new PreferenceUpdateError(`${u.channel} cannot be changed for ${event}`)

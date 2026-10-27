@@ -16,6 +16,16 @@
  *   Discord DM choice applies to personal and org notifications alike.
  *
  * Lookups are batched: one query per table for all recipients of an event.
+ *
+ * Merged events (catalog mergedActions: the four order statuses; new and
+ * counter offers) read every merged action's row, per channel and scope:
+ * - any row saying off -> off (the most protective choice: an opt-out the
+ *   user made for one of the old events is kept for the merged one);
+ * - otherwise any row saying on -> on (an explicit opt-in, e.g. email, is kept);
+ * - no row for any of them -> the catalog default.
+ * So nobody receives something they had turned off; the cost is that a user
+ * who turned off only one status stops getting the others on that channel.
+ * Shadow lines count those cases as "merged_preference".
  */
 import { getKnex } from "../../clients/database/knex-db.js"
 import type { UserChannel, UserRecipient } from "./channels.js"
@@ -41,6 +51,38 @@ export async function actionTypeId(action: string): Promise<number> {
 
 /** Effective on/off per recipient and channel for one event. */
 export async function resolvePreferences(
+  def: EventDefinition,
+  recipients: UserRecipient[],
+  channels: readonly UserChannel[],
+): Promise<PreferenceMatrix> {
+  if (def.mergedActions?.length && !isMandatory(def)) {
+    const parts = await Promise.all(
+      def.mergedActions.map((action) =>
+        resolveExplicit({ ...def, legacyAction: action, mergedActions: undefined }, recipients, channels),
+      ),
+    )
+    const out: PreferenceMatrix = new Map()
+    for (const r of recipients) {
+      const key = recipientKey(r)
+      const prefs: Partial<Record<UserChannel, boolean>> = {}
+      for (const c of channels) {
+        const values = parts.map((m) => m.get(key)?.[c])
+        prefs[c] = values.includes(false) ? false : values.includes(true) ? true : (def.defaults[c] ?? false)
+      }
+      out.set(key, prefs)
+    }
+    return out
+  }
+  const explicit = await resolveExplicit(def, recipients, channels)
+  for (const [key, prefs] of explicit) {
+    for (const c of channels) prefs[c] = prefs[c] ?? def.defaults[c] ?? false
+    explicit.set(key, prefs)
+  }
+  return explicit
+}
+
+/** The user's stored choice per recipient and channel; undefined where no row exists. */
+async function resolveExplicit(
   def: EventDefinition,
   recipients: UserRecipient[],
   channels: readonly UserChannel[],
@@ -94,7 +136,7 @@ export async function resolvePreferences(
           (row) => row.user_id === r.userId && row.channel === channel,
         )?.enabled
       }
-      prefs[c] = value ?? def.defaults[c] ?? false
+      prefs[c] = value
     }
     out.set(recipientKey(r), prefs)
   }

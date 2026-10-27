@@ -119,7 +119,9 @@ https://sc-market.space/settings?tab&#x3D;email",
   "shadow": [
     {
       "entity_id": "session:c1",
-      "event": "offer.countered",
+      "event": "offer.received",
+      "exact": true,
+      "expected": {},
       "extra": [],
       "legacy": 3,
       "match": true,
@@ -338,7 +340,9 @@ https://sc-market.space/settings?tab&#x3D;email",
   "shadow": [
     {
       "entity_id": "session:o2",
-      "event": "offer.created",
+      "event": "offer.received",
+      "exact": true,
+      "expected": {},
       "extra": [],
       "legacy": 3,
       "match": true,
@@ -588,7 +592,9 @@ https://sc-market.space/settings?tab&#x3D;email",
   "shadow": [
     {
       "entity_id": "session:o1",
-      "event": "offer.created",
+      "event": "offer.received",
+      "exact": true,
+      "expected": {},
       "extra": [],
       "legacy": 3,
       "match": true,
@@ -733,6 +739,8 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
     {
       "entity_id": "session:m1",
       "event": "offer.message",
+      "exact": true,
+      "expected": {},
       "extra": [],
       "legacy": 2,
       "match": true,
@@ -742,6 +750,8 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
     {
       "entity_id": "session:m1",
       "event": "offer.message",
+      "exact": true,
+      "expected": {},
       "extra": [],
       "legacy": 0,
       "match": true,

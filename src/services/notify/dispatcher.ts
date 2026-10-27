@@ -57,6 +57,12 @@ export interface NotifyOptions {
   collapse?: "unread"
   /** What each channel delivers; may depend on the recipient. */
   messages: RenderedMessages | ((recipient: UserRecipient) => RenderedMessages)
+  /**
+   * Merged events only: the action this occurrence is (which order status;
+   * new or counter offer). Its in-app row and channel messages use it, so
+   * they still say which; preferences are read across all merged actions.
+   */
+  legacyAction?: string
   shadow?: boolean
 }
 
@@ -128,6 +134,10 @@ export async function notify(
 ): Promise<NotifyResult> {
   const def = eventDefinition(eventKey)
   const result: NotifyResult = { planned: [], delivered: [], failed: [], duplicate: [] }
+  if (opts.legacyAction && !def.mergedActions?.includes(opts.legacyAction)) {
+    throw new Error(`${opts.legacyAction} is not one of ${String(eventKey)}'s actions`)
+  }
+  const occurrenceAction = opts.legacyAction ?? def.legacyAction
 
   // 1. Recipients: one per (user, org scope), never the actor unless asked.
   const seen = new Set<string>()
@@ -150,7 +160,7 @@ export async function notify(
     // 1b. Collapse: drop recipients who still have this entity unread.
     let collapseObjectId: string | null = null
     if (opts.collapse === "unread") {
-      const action = await notificationDb.getNotificationActionByName(def.legacyAction)
+      const action = await notificationDb.getNotificationActionByName(occurrenceAction)
       const existing = await notificationDb.getNotificationObjectByEntityAndAction(
         opts.entityId,
         action.action_type_id,
@@ -215,7 +225,7 @@ export async function notify(
       try {
         let objectId = collapseObjectId
         if (!objectId) {
-          const action = await notificationDb.getNotificationActionByName(def.legacyAction)
+          const action = await notificationDb.getNotificationActionByName(occurrenceAction)
           const [object] = await notificationDb.insertNotificationObjects([
             { action_type_id: action.action_type_id, entity_id: opts.entityId },
           ])
@@ -259,7 +269,7 @@ export async function notify(
         try {
           outcome = await adapters[channel].send(msg as never, {
             eventKey,
-            legacyAction: def.legacyAction,
+            legacyAction: occurrenceAction,
             recipient,
             idempotencyKey: keyOf(d),
             mandatory: isMandatory(def),

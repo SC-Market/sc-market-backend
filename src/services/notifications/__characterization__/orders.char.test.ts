@@ -155,7 +155,7 @@ describe("order_create (1)", () => {
         "in_app  user:boss order_create (order:o4)",
         "push    push:boss [order] New Order Created",
         "push    push:boss [order] New Order Created",
-        "shadow  order.created ok",
+        "shadow  order.created ok expected duplicate_role=2",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -253,7 +253,7 @@ describe("order_status_* (4-7)", () => {
         "discord POST /channels/thread:st-in-progress/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status.in_progress ok",
+        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -270,7 +270,7 @@ describe("order_status_* (4-7)", () => {
         "discord PATCH /channels/thread:st-fulfilled",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status.fulfilled ok",
+        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -287,7 +287,7 @@ describe("order_status_* (4-7)", () => {
         "discord PATCH /channels/thread:st-cancelled",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status.cancelled ok",
+        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -303,7 +303,7 @@ describe("order_status_* (4-7)", () => {
         "discord POST /channels/thread:st-not-started/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status.not_started ok",
+        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -328,7 +328,7 @@ describe("order_status_* (4-7)", () => {
         "push    push:clerk [order] Order Cancelled",
         "email   clerk@example.test Order Cancelled",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status.cancelled ok",
+        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -546,5 +546,68 @@ describe("Discord order threads (specialised, not notifications)", () => {
       ]
     `)
     expect(obs.discord_queue).toMatchSnapshot()
+  })
+})
+
+// Owner decisions planned in shadow mode (they ship with the cutover): the
+// shadow line marks them as expected differences, separate from mismatches.
+describe("shadow: expected differences", () => {
+  it("actor_excluded: an org manager ordering from their own org is notified today, not by the plan", async () => {
+    const boss = await w.user("boss")
+    const clerk = await w.user("clerk")
+    const acme = await w.org("acme", [
+      { user: boss, perms: "owner" },
+      { user: clerk, perms: ["manage_orders"] },
+    ])
+    const order = await w.order("self", { customer: clerk, org: acme })
+
+    await notificationService.createOrderNotification(order)
+
+    expect(w.summary(await w.observe())).toMatchInlineSnapshot(`
+      [
+        "in_app  user:boss order_create (order:self)",
+        "in_app  user:clerk order_create (order:self)",
+        "push    push:boss [order] New Order Created",
+        "push    push:clerk [order] New Order Created",
+        "shadow  order.created ok expected actor_excluded=2",
+      ]
+    `)
+  })
+
+  it("merged_preference: push off for in-progress only; a fulfilled push is sent today, not by the merged event", async () => {
+    const customer = await w.user("customer")
+    const seller = await w.user("seller")
+    await w.pushPref(customer, "order_status_in_progress", false)
+    const order = await w.order("mp", { customer, assigned: seller, status: "fulfilled" })
+
+    await notificationService.createOrderStatusNotification(order, "fulfilled", seller.user_id)
+
+    expect(w.summary(await w.observe())).toMatchInlineSnapshot(`
+      [
+        "in_app  user:customer order_status_fulfilled (order:mp)",
+        "push    push:customer [order] Order Fulfilled",
+        "shadow  order.status_changed ok expected merged_preference=1",
+      ]
+    `)
+  })
+
+  it("merged event, consistent preferences: exact", async () => {
+    const customer = await w.user("customer")
+    const seller = await w.user("seller")
+    for (const a of ["order_status_not_started", "order_status_in_progress", "order_status_fulfilled", "order_status_cancelled"]) {
+      await w.pushPref(customer, a, false)
+    }
+    const order = await w.order("mp2", { customer, assigned: seller, status: "cancelled" })
+
+    await notificationService.createOrderStatusNotification(order, "cancelled", seller.user_id)
+
+    const obs = await w.observe()
+    expect(w.summary(obs)).toMatchInlineSnapshot(`
+      [
+        "in_app  user:customer order_status_cancelled (order:mp2)",
+        "shadow  order.status_changed ok",
+      ]
+    `)
+    expect((obs.shadow as { exact: boolean }[]).map((l) => l.exact)).toEqual([true])
   })
 })

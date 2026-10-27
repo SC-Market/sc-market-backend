@@ -46,6 +46,16 @@ export interface EventDefinition {
    * (Discord DM) can't be turned on until the event is switched over.
    */
   legacyDelivery?: true
+  /**
+   * Owner decision: one event for what used to be several notification
+   * actions (the four order statuses; new offer and counter offer). The
+   * occurrence still names its own action (NotifyOptions.legacyAction): the
+   * in-app row, push and email say which status, or new vs counter offer.
+   * Preferences are read across all of them (preferences.ts, "merged").
+   */
+  mergedActions?: readonly string[]
+  /** Planned in shadow mode only; not shown or editable in the settings matrix yet. */
+  shadowOnly?: true
 }
 
 /**
@@ -67,6 +77,18 @@ function event(
 }
 
 const ALL = ["in_app", "push", "email", "discord_dm"] as const
+
+export const ORDER_STATUS_ACTIONS = [
+  "order_status_not_started",
+  "order_status_in_progress",
+  "order_status_fulfilled",
+  "order_status_cancelled",
+] as const
+export const OFFER_ACTIONS = ["offer_create", "counter_offer_create"] as const
+
+function merged(category: CategoryId, actions: readonly string[], channels: readonly UserChannel[]): EventDefinition {
+  return { ...event(category, actions[0], channels), mergedActions: actions, shadowOnly: true }
+}
 /** Channels without email: these never sent email (a template exists for some; widening is the owner's call). */
 const NO_EMAIL = ["in_app", "push", "discord_dm"] as const
 
@@ -95,6 +117,11 @@ export const CATALOG = {
   "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
   // Someone made an offer on your public contract (was order_contractor_applied).
   "contract.offer_received": event("contracts", "contract_offer_received", ALL),
+  // Owner decision (ships with the cutover; shadow-only until then): the four
+  // order_status_* events become one, and offer_create + counter_offer_create
+  // become one. They replace the per-status / per-type entries above at cutover.
+  "order.status_changed": merged("orders", ORDER_STATUS_ACTIONS, ALL),
+  "offer.received": merged("offers", OFFER_ACTIONS, ALL),
 } as const satisfies Record<string, EventDefinition>
 
 /** Orders, offers and chat messages: shadow mode until parity is proven on real traffic. */
@@ -109,6 +136,8 @@ const LEGACY_DELIVERY: EventKey[] = [
   "offer.created",
   "offer.countered",
   "offer.message",
+  "order.status_changed",
+  "offer.received",
 ]
 for (const key of LEGACY_DELIVERY) (CATALOG[key] as EventDefinition).legacyDelivery = true
 

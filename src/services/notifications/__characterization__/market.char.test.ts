@@ -294,6 +294,56 @@ describe("order created through Buy now (BuyOrdersV2Controller.createPurchase)",
         "outcome": "created",
         "summary": [
           "push    push:seller [order_v2] New Order",
+          "shadow  order.assigned ok expected buy_now_normal_path=1",
+        ],
+      }
+    `)
+  })
+})
+
+describe("Buy now from an org shop (shadow: normal order path)", () => {
+  it("V2 push to managers today; the plan is the normal org order notification", async () => {
+    const { BuyOrdersV2Controller } = await import("../../../api/routes/v2/buy-orders/BuyOrdersV2Controller.js")
+    const { getKnex } = await import("../../../clients/database/knex-db.js")
+    const profileDb = await import("../../../api/routes/v1/profiles/database.js")
+    const buyer = await w.user("buyer")
+    const boss = await w.user("boss")
+    const clerk = await w.user("clerk")
+    const acme = await w.org("acme", [
+      { user: boss, perms: "owner" },
+      { user: clerk, perms: ["manage_orders"] },
+    ])
+    await w.emailOptIn(boss, ["order_create"], acme)
+    const shop = await w.shop("acme-shop", { org: acme })
+    const item = await w.gameItem("Laranite")
+    const { listing_id } = await w.listing("ore2", { shop, seller: { org: acme }, title: "Laranite", price: 5000, gameItem: item })
+    const db = getKnex()
+    const [variant] = await db("item_variants")
+      .insert({ game_item_id: item.id, attributes: { quality_tier: 3 }, attributes_hash: "t3", display_name: "Tier 3", short_name: "T3" })
+      .returning("variant_id")
+    const li = await db("listing_items").where({ listing_id }).first()
+    await db("listing_item_lots").insert({ item_id: li.item_id, variant_id: variant.variant_id, quantity_total: 10, owner_id: boss.user_id, listed: true })
+    w.nameId(variant.variant_id, "variant:t3")
+
+    let outcome: string
+    try {
+      const res = await new BuyOrdersV2Controller().createPurchase(
+        { listing_id, variant_id: variant.variant_id, quantity: 1 },
+        { user: await profileDb.getUser({ user_id: buyer.user_id }) } as never,
+      )
+      w.nameId(res.order_id, "order:v2org")
+      outcome = "created"
+    } catch (e) {
+      outcome = `throws: ${(e as Error).message.split(" - ").pop()}`
+    }
+
+    expect({ outcome, summary: w.summary(await w.observe()) }).toMatchInlineSnapshot(`
+      {
+        "outcome": "created",
+        "summary": [
+          "push    push:boss [order_v2] New Order",
+          "push    push:clerk [order_v2] New Order",
+          "shadow  order.created ok expected buy_now_normal_path=7",
         ],
       }
     `)

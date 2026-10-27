@@ -505,11 +505,15 @@ export function summary(o: Observed) {
     lines.push(`webhook ${w.url.replace("https://discord.com/api/webhooks/", "").replace("/token", "")} ${w.body?.username ?? ""}`.trim())
   }
   for (const w of o.websocket) lines.push(`ws      ${JSON.stringify(w).slice(0, 60)}`)
-  for (const sh of o.shadow as { event: string; match: boolean; missing: string[]; extra: string[] }[]) {
+  type ShadowLine = { event: string; match: boolean; missing: string[]; extra: string[]; expected?: Record<string, number> }
+  for (const sh of o.shadow as ShadowLine[]) {
+    // Expected differences (owner decisions) by reason, e.g. "expected actor_excluded=1".
+    const exp = Object.entries(sh.expected ?? {}).map(([r, n]) => `${r}=${n}`).join(",")
+    const suffix = exp ? ` expected ${exp}` : ""
     lines.push(
       sh.match
-        ? `shadow  ${sh.event} ok`
-        : `shadow  ${sh.event} MISMATCH missing=${sh.missing.join(",")} extra=${sh.extra.join(",")}`,
+        ? `shadow  ${sh.event} ok${suffix}`
+        : `shadow  ${sh.event} MISMATCH missing=${sh.missing.join(",")} extra=${sh.extra.join(",")}${suffix}`,
     )
   }
   for (const e of o.errors as string[]) lines.push(`ERROR   ${e}`)
