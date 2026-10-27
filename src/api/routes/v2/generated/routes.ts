@@ -6307,6 +6307,7 @@ export function RegisterRoutes(app: Router) {
                 in_stock: {"in":"query","name":"in_stock","dataType":"boolean"},
                 has_photos: {"in":"query","name":"has_photos","dataType":"boolean"},
                 bulk_discount: {"in":"query","name":"bulk_discount","dataType":"boolean"},
+                include_unlisted: {"in":"query","name":"include_unlisted","dataType":"boolean"},
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/listings/search',

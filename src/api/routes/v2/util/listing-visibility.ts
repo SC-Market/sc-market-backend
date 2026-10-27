@@ -7,8 +7,12 @@
  * - 'private'  — internal to the org that owns the shop: only members of that
  *                org may see it, in grids and on the detail page.
  * - 'unlisted' — reachable by direct link only. It never appears in a grid,
- *                search result, aggregate or count, for anyone; the listing
- *                detail page still serves it to whoever has the link.
+ *                search result, aggregate or count; the listing detail page
+ *                still serves it to whoever has the link. The one exception
+ *                is the listing search for a site admin who asks for it
+ *                (?include_unlisted=true: the admin Market page and the
+ *                admin-only "Show unlisted" toggle on shop pages), see
+ *                ListingVisibilityOptions.
  *
  * The shop header and shop cards used to count every active listing, so an
  * anonymous visitor saw "3 listings" on a shop whose grid said "No active
@@ -35,16 +39,27 @@ export interface ListingVisibilityColumns {
   shopId: string
 }
 
+export interface ListingVisibilityOptions {
+  /**
+   * Also include unlisted listings. Only for a site admin's listing search
+   * (the caller checks isSiteAdmin, which is never true for a test account);
+   * ignored for anonymous viewers. The test-shop rule still applies.
+   */
+  includeUnlisted?: boolean
+}
+
 /**
  * Returns a `where` callback restricting a listings query to the listings the
  * viewer may see in a grid, search result, aggregate or count: public ones,
- * plus private ones of orgs the viewer belongs to. Unlisted listings are never
- * included (they are link-only). Pass `undefined` for anonymous viewers.
+ * plus private ones of orgs the viewer belongs to. Unlisted listings are
+ * never included (they are link-only), unless `options.includeUnlisted`.
+ * Pass `undefined` for anonymous viewers.
  */
 export function listingVisibleTo(
   db: Knex,
   viewerUserId: string | undefined,
   columns: ListingVisibilityColumns,
+  options: ListingVisibilityOptions = {},
 ): (this: Knex.QueryBuilder) => void {
   return function () {
     // Test shops' listings: test viewers only (services/test-accounts).
@@ -53,8 +68,11 @@ export function listingVisibleTo(
       this.where(columns.visibility, "public")
       return
     }
+    const includeUnlisted = options.includeUnlisted === true
     this.where(function () {
-      this.where(columns.visibility, "public").orWhere(function () {
+      this.where(columns.visibility, "public")
+      if (includeUnlisted) this.orWhere(columns.visibility, "unlisted")
+      this.orWhere(function () {
       this.where(columns.visibility, "private")
         .whereNotNull(columns.ownerContractorId)
         .whereExists(function () {

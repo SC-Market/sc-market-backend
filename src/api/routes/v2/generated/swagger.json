@@ -16109,6 +16109,15 @@
 						"schema": {
 							"type": "boolean"
 						}
+					},
+					{
+						"description": "Site admins only: also list unlisted (link-only) listings (the admin Market page, the admin \"Show unlisted\" toggle on shop pages). Ignored for everyone else.",
+						"in": "query",
+						"name": "include_unlisted",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				]
 			}

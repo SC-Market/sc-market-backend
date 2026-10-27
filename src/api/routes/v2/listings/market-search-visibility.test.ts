@@ -39,13 +39,19 @@ beforeEach(() => {
 
 type SearchArgs = Parameters<InstanceType<typeof ListingsV2Controller>["searchListings"]>
 
-function search(status: string | undefined, user?: { user_id: string; role?: string }) {
-  const args = new Array(23).fill(undefined) as SearchArgs
+function search(
+  status: string | undefined,
+  user?: { user_id: string; role?: string; is_test?: boolean },
+  includeUnlisted?: boolean,
+) {
+  const args = new Array(24).fill(undefined) as SearchArgs
   args[8] = 1 // page
   args[9] = 20 // page_size
   args[12] = status as SearchArgs[12]
-  args[22] = { user } as never // request
-  return new ListingsV2Controller().searchListings(...args)
+  args[22] = includeUnlisted // include_unlisted
+  args[23] = { user } as never // request
+  const controller = new ListingsV2Controller()
+  return controller.searchListings(...args).then(() => controller)
 }
 
 function gridQueries() {
@@ -127,5 +133,61 @@ describe("market search visibility", () => {
       expect(q.sql).toContain("false")
       expect(q.bindings).not.toContain("inactive")
     }
+  })
+
+  // include_unlisted: the admin Market page and the admin-only "Show
+  // unlisted" toggle on shop pages. Only a site admin who asks gets unlisted
+  // listings; it is never a way for anyone else to list them.
+  describe("include_unlisted", () => {
+    const admin = { user_id: "admin", role: "admin" }
+
+    it("an admin with the flag also gets unlisted listings", async () => {
+      const controller = await search("inactive", admin, true)
+      const queries = gridQueries()
+      expect(queries.length).toBe(2)
+      for (const q of queries) {
+        expect(q.bindings).toEqual(expect.arrayContaining(["public", "unlisted", "private", "inactive"]))
+        // The test-shop rule still applies.
+        expect(q.sql).toContain("NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test)")
+      }
+      expect(controller.getHeader("Cache-Control")).toBe("private, no-store")
+    })
+
+    it("an admin with the flag gets unlisted active listings too", async () => {
+      await search(undefined, admin, true)
+      for (const q of gridQueries()) {
+        expect(q.bindings).toEqual(expect.arrayContaining(["active", "public", "unlisted"]))
+      }
+    })
+
+    it("an admin without the flag doesn't", async () => {
+      for (const flag of [undefined, false]) {
+        tracker.resetHistory()
+        const controller = await search("inactive", admin, flag)
+        for (const q of gridQueries()) {
+          expect(q.bindings).toContain("inactive")
+          expect(q.bindings).not.toContain("unlisted")
+        }
+        expect(controller.getHeader("Cache-Control")).toBeUndefined()
+      }
+    })
+
+    it("a non-admin with the flag never does", async () => {
+      for (const user of [undefined, { user_id: "member", role: "user" }]) {
+        tracker.resetHistory()
+        await search(undefined, user, true)
+        for (const q of gridQueries()) {
+          expect(q.bindings).not.toContain("unlisted")
+          expect(q.bindings).toContain("public")
+        }
+      }
+    })
+
+    it("a test account with the admin role never does", async () => {
+      await search(undefined, { user_id: "t", role: "admin", is_test: true }, true)
+      for (const q of gridQueries()) {
+        expect(q.bindings).not.toContain("unlisted")
+      }
+    })
   })
 })

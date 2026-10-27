@@ -541,6 +541,7 @@ export class ListingsV2Controller extends BaseController {
    * @param sort_by Sort field (default: created_at)
    * @param status Only 'active' is served (the default); other statuses return no results, except to site admins
    * @param sort_order Sort order (default: desc)
+   * @param include_unlisted Site admins only: also list unlisted (link-only) listings (the admin Market page, the admin "Show unlisted" toggle on shop pages). Ignored for everyone else.
    * @returns Search results with pagination metadata
    */
   @Get("search")
@@ -567,10 +568,15 @@ export class ListingsV2Controller extends BaseController {
     @Query() in_stock?: boolean,
     @Query() has_photos?: boolean,
     @Query() bulk_discount?: boolean,
+    @Query() include_unlisted?: boolean,
     @Request() request?: ExpressRequest,
   ): Promise<SearchListingsResponse> {
     if (request) this.request = request
     const db = getKnex()
+    // Unlisted listings are link-only: never in a search result, except for a
+    // site admin who asks (isSiteAdmin is never true for a test account).
+    const includeUnlisted = include_unlisted === true && this.isAdmin()
+    if (includeUnlisted) this.setHeader("Cache-Control", "private, no-store")
 
     // Validate and set defaults
     const validatedPage = Math.max(1, page || 1)
@@ -850,14 +856,20 @@ export class ListingsV2Controller extends BaseController {
       }
 
       // Filter by visibility: public listings, plus private ones of orgs the
-      // viewer belongs to; never unlisted (link-only) listings. Shared with the
-      // shop listing counts so they always match this grid.
+      // viewer belongs to; never unlisted (link-only) listings, except for a
+      // site admin with include_unlisted. Shared with the shop listing counts
+      // so they always match this grid.
       query = query.where(
-        listingVisibleTo(db, this.tryGetUserId(), {
-          visibility: "ls.visibility",
-          ownerContractorId: "ls.shop_owner_contractor_id",
-          shopId: "ls.shop_id",
-        }),
+        listingVisibleTo(
+          db,
+          this.tryGetUserId(),
+          {
+            visibility: "ls.visibility",
+            ownerContractorId: "ls.shop_owner_contractor_id",
+            shopId: "ls.shop_id",
+          },
+          { includeUnlisted },
+        ),
       )
 
       // Get total count for pagination (Requirement 15.8)
