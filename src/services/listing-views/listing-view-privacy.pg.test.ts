@@ -32,6 +32,7 @@ import {
 } from "./listing-view-privacy.js"
 import * as addColumns from "../../../migrations/20261027010000_listing_views_hashed_ip.js"
 import * as dropRaw from "../../../migrations/20261027020000_listing_views_drop_raw_ip.js"
+import * as truncateUa from "../../../migrations/20261027050000_listing_views_truncate_user_agent.js"
 
 describe("hashViewerIp", () => {
   const day = new Date("2026-10-26T12:00:00Z")
@@ -211,5 +212,36 @@ describe.skipIf(!PG_TEST_URL)("listing_views migrations and purge", () => {
     expect(left).toHaveLength(3)
     expect(left.filter((r) => r.viewer_id === null)).toHaveLength(1)
     expect(await purgeAnonymousListingViews()).toBe(0)
+  })
+  it("truncates old user agents over 256 characters, in batches; idempotent", async () => {
+    const db = state.db!
+    await db("listing_views").delete()
+    const row = (user_agent: string | null) => ({
+      listing_type: "market",
+      listing_id: "00000000-0000-4000-8000-000000000001",
+      user_agent,
+    })
+    const long = "Mozilla/5.0 " + "x".repeat(4000)
+    await db("listing_views").insert([
+      ...Array.from({ length: 23 }, () => row(long)),
+      row("Mozilla/5.0"),
+      row("y".repeat(256)),
+      row(null),
+    ])
+
+    // Batches of 5 over 26 rows: the walk crosses several batches.
+    expect(await truncateUa.truncateListingViewUserAgents(db, 5)).toBe(23)
+    const rows: Array<{ user_agent: string | null }> = await db("listing_views").select("user_agent")
+    expect(rows).toHaveLength(26)
+    expect(rows.filter((r) => r.user_agent === long.slice(0, 256))).toHaveLength(23)
+    expect(rows.map((r) => r.user_agent)).toEqual(
+      expect.arrayContaining(["Mozilla/5.0", "y".repeat(256), null]),
+    )
+    expect(Math.max(...rows.map((r) => r.user_agent?.length ?? 0))).toBe(USER_AGENT_MAX_LENGTH)
+
+    // The migration entry point; a second run changes nothing.
+    await truncateUa.up(db)
+    expect(await truncateUa.truncateListingViewUserAgents(db, 5)).toBe(0)
+    expect(truncateUa.USER_AGENT_MAX_LENGTH).toBe(USER_AGENT_MAX_LENGTH)
   })
 })
