@@ -174,11 +174,16 @@ export interface GameDataPayload {
     unitLabel: string | null
   }>
   /**
-   * In-game shop inventories: shop-inventories.json from the same ZIP (the
-   * admin import reads it next to game-data.json). Undefined when the ZIP has
-   * none; the shop tables are then left as they are.
+   * In-game shop inventories: shop-inventories.json from the same ZIP, read
+   * by the admin import only when shop import is enabled (off by default, see
+   * shopImportEnabled in shop-inventories.ts). Undefined otherwise.
    */
   shopInventories?: P4KShopInventory[]
+}
+
+export interface GameDataImportOptions {
+  /** Refresh in-game shops from gameData.shopInventories (default false). */
+  importShops?: boolean
 }
 
 export interface P4KShip {
@@ -620,9 +625,16 @@ export class GameDataImportService {
    *
    * @param knex Database connection
    * @param gameData Parsed game-data.json content
+   * @param options.importShops Refresh the in-game shops from
+   *   gameData.shopInventories. Off by default: the game files' shop data is
+   *   stale, so a routine import must not touch game_shops.
    * @returns Import statistics
    */
-  async importGameData(knex: Knex, gameData: GameDataPayload): Promise<ImportStats> {
+  async importGameData(
+    knex: Knex,
+    gameData: GameDataPayload,
+    options: GameDataImportOptions = {},
+  ): Promise<ImportStats> {
     const stats: ImportStats = {
       totalP4KItems: 0,
       validP4KItems: 0,
@@ -1460,9 +1472,9 @@ export class GameDataImportService {
 
       // ========================================================================
       // STEP 23: Refresh in-game shop inventories (after items, so p4k_id links
-      // resolve to this patch's game_items)
+      // resolve to this patch's game_items). Opt-in only; a no-op by default.
       // ========================================================================
-      await this.refreshShopInventories(knex, gameData, stats)
+      await this.refreshShopInventories(knex, gameData, stats, options)
 
       logger.info("Import completed successfully", stats)
       return stats
@@ -1476,11 +1488,18 @@ export class GameDataImportService {
 
   /**
    * Replace the in-game shop inventories with the ZIP's shop-inventories.json
-   * (see shop-inventories.ts). Without that file the shop tables are left as
+   * (see shop-inventories.ts). Does nothing unless options.importShops is set.
+   * When enabled but the ZIP has no such file, the shop tables are left as
    * they are and a warning says so. The step is one transaction, so a failure
    * keeps the previous inventory and is reported as a warning.
    */
-  async refreshShopInventories(knex: Knex, gameData: GameDataPayload, stats: ImportStats): Promise<void> {
+  async refreshShopInventories(
+    knex: Knex,
+    gameData: GameDataPayload,
+    stats: ImportStats,
+    options: GameDataImportOptions = {},
+  ): Promise<void> {
+    if (!options.importShops) return
     if (!gameData.shopInventories) {
       stats.errors.push("ZIP has no shop-inventories.json; in-game shops were not refreshed")
       return

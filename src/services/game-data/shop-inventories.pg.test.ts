@@ -1,7 +1,12 @@
 /**
  * In-game shop inventories as a step of the admin game data import, against a
- * real, throwaway Postgres: a game-data.zip carrying shop-inventories.json is
- * uploaded to AdminController, the import refreshes game_shops /
+ * real, throwaway Postgres.
+ *
+ * By default the step is off (the game files' shop data is stale): a
+ * game-data.zip carrying shop-inventories.json is uploaded to AdminController
+ * and game_shops stays empty, the job only noting that the file was ignored.
+ *
+ * With GAME_DATA_IMPORT_SHOPS=true the import refreshes game_shops /
  * game_shop_items, and GET /game-data/wiki/items/{id}/shops returns the shops.
  * A second import with a changed snapshot updates prices, drops items a shop
  * stopped selling and shops the game data no longer has, and a repeat of the
@@ -72,7 +77,10 @@ import {
   type GameDataPayload,
   type ImportStats,
 } from "./import.service.js"
-import type { P4KShopInventory } from "./shop-inventories.js"
+import {
+  SHOP_IMPORT_DISABLED_NOTE,
+  type P4KShopInventory,
+} from "./shop-inventories.js"
 import { AdminController } from "../../api/routes/v2/admin/AdminController.js"
 import { WikiController } from "../../api/routes/v2/game-data/wiki/WikiController.js"
 
@@ -203,43 +211,102 @@ const shopsFor = (id: string) =>
 
 const db = () => h.db as Knex
 
-describe.skipIf(!PG_TEST_URL)(
-  "game data import refreshes in-game shops",
-  () => {
-    beforeAll(async () => {
-      tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "shop-import-test-"))
-      const connection = await createTestDatabase(DB)
-      h.db = knexFactory({ client: "pg", connection, pool: { min: 0, max: 2 } })
-      await db().schema.createTable("game_items", (t) => {
-        t.uuid("id").primary()
-        t.string("p4k_id").nullable()
+describe.skipIf(!PG_TEST_URL)("game data import and in-game shops", () => {
+  beforeAll(async () => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "shop-import-test-"))
+    const connection = await createTestDatabase(DB)
+    h.db = knexFactory({ client: "pg", connection, pool: { min: 0, max: 2 } })
+    await db().schema.createTable("game_items", (t) => {
+      t.uuid("id").primary()
+      t.string("p4k_id").nullable()
+    })
+    await shopsUp(db())
+    await db()("game_items").insert([RIFLE, HELMET, MEDPEN])
+
+    // The rest of the import is not under test; run only the shop step, the
+    // way importGameData does after its item steps.
+    vi.spyOn(gameDataImportService, "importGameData").mockImplementation(
+      async (knex: Knex, payload: GameDataPayload, options) => {
+        const stats = { errors: [] as string[] } as ImportStats
+        await gameDataImportService.refreshShopInventories(
+          knex,
+          payload,
+          stats,
+          options,
+        )
+        return stats
+      },
+    )
+  })
+
+  afterAll(async () => {
+    vi.unstubAllEnvs()
+    await db()?.destroy()
+    await dropTestDatabase(DB)
+    fs.rmSync(tmpDir, { recursive: true, force: true })
+  })
+
+  beforeEach(() => {
+    vi.mocked(gameDataImportService.importGameData).mockClear()
+  })
+
+  describe("by default (GAME_DATA_IMPORT_SHOPS unset)", () => {
+    beforeAll(() => {
+      vi.stubEnv("GAME_DATA_IMPORT_SHOPS", undefined)
+    })
+
+    it("ignores a ZIP's shop-inventories.json: no shops are written or shown", async () => {
+      const job = await runAdminImport({
+        "game-data.json": gameData,
+        "shop-inventories.json": FIRST_SNAPSHOT,
       })
-      await shopsUp(db())
-      await db()("game_items").insert([RIFLE, HELMET, MEDPEN])
 
-      // The rest of the import is not under test; run only the shop step, the
-      // way importGameData does after its item steps.
-      vi.spyOn(gameDataImportService, "importGameData").mockImplementation(
-        async (knex: Knex, payload: GameDataPayload) => {
-          const stats = { errors: [] as string[] } as ImportStats
-          await gameDataImportService.refreshShopInventories(
-            knex,
-            payload,
-            stats,
-          )
-          return stats
-        },
-      )
+      expect(job.status).toBe("completed")
+      expect(
+        vi.mocked(gameDataImportService.importGameData).mock.calls[0][1]
+          .shopInventories,
+      ).toBeUndefined()
+      expect(job.result?.errors).toEqual([SHOP_IMPORT_DISABLED_NOTE])
+      expect(job.result?.summary).not.toHaveProperty("shopsImported")
+      expect(await db()("game_shops").count({ n: "*" }).first()).toEqual({
+        n: "0",
+      })
+      expect(await db()("game_shop_items").count({ n: "*" }).first()).toEqual({
+        n: "0",
+      })
+      expect(await shopsFor(RIFLE.id)).toEqual([])
     })
 
-    afterAll(async () => {
-      await db()?.destroy()
-      await dropTestDatabase(DB)
-      fs.rmSync(tmpDir, { recursive: true, force: true })
+    it("a ZIP without shop-inventories.json imports with no shop warning", async () => {
+      const job = await runAdminImport({ "game-data.json": gameData })
+
+      expect(job.status).toBe("completed")
+      expect(job.result?.errors).toEqual([])
+      expect(await db()("game_shops").count({ n: "*" }).first()).toEqual({
+        n: "0",
+      })
     })
 
-    beforeEach(() => {
-      vi.mocked(gameDataImportService.importGameData).mockClear()
+    it('any value other than "true" keeps it off', async () => {
+      vi.stubEnv("GAME_DATA_IMPORT_SHOPS", "1")
+      try {
+        const job = await runAdminImport({
+          "game-data.json": gameData,
+          "shop-inventories.json": FIRST_SNAPSHOT,
+        })
+        expect(job.result?.errors).toEqual([SHOP_IMPORT_DISABLED_NOTE])
+        expect(await db()("game_shops").count({ n: "*" }).first()).toEqual({
+          n: "0",
+        })
+      } finally {
+        vi.stubEnv("GAME_DATA_IMPORT_SHOPS", undefined)
+      }
+    })
+  })
+
+  describe("with GAME_DATA_IMPORT_SHOPS=true", () => {
+    beforeAll(() => {
+      vi.stubEnv("GAME_DATA_IMPORT_SHOPS", "true")
     })
 
     it("imports the ZIP's shop-inventories.json and the wiki endpoint returns the shops", async () => {
@@ -382,5 +449,5 @@ describe.skipIf(!PG_TEST_URL)(
         n: "3",
       })
     })
-  },
-)
+  })
+})

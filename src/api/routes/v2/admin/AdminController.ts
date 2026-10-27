@@ -9,6 +9,10 @@ import { createDedicatedKnex, getKnex } from "../../../../clients/database/knex-
 import logger from "../../../../logger/logger.js"
 import { ImportGameDataResponse, ImportErrorResponse } from "./admin.types.js"
 import { gameDataImportService, GameDataPayload } from "../../../../services/game-data/import.service.js"
+import {
+  SHOP_IMPORT_DISABLED_NOTE,
+  shopImportEnabled,
+} from "../../../../services/game-data/shop-inventories.js"
 import AdmZip from "adm-zip"
 import * as fs from "fs"
 import * as path from "path"
@@ -159,10 +163,13 @@ export class AdminController extends BaseController {
         throw new Error("game-data.json must contain an 'items' array")
       }
 
-      // In-game shop inventories travel in the same ZIP (extract-game-data
-      // packs shop-inventories.json next to game-data.json).
+      // In-game shops are not imported unless GAME_DATA_IMPORT_SHOPS=true:
+      // the game files' shop data is stale. A shop-inventories.json in the
+      // ZIP (older extractor runs packed one) is then not even read.
+      const importShops = shopImportEnabled()
       const shopsPath = path.join(tempDir, "shop-inventories.json")
-      if (fs.existsSync(shopsPath)) {
+      const ignoredShopsFile = !importShops && fs.existsSync(shopsPath)
+      if (importShops && fs.existsSync(shopsPath)) {
         const shopInventories = JSON.parse(fs.readFileSync(shopsPath, "utf-8"))
         if (!Array.isArray(shopInventories)) {
           throw new Error("shop-inventories.json must contain an array of shops")
@@ -189,7 +196,7 @@ export class AdminController extends BaseController {
       })
       let stats
       try {
-        stats = await gameDataImportService.importGameData(importKnex, gameData)
+        stats = await gameDataImportService.importGameData(importKnex, gameData, { importShops })
       } finally {
         await importKnex.destroy()
       }
@@ -198,6 +205,7 @@ export class AdminController extends BaseController {
       job.completedAt = new Date().toISOString()
       job.progress = null
       const { errors, ...summary } = stats
+      if (ignoredShopsFile) errors.push(SHOP_IMPORT_DISABLED_NOTE)
       job.result = {
         success: true,
         summary,

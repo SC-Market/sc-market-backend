@@ -1,9 +1,15 @@
 /**
  * In-game NPC shop inventories, imported as a step of the game data import.
  *
- * Source: Data/Scripts/ShopInventories/*.json in Data.p4k, which
- * scripts/extract-game-data.ts turns into shop-inventories.json and packs into
- * game-data.zip next to game-data.json. Each import is a full snapshot:
+ * DISABLED BY DEFAULT. The only source so far, Data/Scripts/ShopInventories
+ * in Data.p4k, is stale: the files date from 2024, list Port Olisar and
+ * placeholder shops, and current inventories and prices are server-side, not
+ * in the game files. extract-game-data no longer packs shop-inventories.json
+ * into game-data.zip, and the admin import ignores the file (even in an older
+ * ZIP that has it) unless GAME_DATA_IMPORT_SHOPS=true is set, deliberately,
+ * for a source that is known to be current. See shopImportEnabled().
+ *
+ * When enabled, each import is a full snapshot:
  *
  * - shops are upserted on (name, location), so a shop keeps its id across
  *   imports (v1 /shops/game/:id links stay valid);
@@ -21,6 +27,18 @@
  */
 
 import type { Knex } from "knex"
+
+/**
+ * Whether the game data import may write in-game shops. Off unless the server
+ * runs with GAME_DATA_IMPORT_SHOPS=true: shops from the game files are stale
+ * and must never be published by a routine import.
+ */
+export function shopImportEnabled(): boolean {
+  return process.env.GAME_DATA_IMPORT_SHOPS === "true"
+}
+
+export const SHOP_IMPORT_DISABLED_NOTE =
+  "shop-inventories.json was ignored: in-game shops are not imported (the game files' shop data is stale; set GAME_DATA_IMPORT_SHOPS=true to enable)"
 
 export interface P4KShopInventoryItem {
   /** Item record UUID in Data.p4k (game_items.p4k_id). */

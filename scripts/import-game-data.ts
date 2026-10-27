@@ -1,9 +1,9 @@
 /**
  * Game Data Import Script - Blueprints & Crafting Recipes
  *
- * Imports blueprint/crafting data from JSON source files. In-game shop
- * inventories are imported by the admin game data import (game-data.zip
- * carries shop-inventories.json), not by this script.
+ * Imports blueprint/crafting data from JSON source files. In-game shops are
+ * not imported by this script (the admin game data import has an opt-in shop
+ * step, off by default, see src/services/game-data/shop-inventories.ts).
  * Supports both initial import and incremental updates.
  *
  * Usage:

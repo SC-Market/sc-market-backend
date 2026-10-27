@@ -12686,7 +12686,7 @@
 							"shopsImported": {
 								"type": "number",
 								"format": "double",
-								"description": "In-game shops upserted from shop-inventories.json"
+								"description": "In-game shops upserted from shop-inventories.json (0 unless GAME_DATA_IMPORT_SHOPS=true)"
 							},
 							"blueprintsUpdated": {
 								"type": "number",

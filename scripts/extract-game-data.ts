@@ -2422,138 +2422,23 @@ const outputData = {
 const jsonPath = path.join(OUTPUT_DIR, "game-data.json")
 fs.writeFileSync(jsonPath, JSON.stringify(outputData))
 
-// --- Extract Shop Inventories from P4K ---
-interface ShopInventoryItem {
-  id: string
-  name: string | null
-  type: string | null
-  subType: string | null
-  buyPrice: number
-  sellPrice: number
-}
+// In-game shops are NOT extracted. Data/Scripts/ShopInventories/*.json in the
+// p4k is the engine's offline/dev fallback (SShopComponentParams.
+// offlineInventoryJSON): the files date from 2024, list Port Olisar and
+// placeholder shops, and current inventories and prices are server-side, not in
+// the game files. Packing them into game-data.zip would publish wrong shops and
+// prices on the wiki, so the ZIP carries game-data.json only. The current shop
+// directory (shops and their locations, no items or prices) can be built from
+// the object container socpaks; see the shop data research write-up. The old
+// ShopInventories parser is in git history (commit 337d5fd21).
 
-interface ShopInventoryEntry {
-  shop: string
-  location: string
-  filename: string
-  items: ShopInventoryItem[]
-}
-
-interface P4KInventoryEntry {
-  ID: { ID: string[] }
-  BuyPrice: number
-  SellPrice: number
-  CurrentInventory: number
-  MaxInventory: number
-}
-
-interface P4KInventoryFile {
-  ShopID: string
-  Collection: { Inventory: P4KInventoryEntry[] }
-}
-
-let shopInventories: ShopInventoryEntry[] = []
-if (P4K_PATH && STARBREAKER_BIN) {
-  console.log("\nExtracting shop inventories from P4K...")
-  const shopDir = path.join(OUTPUT_DIR, "shop_inventories_raw")
-  fs.mkdirSync(shopDir, { recursive: true })
-  try {
-    execSync(`SC_DATA_P4K="${P4K_PATH}" "${STARBREAKER_BIN}" p4k extract -o "${shopDir}" --filter "**/ShopInventories/**"`, { stdio: "pipe" })
-  } catch {
-    // Try regex fallback
-    try {
-      execSync(`SC_DATA_P4K="${P4K_PATH}" "${STARBREAKER_BIN}" p4k extract -o "${shopDir}" --regex "ShopInventor"`, { stdio: "pipe" })
-    } catch {
-      console.warn("  Could not extract ShopInventories from P4K (starbreaker filter failed)")
-    }
-  }
-
-  // Find extracted JSON files
-  const shopInvDir = path.join(shopDir, "Data", "Scripts", "ShopInventories")
-  if (fs.existsSync(shopInvDir)) {
-    const invFiles = fs.readdirSync(shopInvDir).filter(f => f.endsWith(".json"))
-    console.log(`  Found ${invFiles.length} shop inventory files`)
-
-    // Build item name lookup from already-parsed items
-    const itemNameById = new Map<string, { name: string; type: string; subType: string }>()
-    for (const item of items) {
-      if (item.id) itemNameById.set(item.id, { name: item.name || "", type: item.type || "", subType: item.subType || "" })
-    }
-
-    for (const invFile of invFiles) {
-      try {
-        const raw: P4KInventoryFile = JSON.parse(fs.readFileSync(path.join(shopInvDir, invFile), "utf-8"))
-        const inventory = raw?.Collection?.Inventory || []
-        if (inventory.length === 0) continue
-
-        // Parse shop name and location from filename: Inv_ShopName_Location.json
-        const baseName = invFile.replace(/\.json$/i, "").replace(/^Inv_/, "")
-        const parts = baseName.split("_")
-        // Last part is usually the location, rest is shop name
-        const location = parts.pop() || ""
-        const shopName = parts.join(" ").replace(/([a-z])([A-Z])/g, "$1 $2")
-
-        const shopItems: ShopInventoryItem[] = inventory
-          .filter((entry) => {
-            const id = entry?.ID?.ID?.[0]
-            const buyPrice = entry?.BuyPrice ?? 0
-            return id && buyPrice > 0
-          })
-          .map((entry) => {
-            const id = entry.ID.ID[0]
-            const info = itemNameById.get(id)
-            return {
-              id,
-              name: info?.name || null,
-              type: info?.type || null,
-              subType: info?.subType || null,
-              buyPrice: Math.round((entry.BuyPrice ?? 0) * 100) / 100,
-              sellPrice: Math.round((entry.SellPrice ?? 0) * 100) / 100,
-            }
-          })
-
-        if (shopItems.length > 0) {
-          shopInventories.push({
-            shop: shopName,
-            location: location.replace(/([a-z])([A-Z])/g, "$1 $2"),
-            filename: invFile,
-            items: shopItems,
-          })
-        }
-      } catch {}
-    }
-    console.log(`  Parsed ${shopInventories.length} shops with ${shopInventories.reduce((s, sh) => s + sh.items.length, 0)} total items`)
-  } else {
-    console.warn("  ShopInventories directory not found after extraction")
-  }
-} else if (fs.existsSync(path.join(OUTPUT_DIR, "shop-inventories.json"))) {
-  // Use pre-existing shop-inventories.json if available
-  shopInventories = JSON.parse(fs.readFileSync(path.join(OUTPUT_DIR, "shop-inventories.json"), "utf-8"))
-  console.log(`Using existing shop-inventories.json (${shopInventories.length} shops)`)
-}
-
-// Write shop inventories as separate file (too large for main game-data.json)
-if (shopInventories.length > 0) {
-  const shopPath = path.join(OUTPUT_DIR, "shop-inventories.json")
-  fs.writeFileSync(shopPath, JSON.stringify(shopInventories))
-  console.log(`  Shop inventories: ${shopPath} (${(fs.statSync(shopPath).size / 1024).toFixed(0)} KB)`)
-}
-
-// game-data.zip carries both files; the admin game data import refreshes the
-// in-game shops from shop-inventories.json. Remove any previous ZIP first so a
-// stale shop-inventories.json from an earlier run is never left inside it.
+// Remove any previous ZIP first so a file from an earlier run (e.g. an old
+// shop-inventories.json) is never left inside it.
 const zipPath = path.join(OUTPUT_DIR, "game-data.zip")
 if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath)
-const zipFiles = shopInventories.length > 0 ? "game-data.json shop-inventories.json" : "game-data.json"
-execSync(`cd "${OUTPUT_DIR}" && zip -j "${zipPath}" ${zipFiles}`, { stdio: "inherit" })
+execSync(`cd "${OUTPUT_DIR}" && zip -j "${zipPath}" game-data.json`, { stdio: "inherit" })
 
 const zipSize = (fs.statSync(zipPath).size / 1024).toFixed(0)
 console.log(`\nDone! Output: ${zipPath} (${zipSize} KB)`)
 console.log(`  ${items.length} items, ${blueprints.length} blueprints, ${missions.length} missions`)
 console.log(`  ${resources.length} resources, ${ships.length} ships, ${manufacturers.length} manufacturers, ${starmap.length} locations`)
-if (shopInventories.length === 0) {
-  console.warn("  No shop inventories extracted: the ZIP has no shop-inventories.json and the import will not refresh in-game shops")
-}
-if (shopInventories.length > 0) {
-  console.log(`  ${shopInventories.length} shops with ${shopInventories.reduce((s, sh) => s + sh.items.length, 0)} item listings`)
-}

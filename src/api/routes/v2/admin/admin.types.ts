@@ -27,7 +27,7 @@ export interface ImportGameDataResponse {
     blueprintsProcessed: number
     blueprintsInserted: number
     blueprintsUpdated: number
-    /** In-game shops upserted from shop-inventories.json */
+    /** In-game shops upserted from shop-inventories.json (0 unless GAME_DATA_IMPORT_SHOPS=true) */
     shopsImported: number
     shopItemsImported: number
     /** Shop inventory rows matched to a game item */
