@@ -36,6 +36,10 @@ import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
 import { checkBuyOrderMatches } from "../../../../services/buy-order-matching/buy-order-matching.service.js"
 import { listingVisibleTo } from "../util/listing-visibility.js"
+import {
+  hiddenFromRealViewers,
+  notTestShop,
+} from "../../../../services/test-accounts/isolation.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
 
@@ -1289,6 +1293,10 @@ export class ListingsV2Controller extends BaseController {
           "s.owner_contractor_id as shop_owner_contractor_id",
         )
         .where("l.listing_id", id)
+        // Test shops' listings exist only for test accounts: anyone else
+        // (anonymous, real users, site admins) gets the same 404 as for a
+        // listing that doesn't exist (services/test-accounts/isolation.ts).
+        .whereRaw(hiddenFromRealViewers(db, notTestShop("l.shop_id"), this.tryGetUserId()))
         .first()
 
       if (!listing) {
