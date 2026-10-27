@@ -213,8 +213,6 @@ oapi.schema("NotificationActionType", {
     // Market notifications
     "market_item_bid",
     "market_item_offer",
-    "market_bid_accepted",
-    "market_bid_declined",
     "offer_accepted",
     "offer_rejected",
     // Contractor notifications

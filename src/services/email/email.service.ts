@@ -591,22 +591,6 @@ class SESEmailService implements EmailService {
           }
           break
 
-        case "market_bid_accepted":
-        case "market_bid_declined":
-          if (!data.listing || !data.bid) {
-            logger.warn(
-              `Missing listing or bid data for email notification: ${notificationType}`,
-              { userId, notificationType },
-            )
-            return false
-          }
-          templateData = await payloadFormatters.formatMarketBidEmailData(
-            data.listing as DBMarketListingComplete,
-            data.bid as DBMarketBid,
-            userId,
-          )
-          break
-
         case "order_review_revision_requested":
           if (!data.review) {
             logger.warn(
