@@ -138,3 +138,89 @@ describe("enforceTokenOrgAccess", () => {
     ).resolves.toBeUndefined()
   })
 })
+
+describe("enforceTokenOrgAccess: nested and camelCase body references", () => {
+  it("finds shop references nested in arrays (cart lines, bulk payloads)", async () => {
+    await expect(
+      enforceTokenOrgAccess(
+        db(),
+        token(["org-a"]),
+        req({
+          body: {
+            items: [
+              { shopId: "shop-a", quantity: 1 },
+              { line: { shop_id: "shop-b" }, quantity: 2 },
+            ],
+          },
+        }),
+        "me",
+      ),
+    ).rejects.toMatchObject({ status: 403 })
+  })
+
+  it("finds references in a body that is itself an array", async () => {
+    await expect(
+      enforceTokenOrgAccess(
+        db(),
+        token(["org-a"]),
+        req({ body: [{ listingId: LISTING }] as never }),
+        "me",
+      ),
+    ).rejects.toMatchObject({ status: 403 })
+  })
+
+  it("finds camelCase contractorId and spectrumId, and arrays of ids", async () => {
+    for (const body of [
+      { settings: { contractorId: "org-b" } },
+      { target: { spectrumId: "ORGB" } },
+      { shop_id: ["shop-a", "shop-b"] },
+      { order_id: ORDER },
+    ]) {
+      await expect(
+        enforceTokenOrgAccess(db(), token(["org-a"]), req({ body }), "me"),
+      ).rejects.toMatchObject({ status: 403 })
+    }
+  })
+
+  it("resolves GET /shops/{slug} to the shop's org", async () => {
+    const withSlugs = createFakeKnex({
+      shops: [
+        { shop_id: "shop-b", slug: "orgb-shop", owner_contractor_id: "org-b" },
+      ],
+      contractor_members: [{ contractor_id: "org-b", user_id: "me" }],
+    }) as never
+    await expect(
+      enforceTokenOrgAccess(
+        withSlugs,
+        token(["org-a"]),
+        req({ path: "/shops/OrgB-Shop", params: { slug: "OrgB-Shop" } }),
+        "me",
+      ),
+    ).rejects.toMatchObject({ status: 403 })
+  })
+
+  it("still allows nested references to granted orgs", async () => {
+    await expect(
+      enforceTokenOrgAccess(
+        db(),
+        token(["org-a"]),
+        req({
+          body: { items: [{ shopId: "shop-a" }, { shop_id: "shop-me" }] },
+        }),
+        "me",
+      ),
+    ).resolves.toBeUndefined()
+  })
+
+  it("refuses an unbounded number of references (400)", async () => {
+    const items = Array.from({ length: 101 }, (_, i) => ({ shop_id: `s-${i}` }))
+    await expect(
+      enforceTokenOrgAccess(
+        db(),
+        token(["org-a"]),
+        req({ body: { items } }),
+        "me",
+      ),
+    ).rejects.toMatchObject({ status: 400 })
+  })
+})

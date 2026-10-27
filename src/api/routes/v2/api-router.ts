@@ -21,7 +21,7 @@ import {
   removeUploadsWhenDone,
 } from "../v1/util/upload.js"
 import { tsoaWriteRateLimit } from "../../middleware/tsoa-ratelimit.js"
-import { requireSecurity } from "./middleware/tsoa-auth.js"
+import { requireSecurity, tokenRequestGuard } from "./middleware/tsoa-auth.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -133,6 +133,10 @@ apiV2Router.post("/integrations/scmdb/ingest/:token", scmdbIngestRateLimit)
 // Resolve short-slug URLs to full UUIDs before TSOA routes handle them
 import { resolveShortSlug } from "./middleware/resolve-short-slug.js"
 apiV2Router.use(resolveShortSlug)
+
+// API-token scope and contractor_ids checks on every route, public ones
+// included (after short slugs resolve, so ids are UUIDs).
+apiV2Router.use(tokenRequestGuard())
 
 RegisterRoutes(apiV2Router)
 

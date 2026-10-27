@@ -13,6 +13,13 @@ import { isSiteAdmin } from "../../../util/site-role.js"
 import { adminLockError } from "../../../util/site-admin-policy.js"
 import { enforceTokenOrgAccess } from "./token-org-access.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { matchV2Route, v2RouteTable, type V2Route } from "./v2-route-table.js"
+
+type TokenCheckedRequest = Request & {
+  __tokenInfo?: TokenInfo
+  /** Set once the token's scope and org checks passed for this request. */
+  __v2TokenChecked?: boolean
+}
 
 const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts"]
 
@@ -77,10 +84,14 @@ export async function expressAuthentication(
     // Throws a 403 (mapped by tsoa-error-handler) when the token's scopes do
     // not cover this method+path. `request.path` is router-relative here (the
     // router is mounted at /api/v2), matching the deletion-status check above.
-    const tokenInfo = (request as { __tokenInfo?: TokenInfo }).__tokenInfo
-    enforceTokenScopes(tokenInfo, request.method, request.path)
-    // ...and to the orgs the token was granted (contractor_ids).
-    await enforceTokenOrgAccess(getKnex(), tokenInfo, request, user.user_id)
+    const tokenRequest = request as TokenCheckedRequest
+    const tokenInfo = tokenRequest.__tokenInfo
+    if (!tokenRequest.__v2TokenChecked) {
+      enforceTokenScopes(tokenInfo, request.method, request.path)
+      // ...and to the orgs the token was granted (contractor_ids).
+      await enforceTokenOrgAccess(getKnex(), tokenInfo, request, user.user_id)
+      if (tokenInfo) tokenRequest.__v2TokenChecked = true
+    }
 
     return user
   }
@@ -121,5 +132,70 @@ export function requireSecurity(
       return
     }
     next()
+  }
+}
+
+/**
+ * Token checks for EVERY v2 route, not just @Security ones.
+ *
+ * populateUser fills req.user from a Bearer token on every request, and
+ * TSOA only calls expressAuthentication (scopes, contractor_ids) for routes
+ * that declare @Security. Public routes that read req.user (shop pages,
+ * listing search and detail, buy orders, ...) therefore served a token's
+ * identity with no scope or org check: e.g. a token restricted to other
+ * orgs read its user's private org listings through GET /listings/{id}.
+ *
+ * Registered on the v2 router before RegisterRoutes. For a token request:
+ * - @Security routes: the same checks expressAuthentication runs, here with
+ *   the route's real path params (matched from the spec), answered 403;
+ *   expressAuthentication then doesn't repeat them.
+ * - public routes: the same checks; when they fail the request is served as
+ *   anonymous (req.user and the token are dropped), so a token never lends
+ *   its identity to a route its scopes or org grant don't cover, while public
+ *   data stays readable.
+ * Session and cookie requests are untouched.
+ */
+export function tokenRequestGuard(
+  table: () => V2Route[] = v2RouteTable,
+): RequestHandler {
+  return async function guardTokenRequest(
+    request: Request,
+    _response: Response,
+    next: NextFunction,
+  ) {
+    const req = request as TokenCheckedRequest
+    const tokenInfo = req.__tokenInfo
+    const user = req.user as User | undefined
+    if (!tokenInfo || !user) return next()
+
+    const match = matchV2Route(table(), req.method, req.path)
+    const secured = match?.route.secured ?? true
+    try {
+      if (isSessionOnlyPath(req.path)) {
+        const err = new Error("API tokens cannot use this endpoint") as Error & {
+          status: number
+        }
+        err.status = 403
+        throw err
+      }
+      enforceTokenScopes(tokenInfo, req.method, req.path)
+      await enforceTokenOrgAccess(
+        getKnex(),
+        tokenInfo,
+        { path: req.path, params: match?.params ?? {}, query: req.query, body: req.body },
+        user.user_id,
+      )
+      req.__v2TokenChecked = true
+      next()
+    } catch (err) {
+      const error = err as Error & { status?: number }
+      // Not a refusal (e.g. a DB error), or a refusal on a @Security route.
+      if (error.status !== 403 || secured) return next(error)
+      // A refusal on a public route: serve it as anonymous.
+      req.user = undefined
+      req.__tokenInfo = undefined
+      ;(req as { auth?: unknown }).auth = undefined
+      next()
+    }
   }
 }
