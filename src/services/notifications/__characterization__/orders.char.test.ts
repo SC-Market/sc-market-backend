@@ -426,6 +426,40 @@ describe("order_review (3)", () => {
     `)
     expect(obs).toMatchSnapshot()
   })
+
+  it("seller reviews the customer: the customer is notified, not the seller (owner decision)", async () => {
+    const customer = await w.user("customer")
+    const seller = await w.user("seller")
+    const shop = await w.shop("seller-shop", { user: seller })
+    await w.emailOptIn(customer, ["order_review"])
+    await w.emailOptIn(seller, ["order_review"])
+    const order = await w.order("rev2", { customer, assigned: seller, shop, status: "fulfilled" })
+    const [review] = await getKnex()("order_reviews")
+      .insert({ order_id: order.order_id, user_author: seller.user_id, rating: 5, content: "Paid fast", role: "contractor" })
+      .returning("*")
+    w.nameId(review.review_id, "review:rev2")
+
+    await notificationService.createOrderReviewNotification(review)
+
+    const obs = await w.observe()
+    expect(w.summary(obs).filter((l: string) => !l.startsWith("webhook"))).toMatchInlineSnapshot(`
+      [
+        "in_app  user:customer order_review (review:rev2)",
+        "push    push:customer [order_review] New Review",
+        "email   customer@example.test New Review on Order",
+      ]
+    `)
+    expect(obs.in_app.map((n: { to: string; actors: string[] }) => [n.to, n.actors])).toMatchInlineSnapshot(`
+      [
+        [
+          "user:customer",
+          [
+            "user:seller",
+          ],
+        ],
+      ]
+    `)
+  })
 })
 
 describe("order_review_revision_requested (22)", () => {

@@ -60,7 +60,7 @@ describe("admin_alert (21)", () => {
     return row
   }
 
-  it("all_users: everyone not banned, including the admin; mandatory (push even when turned off); no email", async () => {
+  it("all_users: everyone not banned except the admin who posted it; mandatory (push even when turned off); no email", async () => {
     const admin = await w.user("admin", { role: "admin" })
     const a = await w.user("alice")
     const b = await w.user("bob")
@@ -73,10 +73,8 @@ describe("admin_alert (21)", () => {
     const obs = await w.observe()
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
-        "in_app  user:admin admin_alert (alert:all_users)",
         "in_app  user:alice admin_alert (alert:all_users)",
         "in_app  user:bob admin_alert (alert:all_users)",
-        "push    push:admin [admin_alert] Maintenance",
         "push    push:alice [admin_alert] Maintenance",
         "push    push:bob [admin_alert] Maintenance",
       ]

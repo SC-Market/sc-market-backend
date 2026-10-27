@@ -551,16 +551,24 @@ class DatabaseNotificationService implements NotificationService {
 
     await webhookService.sendOrderReviewWebhooks(order, review)
 
-    if (!order.assigned_id) {
+    // The review goes to the other side of the order: a customer's review to
+    // the assigned seller (org-scoped), a seller's review to the customer.
+    const recipient =
+      review.role === "contractor"
+        ? { userId: order.customer_id, contractorId: null }
+        : order.assigned_id
+          ? { userId: order.assigned_id, contractorId: order.contractor_id ?? null }
+          : null
+    if (!recipient) {
       return
     }
 
     await notify(
       "order.review",
-      [{ userId: order.assigned_id, contractorId: order.contractor_id ?? null }],
+      [recipient],
       {
         entityId: review.review_id,
-        actorId: order.customer_id,
+        actorId: review.user_author ?? order.customer_id,
         messages: {
           push: payloadFormatters.formatOrderReviewNotificationPayload(review),
           email: { data: { review } },
@@ -1077,8 +1085,7 @@ class DatabaseNotificationService implements NotificationService {
       await notify("market.bid", recipients, {
         entityId: bid.bid_id,
         actorId: bid.user_bidder_id,
-        // As before: a member bidding on their own org's listing is notified too.
-        notifyActor: true,
+        // The bidder is never notified of their own bid (owner decision).
         messages: {
           push: payloadFormatters.formatMarketBidNotificationPayload(listing, bid),
         },
@@ -1114,15 +1121,14 @@ class DatabaseNotificationService implements NotificationService {
       return
     }
 
-    // Admin alerts are site-wide: personal preferences, and the admin who
-    // posted it is included when targeted.
+    // Admin alerts are site-wide: personal preferences. The admin who posted
+    // it is not notified (owner decision: never notify the actor).
     await notify(
       "admin.alert",
       targetUserIds.map((userId: string) => ({ userId })),
       {
         entityId: alert.alert_id,
         actorId: alert.created_by,
-        notifyActor: true,
         messages: {
           push: payloadFormatters.formatAdminAlertNotificationPayload(alert),
         },
@@ -1171,7 +1177,6 @@ class DatabaseNotificationService implements NotificationService {
     await notify("order.review_revision_requested", recipients, {
       entityId: review.review_id,
       actorId: requester.user_id,
-      notifyActor: true,
       messages: {
         push: payloadFormatters.formatOrderReviewRevisionNotificationPayload(review),
       },
@@ -1220,7 +1225,6 @@ class DatabaseNotificationService implements NotificationService {
         await notify("market.bid", recipients, {
           entityId: bidId,
           actorId: bidderId,
-          notifyActor: true,
           messages: {
             push: payloadFormattersV2.formatMarketBidNotificationPayloadV2(
               listing,

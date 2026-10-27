@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`admin_alert (21) > all_users: everyone not banned, including the admin; mandatory (push even when turned off); no email 2`] = `
+exports[`admin_alert (21) > all_users: everyone not banned except the admin who posted it; mandatory (push even when turned off); no email 2`] = `
 {
   "discord": [],
   "discord_queue": [],
@@ -8,14 +8,6 @@ exports[`admin_alert (21) > all_users: everyone not banned, including the admin;
   "email_queue": [],
   "errors": [],
   "in_app": [
-    {
-      "action": "admin_alert",
-      "actors": [
-        "user:admin",
-      ],
-      "entity": "alert:all_users",
-      "to": "user:admin",
-    },
     {
       "action": "admin_alert",
       "actors": [
@@ -34,23 +26,6 @@ exports[`admin_alert (21) > all_users: everyone not banned, including the admin;
     },
   ],
   "push": [
-    {
-      "payload": {
-        "badge": "https://sc-market.space/favicon.ico",
-        "body": "Down at 10:00",
-        "data": {
-          "action": "admin_alert",
-          "entityId": "alert:all_users",
-          "type": "admin_alert",
-          "url": "https://sc-market.space/news",
-        },
-        "icon": "https://sc-market.space/favicon.ico",
-        "requireInteraction": true,
-        "tag": "admin-alert-alert:all_users",
-        "title": "Maintenance",
-      },
-      "to": "push:admin",
-    },
     {
       "payload": {
         "badge": "https://sc-market.space/favicon.ico",

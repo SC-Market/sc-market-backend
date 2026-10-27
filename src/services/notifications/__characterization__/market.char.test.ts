@@ -105,6 +105,39 @@ describe("market_item_bid (10), V1 route", () => {
   })
 })
 
+describe("market_item_bid (10), actor exclusion", () => {
+  it("a member bidding on their own org's listing is not notified; the other managers are (owner decision)", async () => {
+    const boss = await w.user("boss")
+    const trader = await w.user("trader")
+    const acme = await w.org("acme", [
+      { user: boss, perms: "owner" },
+      { user: trader, perms: ["manage_market"] },
+    ])
+    const bid = {
+      bid_id: "00000000-0000-4000-8999-000000000b3d",
+      user_bidder_id: trader.user_id,
+      contractor_bidder_id: null,
+      listing_id: "00000000-0000-4000-8999-0000000001a3",
+      bid: 1200,
+      timestamp: new Date("2026-10-20T00:00:00Z"),
+    } as unknown as DBMarketBid
+    w.nameId(bid.bid_id, "bid:b3")
+    w.nameId(bid.listing_id, "listing:v1c")
+
+    await notificationService.createMarketBidNotification(
+      v1Listing(bid.listing_id, { contractor_seller_id: acme.contractor_id }),
+      bid,
+    )
+
+    expect(w.summary(await w.observe())).toMatchInlineSnapshot(`
+      [
+        "in_app  user:boss market_item_bid (bid:b3)",
+        "push    push:boss [market_listing] New Bid",
+      ]
+    `)
+  })
+})
+
 describe("market_item_bid (10), V2 auctions", () => {
   it("org shop: manage_market members; shop and org webhooks (deduplicated)", async () => {
     const bidder = await w.user("bidder")
