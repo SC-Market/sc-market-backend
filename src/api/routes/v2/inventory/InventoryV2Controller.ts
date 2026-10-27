@@ -13,6 +13,7 @@ import { getKnex } from "../../../../clients/database/knex-db.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
+import { clampPagination } from "../util/pagination.js"
 
 interface CreateInventoryLotRequest {
   game_item_id?: string | null
@@ -77,8 +78,7 @@ export class InventoryV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
     const knex = getKnex()
-    const p = Math.max(1, page || 1)
-    const ps = Math.min(100, Math.max(1, page_size || 50))
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 50, maxPageSize: 100 })
 
     let query = knex("listing_item_lots as lil")
       .where("lil.owner_id", userId)

@@ -30,6 +30,7 @@ import { VariantAttributes } from "../types/listings.types.js"
 import logger from "../../../../logger/logger.js"
 import { activeAllocatedByLot } from "../../../../services/allocation/v2-order-allocation.service.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * Row shape of the enriched stock-lot query: `listing_item_lots` joined with
@@ -192,8 +193,7 @@ export class StockLotsV2Controller extends BaseController {
     const knex = getKnex()
 
     // Validate and set defaults (Requirement 20.10)
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     // Validate quality tier range (Requirement 20.7)
     if (quality_tier_min !== undefined && (quality_tier_min < 1 || quality_tier_min > 5)) {

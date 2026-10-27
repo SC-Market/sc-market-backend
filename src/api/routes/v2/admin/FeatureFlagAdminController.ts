@@ -18,6 +18,7 @@ import {
 } from "../../../../services/market-v2/feature-flag.service.js"
 import logger from "../../../../logger/logger.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { clampPagination } from "../util/pagination.js"
 
 /** Row shape of the user-override list query */
 interface UserOverrideRow {
@@ -139,9 +140,7 @@ export class FeatureFlagAdminController extends BaseController {
     this.request = request
     this.requireAdmin()
     const db = getKnex()
-    const p = page ?? 1
-    const ps = pageSize ?? 50
-    const offset = (p - 1) * ps
+    const { page_size: ps, offset } = clampPagination(page, pageSize, { defaultPageSize: 50, pageSizeParam: "pageSize" })
 
     const hasTable = await db.schema.hasTable("user_feature_overrides")
     if (!hasTable) return { overrides: [], total: 0 }

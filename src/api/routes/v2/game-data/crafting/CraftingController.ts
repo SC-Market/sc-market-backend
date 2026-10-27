@@ -40,6 +40,7 @@ import {
   MaterialAvailability,
 } from "./crafting.types.js"
 import logger from "../../../../../logger/logger.js"
+import { clampPagination } from "../../util/pagination.js"
 
 /** Row shape of the `game_items` id/name lookup used to label input materials */
 interface GameItemNameRow {
@@ -554,8 +555,7 @@ export class CraftingController extends BaseController {
     const user_id = this.getUserId()
 
     // Validate pagination
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     logger.info("Fetching crafting history", {
       user_id,
@@ -687,8 +687,7 @@ export class CraftingController extends BaseController {
     const user_id = this.getUserId()
 
     // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     // Validate tier range
     if (tier !== undefined && (tier < 1 || tier > 5)) {

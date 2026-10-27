@@ -53,6 +53,7 @@ import {
   denyTestUser,
   hiddenFromRealViewers,
 } from "../../../../services/test-accounts/isolation.js"
+import { clampPagination } from "../util/pagination.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -465,34 +466,40 @@ export class ShopsV2Controller extends BaseController {
       return []
     }
 
-    const shops = await query.select("s.*").orderBy("s.created_at", "asc")
+    // One query: ratings and image URLs come from correlated subqueries and
+    // joins instead of three queries per shop.
+    const shops = await query
+      .leftJoin("image_resources as banner_img", "banner_img.resource_id", "s.banner")
+      .leftJoin("image_resources as logo_img", "logo_img.resource_id", "s.logo")
+      .select(
+        "s.*",
+        db.raw(`${imageUrlSql("banner_img")} as banner_url`),
+        db.raw(`${imageUrlSql("logo_img")} as logo_url`),
+        db.raw(
+          "(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = s.shop_id) as rating",
+        ),
+        db.raw(
+          "(SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id) as rating_count",
+        ),
+      )
+      .orderBy("s.created_at", "asc")
 
-    return Promise.all(
-      shops.map(async (shop: Shop) => {
-        const ratingResult = await db("shop_ratings")
-          .where("shop_id", shop.shop_id)
-          .select(
-            db.raw("COALESCE(AVG(rating)::numeric(3,2), 0) as rating"),
-            db.raw("COUNT(*)::integer as rating_count"),
-          )
-          .first()
-
-        return {
-          shop_id: shop.shop_id,
-          slug: shop.slug,
-          name: shop.name,
-          description: shop.description,
-          banner_url: await resolveImageUrl(db, shop.banner),
-          logo_url: await resolveImageUrl(db, shop.logo),
-          supported_languages: shop.supported_languages,
-          tags: shop.tags || [],
-          accepts_custom_orders: shop.accepts_custom_orders || false,
-          status: shop.status,
-          created_at: shop.created_at,
-          rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
-          rating_count: ratingResult?.rating_count || 0,
-          badge_ids: shop.badge_ids || [],
-        }
+    return shops.map(
+      (shop: Shop & { banner_url: string | null; logo_url: string | null; rating: string | null; rating_count: number | null }) => ({
+        shop_id: shop.shop_id,
+        slug: shop.slug,
+        name: shop.name,
+        description: shop.description,
+        banner_url: shop.banner_url,
+        logo_url: shop.logo_url,
+        supported_languages: shop.supported_languages,
+        tags: shop.tags || [],
+        accepts_custom_orders: shop.accepts_custom_orders || false,
+        status: shop.status,
+        created_at: shop.created_at,
+        rating: shop.rating ? parseFloat(shop.rating) : null,
+        rating_count: shop.rating_count || 0,
+        badge_ids: shop.badge_ids || [],
       }),
     )
   }
@@ -561,8 +568,7 @@ export class ShopsV2Controller extends BaseController {
     if (request) this.request = request
     const db = getKnex()
     const viewerUserId = this.tryGetUserId()
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 50 })
     const sortBy = sort_by || "rating"
     const sortOrder = sort_order || "desc"
     const direction = sortOrder === "asc" ? "ASC" : "DESC"
@@ -886,8 +892,7 @@ export class ShopsV2Controller extends BaseController {
     @Query() page_size?: number,
   ): Promise<{ reviews: ShopReviewResponse[]; total: number; page: number; page_size: number }> {
     const db = getKnex()
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 50 })
     const offset = (validatedPage - 1) * validatedPageSize
 
     const shop = await getShopById(shopId)
@@ -1319,18 +1324,28 @@ export class ShopsV2Controller extends BaseController {
       this.throwForbidden("Missing permissions")
     }
 
-    const limit = page_size || 20
-    const offset = (page || 0) * limit
+    // This list is 0-based (page 0 is the first page), unlike the other v2
+    // lists; the shop customers table sends MUI's 0-based page. Bounds are the
+    // shared ones: page_size 1-100, page 0-499.
+    const { page_size: limit, offset } = clampPagination((page ?? 0) + 1, page_size, { defaultPageSize: 20 })
 
     const customers = await db("orders")
       .join("accounts", "orders.customer_id", "accounts.user_id")
+      .leftJoin("image_resources as avatar_img", "avatar_img.resource_id", "accounts.avatar")
       .where("orders.shop_id", shopId)
-      .groupBy("accounts.user_id", "accounts.username", "accounts.display_name", "accounts.avatar")
+      .groupBy(
+        "accounts.user_id",
+        "accounts.username",
+        "accounts.display_name",
+        "avatar_img.resource_id",
+        "avatar_img.external_url",
+        "avatar_img.filename",
+      )
       .select(
         "accounts.user_id",
         "accounts.username",
         "accounts.display_name",
-        "accounts.avatar",
+        db.raw(`${imageUrlSql("avatar_img")} as avatar_url`),
         db.raw("COUNT(*) as order_count"),
         db.raw("COUNT(CASE WHEN orders.status = 'fulfilled' THEN 1 END) as fulfilled_count"),
         db.raw("COALESCE(SUM(orders.cost), 0) as total_spent"),
@@ -1345,16 +1360,16 @@ export class ShopsV2Controller extends BaseController {
       .countDistinct("customer_id as count")
 
     return {
-      items: await Promise.all(customers.map(async (c) => ({
+      items: customers.map((c) => ({
         user_id: c.user_id,
         username: c.username,
         display_name: c.display_name,
-        avatar: await resolveImageUrl(db, c.avatar),
+        avatar: c.avatar_url ?? null,
         order_count: +c.order_count,
         fulfilled_count: +c.fulfilled_count,
         total_spent: +c.total_spent,
         last_order_at: c.last_order_at?.toISOString() || null,
-      }))),
+      })),
       total: +totalCount,
       page: page || 0,
       page_size: limit,
@@ -1629,6 +1644,15 @@ function parseShopThreadChannel(
   if (!guild_id && !channel_id) return "clear"
   if (!DISCORD_ID.test(guild_id) || !DISCORD_ID.test(channel_id)) return "invalid"
   return { guild_id, channel_id }
+}
+
+/**
+ * SQL for an image_resources row's public URL, the joined form of
+ * resolveImageUrl: NULL when the join found no row. `alias` is a code literal.
+ */
+function imageUrlSql(alias: string): string {
+  if (!/^[a-z_][a-z0-9_]*$/i.test(alias)) throw new Error(`imageUrlSql: invalid alias ${alias}`)
+  return `CASE WHEN ${alias}.resource_id IS NULL THEN NULL ELSE COALESCE(NULLIF(${alias}.external_url, ''), 'https://cdn.sc-market.space/' || ${alias}.filename) END`
 }
 
 async function resolveImageUrl(db: ReturnType<typeof getKnex>, resourceId: string | null): Promise<string | null> {

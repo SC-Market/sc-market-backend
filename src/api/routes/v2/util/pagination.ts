@@ -26,6 +26,11 @@ export interface PaginationOptions {
   defaultPageSize?: number
   /** Largest page_size for this endpoint (<= MAX_PAGE_SIZE). Default 100. */
   maxPageSize?: number
+  /**
+   * Let maxPageSize exceed MAX_PAGE_SIZE. Only for small, static game-data
+   * lists the site fetches whole (the ship browser loads every ship).
+   */
+  allowLargePages?: boolean
   /** Deepest page for this endpoint (<= MAX_PAGE). Default MAX_PAGE. */
   maxPage?: number
   /** Query parameter names, for error messages. */
@@ -54,10 +59,9 @@ export function clampPagination(
   pageSize: unknown,
   options: PaginationOptions = {},
 ): Pagination {
-  const maxPageSize = Math.min(
-    options.maxPageSize ?? MAX_PAGE_SIZE,
-    MAX_PAGE_SIZE,
-  )
+  const maxPageSize = options.allowLargePages
+    ? (options.maxPageSize ?? MAX_PAGE_SIZE)
+    : Math.min(options.maxPageSize ?? MAX_PAGE_SIZE, MAX_PAGE_SIZE)
   const maxPage = Math.min(options.maxPage ?? MAX_PAGE, MAX_PAGE)
   const defaultPageSize = Math.min(options.defaultPageSize ?? 20, maxPageSize)
   const pageParam = options.pageParam ?? "page"

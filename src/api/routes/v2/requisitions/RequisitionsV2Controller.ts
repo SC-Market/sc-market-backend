@@ -37,6 +37,7 @@ import {
 import logger from "../../../../logger/logger.js"
 import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 import type { OrderStatus } from "../../../../clients/database/db-models.js"
+import { clampPagination } from "../util/pagination.js"
 
 /** Row shape of the `game_items` id/name lookup used to snapshot item names */
 interface GameItemNameRow {
@@ -269,8 +270,7 @@ export class RequisitionsV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
     const knex = getKnex()
-    const p = Math.max(1, page || 1)
-    const ps = Math.min(100, Math.max(1, page_size || 20))
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     const contractorIds = await this.getUserContractorIds(userId)
 

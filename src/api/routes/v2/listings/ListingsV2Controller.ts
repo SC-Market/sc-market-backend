@@ -37,6 +37,7 @@ import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.
 import { checkBuyOrderMatches } from "../../../../services/buy-order-matching/buy-order-matching.service.js"
 import { listingVisibleTo } from "../util/listing-visibility.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * Response for creating a listing
@@ -579,8 +580,7 @@ export class ListingsV2Controller extends BaseController {
     if (includeUnlisted) this.setHeader("Cache-Control", "private, no-store")
 
     // Validate and set defaults
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
     const validatedSortBy = sort_by || "created_at"
     const validatedSortOrder = sort_order || "desc"
 
@@ -1041,8 +1041,7 @@ export class ListingsV2Controller extends BaseController {
     const db = getKnex()
 
     // Validate and set defaults (Requirement 18.6)
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
     const validatedSortBy = sort_by || "created_at"
     const validatedSortOrder = sort_order || "desc"
 

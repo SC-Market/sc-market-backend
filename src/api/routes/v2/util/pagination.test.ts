@@ -39,6 +39,13 @@ describe("clampPagination", () => {
     )
   })
 
+  it("lets a static game-data list opt into a larger page", () => {
+    expect(
+      clampPagination(1, 1000, { maxPageSize: 500, allowLargePages: true })
+        .page_size,
+    ).toBe(500)
+  })
+
   it.each([
     [0, 10],
     [-1, 10],

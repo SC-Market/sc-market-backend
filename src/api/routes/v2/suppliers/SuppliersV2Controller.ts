@@ -29,6 +29,7 @@ import {
   SupplierStatus,
 } from "../types/suppliers.types.js"
 import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * The aggregator side of a roster row: exactly one of the two columns is
@@ -86,8 +87,7 @@ export class SuppliersV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
     const knex = getKnex()
-    const p = Math.max(1, page || 1)
-    const ps = Math.min(100, Math.max(1, page_size || 50))
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 50, maxPageSize: 100 })
 
     // Aggregator may be acting as a user or as a contractor org they manage
     const contractorIds = await this.getUserContractorIds(userId)
@@ -244,8 +244,7 @@ export class SuppliersV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
     const knex = getKnex()
-    const p = Math.max(1, page || 1)
-    const ps = Math.min(100, Math.max(1, page_size || 50))
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 50, maxPageSize: 100 })
 
     const contractorIds = await this.getUserContractorIds(userId)
 

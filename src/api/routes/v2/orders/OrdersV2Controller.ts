@@ -28,6 +28,7 @@ import {
   OrdersByListingResponse,
 } from "../types/orders.types.js"
 import logger from "../../../../logger/logger.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * Row shape of the `order_market_items_v2` table. `price_per_unit` is a bigint,
@@ -303,11 +304,11 @@ export class OrdersV2Controller extends BaseController {
     const userId = this.getUserId()
 
     // Set defaults
-    const currentPage = page || 1
-    const pageSize = Math.min(page_size || 20, 100)
+    // Validated before anything else: a negative page_size used to become a
+    // negative LIMIT, which Postgres answers with a 500.
+    const { page: currentPage, page_size: pageSize, offset } = clampPagination(page, page_size, { defaultPageSize: 20 })
     const sortBy = sort_by || 'created_at'
     const sortOrder = sort_order || 'desc'
-    const offset = (currentPage - 1) * pageSize
 
     logger.info("Fetching V2 orders list", {
       userId,

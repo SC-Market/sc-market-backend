@@ -29,6 +29,7 @@ import {
   lookupManufacturerName,
 } from "./manufacturer-names.js"
 import logger from "../../../../../logger/logger.js"
+import { clampPagination } from "../../util/pagination.js"
 
 /** Row shape of the `game_item_attributes` projection used here */
 interface GameItemAttributeRow {
@@ -196,8 +197,7 @@ export class WikiController extends BaseController {
     const knex = getKnex()
 
     // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     logger.info("Searching wiki items", {
       text,
@@ -582,8 +582,7 @@ export class WikiController extends BaseController {
     const knex = getKnex()
 
     // Validate pagination — allow up to 500 since the frontend fetches all for client-side filtering
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(500, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 500, allowLargePages: true })
 
     logger.info("Fetching ships", { manufacturer, focus, size, page: validatedPage })
 
@@ -867,8 +866,7 @@ export class WikiController extends BaseController {
     const knex = getKnex()
 
     // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     logger.info("Fetching commodities", { category, can_be_mined, page: validatedPage })
 

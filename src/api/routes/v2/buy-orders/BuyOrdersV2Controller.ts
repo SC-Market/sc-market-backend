@@ -60,6 +60,7 @@ import {
   queryFulfillmentOptionRows,
   rankFulfillmentOptions,
 } from "../../../../services/market-v2/buy-order-fulfillment.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * Row shape of `buy_orders_v2` joined with the buyer account and game item.
@@ -486,8 +487,7 @@ export class BuyOrdersV2Controller extends BaseController {
   ): Promise<SearchBuyOrdersResponse> {
     this.request = request
     const db = getKnex();
-    const p = Math.max(1, page || 1);
-    const ps = Math.min(100, Math.max(1, page_size || 20));
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
     const userId = this.tryGetUserId()
 
     let query = db('buy_orders_v2 as bo')
@@ -545,8 +545,7 @@ export class BuyOrdersV2Controller extends BaseController {
     this.requireAuth()
     const db = getKnex()
     const sellerId = this.getUserId()
-    const p = Math.max(1, page || 1)
-    const ps = Math.min(50, Math.max(1, page_size || 10))
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 10, maxPageSize: 50 })
 
     // Find game_item_ids the seller's shops (owned, or managed for an org)
     // have active listings for: the shops fulfill accepts listings from
@@ -595,8 +594,7 @@ export class BuyOrdersV2Controller extends BaseController {
     this.requireAuth()
     const db = getKnex();
     const userId = this.getUserId();
-    const p = Math.max(1, page || 1);
-    const ps = Math.min(100, Math.max(1, page_size || 20));
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     let query = db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')

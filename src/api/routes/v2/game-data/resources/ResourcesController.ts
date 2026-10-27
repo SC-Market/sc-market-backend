@@ -23,6 +23,7 @@ import {
 } from "./resources.types.js"
 import logger from "../../../../../logger/logger.js"
 import { isUuid } from "../../util/short-slug.js"
+import { clampPagination } from "../../util/pagination.js"
 
 /**
  * Row shape of the "blueprints requiring this resource" query:
@@ -89,8 +90,7 @@ export class ResourcesController extends BaseController {
     const knex = getKnex()
 
     // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     logger.info("Searching resources", {
       text,

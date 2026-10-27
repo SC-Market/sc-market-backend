@@ -29,6 +29,7 @@ import {
 } from "./blueprints.types.js"
 import logger from "../../../../../logger/logger.js"
 import { resolveGameItemImages } from "../../util/resolve-game-item-images.js"
+import { clampPagination } from "../../util/pagination.js"
 
 /** Row shape returned by the blueprint search query */
 interface BlueprintSearchRow {
@@ -204,8 +205,7 @@ export class BlueprintsController extends BaseController {
     const knex = getKnex()
 
     // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     // Validate tier range
     if (tier !== undefined && (tier < 1 || tier > 5)) {
@@ -634,8 +634,7 @@ export class BlueprintsController extends BaseController {
     }
 
     // Validate pagination parameters
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 50))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 50, maxPageSize: 100 })
 
     // Validate sort parameters
     const validSortBy = ["acquisition_date", "blueprint_name"].includes(sort_by)

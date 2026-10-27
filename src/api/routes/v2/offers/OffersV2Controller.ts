@@ -29,6 +29,7 @@ import {
 } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * Row shape of the `offer_market_items_v2` join table. `price_per_unit` is a
@@ -76,8 +77,7 @@ export class OffersV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
     const knex = getKnex()
-    const p = Math.max(1, page || 1)
-    const ps = Math.min(100, Math.max(1, page_size || 20))
+    const { page: p, page_size: ps } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     let query = knex("offer_sessions")
 

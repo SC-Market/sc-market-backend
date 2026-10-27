@@ -24,6 +24,7 @@ import {
 import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
+import { clampPagination } from "../util/pagination.js"
 
 /**
  * Row shape of the quality-distribution aggregate query. The integer columns are
@@ -93,7 +94,7 @@ export class GameItemsV2Controller extends BaseController {
 
     const knex = getKnex()
     const trimmed = query.trim()
-    const effectiveLimit = Math.min(limit || 50, 100)
+    const effectiveLimit = clampPagination(1, limit, { defaultPageSize: 50, pageSizeParam: "limit" }).page_size
 
     // Prefix-aware tsquery; empty when the input is all punctuation.
     const prefixTsquery = buildPrefixTsquery(trimmed)
@@ -221,8 +222,7 @@ export class GameItemsV2Controller extends BaseController {
     }
 
     // Validate and set defaults for pagination (Requirement 38.9)
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
     const validatedSortBy = sort_by || "price"
     const validatedSortOrder = sort_order || "asc"
 
@@ -519,8 +519,7 @@ export class GameItemsV2Controller extends BaseController {
   ): Promise<SearchGameItemAggregatesResponse> {
     if (request) this.request = request
     const db = getKnex()
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 24))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 24, maxPageSize: 100 })
     const offset = (validatedPage - 1) * validatedPageSize
 
     try {

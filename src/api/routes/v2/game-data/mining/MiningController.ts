@@ -26,6 +26,7 @@ import {
 import logger from "../../../../../logger/logger.js"
 import { LISTING_MARKET_PRICE, excludePlaceholderPrices } from "./market-price.js"
 import { listingPubliclyListed } from "../../util/listing-visibility.js"
+import { clampPagination } from "../../util/pagination.js"
 
 // Market prices come from publicly listed listings only: org-internal
 // (private) and link-only (unlisted) listings must not set a public price.
@@ -196,8 +197,7 @@ export class MiningController extends BaseController {
     @Query() page_size: number = 20,
   ): Promise<SearchOresResponse> {
     const knex = getKnex()
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     logger.info("Searching ores", { text, system, mining_method, rarity, page: validatedPage, page_size: validatedPageSize })
 
@@ -445,8 +445,7 @@ export class MiningController extends BaseController {
     @Query() page_size: number = 20,
   ): Promise<SearchLocationsResponse> {
     const knex = getKnex()
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 100 })
 
     logger.info("Searching mining locations", { text, system, location_type, mining_method, page: validatedPage })
 
