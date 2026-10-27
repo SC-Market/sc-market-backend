@@ -36,6 +36,7 @@ export interface WebhookUrlValidationResult {
  *  - Parses as a valid URL
  *  - Protocol is exactly "https:"
  *  - Hostname is exactly one of the allowed Discord hosts
+ *  - No explicit port and no username/password
  *  - Pathname starts with "/api/webhooks/"
  */
 export function validateWebhookUrl(
@@ -64,6 +65,15 @@ export function validateWebhookUrl(
       valid: false,
       reason: `Webhook URL host "${url.hostname}" is not an allowed Discord webhook host`,
     }
+  }
+
+  // The default https port only, and no userinfo: neither has a legitimate
+  // use for a Discord webhook.
+  if (url.port !== "") {
+    return { valid: false, reason: "Webhook URL must not set a port" }
+  }
+  if (url.username !== "" || url.password !== "") {
+    return { valid: false, reason: "Webhook URL must not contain credentials" }
   }
 
   if (!url.pathname.startsWith(WEBHOOK_PATH_PREFIX)) {

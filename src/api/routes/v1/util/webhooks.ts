@@ -23,6 +23,7 @@ import logger from "../../../../logger/logger.js"
 import { formatMarketUrl } from "./urls.js"
 import { env } from "../../../../config/env.js"
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
+import { assertPublicDestination } from "../../../util/webhook-ip-guard.js"
 
 /**
  * Get the SC Market logo URL based on environment
@@ -577,6 +578,10 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
     return
   }
 
+  // Second SSRF layer: every address the (allowlisted) host resolves to must
+  // be public. Throws, like any other failed send.
+  await assertPublicDestination(new URL(webhook.webhook_url).hostname)
+
   // Create AbortController for timeout
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
@@ -589,14 +594,21 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
       },
       body: JSON.stringify(body),
       signal: controller.signal,
+      // Never follow a redirect: the allowlist checked this URL, not wherever
+      // a 3xx points. A redirect is a failed delivery.
+      redirect: "manual",
     })
 
     // Clear timeout if request completes
     clearTimeout(timeoutId)
 
+    if (response.type === "opaqueredirect" || (response.status >= 300 && response.status < 400)) {
+      throw new Error(`Webhook request was redirected (status ${response.status}); redirects are not followed`)
+    }
+
     // Check response status
     if (!response.ok) {
-      const statusText = await response.text().catch(() => response.statusText)
+      const statusText = await readCapped(response, 1024).catch(() => response.statusText)
       throw new Error(
         `Webhook request failed with status ${response.status}: ${statusText}`,
       )
@@ -611,6 +623,25 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
     }
     throw error
   }
+}
+
+/** Reads at most `limit` bytes of a response body as text, then cancels the rest. */
+async function readCapped(response: Response, limit: number): Promise<string> {
+  const reader = response.body?.getReader()
+  if (!reader) return (await response.text()).slice(0, limit)
+  const chunks: Uint8Array[] = []
+  let size = 0
+  try {
+    while (size < limit) {
+      const { done, value } = await reader.read()
+      if (done) break
+      chunks.push(value)
+      size += value.byteLength
+    }
+  } finally {
+    await reader.cancel().catch(() => undefined)
+  }
+  return Buffer.concat(chunks).subarray(0, limit).toString("utf8")
 }
 
 async function sendOrderWebhook(

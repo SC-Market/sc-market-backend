@@ -43,6 +43,11 @@ vi.mock("../push-notifications/push-notification.service.js", () => ({
 vi.mock("../email/email.service.js", () => ({
   emailService: { sendNotificationEmail: vi.fn() },
 }))
+// No DNS in unit tests: every webhook host counts as public here
+// (webhook-ip-guard.test.ts covers the guard).
+vi.mock("../../api/util/webhook-ip-guard.js", () => ({
+  assertPublicDestination: vi.fn(async () => undefined),
+}))
 
 const notificationDb = await import("../../api/routes/v1/notifications/database.js")
 const orderDb = await import("../../api/routes/v1/orders/database.js")
