@@ -1,7 +1,9 @@
 /**
  * Outbound webhook sends (v1/util/webhooks.ts sendWebhook):
  * - redirects are never followed (redirect: "manual"); a 3xx is a failure;
- * - the allowlisted host must resolve only to public addresses at send time;
+ * - the allowlisted host must resolve only to public addresses at send time,
+ *   and the connection is pinned to them (DNS is asked once; the request goes
+ *   out through a pinned undici dispatcher);
  * - an error body is read only up to 1 KB.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest"
@@ -33,10 +35,14 @@ vi.mock("../../../../logger/logger.js", () => ({
   default: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }))
 
-const { sendWebhookBody } = await import("./webhooks.js")
+const fetchMock = vi.hoisted(() => vi.fn())
+vi.mock("undici", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("undici")>()),
+  fetch: fetchMock,
+}))
 
-const fetchMock = vi.fn()
-vi.stubGlobal("fetch", fetchMock)
+const { sendWebhookBody } = await import("./webhooks.js")
+const { Agent } = await import("undici")
 
 const webhook = {
   webhook_id: "w1",
@@ -50,13 +56,16 @@ describe("webhook send hardening", () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 204 }))
   })
 
-  it("sends with redirect: manual", async () => {
+  it("sends with redirect: manual through a pinned dispatcher, resolving DNS once", async () => {
     await sendWebhookBody({ content: "hi" }, webhook)
     expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock.mock.calls[0][0]).toBe(webhook.webhook_url)
     expect(fetchMock.mock.calls[0][1]).toMatchObject({
       method: "post",
       redirect: "manual",
     })
+    expect(fetchMock.mock.calls[0][1].dispatcher).toBeInstanceOf(Agent)
+    expect(lookup).toHaveBeenCalledTimes(1)
   })
 
   it.each([301, 302, 307, 308])(

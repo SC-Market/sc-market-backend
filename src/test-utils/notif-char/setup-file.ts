@@ -266,20 +266,25 @@ vi.mock("../../logger/logger.js", () => {
   return { default: logger }
 })
 
-// Outbound HTTP (notification webhooks): global fetch.
-vi.stubGlobal("fetch", async (url: string | URL, init?: { method?: string; body?: string }) => {
-  const r = recorder()
-  const u = String(url)
-  let body: unknown = init?.body
-  try {
-    body = init?.body ? JSON.parse(init.body) : undefined
-  } catch {
-    // not JSON
-  }
-  r.fetch.push({ url: u, method: (init?.method ?? "GET").toUpperCase(), body })
-  const status = r.fetchStatus.get(u) ?? 204
-  return new Response(status === 204 ? null : "fake", { status })
-})
+// Outbound HTTP (notification webhooks): the pinned, public-only fetch in
+// api/util/webhook-ip-guard.ts. No DNS and no network here.
+vi.mock("../../api/util/webhook-ip-guard.js", () => ({
+  fetchPublicDestination: async (url: string, init?: { method?: string; body?: string }) => {
+    const r = recorder()
+    let body: unknown = init?.body
+    try {
+      body = init?.body ? JSON.parse(init.body) : undefined
+    } catch {
+      // not JSON
+    }
+    r.fetch.push({ url, method: (init?.method ?? "GET").toUpperCase(), body })
+    const status = r.fetchStatus.get(url) ?? 204
+    return {
+      response: new Response(status === 204 ? null : "fake", { status }),
+      release: async () => undefined,
+    }
+  },
+}))
 
 // Websocket: the socket.io chat server's broadcast.
 {

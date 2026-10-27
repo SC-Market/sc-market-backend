@@ -23,7 +23,8 @@ import logger from "../../../../logger/logger.js"
 import { formatMarketUrl } from "./urls.js"
 import { env } from "../../../../config/env.js"
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
-import { assertPublicDestination } from "../../../util/webhook-ip-guard.js"
+import { fetchPublicDestination } from "../../../util/webhook-ip-guard.js"
+import type { Response as UndiciResponse } from "undici"
 
 /**
  * Get the SC Market logo URL based on environment
@@ -578,16 +579,17 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
     return
   }
 
-  // Second SSRF layer: every address the (allowlisted) host resolves to must
-  // be public. Throws, like any other failed send.
-  await assertPublicDestination(new URL(webhook.webhook_url).hostname)
-
   // Create AbortController for timeout
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
 
+  let release: (() => Promise<void>) | undefined
   try {
-    const response = await fetch(webhook.webhook_url, {
+    // Second SSRF layer: every address the (allowlisted) host resolves to
+    // must be public, and the connection goes to those checked addresses
+    // only (no second DNS lookup to rebind). Throws, like any other failed
+    // send.
+    const sent = await fetchPublicDestination(webhook.webhook_url, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -598,6 +600,8 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
       // a 3xx points. A redirect is a failed delivery.
       redirect: "manual",
     })
+    release = sent.release
+    const response = sent.response
 
     // Clear timeout if request completes
     clearTimeout(timeoutId)
@@ -614,7 +618,9 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
       )
     }
 
-    return response
+    // Nothing reads a successful response's body.
+    await response.body?.cancel().catch(() => undefined)
+    return { ok: response.ok, status: response.status }
   } catch (error) {
     clearTimeout(timeoutId)
     // Check if it's an AbortError (timeout)
@@ -622,11 +628,13 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
       throw new Error(`Webhook request timed out after 10 seconds`)
     }
     throw error
+  } finally {
+    await release?.()
   }
 }
 
 /** Reads at most `limit` bytes of a response body as text, then cancels the rest. */
-async function readCapped(response: Response, limit: number): Promise<string> {
+async function readCapped(response: UndiciResponse, limit: number): Promise<string> {
   const reader = response.body?.getReader()
   if (!reader) return (await response.text()).slice(0, limit)
   const chunks: Uint8Array[] = []

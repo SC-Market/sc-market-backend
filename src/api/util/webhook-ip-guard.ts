@@ -11,10 +11,18 @@
  * loopback, link-local (including the 169.254.169.254 cloud metadata
  * endpoint), CGNAT, multicast, reserved and documentation ranges are refused,
  * for IPv4, IPv6, and IPv4 embedded in IPv6.
+ *
+ * The connection is pinned to the addresses that were checked
+ * (fetchPublicDestination): the HTTP client gets a lookup that answers only
+ * with them, so a second resolution can't hand it a different (private)
+ * address between the check and the connect (DNS rebinding). The URL is
+ * unchanged, so the Host header and TLS SNI/certificate checks still use the
+ * hostname.
  */
 
 import dns from "node:dns"
 import net from "node:net"
+import { Agent, fetch, type RequestInit, type Response } from "undici"
 
 const BLOCKED = new net.BlockList()
 for (const [network, prefix] of [
@@ -95,21 +103,28 @@ type Lookup = (
   options: { all: true; verbatim: true },
 ) => Promise<Array<{ address: string; family: number }>>
 
+export interface ResolvedAddress {
+  address: string
+  family: 4 | 6
+}
+
 /**
- * Resolves `hostname` and throws a WebhookDestinationError unless it resolves
- * to at least one address and every address is public.
+ * Resolves `hostname` and returns its addresses, or throws a
+ * WebhookDestinationError unless it resolves to at least one address and
+ * every address is public. An IP literal is checked without DNS.
  */
-export async function assertPublicDestination(
+export async function resolvePublicDestination(
   hostname: string,
   lookup: Lookup = dns.promises.lookup as unknown as Lookup,
-): Promise<void> {
+): Promise<ResolvedAddress[]> {
   const host = hostname.replace(/^\[|\]$/g, "")
-  if (net.isIP(host)) {
+  const literal = net.isIP(host)
+  if (literal) {
     if (!isPublicAddress(host))
       throw new WebhookDestinationError(
         `Webhook destination ${host} is not public`,
       )
-    return
+    return [{ address: host, family: literal as 4 | 6 }]
   }
   let addresses: Array<{ address: string }>
   try {
@@ -126,5 +141,87 @@ export async function assertPublicDestination(
     throw new WebhookDestinationError(
       `Webhook host ${host} resolves to a non-public address (${blocked.map((a) => a.address).join(", ")})`,
     )
+  }
+  return addresses.map((a) => ({
+    address: a.address,
+    family: net.isIP(a.address) as 4 | 6,
+  }))
+}
+
+type LookupCallback = (
+  err: NodeJS.ErrnoException | null,
+  address: string | Array<{ address: string; family: number }>,
+  family?: number,
+) => void
+
+/**
+ * A `net.connect` / `tls.connect` lookup that answers `hostname` with the
+ * given (already validated) addresses only, and never asks DNS. Any other
+ * hostname is an error. Honors `family` and `all` (Node's happy-eyeballs
+ * connect asks with `all: true`).
+ */
+export function pinnedLookup(hostname: string, addresses: ResolvedAddress[]) {
+  const host = hostname.replace(/^\[|\]$/g, "").toLowerCase()
+  return (
+    name: string,
+    options: { family?: number | string; all?: boolean } | number | LookupCallback,
+    callback?: LookupCallback,
+  ): void => {
+    const cb = (typeof options === "function" ? options : callback) as LookupCallback
+    const opts = typeof options === "object" && options !== null ? options : {}
+    const wanted =
+      typeof options === "number"
+        ? options
+        : opts.family === "IPv4"
+          ? 4
+          : opts.family === "IPv6"
+            ? 6
+            : Number(opts.family) || 0
+    const answer = addresses.filter((a) => !wanted || a.family === wanted)
+    if (name.replace(/^\[|\]$/g, "").toLowerCase() !== host || answer.length === 0) {
+      const err: NodeJS.ErrnoException = new Error(
+        `Webhook connection to ${name} is not pinned to a validated address`,
+      )
+      err.code = "ENOTFOUND"
+      process.nextTick(() => cb(err, opts.all ? [] : "", 0))
+      return
+    }
+    process.nextTick(() =>
+      opts.all ? cb(null, answer) : cb(null, answer[0].address, answer[0].family),
+    )
+  }
+}
+
+/** An undici dispatcher whose connections to `hostname` go only to `addresses`. */
+export function pinnedAgent(hostname: string, addresses: ResolvedAddress[]): Agent {
+  return new Agent({
+    connect: { lookup: pinnedLookup(hostname, addresses) },
+    // One request per agent: no keep-alive pool to outlive the send.
+    pipelining: 0,
+  })
+}
+
+/**
+ * fetch() to a webhook URL whose host must resolve only to public addresses,
+ * with the connection pinned to the addresses that were checked. Throws a
+ * WebhookDestinationError (before connecting) otherwise. The response body is
+ * readable until `release()` is called; call it when done (it closes the
+ * pinned connection).
+ */
+export async function fetchPublicDestination(
+  url: string,
+  init: Omit<RequestInit, "dispatcher">,
+  lookup?: Lookup,
+): Promise<{ response: Response; release: () => Promise<void> }> {
+  const { hostname } = new URL(url)
+  const addresses = await resolvePublicDestination(hostname, lookup)
+  const dispatcher = pinnedAgent(hostname, addresses)
+  const release = () => dispatcher.destroy().catch(() => undefined)
+  try {
+    const response = await fetch(url, { ...init, dispatcher })
+    return { response, release }
+  } catch (e) {
+    await release()
+    throw e
   }
 }

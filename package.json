@@ -61,6 +61,7 @@
     "sitemap": "^8.0.0",
     "socket.io": "^4.8.4",
     "typescript": "^5.2.2",
+    "undici": "^6.29.1",
     "uuid": "^11.1.0",
     "web-push": "^3.6.7",
     "winston": "^3.17.0",

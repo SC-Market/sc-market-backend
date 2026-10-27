@@ -45,8 +45,20 @@ vi.mock("../email/email.service.js", () => ({
 }))
 // No DNS in unit tests: every webhook host counts as public here
 // (webhook-ip-guard.test.ts covers the guard).
+const fetchMock = vi.hoisted(() =>
+  vi.fn(async (_url: string, _init?: unknown) => ({
+    ok: true,
+    status: 204,
+    type: "basic",
+    body: null,
+    text: async () => "",
+  })),
+)
 vi.mock("../../api/util/webhook-ip-guard.js", () => ({
-  assertPublicDestination: vi.fn(async () => undefined),
+  fetchPublicDestination: vi.fn(async (url: string, init: unknown) => ({
+    response: await fetchMock(url, init),
+    release: async () => undefined,
+  })),
 }))
 
 const notificationDb = await import("../../api/routes/v1/notifications/database.js")
@@ -54,8 +66,6 @@ const orderDb = await import("../../api/routes/v1/orders/database.js")
 const webhookUtil = await import("../../api/routes/v1/util/webhooks.js")
 const { notificationService } = await import("../notifications/notification.service.js")
 
-const fetchMock = vi.fn(async () => ({ ok: true, status: 204, text: async () => "" }))
-vi.stubGlobal("fetch", fetchMock)
 
 const order = {
   order_id: "o1",
