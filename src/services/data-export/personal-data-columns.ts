@@ -91,6 +91,9 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "order_applicants.org_applicant_id": { exclude: "org id, not a user" },
   "order_response_times.assigned_user_id": { export: "order_response_times" },
   "stock_allocation_log.allocated_by": { export: "stock_allocations_made" },
+  "order_stock_allocations_v2.allocated_by": {
+    export: "order_stock_allocations_made",
+  },
   "public_contracts.customer_id": { export: "public_contracts" },
   "services.user_id": { export: "services" },
   "services.assigned_id": { export: "services" },

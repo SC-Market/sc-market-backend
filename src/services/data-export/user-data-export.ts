@@ -802,6 +802,25 @@ export async function writeUserDataExport(
         .select("order_id", "lot_id", "quantity_allocated", "allocated_at"),
     ),
   )
+  // Stock the user allocated by hand to V2 order lines (automatic
+  // allocations have no allocated_by).
+  await out.array(
+    "order_stock_allocations_made",
+    all(
+      knex("order_stock_allocations_v2")
+        .where({ allocated_by: userId })
+        .select(
+          "order_id",
+          "order_item_id",
+          "lot_id",
+          "quantity",
+          "status",
+          "created_at",
+          "updated_at",
+          "released_at",
+        ),
+    ),
+  )
   await out.array(
     "public_contracts",
     all(
