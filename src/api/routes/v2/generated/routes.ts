@@ -1839,7 +1839,8 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "is_connected": {"dataType":"boolean","required":true},
-            "ingest_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "ingest_url": {"dataType":"enum","enums":[null],"required":true},
+            "token_hint": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "last_event_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "created_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },

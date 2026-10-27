@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Route, Tags, Path, Security, Request } from "tsoa"
+import { Get, Post, Delete, Route, Tags, Path, Security, Request } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
 import { scmdbSyncService } from "../../../../../services/scmdb/scmdb-sync.service.js"
@@ -65,6 +65,7 @@ export class ScmdbSyncController extends BaseController {
       return {
         is_connected: false,
         ingest_url: null,
+        token_hint: null,
         last_event_at: null,
         created_at: null,
       }
@@ -72,14 +73,17 @@ export class ScmdbSyncController extends BaseController {
 
     return {
       is_connected: true,
-      ingest_url: status.ingest_url,
+      ingest_url: null,
+      token_hint: status.token_hint,
       last_event_at: status.last_event_at,
       created_at: status.created_at,
     }
   }
 
   /**
-   * Generate a new SCMDB sync token and return the ingest URL.
+   * Generate a new SCMDB sync token and return the ingest URL. The URL is
+   * shown only in this response: the token is stored hashed. 409 when already
+   * connected (use regenerate for a new URL).
    *
    * @summary Connect SCMDB
    */
@@ -93,7 +97,9 @@ export class ScmdbSyncController extends BaseController {
 
     const existing = await scmdbSyncService.getTokenStatus(userId)
     if (existing) {
-      return { ingest_url: existing.ingest_url! }
+      this.throwConflict(
+        "SCMDB is already connected. Regenerate the token to get a new ingest URL.",
+      )
     }
 
     const { ingest_url } = await scmdbSyncService.generateToken(userId)
@@ -101,7 +107,8 @@ export class ScmdbSyncController extends BaseController {
   }
 
   /**
-   * Regenerate the SCMDB sync token. Old URL stops working immediately.
+   * Regenerate the SCMDB sync token. Old URL stops working immediately. The
+   * new URL is shown only in this response.
    *
    * @summary Regenerate SCMDB token
    */

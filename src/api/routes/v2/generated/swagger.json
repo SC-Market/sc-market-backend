@@ -5490,8 +5490,18 @@
 						"type": "boolean"
 					},
 					"ingest_url": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true,
+						"description": "Always null. The token is stored hashed, so the URL can't be shown again\nafter connect/regenerate returned it. Kept for older clients.",
+						"deprecated": true
+					},
+					"token_hint": {
 						"type": "string",
-						"nullable": true
+						"nullable": true,
+						"description": "Last 4 characters of the active token, e.g. to show \"…ab12\"."
 					},
 					"last_event_at": {
 						"type": "string",
@@ -5505,6 +5515,7 @@
 				"required": [
 					"is_connected",
 					"ingest_url",
+					"token_hint",
 					"last_event_at",
 					"created_at"
 				],
@@ -5514,7 +5525,8 @@
 			"ScmdbConnectResponse": {
 				"properties": {
 					"ingest_url": {
-						"type": "string"
+						"type": "string",
+						"description": "The ingest URL, containing the secret token. Returned only here, once."
 					}
 				},
 				"required": [
@@ -17321,7 +17333,7 @@
 						}
 					}
 				},
-				"description": "Generate a new SCMDB sync token and return the ingest URL.",
+				"description": "Generate a new SCMDB sync token and return the ingest URL. The URL is\nshown only in this response: the token is stored hashed. 409 when already\nconnected (use regenerate for a new URL).",
 				"summary": "Connect SCMDB",
 				"tags": [
 					"Integrations - SCMDB"
@@ -17349,7 +17361,7 @@
 						}
 					}
 				},
-				"description": "Regenerate the SCMDB sync token. Old URL stops working immediately.",
+				"description": "Regenerate the SCMDB sync token. Old URL stops working immediately. The\nnew URL is shown only in this response.",
 				"summary": "Regenerate SCMDB token",
 				"tags": [
 					"Integrations - SCMDB"

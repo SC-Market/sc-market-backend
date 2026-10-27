@@ -115,6 +115,11 @@ apiV2Router.post(
   multiplePhotoUpload.single("photo"),
 )
 
+// SCMDB ingest: anonymous (the path token is the credential), so it's rate
+// limited per token and per IP before the handler's DB lookup.
+import { scmdbIngestRateLimit } from "./integrations/scmdb/ingest-rate-limit.js"
+apiV2Router.post("/integrations/scmdb/ingest/:token", scmdbIngestRateLimit)
+
 // NOTE: literal-path routes under a `{param}` path used to be hand-registered
 // here, because TSOA emitted `/game-data/resources/{resource_id}` before
 // `/game-data/resources/categories` and Express matches in registration order.

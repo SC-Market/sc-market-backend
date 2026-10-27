@@ -4,7 +4,8 @@ import logger from "../../logger/logger.js"
 
 export interface ScmdbTokenStatus {
   is_active: boolean
-  ingest_url: string | null
+  /** Last 4 characters of the token, to tell tokens apart. Never the token. */
+  token_hint: string | null
   last_event_at: string | null
   created_at: string | null
 }
@@ -24,6 +25,18 @@ interface ScmdbEnvelope {
   payload: Record<string, unknown>
 }
 
+/**
+ * Tokens are stored only as their SHA-256 (hex) and looked up by it: the
+ * plaintext is returned once, when it is created or regenerated. Plain
+ * SHA-256 is right for 256 random bits; a slow hash would only add latency.
+ */
+export function hashScmdbToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex")
+}
+
+/** Shape of a token minted by generateToken (32 random bytes, hex). */
+const TOKEN_FORMAT = /^[0-9a-f]{64}$/
+
 function buildIngestUrl(token: string): string {
   const base = process.env.BACKEND_URL || "https://api.sc-market.space"
   return `${base}/api/v2/integrations/scmdb/ingest/${token}`
@@ -36,7 +49,8 @@ export class ScmdbSyncService {
 
     await knex("scmdb_sync_tokens").insert({
       user_id: userId,
-      token,
+      token_hash: hashScmdbToken(token),
+      token_hint: token.slice(-4),
       is_active: true,
     })
 
@@ -54,7 +68,7 @@ export class ScmdbSyncService {
 
     return {
       is_active: true,
-      ingest_url: buildIngestUrl(row.token),
+      token_hint: row.token_hint ?? null,
       last_event_at: row.last_event_at?.toISOString() || null,
       created_at: row.created_at?.toISOString() || null,
     }
@@ -82,8 +96,10 @@ export class ScmdbSyncService {
   async processEvent(token: string, body: string): Promise<ScmdbProcessResult> {
     const knex = getKnex()
 
+    // Anything that isn't a minted token can't match: skip the lookup.
+    if (!TOKEN_FORMAT.test(token)) return { status: "token_not_found" }
     const tokenRow = await knex("scmdb_sync_tokens")
-      .where("token", token)
+      .where("token_hash", hashScmdbToken(token))
       .first()
 
     if (!tokenRow) return { status: "token_not_found" }
