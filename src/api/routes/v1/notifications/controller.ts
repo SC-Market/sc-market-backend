@@ -340,10 +340,16 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
       shopIdFilter,
     )
 
-    // Add unread count to the response
+    // The "My Orders" badge, so the app's chrome needs one notifications
+    // request instead of three (list + order_assigned + order_status).
+    // Sequential, like the two above: one pool connection per request.
+    const unreadOrderCount =
+      await notificationDb.getUnreadOrderNotificationCount(user.user_id)
+
     const responseWithUnreadCount = {
       ...result,
       unread_count: unreadCount,
+      unread_order_count: unreadOrderCount,
     }
 
     res.json(createResponse(responseWithUnreadCount))

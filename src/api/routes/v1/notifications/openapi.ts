@@ -140,8 +140,13 @@ oapi.schema("PaginatedNotificationsResponse", {
       description:
         "Total number of unread notifications matching the current search criteria",
     },
+    unread_order_count: {
+      type: "integer",
+      description:
+        "Unread order notifications of the user (order assigned, order status changed), regardless of the filters: the count behind the My Orders badge",
+    },
   },
-  required: ["notifications", "pagination", "unread_count"],
+  required: ["notifications", "pagination", "unread_count", "unread_order_count"],
 })
 
 oapi.schema("SuccessResponse", {

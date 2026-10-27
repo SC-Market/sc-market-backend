@@ -397,6 +397,47 @@ export async function getUnreadNotificationCount(
   return result ? parseInt((result as any).count) : 0
 }
 
+/** The order actions behind the "My Orders" badge (assigned, status changes). */
+export const ORDER_BADGE_ACTIONS = [
+  "order_assigned",
+  "order_status_fulfilled",
+  "order_status_in_progress",
+  "order_status_not_started",
+  "order_status_cancelled",
+] as const
+
+/**
+ * Unread order notifications (an order assigned to the user, or an order's
+ * status changed): the count behind the "My Orders" badge. Same rows as the
+ * unread counts for action=order_assigned plus action=order_status, in one
+ * query.
+ */
+export async function getUnreadOrderNotificationCount(
+  user_id: string,
+): Promise<number> {
+  const result = await knex()<DBNotification>("notification")
+    .join(
+      "notification_object",
+      "notification.notification_object_id",
+      "=",
+      "notification_object.notification_object_id",
+    )
+    .join(
+      "notification_actions",
+      "notification_object.action_type_id",
+      "=",
+      "notification_actions.action_type_id",
+    )
+    .where({
+      "notification.notifier_id": user_id,
+      "notification.read": false,
+    })
+    .whereIn("notification_actions.action", [...ORDER_BADGE_ACTIONS])
+    .count("notification.notification_id as count")
+    .first()
+  return result ? parseInt((result as any).count) : 0
+}
+
 /**
  * Get unread notification counts grouped by entity_id for message notifications.
  * Returns a map of entity_id -> unread count for order_message and offer_message actions.
