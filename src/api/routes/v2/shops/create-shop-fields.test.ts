@@ -29,6 +29,19 @@ vi.mock("../../../../clients/database/knex-db.js", () => {
       whereRaw() {
         return b
       },
+      // Slug availability lookups (shop-slug.service.ts): nothing taken or reserved.
+      whereIn() {
+        return b
+      },
+      whereNot() {
+        return b
+      },
+      select() {
+        return b
+      },
+      then(resolve: (rows: unknown[]) => void) {
+        resolve([])
+      },
       async first() {
         if (table === "contractors") return h.contractors.get(where.contractor_id as string)
         return undefined // no shop with this slug yet

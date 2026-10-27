@@ -510,6 +510,30 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopSlugUnavailableReason": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["invalid"]},{"dataType":"enum","enums":["reserved_word"]},{"dataType":"enum","enums":["reserved_org"]},{"dataType":"enum","enums":["reserved_user"]},{"dataType":"enum","enums":["taken"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReservedShopSlug": {
+        "dataType": "refEnum",
+        "enums": ["mine","quick","by-owner","slug-availability","create","game","new","edit","settings","manage","dashboard","admin","api","all","browse","search","directory","explore","featured","popular","trending","top","categories","category","tags","reviews","listings","services","orders","stock","customers","help","about","support","login","logout","signup","register","account","profile","shop","shops","market","sc-market","scmarket","official","staff","moderator","system","root","null","undefined","index","www","static","assets"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopSlugAvailabilityResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "slug": {"dataType":"string","required":true},
+            "available": {"dataType":"boolean","required":true},
+            "reason": {"ref":"ShopSlugUnavailableReason"},
+            "message": {"dataType":"string"},
+            "reserved_for": {"dataType":"string"},
+            "reserved_word": {"ref":"ReservedShopSlug"},
+            "suggestions": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateShopRequest": {
         "dataType": "refObject",
         "properties": {
@@ -4882,6 +4906,40 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getShopsByOwner',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getShopSlugAvailability: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                slug: {"in":"query","name":"slug","required":true,"dataType":"string"},
+                contractor_id: {"in":"query","name":"contractor_id","dataType":"string"},
+                shop_id: {"in":"query","name":"shop_id","dataType":"string"},
+        };
+        app.get('/shops/slug-availability',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getShopSlugAvailability)),
+
+            async function ShopsV2Controller_getShopSlugAvailability(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getShopSlugAvailability, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getShopSlugAvailability',
                 controller,
                 response,
                 next,

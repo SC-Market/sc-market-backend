@@ -25,6 +25,18 @@ import {
 } from "../../../../services/shops/shop-permissions.service.js"
 import { publiclyListedSql, visibleActiveListingCountQuery } from "../util/listing-visibility.js"
 import { isUuid } from "../util/short-slug.js"
+import {
+  ShopSlugConflictError,
+  assertChosenShopSlugAvailable,
+  checkShopSlugAvailability,
+  insertShopWithAutoSlug,
+  insertShopWithChosenSlug,
+  isShopSlugUniqueViolation,
+  shopSlugFormatProblem,
+  shopSlugOwner,
+  type ShopSlugAvailabilityResponse,
+  type ShopSlugOwner,
+} from "../../../../services/shops/shop-slug.service.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
@@ -328,44 +340,28 @@ export class ShopsV2Controller extends BaseController {
       ownerUserId = userId
     }
 
-    let slug = body.slug?.trim() || await generateSlug(db, body.name)
-    if (!slug || slug.length < 3) slug = await generateSlug(db, body.name)
-
-    if (slug.length < 3) {
-      this.throwValidationError("Slug must be at least 3 characters", [
-        { field: "slug", message: "Slug must be at least 3 characters" },
-      ])
-    }
-    if (slug.length > 50) {
-      this.throwValidationError("Slug must be 50 characters or less", [
-        { field: "slug", message: "Slug must be 50 characters or less" },
-      ])
-    }
-    if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(slug) && slug.length >= 3) {
-      this.throwValidationError("Slug must contain only lowercase letters, numbers, and hyphens", [
-        { field: "slug", message: "Slug must start and end with a letter or number, and contain only lowercase letters, numbers, and hyphens" },
-      ])
+    const owner: ShopSlugOwner = ownerContractorId ? { contractorId: ownerContractorId } : { userId }
+    const row = {
+      name: body.name,
+      description: body.description || "",
+      banner: body.banner || null,
+      logo: body.logo || null,
+      owner_user_id: ownerUserId,
+      owner_contractor_id: ownerContractorId,
+      ...(body.supported_languages !== undefined && { supported_languages: body.supported_languages }),
+      ...(body.tags !== undefined && { tags: body.tags }),
+      ...(body.accepts_custom_orders !== undefined && { accepts_custom_orders: body.accepts_custom_orders }),
     }
 
-    const existing = await db("shops").whereRaw("LOWER(slug) = ?", [slug.toLowerCase()]).first()
-    if (existing) {
-      this.throwConflict("A shop with this slug already exists")
-    }
-
-    const [shop] = await db("shops")
-      .insert({
-        slug,
-        name: body.name,
-        description: body.description || "",
-        banner: body.banner || null,
-        logo: body.logo || null,
-        owner_user_id: ownerUserId,
-        owner_contractor_id: ownerContractorId,
-        ...(body.supported_languages !== undefined && { supported_languages: body.supported_languages }),
-        ...(body.tags !== undefined && { tags: body.tags }),
-        ...(body.accepts_custom_orders !== undefined && { accepts_custom_orders: body.accepts_custom_orders }),
-      })
-      .returning("*")
+    // No slug: generate one from the name. A chosen slug must be valid and
+    // free for this owner; taken or reserved is a 409 with suggestions.
+    const chosenSlug = body.slug?.trim()
+    if (chosenSlug) this.assertSlugFormat(chosenSlug)
+    const shop = await this.slugConflictAs409(async () => {
+      if (!chosenSlug) return insertShopWithAutoSlug(db, body.name, owner, row)
+      await assertChosenShopSlugAvailable(db, chosenSlug, owner)
+      return insertShopWithChosenSlug(db, chosenSlug, owner, row)
+    })
 
     return await shopToResponse(shop)
   }
@@ -405,19 +401,17 @@ export class ShopsV2Controller extends BaseController {
         .first()
       if (!contractor) this.throwNotFound("Contractor", body.contractor_id)
 
-      const slug = await generateSlug(db, contractor.spectrum_id)
-
-      const [shop] = await db("shops")
-        .insert({
-          slug,
+      // The org's Spectrum ID is reserved for it; -2, -3… if its shop already has it.
+      const shop = await this.slugConflictAs409(() =>
+        insertShopWithAutoSlug(db, contractor.spectrum_id, { contractorId: body.contractor_id! }, {
           name: contractor.name,
           description: contractor.description || "",
           banner: contractor.banner,
           logo: contractor.avatar,
           owner_contractor_id: body.contractor_id,
           market_order_template: contractor.market_order_template || "",
-        })
-        .returning("*")
+        }),
+      )
 
       return await shopToResponse(shop)
     }
@@ -430,19 +424,17 @@ export class ShopsV2Controller extends BaseController {
     const user = await db("accounts").where("user_id", userId).first()
     if (!user) this.throwNotFound("User")
 
-    const slug = await generateSlug(db, user.username + "-shop")
-
-    const [shop] = await db("shops")
-      .insert({
-        slug,
+    // <username>-shop is reserved for this user's personal shop.
+    const shop = await this.slugConflictAs409(() =>
+      insertShopWithAutoSlug(db, `${user.username}-shop`, { userId }, {
         name: `${user.display_name}'s Shop`,
         description: "",
         banner: user.banner,
         logo: user.avatar,
         owner_user_id: userId,
         market_order_template: user.market_order_template || "",
-      })
-      .returning("*")
+      }),
+    )
 
     return await shopToResponse(shop)
   }
@@ -503,6 +495,52 @@ export class ShopsV2Controller extends BaseController {
         }
       }),
     )
+  }
+
+  /**
+   * Check whether a slug is free for a shop, before creating or renaming it.
+   * Unavailable answers say why (invalid, reserved route word, reserved for
+   * an org's Spectrum ID or a user's personal shop, taken) and suggest free
+   * alternatives. The owner is the caller's personal shop, or `contractor_id`'s
+   * org shop (needs manage_market), or `shop_id`'s owner when renaming that
+   * shop (needs to manage it; its own slug counts as free).
+   *
+   * @summary Check shop slug availability
+   */
+  @Get("slug-availability")
+  @Security("loggedin")
+  public async getShopSlugAvailability(
+    @Request() request: ExpressRequest,
+    @Query() slug: string,
+    @Query() contractor_id?: string,
+    @Query() shop_id?: string,
+  ): Promise<ShopSlugAvailabilityResponse> {
+    this.request = request
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    let owner: ShopSlugOwner = { userId }
+    let excludeShopId: string | undefined
+    if (shop_id) {
+      if (!isUuid(shop_id)) this.throwNotFound("Shop", shop_id)
+      const shop = await getShopById(shop_id)
+      if (!shop) this.throwNotFound("Shop", shop_id)
+      if (!this.isAdmin() && !(await canManageShop(shop, userId))) this.throwForbidden()
+      owner = shopSlugOwner(shop)
+      excludeShopId = shop_id
+    } else if (contractor_id) {
+      if (!isUuid(contractor_id)) {
+        this.throwValidationError("contractor_id must be the org's id (a UUID), not its Spectrum ID", [
+          { field: "contractor_id", message: "Must be the org's contractor_id (UUID)" },
+        ])
+      }
+      if (!(await has_permission(contractor_id, userId, "manage_market"))) {
+        this.throwForbidden("You do not have manage_market permission in this org")
+      }
+      owner = { contractorId: contractor_id }
+    }
+
+    return checkShopSlugAvailability(db, slug, owner, { excludeShopId })
   }
 
   /**
@@ -738,34 +776,21 @@ export class ShopsV2Controller extends BaseController {
       this.throwForbidden()
     }
 
-    if (body.slug !== undefined) {
-      const newSlug = body.slug.trim()
-      if (newSlug.length < 3) {
-        this.throwValidationError("Slug must be at least 3 characters", [
-          { field: "slug", message: "Slug must be at least 3 characters" },
-        ])
-      }
-      if (newSlug.length > 50) {
-        this.throwValidationError("Slug must be 50 characters or less", [
-          { field: "slug", message: "Slug must be 50 characters or less" },
-        ])
-      }
-      if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(newSlug)) {
-        this.throwValidationError("Invalid slug format", [
-          { field: "slug", message: "Slug must start and end with a letter or number, and contain only lowercase letters, numbers, and hyphens" },
-        ])
-      }
-      if (newSlug !== shop.slug) {
-        const existing = await db("shops").whereRaw("LOWER(slug) = ?", [newSlug.toLowerCase()]).whereNot("shop_id", shopId).first()
-        if (existing) {
-          this.throwConflict("A shop with this slug already exists")
-        }
-      }
+    // An unchanged slug is not re-checked: a shop that already holds a slug
+    // reserved for someone else keeps it (shop-slug.service.ts).
+    const newSlug = body.slug?.trim()
+    const slugChanged = newSlug !== undefined && newSlug !== shop.slug
+    const slugOwner = shopSlugOwner(shop)
+    if (slugChanged) {
+      this.assertSlugFormat(newSlug)
+      await this.slugConflictAs409(() =>
+        assertChosenShopSlugAvailable(db, newSlug, slugOwner, { excludeShopId: shopId }),
+      )
     }
 
     const updates: Partial<Record<string, string | boolean | string[] | null | ReturnType<typeof db.fn.now>>> = { updated_at: db.fn.now() }
     if (body.name !== undefined) updates.name = body.name
-    if (body.slug !== undefined) updates.slug = body.slug.trim()
+    if (slugChanged) updates.slug = newSlug
     if (body.description !== undefined) updates.description = body.description
     if (body.banner !== undefined) updates.banner = body.banner
     if (body.logo !== undefined) updates.logo = body.logo
@@ -802,7 +827,19 @@ export class ShopsV2Controller extends BaseController {
       }
     }
 
-    const [updated] = await db("shops").where("shop_id", shopId).update(updates).returning("*")
+    const [updated] = await this.slugConflictAs409(async () => {
+      try {
+        return await db("shops").where("shop_id", shopId).update(updates).returning("*")
+      } catch (error) {
+        // Another shop took the slug between the check and the update.
+        if (slugChanged && isShopSlugUniqueViolation(error)) {
+          throw new ShopSlugConflictError(
+            await checkShopSlugAvailability(db, newSlug, slugOwner, { excludeShopId: shopId }),
+          )
+        }
+        throw error
+      }
+    })
     if (threadChannel === "clear") {
       await clearThreadChannel({ owner_type: "shop", owner_id: shopId })
     } else if (threadChannel !== "unchanged") {
@@ -1126,6 +1163,25 @@ export class ShopsV2Controller extends BaseController {
     await computeShopBadges(shopId)
 
     return await shopToResponse(updated)
+  }
+
+  /** 400 for a malformed slug. */
+  private assertSlugFormat(slug: string): void {
+    const problem = shopSlugFormatProblem(slug)
+    if (problem) this.throwValidationError(problem, [{ field: "slug", message: problem }])
+  }
+
+  /**
+   * Run `fn`, answering a ShopSlugConflictError as 409 whose error details are
+   * the ShopSlugAvailabilityResponse (reason, suggestions).
+   */
+  private async slugConflictAs409<T>(fn: () => Promise<T>): Promise<T> {
+    try {
+      return await fn()
+    } catch (error) {
+      if (error instanceof ShopSlugConflictError) this.throwConflict(error.message, { ...error.availability })
+      throw error
+    }
   }
 
   // ─── Blocklist ──────────────────────────────────────────────────────────────
@@ -1580,28 +1636,4 @@ async function resolveImageUrl(db: ReturnType<typeof getKnex>, resourceId: strin
   const row = await db("image_resources").where("resource_id", resourceId).first()
   if (!row) return null
   return row.external_url || `https://cdn.sc-market.space/${row.filename}`
-}
-
-async function generateSlug(db: ReturnType<typeof getKnex>, base: string): Promise<string> {
-  let slug = base
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 45)
-
-  if (!slug) slug = `shop-${crypto.randomUUID().slice(0, 8)}`
-
-  const existing = await db("shops").whereRaw("LOWER(slug) = ?", [slug]).first()
-  if (!existing) return slug
-
-  // Append numeric suffix
-  for (let i = 2; i < 100; i++) {
-    const candidate = `${slug.slice(0, 42)}-${i}`
-    const exists = await db("shops").where("slug", candidate).first()
-    if (!exists) return candidate
-  }
-
-  // Fallback: use partial UUID
-  return `${slug.slice(0, 37)}-${crypto.randomUUID().slice(0, 8)}`
 }

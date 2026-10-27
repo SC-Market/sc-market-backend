@@ -5,7 +5,7 @@
  * - Returns contractor shop if contractorId is provided and one exists
  * - Returns personal shop if user already has one
  * - Creates a new shop if no existing shop found
- * - Uses userId as slug fallback when username is unavailable
+ * - New shops get <username>-shop from the shared slug allocator
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
@@ -13,7 +13,6 @@ import type { Knex } from "knex"
 import {
   clearMockData,
   setupMockTableDataGeneric,
-  getMockTableDataGeneric,
 } from "../../test-utils/mockDatabase.js"
 
 // Need to mock many transitive imports that threads.ts pulls in
@@ -96,6 +95,9 @@ vi.mock("../database/transaction.js", () => ({
 vi.mock("../../services/market-v2/variant.service.js", () => ({
   getOrCreateVariant: vi.fn(async () => ({ variant_id: "variant-1" })),
 }))
+
+const { insertShopWithAutoSlug } = vi.hoisted(() => ({ insertShopWithAutoSlug: vi.fn() }))
+vi.mock("../../services/shops/shop-slug.service.js", () => ({ insertShopWithAutoSlug }))
 
 vi.mock("../../services/watchlist/watchlist.service.js", () => ({
   checkWatchlistMatches: vi.fn(async () => []),
@@ -239,23 +241,18 @@ describe("resolveShopForUser", () => {
     expect(result).toBe("shop-contractor")
   })
 
-  it("should sanitize username for slug (replace non-alphanumeric with dashes)", async () => {
-    // Test the slug generation logic by verifying its behavior
-    // The slug is: (username || userId).toLowerCase().replace(/[^a-z0-9-]/g, "-")
-    const userId = "user-special"
+  it("creates the personal shop as <username>-shop through the shared slug allocator", async () => {
+    setupMockTableDataGeneric("shops", [])
+    setupMockTableDataGeneric("accounts", [{ user_id: "user-new", username: "Cool User!" }])
+    insertShopWithAutoSlug.mockResolvedValueOnce({ shop_id: "shop-new" })
 
-    // Since we cannot mock the insert().returning() to return meaningful data,
-    // test slug generation logic directly
-    const username = "Cool User!@#$"
-    const expectedSlug = username.toLowerCase().replace(/[^a-z0-9-]/g, "-")
-    expect(expectedSlug).toBe("cool-user----")
-  })
-
-  it("should use userId as slug fallback when user not found in accounts", async () => {
-    // Test the slug generation fallback logic
-    const userId = "user-fallback-abc"
-    const expectedSlug = userId.toLowerCase().replace(/[^a-z0-9-]/g, "-")
-    expect(expectedSlug).toBe("user-fallback-abc")
+    expect(await resolveShopForUser("user-new")).toBe("shop-new")
+    expect(insertShopWithAutoSlug).toHaveBeenCalledWith(
+      expect.anything(),
+      "Cool User!-shop",
+      { userId: "user-new" },
+      expect.objectContaining({ owner_user_id: "user-new", name: "Cool User!" }),
+    )
   })
 })
 

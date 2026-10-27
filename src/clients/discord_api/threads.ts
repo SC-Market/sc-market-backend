@@ -24,6 +24,7 @@ import {
   WatchlistError,
 } from "../../services/watchlist/watchlist-items.service.js"
 import { canManageShop } from "../../services/shops/shop-permissions.service.js"
+import { insertShopWithAutoSlug } from "../../services/shops/shop-slug.service.js"
 import {
   ListingQuickEditError,
   STOCK_OPERATIONS,
@@ -44,10 +45,11 @@ export async function resolveShopForUser(userId: string, contractorId?: string):
   const personal = await db("shops").where("owner_user_id", userId).where("status", "active").first("shop_id")
   if (personal) return personal.shop_id
   const user = await db("accounts").where("user_id", userId).first("username")
-  const slug = (user?.username || userId).toLowerCase().replace(/[^a-z0-9-]/g, "-")
-  const [shop] = await db("shops").insert({
-    slug, name: user?.username || "My Shop", description: "", owner_user_id: userId,
-  }).returning("shop_id")
+  // Same slug as the site's quick-create: <username>-shop, reserved for this
+  // user, with -2, -3… (and a retry on a concurrent insert) when taken.
+  const shop = await insertShopWithAutoSlug(db, `${user?.username || "my"}-shop`, { userId }, {
+    name: user?.username || "My Shop", description: "", owner_user_id: userId,
+  })
   return shop.shop_id
 }
 

@@ -64,6 +64,9 @@ describe("v2 route ordering", () => {
     ["/game-data/blueprints/categories", "/game-data/blueprints/:blueprint_id"],
     ["/game-data/blueprints/inventory", "/game-data/blueprints/:blueprint_id"],
     ["/offers/search", "/offers/:sessionId"],
+    ["/shops/mine", "/shops/:slug"],
+    ["/shops/by-owner", "/shops/:slug"],
+    ["/shops/slug-availability", "/shops/:slug"],
   ]
 
   it.each(pairs)("registers %s before %s", (literal, param) => {
