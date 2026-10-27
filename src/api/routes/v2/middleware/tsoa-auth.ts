@@ -21,7 +21,15 @@ type TokenCheckedRequest = Request & {
   __v2TokenChecked?: boolean
 }
 
-const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts"]
+/**
+ * Browser-session only: an API token is refused with 403 on every route here,
+ * public ones included (it is not served as anonymous either).
+ * - auth/mfa, admin/mfa: two-factor state and enrollment/verification.
+ * - admin/test-accounts: test-account management.
+ * - debug: the viewer's resolved feature flags and per-user overrides
+ *   (GET/POST debug/feature-flag, which the site uses for every user).
+ */
+const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts", "debug"]
 
 export function isSessionOnlyPath(path: string): boolean {
   const clean = path.replace(/^\/+/, "").toLowerCase()
@@ -168,16 +176,18 @@ export function tokenRequestGuard(
     const user = req.user as User | undefined
     if (!tokenInfo || !user) return next()
 
+    // Session-only routes refuse tokens outright, public ones included.
+    if (isSessionOnlyPath(req.path)) {
+      const err = new Error("API tokens cannot use this endpoint") as Error & {
+        status: number
+      }
+      err.status = 403
+      return next(err)
+    }
+
     const match = matchV2Route(table(), req.method, req.path)
     const secured = match?.route.secured ?? true
     try {
-      if (isSessionOnlyPath(req.path)) {
-        const err = new Error("API tokens cannot use this endpoint") as Error & {
-          status: number
-        }
-        err.status = 403
-        throw err
-      }
       enforceTokenScopes(tokenInfo, req.method, req.path)
       await enforceTokenOrgAccess(
         getKnex(),

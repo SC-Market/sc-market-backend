@@ -189,3 +189,54 @@ describe("tokenRequestGuard", () => {
     ).resolves.toMatchObject({ user_id: "me" })
   })
 })
+
+describe("session-only routes: API tokens are refused outright", () => {
+  const realTable = () => v2RouteTable()
+  const runReal = async (r: Record<string, unknown>) => {
+    const next = vi.fn()
+    await tokenRequestGuard(realTable)(r as never, {} as never, next)
+    return next
+  }
+  const forbidden = (next: ReturnType<typeof vi.fn>) => {
+    expect(next).toHaveBeenCalledTimes(1)
+    const err = next.mock.calls[0][0] as Error & { status?: number }
+    expect(err).toBeInstanceOf(Error)
+    expect(err.status).toBe(403)
+  }
+
+  it.each([
+    ["GET", "/auth/mfa/status"],
+    ["POST", "/auth/mfa/verify"],
+    ["POST", "/auth/mfa/totp/enroll"],
+    ["DELETE", "/auth/mfa/factors/x"],
+    // Public route: a token is not served as anonymous here, it is a 403.
+    ["GET", "/debug/feature-flag"],
+    ["POST", "/debug/feature-flag"],
+  ])("%s %s with any token, even full/admin, is a 403", async (method, path) => {
+    for (const scopes of [["readonly"], ["profile:read"], ["full"], ["admin"]]) {
+      const r = req(method, path, { token: token(scopes) })
+      forbidden(await runReal(r))
+    }
+  })
+
+  it("the routes exist in the generated spec (the guard covers real paths)", () => {
+    expect(matchV2Route(realTable(), "GET", "/auth/mfa/status")?.route.secured).toBe(true)
+    expect(matchV2Route(realTable(), "GET", "/debug/feature-flag")?.route.secured).toBe(false)
+  })
+
+  it("sessions are untouched", async () => {
+    for (const path of ["/auth/mfa/status", "/debug/feature-flag"]) {
+      const r = req("GET", path)
+      const next = await runReal(r)
+      expect(next).toHaveBeenCalledWith()
+      expect(r.user).toEqual(user)
+    }
+  })
+
+  it("expressAuthentication refuses a token on auth/mfa too", async () => {
+    const r = req("GET", "/auth/mfa/status", { token: token(["full"]) })
+    await expect(expressAuthentication(r as never, "loggedin")).rejects.toMatchObject({
+      status: 403,
+    })
+  })
+})
