@@ -1162,6 +1162,8 @@ class DatabaseNotificationService implements NotificationService {
       {
         entityId: alert.alert_id,
         actorId: alert.created_by,
+        // Exactly the channels the admin chose; unchosen ones never send.
+        channels: alert.channels?.length ? alert.channels : ["in_app", "push", "email"],
         messages: {
           push: payloadFormatters.formatAdminAlertNotificationPayload(alert),
           email: { data: { alert } },

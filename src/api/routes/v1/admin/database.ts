@@ -317,6 +317,34 @@ export async function getUsersForAlertTarget(
 }
 
 /**
+ * Audience of an alert before it is sent: recipients (not the posting
+ * admin), and how many of them have a verified email or a linked Discord
+ * account.
+ */
+export async function getAlertAudienceCounts(
+  targetType: string,
+  targetContractorId: string | undefined,
+  actorId: string,
+): Promise<{ recipients: number; verified_emails: number; discord_linked: number }> {
+  const ids = (await getUsersForAlertTarget(targetType, targetContractorId)).filter((id) => id !== actorId)
+  if (!ids.length) return { recipients: 0, verified_emails: 0, discord_linked: 0 }
+  const real = ids
+  const [emails, discord] = await Promise.all([
+    knex()("user_emails").whereIn("user_id", real).where("email_verified", true).countDistinct({ n: "user_id" }).first(),
+    knex()("account_providers")
+      .whereIn("user_id", real)
+      .where("provider_type", "discord")
+      .countDistinct({ n: "user_id" })
+      .first(),
+  ])
+  return {
+    recipients: real.length,
+    verified_emails: Number(emails?.n ?? 0),
+    discord_linked: Number(discord?.n ?? 0),
+  }
+}
+
+/**
  * Get admin alerts by where clause.
  */
 export async function getAdminAlerts(where: any = {}): Promise<DBAdminAlert[]> {

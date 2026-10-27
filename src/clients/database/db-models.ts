@@ -665,6 +665,8 @@ export interface DBRecruitingVote {
   timestamp: Date
 }
 
+export type AdminAlertChannel = "in_app" | "push" | "email" | "discord_dm"
+
 export interface DBAdminAlert {
   alert_id: string
   title: string
@@ -680,6 +682,8 @@ export interface DBAdminAlert {
   created_by: string
   created_at: Date
   active: boolean
+  /** Delivery channels chosen for this alert; in_app is always included. */
+  channels: AdminAlertChannel[]
 }
 
 export interface DBComment {

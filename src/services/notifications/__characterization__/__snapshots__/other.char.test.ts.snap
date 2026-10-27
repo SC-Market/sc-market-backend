@@ -71,6 +71,11 @@ https://sc-market.space/settings?tab&#x3D;email",
           "alert": {
             "active": true,
             "alert_id": "alert:all_users",
+            "channels": [
+              "in_app",
+              "push",
+              "email",
+            ],
             "content": "Down at 10:00",
             "created_at": "<ts>",
             "created_by": "user:admin",
@@ -95,6 +100,11 @@ https://sc-market.space/settings?tab&#x3D;email",
           "alert": {
             "active": true,
             "alert_id": "alert:all_users",
+            "channels": [
+              "in_app",
+              "push",
+              "email",
+            ],
             "content": "Down at 10:00",
             "created_at": "<ts>",
             "created_by": "user:admin",

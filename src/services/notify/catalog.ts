@@ -116,7 +116,9 @@ export const CATALOG = {
   "org.member_joined": event("org_members", "org_member_joined", ["in_app", "push", "discord_dm"], { push: false }),
   // Mandatory (category): delivered on in-app and push whatever the preferences.
   // Owner decision: email too, mandatory like the other channels.
-  "admin.alert": event("announcements", "admin_alert", ["in_app", "push", "email"]),
+  // The admin picks the channels per alert (admin_alerts.channels); the chosen
+  // ones ignore opt-outs.
+  "admin.alert": event("announcements", "admin_alert", ALL),
   "reminder.unread_messages": event("reminders", "dm_reminder", ["email"]),
   "watchlist.price_alert": event("watchlist", "price_alert", ALL, { discord_dm: true }),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.

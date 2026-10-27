@@ -13,9 +13,22 @@ import {
 } from "../openapi.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { User } from "../api-models.js"
+import type { AdminAlertChannel } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 
 export const adminAlertsRouter = express.Router()
+
+const ALERT_CHANNELS: AdminAlertChannel[] = ["in_app", "push", "email", "discord_dm"]
+
+/** Channels for a new alert: in_app always; default in_app + push. */
+export function parseAlertChannels(raw: unknown): { channels: AdminAlertChannel[] } | { error: string } {
+  if (raw === undefined || raw === null) return { channels: ["in_app", "push"] }
+  if (!Array.isArray(raw) || raw.some((c) => !ALERT_CHANNELS.includes(c as AdminAlertChannel))) {
+    return { error: `channels must be a list of: ${ALERT_CHANNELS.join(", ")}` }
+  }
+  const set = new Set<AdminAlertChannel>(["in_app", ...(raw as AdminAlertChannel[])])
+  return { channels: ALERT_CHANNELS.filter((c) => set.has(c)) }
+}
 
 // Helper function to convert database alert to API response format
 async function formatAlertForAPI(alert: any) {
@@ -108,6 +121,11 @@ adminOapi.schema("AdminAlert", {
       description: "Whether the alert is currently active",
       default: true,
     },
+    channels: {
+      type: "array",
+      items: { type: "string", enum: ["in_app", "push", "email", "discord_dm"] },
+      description: "Delivery channels used for this alert (in_app always included)",
+    },
   },
   required: [
     "alert_id",
@@ -161,6 +179,16 @@ adminOapi.schema("AdminAlertCreate", {
       nullable: true,
       description:
         "Specific contractor Spectrum ID when target_type is specific_org",
+    },
+    channels: {
+      type: "array",
+      items: { type: "string", enum: ["in_app", "push", "email", "discord_dm"] },
+      description:
+        "Delivery channels. in_app is always added. Default: in_app and push. Chosen channels ignore user opt-outs; others never send.",
+    },
+    confirm_email_all_users: {
+      type: "boolean",
+      description: "Required (true) when email is chosen with target_type all_users",
     },
   },
   required: ["title", "content", "target_type"],
@@ -256,6 +284,20 @@ adminAlertsRouter.post(
   async (req, res) => {
     const user = req.user as User
     const { title, content, link, target_type, target_spectrum_id } = req.body
+    const channelsResult = parseAlertChannels(req.body.channels)
+    if ("error" in channelsResult) {
+      res.status(400).json(createErrorResponse({ message: channelsResult.error }))
+      return
+    }
+    const channels = channelsResult.channels
+    if (target_type === "all_users" && channels.includes("email") && req.body.confirm_email_all_users !== true) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "Emailing all users needs confirm_email_all_users: true",
+        }),
+      )
+      return
+    }
 
     // Validate required fields
     if (!title || !content || !target_type) {
@@ -339,6 +381,7 @@ adminAlertsRouter.post(
         target_contractor_id,
         created_by: user.user_id,
         active: true,
+        channels,
       })
 
       // Send notifications to target users
@@ -365,6 +408,72 @@ adminAlertsRouter.post(
 
 // Get paginated admin alerts
 // GET /admin/alerts?page=0&pageSize=20
+adminAlertsRouter.get(
+  "/preview",
+  adminAuthorized,
+  adminOapi.validPath({
+    summary: "Preview an admin alert's audience",
+    description:
+      "How many users an alert to this target would reach, and how many of them have a verified email or a linked Discord account.",
+    operationId: "previewAdminAlert",
+    tags: ["AdminAlerts", "Admin"],
+    parameters: [
+      { name: "target_type", in: "query", required: true, schema: { type: "string" } },
+      { name: "target_spectrum_id", in: "query", required: false, schema: { type: "string" } },
+    ],
+    responses: {
+      "200": {
+        description: "Audience counts",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    recipients: { type: "integer" },
+                    verified_emails: { type: "integer" },
+                    discord_linked: { type: "integer" },
+                  },
+                  required: ["recipients", "verified_emails", "discord_linked"],
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "500": Response500,
+    },
+    security: [{ adminAuth: [] }],
+  }),
+  async (req, res) => {
+    const user = req.user as User
+    const target_type = String(req.query.target_type ?? "")
+    const target_spectrum_id = req.query.target_spectrum_id ? String(req.query.target_spectrum_id) : undefined
+    let contractorId: string | undefined
+    if (target_spectrum_id) {
+      try {
+        contractorId = (await contractorDb.getContractor({ spectrum_id: target_spectrum_id })).contractor_id
+      } catch {
+        res.status(400).json(createErrorResponse({ message: "Invalid target_spectrum_id" }))
+        return
+      }
+    }
+    try {
+      const counts = await adminDb.getAlertAudienceCounts(target_type, contractorId, user.user_id)
+      res.json(createResponse(counts))
+    } catch (error) {
+      logger.error("Failed to preview admin alert audience", { error })
+      res.status(500).json(createErrorResponse({ message: "Failed to preview the audience" }))
+    }
+  },
+)
+
 adminAlertsRouter.get(
   "/",
   adminAuthorized,
