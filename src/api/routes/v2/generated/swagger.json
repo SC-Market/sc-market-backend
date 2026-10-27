@@ -11823,6 +11823,13 @@
 					},
 					"bidder": {
 						"properties": {
+							"is_you": {
+								"type": "boolean"
+							},
+							"bidder_number": {
+								"type": "number",
+								"format": "double"
+							},
 							"avatar": {
 								"type": "string",
 								"nullable": true
@@ -11831,15 +11838,19 @@
 								"type": "string"
 							},
 							"username": {
-								"type": "string"
+								"type": "string",
+								"nullable": true
 							}
 						},
 						"required": [
+							"is_you",
+							"bidder_number",
 							"avatar",
 							"display_name",
 							"username"
 						],
-						"type": "object"
+						"type": "object",
+						"description": "Who placed the bid. Only the seller side (whoever may manage the listing's\nshop) sees the real account. Everyone else sees \"Bidder N\", numbered by\nfirst bid on this auction, with no username or avatar; `is_you` marks the\nviewer's own bid."
 					},
 					"amount": {
 						"type": "number",
@@ -11882,7 +11893,20 @@
 					"reserve_price": {
 						"type": "number",
 						"format": "double",
-						"nullable": true
+						"nullable": true,
+						"description": "The seller's reserve. Only present for the seller side; everyone else\ngets `has_reserve` and `reserve_met`."
+					},
+					"has_reserve": {
+						"type": "boolean"
+					},
+					"reserve_met": {
+						"type": "boolean",
+						"nullable": true,
+						"description": "Whether the highest bid meets the reserve. null when there is no reserve."
+					},
+					"is_seller": {
+						"type": "boolean",
+						"description": "Whether the viewer is on the seller side (may manage the listing's shop)."
 					},
 					"status": {
 						"type": "string"
@@ -11894,13 +11918,23 @@
 					},
 					"total_bids": {
 						"type": "number",
+						"format": "double",
+						"description": "Number of active bids (one per bidder), across all pages."
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
 						"format": "double"
 					},
 					"bids": {
 						"items": {
 							"$ref": "#/components/schemas/BidDetail"
 						},
-						"type": "array"
+						"type": "array",
+						"description": "Active bids, highest first, paginated."
 					}
 				},
 				"required": [
@@ -11908,10 +11942,14 @@
 					"end_time",
 					"min_bid_increment",
 					"buyout_price",
-					"reserve_price",
+					"has_reserve",
+					"reserve_met",
+					"is_seller",
 					"status",
 					"current_highest_bid",
 					"total_bids",
+					"page",
+					"page_size",
 					"bids"
 				],
 				"type": "object",
@@ -21845,7 +21883,7 @@
 						}
 					}
 				},
-				"description": "Get auction details and bids for a listing",
+				"description": "Get auction details and bids for a listing.\n\nThe auction is visible exactly when its listing is: public listings to\neveryone, unlisted ones to whoever has the link, private ones to members\nof the owning org, and test shops' listings to test accounts only. Others\nget a 404.",
 				"tags": [
 					"Auctions V2"
 				],
@@ -21857,6 +21895,26 @@
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"description": "1-based page of bids (default 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Bids per page (default 20, max 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]
