@@ -201,7 +201,6 @@ export const SECRET_COLUMNS = [
   "user_mfa_recovery_codes.code_hash",
   "email_verification_tokens.token",
   "email_unsubscribe_tokens.token",
-  "scmdb_sync_tokens.token",
   "scmdb_sync_tokens.token_hash",
   "notification_webhooks.webhook_url",
   "wishlists.share_token",
