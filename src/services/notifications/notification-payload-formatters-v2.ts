@@ -146,7 +146,7 @@ export function formatMarketBidNotificationPayloadV2(
 export function formatNewOrderNotificationPayloadV2(
   order: CreateOrderResponse | GetOrderDetailResponse,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${order.order_id}`
+  const url = `${getBaseUrl()}/contract/${order.order_id}`
   
   // Build notification body with variant information
   let body = `New order for ${order.total_price} aUEC`

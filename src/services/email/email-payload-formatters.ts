@@ -253,7 +253,7 @@ export async function formatOfferNotificationEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, action)
-  const url = `${getBaseUrl()}/offers/${offer.id}`
+  const url = `${getBaseUrl()}/offer/${offer.id}`
 
   const title =
     action === "offer_create" ? "New Offer Created" : "Counter Offer Received"
@@ -283,7 +283,7 @@ export async function formatOfferMessageEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "offer_message")
-  const url = `${getBaseUrl()}/offers/${offer.id}`
+  const url = `${getBaseUrl()}/offer/${offer.id}`
 
   const author = await profileDb.getUser({ user_id: message.author })
   const authorName = author?.display_name || author?.username || "Unknown"
@@ -372,7 +372,6 @@ export async function formatContractorInviteEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "contractor_invite")
-  const url = `${getBaseUrl()}/contractors`
 
   // Get contractor details
   const contractorDb =
@@ -380,6 +379,8 @@ export async function formatContractorInviteEmailData(
   const contractor = await contractorDb.getContractor({
     contractor_id: invite.contractor_id,
   })
+  // The org's page shows Join / Decline while the invite is pending.
+  const url = `${getBaseUrl()}/contractor/${encodeURIComponent(contractor.spectrum_id)}`
 
   return {
     ...baseData,
@@ -406,7 +407,7 @@ export async function formatAdminAlertEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "admin_alert")
-  const url = `${getBaseUrl()}/admin/alerts`
+  const url = alert.link || `${getBaseUrl()}/notifications`
 
   return {
     ...baseData,

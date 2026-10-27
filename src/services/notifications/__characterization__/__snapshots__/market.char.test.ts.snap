@@ -10,7 +10,7 @@ exports[`V2 order push (order_create_v2, no action row) > createNewOrderNotifica
         "action": "order_create_v2",
         "entityId": "order:v2",
         "type": "order_v2",
-        "url": "https://sc-market.space/orders/order:v2",
+        "url": "https://sc-market.space/contract/order:v2",
       },
       "icon": "https://sc-market.space/android-chrome-192x192.png",
       "requireInteraction": false,
@@ -27,7 +27,7 @@ exports[`V2 order push (order_create_v2, no action row) > createNewOrderNotifica
         "action": "order_create_v2",
         "entityId": "order:v2",
         "type": "order_v2",
-        "url": "https://sc-market.space/orders/order:v2",
+        "url": "https://sc-market.space/contract/order:v2",
       },
       "icon": "https://sc-market.space/android-chrome-192x192.png",
       "requireInteraction": false,
@@ -98,7 +98,7 @@ exports[`market_item_bid (10), V1 route > org seller: manage_market members get 
             "author": {
               "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
               "name": "Bidder",
-              "url": "https://sc-market.space/profile/bidder",
+              "url": "https://sc-market.space/user/bidder",
             },
             "color": 1120296,
             "fields": [

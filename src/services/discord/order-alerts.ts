@@ -55,7 +55,7 @@ export async function postOfferAlert(session: DBOfferSession): Promise<void> {
         color: 0x10b881,
         author: {
           name: customer.display_name,
-          url: `https://sc-market.space/profile/${customer.username}`,
+          url: `https://sc-market.space/user/${customer.username}`,
           icon_url: avatar || undefined,
         },
         title: `New Offer: ${lastOffer.title}`,
@@ -156,7 +156,7 @@ export async function postOrderAlert(order: DBOrder): Promise<void> {
         color: 0x10b881,
         author: {
           name: customer.display_name,
-          url: `https://sc-market.space/profile/${customer.username}`,
+          url: `https://sc-market.space/user/${customer.username}`,
           icon_url: avatar || undefined,
         },
         title: `New Order: ${order.title}`,

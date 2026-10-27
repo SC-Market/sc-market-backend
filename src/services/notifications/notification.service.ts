@@ -1097,7 +1097,7 @@ class DatabaseNotificationService implements NotificationService {
       // Invites record no actor on the in-app row.
       actorId: null,
       messages: {
-        push: payloadFormatters.formatContractorInviteNotificationPayload(invite),
+        push: await payloadFormatters.formatContractorInviteNotificationPayload(invite),
       },
     })
   }

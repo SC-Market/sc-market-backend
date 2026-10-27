@@ -109,11 +109,11 @@ describe("Discord DM on every event group", () => {
             "embeds": [
               {
                 "color": 1095809,
-                "description": "You have been invited to join a contractor organization
+                "description": "You have been invited to join Org acme
 
-      [Open on SC Market](https://sc-market.space/contractors)",
+      [Open on SC Market](https://sc-market.space/contractor/ACME)",
                 "title": "Contractor Invitation",
-                "url": "https://sc-market.space/contractors",
+                "url": "https://sc-market.space/contractor/ACME",
               },
             ],
           },

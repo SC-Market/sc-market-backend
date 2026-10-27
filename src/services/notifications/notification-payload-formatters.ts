@@ -152,7 +152,7 @@ export async function formatOrderMessageNotificationPayload(
   chatId?: string,
 ): Promise<PushNotificationPayload> {
   const url = chatId
-    ? `${getBaseUrl()}/messages?chat_id=${chatId}`
+    ? `${getBaseUrl()}/messages/${chatId}`
     : `${getBaseUrl()}/contract/${order.order_id}`
 
   // Get sender information
@@ -270,7 +270,7 @@ export async function formatOfferMessageNotificationPayload(
   chatId?: string,
 ): Promise<PushNotificationPayload> {
   const url = chatId
-    ? `${getBaseUrl()}/messages?chat_id=${chatId}`
+    ? `${getBaseUrl()}/messages/${chatId}`
     : `${getBaseUrl()}/offer/${session.id}`
 
   // Get sender information
@@ -364,16 +364,22 @@ export function formatMarketOfferNotificationPayload(
 }
 
 /**
- * Format contractor invite notification payload
+ * Format contractor invite notification payload. Opens the org's page, which
+ * shows Join / Decline while the invite is pending.
  */
-export function formatContractorInviteNotificationPayload(
+export async function formatContractorInviteNotificationPayload(
   invite: DBContractorInvite,
-): PushNotificationPayload {
-  const url = `${getBaseUrl()}/contractors`
+): Promise<PushNotificationPayload> {
+  const contractorDb =
+    await import("../../api/routes/v1/contractors/database.js")
+  const org = await contractorDb.getContractor({
+    contractor_id: invite.contractor_id,
+  })
+  const url = `${getBaseUrl()}/contractor/${encodeURIComponent(org.spectrum_id)}`
 
   return {
     title: "Contractor Invitation",
-    body: `You have been invited to join a contractor organization`,
+    body: `You have been invited to join ${org.name}`,
     icon: `${getBaseUrl()}/favicon.ico`,
     badge: `${getBaseUrl()}/favicon.ico`,
     data: {
@@ -393,7 +399,8 @@ export function formatContractorInviteNotificationPayload(
 export function formatAdminAlertNotificationPayload(
   alert: DBAdminAlert,
 ): PushNotificationPayload {
-  const url = alert.link || `${getBaseUrl()}/admin`
+  // Not /admin: most recipients aren't admins. The alert is in their notifications.
+  const url = alert.link || `${getBaseUrl()}/notifications`
 
   return {
     title: alert.title,

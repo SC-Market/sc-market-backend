@@ -45,7 +45,7 @@ Status:
 active
 
 View Offer:
-https://sc-market.space/offers/session:c1
+https://sc-market.space/offer/session:c1
 
 ---
 SC Market
@@ -140,7 +140,7 @@ https://sc-market.space/settings?tab&#x3D;email",
             "author": {
               "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
               "name": "Customer",
-              "url": "https://sc-market.space/profile/customer",
+              "url": "https://sc-market.space/user/customer",
             },
             "color": 1120296,
             "description": "Description of c1",
@@ -219,7 +219,7 @@ exports[`offer_create (19) > offer to a personal shop: the assignee gets in-app,
             "author": {
               "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
               "name": "Customer",
-              "url": "https://sc-market.space/profile/customer",
+              "url": "https://sc-market.space/user/customer",
             },
             "color": 1095809,
             "description": "Please haul",
@@ -264,7 +264,7 @@ Status:
 active
 
 View Offer:
-https://sc-market.space/offers/session:o2
+https://sc-market.space/offer/session:o2
 
 ---
 SC Market
@@ -359,7 +359,7 @@ https://sc-market.space/settings?tab&#x3D;email",
             "author": {
               "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
               "name": "Customer",
-              "url": "https://sc-market.space/profile/customer",
+              "url": "https://sc-market.space/user/customer",
             },
             "color": 1120296,
             "description": "Please haul",
@@ -411,7 +411,7 @@ exports[`offer_create (19) > offer to an org shop: managers get in-app + email b
             "author": {
               "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
               "name": "Customer",
-              "url": "https://sc-market.space/profile/customer",
+              "url": "https://sc-market.space/user/customer",
             },
             "color": 1095809,
             "description": "Please haul",
@@ -500,7 +500,7 @@ Status:
 active
 
 View Offer:
-https://sc-market.space/offers/session:o1
+https://sc-market.space/offer/session:o1
 
 ---
 SC Market
@@ -609,7 +609,7 @@ https://sc-market.space/settings?tab&#x3D;email",
             "author": {
               "icon_url": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
               "name": "Customer",
-              "url": "https://sc-market.space/profile/customer",
+              "url": "https://sc-market.space/user/customer",
             },
             "color": 1120296,
             "description": "Please haul",
@@ -719,7 +719,7 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
           "chatId": "chat:m1",
           "entityId": "session:m1",
           "type": "offer",
-          "url": "https://sc-market.space/messages?chat_id=chat:m1",
+          "url": "https://sc-market.space/messages/chat:m1",
         },
         "icon": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
         "requireInteraction": false,

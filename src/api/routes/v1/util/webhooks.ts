@@ -479,7 +479,7 @@ export async function sendOrderAssignedWebhooks(order: DBOrder) {
               color: 0x111828,
               author: {
                 name: assignee.display_name,
-                url: `https://sc-market.space/profile/${assignee.username}`,
+                url: `https://sc-market.space/user/${assignee.username}`,
                 icon_url: assignee.avatar,
               },
               title: order.title,
@@ -528,7 +528,7 @@ export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) 
               ...(author && {
                 author: {
                   name: author.display_name,
-                  url: `https://sc-market.space/profile/${author.username}`,
+                  url: `https://sc-market.space/user/${author.username}`,
                   icon_url: author.avatar,
                 },
               }),
@@ -640,7 +640,7 @@ async function sendOrderWebhook(
           // - icon next to text at top (text is a link)
           author: {
             name: customer.display_name,
-            url: `https://sc-market.space/profile/${customer.username}`,
+            url: `https://sc-market.space/user/${customer.username}`,
             icon_url: customer.avatar,
           },
           // embed title
@@ -713,7 +713,7 @@ async function sendOfferWebhook(
           // - icon next to text at top (text is a link)
           author: {
             name: customer.display_name,
-            url: `https://sc-market.space/profile/${customer.username}`,
+            url: `https://sc-market.space/user/${customer.username}`,
             icon_url: customer.avatar,
           },
           // embed title
@@ -798,7 +798,7 @@ async function marketBidWebhook(
           // - icon next to text at top (text is a link)
           author: {
             name: bidder.display_name,
-            url: `https://sc-market.space/profile/${bidder.username}`,
+            url: `https://sc-market.space/user/${bidder.username}`,
             icon_url: bidder.avatar,
           },
           // embed title
@@ -987,7 +987,7 @@ async function orderStatusWebhook(
           // - icon next to text at top (text is a link)
           author: {
             name: actor.display_name,
-            url: `https://sc-market.space/profile/${actor.username}`,
+            url: `https://sc-market.space/user/${actor.username}`,
             icon_url: actor.avatar,
           },
           // embed title

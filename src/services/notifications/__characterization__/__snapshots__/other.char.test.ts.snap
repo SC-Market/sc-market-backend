@@ -112,12 +112,12 @@ exports[`contractor_invite (9) > invitee gets in-app + push; email is never sent
     {
       "payload": {
         "badge": "https://sc-market.space/favicon.ico",
-        "body": "You have been invited to join a contractor organization",
+        "body": "You have been invited to join Org acme",
         "data": {
           "action": "contractor_invite",
           "entityId": "invite:1",
           "type": "contractor_invite",
-          "url": "https://sc-market.space/contractors",
+          "url": "https://sc-market.space/contractor/ACME",
         },
         "icon": "https://sc-market.space/favicon.ico",
         "requireInteraction": false,

@@ -935,7 +935,7 @@ export const admin_post_test_notification: RequestHandler = async (
         }
         const invite = invites[0]
         const payload =
-          payloadFormatters.formatContractorInviteNotificationPayload(invite)
+          await payloadFormatters.formatContractorInviteNotificationPayload(invite)
         await createTestNotification(
           "contractor_invite",
           invite.invite_id,
