@@ -76,6 +76,10 @@ const DOMAIN_PREFIXES: Array<{ prefix: string; domain: string }> = [
   { prefix: "price-alerts", domain: "market" },
   { prefix: "contract-alerts", domain: "market" },
   { prefix: "notification-preferences", domain: "notifications" },
+  // Market analytics: price history and quality distribution (public) and the
+  // caller's own seller-stats / listing-stats (private). There is no dedicated
+  // analytics scope; market:read governs market data.
+  { prefix: "analytics", domain: "market" },
   // SCMDB status/connect/regenerate/disconnect. The ingest is anonymous (its
   // path token is the credential); a Bearer token there is just ignored when
   // it lacks the scope (public route, served as anonymous).

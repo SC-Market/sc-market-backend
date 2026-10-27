@@ -275,6 +275,10 @@ describe("P0-6: private per-user prefixes are scoped, retired scopes grant nothi
     ["/contract-alerts", "market"],
     ["/notification-preferences", "notifications"],
     ["/integrations/scmdb/status", "profile"],
+    ["/analytics/seller-stats", "market"],
+    ["/analytics/listing-stats", "market"],
+    ["/analytics/price-history", "market"],
+    ["/analytics/quality-distribution", "market"],
   ])("%s needs %s:read, not any :read", (path, domain) => {
     expect(requiredScope("GET", path).domain).toBe(domain)
     expect(can([`${domain}:read`], "GET", path)).toBe(true)
@@ -290,5 +294,24 @@ describe("P0-6: private per-user prefixes are scoped, retired scopes grant nothi
     // ...while a token's other scopes keep working.
     expect(can(["orgs:read", "market:read"], "GET", "/listings/search")).toBe(true)
     expect(can(["orgs:read", "comments:read"], "GET", "/game-data/wiki/items")).toBe(true)
+  })
+})
+
+describe("analytics reads are market:read, not any :read", () => {
+  const can = (scopes: string[], method: string, path: string) =>
+    tokenSatisfiesScope(scopes, requiredScope(method, path))
+
+  it("fails closed for unrelated read scopes", () => {
+    for (const path of ["/analytics/seller-stats", "/analytics/listing-stats?listing_id=x"]) {
+      expect(can(["market:read"], "GET", path)).toBe(true)
+      expect(can(["full"], "GET", path)).toBe(true)
+      for (const scope of ["comments:read", "chats:read", "profile:read", "orders:read", "market:write"]) {
+        expect(can([scope], "GET", path)).toBe(false)
+      }
+      const token: TokenInfo = { id: "t", name: "test", scopes: ["comments:read"] }
+      expect(() => enforceTokenScopes(token, "GET", path)).toThrow(
+        "Insufficient token permissions",
+      )
+    }
   })
 })
