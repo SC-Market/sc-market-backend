@@ -84,6 +84,8 @@ import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminControlle
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminController } from './../admin/AdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminAlertsV2Controller } from './../admin/AdminAlertsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AccountDeletionV2Controller } from './../accounts/AccountDeletionV2Controller.js';
 import { expressAuthentication } from './../middleware/tsoa-auth.js';
 // @ts-ignore - no great way to install types from subpackage
@@ -4198,6 +4200,21 @@ const models: TsoaRoute.Models = {
             "details": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertAudiencePreview": {
+        "dataType": "refObject",
+        "properties": {
+            "recipients": {"dataType":"double","required":true},
+            "verified_emails": {"dataType":"double","required":true},
+            "discord_linked": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertTargetType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["all_users"]},{"dataType":"enum","enums":["org_members"]},{"dataType":"enum","enums":["org_owners"]},{"dataType":"enum","enums":["admins_only"]},{"dataType":"enum","enums":["specific_org"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RequestDeletionResponse": {
@@ -10381,6 +10398,39 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getActiveListingCount',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAlertsV2Controller_previewAdminAlertAudience: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                target_type: {"in":"query","name":"target_type","required":true,"ref":"AdminAlertTargetType"},
+                target_spectrum_id: {"in":"query","name":"target_spectrum_id","dataType":"string"},
+        };
+        app.get('/admin/alerts/preview',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller.prototype.previewAdminAlertAudience)),
+
+            async function AdminAlertsV2Controller_previewAdminAlertAudience(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAlertsV2Controller_previewAdminAlertAudience, request, response });
+
+                const controller = new AdminAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'previewAdminAlertAudience',
                 controller,
                 response,
                 next,

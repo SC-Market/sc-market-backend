@@ -12904,6 +12904,42 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AdminAlertAudiencePreview": {
+				"properties": {
+					"recipients": {
+						"type": "number",
+						"format": "double",
+						"description": "Users the alert would reach (the posting admin excluded)."
+					},
+					"verified_emails": {
+						"type": "number",
+						"format": "double",
+						"description": "Of those, how many have a verified email (email reach)."
+					},
+					"discord_linked": {
+						"type": "number",
+						"format": "double",
+						"description": "Of those, how many have Discord linked (Discord DM reach)."
+					}
+				},
+				"required": [
+					"recipients",
+					"verified_emails",
+					"discord_linked"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAlertTargetType": {
+				"type": "string",
+				"enum": [
+					"all_users",
+					"org_members",
+					"org_owners",
+					"admins_only",
+					"specific_org"
+				]
+			},
 			"RequestDeletionResponse": {
 				"properties": {
 					"scheduledAt": {
@@ -22619,6 +22655,52 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/admin/alerts/preview": {
+			"get": {
+				"operationId": "PreviewAdminAlertAudience",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlertAudiencePreview"
+								}
+							}
+						}
+					}
+				},
+				"description": "How many users an alert to this target would reach, and how many of them\nan email or a Discord DM would reach.",
+				"summary": "Preview an admin alert's audience",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "target_type",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/AdminAlertTargetType"
+						}
+					},
+					{
+						"description": "The org, when target_type is specific_org",
+						"in": "query",
+						"name": "target_spectrum_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/accounts/delete": {
