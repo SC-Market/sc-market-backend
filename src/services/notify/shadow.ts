@@ -16,12 +16,17 @@
  * - duplicate_role: legacy delivered more than once to the same place (a
  *   member holding two roles with the permission); notify() delivers once.
  * - actor_excluded: legacy notified the user who acted; notify() never does.
- * - merged_preference: merged events (order.status_changed, offer.received)
- *   read preferences across the merged actions (preferences.ts); the user's
- *   choice for this one action differs from the merged result.
  * - buy_now_normal_path: buy-now orders go through the normal order
  *   notification (in-app, email, org-scoped push preferences) instead of the
  *   V2 push-only one.
+ * - permission_scope: legacy reached an org member the permission helper
+ *   excludes (no longer a member, or banned).
+ * - customer_scope: the customer's push/email follow their Personal
+ *   preferences; legacy read them under the seller org's.
+ * - unassigned_to_managers: messages on an unassigned org order/offer also go
+ *   to the org's manage_orders members.
+ * (Merged events read the occurrence's own per-status preference, exactly as
+ * legacy does, so they add no difference.)
  *
  * Parity is proven when real traffic shows no unexpected difference; then the
  * event is switched to notify() and its legacy code removed.
@@ -43,10 +48,16 @@ import * as emailPreferenceDb from "../../api/routes/v1/email/database.js"
 import { eventDefinition, type EventKey } from "./catalog.js"
 import type { UserChannel, UserRecipient } from "./channels.js"
 import { notify, type NotifyOptions } from "./dispatcher.js"
-import { actionTypeId, recipientKey, resolvePreferences } from "./preferences.js"
+import { actionTypeId } from "./preferences.js"
 import { currentTrace, outsideTrace, traceLegacy, type LegacyTrace } from "./trace.js"
 
-export type ExpectedReason = "duplicate_role" | "actor_excluded" | "merged_preference" | "buy_now_normal_path"
+export type ExpectedReason =
+  | "duplicate_role"
+  | "actor_excluded"
+  | "buy_now_normal_path"
+  | "permission_scope"
+  | "customer_scope"
+  | "unassigned_to_managers"
 
 export interface ShadowDiff {
   kind: "missing" | "extra"
@@ -174,8 +185,6 @@ async function compare(plans: ShadowPlan[], planned: Map<EventKey, Set<Key>>, tr
     const extra: Key[] = []
     const explainers = eventPlans.map((p) => p.explain).filter((f): f is NonNullable<typeof f> => !!f)
     const actorIds = new Set(eventPlans.filter((p) => !p.opts.notifyActor && p.opts.actorId).map((p) => p.opts.actorId!))
-    const scopeOf = (userId: string) =>
-      eventPlans.flatMap((p) => p.recipients).find((r) => r.userId === userId)?.contractorId ?? null
 
     const classify = async (kind: "missing" | "extra", k: Key): Promise<ExpectedReason | undefined> => {
       const d: ShadowDiff = { kind, ...parseKey(k) }
@@ -183,19 +192,6 @@ async function compare(plans: ShadowPlan[], planned: Map<EventKey, Set<Key>>, tr
       for (const f of explainers) {
         const reason = f(d)
         if (reason) return reason
-      }
-      if (def.mergedActions && d.channel !== "discord_dm") {
-        // The choice for this occurrence's own action vs the merged result.
-        const recipient = { userId: d.userId, contractorId: d.contractorId === undefined ? scopeOf(d.userId) : d.contractorId }
-        for (const p of eventPlans) {
-          const own = p.opts.legacyAction
-          if (!own) continue
-          const single = await resolvePreferences({ ...def, legacyAction: own, mergedActions: undefined }, [recipient], [d.channel])
-          const mergedPrefs = await resolvePreferences(def, [recipient], [d.channel])
-          const a = single.get(recipientKey(recipient))?.[d.channel]
-          const b = mergedPrefs.get(recipientKey(recipient))?.[d.channel]
-          if (a !== b && b === (kind === "extra")) return "merged_preference"
-        }
       }
       return undefined
     }

@@ -4,12 +4,15 @@ import { BaseController } from "../base/BaseController.js"
 import * as contractorDb from "../../v1/contractors/database.js"
 import {
   getMatrix,
+  getOrgMute,
   PreferenceUpdateError,
+  setOrgMute,
   setPreferences,
 } from "../../../../services/notify/preference-matrix.js"
 import type {
   NotificationPreferenceScope,
   NotificationPreferencesResponse,
+  UpdateNotificationOrgMuteRequest,
   UpdateNotificationPreferencesRequest,
 } from "../types/notification-preferences.types.js"
 
@@ -36,11 +39,7 @@ export class NotificationPreferencesV2Controller extends BaseController {
     const userId = this.getUserId()
     const scopes = await this.scopes(userId)
     const scope = this.checkScope(scopes, contractor_id ?? null)
-    return {
-      contractor_id: scope,
-      scopes,
-      categories: (await getMatrix(userId, scope)) as NotificationPreferencesResponse["categories"],
-    }
+    return this.response(userId, scope, scopes)
   }
 
   /**
@@ -70,10 +69,55 @@ export class NotificationPreferencesV2Controller extends BaseController {
       }
       throw err
     }
+    return this.response(userId, scope, scopes)
+  }
+
+  /**
+   * Mute or unmute one org's notifications: push, email and Discord DM stop
+   * for its events; in-app notifications are still listed, and mandatory
+   * alerts still arrive.
+   * @summary Mute an org's notifications
+   */
+  @Security("loggedin")
+  @Put("mute")
+  public async updateNotificationOrgMute(
+    @Body() body: UpdateNotificationOrgMuteRequest,
+    @Request() request: ExpressRequest,
+  ): Promise<NotificationPreferencesResponse> {
+    this.request = request
+    const userId = this.getUserId()
+    const scopes = await this.scopes(userId)
+    const scope = this.checkScope(scopes, body.contractor_id ?? null)
+    if (!scope) {
+      this.throwValidationError("contractor_id is required", [
+        { field: "contractor_id", message: "Pick an org to mute" },
+      ])
+    }
+    const until = body.until ? new Date(body.until) : null
+    if (until && Number.isNaN(until.getTime())) {
+      this.throwValidationError("until must be an ISO time", [{ field: "until", message: "Invalid time" }])
+    }
+    try {
+      await setOrgMute(userId, scope!, !!body.muted, until)
+    } catch (err) {
+      if (err instanceof PreferenceUpdateError) {
+        this.throwValidationError(err.message, [{ field: "until", message: err.message }])
+      }
+      throw err
+    }
+    return this.response(userId, scope, scopes)
+  }
+
+  private async response(
+    userId: string,
+    scope: string | null,
+    scopes: NotificationPreferenceScope[],
+  ): Promise<NotificationPreferencesResponse> {
     return {
       contractor_id: scope,
       scopes,
       categories: (await getMatrix(userId, scope)) as NotificationPreferencesResponse["categories"],
+      ...(scope ? { mute: await getOrgMute(userId, scope) } : {}),
     }
   }
 

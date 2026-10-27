@@ -275,6 +275,8 @@ async function convertToTombstone(userId: string): Promise<void> {
       ["push_notification_preferences", () => trx("push_notification_preferences").where("user_id", userId).delete()],
       ["email_notification_preferences", () => trx("email_notification_preferences").where("user_id", userId).delete()],
       ["notification_channel_preferences", () => trx("notification_channel_preferences").where("user_id", userId).delete()],
+      ["notification_channel_org_preferences", () => trx("notification_channel_org_preferences").where("user_id", userId).delete()],
+      ["notification_org_mutes", () => trx("notification_org_mutes").where("user_id", userId).delete()],
       ["user_emails", () => trx("user_emails").where("user_id", userId).delete()],
       ["notification_webhooks", () => trx("notification_webhooks").where("user_id", userId).delete()],
       ["notification", () => trx("notification").where("notifier_id", userId).delete()],

@@ -64,7 +64,11 @@ export async function getMatrix(userId: string, contractorId: string | null): Pr
     const events: MatrixEvent[] = []
     for (const event of eventsOf(category)) {
       const def: EventDefinition = CATALOG[event]
-      const prefs = (await resolvePreferences(def, [recipient], def.channels)).get(recipientKey(recipient)) ?? {}
+      // The stored choices: a mute is shown separately, not as switched-off cells.
+      const prefs =
+        (await resolvePreferences(def, [recipient], def.channels, undefined, { ignoreMute: true })).get(
+          recipientKey(recipient),
+        ) ?? {}
       const editable = editableChannels(event)
       events.push({
         event,
@@ -76,8 +80,6 @@ export async function getMatrix(userId: string, contractorId: string | null): Pr
               ? "coming_soon"
               : c === "discord_dm" && !discordLinked
                 ? "discord_not_linked"
-              : contractorId && (c === "in_app" || c === "discord_dm")
-                ? "personal_only"
                 : undefined
           return {
             channel: c,
@@ -142,9 +144,6 @@ export async function setPreferences(
         if (u.event) throw new PreferenceUpdateError(`${u.channel} cannot be changed for ${event}`)
         continue // category-wide update: skip events without that channel
       }
-      if (contractorId && u.channel !== "push" && u.channel !== "email") {
-        throw new PreferenceUpdateError(`${u.channel} is set once for all scopes, under Personal`)
-      }
       writes.push({ event, channel: u.channel, enabled: u.enabled })
     }
   }
@@ -164,6 +163,19 @@ export async function setPreferences(
         if (!updated) {
           await trx(table).insert({ user_id: userId, action_type_id, contractor_id: contractorId, enabled: w.enabled })
         }
+      } else if (contractorId) {
+        // Per-org in-app / Discord DM (§8): overrides the personal row for this org.
+        await trx("notification_channel_org_preferences")
+          .insert({
+            user_id: userId,
+            action_type_id,
+            channel: w.channel === "in_app" ? "site" : "discord",
+            contractor_id: contractorId,
+            enabled: w.enabled,
+            updated_at: new Date(),
+          })
+          .onConflict(["user_id", "action_type_id", "channel", "contractor_id"])
+          .merge({ enabled: w.enabled, updated_at: new Date() })
       } else {
         await trx("notification_channel_preferences")
           .insert({
@@ -178,4 +190,33 @@ export async function setPreferences(
       }
     }
   })
+}
+
+/** The user's mute for one org (§8). */
+export async function getOrgMute(userId: string, contractorId: string): Promise<{ muted: boolean; until: string | null }> {
+  const row = await getKnex()("notification_org_mutes")
+    .where({ user_id: userId, contractor_id: contractorId })
+    .first("muted_until")
+  if (!row) return { muted: false, until: null }
+  const until = row.muted_until ? new Date(row.muted_until) : null
+  if (until && until <= new Date()) return { muted: false, until: null }
+  return { muted: true, until: until ? until.toISOString() : null }
+}
+
+export async function setOrgMute(
+  userId: string,
+  contractorId: string,
+  muted: boolean,
+  until: Date | null,
+): Promise<void> {
+  const db = getKnex()
+  if (!muted) {
+    await db("notification_org_mutes").where({ user_id: userId, contractor_id: contractorId }).delete()
+    return
+  }
+  if (until && until <= new Date()) throw new PreferenceUpdateError("until must be in the future")
+  await db("notification_org_mutes")
+    .insert({ user_id: userId, contractor_id: contractorId, muted_until: until })
+    .onConflict(["user_id", "contractor_id"])
+    .merge({ muted_until: until })
 }

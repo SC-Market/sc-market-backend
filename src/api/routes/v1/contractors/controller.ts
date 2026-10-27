@@ -503,7 +503,20 @@ export const post_invites_invite_id_accept: RequestHandler = async (
     },
   })
 
+  await notifyMemberJoined(contractor, user.user_id)
   res.json(createResponse({ result: "Success" }))
+}
+
+/** Never fails the join: the notification is best effort. */
+async function notifyMemberJoined(
+  contractor: { contractor_id: string; spectrum_id: string; name: string },
+  userId: string,
+) {
+  try {
+    await notificationService.createOrgMemberJoinedNotification(contractor, userId)
+  } catch (error) {
+    logger.error("Failed to send member joined notification", { error, contractor_id: contractor.contractor_id })
+  }
 }
 
 export const get_spectrum_id_members_search_query: RequestHandler = async (
@@ -2511,6 +2524,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
       )
     })
 
+    await notifyMemberJoined(contractor, user.user_id)
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
     logger.error("Error in contractor operation", { error: e })

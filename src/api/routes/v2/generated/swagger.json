@@ -3545,6 +3545,7 @@
 					"reviews",
 					"watchlist",
 					"org",
+					"org_members",
 					"announcements",
 					"reminders",
 					"contracts"
@@ -3577,6 +3578,7 @@
 					"offer.message",
 					"market.bid",
 					"org.invite",
+					"org.member_joined",
 					"admin.alert",
 					"reminder.unread_messages",
 					"watchlist.price_alert",
@@ -3689,6 +3691,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"NotificationOrgMute": {
+				"properties": {
+					"muted": {
+						"type": "boolean"
+					},
+					"until": {
+						"type": "string",
+						"nullable": true,
+						"description": "When the mute ends (ISO); null = until turned back on."
+					}
+				},
+				"required": [
+					"muted",
+					"until"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"NotificationPreferencesResponse": {
 				"properties": {
 					"contractor_id": {
@@ -3708,6 +3728,10 @@
 							"$ref": "#/components/schemas/NotificationPreferenceCategory"
 						},
 						"type": "array"
+					},
+					"mute": {
+						"$ref": "#/components/schemas/NotificationOrgMute",
+						"description": "Org scope only: whether the user muted this org (push, email and Discord DM stop; in-app stays)."
 					}
 				},
 				"required": [
@@ -3758,6 +3782,27 @@
 				},
 				"required": [
 					"updates"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateNotificationOrgMuteRequest": {
+				"properties": {
+					"contractor_id": {
+						"type": "string"
+					},
+					"muted": {
+						"type": "boolean"
+					},
+					"until": {
+						"type": "string",
+						"nullable": true,
+						"description": "ISO time the mute ends; omit or null for \"until I turn it back on\"."
+					}
+				},
+				"required": [
+					"contractor_id",
+					"muted"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -15545,6 +15590,44 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/UpdateNotificationPreferencesRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/notification-preferences/mute": {
+			"put": {
+				"operationId": "UpdateNotificationOrgMute",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/NotificationPreferencesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Mute or unmute one org's notifications: push, email and Discord DM stop\nfor its events; in-app notifications are still listed, and mandatory\nalerts still arrive.",
+				"summary": "Mute an org's notifications",
+				"tags": [
+					"Notifications"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateNotificationOrgMuteRequest"
 							}
 						}
 					}

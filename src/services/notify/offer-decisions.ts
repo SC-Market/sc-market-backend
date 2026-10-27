@@ -10,7 +10,7 @@
 import type { DBOfferSession } from "../../clients/database/db-models.js"
 import { env } from "../../config/env.js"
 import { notify } from "./dispatcher.js"
-import { orgMembersWith } from "./plans.js"
+import { orgMembersWithPermission } from "./recipients.js"
 import type { UserRecipient } from "./channels.js"
 
 export type OfferDecision = "accepted" | "rejected" | "withdrawn"
@@ -21,10 +21,11 @@ export async function offerDecisionRecipients(
 ): Promise<UserRecipient[]> {
   const scope = session.contractor_id ?? null
   if (actorId !== session.customer_id) {
-    return [{ userId: session.customer_id, contractorId: scope }]
+    // The customer is on their Personal preferences (owner decision, §8).
+    return [{ userId: session.customer_id, contractorId: null }]
   }
   if (session.assigned_id) return [{ userId: session.assigned_id, contractorId: scope }]
-  if (session.contractor_id) return orgMembersWith(session.contractor_id, "manage_orders")
+  if (session.contractor_id) return orgMembersWithPermission(session.contractor_id, "manage_orders")
   return []
 }
 

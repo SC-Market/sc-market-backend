@@ -14,6 +14,7 @@ export type NotificationCategoryId =
   | "reviews"
   | "watchlist"
   | "org"
+  | "org_members"
   | "announcements"
   | "reminders"
   | "contracts"
@@ -33,6 +34,7 @@ export type NotificationEventKey =
   | "offer.message"
   | "market.bid"
   | "org.invite"
+  | "org.member_joined"
   | "admin.alert"
   | "reminder.unread_messages"
   | "watchlist.price_alert"
@@ -77,6 +79,21 @@ export interface NotificationPreferencesResponse {
   /** Personal plus every org the user belongs to (org-scoped categories only). */
   scopes: NotificationPreferenceScope[]
   categories: NotificationPreferenceCategory[]
+  /** Org scope only: whether the user muted this org (push, email and Discord DM stop; in-app stays). */
+  mute?: NotificationOrgMute
+}
+
+export interface NotificationOrgMute {
+  muted: boolean
+  /** When the mute ends (ISO); null = until turned back on. */
+  until: string | null
+}
+
+export interface UpdateNotificationOrgMuteRequest {
+  contractor_id: string
+  muted: boolean
+  /** ISO time the mute ends; omit or null for "until I turn it back on". */
+  until?: string | null
 }
 
 export interface NotificationPreferenceUpdate {

@@ -16,7 +16,6 @@ import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as chatDb from "../../api/routes/v1/chats/database.js"
 import * as adminDb from "../../api/routes/v1/admin/database.js"
 import logger from "../../logger/logger.js"
-import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { pushNotificationService } from "../push-notifications/push-notification.service.js"
 import { webhookService } from "../webhooks/webhook.service.js"
 import { emailService } from "../email/email.service.js"
@@ -26,6 +25,7 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import { notify } from "../notify/dispatcher.js"
 import { withShadow, type ShadowPlan } from "../notify/shadow.js"
 import * as plans from "../notify/plans.js"
+import { orgMembersWithPermission } from "../notify/recipients.js"
 
 /** Shadow plans never break the legacy send: a planning error means no shadow. */
 async function shadowPlans(build: () => Promise<ShadowPlan[]>): Promise<ShadowPlan[]> {
@@ -52,7 +52,8 @@ import type {
 export interface NotificationService {
   // Order notifications
   createOrderNotification(order: DBOrder): Promise<void>
-  createOrderAssignedNotification(order: DBOrder): Promise<void>
+  /** actorId: who assigned it (defaults to the customer, as before). */
+  createOrderAssignedNotification(order: DBOrder, actorId?: string | null): Promise<void>
   createOrderMessageNotification(
     order: DBOrder,
     message: DBMessage,
@@ -96,6 +97,8 @@ export interface NotificationService {
 
   // Other notifications
   createContractorInviteNotification(invite: DBContractorInvite): Promise<void>
+  /** A user joined an org: its members with manage_invites (in-app by default). */
+  createOrgMemberJoinedNotification(contractor: { contractor_id: string; spectrum_id: string; name: string }, userId: string): Promise<void>
   createAdminAlertNotification(alert: DBAdminAlert): Promise<void>
   createOrderReviewRevisionNotification(
     review: DBReview,
@@ -120,8 +123,8 @@ class DatabaseNotificationService implements NotificationService {
     )
   }
 
-  async createOrderAssignedNotification(order: DBOrder): Promise<void> {
-    return withShadow(await shadowPlans(async () => plans.orderAssignedPlans(order)), () =>
+  async createOrderAssignedNotification(order: DBOrder, actorId?: string | null): Promise<void> {
+    return withShadow(await shadowPlans(async () => plans.orderAssignedPlans(order, actorId)), () =>
       this.legacyOrderAssignedNotification(order),
     )
   }
@@ -553,19 +556,23 @@ class DatabaseNotificationService implements NotificationService {
 
     // The review goes to the other side of the order: a customer's review to
     // the assigned seller (org-scoped), a seller's review to the customer.
-    const recipient =
+    // A customer's review of an unassigned org order goes to the org's
+    // order managers (owner decision, §8).
+    const recipients =
       review.role === "contractor"
-        ? { userId: order.customer_id, contractorId: null }
+        ? [{ userId: order.customer_id, contractorId: null }]
         : order.assigned_id
-          ? { userId: order.assigned_id, contractorId: order.contractor_id ?? null }
-          : null
-    if (!recipient) {
+          ? [{ userId: order.assigned_id, contractorId: order.contractor_id ?? null }]
+          : order.contractor_id
+            ? await orgMembersWithPermission(order.contractor_id, "manage_orders")
+            : []
+    if (!recipients.length) {
       return
     }
 
     await notify(
       "order.review",
-      [recipient],
+      recipients,
       {
         entityId: review.review_id,
         actorId: review.user_author ?? order.customer_id,
@@ -1068,13 +1075,9 @@ class DatabaseNotificationService implements NotificationService {
     const recipients: { userId: string; contractorId: string | null }[] = []
     if (bid.user_bidder_id) {
       if (listing.listing.contractor_seller_id) {
-        const admins = await contractorDb.getMembersWithMatchingRole(
-          listing.listing.contractor_seller_id,
-          { manage_market: true },
+        recipients.push(
+          ...(await orgMembersWithPermission(listing.listing.contractor_seller_id, "manage_market")),
         )
-        for (const a of admins) {
-          recipients.push({ userId: a.user_id, contractorId: listing.listing.contractor_seller_id })
-        }
       }
       if (listing.listing.user_seller_id) {
         recipients.push({ userId: listing.listing.user_seller_id, contractorId: null })
@@ -1105,6 +1108,35 @@ class DatabaseNotificationService implements NotificationService {
       actorId: null,
       messages: {
         push: await payloadFormatters.formatContractorInviteNotificationPayload(invite),
+      },
+    })
+  }
+
+  async createOrgMemberJoinedNotification(
+    contractor: { contractor_id: string; spectrum_id: string; name: string },
+    userId: string,
+  ): Promise<void> {
+    const recipients = await orgMembersWithPermission(contractor.contractor_id, "manage_invites")
+    if (!recipients.length) return
+    const member = await profileDb.getUser({ user_id: userId }).catch(() => null)
+    const who = member?.display_name || member?.username || "Someone"
+    const base = (await import("../../config/env.js")).env.FRONTEND_URL || "https://sc-market.space"
+    const url = `${base}/contractor/${encodeURIComponent(contractor.spectrum_id)}/members`
+    await notify("org.member_joined", recipients, {
+      // The org is the entity; the new member is the actor on the in-app row.
+      entityId: contractor.contractor_id,
+      actorId: userId,
+      dedupeKey: `${contractor.contractor_id}:${userId}:${Date.now()}`,
+      messages: {
+        push: {
+          title: "New member",
+          body: `${who} joined ${contractor.name}`,
+          icon: `${base}/favicon.ico`,
+          badge: `${base}/favicon.ico`,
+          data: { url, type: "org_member_joined", entityId: contractor.contractor_id, action: "org_member_joined" },
+          tag: `org-member-joined-${contractor.contractor_id}-${userId}`,
+          requireInteraction: false,
+        },
       },
     })
   }
@@ -1155,14 +1187,7 @@ class DatabaseNotificationService implements NotificationService {
     if (review.user_author) {
       recipients.push({ userId: review.user_author, contractorId: null })
     } else if (review.contractor_author) {
-      const members = await contractorDb.getContractorMembers({
-        contractor_id: review.contractor_author,
-      })
-      for (const member of members) {
-        if (await has_permission(review.contractor_author, member.user_id, "manage_orders")) {
-          recipients.push({ userId: member.user_id, contractorId: review.contractor_author })
-        }
-      }
+      recipients.push(...(await orgMembersWithPermission(review.contractor_author, "manage_orders")))
     }
 
     if (recipients.length === 0) {
@@ -1209,13 +1234,7 @@ class DatabaseNotificationService implements NotificationService {
       if (shopId) {
         const shop = await getKnex()("shops").where("shop_id", shopId).first()
         if (shop?.owner_contractor_id) {
-          const admins = await contractorDb.getMembersWithMatchingRole(
-            shop.owner_contractor_id,
-            { manage_market: true },
-          )
-          for (const a of admins) {
-            recipients.push({ userId: a.user_id, contractorId: shop.owner_contractor_id })
-          }
+          recipients.push(...(await orgMembersWithPermission(shop.owner_contractor_id, "manage_market")))
         } else if (shop?.owner_user_id) {
           recipients.push({ userId: shop.owner_user_id, contractorId: null })
         }

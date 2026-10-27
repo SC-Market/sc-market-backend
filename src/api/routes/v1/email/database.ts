@@ -152,7 +152,10 @@ export async function isEmailEnabled(
     actionTypeId,
     contractorId,
   )
-  return preference?.enabled ?? false
+  if (!(preference?.enabled ?? false)) return false
+  // A member who muted the org gets no email for its events.
+  const { isOrgMuted } = await import("../../../../services/notify/preferences.js")
+  return !(await isOrgMuted(userId, contractorId))
 }
 
 /**

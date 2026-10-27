@@ -8,6 +8,7 @@
  * - Cleaning up invalid subscriptions
  */
 
+import { isOrgMuted } from "../notify/preferences.js"
 import webpush from "web-push"
 import { isAllowedPushEndpoint } from "./push-endpoint.js"
 import { env } from "../../config/env.js"
@@ -278,6 +279,7 @@ class WebPushNotificationService implements PushNotificationService {
           )
           enabled = pref?.enabled ?? true
         }
+        if (enabled && (await isOrgMuted(userId, contractorId))) enabled = false
       }
       trace.push.push({ userId, action: actionType ?? null, contractorId: contractorId ?? null, enabled })
     }
@@ -318,8 +320,9 @@ class WebPushNotificationService implements PushNotificationService {
           action.action_type_id,
           contractorId ?? null,
         )
-        // Default to enabled if no preference exists (current behavior)
-        const isEnabled = preference?.enabled ?? true
+        // Default to enabled if no preference exists (current behavior).
+        // A member who muted the org gets no push for its events.
+        const isEnabled = (preference?.enabled ?? true) && !(await isOrgMuted(userId, contractorId))
         if (!isEnabled) {
           logger.debug(
             `Push notifications disabled for user ${userId}, action ${actionType}, contractor_id: ${contractorId}`,

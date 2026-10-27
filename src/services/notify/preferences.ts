@@ -12,24 +12,27 @@
  *   events there is NO fallback to the user's personal row, and vice versa;
  * - no row: the event's catalog default (push on, email off, in-app on,
  *   Discord DM on);
- * - notification_channel_preferences has no org scope: a user's in-app and
- *   Discord DM choice applies to personal and org notifications alike.
+ * - in-app and Discord DM: an org row (notification_channel_org_preferences)
+ *   decides for that org's notifications; without one the personal row
+ *   (notification_channel_preferences) applies, as it did before per-org rows
+ *   existed, so no earlier choice is lost.
+ *
+ * Org mute (notification_org_mutes, owner decision): for a recipient on an
+ * org's side (contractorId set) of an org-scoped category, a mute (until
+ * NULL, or still in the future) turns push, email and Discord DM off; in-app
+ * stays as resolved. Mandatory events ignore preferences and mutes.
  *
  * Lookups are batched: one query per table for all recipients of an event.
  *
  * Merged events (catalog mergedActions: the four order statuses; new and
- * counter offers) read every merged action's row, per channel and scope:
- * - any row saying off -> off (the most protective choice: an opt-out the
- *   user made for one of the old events is kept for the merged one);
- * - otherwise any row saying on -> on (an explicit opt-in, e.g. email, is kept);
- * - no row for any of them -> the catalog default.
- * So nobody receives something they had turned off; the cost is that a user
- * who turned off only one status stops getting the others on that channel.
- * Shadow lines count those cases as "merged_preference".
+ * counter offers) keep a per-status / per-kind filter (owner decision: never
+ * silence more than the user chose). An occurrence reads its own action's
+ * rows (the user's exact earlier per-event choice); the merged event in the
+ * settings shows those as "Customise statuses".
  */
 import { getKnex } from "../../clients/database/knex-db.js"
 import type { UserChannel, UserRecipient } from "./channels.js"
-import { isMandatory, type EventDefinition } from "./catalog.js"
+import { CATEGORIES, isMandatory, type EventDefinition } from "./catalog.js"
 
 export type PreferenceMatrix = Map<string, Partial<Record<UserChannel, boolean>>>
 
@@ -54,31 +57,45 @@ export async function resolvePreferences(
   def: EventDefinition,
   recipients: UserRecipient[],
   channels: readonly UserChannel[],
+  /** Merged events: the occurrence's own action (its per-status filter). */
+  occurrenceAction?: string,
+  options: { ignoreMute?: boolean } = {},
 ): Promise<PreferenceMatrix> {
-  if (def.mergedActions?.length && !isMandatory(def)) {
-    const parts = await Promise.all(
-      def.mergedActions.map((action) =>
-        resolveExplicit({ ...def, legacyAction: action, mergedActions: undefined }, recipients, channels),
-      ),
-    )
-    const out: PreferenceMatrix = new Map()
-    for (const r of recipients) {
-      const key = recipientKey(r)
-      const prefs: Partial<Record<UserChannel, boolean>> = {}
-      for (const c of channels) {
-        const values = parts.map((m) => m.get(key)?.[c])
-        prefs[c] = values.includes(false) ? false : values.includes(true) ? true : (def.defaults[c] ?? false)
-      }
-      out.set(key, prefs)
-    }
-    return out
-  }
-  const explicit = await resolveExplicit(def, recipients, channels)
+  const own = def.mergedActions?.length
+    ? { ...def, legacyAction: occurrenceAction ?? def.legacyAction, mergedActions: undefined }
+    : def
+  const explicit = await resolveExplicit(own, recipients, channels)
   for (const [key, prefs] of explicit) {
     for (const c of channels) prefs[c] = prefs[c] ?? def.defaults[c] ?? false
     explicit.set(key, prefs)
   }
+  if (!options.ignoreMute && !isMandatory(def) && CATEGORIES[def.category].orgScoped) {
+    const muted = await mutedRecipients(recipients)
+    for (const r of recipients) {
+      if (!muted.has(recipientKey(r))) continue
+      const prefs = explicit.get(recipientKey(r))!
+      for (const c of channels) if (c !== "in_app") prefs[c] = false
+    }
+  }
   return explicit
+}
+
+/** Whether the user muted this org (legacy push/email paths use this). */
+export async function isOrgMuted(userId: string, contractorId: string | null | undefined): Promise<boolean> {
+  if (!contractorId) return false
+  return (await mutedRecipients([{ userId, contractorId }])).size > 0
+}
+
+/** Org-side recipients who muted that org (until NULL or in the future). */
+export async function mutedRecipients(recipients: UserRecipient[]): Promise<Set<string>> {
+  const scoped = recipients.filter((r) => r.contractorId)
+  if (!scoped.length) return new Set()
+  const rows: { user_id: string; contractor_id: string }[] = await getKnex()("notification_org_mutes")
+    .whereIn("user_id", [...new Set(scoped.map((r) => r.userId))])
+    .whereIn("contractor_id", [...new Set(scoped.map((r) => r.contractorId!))])
+    .where((q) => q.whereNull("muted_until").orWhere("muted_until", ">", new Date()))
+    .select("user_id", "contractor_id")
+  return new Set(rows.map((r) => recipientKey({ userId: r.user_id, contractorId: r.contractor_id })))
 }
 
 /** The user's stored choice per recipient and channel; undefined where no row exists. */
@@ -100,7 +117,8 @@ async function resolveExplicit(
   }
 
   const want = (c: UserChannel) => channels.includes(c)
-  const [push, email, generic] = await Promise.all([
+  const orgIds = [...new Set(recipients.map((r) => r.contractorId).filter((c): c is string => !!c))]
+  const [push, email, generic, orgGeneric] = await Promise.all([
     want("push")
       ? db("push_notification_preferences")
           .whereIn("user_id", userIds)
@@ -119,6 +137,13 @@ async function resolveExplicit(
           .where({ action_type_id: id })
           .select("user_id", "channel", "enabled")
       : [],
+    (want("in_app") || want("discord_dm")) && orgIds.length
+      ? db("notification_channel_org_preferences")
+          .whereIn("user_id", userIds)
+          .whereIn("contractor_id", orgIds)
+          .where({ action_type_id: id })
+          .select("user_id", "channel", "contractor_id", "enabled")
+      : [],
   ])
 
   for (const r of recipients) {
@@ -129,12 +154,16 @@ async function resolveExplicit(
       if (c === "push" || c === "email") {
         value = pickScoped(c === "push" ? push : email, r.userId, scope)
       } else {
-        // In-app and Discord DM rows have no org scope: one setting per user
-        // that applies to personal and org notifications alike.
+        // In-app and Discord DM: the org's row, else the personal one.
         const channel = c === "in_app" ? "site" : "discord"
-        value = (generic as GenericRow[]).find(
-          (row) => row.user_id === r.userId && row.channel === channel,
-        )?.enabled
+        const orgRow = scope
+          ? (orgGeneric as (GenericRow & { contractor_id: string })[]).find(
+              (row) => row.user_id === r.userId && row.channel === channel && row.contractor_id === scope,
+            )
+          : undefined
+        value =
+          orgRow?.enabled ??
+          (generic as GenericRow[]).find((row) => row.user_id === r.userId && row.channel === channel)?.enabled
       }
       prefs[c] = value
     }

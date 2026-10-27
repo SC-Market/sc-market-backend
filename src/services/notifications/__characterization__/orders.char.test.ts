@@ -574,7 +574,7 @@ describe("shadow: expected differences", () => {
     `)
   })
 
-  it("merged_preference: push off for in-progress only; a fulfilled push is sent today, not by the merged event", async () => {
+  it("per-status filter: push off for in-progress only; the fulfilled push still goes out, in legacy and plan alike", async () => {
     const customer = await w.user("customer")
     const seller = await w.user("seller")
     await w.pushPref(customer, "order_status_in_progress", false)
@@ -586,7 +586,7 @@ describe("shadow: expected differences", () => {
       [
         "in_app  user:customer order_status_fulfilled (order:mp)",
         "push    push:customer [order] Order Fulfilled",
-        "shadow  order.status_changed ok expected merged_preference=1",
+        "shadow  order.status_changed ok",
       ]
     `)
   })

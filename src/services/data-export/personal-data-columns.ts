@@ -69,6 +69,10 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "notification_channel_preferences.user_id": {
     export: "notification_preferences.channels",
   },
+  "notification_channel_org_preferences.user_id": {
+    export: "notification_preferences.channels_by_org",
+  },
+  "notification_org_mutes.user_id": { export: "notification_preferences.org_mutes" },
   "push_subscriptions.user_id": { export: "push_subscriptions" },
   "notification_deliveries.user_id": { export: "notification_deliveries" },
   "dm_reminder_log.user_id": { export: "dm_reminders" },

@@ -1062,7 +1062,7 @@ export async function handleAssignedUpdate(req: any, res: any) {
       )
     }
 
-    await notificationService.createOrderAssignedNotification(newOrders[0])
+    await notificationService.createOrderAssignedNotification(newOrders[0], req.user.user_id)
     await discordService.sendOrderAssignedMessage(newOrders[0], targetUserObj)
   } else {
     await orderDb.updateOrder(req.order.order_id, {

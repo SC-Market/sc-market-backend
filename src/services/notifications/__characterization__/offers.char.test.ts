@@ -218,7 +218,7 @@ describe("offer_message (18)", () => {
         "discord POST /channels/thread:m1/messages",
         "ws      {"message_id":"uuid#1","content":"hello","author":"seller","",
         "ws      {"message_id":"uuid#2","content":"are you there?","author":"",
-        "shadow  offer.message ok",
+        "shadow  offer.message ok expected customer_scope=2",
         "shadow  offer.message ok",
       ]
     `)

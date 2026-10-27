@@ -739,8 +739,10 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
     {
       "entity_id": "session:m1",
       "event": "offer.message",
-      "exact": true,
-      "expected": {},
+      "exact": false,
+      "expected": {
+        "customer_scope": 2,
+      },
       "extra": [],
       "legacy": 2,
       "match": true,

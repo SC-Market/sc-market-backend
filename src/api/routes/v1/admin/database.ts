@@ -268,7 +268,8 @@ export async function getUsersForAlertTarget(
       break
 
     case "org_owners":
-      // Users who own organizations (have Owner role in contractor_member_roles)
+      // Users holding an org's owner role (contractors.owner_role), whatever
+      // the role is called (it used to match the role name "Owner").
       query = query
         .join(
           "contractor_member_roles",
@@ -277,13 +278,13 @@ export async function getUsersForAlertTarget(
           "contractor_member_roles.user_id",
         )
         .join(
-          "contractor_roles",
-          "contractor_member_roles.role_id",
+          "contractors",
+          "contractors.owner_role",
           "=",
-          "contractor_roles.role_id",
+          "contractor_member_roles.role_id",
         )
-        .where("contractor_roles.name", "Owner")
         .where("accounts.banned", false)
+        .distinct()
       break
 
     case "admins_only":

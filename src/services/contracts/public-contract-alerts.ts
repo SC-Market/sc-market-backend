@@ -60,13 +60,21 @@ export async function contractAlertRecipients(
     .where(function () {
       this.whereNull("s.kinds").orWhereRaw("? = ANY (s.kinds)", [contract.kind])
     })
-    // An org subscription only while the user is still a member.
+    // An org subscription only while the user is still a member holding
+    // manage_orders there (taking contracts on the org's behalf, §8).
     .where(function () {
       this.whereNull("s.contractor_id").orWhereExists(function () {
         this.select(getKnex().raw("1"))
           .from("contractor_members as m")
+          .join("contractor_member_roles as mr", function () {
+            this.on("mr.user_id", "=", "m.user_id")
+          })
+          .join("contractor_roles as r", function () {
+            this.on("r.role_id", "=", "mr.role_id").andOn("r.contractor_id", "=", "m.contractor_id")
+          })
           .whereRaw("m.contractor_id = s.contractor_id")
           .whereRaw("m.user_id = s.user_id")
+          .where("r.manage_orders", true)
       })
     })
     .orderBy([{ column: "s.user_id" }, { column: "s.contractor_id", order: "asc", nulls: "first" }])

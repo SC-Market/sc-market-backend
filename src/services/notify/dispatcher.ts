@@ -188,7 +188,7 @@ export async function notify(
     }
 
     // 2. Preferences.
-    const prefs = await resolvePreferences(def, recipients, channels)
+    const prefs = await resolvePreferences(def, recipients, channels, occurrenceAction)
     for (const r of recipients) {
       const p = prefs.get(recipientKey(r)) ?? {}
       for (const c of channels) {

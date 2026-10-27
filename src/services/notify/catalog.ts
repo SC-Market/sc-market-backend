@@ -24,6 +24,8 @@ export const CATEGORIES = {
   reviews: { orgScoped: true, mandatory: false },
   watchlist: { orgScoped: false, mandatory: false },
   org: { orgScoped: false, mandatory: false },
+  // Activity inside an org you help run (members joining).
+  org_members: { orgScoped: true, mandatory: false },
   // Owner decision: admin alerts can't be turned off (shown locked on).
   announcements: { orgScoped: false, mandatory: true },
   reminders: { orgScoped: false, mandatory: false },
@@ -109,6 +111,8 @@ export const CATALOG = {
   "offer.message": event("offer_messages", "offer_message", ALL),
   "market.bid": event("market", "market_item_bid", NO_EMAIL),
   "org.invite": event("org", "contractor_invite", NO_EMAIL),
+  // Owner decision (§8): to members with manage_invites; in-app only by default.
+  "org.member_joined": event("org_members", "org_member_joined", ["in_app", "push", "discord_dm"], { push: false }),
   // Mandatory (category): delivered on in-app and push whatever the preferences.
   "admin.alert": event("announcements", "admin_alert", ["in_app", "push"]),
   "reminder.unread_messages": event("reminders", "dm_reminder", ["email"]),

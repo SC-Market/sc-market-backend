@@ -537,6 +537,17 @@ export async function writeUserDataExport(
       )
       .where("p.user_id", userId)
       .select("a.action", "p.channel", "p.enabled", "p.updated_at"),
+    channels_by_org: await knex("notification_channel_org_preferences as p")
+      .leftJoin(
+        "notification_actions as a",
+        "a.action_type_id",
+        "p.action_type_id",
+      )
+      .where("p.user_id", userId)
+      .select("a.action", "p.channel", "p.contractor_id", "p.enabled", "p.updated_at"),
+    org_mutes: await knex("notification_org_mutes")
+      .where("user_id", userId)
+      .select("contractor_id", "muted_until", "created_at"),
   })
   await out.array(
     "push_subscriptions",
