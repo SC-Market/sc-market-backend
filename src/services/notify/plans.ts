@@ -192,13 +192,17 @@ export async function offerPlans(
   const dedupeKey = `${session.id}:${legacyAction}:${latest?.id ?? "none"}`
   const plans: ShadowPlan[] = []
   if (session.contractor_id) {
-    // Org managers get the offer in-app and by email, not by push (today).
+    // Org managers: in-app, email and (owner decision, ships with the
+    // cutover) push, as for new orders. Legacy sends them no push.
     const org = await orgSide(session.contractor_id, "manage_orders")
+    const managers = new Set(org.recipients.map((r) => r.userId))
     plans.push({
       event,
       recipients: org.recipients,
-      opts: { entityId: session.id, actorId, legacyAction, dedupeKey, channels: ["in_app", "email"] },
-      explain: org.explain,
+      opts: { entityId: session.id, actorId, legacyAction, dedupeKey, channels: ["in_app", "push", "email"] },
+      explain: firstOf(org.explain, (d) =>
+        d.kind === "extra" && d.channel === "push" && managers.has(d.userId) ? "org_offer_push" : undefined,
+      ),
     })
   }
   if (session.assigned_id) {

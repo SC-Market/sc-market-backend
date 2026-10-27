@@ -24,9 +24,9 @@ describe("matrix", () => {
         "market: in_app=on(locked) push=on discord_dm=off",
         "reviews: in_app=on(locked) push=on email=off discord_dm=off",
         "watchlist: in_app=on push=on email=off discord_dm=on",
-        "org: in_app=on(locked) push=on discord_dm=off",
+        "org: in_app=on(locked) push=on email=on discord_dm=off",
         "org_members: in_app=on(locked) push=off discord_dm=off",
-        "announcements: in_app=on(locked) push=on(locked)",
+        "announcements: in_app=on(locked) push=on(locked) email=on(locked)",
         "reminders: email=off",
         "contracts: in_app=on(locked) push=on discord_dm=off email=off",
       ]

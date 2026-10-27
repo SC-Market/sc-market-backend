@@ -25,6 +25,8 @@
  *   preferences; legacy read them under the seller org's.
  * - unassigned_to_managers: messages on an unassigned org order/offer also go
  *   to the org's manage_orders members.
+ * - org_offer_push: org manage_orders members get push for new offers (as
+ *   for new orders); legacy sent them in-app and email only.
  * (Merged events read the occurrence's own per-status preference, exactly as
  * legacy does, so they add no difference.)
  *
@@ -58,6 +60,7 @@ export type ExpectedReason =
   | "permission_scope"
   | "customer_scope"
   | "unassigned_to_managers"
+  | "org_offer_push"
 
 export interface ShadowDiff {
   kind: "missing" | "extra"

@@ -110,11 +110,13 @@ export const CATALOG = {
   "offer.rejected": event("offers", "offer_rejected", ALL),
   "offer.message": event("offer_messages", "offer_message", ALL),
   "market.bid": event("market", "market_item_bid", NO_EMAIL),
-  "org.invite": event("org", "contractor_invite", NO_EMAIL),
+  // Owner decision: invites email by default (opt-out).
+  "org.invite": event("org", "contractor_invite", ALL, { email: true }),
   // Owner decision (§8): to members with manage_invites; in-app only by default.
   "org.member_joined": event("org_members", "org_member_joined", ["in_app", "push", "discord_dm"], { push: false }),
   // Mandatory (category): delivered on in-app and push whatever the preferences.
-  "admin.alert": event("announcements", "admin_alert", ["in_app", "push"]),
+  // Owner decision: email too, mandatory like the other channels.
+  "admin.alert": event("announcements", "admin_alert", ["in_app", "push", "email"]),
   "reminder.unread_messages": event("reminders", "dm_reminder", ["email"]),
   "watchlist.price_alert": event("watchlist", "price_alert", ALL, { discord_dm: true }),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
@@ -155,4 +157,17 @@ export function eventDefinition(key: EventKey): EventDefinition {
   const def = CATALOG[key]
   if (!def) throw new Error(`Unknown notification event: ${String(key)}`)
   return def
+}
+
+/**
+ * The email policy for a legacy action, for the email queue's send-time
+ * check: mandatory (always sent) or the catalog default when the user has no
+ * row. Actions not in the catalog keep the opt-in default.
+ */
+export function emailDefaultFor(action: string): { mandatory: boolean; defaultOn: boolean } {
+  for (const def of Object.values(CATALOG) as EventDefinition[]) {
+    if (def.legacyAction !== action || !def.channels.includes("email")) continue
+    return { mandatory: isMandatory(def), defaultOn: !!def.defaults.email }
+  }
+  return { mandatory: false, defaultOn: false }
 }

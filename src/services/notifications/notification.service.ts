@@ -1108,6 +1108,7 @@ class DatabaseNotificationService implements NotificationService {
       actorId: null,
       messages: {
         push: await payloadFormatters.formatContractorInviteNotificationPayload(invite),
+        email: { data: { invite } },
       },
     })
   }
@@ -1163,6 +1164,7 @@ class DatabaseNotificationService implements NotificationService {
         actorId: alert.created_by,
         messages: {
           push: payloadFormatters.formatAdminAlertNotificationPayload(alert),
+          email: { data: { alert } },
         },
       },
     )

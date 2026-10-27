@@ -87,9 +87,23 @@ describe("idempotency", () => {
       {
         "again": {
           "delivered": 0,
-          "duplicate": 2,
+          "duplicate": 3,
         },
         "deliveries": [
+          {
+            "channel": "email",
+            "contractor_id": null,
+            "event_key": "org.invite",
+            "status": "skipped",
+            "user_id": "user:u",
+          },
+          {
+            "channel": "email",
+            "contractor_id": null,
+            "event_key": "org.invite",
+            "status": "skipped",
+            "user_id": "user:u",
+          },
           {
             "channel": "in_app",
             "contractor_id": null,
@@ -138,6 +152,13 @@ describe("shadow mode", () => {
       {
         "deliveries": [
           {
+            "channel": "email",
+            "contractor_id": null,
+            "event_key": "org.invite",
+            "status": "shadow",
+            "user_id": "user:u",
+          },
+          {
             "channel": "in_app",
             "contractor_id": null,
             "event_key": "org.invite",
@@ -155,6 +176,7 @@ describe("shadow mode", () => {
         "planned": [
           "in_app",
           "push",
+          "email",
         ],
         "summary": [],
       }

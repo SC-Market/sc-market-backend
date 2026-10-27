@@ -1,11 +1,115 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`admin_alert (21) > all_users: everyone not banned except the admin who posted it; mandatory (push even when turned off); no email 2`] = `
+exports[`admin_alert (21) > all_users: everyone not banned except the admin who posted it; mandatory (push and email even when turned off) 2`] = `
 {
   "discord": [],
   "discord_queue": [],
-  "email": [],
-  "email_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "Admin Alert",
+      "text": "SC Market
+https://sc-market.space
+
+Admin Alert Hello
+Alice, You have a new admin alert:
+
+Maintenance
+Down at 10:00
+
+View Alert:
+https://sc-market.space/news
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "alice@example.test",
+      ],
+    },
+    {
+      "html_length_bucket": 3500,
+      "subject": "Admin Alert",
+      "text": "SC Market
+https://sc-market.space
+
+Admin Alert Hello
+Bob, You have a new admin alert:
+
+Maintenance
+Down at 10:00
+
+View Alert:
+https://sc-market.space/news
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "bob@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "alert": {
+            "active": true,
+            "alert_id": "alert:all_users",
+            "content": "Down at 10:00",
+            "created_at": "<ts>",
+            "created_by": "user:admin",
+            "link": "https://sc-market.space/news",
+            "target_contractor_id": null,
+            "target_type": "all_users",
+            "title": "Maintenance",
+          },
+        },
+        "notificationType": "admin_alert",
+        "userId": "user:alice",
+      },
+      "type": "notification_email",
+    },
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "alert": {
+            "active": true,
+            "alert_id": "alert:all_users",
+            "content": "Down at 10:00",
+            "created_at": "<ts>",
+            "created_by": "user:admin",
+            "link": "https://sc-market.space/news",
+            "target_contractor_id": null,
+            "target_type": "all_users",
+            "title": "Maintenance",
+          },
+        },
+        "notificationType": "admin_alert",
+        "userId": "user:bob",
+      },
+      "type": "notification_email",
+    },
+  ],
   "errors": [],
   "in_app": [
     {
@@ -68,12 +172,62 @@ exports[`admin_alert (21) > all_users: everyone not banned except the admin who 
 }
 `;
 
-exports[`contractor_invite (9) > invitee gets in-app + push; email is never sent even when opted in 2`] = `
+exports[`contractor_invite (9) > invitee gets in-app, push and email (owner decision: invites email by default) 2`] = `
 {
   "discord": [],
   "discord_queue": [],
-  "email": [],
-  "email_queue": [],
+  "email": [
+    {
+      "html_length_bucket": 3500,
+      "subject": "Contractor Invitation",
+      "text": "SC Market
+https://sc-market.space
+
+Contractor Invitation Hello
+Invitee, You have been invited to join a contractor organization.
+
+Org acme
+
+Message: Join us
+
+View Invitation:
+https://sc-market.space/contractor/ACME
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab&#x3D;email",
+      "to": [
+        "invitee@example.test",
+      ],
+    },
+  ],
+  "email_queue": [
+    {
+      "metadata": {
+        "created_at": "<ts>",
+        "priority": "normal",
+      },
+      "payload": {
+        "data": {
+          "invite": {
+            "contractor_id": "org:acme",
+            "invite_id": "invite:1",
+            "message": "Join us",
+            "timestamp": "<ts>",
+            "user_id": "user:invitee",
+          },
+        },
+        "notificationType": "contractor_invite",
+        "userId": "user:invitee",
+      },
+      "type": "notification_email",
+    },
+  ],
   "errors": [],
   "in_app": [
     {

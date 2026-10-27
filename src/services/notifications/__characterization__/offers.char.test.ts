@@ -61,7 +61,7 @@ describe("offer_create (19)", () => {
         "discord POST /channels/900000000000000101/invites",
         "dqueue  create_thread",
         "webhook shop-hook SC Market - Offer Received",
-        "shadow  offer.received ok",
+        "shadow  offer.received ok expected org_offer_push=2",
       ]
     `)
     expect(obs).toMatchSnapshot()

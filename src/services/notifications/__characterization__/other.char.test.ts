@@ -11,7 +11,7 @@ import { checkWatchlistMatches } from "../../watchlist/watchlist.service.js"
 import { getKnex } from "../../../clients/database/knex-db.js"
 
 describe("contractor_invite (9)", () => {
-  it("invitee gets in-app + push; email is never sent even when opted in", async () => {
+  it("invitee gets in-app, push and email (owner decision: invites email by default)", async () => {
     const boss = await w.user("boss")
     const invitee = await w.user("invitee")
     const acme = await w.org("acme", [{ user: boss, perms: "owner" }])
@@ -28,9 +28,30 @@ describe("contractor_invite (9)", () => {
       [
         "in_app  user:invitee contractor_invite (invite:1)",
         "push    push:invitee [contractor_invite] Contractor Invitation",
+        "email   invitee@example.test Contractor Invitation",
       ]
     `)
     expect(obs).toMatchSnapshot()
+  })
+
+  it("email opt-out is respected", async () => {
+    const boss = await w.user("boss")
+    const invitee = await w.user("invitee")
+    const acme = await w.org("acme", [{ user: boss, perms: "owner" }])
+    await w.emailPref(invitee, "contractor_invite", false)
+    const [invite] = await getKnex()("contractor_invites")
+      .insert({ contractor_id: acme.contractor_id, user_id: invitee.user_id })
+      .returning("*")
+    w.nameId(invite.invite_id, "invite:3")
+
+    await notificationService.createContractorInviteNotification(invite)
+
+    expect(w.summary(await w.observe({ drainEmail: true }))).toMatchInlineSnapshot(`
+      [
+        "in_app  user:invitee contractor_invite (invite:3)",
+        "push    push:invitee [contractor_invite] Contractor Invitation",
+      ]
+    `)
   })
 
   it("push preference off", async () => {
@@ -46,6 +67,7 @@ describe("contractor_invite (9)", () => {
     expect(w.summary(await w.observe())).toMatchInlineSnapshot(`
       [
         "in_app  user:invitee contractor_invite (invite:2)",
+        "email   invitee@example.test Contractor Invitation",
       ]
     `)
   })
@@ -60,12 +82,13 @@ describe("admin_alert (21)", () => {
     return row
   }
 
-  it("all_users: everyone not banned except the admin who posted it; mandatory (push even when turned off); no email", async () => {
+  it("all_users: everyone not banned except the admin who posted it; mandatory (push and email even when turned off)", async () => {
     const admin = await w.user("admin", { role: "admin" })
     const a = await w.user("alice")
     const b = await w.user("bob")
     await w.emailOptIn(a, ["admin_alert"])
     await w.pushPref(b, "admin_alert", false)
+    await w.emailPref(b, "admin_alert", false)
     await getKnex()("accounts").insert({ username: "banned", display_name: "Banned", banned: true, avatar: "5226c767-0599-419b-ae71-a7303c441db0" })
 
     await notificationService.createAdminAlertNotification(await alert("all_users", admin.user_id))
@@ -77,6 +100,8 @@ describe("admin_alert (21)", () => {
         "in_app  user:bob admin_alert (alert:all_users)",
         "push    push:alice [admin_alert] Maintenance",
         "push    push:bob [admin_alert] Maintenance",
+        "email   alice@example.test Admin Alert",
+        "email   bob@example.test Admin Alert",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -101,6 +126,8 @@ describe("admin_alert (21)", () => {
         "in_app  user:member admin_alert (alert:specific_org)",
         "push    push:boss [admin_alert] Maintenance",
         "push    push:member [admin_alert] Maintenance",
+        "email   boss@example.test Admin Alert",
+        "email   member@example.test Admin Alert",
       ]
     `)
   })
@@ -304,6 +331,7 @@ describe("transport failures", () => {
         "summary": [
           "in_app  user:invitee contractor_invite (invite:3)",
           "push    push:invitee#1 [contractor_invite] Contractor Invitation",
+          "email   invitee@example.test Contractor Invitation",
         ],
       }
     `)

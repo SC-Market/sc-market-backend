@@ -125,6 +125,8 @@ describe("Discord DM on every event group", () => {
           "in_app  user:unlinked contractor_invite (invite:unlinked)",
           "push    push:invitee [contractor_invite] Contractor Invitation",
           "push    push:unlinked [contractor_invite] Contractor Invitation",
+          "email   invitee@example.test Contractor Invitation",
+          "email   unlinked@example.test Contractor Invitation",
           "discord POST /users/@me/channels",
           "discord POST /channels/dm-discord:invitee/messages",
         ],

@@ -413,11 +413,20 @@ class SESEmailService implements EmailService {
           }
         }
 
-        const isEnabled = await emailPreferenceDb.isEmailEnabled(
-          userId,
-          actionTypeId,
-          contractorIdToCheck,
-        )
+        // Defaults and mandatory events come from the notify() catalog:
+        // invites email by default (owner decision), admin alerts always.
+        const { emailDefaultFor } = await import("../notify/catalog.js")
+        const policy = emailDefaultFor(notificationType)
+        let isEnabled: boolean
+        if (policy.mandatory) {
+          isEnabled = true
+        } else if (policy.defaultOn) {
+          const pref = await emailPreferenceDb.getEmailPreference(userId, actionTypeId, contractorIdToCheck)
+          const { isOrgMuted } = await import("../notify/preferences.js")
+          isEnabled = (pref?.enabled ?? true) && !(await isOrgMuted(userId, contractorIdToCheck))
+        } else {
+          isEnabled = await emailPreferenceDb.isEmailEnabled(userId, actionTypeId, contractorIdToCheck)
+        }
         if (!isEnabled) {
           logger.debug(
             `Email notifications disabled for user ${userId}, type ${notificationType}, contractor_id: ${contractorIdToCheck}`,
