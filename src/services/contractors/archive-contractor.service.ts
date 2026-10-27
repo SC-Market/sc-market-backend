@@ -11,6 +11,7 @@ import {
 import logger from "../../logger/logger.js"
 import { auditLogService } from "../audit-log/audit-log.service.js"
 import { cancelOrderMarketItems } from "../../api/routes/v1/orders/helpers.js"
+import { OrderLifecycleService } from "../allocation/order-lifecycle.service.js"
 
 export interface ArchiveContractorOptions {
   contractor: DBContractor
@@ -160,6 +161,10 @@ export async function archiveContractor({
       if (order.status !== "cancelled") {
         await orderDb.updateOrder(order.order_id, { status: "cancelled" })
         await cancelOrderMarketItems(order)
+        // V1 split-lot allocations (stock_allocations), as a status update to
+        // "cancelled" releases them (handleStatusUpdate). V2 allocations are
+        // released by cancelOrderMarketItems.
+        await new OrderLifecycleService().releaseAllocationsForOrder(order.order_id)
 
         // Log order cancellation
         await auditLogService.record({
