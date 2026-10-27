@@ -56,7 +56,7 @@ describe("v2 token scope enforcement", () => {
     })
 
     it("returns null domain for unmapped catalog routes", () => {
-      for (const p of ["/game-items/x", "/game-data/wiki/items", "/debug", "/integrations/scmdb/ingest"]) {
+      for (const p of ["/game-items/x", "/game-data/wiki/items", "/debug"]) {
         expect(requiredScope("GET", p).domain).toBeNull()
       }
     })
@@ -261,5 +261,34 @@ describe("v2 token scope enforcement", () => {
         enforceTokenScopes(token(["admin"]), "POST", "/admin/imports"),
       ).not.toThrow()
     })
+  })
+})
+
+describe("P0-6: private per-user prefixes are scoped, retired scopes grant nothing", () => {
+  const can = (scopes: string[], method: string, path: string) =>
+    tokenSatisfiesScope(scopes, requiredScope(method, path))
+
+  it.each([
+    ["/watchlist", "market"],
+    ["/watchlist/items/1", "market"],
+    ["/price-alerts", "market"],
+    ["/contract-alerts", "market"],
+    ["/notification-preferences", "notifications"],
+    ["/integrations/scmdb/status", "profile"],
+  ])("%s needs %s:read, not any :read", (path, domain) => {
+    expect(requiredScope("GET", path).domain).toBe(domain)
+    expect(can([`${domain}:read`], "GET", path)).toBe(true)
+    expect(can(["readonly"], "GET", path)).toBe(true)
+    expect(can(["comments:read"], "GET", path)).toBe(false)
+    expect(can(["chats:read"], "GET", path)).toBe(false)
+  })
+
+  it("retired scopes are ignored: orgs:read is no longer a read pass", () => {
+    expect(can(["orgs:read"], "GET", "/game-data/wiki/items")).toBe(false)
+    expect(can(["contractors:webhooks"], "GET", "/analytics/price-history")).toBe(false)
+    expect(can(["orgs:manage"], "POST", "/shops/x/webhooks")).toBe(false)
+    // ...while a token's other scopes keep working.
+    expect(can(["orgs:read", "market:read"], "GET", "/listings/search")).toBe(true)
+    expect(can(["orgs:read", "comments:read"], "GET", "/game-data/wiki/items")).toBe(true)
   })
 })

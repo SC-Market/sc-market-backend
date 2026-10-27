@@ -27,6 +27,8 @@
  *     controllers via BaseController.requireAdmin(); both must hold.
  */
 
+import { effectiveTokenScopes } from "../../../util/token-scope-catalog.js"
+
 export interface TokenInfo {
   id: string
   name: string
@@ -69,6 +71,15 @@ const DOMAIN_PREFIXES: Array<{ prefix: string; domain: string }> = [
   { prefix: "dashboard", domain: "profile" },
   { prefix: "game-data/wishlists", domain: "profile" },
   { prefix: "my-domain", domain: "contractors" },
+  // Private per-user data that used to fall through to "any :read".
+  { prefix: "watchlist", domain: "market" },
+  { prefix: "price-alerts", domain: "market" },
+  { prefix: "contract-alerts", domain: "market" },
+  { prefix: "notification-preferences", domain: "notifications" },
+  // SCMDB status/connect/regenerate/disconnect. The ingest is anonymous (its
+  // path token is the credential); a Bearer token there is just ignored when
+  // it lacks the scope (public route, served as anonymous).
+  { prefix: "integrations", domain: "profile" },
 ]
 
 const WRITE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"])
@@ -138,10 +149,12 @@ export function requiredScope(
  * `admin`.
  */
 export function tokenSatisfiesScope(
-  userScopes: string[],
+  grantedScopes: string[],
   req: { domain: string | null; level: Level },
 ): boolean {
   const { domain, level } = req
+  // Retired scopes (token-scope-catalog.ts) count for nothing.
+  const userScopes = effectiveTokenScopes(grantedScopes)
 
   // Admin surface: fail closed — only the literal `admin` scope passes.
   if (domain === "admin") {

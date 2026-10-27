@@ -7,6 +7,7 @@
  */
 
 import { NextFunction, Request, Response } from "express"
+import { effectiveTokenScopes } from "../util/token-scope-catalog.js"
 import { User } from "../routes/v1/api-models.js"
 import {
   createErrorResponse,
@@ -191,7 +192,8 @@ export function requireScopes(...requiredScopes: string[]) {
     if (!isTokenAuth(req)) return next()
 
     const tokenInfo = getTokenInfo(req)!
-    const userScopes = tokenInfo.scopes
+    // Retired scopes (token-scope-catalog.ts) count for nothing.
+    const userScopes = effectiveTokenScopes(tokenInfo.scopes)
 
     const isAdminScope = (s: string) =>
       s.startsWith("admin:") || s === "admin" ||

@@ -14,30 +14,23 @@ import { getMfaService } from "../../../../services/mfa/instance.js"
 import { isStepUpFresh, stepUpError } from "../../../util/step-up.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { isRetiredScope } from "../../../util/token-scope-catalog.js"
 
 const MAX_TOKENS_PER_USER = 25
 
+// Grantable scopes. The retired ones (util/token-scope-catalog.ts) are gone:
+// they were never enforced anywhere.
 const VALID_SCOPES = [
   "profile:read",
   "profile:write",
   "market:read",
   "market:write",
-  "market:purchase",
-  "market:photos",
   "orders:read",
   "orders:write",
-  "orders:reviews",
   "contractors:read",
   "contractors:write",
-  "contractors:members",
-  "contractors:webhooks",
-  "contractors:blocklist",
-  "orgs:read",
-  "orgs:write",
-  "orgs:manage",
   "services:read",
   "services:write",
-  "services:photos",
   "offers:read",
   "offers:write",
   "chats:read",
@@ -534,7 +527,22 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
 
     // Validate scopes if provided
     if (scopes && Array.isArray(scopes)) {
-      const uniqueScopes = [...new Set(scopes as string[])]
+      // An edit may send back the token's existing scopes, which can include
+      // retired ones: drop those rather than refuse the edit.
+      const uniqueScopes = [...new Set(scopes as string[])].filter(
+        (s) => !isRetiredScope(s),
+      )
+      if (uniqueScopes.length === 0) {
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "A token needs at least one scope",
+            ),
+          )
+        return
+      }
 
       const invalidScopes = uniqueScopes.filter(
         (scope: string) => !VALID_SCOPES.includes(scope as any),
@@ -659,7 +667,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
 
     const nextScopes =
       scopes !== undefined
-        ? [...new Set(scopes as string[])]
+        ? [...new Set(scopes as string[])].filter((s) => !isRetiredScope(s))
         : (existingToken.scopes as string[])
     const grant =
       scopes !== undefined || expires_at !== undefined
@@ -674,7 +682,9 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       .update({
         ...(name !== undefined && { name }),
         ...(description !== undefined && { description }),
-        ...(scopes !== undefined && { scopes: [...new Set(scopes as string[])] }),
+        ...(scopes !== undefined && {
+          scopes: [...new Set(scopes as string[])].filter((s) => !isRetiredScope(s)),
+        }),
         ...(contractor_spectrum_ids !== undefined && {
           contractor_ids: validatedContractorIds,
         }),
