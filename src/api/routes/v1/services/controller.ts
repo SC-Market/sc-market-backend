@@ -19,6 +19,8 @@ import { createResponse as createResponse } from "../util/response.js"
 import { randomUUID as randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
+import { ImageUploadUserError } from "../../../../clients/image-lambda/image-upload-error.js"
+import { sendPhotoUploadUserError } from "../util/image-upload-errors.js"
 import { isSCMarketsCDN as isSCMarketsCDN } from "./helpers.js"
 import { isImageAlreadyAssociated as isImageAlreadyAssociated } from "./helpers.js"
 import { validateServicePhotos as validateServicePhotos } from "./helpers.js"
@@ -581,53 +583,9 @@ export const services_post_service_id_photos: RequestHandler = async (
 
         uploadResults.push({ success: true, resource, index })
       } catch (error) {
-        // Handle different types of errors and return appropriate responses
-        if (error instanceof Error) {
-          if (error.message.includes("Image failed moderation checks")) {
-            logger.debug(`Photo ${index + 1} failed content moderation:`, error)
-            res.status(400).json(
-              createErrorResponse(
-                ErrorCode.VALIDATION_ERROR,
-                `Photo ${index + 1} failed content moderation checks and cannot be uploaded.`,
-                {
-                  details: "One or more photos contain inappropriate content.",
-                },
-              ),
-            )
-            return
-          }
-
-          if (
-            error.message.includes("Missing required fields") ||
-            error.message.includes("VALIDATION_ERROR") ||
-            error.message.includes("UNSUPPORTED_FORMAT")
-          ) {
-            logger.debug(`Photo ${index + 1} failed validation:`, error)
-            res
-              .status(400)
-              .json(
-                createErrorResponse(
-                  ErrorCode.VALIDATION_ERROR,
-                  `Photo ${index + 1} failed validation: ${error.message}`,
-                  { details: "Please check the file format and try again." },
-                ),
-              )
-            return
-          }
-
-          if (error.message.includes("Unsupported MIME type")) {
-            logger.debug(`Photo ${index + 1} has unsupported format:`, error)
-            res.status(400).json(
-              createErrorResponse(
-                ErrorCode.VALIDATION_ERROR,
-                `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.`,
-                {
-                  details: "Please ensure all photos are in supported formats.",
-                },
-              ),
-            )
-            return
-          }
+        if (error instanceof ImageUploadUserError) {
+          sendPhotoUploadUserError(res, error, index + 1)
+          return
         }
 
         // Log unexpected errors as error level

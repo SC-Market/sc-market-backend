@@ -6,6 +6,7 @@ import { env } from "../../config/env.js"
 import { S3, S3ClientConfig } from "@aws-sdk/client-s3"
 import logger from "../../logger/logger.js"
 import { ImageLambdaClient } from "../image-lambda/image-lambda.js"
+import { ImageUploadUserError } from "../image-lambda/image-upload-error.js"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 
 export class BackBlazeCDN implements CDN {
@@ -67,7 +68,8 @@ export class BackBlazeCDN implements CDN {
     const { isValid, contentType } = this.validateMimeType(mimeType)
 
     if (!isValid) {
-      throw new Error(
+      throw new ImageUploadUserError(
+        "UNSUPPORTED_MIME",
         `Unsupported MIME type: ${mimeType}. Only PNG, JPG, and WEBP images are allowed.`,
       )
     }
@@ -88,12 +90,9 @@ export class BackBlazeCDN implements CDN {
 
       return imageResource
     } catch (error) {
-      // Only log system errors here - user-fault errors will be handled at the API route level
-      // where we have better context about the user's request
-      if (
-        error instanceof Error &&
-        !error.message.includes("Image failed moderation checks")
-      ) {
+      // Only log system errors here - user-fault errors are handled (as a 400)
+      // at the API route level.
+      if (!(error instanceof ImageUploadUserError)) {
         logger.error(
           "Failed to upload image via lambda (system error):",
           error,

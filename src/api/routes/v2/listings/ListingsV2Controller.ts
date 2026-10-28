@@ -42,6 +42,8 @@ import {
 } from "../../../../services/test-accounts/isolation.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
+import { ImageUploadUserError } from "../../../../clients/image-lambda/image-upload-error.js"
+import { imageUploadValidationError } from "../images/image-upload-errors.js"
 
 /**
  * Response for creating a listing
@@ -2246,26 +2248,12 @@ export class ListingsV2Controller extends BaseController {
           resource_id: resource.resource_id,
           url: resource.external_url || `https://cdn.sc-market.space/${resource.filename}`,
         })
-      } catch (uploadError: any) {
+      } catch (uploadError: unknown) {
         for (const f of files) {
           try { (await import('fs')).unlinkSync(f.path) } catch {}
         }
-        if (uploadError?.name === "ImageModerationError") {
-          const labels = uploadError.labels || []
-          this.throwValidationError('Image failed moderation', [
-            {
-              field: 'photos',
-              message: labels.length > 0
-                ? `Photo ${i + 1} rejected for: ${labels.join(", ")} (${uploadError.confidence?.toFixed(0) || 0}% confidence)`
-                : `Photo ${i + 1} failed content moderation checks`,
-            },
-          ])
-        }
-        const msg = uploadError?.message || 'Image upload failed'
-        if (msg.includes('Unsupported') || msg.includes('UNSUPPORTED')) {
-          this.throwValidationError('Unsupported image format', [
-            { field: 'photos', message: `Photo ${i + 1}: ${msg}` },
-          ])
+        if (uploadError instanceof ImageUploadUserError) {
+          throw imageUploadValidationError(uploadError, 'photos', `Photo ${i + 1}`)
         }
         throw uploadError
       }

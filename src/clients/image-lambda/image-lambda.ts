@@ -1,6 +1,10 @@
 import { env } from "../../config/env.js"
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda"
 import logger from "../../logger/logger.js"
+import {
+  ImageUploadUserError,
+  type ImageUploadUserErrorCode,
+} from "./image-upload-error.js"
 
 export interface ImageLambdaResponse {
   success: boolean
@@ -20,17 +24,24 @@ export interface ImageLambdaResponse {
   error?: string
 }
 
-export class ImageModerationError extends Error {
+export class ImageModerationError extends ImageUploadUserError {
   public readonly labels: string[]
   public readonly confidence: number
 
   constructor(message: string, labels: string[], confidence: number) {
-    super(message)
+    super("MODERATION_FAILED", message)
     this.name = "ImageModerationError"
     this.labels = labels
     this.confidence = confidence
   }
 }
+
+/** The image Lambda's `error` codes that mean the user's file was rejected. */
+const LAMBDA_USER_FAULT_CODES: readonly ImageUploadUserErrorCode[] = [
+  "MODERATION_FAILED",
+  "VALIDATION_ERROR",
+  "UNSUPPORTED_FORMAT",
+]
 
 // API Gateway response wrapper
 interface ApiGatewayResponse {
@@ -220,15 +231,11 @@ export class ImageLambdaClient {
 
     const errorMessage = finalResponse.message || "Upload failed"
 
-    const isUserFault =
-      finalResponse.error &&
-      [
-        "MODERATION_FAILED",
-        "VALIDATION_ERROR",
-        "UNSUPPORTED_FORMAT",
-      ].includes(finalResponse.error)
+    const userFaultCode = LAMBDA_USER_FAULT_CODES.find(
+      (code) => code === finalResponse.error,
+    )
 
-    if (isUserFault) {
+    if (userFaultCode) {
       logger.debug("Image upload failed due to user input:", {
         error: finalResponse.error,
         message: finalResponse.message,
@@ -252,6 +259,10 @@ export class ImageLambdaClient {
         labels,
         confidence,
       )
+    }
+
+    if (userFaultCode) {
+      throw new ImageUploadUserError(userFaultCode, errorMessage)
     }
 
     throw new Error(errorMessage)

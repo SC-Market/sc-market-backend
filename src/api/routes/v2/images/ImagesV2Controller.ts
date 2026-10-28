@@ -12,17 +12,9 @@ import fs from "node:fs"
 import crypto from "crypto"
 import { BaseController } from "../base/BaseController.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
-import { ImageModerationError } from "../../../../clients/image-lambda/image-lambda.js"
+import { ImageUploadUserError } from "../../../../clients/image-lambda/image-upload-error.js"
+import { imageUploadValidationError } from "./image-upload-errors.js"
 import logger from "../../../../logger/logger.js"
-
-/**
- * Narrow an unknown thrown value to something carrying a string `message`.
- * The CDN client rejects with plain objects as well as Error instances, so
- * `instanceof Error` alone would miss those.
- */
-function hasMessage(value: unknown): value is { message?: string } {
-  return typeof value === "object" && value !== null && "message" in value
-}
 
 /**
  * Response for a single image upload
@@ -97,25 +89,8 @@ export class ImagesV2Controller extends BaseController {
         url,
       }
     } catch (uploadError: unknown) {
-      if (uploadError instanceof ImageModerationError) {
-        this.throwValidationError("Image failed moderation", [
-          {
-            field: "photo",
-            message: uploadError.labels.length > 0
-              ? `Rejected for: ${uploadError.labels.join(", ")} (${uploadError.confidence.toFixed(0)}% confidence)`
-              : "Image failed content moderation checks",
-          },
-        ])
-      }
-
-      const msg = hasMessage(uploadError)
-        ? uploadError.message || "Image upload failed"
-        : "Image upload failed"
-
-      if (msg.includes("Unsupported") || msg.includes("UNSUPPORTED")) {
-        this.throwValidationError("Unsupported image format", [
-          { field: "photo", message: msg },
-        ])
+      if (uploadError instanceof ImageUploadUserError) {
+        throw imageUploadValidationError(uploadError, "photo")
       }
 
       throw uploadError

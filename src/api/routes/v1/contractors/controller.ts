@@ -32,6 +32,8 @@ import { cdn, external_resource_regex } from "../../../../clients/cdn/cdn.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
+import { ImageUploadUserError } from "../../../../clients/image-lambda/image-upload-error.js"
+import { sendImageUploadUserError } from "../util/image-upload-errors.js"
 import {
   DBContractor,
   DBContractorMemberRole,
@@ -1784,55 +1786,9 @@ export const contractors_post_spectrum_id_avatar: RequestHandler = async (
       }),
     )
   } catch (error) {
-    // Handle moderation failures
-    if (error instanceof Error) {
-      if (error.message.includes("Image failed moderation checks")) {
-        logger.debug("Organization avatar upload failed content moderation:", {
-          error: error.message,
-        })
-        res.status(400).json(
-          createErrorResponse({
-            error: "Content Moderation Failed",
-            message: "Avatar failed content moderation checks",
-            details:
-              "The avatar image contains inappropriate content and cannot be uploaded.",
-          }),
-        )
-        return
-      }
-
-      if (
-        error.message.includes("Missing required fields") ||
-        error.message.includes("VALIDATION_ERROR") ||
-        error.message.includes("UNSUPPORTED_FORMAT")
-      ) {
-        logger.debug("Organization avatar upload failed validation:", {
-          error: error.message,
-        })
-        res.status(400).json(
-          createErrorResponse({
-            error: "Validation Failed",
-            message: `Avatar failed validation: ${error.message}`,
-            details: "Please check the file format and try again.",
-          }),
-        )
-        return
-      }
-
-      if (error.message.includes("Unsupported MIME type")) {
-        logger.debug("Organization avatar has unsupported format:", {
-          error: error.message,
-        })
-        res.status(400).json(
-          createErrorResponse({
-            error: "Unsupported File Type",
-            message:
-              "Avatar has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.",
-            details: "Please ensure the avatar is in a supported format.",
-          }),
-        )
-        return
-      }
+    if (error instanceof ImageUploadUserError) {
+      sendImageUploadUserError(res, error, "avatar")
+      return
     }
 
     // Log unexpected server errors as error level
@@ -1942,55 +1898,9 @@ export const contractors_post_spectrum_id_banner: RequestHandler = async (
       }),
     )
   } catch (error) {
-    // Handle moderation failures
-    if (error instanceof Error) {
-      if (error.message.includes("Image failed moderation checks")) {
-        logger.debug("Organization banner upload failed content moderation:", {
-          error: error.message,
-        })
-        res.status(400).json(
-          createErrorResponse({
-            error: "Content Moderation Failed",
-            message: "Banner failed content moderation checks",
-            details:
-              "The banner image contains inappropriate content and cannot be uploaded.",
-          }),
-        )
-        return
-      }
-
-      if (
-        error.message.includes("Missing required fields") ||
-        error.message.includes("VALIDATION_ERROR") ||
-        error.message.includes("UNSUPPORTED_FORMAT")
-      ) {
-        logger.debug("Organization banner upload failed validation:", {
-          error: error.message,
-        })
-        res.status(400).json(
-          createErrorResponse({
-            error: "Validation Failed",
-            message: `Banner failed validation: ${error.message}`,
-            details: "Please check the file format and try again.",
-          }),
-        )
-        return
-      }
-
-      if (error.message.includes("Unsupported MIME type")) {
-        logger.debug("Organization banner has unsupported format:", {
-          error: error.message,
-        })
-        res.status(400).json(
-          createErrorResponse({
-            error: "Unsupported File Type",
-            message:
-              "Banner has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.",
-            details: "Please ensure the banner is in a supported format.",
-          }),
-        )
-        return
-      }
+    if (error instanceof ImageUploadUserError) {
+      sendImageUploadUserError(res, error, "banner")
+      return
     }
 
     // Log unexpected server errors as error level
