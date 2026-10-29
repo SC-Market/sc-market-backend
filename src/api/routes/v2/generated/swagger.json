@@ -16175,6 +16175,25 @@
 								"desc"
 							]
 						}
+					},
+					{
+						"description": "Only orders of this shop (still only those the user may see)",
+						"in": "query",
+						"name": "shop_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Only orders created or fulfilled at or after this time",
+						"in": "query",
+						"name": "updated_since",
+						"required": false,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
 					}
 				]
 			}
@@ -17345,6 +17364,16 @@
 						"name": "shop_id",
 						"required": false,
 						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Only listings updated at or after this time",
+						"in": "query",
+						"name": "updated_since",
+						"required": false,
+						"schema": {
+							"format": "date-time",
 							"type": "string"
 						}
 					}

@@ -284,6 +284,8 @@ export class OrdersV2Controller extends BaseController {
    * @param role buyer: orders the user placed; customer: the same (the word
    *   /offers and the V1 API use for the buyer); seller: orders of the user's
    *   shops or assigned to them. Omitted: both.
+   * @param shop_id Only orders of this shop (still only those the user may see)
+   * @param updated_since Only orders created or fulfilled at or after this time
    * @param request Express request for authentication
    * @returns Orders list with pagination metadata
    */
@@ -298,6 +300,8 @@ export class OrdersV2Controller extends BaseController {
     @Query() sort_by?: 'created_at' | 'updated_at' | 'total_price',
     @Query() sort_order?: 'asc' | 'desc',
     @Request() request?: ExpressRequest,
+    @Query() shop_id?: string,
+    @Query() updated_since?: Date,
   ): Promise<GetOrdersResponse> {
     this.request = request
     this.requireAuth()
@@ -389,6 +393,13 @@ export class OrdersV2Controller extends BaseController {
       // Apply status filter
       if (status) {
         query = query.where("orders.status", status)
+      }
+
+      if (shop_id) {
+        query = query.where("orders.shop_id", shop_id)
+      }
+      if (updated_since) {
+        query = query.whereRaw(`${ORDER_UPDATED_AT_SQL} >= ?`, [updated_since])
       }
 
       // Clone query for count

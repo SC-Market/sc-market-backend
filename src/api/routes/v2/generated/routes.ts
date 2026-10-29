@@ -6100,6 +6100,8 @@ export function RegisterRoutes(app: Router) {
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["total_price"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 request: {"in":"request","name":"request","dataType":"object"},
+                shop_id: {"in":"query","name":"shop_id","dataType":"string"},
+                updated_since: {"in":"query","name":"updated_since","dataType":"datetime"},
         };
         app.get('/orders',
             authenticateMiddleware([{"loggedin":[]}]),
@@ -6834,6 +6836,7 @@ export function RegisterRoutes(app: Router) {
                 spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
                 shop_id: {"in":"query","name":"shop_id","dataType":"string"},
                 request: {"in":"request","name":"request","dataType":"object"},
+                updated_since: {"in":"query","name":"updated_since","dataType":"datetime"},
         };
         app.get('/listings/mine',
             authenticateMiddleware([{"loggedin":[]}]),

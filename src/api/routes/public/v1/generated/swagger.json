@@ -83,6 +83,1466 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PublicShopPermissions": {
+				"properties": {
+					"can_manage": {
+						"type": "boolean"
+					},
+					"manage_market": {
+						"type": "boolean"
+					},
+					"manage_stock": {
+						"type": "boolean"
+					},
+					"manage_orders": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"can_manage",
+					"manage_market",
+					"manage_stock",
+					"manage_orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicShop": {
+				"properties": {
+					"shop_id": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"owner": {
+						"properties": {
+							"spectrum_id": {
+								"type": "string",
+								"nullable": true,
+								"description": "The owning org's spectrum id, for org shops."
+							},
+							"user_id": {
+								"type": "string",
+								"nullable": true
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"user",
+									"org"
+								]
+							}
+						},
+						"required": [
+							"spectrum_id",
+							"user_id",
+							"type"
+						],
+						"type": "object"
+					},
+					"supported_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accepts_custom_orders": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					},
+					"permissions": {
+						"$ref": "#/components/schemas/PublicShopPermissions",
+						"description": "What the token's user may do in this shop, right now."
+					}
+				},
+				"required": [
+					"shop_id",
+					"slug",
+					"name",
+					"description",
+					"status",
+					"owner",
+					"supported_languages",
+					"tags",
+					"accepts_custom_orders",
+					"created_at",
+					"updated_at",
+					"permissions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicShopList": {
+				"properties": {
+					"shops": {
+						"items": {
+							"$ref": "#/components/schemas/PublicShop"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"shops",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_PublicShopList_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PublicShopList"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_PublicShop_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PublicShop"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MyListingItem": {
+				"description": "Individual listing item in my listings response",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"status": {
+						"type": "string",
+						"description": "Current status"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was created"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was last updated"
+					},
+					"variant_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of unique variants"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available across all variants"
+					},
+					"price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price across all variants"
+					},
+					"price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price across all variants"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier available (1-5)"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality tier available (1-5)"
+					},
+					"photo": {
+						"type": "string",
+						"description": "Primary photo URL"
+					},
+					"expires_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing expires (null if no expiry)"
+					},
+					"visibility": {
+						"type": "string",
+						"enum": [
+							"public",
+							"private"
+						],
+						"description": "Listing visibility: public or private (org-only)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"title",
+					"status",
+					"created_at",
+					"updated_at",
+					"variant_count",
+					"quantity_available",
+					"price_min",
+					"price_max"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetMyListingsResponse": {
+				"description": "Response for my listings with pagination",
+				"properties": {
+					"listings": {
+						"items": {
+							"$ref": "#/components/schemas/MyListingItem"
+						},
+						"type": "array",
+						"description": "Array of user's listings"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of listings matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of results per page"
+					}
+				},
+				"required": [
+					"listings",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_GetMyListingsResponse_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetMyListingsResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderPreview": {
+				"description": "Order preview item for list display",
+				"properties": {
+					"order_id": {
+						"type": "string",
+						"description": "UUID of the order"
+					},
+					"title": {
+						"type": "string",
+						"description": "Order title (from first listing)"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price in aUEC"
+					},
+					"status": {
+						"type": "string",
+						"description": "Order status"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of order creation"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of last update"
+					},
+					"buyer_username": {
+						"type": "string",
+						"description": "Buyer username"
+					},
+					"shop_name": {
+						"type": "string",
+						"description": "Shop name (seller)"
+					},
+					"shop_slug": {
+						"type": "string",
+						"description": "Shop slug (for linking to /shops/:slug)"
+					},
+					"item_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of items in order"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier across all items"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality tier across all items"
+					},
+					"buyer_avatar": {
+						"type": "string",
+						"nullable": true,
+						"description": "Buyer avatar URL"
+					},
+					"shop_logo": {
+						"type": "string",
+						"nullable": true,
+						"description": "Shop logo URL"
+					}
+				},
+				"required": [
+					"order_id",
+					"title",
+					"total_price",
+					"status",
+					"created_at",
+					"updated_at",
+					"buyer_username",
+					"shop_name",
+					"shop_slug",
+					"item_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOrdersResponse": {
+				"description": "Response from getting orders list",
+				"properties": {
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/OrderPreview"
+						},
+						"type": "array",
+						"description": "Array of order previews"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of orders matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of results per page"
+					}
+				},
+				"required": [
+					"orders",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_GetOrdersResponse_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetOrdersResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderMarketListingV1": {
+				"description": "V1 market listing in an order",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"VariantAttributes": {
+				"description": "Flexible JSONB attributes for item variants\nSupports quality tiers, crafting source, and future extensibility",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier from 1 (lowest) to 5 (highest)"
+					},
+					"quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Precise quality value from 0 to 1000"
+					},
+					"crafted_source": {
+						"type": "string",
+						"enum": [
+							"crafted",
+							"store",
+							"looted",
+							"unknown",
+							"duped"
+						],
+						"description": "How the item was obtained"
+					},
+					"blueprint_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Blueprint quality tier for craftable items (1-5)"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderVariantItem": {
+				"properties": {
+					"order_item_id": {
+						"type": "string"
+					},
+					"variant_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"short_name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"variant_id",
+					"quantity",
+					"price_per_unit",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderMarketListingV2": {
+				"description": "V2 market listing in an order with variant data",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"photo": {
+						"type": "string",
+						"description": "First photo URL"
+					},
+					"v2_variants": {
+						"items": {
+							"$ref": "#/components/schemas/OrderVariantItem"
+						},
+						"type": "array",
+						"description": "V2 variant items for this listing"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price",
+					"v2_variants"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderVariantDetail": {
+				"description": "Variant details for orders (separate from listings to avoid TSOA conflicts)",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the variant"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes (quality_tier, quality_value, crafted_source, etc)"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderItemDetail": {
+				"description": "Detailed information about an order item\nRequirement 25.9: Create order_market_items_v2 entries for each item",
+				"properties": {
+					"order_item_id": {
+						"type": "string",
+						"description": "UUID of the order item"
+					},
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing"
+					},
+					"item_id": {
+						"type": "string",
+						"description": "UUID of the listing item"
+					},
+					"listing_title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/OrderVariantDetail",
+						"description": "Variant details with quality attributes"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity purchased"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double",
+						"description": "Price per unit at time of purchase (snapshot)"
+					},
+					"subtotal": {
+						"type": "number",
+						"format": "double",
+						"description": "Subtotal for this item (quantity * price_per_unit)"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"listing_id",
+					"item_id",
+					"listing_title",
+					"variant",
+					"quantity",
+					"price_per_unit",
+					"subtotal"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOrderDetailResponse": {
+				"description": "Response from getting order details\nRequirement 26.1-26.12: Return order metadata with buyer/seller info and variant details",
+				"properties": {
+					"order_id": {
+						"type": "string",
+						"description": "UUID of the order"
+					},
+					"buyer": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"avatar",
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object",
+						"description": "Buyer information"
+					},
+					"seller": {
+						"properties": {
+							"slug": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"shop_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"slug",
+							"name",
+							"shop_id"
+						],
+						"type": "object",
+						"description": "Seller shop information"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price in aUEC (atomic units)"
+					},
+					"status": {
+						"type": "string",
+						"description": "Order status"
+					},
+					"kind": {
+						"type": "string",
+						"description": "Order kind (Delivery, Escort, etc.)"
+					},
+					"title": {
+						"type": "string",
+						"description": "Order title"
+					},
+					"description": {
+						"type": "string",
+						"description": "Order description"
+					},
+					"payment_type": {
+						"type": "string",
+						"description": "Payment type"
+					},
+					"offer_session_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Offer session ID (if created from offer)"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of order creation"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of last update"
+					},
+					"market_listings": {
+						"items": {
+							"$ref": "#/components/schemas/OrderMarketListingV1"
+						},
+						"type": "array",
+						"description": "V1 market listings from market_orders"
+					},
+					"market_listings_v2": {
+						"items": {
+							"$ref": "#/components/schemas/OrderMarketListingV2"
+						},
+						"type": "array",
+						"description": "V2 market listings with variant data from order_market_items_v2"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OrderItemDetail"
+						},
+						"type": "array",
+						"description": "V2-only order items (from order_market_items_v2)"
+					}
+				},
+				"required": [
+					"order_id",
+					"buyer",
+					"seller",
+					"total_price",
+					"status",
+					"kind",
+					"title",
+					"description",
+					"payment_type",
+					"created_at",
+					"updated_at",
+					"market_listings",
+					"market_listings_v2",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_GetOrderDetailResponse_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetOrderDetailResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Rating": {
+				"properties": {
+					"avg_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"streak": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_assignments": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"avg_rating",
+					"rating_count",
+					"streak",
+					"total_rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BadgeMetadata": {
+				"properties": {
+					"avg_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_streak": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"fulfilled_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_assignments": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders_last_30_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders_last_90_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"avg_completion_time_hours": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"account_age_months": {
+						"type": "number",
+						"format": "double"
+					},
+					"account_created_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"donor_duration_months": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"calculated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"avg_rating",
+					"rating_count",
+					"rating_streak",
+					"total_orders",
+					"fulfilled_orders",
+					"total_assignments",
+					"response_rate",
+					"total_rating",
+					"orders_last_30_days",
+					"orders_last_90_days",
+					"avg_completion_time_hours",
+					"account_age_months",
+					"account_created_at",
+					"donor_duration_months",
+					"calculated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BadgeData": {
+				"properties": {
+					"badge_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"metadata": {
+						"$ref": "#/components/schemas/BadgeMetadata"
+					}
+				},
+				"required": [
+					"badge_ids"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MinimalUser": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"rating": {
+						"$ref": "#/components/schemas/Rating"
+					},
+					"badges": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/BadgeData"
+							}
+						],
+						"nullable": true
+					},
+					"last_seen": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"in_game": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"username",
+					"avatar",
+					"display_name",
+					"rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MinimalContractor": {
+				"properties": {
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"rating": {
+						"$ref": "#/components/schemas/Rating"
+					},
+					"badges": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/BadgeData"
+							}
+						],
+						"nullable": true
+					},
+					"last_seen": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"members_online": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"spectrum_id",
+					"name",
+					"avatar",
+					"rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferMarketListingV1": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferVariantItem": {
+				"properties": {
+					"variant_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"short_name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"variant_id",
+					"quantity",
+					"price_per_unit",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferMarketListingV2": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"photo": {
+						"type": "string",
+						"description": "First photo URL"
+					},
+					"v2_variants": {
+						"items": {
+							"$ref": "#/components/schemas/OfferVariantItem"
+						},
+						"type": "array",
+						"description": "V2 variant items for this listing"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price",
+					"v2_variants"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferV2": {
+				"properties": {
+					"offer_id": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"payment_type": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"collateral": {
+						"type": "number",
+						"format": "double"
+					},
+					"actor_username": {
+						"type": "string",
+						"description": "Username of the user who created this offer"
+					},
+					"market_listings": {
+						"items": {
+							"$ref": "#/components/schemas/OfferMarketListingV1"
+						},
+						"type": "array",
+						"description": "V1 market listings from offer_market_items (empty when V2 data exists)"
+					},
+					"market_listings_v2": {
+						"items": {
+							"$ref": "#/components/schemas/OfferMarketListingV2"
+						},
+						"type": "array",
+						"description": "V2 market listings with variant data from offer_market_items_v2"
+					},
+					"service": {
+						"properties": {
+							"title": {
+								"type": "string"
+							},
+							"service_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"title",
+							"service_id"
+						],
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"offer_id",
+					"kind",
+					"cost",
+					"title",
+					"description",
+					"payment_type",
+					"status",
+					"created_at",
+					"actor_username",
+					"market_listings",
+					"market_listings_v2"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DBAvailabilityEntry": {
+				"properties": {
+					"contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"user_id": {
+						"type": "string"
+					},
+					"start": {
+						"type": "number",
+						"format": "double"
+					},
+					"finish": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"contractor_id",
+					"user_id",
+					"start",
+					"finish"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAvailability": {
+				"properties": {
+					"customer": {
+						"items": {
+							"$ref": "#/components/schemas/DBAvailabilityEntry"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"assigned": {
+						"items": {
+							"$ref": "#/components/schemas/DBAvailabilityEntry"
+						},
+						"type": "array",
+						"nullable": true
+					}
+				},
+				"required": [
+					"customer",
+					"assigned"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferSessionV2": {
+				"description": "V2 serialization of an offer session with variant-enriched market listings",
+				"properties": {
+					"session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"order_id": {
+						"type": "string"
+					},
+					"contract_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_thread_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_server_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_invite": {
+						"type": "string",
+						"nullable": true
+					},
+					"customer": {
+						"$ref": "#/components/schemas/MinimalUser"
+					},
+					"assigned_to": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalUser"
+							}
+						],
+						"nullable": true
+					},
+					"contractor": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalContractor"
+							}
+						],
+						"nullable": true
+					},
+					"shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Shop slug for the seller — use to filter listings in counteroffers"
+					},
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferV2"
+						},
+						"type": "array"
+					},
+					"availability": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OfferAvailability"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"session_id",
+					"status",
+					"created_at",
+					"customer",
+					"assigned_to",
+					"contractor",
+					"offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchOffersV2Response": {
+				"properties": {
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferSessionV2"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"offers",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_SearchOffersV2Response_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/SearchOffersV2Response"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOfferSessionV2Response": {
+				"properties": {
+					"session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"order_id": {
+						"type": "string"
+					},
+					"contract_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_thread_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_server_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_invite": {
+						"type": "string",
+						"nullable": true
+					},
+					"customer": {
+						"$ref": "#/components/schemas/MinimalUser"
+					},
+					"assigned_to": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalUser"
+							}
+						],
+						"nullable": true
+					},
+					"contractor": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalContractor"
+							}
+						],
+						"nullable": true
+					},
+					"shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Shop slug for the seller — use to filter listings in counteroffers"
+					},
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferV2"
+						},
+						"type": "array"
+					},
+					"availability": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OfferAvailability"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"session_id",
+					"status",
+					"created_at",
+					"customer",
+					"assigned_to",
+					"contractor",
+					"offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_GetOfferSessionV2Response_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetOfferSessionV2Response"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PublicScope": {
 				"type": "string",
 				"enum": [
@@ -203,6 +1663,613 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ListingDetail": {
+				"description": "Core listing metadata",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"shop_id": {
+						"type": "string",
+						"description": "Shop ID this listing belongs to"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"description": {
+						"type": "string",
+						"description": "Listing description (markdown)"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"inactive",
+							"sold",
+							"expired",
+							"cancelled"
+						],
+						"description": "Current listing status"
+					},
+					"visibility": {
+						"type": "string",
+						"enum": [
+							"public",
+							"private",
+							"unlisted"
+						],
+						"description": "Visibility setting"
+					},
+					"sale_type": {
+						"type": "string",
+						"enum": [
+							"fixed",
+							"auction",
+							"negotiable"
+						],
+						"description": "Sale type"
+					},
+					"listing_type": {
+						"type": "string",
+						"enum": [
+							"single",
+							"bundle",
+							"bulk"
+						],
+						"description": "Listing type"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was created"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was last updated"
+					},
+					"expires_at": {
+						"type": "string",
+						"description": "Optional ISO 8601 timestamp when listing expires"
+					},
+					"photos": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Array of photo URLs"
+					},
+					"pickup_method": {
+						"type": "string",
+						"enum": [
+							"delivery",
+							"pickup",
+							"any",
+							null
+						],
+						"nullable": true,
+						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
+					},
+					"quantity_unit": {
+						"type": "string",
+						"enum": [
+							"unit",
+							"scu"
+						],
+						"description": "Quantity unit: 'unit' or 'scu'"
+					},
+					"min_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Per-listing order limits (null = no limit)"
+					},
+					"max_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"min_order_value": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"max_order_value": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"view_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of views this listing has received"
+					},
+					"in_carts": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of users who have this listing in their cart"
+					}
+				},
+				"required": [
+					"listing_id",
+					"shop_id",
+					"title",
+					"description",
+					"status",
+					"visibility",
+					"sale_type",
+					"listing_type",
+					"created_at",
+					"updated_at",
+					"quantity_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SellerInfo": {
+				"description": "Shop information for a listing's seller",
+				"properties": {
+					"shop_id": {
+						"type": "string",
+						"description": "Shop ID"
+					},
+					"name": {
+						"type": "string",
+						"description": "Shop name"
+					},
+					"slug": {
+						"type": "string",
+						"description": "Shop slug — use for profile links: /shops/:slug"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double",
+						"description": "Shop rating (0-5)"
+					},
+					"logo_url": {
+						"type": "string",
+						"description": "Shop logo URL"
+					},
+					"languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Shop supported languages (ISO 639-1 codes)"
+					}
+				},
+				"required": [
+					"shop_id",
+					"name",
+					"slug",
+					"rating",
+					"languages"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameItemInfo": {
+				"description": "Game item information",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"name": {
+						"type": "string",
+						"description": "Item name"
+					},
+					"type": {
+						"type": "string",
+						"description": "Item type/category"
+					},
+					"image_url": {
+						"type": "string",
+						"description": "Optional item image URL"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"VariantDetail": {
+				"description": "Variant detail with attributes, quantity, and price",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "Variant UUID"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes (quality tier, crafted source, etc)"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available for this variant"
+					},
+					"price": {
+						"type": "number",
+						"format": "double",
+						"description": "Price for this variant"
+					},
+					"locations": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Location names where this variant is stored"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name",
+					"quantity",
+					"price",
+					"locations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkDiscountTier": {
+				"description": "A single bulk discount tier: buy at least min_quantity to get discount_percent off",
+				"properties": {
+					"min_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quantity to qualify for this discount"
+					},
+					"discount_percent": {
+						"type": "number",
+						"format": "double",
+						"description": "Discount percentage (0-100)"
+					}
+				},
+				"required": [
+					"min_quantity",
+					"discount_percent"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListingItemDetail": {
+				"description": "Item detail with game item info and variants",
+				"properties": {
+					"item_id": {
+						"type": "string",
+						"description": "Item UUID"
+					},
+					"game_item": {
+						"$ref": "#/components/schemas/GameItemInfo",
+						"description": "Game item information"
+					},
+					"pricing_mode": {
+						"type": "string",
+						"enum": [
+							"unified",
+							"per_variant"
+						],
+						"description": "Pricing strategy for this item"
+					},
+					"base_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Base price (used when pricing_mode is 'unified')"
+					},
+					"variants": {
+						"items": {
+							"$ref": "#/components/schemas/VariantDetail"
+						},
+						"type": "array",
+						"description": "Array of variants with quantities and prices"
+					},
+					"bulk_discount_tiers": {
+						"items": {
+							"$ref": "#/components/schemas/BulkDiscountTier"
+						},
+						"type": "array",
+						"nullable": true,
+						"description": "Bulk discount tiers (null if none defined)"
+					}
+				},
+				"required": [
+					"item_id",
+					"game_item",
+					"pricing_mode",
+					"variants"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetListingDetailResponse": {
+				"description": "Complete listing detail response with all related data",
+				"properties": {
+					"listing": {
+						"$ref": "#/components/schemas/ListingDetail",
+						"description": "Core listing metadata"
+					},
+					"seller": {
+						"$ref": "#/components/schemas/SellerInfo",
+						"description": "Seller information"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ListingItemDetail"
+						},
+						"type": "array",
+						"description": "Array of items being sold with variant breakdown"
+					}
+				},
+				"required": [
+					"listing",
+					"seller",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_GetListingDetailResponse_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetListingDetailResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StockLotVariant": {
+				"description": "Variant information for stock lot",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "Variant UUID"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationInfo": {
+				"description": "Location information",
+				"properties": {
+					"location_id": {
+						"type": "string",
+						"description": "Location UUID"
+					},
+					"name": {
+						"type": "string",
+						"description": "Location name"
+					},
+					"is_preset": {
+						"type": "boolean",
+						"description": "Whether this is a preset location (vs custom)"
+					}
+				},
+				"required": [
+					"location_id",
+					"name",
+					"is_preset"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OwnerInfo": {
+				"description": "Owner information",
+				"properties": {
+					"user_id": {
+						"type": "string",
+						"description": "User UUID"
+					},
+					"username": {
+						"type": "string",
+						"description": "Username"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Display name"
+					},
+					"avatar_url": {
+						"type": "string",
+						"description": "Avatar URL"
+					}
+				},
+				"required": [
+					"user_id",
+					"username"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StockLotDetail": {
+				"description": "Complete stock lot detail",
+				"properties": {
+					"lot_id": {
+						"type": "string",
+						"description": "Stock lot UUID"
+					},
+					"item_id": {
+						"type": "string",
+						"description": "Item UUID this lot belongs to"
+					},
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID this lot belongs to"
+					},
+					"listing_title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"game_item_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Game item name"
+					},
+					"listing_photo": {
+						"type": "string",
+						"nullable": true,
+						"description": "First listing photo URL"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/StockLotVariant",
+						"description": "Variant information"
+					},
+					"quantity_total": {
+						"type": "number",
+						"format": "double",
+						"description": "Units in this lot that are free: not allocated to any order"
+					},
+					"quantity_allocated": {
+						"type": "number",
+						"format": "double",
+						"description": "Units taken from this lot for orders that are still open. They are\nalready out of quantity_total (allocating moves them out), so the lot\nheld quantity_total + quantity_allocated before those orders."
+					},
+					"location": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/LocationInfo"
+							}
+						],
+						"nullable": true,
+						"description": "Location information (null if unspecified)"
+					},
+					"owner": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OwnerInfo"
+							}
+						],
+						"nullable": true,
+						"description": "Owner information (null if unassigned)"
+					},
+					"listed": {
+						"type": "boolean",
+						"description": "Whether this lot is listed for sale"
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true,
+						"description": "Optional notes about this lot"
+					},
+					"crafted_by": {
+						"type": "string",
+						"description": "User who crafted this item (if applicable)"
+					},
+					"crafted_at": {
+						"type": "string",
+						"description": "Timestamp when item was crafted (if applicable)"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when lot was created"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when lot was last updated"
+					}
+				},
+				"required": [
+					"lot_id",
+					"item_id",
+					"listing_id",
+					"listing_title",
+					"game_item_name",
+					"listing_photo",
+					"variant",
+					"quantity_total",
+					"quantity_allocated",
+					"location",
+					"owner",
+					"listed",
+					"notes",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetStockLotsResponse": {
+				"description": "Response for fetching stock lots",
+				"properties": {
+					"lots": {
+						"items": {
+							"$ref": "#/components/schemas/StockLotDetail"
+						},
+						"type": "array",
+						"description": "Array of stock lots"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of lots matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of results per page"
+					}
+				},
+				"required": [
+					"lots",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_GetStockLotsResponse_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/GetStockLotsResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -224,6 +2291,749 @@
 		"contact": {}
 	},
 	"paths": {
+		"/shops": {
+			"get": {
+				"operationId": "ListShops",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_PublicShopList_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "Shops the token's user belongs to: their personal shop, and the shops of\nthe orgs the token was granted, with the user's permissions in each.",
+				"summary": "List shops",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"shops:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Page number, from 1",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page, 1-100 (default 25)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shop}": {
+			"get": {
+				"operationId": "GetShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_PublicShop_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "One shop, by UUID or slug. 404 when the token doesn't reach it.",
+				"summary": "Get shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"shops:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Shop UUID or slug",
+						"in": "path",
+						"name": "shop",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shop}/listings": {
+			"get": {
+				"operationId": "ListShopListings",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_GetMyListingsResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "The shop's listings, every status and visibility, as its seller sees\nthem. Archived (cancelled) listings only with status=cancelled.",
+				"summary": "List a shop's listings",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"listings:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Shop UUID or slug",
+						"in": "path",
+						"name": "shop",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Only listings with this status",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"active",
+								"inactive",
+								"sold",
+								"expired",
+								"cancelled"
+							]
+						}
+					},
+					{
+						"description": "Only listings updated at or after this time",
+						"in": "query",
+						"name": "updated_since",
+						"required": false,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"created_at",
+								"updated_at",
+								"price",
+								"quantity"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					},
+					{
+						"description": "Page number, from 1",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page, 1-100 (default 25)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders": {
+			"get": {
+				"operationId": "ListOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_GetOrdersResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "The shop filter names a shop the token doesn't reach",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "Orders the user is party to: placed by them (buyer), or of a shop whose\norders they handle in an org the token was granted (seller).",
+				"summary": "List orders",
+				"tags": [
+					"Orders"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"orders:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "buyer: orders the user placed; seller: orders of their shops or assigned to them. Omitted: both.",
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"buyer",
+								"seller"
+							]
+						}
+					},
+					{
+						"description": "Only orders with this status",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"not-started",
+								"in-progress",
+								"fulfilled",
+								"cancelled"
+							]
+						}
+					},
+					{
+						"description": "Only orders of this shop (UUID or slug; must be reachable)",
+						"in": "query",
+						"name": "shop",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Only orders created or fulfilled at or after this time",
+						"in": "query",
+						"name": "updated_since",
+						"required": false,
+						"schema": {
+							"format": "date-time",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"created_at",
+								"updated_at",
+								"total_price"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					},
+					{
+						"description": "Page number, from 1",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page, 1-100 (default 25)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}": {
+			"get": {
+				"operationId": "GetOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_GetOrderDetailResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "One order the user is party to, with its items.",
+				"summary": "Get order",
+				"tags": [
+					"Orders"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"orders:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Order UUID",
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/offers": {
+			"get": {
+				"operationId": "ListOffers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_SearchOffersV2Response_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "Offer sessions the user is party to: made by them (customer), or made to\nthem or to an org the token was granted (seller).",
+				"summary": "List offers",
+				"tags": [
+					"Offers"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"offers:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "customer: offers the user made; seller: offers made to them or their orgs. Omitted: both.",
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"customer",
+								"seller"
+							]
+						}
+					},
+					{
+						"description": "active (open) or closed",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"active",
+								"closed"
+							]
+						}
+					},
+					{
+						"description": "Page number, from 1",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page, 1-100 (default 25)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/offers/{offerId}": {
+			"get": {
+				"operationId": "GetOffer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_GetOfferSessionV2Response_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "One offer session with its offers, newest first.",
+				"summary": "Get offer",
+				"tags": [
+					"Offers"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"offers:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Offer session UUID",
+						"in": "path",
+						"name": "offerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/me": {
 			"get": {
 				"operationId": "GetMe",
@@ -270,6 +3080,186 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/listings/{listingId}": {
+			"get": {
+				"operationId": "GetListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_GetListingDetailResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "One listing of a shop the token reaches, with its variants and stock\nsummary, as the seller sees it.",
+				"summary": "Get listing",
+				"tags": [
+					"Listings"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"listings:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "listingId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/listings/{listingId}/stock": {
+			"get": {
+				"operationId": "GetListingStock",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_GetStockLotsResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The token lacks the required scope (INSUFFICIENT_SCOPE)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "The listing's stock lots: quantity per variant and location.",
+				"summary": "Get listing stock",
+				"tags": [
+					"Listings"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"stock:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "listingId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number, from 1",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page, 1-100 (default 25)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		}
 	},

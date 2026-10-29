@@ -364,3 +364,63 @@ describe("public API authentication", () => {
     expect(res.headers["access-control-allow-origin"]).toBeUndefined()
   })
 })
+
+describe("public API scopes", () => {
+  it("refuses a token without the route's scope", async () => {
+    const res = await request(app())
+      .get(`/api/public/v1/orders/${ORDER_MINE_B}`)
+      .set(bearer(SHOP_SYNC))
+    expect(res.status).toBe(403)
+    expect(res.body.error.code).toBe("INSUFFICIENT_SCOPE")
+    expect(res.body.error.details.required).toEqual(["orders:read"])
+  })
+
+  it("answers 404 in the public envelope for routes that don't exist", async () => {
+    const res = await request(app())
+      .get("/api/public/v1/admin/users")
+      .set(bearer(ORDER_DESK_PERSONAL))
+    expect(res.status).toBe(404)
+    expect(res.body.error.code).toBe("NOT_FOUND")
+  })
+})
+
+describe("public API org grant", () => {
+  it("hides an org's order from a token not granted that org", async () => {
+    const personal = await request(app())
+      .get(`/api/public/v1/orders/${ORDER_B}`)
+      .set(bearer(ORDER_DESK_PERSONAL))
+    expect(personal.status).toBe(404)
+    const otherOrg = await request(app())
+      .get(`/api/public/v1/orders/${ORDER_B}`)
+      .set(bearer(ORDER_DESK_ORG_A))
+    expect(otherOrg.status).toBe(404)
+
+    const granted = await request(app())
+      .get(`/api/public/v1/orders/${ORDER_B}`)
+      .set(bearer(ORDER_DESK_ORG_B))
+    expect(granted.status).toBe(200)
+    expect(granted.body.data).toEqual({ order_id: ORDER_B, reached: true })
+  })
+
+  it("hides an org's offer from a token not granted that org", async () => {
+    expect(
+      (
+        await request(app())
+          .get(`/api/public/v1/offers/${OFFER_B}`)
+          .set(bearer(ORDER_DESK_ORG_A))
+      ).status,
+    ).toBe(404)
+    const granted = await request(app())
+      .get(`/api/public/v1/offers/${OFFER_B}`)
+      .set(bearer(ORDER_DESK_ORG_B))
+    expect(granted.status).toBe(200)
+    expect(granted.body.data).toEqual({ session_id: OFFER_B, reached: true })
+  })
+
+  it("keeps the user's own orders as customer visible without a grant", async () => {
+    const res = await request(app())
+      .get(`/api/public/v1/orders/${ORDER_MINE_B}`)
+      .set(bearer(ORDER_DESK_PERSONAL))
+    expect(res.status).toBe(200)
+  })
+})

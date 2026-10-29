@@ -230,7 +230,6 @@ export class PublicApiTokensController extends BaseController {
         },
       })
       const [summary] = await summarize([record])
-      this.setStatus(201)
       return { token, summary }
     } catch (error) {
       if (error instanceof PublicTokenRequestError) {

@@ -1000,6 +1000,7 @@ export class ListingsV2Controller extends BaseController {
    * @param sort_by Sort field (default: created_at)
    * @param sort_order Sort order (default: desc)
    * @param request Express request for authentication
+   * @param updated_since Only listings updated at or after this time
    * @returns User's listings with pagination metadata
    */
   @Security("loggedin")
@@ -1013,6 +1014,7 @@ export class ListingsV2Controller extends BaseController {
     @Query() spectrum_id?: string,
     @Query() shop_id?: string,
     @Request() request?: ExpressRequest,
+    @Query() updated_since?: Date,
   ): Promise<GetMyListingsResponse> {
     this.request = request
     this.requireAuth()
@@ -1101,6 +1103,9 @@ export class ListingsV2Controller extends BaseController {
         query = query.where("ls.status", status)
       } else {
         query = query.where("ls.status", "!=", "cancelled")
+      }
+      if (updated_since) {
+        query = query.where("ls.updated_at", ">=", updated_since)
       }
 
       // Get total count for pagination (Requirement 18.8)

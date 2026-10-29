@@ -382,10 +382,15 @@ app.use(
   apiReference({
     sources: [
       {
+        title: "Public API v1",
+        slug: "public-v1",
+        url: "/api/public/v1/openapi.json",
+        default: true,
+      },
+      {
         title: "V2 API",
         slug: "v2",
         url: "/api/v2/openapi.json",
-        default: true,
       },
       {
         title: "V1 API",

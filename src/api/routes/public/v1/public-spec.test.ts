@@ -54,7 +54,9 @@ describe("public API spec", () => {
     ])
     spec.paths["/me"].get.security = [{ apiToken: ["orders:read"] }]
     expect(publicSpecProblems(spec)).toEqual([
-      expect.stringContaining("GET /me: declares scopes [orders:read], catalog says []"),
+      expect.stringContaining(
+        "GET /me: declares scopes [orders:read], catalog says []",
+      ),
     ])
   })
 

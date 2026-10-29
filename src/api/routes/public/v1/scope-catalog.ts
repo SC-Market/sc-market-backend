@@ -74,6 +74,15 @@ export const PUBLIC_SECURITY_SCHEME = "apiToken"
  */
 export const PUBLIC_OPERATIONS: Record<string, readonly PublicScope[]> = {
   "GET /me": [],
+  "GET /shops": ["shops:read"],
+  "GET /shops/{shop}": ["shops:read"],
+  "GET /shops/{shop}/listings": ["listings:read"],
+  "GET /listings/{listingId}": ["listings:read"],
+  "GET /listings/{listingId}/stock": ["stock:read"],
+  "GET /orders": ["orders:read"],
+  "GET /orders/{orderId}": ["orders:read"],
+  "GET /offers": ["offers:read"],
+  "GET /offers/{offerId}": ["offers:read"],
 }
 
 /** Routes served outside TSOA by the public router itself (no token needed). */
