@@ -176,6 +176,7 @@ export class BlueprintsController extends BaseController {
    * @param output_game_item_id Filter by output game item ID
    * @param user_owned_only Filter to show only user-owned blueprints
    * @param sourceable Only blueprints a player can get: default blueprints (everyone has them) and blueprints rewarded by at least one mission
+   * @param has_mission_source Only blueprints rewarded by at least one mission
    * @param version_id Game version ID (defaults to active LIVE version)
    * @param page Page number (default: 1)
    * @param page_size Results per page (default: 20, max: 100)
@@ -198,6 +199,7 @@ export class BlueprintsController extends BaseController {
     /** Filter by ingredient material name */
     @Query() ingredient_name?: string,
     @Query() sourceable?: boolean,
+    @Query() has_mission_source?: boolean,
     @Query() version_id?: string,
     @Query() page: number = 1,
     @Query() page_size: number = 20,
@@ -344,6 +346,12 @@ export class BlueprintsController extends BaseController {
         blueprintsQuery = blueprintsQuery.where(function () {
           this.where("b.source", "default").orWhere("mission_counts.mission_count", ">", 0)
         })
+      }
+
+      // Mission-sourced only: rewarded by at least one mission (the blueprint
+      // browser's "Has Mission Source": mission_count > 0).
+      if (has_mission_source) {
+        blueprintsQuery = blueprintsQuery.where("mission_counts.mission_count", ">", 0)
       }
 
       // Apply manufacturer filter

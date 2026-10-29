@@ -20815,6 +20815,15 @@
 						}
 					},
 					{
+						"description": "Only blueprints rewarded by at least one mission",
+						"in": "query",
+						"name": "has_mission_source",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
 						"description": "Game version ID (defaults to active LIVE version)",
 						"in": "query",
 						"name": "version_id",

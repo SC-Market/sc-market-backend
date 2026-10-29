@@ -5,6 +5,9 @@
  * in the browser. Filtering in SQL keeps a page full (and `total` right) so
  * the /blueprints hub can be prerendered. Without the param nothing changes.
  *
+ * has_mission_source=true likewise moves "Has Mission Source" (mission_count
+ * > 0) into SQL.
+ *
  * Runs when PG_TEST_URL names a throwaway Postgres server (see
  * src/test-utils/pg-test-db.ts; CI provides one), in its own database.
  */
@@ -38,7 +41,7 @@ vi.mock("../../../../../logger/logger.js", () => ({
 const { BlueprintsController } = await import("./BlueprintsController.js")
 
 /** searchBlueprints with only `sourceable` and pagination set. */
-function search(sourceable: boolean | undefined, page = 1, pageSize = 20) {
+function search(sourceable: boolean | undefined, page = 1, pageSize = 20, has_mission_source?: boolean) {
   return new BlueprintsController().searchBlueprints(
     undefined, // text
     undefined, // item_category
@@ -52,6 +55,7 @@ function search(sourceable: boolean | undefined, page = 1, pageSize = 20) {
     undefined, // manufacturer
     undefined, // ingredient_name
     sourceable,
+    has_mission_source,
     undefined, // version_id: the active LIVE version
     page,
     pageSize,
@@ -136,6 +140,27 @@ describe.skipIf(!PG_TEST_URL)("searchBlueprints sourceable filter", () => {
     expect(first.blueprints).toHaveLength(2)
     expect(second.blueprints.map((b) => b.blueprint_name)).toEqual(["BP_C_UNSOURCED_WITH_MISSION"])
     expect(first.total).toBe(3)
+  })
+
+  it("has_mission_source returns only blueprints a mission rewards, whatever their source", async () => {
+    const res = await search(undefined, 1, 20, true)
+    expect(res.blueprints.map((b) => b.blueprint_name)).toEqual([
+      "BP_B_MISSION",
+      "BP_C_UNSOURCED_WITH_MISSION",
+    ])
+    expect(res.total).toBe(2)
+    // Same rule the browser applied ("Has Mission Source").
+    for (const b of res.blueprints) expect(b.mission_count > 0).toBe(true)
+  })
+
+  it("has_mission_source filters before paginating and combines with sourceable", async () => {
+    const first = await search(true, 1, 1, true)
+    const second = await search(true, 2, 1, true)
+    expect(first.blueprints.map((b) => b.blueprint_name)).toEqual(["BP_B_MISSION"])
+    expect(second.blueprints.map((b) => b.blueprint_name)).toEqual(["BP_C_UNSOURCED_WITH_MISSION"])
+    expect(first.total).toBe(2)
+    const off = await search(undefined, 1, 20, false)
+    expect(off.total).toBe(6)
   })
 
   it("leaves results unchanged without the param (or with false)", async () => {

@@ -8935,6 +8935,7 @@ export function RegisterRoutes(app: Router) {
                 manufacturer: {"in":"query","name":"manufacturer","dataType":"string"},
                 ingredient_name: {"in":"query","name":"ingredient_name","dataType":"string"},
                 sourceable: {"in":"query","name":"sourceable","dataType":"boolean"},
+                has_mission_source: {"in":"query","name":"has_mission_source","dataType":"boolean"},
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
