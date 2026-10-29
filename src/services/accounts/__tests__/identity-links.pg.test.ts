@@ -31,6 +31,8 @@ vi.mock("../../../clients/database/knex-db.js", () => ({
 vi.mock("../../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: async () => null, createExternalResource: async () => null },
 }))
+// setupTests mocks the profile database globally; this suite needs the real one.
+vi.mock("../../../api/routes/v1/profiles/database.js", async (orig) => await orig())
 vi.mock("../../../logger/logger.js", () => ({
   default: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }))
