@@ -89,7 +89,7 @@
     "@types/express-session": "^1.18.1",
     "@types/express-ws": "^3.0.1",
     "@types/handlebars": "^4.0.0",
-    "@types/multer": "^1.4.12",
+    "@types/multer": "^2.3.0",
     "@types/node": "^22.19.11",
     "@types/node-fetch": "^2.6.12",
     "@types/passport": "^1.0.17",
