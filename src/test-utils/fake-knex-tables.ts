@@ -2,7 +2,8 @@
  * Tiny in-memory stand-in for knex, for route/service tests that only need
  * equality filters over a handful of tables.
  *
- * Supported: db(table).where({...} | col, val).whereIn(col, vals).orderBy(col, dir)
+ * Supported: db.transaction(fn) (runs fn on the same fake; no rollback),
+ * db(table).where({...} | col, val).whereIn(col, vals).orderBy(col, dir)
  * .first(...) / .select(...) / .forUpdate() / .update({...}) / .del() / .insert(row | rows).returning("*"), awaiting
  * a builder yields the matching rows. Anything else is undefined on the
  * builder and fails loudly, so a query shape the fake doesn't model can't
@@ -14,6 +15,7 @@ type Row = Record<string, unknown>
 export interface FakeKnex {
   (table: string): FakeBuilder
   tables: Record<string, Row[]>
+  transaction<T>(fn: (trx: FakeKnex) => Promise<T>): Promise<T>
 }
 
 let nextId = 1
@@ -129,5 +131,6 @@ export function createFakeKnex(tables: Record<string, Row[]> = {}): FakeKnex {
     return new FakeBuilder(tables[table], table)
   }) as FakeKnex
   db.tables = tables
+  db.transaction = (fn) => fn(db)
   return db
 }

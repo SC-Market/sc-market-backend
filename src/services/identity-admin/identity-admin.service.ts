@@ -16,12 +16,14 @@
  * (AdminIdentityController); this module trusts its caller.
  */
 
-import crypto from "node:crypto"
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { BusinessLogicError } from "../../api/routes/v1/util/errors.js"
 import { ErrorCode } from "../../api/routes/v1/util/error-codes.js"
 import { isSiteAdmin } from "../../api/util/site-role.js"
+import { renameToPlaceholder } from "../accounts/identity-links.js"
+
+export { placeholderUsername } from "../accounts/identity-links.js"
 
 export type IdentityActionKind =
   | "username_released"
@@ -30,6 +32,8 @@ export type IdentityActionKind =
   | "spectrum_set"
   | "account_deactivated"
   | "account_reactivated"
+  /** Not an admin action: a sign-up or link skipped a Discord another account holds (services/accounts/identity-links). */
+  | "discord_link_skipped"
 
 /** audit_logs.action for each kind ("identity." prefix). */
 export const AUDIT_ACTION_PREFIX = "identity."
@@ -50,6 +54,7 @@ export const IDENTITY_ACTION_KINDS = [
   "spectrum_set",
   "account_deactivated",
   "account_reactivated",
+  "discord_link_skipped",
 ] as const satisfies readonly IdentityActionKind[]
 
 export const REASON_MIN = 5
@@ -174,19 +179,6 @@ async function writeAudit(
   return String((row as { audit_log_id: string }).audit_log_id)
 }
 
-/** A free `user_<8 hex>` username (the same shape new accounts fall back to). */
-export async function placeholderUsername(
-  db: Knex,
-  random: () => string = () => crypto.randomBytes(4).toString("hex"),
-): Promise<string> {
-  for (let attempt = 0; attempt < 8; attempt++) {
-    const candidate = `user_${random()}`
-    const taken = await db("accounts").where({ username: candidate }).first("user_id")
-    if (!taken) return candidate
-  }
-  throw new Error("Could not find a free placeholder username")
-}
-
 type TrxRunner = <T>(fn: (trx: Knex) => Promise<T>) => Promise<T>
 const defaultRunner: TrxRunner = (fn) => getKnex().transaction((trx) => fn(trx))
 
@@ -205,15 +197,12 @@ export async function releaseUsername(
   const reason = validateReason(rawReason)
   return run(async (trx) => {
     const row = await lockTarget(trx, userId)
-    const username = await placeholderUsername(trx)
     const sameDisplay = row.display_name.toLowerCase() === row.username.toLowerCase()
+    // Collision-safe: a lost race on the placeholder retries with a new one.
+    const username = await renameToPlaceholder(trx, userId, (name) =>
+      sameDisplay ? { display_name: name } : {},
+    )
     const update = { username, ...(sameDisplay ? { display_name: username } : {}) }
-    try {
-      await trx("accounts").where({ user_id: userId }).update(update)
-    } catch (error) {
-      if (isUniqueViolation(error)) conflict("The placeholder username was just taken; try again")
-      throw error
-    }
     const audit_log_id = await writeAudit(
       trx,
       actor,

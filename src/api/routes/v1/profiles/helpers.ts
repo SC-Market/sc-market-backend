@@ -3,6 +3,7 @@ import { cdn } from "../../../../clients/cdn/cdn.js"
 import { fetchRSIProfileDirect } from "../../../../clients/rsi/scraper.js"
 import { fetchRSIProfileCommunityHub } from "../../../../clients/rsi/community_hub.js"
 import logger from "../../../../logger/logger.js"
+import { isUsernameTaken } from "../../../../services/accounts/identity-links.js"
 import { getSpectrumUserIdByHandle } from "../util/spectrum.js"
 import { spectrumAPI } from "../../../../clients/spectrum/index.js"
 
@@ -40,6 +41,16 @@ async function fetchProfile(spectrum_id: string) {
     logger.error("Failed to fetch direct", e)
     return undefined
   }
+}
+
+/** Whether another account's username is exactly `handle` (accounts_username_key). */
+async function handleHeldByOther(handle: string, userId: string): Promise<boolean> {
+  const holder = await profileDb.findUser({ username: handle })
+  return !!holder && holder.user_id !== userId
+}
+
+export function handleTakenMessage(handle: string): string {
+  return `The RSI handle ${handle} is the username of another SC Market account. Contact SC Market support to have it released.`
 }
 
 export async function authorizeProfile(
@@ -116,16 +127,26 @@ export async function authorizeProfile(
       }
     }
 
-    await profileDb.updateUser(
-      { user_id },
-      {
-        username: profileDetails.handle,
-        display_name: profileDetails.display_name,
-        rsi_confirmed: true,
-        spectrum_user_id: spectrum_user_id,
-        avatar: avatar_resource ? avatar_resource.resource_id : undefined,
-      },
-    )
+    if (await handleHeldByOther(profileDetails.handle, user_id)) {
+      return { success: false, error: handleTakenMessage(profileDetails.handle) }
+    }
+    try {
+      await profileDb.updateUser(
+        { user_id },
+        {
+          username: profileDetails.handle,
+          display_name: profileDetails.display_name,
+          rsi_confirmed: true,
+          spectrum_user_id: spectrum_user_id,
+          avatar: avatar_resource ? avatar_resource.resource_id : undefined,
+        },
+      )
+    } catch (error) {
+      if (isUsernameTaken(error)) {
+        return { success: false, error: handleTakenMessage(profileDetails.handle) }
+      }
+      throw error
+    }
 
     logger.debug(
       `Successfully verified and updated user ${user_id} with RSI handle ${profileDetails.handle} and Spectrum ID ${spectrum_user_id}`,
@@ -228,16 +249,29 @@ export async function syncRSIHandle(user_id: string) {
       }
     }
 
+    // The handle is another account's username: never taken from it (an
+    // admin can release it in Admin -> Identity).
+    if (await handleHeldByOther(profileDetails.handle, user_id)) {
+      return { success: false, error: handleTakenMessage(profileDetails.handle) }
+    }
+
     // Update user profile with current information
-    await profileDb.updateUser(
-      { user_id },
-      {
-        username: profileDetails.handle,
-        display_name: profileDetails.display_name,
-        rsi_confirmed: true,
-        avatar: avatar_resource ? avatar_resource.resource_id : undefined,
-      },
-    )
+    try {
+      await profileDb.updateUser(
+        { user_id },
+        {
+          username: profileDetails.handle,
+          display_name: profileDetails.display_name,
+          rsi_confirmed: true,
+          avatar: avatar_resource ? avatar_resource.resource_id : undefined,
+        },
+      )
+    } catch (error) {
+      if (isUsernameTaken(error)) {
+        return { success: false, error: handleTakenMessage(profileDetails.handle) }
+      }
+      throw error
+    }
 
     logger.debug(
       `Successfully synced RSI handle for user ${user_id} to ${profileDetails.handle}`,

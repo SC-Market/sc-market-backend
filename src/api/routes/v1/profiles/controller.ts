@@ -39,6 +39,7 @@ import { ErrorCode } from "../util/error-codes.js"
 import { randomUUID as randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
+import { renameToPlaceholder } from "../../../../services/accounts/identity-links.js"
 import { ImageUploadUserError } from "../../../../clients/image-lambda/image-upload-error.js"
 import { sendImageUploadUserError } from "../util/image-upload-errors.js"
 import { writeUserDataExport } from "../../../../services/data-export/user-data-export.js"
@@ -142,26 +143,16 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
       return
     }
 
-    // Generate default username from Discord ID or user ID
-    const discordProvider = await profileDb.getUserProvider(
-      user.user_id,
-      "discord",
-    )
-    const discordId =
-      discordProvider?.provider_id || user.user_id.substring(0, 8)
-    const defaultUsername = `new_user${discordId}`
-    const defaultDisplayName = `new_user${discordId}`
-
-    // Update user to unverified state with default usernames
-    await profileDb.updateUser(
-      { user_id: user.user_id },
-      {
-        rsi_confirmed: false,
-        spectrum_user_id: null,
-        username: defaultUsername,
-        display_name: defaultDisplayName,
-      },
-    )
+    // Unverified state with a free placeholder username (user_<8 hex>):
+    // the old new_user<discord id> name could already be taken and 500ed.
+    await getKnex().transaction(async (trx) => {
+      await profileDb.updateUser(
+        { user_id: user.user_id },
+        { rsi_confirmed: false, spectrum_user_id: null },
+        trx,
+      )
+      await renameToPlaceholder(trx, user.user_id, (name) => ({ display_name: name }))
+    })
 
     logger.info(
       `User ${user.user_id} unlinked Star Citizen account. Reset to default usernames.`,

@@ -11,7 +11,14 @@ import {
   PassportDoneCallback,
 } from "passport-citizenid"
 import { User } from "../routes/v1/api-models.js"
-import { database } from "../../clients/database/knex-db.js"
+import type { Knex } from "knex"
+import { database, getKnex } from "../../clients/database/knex-db.js"
+import {
+  discordHolder,
+  freeUsername,
+  recordDiscordLinkSkipped,
+} from "../../services/accounts/identity-links.js"
+import { notifyIdentityChanged } from "../../services/identity-admin/notify.js"
 import * as profileDb from "../routes/v1/profiles/database.js"
 import { cdn } from "../../clients/cdn/cdn.js"
 import { env } from "../../config/env.js"
@@ -56,6 +63,55 @@ function spectrumTakenError(spectrumId: string): Error & { code: string } {
   ) as Error & { code: string }
   error.code = CitizenIDErrorCodes.ALREADY_LINKED
   return error
+}
+
+/**
+ * Auto-link the Discord account Citizen ID reports. An account that already
+ * has a Discord keeps it. If ANOTHER account holds this Discord (provider or
+ * legacy column), it is never moved: the link is skipped and recorded, and
+ * the returned audit id is what the user is notified about.
+ */
+async function linkDiscordFromCitizenID(
+  trx: Knex,
+  userId: string,
+  discordAccountId: string,
+  discordUsername: string | undefined,
+  via: "citizenid_signup" | "citizenid_link",
+): Promise<string | null> {
+  const own = await trx("account_providers")
+    .where({ user_id: userId, provider_type: "discord" })
+    .first("provider_id")
+  if (own) return null
+  if (await discordHolder(trx, discordAccountId, userId)) {
+    logger.info("[CitizenID] Discord already linked to another account; not linked", { userId, via })
+    return recordDiscordLinkSkipped(trx, userId, discordAccountId, via)
+  }
+  await profileDb.updateUser({ user_id: userId }, { discord_id: discordAccountId }, trx)
+  await profileDb.linkProvider(
+    userId,
+    {
+      provider_type: "discord",
+      provider_id: discordAccountId,
+      access_token: null, // No tokens from Citizen ID - user can authenticate with Discord later to get tokens
+      refresh_token: null,
+      metadata: {
+        username: discordUsername,
+        linkedViaCitizenID: true, // Flag to indicate this was auto-linked
+      },
+      is_primary: false,
+    },
+    trx,
+  )
+  return null
+}
+
+/** Tell the user their Discord wasn't linked, after the sign-up/link committed. */
+async function notifyDiscordLinkSkipped(userId: string, auditLogId: string): Promise<void> {
+  await notifyIdentityChanged(userId, null, {
+    audit_log_id: auditLogId,
+    kind: "discord_link_skipped",
+    notice: {},
+  })
 }
 
 /**
@@ -164,33 +220,36 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
           const discordExpiresAt = new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000,
           )
-          // Generate username in format: new_user{discord_id}
-          const generatedUsername = `new_user${profile.id}`
-          user = await profileDb.createUserWithProvider(
-            {
-              provider_type: "discord",
-              provider_id: profile.id,
-              access_token: accessToken,
-              refresh_token: refreshToken,
-              token_expires_at: discordExpiresAt,
-              metadata: {
-                username: generatedUsername,
-                displayName: generatedUsername,
-                discriminator: profile.discriminator,
+          // One transaction: the account, its Discord link, settings and
+          // the legacy discord_id column, or nothing.
+          user = await getKnex().transaction(async (trx) => {
+            // new_user{discord_id}, or a free placeholder when an older
+            // account (e.g. one that unlinked this Discord) already has it.
+            const generatedUsername = await freeUsername(trx, `new_user${profile.id}`)
+            const created = await profileDb.createUserWithProvider(
+              {
+                provider_type: "discord",
+                provider_id: profile.id,
+                access_token: accessToken,
+                refresh_token: refreshToken,
+                token_expires_at: discordExpiresAt,
+                metadata: {
+                  username: generatedUsername,
+                  displayName: generatedUsername,
+                  discriminator: profile.discriminator,
+                },
+                is_primary: true,
               },
-              is_primary: true,
-            },
-            getValidLocale(req.language),
-          )
-
-          // Also set discord_id for backward compatibility
-          // (createUserWithProvider sets it to null, but Discord users should have it)
-          await profileDb.updateUser(
-            { user_id: user.user_id },
-            { discord_id: profile.id },
-          )
-          // Refresh user to get updated discord_id
-          user = await profileDb.getUser({ user_id: user.user_id })
+              getValidLocale(req.language),
+              trx,
+            )
+            // Also set the legacy discord_id column, unless another account
+            // still holds it (a stale value: it is never moved).
+            if (!(await discordHolder(trx, profile.id, created.user_id))) {
+              await profileDb.updateUser({ user_id: created.user_id }, { discord_id: profile.id }, trx)
+            }
+            return profileDb.getUser({ user_id: created.user_id }, undefined, trx)
+          })
         } else {
           // User exists - update tokens and sign in (works for both signup and signin)
           // Sign up with existing account just signs them in
@@ -347,66 +406,47 @@ export function createCitizenIDVerifyCallback(
           return done(error, undefined)
         }
 
-        // Link Citizen ID to existing account
+        // Link Citizen ID to the existing account, with its RSI fields and
+        // Discord auto-link, in one transaction.
         // Token expiration will be set when we refresh (we don't have expires_in in callback)
-        await profileDb.linkProvider(currentUser.user_id, {
-          provider_type: "citizenid",
-          provider_id: profile.id,
-          access_token: accessToken,
-          refresh_token: refreshToken,
-          token_expires_at: null, // Will be updated on first refresh
-          metadata: {
-            username: citizenIDUsername,
-            rsiUsername: rsiUsername,
-            rsiSpectrumId: rsiSpectrumId,
-            discordAccountId: discordAccountId,
-            displayName: displayName,
-            roles: profile.roles,
-          },
-          is_primary: false,
-        })
-
-        // Update RSI verification status, spectrum_user_id, and discord_id from Citizen ID
-        const updateData: {
-          rsi_confirmed: boolean
-          spectrum_user_id: string
-          discord_id?: string
-        } = {
-          rsi_confirmed: true,
-          spectrum_user_id: rsiSpectrumId,
-        }
-        // Only update discord_id if available and not already set
-        const discordProvider = await profileDb.getUserProvider(
-          currentUser.user_id,
-          "discord",
-        )
-        if (discordAccountId && !discordProvider) {
-          updateData.discord_id = discordAccountId
-        }
-        await profileDb.updateUser({ user_id: currentUser.user_id }, updateData)
-
-        // Auto-link Discord as a provider if available and not already linked
-        if (discordAccountId) {
-          const providers = await profileDb.getUserProviders(
+        const discordSkippedAudit = await getKnex().transaction(async (trx) => {
+          await profileDb.linkProvider(
             currentUser.user_id,
-          )
-          const existingDiscordProvider = providers.find(
-            (p) => p.provider_type === "discord",
-          )
-
-          if (!existingDiscordProvider) {
-            await profileDb.linkProvider(currentUser.user_id, {
-              provider_type: "discord",
-              provider_id: discordAccountId,
-              access_token: null, // No tokens from Citizen ID - user can authenticate with Discord later to get tokens
-              refresh_token: null,
+            {
+              provider_type: "citizenid",
+              provider_id: profile.id,
+              access_token: accessToken,
+              refresh_token: refreshToken,
+              token_expires_at: null, // Will be updated on first refresh
               metadata: {
-                username: discordUsername,
-                linkedViaCitizenID: true, // Flag to indicate this was auto-linked
+                username: citizenIDUsername,
+                rsiUsername: rsiUsername,
+                rsiSpectrumId: rsiSpectrumId,
+                discordAccountId: discordAccountId,
+                displayName: displayName,
+                roles: profile.roles,
               },
               is_primary: false,
-            })
-          }
+            },
+            trx,
+          )
+          await profileDb.updateUser(
+            { user_id: currentUser.user_id },
+            { rsi_confirmed: true, spectrum_user_id: rsiSpectrumId },
+            trx,
+          )
+          return discordAccountId
+            ? linkDiscordFromCitizenID(
+                trx,
+                currentUser.user_id,
+                discordAccountId,
+                discordUsername,
+                "citizenid_link",
+              )
+            : null
+        })
+        if (discordSkippedAudit) {
+          await notifyDiscordLinkSkipped(currentUser.user_id, discordSkippedAudit)
         }
 
         const updatedUser = await profileDb.getUser({
@@ -468,49 +508,49 @@ export function createCitizenIDVerifyCallback(
           return done(spectrumTakenError(rsiSpectrumId), undefined)
         }
 
-        // Create new user (Citizen ID is verified, so we can create)
-        // Token expiration will be set when we refresh (we don't have expires_in in callback)
+        // Create new user (Citizen ID is verified, so we can create), in ONE
+        // transaction with its RSI fields and Discord link: a failure leaves
+        // no half-made account. Token expiration will be set when we refresh
+        // (we don't have expires_in in callback).
+        let discordSkippedAudit: string | null = null
         try {
-          user = await profileDb.createUserWithProvider(
-            {
-              provider_type: "citizenid",
-              provider_id: profile.id,
-              access_token: accessToken,
-              refresh_token: refreshToken,
-              token_expires_at: null, // Will be updated on first refresh
-              metadata: {
-                username: citizenIDUsername,
-                rsiUsername: rsiUsername,
-                rsiSpectrumId: rsiSpectrumId,
-                displayName: displayName,
-                roles: profile.roles,
+          const created = await getKnex().transaction(async (trx) => {
+            const newUser = await profileDb.createUserWithProvider(
+              {
+                provider_type: "citizenid",
+                provider_id: profile.id,
+                access_token: accessToken,
+                refresh_token: refreshToken,
+                token_expires_at: null, // Will be updated on first refresh
+                metadata: {
+                  username: citizenIDUsername,
+                  rsiUsername: rsiUsername,
+                  rsiSpectrumId: rsiSpectrumId,
+                  displayName: displayName,
+                  roles: profile.roles,
+                },
+                is_primary: true,
               },
-              is_primary: true,
-            },
-            getValidLocale(req.language),
-          )
-
-          // Set avatar from RSI if available
-          if (rsiAvatar) {
-            try {
-              const avatarResource = await cdn.createExternalResource(
-                rsiAvatar,
-                `${user.user_id}_rsi_avatar`,
-              )
-              await profileDb.updateUser(
-                { user_id: user.user_id },
-                { avatar: avatarResource.resource_id },
-              )
-              // Refresh user to get updated avatar
-              user = await profileDb.getUser({ user_id: user.user_id })
-            } catch (error) {
-              // If external resource creation fails (e.g., URL not whitelisted), log and continue
-              logger.warn(
-                `[CitizenID] Failed to create external resource for RSI avatar`,
-                { error },
+              getValidLocale(req.language),
+              trx,
+            )
+            await profileDb.updateUser(
+              { user_id: newUser.user_id },
+              { rsi_confirmed: true, spectrum_user_id: rsiSpectrumId },
+              trx,
+            )
+            if (discordAccountId) {
+              discordSkippedAudit = await linkDiscordFromCitizenID(
+                trx,
+                newUser.user_id,
+                discordAccountId,
+                discordUsername,
+                "citizenid_signup",
               )
             }
-          }
+            return newUser
+          })
+          user = await profileDb.getUser({ user_id: created.user_id })
         } catch (createError: unknown) {
           // Another sign-up took the username or Spectrum ID between the
           // checks above and the insert: the same handled errors, never the
@@ -529,43 +569,31 @@ export function createCitizenIDVerifyCallback(
           throw createError
         }
 
-        // Update RSI verification status, spectrum_user_id, and discord_id from Citizen ID
-        // Note: rsi_confirmed and spectrum_user_id are already set during user creation,
-        // but we update them here as well to ensure consistency and handle discord_id
-        const updateData: {
-          rsi_confirmed: boolean
-          spectrum_user_id: string
-          discord_id?: string
-        } = {
-          rsi_confirmed: true,
-          spectrum_user_id: rsiSpectrumId,
-        }
-        // Populate discord_id from Citizen ID if available
-        if (discordAccountId) {
-          updateData.discord_id = discordAccountId
-        }
-        await profileDb.updateUser({ user_id: user.user_id }, updateData)
-
-        // Auto-link Discord as a provider if available
-        if (discordAccountId) {
-          const providers = await profileDb.getUserProviders(user.user_id)
-          const existingDiscordProvider = providers.find(
-            (p) => p.provider_type === "discord",
-          )
-
-          if (!existingDiscordProvider) {
-            await profileDb.linkProvider(user.user_id, {
-              provider_type: "discord",
-              provider_id: discordAccountId,
-              access_token: null, // No tokens from Citizen ID - user can authenticate with Discord later to get tokens
-              refresh_token: null,
-              metadata: {
-                username: discordUsername,
-                linkedViaCitizenID: true, // Flag to indicate this was auto-linked
-              },
-              is_primary: false,
-            })
+        // Set avatar from RSI if available (outside the transaction: an
+        // external fetch, and optional).
+        if (rsiAvatar) {
+          try {
+            const avatarResource = await cdn.createExternalResource(
+              rsiAvatar,
+              `${user.user_id}_rsi_avatar`,
+            )
+            await profileDb.updateUser(
+              { user_id: user.user_id },
+              { avatar: avatarResource.resource_id },
+            )
+            // Refresh user to get updated avatar
+            user = await profileDb.getUser({ user_id: user.user_id })
+          } catch (error) {
+            // If external resource creation fails (e.g., URL not whitelisted), log and continue
+            logger.warn(
+              `[CitizenID] Failed to create external resource for RSI avatar`,
+              { error },
+            )
           }
+        }
+
+        if (discordSkippedAudit) {
+          await notifyDiscordLinkSkipped(user.user_id, discordSkippedAudit)
         }
       } else {
         // User exists - update tokens and sign in (works for both signup and signin)

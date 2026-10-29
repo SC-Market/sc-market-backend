@@ -16,7 +16,6 @@ import {
   admin_get_users,
   admin_get_membership_analytics,
   admin_get_audit_logs,
-  admin_post_users_username_unlink,
   admin_post_test_notification,
 } from "./controller.js"
 
@@ -27,7 +26,6 @@ import {
   admin_get_users_spec,
   admin_get_membership_analytics_spec,
   admin_get_audit_logs_spec,
-  admin_post_users_username_unlink_spec,
   admin_post_test_notification_spec,
 } from "./openapi.js"
 
@@ -92,14 +90,8 @@ adminRouter.get(
   admin_get_audit_logs,
 )
 
-adminRouter.post(
-  "/users/:username/unlink",
-  adminAuthorized,
-  requireStepUp,
-  criticalRateLimit,
-  admin_post_users_username_unlink_spec,
-  admin_post_users_username_unlink,
-)
+// POST /users/:username/unlink was retired: Admin -> Identity
+// (/api/v2/admin/identity) replaces it with audited, reasoned actions.
 
 adminRouter.post(
   "/notifications/test",

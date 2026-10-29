@@ -4,6 +4,7 @@
  */
 
 import { getKnex, database } from "../../../../clients/database/knex-db.js"
+import type { Knex } from "knex"
 import { getUserTransactions as getUserTransactionsFromTransactions } from "../transactions/database.js"
 import { User } from "../api-models.js"
 import {
@@ -269,9 +270,10 @@ export async function linkProvider(
     metadata?: Record<string, any>
     is_primary?: boolean
   },
+  db: Knex = knex(),
 ): Promise<DBAccountProvider> {
   // Check if provider already linked to different account
-  const existingProvider = await knex()<DBAccountProvider>("account_providers")
+  const existingProvider = await db<DBAccountProvider>("account_providers")
     .where("provider_type", providerData.provider_type)
     .where("provider_id", providerData.provider_id)
     .first()
@@ -282,7 +284,7 @@ export async function linkProvider(
     )
   }
 
-  const [provider] = await knex()<DBAccountProvider>("account_providers")
+  const [provider] = await db<DBAccountProvider>("account_providers")
     .insert({
       user_id: userId,
       provider_type: providerData.provider_type,
@@ -325,10 +327,22 @@ export async function unlinkProvider(
     throw new Error("Cannot unlink the only primary authentication provider")
   }
 
-  await knex()<DBAccountProvider>("account_providers")
-    .where("user_id", userId)
-    .where("provider_type", providerType)
-    .delete()
+  await knex().transaction(async (trx) => {
+    await trx<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .where("provider_type", providerType)
+      .del()
+    // Removing Discord also clears the legacy accounts.discord_id column (and
+    // its old tokens): leaving it set kept that Discord id "taken", so the
+    // next Discord sign-up with it failed on accounts_discord_id_unique.
+    if (providerType === "discord") {
+      await trx<DBUser>("accounts").where("user_id", userId).update({
+        discord_id: null,
+        discord_access_token: "",
+        discord_refresh_token: "",
+      })
+    }
+  })
 }
 
 /**
@@ -386,25 +400,31 @@ export async function createUserWithProvider(
     is_primary?: boolean
   },
   locale: string = "en",
+  db?: Knex,
 ): Promise<User> {
+  // One transaction (the caller's, or our own): the account, its provider
+  // link and its settings row exist together or not at all.
+  if (!db) {
+    return knex().transaction((trx) => createUserWithProvider(providerData, locale, trx))
+  }
   // Check if provider already exists
-  const existingProvider = await knex()<DBAccountProvider>("account_providers")
+  const existingProvider = await db<DBAccountProvider>("account_providers")
     .where("provider_type", providerData.provider_type)
     .where("provider_id", providerData.provider_id)
     .first()
 
   if (existingProvider) {
     // Update tokens and return existing user
-    await updateProviderTokens(
-      existingProvider.user_id,
-      providerData.provider_type,
-      {
+    await db<DBAccountProvider>("account_providers")
+      .where("user_id", existingProvider.user_id)
+      .where("provider_type", providerData.provider_type)
+      .update({
         access_token: providerData.access_token || undefined,
         refresh_token: providerData.refresh_token || undefined,
         token_expires_at: providerData.token_expires_at || undefined,
-      },
-    )
-    return getUser({ user_id: existingProvider.user_id })
+        last_used_at: new Date(),
+      })
+    return getUser({ user_id: existingProvider.user_id }, undefined, db)
   }
 
   // Create new user
@@ -426,7 +446,7 @@ export async function createUserWithProvider(
   const isCitizenID = providerData.provider_type === "citizenid"
   const rsiSpectrumId = providerData.metadata?.rsiSpectrumId
 
-  const [user] = await knex()<DBUser>("accounts")
+  const [user] = await db<DBUser>("accounts")
     .insert({
       username: username,
       display_name: displayName,
@@ -438,17 +458,21 @@ export async function createUserWithProvider(
     .returning("*")
 
   // Link provider
-  await linkProvider(user.user_id, {
-    ...providerData,
-    is_primary: providerData.is_primary ?? true, // First provider is always primary
-  })
+  await linkProvider(
+    user.user_id,
+    {
+      ...providerData,
+      is_primary: providerData.is_primary ?? true, // First provider is always primary
+    },
+    db,
+  )
 
   // Create account settings
-  await knex()<DBAccountSettings>("account_settings").insert({
+  await db<DBAccountSettings>("account_settings").insert({
     user_id: user.user_id,
   })
 
-  return getUser({ user_id: user.user_id })
+  return getUser({ user_id: user.user_id }, undefined, db)
 }
 
 /**
@@ -549,8 +573,9 @@ export async function getUser(
   options: {
     noBalance: boolean
   } = { noBalance: false },
+  db: Knex = knex(),
 ): Promise<User> {
-  const user = await knex()<DBUser>("accounts").where(where).first()
+  const user = await db<DBUser>("accounts").where(where).first()
 
   if (!user) {
     throw new Error("Invalid user!")
@@ -719,13 +744,13 @@ export async function decrementUserBalance(
 /**
  * Update user by where clause.
  */
-export async function updateUser(where: any, values: Partial<DBUser>) {
+export async function updateUser(where: any, values: Partial<DBUser>, db: Knex = knex()) {
   // Renames (RSI verification, unlink) never produce a reserved "~" name:
   // those belong to test accounts (services/test-accounts; a DB CHECK too).
   if (typeof values.username === "string" && values.username.startsWith("~")) {
     throw new Error("Usernames starting with ~ are reserved")
   }
-  return knex()<DBUser>("accounts").where(where).update(values).returning("*")
+  return db<DBUser>("accounts").where(where).update(values).returning("*")
 }
 
 /**

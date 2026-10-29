@@ -38,6 +38,12 @@ const PUSH_TEXT: Record<IdentityActionKind, { title: string; body: (n: ActionRes
     title: "Your SC Market account was deactivated",
     body: () => "An admin deactivated your account. Contact SC Market support if you think this is a mistake.",
   },
+  discord_link_skipped: {
+    title: "Your Discord wasn't linked to SC Market",
+    body: () =>
+      "That Discord account is already linked to another SC Market account, so it wasn't linked to this one. " +
+      "If both accounts are yours, contact SC Market support.",
+  },
   account_reactivated: {
     title: "Your SC Market account was reactivated",
     body: () => "An admin reactivated your account. You can log in again.",
@@ -46,7 +52,8 @@ const PUSH_TEXT: Record<IdentityActionKind, { title: string; body: (n: ActionRes
 
 export async function notifyIdentityChanged(
   userId: string,
-  actorId: string,
+  /** The admin who made the change; null for a system notice (skipped Discord link). */
+  actorId: string | null,
   result: ActionResult,
 ): Promise<void> {
   const baseUrl = env.FRONTEND_URL || "https://sc-market.space"

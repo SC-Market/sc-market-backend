@@ -124,7 +124,7 @@ describe("refusals shared by every action", () => {
         }
         return real(table)
       },
-      { tables: real.tables, raw: real.raw },
+      { tables: real.tables, raw: real.raw, transaction: <T>(fn: (t: unknown) => Promise<T>) => fn(failing) },
     )
     db = failing as unknown as typeof db
     await expect(f()).rejects.toThrow("audit down")

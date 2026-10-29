@@ -4249,7 +4249,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IdentityActionKind": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["username_released"]},{"dataType":"enum","enums":["discord_unlinked"]},{"dataType":"enum","enums":["spectrum_cleared"]},{"dataType":"enum","enums":["spectrum_set"]},{"dataType":"enum","enums":["account_deactivated"]},{"dataType":"enum","enums":["account_reactivated"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["username_released"]},{"dataType":"enum","enums":["discord_unlinked"]},{"dataType":"enum","enums":["spectrum_cleared"]},{"dataType":"enum","enums":["spectrum_set"]},{"dataType":"enum","enums":["account_deactivated"]},{"dataType":"enum","enums":["account_reactivated"]},{"dataType":"enum","enums":["discord_link_skipped"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IdentityAuditEntry": {

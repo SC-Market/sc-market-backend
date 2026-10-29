@@ -13320,7 +13320,8 @@
 					"spectrum_cleared",
 					"spectrum_set",
 					"account_deactivated",
-					"account_reactivated"
+					"account_reactivated",
+					"discord_link_skipped"
 				]
 			},
 			"IdentityAuditEntry": {
