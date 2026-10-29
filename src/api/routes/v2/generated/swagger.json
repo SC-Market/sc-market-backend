@@ -20776,6 +20776,15 @@
 						}
 					},
 					{
+						"description": "Only blueprints a player can get: default blueprints (everyone has them) and blueprints rewarded by at least one mission",
+						"in": "query",
+						"name": "sourceable",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
 						"description": "Game version ID (defaults to active LIVE version)",
 						"in": "query",
 						"name": "version_id",

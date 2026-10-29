@@ -226,9 +226,23 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
       }
     },
     async () => {
-      const blueprints = await db("blueprints").select("blueprint_code", "blueprint_name").limit(5000)
+      // The frontend route /blueprints/:slug and the detail API
+      // (GET /api/v2/game-data/blueprints/{blueprint_id}) resolve the
+      // blueprint name or the blueprint id, never blueprint_code (which
+      // 404s). Link the name, URL-encoded like the frontend's links, once per
+      // name: the API resolves a name to one blueprint, so rows sharing a name
+      // (e.g. across game versions) are the same page.
+      const blueprints = await db("blueprints")
+        .select("blueprint_name")
+        .where("is_active", true)
+        .whereNotNull("blueprint_name")
+        .orderBy("blueprint_name")
+        .limit(5000)
+      const seen = new Set<string>()
       for (const b of blueprints) {
-        wikiPages.push({ url: `/blueprints/${b.blueprint_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+        if (!b.blueprint_name || seen.has(b.blueprint_name)) continue
+        seen.add(b.blueprint_name)
+        wikiPages.push({ url: `/blueprints/${encodeURIComponent(b.blueprint_name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
     },
     async () => {

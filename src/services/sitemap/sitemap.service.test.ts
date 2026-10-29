@@ -220,3 +220,36 @@ describe("getSitemapCache (stale-while-revalidate)", () => {
     clearSitemapCache()
   })
 })
+
+describe("blueprint URLs", () => {
+  beforeEach(() => {
+    clearSitemapCache()
+    fetchMock.mockResolvedValue(manifestResponse({ version: 1, pages: [] }))
+  })
+
+  it("links each blueprint by its URL-encoded name (what /blueprints/:slug resolves), once per name", async () => {
+    const blueprintsQuery = createChainMock([
+      { blueprint_name: "BP_CRAFT_AMRS_LaserCannon_S1" },
+      // Same name in another game version: the same page, listed once.
+      { blueprint_name: "BP_CRAFT_AMRS_LaserCannon_S1" },
+      { blueprint_name: "BP Odd/Name #2" },
+    ])
+    mockKnex.mockImplementation((table?: string) =>
+      table === "blueprints" ? blueprintsQuery : createChainMock([]),
+    )
+
+    const { sitemaps } = await generateSitemapCache()
+    const xml = gunzipSync(sitemaps.get("wiki-0")!).toString("utf8")
+    const blueprintLocs = [...xml.matchAll(/<loc>([^<]*\/blueprints\/[^<]*)<\/loc>/g)].map((m) => m[1])
+
+    expect(blueprintLocs).toEqual([
+      "https://sc-market.space/blueprints/BP_CRAFT_AMRS_LaserCannon_S1",
+      "https://sc-market.space/blueprints/BP%20Odd%2FName%20%232",
+    ])
+    // Never blueprint_code: the detail API answers it with 404.
+    expect(blueprintsQuery.select).toHaveBeenCalledWith("blueprint_name")
+    expect(blueprintsQuery.where).toHaveBeenCalledWith("is_active", true)
+
+    mockKnex.mockImplementation(() => createChainMock([]))
+  })
+})
