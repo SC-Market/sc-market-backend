@@ -10,6 +10,7 @@
 import { Controller, Get, Post, Delete, Route, Tags, Query, Path, Body, Security, Request } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
+import { is_member } from "../../../v1/util/permissions.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../../clients/cdn/cdn.js"
 import {
@@ -1469,8 +1470,18 @@ export class BlueprintsController extends BaseController {
   public async getOrgBlueprintOwners(
     @Path() blueprint_id: string,
     @Path() spectrum_id: string,
+    @Request() request?: ExpressRequest,
   ): Promise<{ members: { user_id: string; username: string; display_name: string; avatar?: string; acquisition_date?: string }[] }> {
+    if (request) this.request = request
     const knex = getKnex()
+
+    // Who in an org owns what is for the org's members only (with an API
+    // token: only if the token was granted the org; is_member applies that).
+    const org = await knex("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
+    if (!org) throw this.throwNotFound("Contractor", spectrum_id)
+    if (!this.isAdmin() && !(await is_member(org.contractor_id, this.getUserId()))) {
+      throw this.throwForbidden("You are not a member of this organization")
+    }
 
     // Resolve blueprint code to UUID if needed
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(blueprint_id)

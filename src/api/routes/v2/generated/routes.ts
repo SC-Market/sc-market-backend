@@ -9196,6 +9196,7 @@ export function RegisterRoutes(app: Router) {
         const argsBlueprintsController_getOrgBlueprintOwners: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-data/blueprints/:blueprint_id/org-owners/:spectrum_id',
             authenticateMiddleware([{"loggedin":[]}]),

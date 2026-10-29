@@ -1195,9 +1195,14 @@ export class ListingsV2Controller extends BaseController {
       .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
       .where("l.status", "active").where("lil.listed", true).where("lil.quantity_total", ">", 0)
     if (spectrum_id) {
+      // An org's stock is for its members only (with an API token: only if
+      // the token was granted the org; is_member applies that grant).
       const org = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
-      if (org) { query = query.whereIn("l.shop_id", db("shops").where("owner_contractor_id", org.contractor_id).select("shop_id")) }
-      else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
+      if (!org) this.throwNotFound("Contractor", spectrum_id)
+      if (!this.isAdmin() && !(await is_member(org.contractor_id, user_id))) {
+        this.throwForbidden("You are not a member of this organization")
+      }
+      query = query.whereIn("l.shop_id", db("shops").where("owner_contractor_id", org.contractor_id).select("shop_id"))
     } else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
     const rows = await query.groupBy("li.game_item_id", "gi.name", "gi.type", "gi.image_url")
       .select("li.game_item_id", "gi.name as game_item_name", "gi.type as game_item_type", "gi.image_url as game_item_icon",
