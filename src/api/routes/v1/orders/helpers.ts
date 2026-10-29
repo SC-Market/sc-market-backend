@@ -800,160 +800,156 @@ export async function sendStatusUpdateMessage(order: DBOrder, status: string) {
   }
 }
 
+/** The statuses an order can be set to. */
+export const ORDER_STATUS_VALUES = ["fulfilled", "in-progress", "not-started", "cancelled"] as const
+
+/**
+ * A status change the actor may not make, or that isn't valid. `status` is
+ * the HTTP status the caller answers with.
+ */
+export class OrderStatusChangeError extends Error {
+  constructor(
+    public readonly status: 400 | 403,
+    message: string,
+    public readonly reason: "invalid_status" | "closed" | "forbidden",
+  ) {
+    super(message)
+    this.name = "OrderStatusChangeError"
+  }
+}
+
+/**
+ * Change an order's status as `actor`, with the site's rules and side
+ * effects (stock release/consumption, notifications, Discord, chat message).
+ * Shared by v1 PUT /orders/{id} and the public API. Throws
+ * OrderStatusChangeError for an invalid or forbidden change; other errors
+ * are failures.
+ */
+export async function applyOrderStatusChange(order: DBOrder, actor: User, status: string): Promise<void> {
+  if (!(ORDER_STATUS_VALUES as readonly string[]).includes(status)) {
+    throw new OrderStatusChangeError(400, "Invalid status!", "invalid_status")
+  }
+
+  if (
+    !isSiteAdmin(actor) &&
+    (order.status.includes("cancelled") || order.status.includes("fulfilled"))
+  ) {
+    throw new OrderStatusChangeError(400, "Cannot change status for closed order", "closed")
+  }
+
+  if (!order.contractor_id) {
+    if (
+      ["fulfilled", "in-progress", "not-started"].includes(status) &&
+      order.assigned_id !== actor.user_id &&
+      !isSiteAdmin(actor)
+    ) {
+      throw new OrderStatusChangeError(
+        403,
+        `Only the assigned user may set the status of this order to ${status}`,
+        "forbidden",
+      )
+    }
+  } else {
+    const orgAdmin = await has_permission(order.contractor_id, actor.user_id, "manage_orders")
+    const assigned = order.assigned_id === actor.user_id
+    const customer = order.customer_id === actor.user_id
+    const allowed = orgAdmin || assigned || (status === "cancelled" && customer)
+    if (!allowed) {
+      throw new OrderStatusChangeError(403, `You may not set the status of this order to ${status}`, "forbidden")
+    }
+  }
+
+  if (status === "cancelled") {
+    await cancelOrderMarketItems(order)
+
+    // Release stock allocations when order is cancelled
+    // Requirements: 6.4
+    try {
+      const orderLifecycleService = new OrderLifecycleService()
+      await orderLifecycleService.releaseAllocationsForOrder(order.order_id)
+
+      logger.info("Stock allocations released for cancelled order", {
+        order_id: order.order_id,
+      })
+    } catch (error) {
+      // Log error but don't fail the cancellation
+      logger.error("Failed to release stock allocations for cancelled order", {
+        order_id: order.order_id,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
+
+  if (status === "in-progress") {
+    await orderDb.updateOrder(order.order_id, {
+      status,
+      assigned_id: actor.user_id,
+    })
+
+    // Track order response for responsive badge
+    await orderDb.trackOrderResponse(
+      order.order_id,
+      order.assigned_id || undefined,
+      order.contractor_id || undefined,
+    )
+
+    await discordService.assignUserToThread(order.thread_id!, actor.user_id)
+  } else if (status === "fulfilled") {
+    // V2: the allocated units leave with the order (already out of the lots)
+    await markOrderAllocationsFulfilled(database.knex, order.order_id)
+
+    // Consume stock allocations when order is fulfilled
+    // Requirements: 6.5, 10.5
+    try {
+      const orderLifecycleService = new OrderLifecycleService()
+      await orderLifecycleService.consumeAllocationsForOrder(order.order_id)
+
+      logger.info("Stock allocations consumed for fulfilled order", {
+        order_id: order.order_id,
+      })
+    } catch (error) {
+      // Log error but don't fail the fulfillment
+      logger.error("Failed to consume stock allocations for fulfilled order", {
+        order_id: order.order_id,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
+
+    await orderDb.updateOrder(order.order_id, { status: status, fulfilled_at: new Date() })
+
+    // Refresh shop metrics after fulfillment
+    if (order.shop_id) {
+      const { refreshShopMetrics } = await import("../../../../services/shops/shop-metrics.service.js")
+      refreshShopMetrics(order.shop_id).catch((e) =>
+        logger.error("Failed to refresh shop metrics", { shop_id: order.shop_id, error: e })
+      )
+    }
+  } else {
+    await orderDb.updateOrder(order.order_id, { status: status })
+  }
+  await notificationService.createOrderStatusNotification(order, status, actor.user_id)
+  await discordService.sendOrderStatusUpdate(order, status)
+  await sendStatusUpdateMessage(order, status)
+}
+
 export async function handleStatusUpdate(req: any, res: any, status: string) {
   const order = req.order as DBOrder
   const user = req.user as User
   try {
-    if (
-      !["fulfilled", "in-progress", "not-started", "cancelled"].includes(status)
-    ) {
-      return res
-        .status(400)
-        .json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid status!"),
-        )
-    }
-
-    if (
-      !isSiteAdmin(user) &&
-      (order.status.includes("cancelled") || order.status.includes("fulfilled"))
-    ) {
-      res
-        .status(400)
-        .json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            "Cannot change status for closed order",
-          ),
-        )
-      return
-    }
-
-    if (!order.contractor_id) {
-      if (
-        ["fulfilled", "in-progress", "not-started"].includes(status) &&
-        order.assigned_id !== user.user_id &&
-        !isSiteAdmin(user)
-      ) {
-        res
-          .status(403)
-          .json(
-            createForbiddenErrorResponse(
-              `Only the assigned user may set the status of this order to ${status}`,
-            ),
-          )
-        return
-      }
-    } else {
-      const orgAdmin = await has_permission(
-        order.contractor_id,
-        req.user.user_id,
-        "manage_orders",
-      )
-      const assigned = order.assigned_id === user.user_id
-      const customer = order.customer_id === user.user_id
-      const allowed =
-        orgAdmin || assigned || (status === "cancelled" && customer)
-      if (!allowed) {
-        res
-          .status(403)
-          .json(
-            createForbiddenErrorResponse(
-              `You may not set the status of this order to ${status}`,
-            ),
-          )
-        return
-      }
-    }
-
-    if (status === "cancelled") {
-      await cancelOrderMarketItems(order)
-
-      // Release stock allocations when order is cancelled
-      // Requirements: 6.4
-      try {
-        const orderLifecycleService = new OrderLifecycleService()
-        await orderLifecycleService.releaseAllocationsForOrder(order.order_id)
-
-        logger.info("Stock allocations released for cancelled order", {
-          order_id: order.order_id,
-        })
-      } catch (error) {
-        // Log error but don't fail the cancellation
-        logger.error(
-          "Failed to release stock allocations for cancelled order",
-          {
-            order_id: order.order_id,
-            error: error instanceof Error ? error.message : String(error),
-          },
-        )
-      }
-    }
-
-    if (status === "in-progress") {
-      await orderDb.updateOrder(order.order_id, {
-        status,
-        assigned_id: req.user.user_id,
-      })
-
-      // Track order response for responsive badge
-      await orderDb.trackOrderResponse(
-        order.order_id,
-        order.assigned_id || undefined,
-        order.contractor_id || undefined,
-      )
-
-      await discordService.assignUserToThread(
-        order.thread_id!,
-        req.user.user_id,
-      )
-    } else if (status === "fulfilled") {
-      // V2: the allocated units leave with the order (already out of the lots)
-      await markOrderAllocationsFulfilled(database.knex, order.order_id)
-
-      // Consume stock allocations when order is fulfilled
-      // Requirements: 6.5, 10.5
-      try {
-        const orderLifecycleService = new OrderLifecycleService()
-        await orderLifecycleService.consumeAllocationsForOrder(order.order_id)
-
-        logger.info("Stock allocations consumed for fulfilled order", {
-          order_id: order.order_id,
-        })
-      } catch (error) {
-        // Log error but don't fail the fulfillment
-        logger.error(
-          "Failed to consume stock allocations for fulfilled order",
-          {
-            order_id: order.order_id,
-            error: error instanceof Error ? error.message : String(error),
-          },
-        )
-      }
-
-      await orderDb.updateOrder(order.order_id, { status: status, fulfilled_at: new Date() })
-
-      // Refresh shop metrics after fulfillment
-      if (order.shop_id) {
-        const { refreshShopMetrics } = await import("../../../../services/shops/shop-metrics.service.js")
-        refreshShopMetrics(order.shop_id).catch((e) =>
-          logger.error("Failed to refresh shop metrics", { shop_id: order.shop_id, error: e })
-        )
-      }
-    } else {
-      await orderDb.updateOrder(order.order_id, { status: status })
-    }
-    await notificationService.createOrderStatusNotification(
-      order,
-      status,
-      req.user.user_id,
-    )
-    await discordService.sendOrderStatusUpdate(order, status)
-    await sendStatusUpdateMessage(order, status)
-
+    await applyOrderStatusChange(order, user, status)
     // Don't send response here - let the controller handle it
     // This allows multiple operations to be performed in one request
   } catch (e) {
+    if (e instanceof OrderStatusChangeError) {
+      res
+        .status(e.status)
+        .json(
+          e.status === 403
+            ? createForbiddenErrorResponse(e.message)
+            : createErrorResponse(ErrorCode.VALIDATION_ERROR, e.message),
+        )
+      return
+    }
     logger.error(`Failed to update order status: ${e}`)
     // Only send error response if headers haven't been sent yet
     // (in case this is the only operation)

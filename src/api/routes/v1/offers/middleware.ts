@@ -6,8 +6,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import * as offerDb from "./database.js"
 import { createErrorResponse } from "../util/response.js"
 import { has_permission } from "../util/permissions.js"
-import { can_respond_to_offer_helper } from "./helpers.js"
-import { isSiteAdmin } from "../../../util/site-role.js"
+import { can_respond_to_offer_helper, userRelatedToOffer } from "./helpers.js"
 
 export async function related_to_offer(
   req: Request,
@@ -30,22 +29,7 @@ export async function related_to_offer(
   // only its customer, not a member of the org).
   if (!(await tokenMayUseOrg(req, res, offer.contractor_id))) return
 
-  const assigned = offer.assigned_id === user.user_id
-  const customer = offer.customer_id === user.user_id
-  let unrelated = !customer && !assigned && !isSiteAdmin(user)
-  if (offer.contractor_id && unrelated) {
-    // Same rule as related_to_order and the Discord Claim button
-    // (clients/discord_api/claim.ts): claim_orders members need access to
-    // self-claim. What they may do is checked in the handlers.
-    unrelated =
-      !(await has_permission(
-        offer.contractor_id,
-        user.user_id,
-        "manage_orders",
-      )) &&
-      !(await has_permission(offer.contractor_id, user.user_id, "claim_orders"))
-  }
-
+  const unrelated = !(await userRelatedToOffer(offer, user))
   if (unrelated) {
     res.status(403).json(
       createErrorResponse({

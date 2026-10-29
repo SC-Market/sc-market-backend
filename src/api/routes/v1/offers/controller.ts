@@ -8,7 +8,7 @@ import * as profileDb from "../profiles/database.js"
 import * as offerDb from "./database.js"
 import * as marketDb from "../market/database.js"
 import * as serviceDb from "../services/database.js"
-import { DBOfferSession } from "../../../../clients/database/db-models.js"
+import { DBOffer, DBOfferSession, DBOrder } from "../../../../clients/database/db-models.js"
 
 import { User } from "../api-models.js"
 import {
@@ -38,6 +38,82 @@ import { is_member, has_permission } from "../util/permissions.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { OfferMergeError } from "./errors.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+
+/**
+ * Accept an offer as `user`: close the session, accept its most recent offer
+ * and create the order, in one transaction; then the side effects (Discord,
+ * chat, order-created effects, notifications), which never fail the call.
+ * The caller has checked that the user may respond (can_respond_to_offer).
+ * Shared by v1 PUT /offers/{id} and the public API.
+ */
+export async function acceptOfferSession(
+  session: DBOfferSession,
+  mostRecent: DBOffer,
+  user: User,
+): Promise<DBOrder> {
+  const { withTransaction } = await import("../../../../clients/database/transaction.js")
+  const order = await withTransaction(async (trx) => {
+    await offerDb.updateOfferSession(session.id, { status: "closed" }, trx)
+    await offerDb.updateOrderOffer(mostRecent.id, { status: "accepted" }, trx)
+    return await initiateOrder(session, trx)
+  })
+
+  // Side effects after successful commit
+  try {
+    await discordService.sendOfferStatusUpdate(session, "Accepted", user)
+    const chat = await chatDb.getChat({ session_id: session.id })
+    const actionBy = user ? ` by ${user.username}` : ""
+    await sendSystemMessage(chat.chat_id, `Offer status updated to **Accepted**${actionBy}`, false)
+  } catch (error) {
+    logger.debug(`Failed to send offer accept side effects for session ${session.id}: ${error}`)
+  }
+
+  // Chat link, chat participants, notifications, discord alerts, custom order message
+  try {
+    await runOrderCreatedSideEffects(order, session)
+  } catch (e) {
+    logger.error(`Failed to run order created side effects for session ${session.id}: ${e}`)
+  }
+
+  try {
+    await notifyOfferDecision(session, "accepted", user.user_id)
+  } catch (e) {
+    logger.error(`Failed to notify offer acceptance for session ${session.id}: ${e}`)
+  }
+
+  return order
+}
+
+/**
+ * Reject an offer as `user` (or withdraw it, as its customer): close the
+ * session and reject its most recent offer, then the side effects. The
+ * caller has checked that the user may respond. Shared by v1 PUT
+ * /offers/{id} and the public API.
+ */
+export async function rejectOfferSession(
+  session: DBOfferSession,
+  mostRecent: DBOffer,
+  user: User,
+  withdrawn: boolean,
+): Promise<void> {
+  await offerDb.updateOfferSession(session.id, { status: "closed" })
+  await offerDb.updateOrderOffer(mostRecent.id, { status: "rejected" })
+
+  try {
+    await discordService.sendOfferStatusUpdate(session, "Rejected", user)
+    const chat = await chatDb.getChat({ session_id: session.id })
+    const actionBy = user ? ` by ${user.username}` : ""
+    await sendSystemMessage(chat.chat_id, `Offer status updated to **Rejected**${actionBy}`, false)
+  } catch (error) {
+    logger.debug(`Failed to send offer status update chat message for session ${session.id}: ${error}`)
+  }
+
+  try {
+    await notifyOfferDecision(session, withdrawn ? "withdrawn" : "rejected", user.user_id)
+  } catch (e) {
+    logger.error(`Failed to notify offer rejection for session ${session.id}: ${e}`)
+  }
+}
 
 export const offer_get_session_id: RequestHandler = async (req, res) => {
   res.json(createResponse(await serializeOfferSession(req.offer_session!)))
@@ -96,48 +172,12 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     status = "rejected"
   }
 
-  const nameMap = new Map([
-    ["accepted" as const, "Accepted" as const],
-    ["rejected" as const, "Rejected" as const],
-    ["cancelled" as const, "Rejected" as const],
-    ["counteroffered" as const, "Counter-Offered" as const],
-  ])
-
   if (["accepted", "rejected"].includes(status)) {
     const user = req.user as User
 
     if (status === "accepted") {
       try {
-        const { withTransaction } = await import("../../../../clients/database/transaction.js")
-        const order = await withTransaction(async (trx) => {
-          await offerDb.updateOfferSession(session.id, { status: "closed" }, trx)
-          await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status }, trx)
-          return await initiateOrder(session, trx)
-        })
-
-        // Side effects after successful commit
-        try {
-          await discordService.sendOfferStatusUpdate(session, "Accepted", user)
-          const chat = await chatDb.getChat({ session_id: session.id })
-          const actionBy = user ? ` by ${user.username}` : ""
-          await sendSystemMessage(chat.chat_id, `Offer status updated to **Accepted**${actionBy}`, false)
-        } catch (error) {
-          logger.debug(`Failed to send offer accept side effects for session ${session.id}: ${error}`)
-        }
-
-        // Chat link, chat participants, notifications, discord alerts, custom order message
-        try {
-          await runOrderCreatedSideEffects(order, session)
-        } catch (e) {
-          logger.error(`Failed to run order created side effects for session ${session.id}: ${e}`)
-        }
-
-        try {
-          await notifyOfferDecision(session, "accepted", user.user_id)
-        } catch (e) {
-          logger.error(`Failed to notify offer acceptance for session ${session.id}: ${e}`)
-        }
-
+        const order = await acceptOfferSession(session, req.most_recent_offer!, user)
         res.json(createResponse({ order_id: order.order_id }))
         return
       } catch (e) {
@@ -148,24 +188,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     }
 
     // Rejected
-    await offerDb.updateOfferSession(session.id, { status: "closed" })
-    await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status })
-
-    try {
-      await discordService.sendOfferStatusUpdate(session, nameMap.get(status)!, user)
-      const chat = await chatDb.getChat({ session_id: session.id })
-      const actionBy = user ? ` by ${user.username}` : ""
-      await sendSystemMessage(chat.chat_id, `Offer status updated to **${nameMap.get(status)!}**${actionBy}`, false)
-    } catch (error) {
-      logger.debug(`Failed to send offer status update chat message for session ${session.id}: ${error}`)
-    }
-
-    try {
-      await notifyOfferDecision(session, withdrawn ? "withdrawn" : "rejected", user.user_id)
-    } catch (e) {
-      logger.error(`Failed to notify offer rejection for session ${session.id}: ${e}`)
-    }
-
+    await rejectOfferSession(session, req.most_recent_offer!, user, withdrawn)
     res.json(createResponse({ result: "Success" }))
     return
   } else {

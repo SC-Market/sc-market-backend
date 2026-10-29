@@ -872,6 +872,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OrderStatusChangeResult": {
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"in-progress",
+							"fulfilled",
+							"cancelled"
+						]
+					}
+				},
+				"required": [
+					"order_id",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_OrderStatusChangeResult_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/OrderStatusChangeResult"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderStatusChangeBody": {
+				"properties": {
+					"status": {
+						"type": "string",
+						"enum": [
+							"in-progress",
+							"fulfilled",
+							"cancelled"
+						]
+					}
+				},
+				"required": [
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Rating": {
 				"properties": {
 					"avg_rating": {
@@ -1535,6 +1586,69 @@
 				"properties": {
 					"data": {
 						"$ref": "#/components/schemas/GetOfferSessionV2Response"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAcceptResult": {
+				"properties": {
+					"offer_id": {
+						"type": "string"
+					},
+					"order_id": {
+						"type": "string",
+						"description": "The order the accepted offer created."
+					}
+				},
+				"required": [
+					"offer_id",
+					"order_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_OfferAcceptResult_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/OfferAcceptResult"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferDeclineResult": {
+				"properties": {
+					"offer_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"rejected"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"offer_id",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_OfferDeclineResult_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/OfferDeclineResult"
 					}
 				},
 				"required": [
@@ -2847,6 +2961,116 @@
 				]
 			}
 		},
+		"/orders/{orderId}/status": {
+			"post": {
+				"operationId": "ChangeOrderStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_OrderStatusChangeResult_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid body",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "The user may not make this change",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "The order is closed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "Move an order to in-progress, fulfilled or cancelled, with the same rules\nand notifications as on the site: the seller side (assignee, or an org\nmember with manage_orders) moves it forward; the customer may cancel.\nClosed (fulfilled or cancelled) orders can't change: 409.",
+				"summary": "Change order status",
+				"tags": [
+					"Orders"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"orders:write"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Order UUID",
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrderStatusChangeBody"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/offers": {
 			"get": {
 				"operationId": "ListOffers",
@@ -3018,6 +3242,186 @@
 					{
 						"apiToken": [
 							"offers:read"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Offer session UUID",
+						"in": "path",
+						"name": "offerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/offers/{offerId}/accept": {
+			"post": {
+				"operationId": "AcceptOffer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_OfferAcceptResult_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Not the user's turn, or not allowed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "The offer is closed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept the most recent offer of the session; creates the order. Only\nwhen it is the user's turn: the seller side answers the customer's\noffer, the customer answers a counter-offer.",
+				"summary": "Accept offer",
+				"tags": [
+					"Offers"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"offers:write"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Offer session UUID",
+						"in": "path",
+						"name": "offerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/offers/{offerId}/decline": {
+			"post": {
+				"operationId": "DeclineOffer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_OfferDeclineResult_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Not the user's turn, or not allowed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found, or not reachable with this token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "The offer is closed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "Decline the most recent offer of the session; closes it. Same turn rule\nas accept.",
+				"summary": "Decline offer",
+				"tags": [
+					"Offers"
+				],
+				"security": [
+					{
+						"apiToken": [
+							"offers:write"
 						]
 					}
 				],

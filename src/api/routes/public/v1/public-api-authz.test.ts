@@ -373,6 +373,12 @@ describe("public API scopes", () => {
     expect(res.status).toBe(403)
     expect(res.body.error.code).toBe("INSUFFICIENT_SCOPE")
     expect(res.body.error.details.required).toEqual(["orders:read"])
+
+    const write = await request(app())
+      .post(`/api/public/v1/offers/${OFFER_B}/accept`)
+      .set(bearer(SHOP_SYNC))
+    expect(write.status).toBe(403)
+    expect(write.body.error.code).toBe("INSUFFICIENT_SCOPE")
   })
 
   it("answers 404 in the public envelope for routes that don't exist", async () => {
@@ -422,5 +428,84 @@ describe("public API org grant", () => {
       .get(`/api/public/v1/orders/${ORDER_MINE_B}`)
       .set(bearer(ORDER_DESK_PERSONAL))
     expect(res.status).toBe(200)
+  })
+
+  it("hides an org's offer from a token not granted that org, for reads and answers", async () => {
+    expect(
+      (
+        await request(app())
+          .get(`/api/public/v1/offers/${OFFER_B}`)
+          .set(bearer(ORDER_DESK_ORG_A))
+      ).status,
+    ).toBe(404)
+    state.roles[`${ORG_B}:${ME}`] = [{ manage_orders: true }]
+    const accept = await request(app())
+      .post(`/api/public/v1/offers/${OFFER_B}/accept`)
+      .set(bearer(ORDER_DESK_ORG_A))
+    expect(accept.status).toBe(404)
+  })
+
+  it("refuses an org order status change for a token not granted the org, despite the user's role", async () => {
+    state.roles[`${ORG_B}:${ME}`] = [{ manage_orders: true }]
+    const res = await request(app())
+      .post(`/api/public/v1/orders/${ORDER_B}/status`)
+      .set(bearer(ORDER_DESK_ORG_A))
+      .send({ status: "in-progress" })
+    expect(res.status).toBe(404)
+  })
+})
+
+describe("public API uses the minter's current permissions", () => {
+  it("allows a status change while the user holds manage_orders in the granted org", async () => {
+    state.roles[`${ORG_A}:${ME}`] = [{ manage_orders: true }]
+    const res = await request(app())
+      .post(`/api/public/v1/orders/${ORDER_A}/status`)
+      .set(bearer(ORDER_DESK_ORG_A))
+      .send({ status: "in-progress" })
+    expect(res.status).toBe(200)
+    expect(res.body.data).toEqual({ order_id: ORDER_A, status: "in-progress" })
+    expect(auditLogService.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: "public_api.order_status_changed",
+        metadata: expect.objectContaining({ via_api_token_id: "t-org-a" }),
+      }),
+    )
+  })
+
+  it("refuses it once the user has lost manage_orders (still claim_orders)", async () => {
+    state.roles[`${ORG_A}:${ME}`] = [{ claim_orders: true }]
+    const res = await request(app())
+      .post(`/api/public/v1/orders/${ORDER_A}/status`)
+      .set(bearer(ORDER_DESK_ORG_A))
+      .send({ status: "in-progress" })
+    expect(res.status).toBe(403)
+    expect(res.body.error.code).toBe("FORBIDDEN")
+  })
+
+  it("hides the order once the user holds no order role there at all", async () => {
+    const res = await request(app())
+      .post(`/api/public/v1/orders/${ORDER_A}/status`)
+      .set(bearer(ORDER_DESK_ORG_A))
+      .send({ status: "in-progress" })
+    expect(res.status).toBe(404)
+  })
+
+  it("never lends a site admin's role to a token", async () => {
+    state.db!.tables.accounts[0].role = "admin"
+    const res = await request(app())
+      .post(`/api/public/v1/orders/${ORDER_A}/status`)
+      .set(bearer(ORDER_DESK_ORG_A))
+      .send({ status: "in-progress" })
+    expect(res.status).toBe(404)
+  })
+
+  it("validates the body against the spec", async () => {
+    state.roles[`${ORG_A}:${ME}`] = [{ manage_orders: true }]
+    const res = await request(app())
+      .post(`/api/public/v1/orders/${ORDER_A}/status`)
+      .set(bearer(ORDER_DESK_ORG_A))
+      .send({ status: "not-started" })
+    expect(res.status).toBe(400)
+    expect(res.body.error.code).toBe("VALIDATION_ERROR")
   })
 })

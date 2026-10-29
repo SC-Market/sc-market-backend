@@ -3,6 +3,7 @@ import {
   DBOfferSession,
 } from "../../../../clients/database/db-models.js"
 import { has_permission } from "../util/permissions.js"
+import { isSiteAdmin } from "../../../util/site-role.js"
 import { User } from "../api-models.js"
 import type { Request } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
@@ -41,6 +42,28 @@ export async function is_related_to_offer(
   }
 
   return false
+}
+
+/**
+ * Whether the user may act on an offer session at all (view it, or try a
+ * response): its customer, its assignee, a site admin, or, for an org's
+ * offer, a member with manage_orders or claim_orders. Whose turn it is is
+ * checked separately (can_respond_to_offer_helper). Callers check the API
+ * token's org grant first.
+ */
+export async function userRelatedToOffer(session: DBOfferSession, user: User): Promise<boolean> {
+  const assigned = session.assigned_id === user.user_id
+  const customer = session.customer_id === user.user_id
+  let unrelated = !customer && !assigned && !isSiteAdmin(user)
+  if (session.contractor_id && unrelated) {
+    // Same rule as related_to_order and the Discord Claim button
+    // (clients/discord_api/claim.ts): claim_orders members need access to
+    // self-claim. What they may do is checked in the handlers.
+    unrelated =
+      !(await has_permission(session.contractor_id, user.user_id, "manage_orders")) &&
+      !(await has_permission(session.contractor_id, user.user_id, "claim_orders"))
+  }
+  return !unrelated
 }
 
 export async function can_respond_to_offer_helper(

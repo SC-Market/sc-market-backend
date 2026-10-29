@@ -81,8 +81,11 @@ export const PUBLIC_OPERATIONS: Record<string, readonly PublicScope[]> = {
   "GET /listings/{listingId}/stock": ["stock:read"],
   "GET /orders": ["orders:read"],
   "GET /orders/{orderId}": ["orders:read"],
+  "POST /orders/{orderId}/status": ["orders:write"],
   "GET /offers": ["offers:read"],
   "GET /offers/{offerId}": ["offers:read"],
+  "POST /offers/{offerId}/accept": ["offers:write"],
+  "POST /offers/{offerId}/decline": ["offers:write"],
 }
 
 /** Routes served outside TSOA by the public router itself (no token needed). */
