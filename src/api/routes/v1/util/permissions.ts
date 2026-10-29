@@ -3,7 +3,14 @@ import {
   DBOrder,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
-import { currentRequestUser } from "../../../util/request-context.js"
+import {
+  currentRequest,
+  currentRequestUser,
+} from "../../../util/request-context.js"
+import {
+  tokenAllowsOrg,
+  tokenOrgScope,
+} from "../../v2/middleware/token-org-access.js"
 import * as contractorDb from "../contractors/database.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
 
@@ -20,11 +27,28 @@ function isActingSiteAdmin(user_id: string): boolean {
   return !!requester && requester.user_id === user_id && isSiteAdmin(requester)
 }
 
+/**
+ * An API token restricted to some orgs (its contractor_ids) acts for no other
+ * org. For the requester of a token request, has_permission and is_member
+ * answer false for orgs outside the token's grant, so every org check behaves
+ * as if the user weren't in that org: writes are refused and lists leave the
+ * org's private data out. A backstop for the explicit checks
+ * (requireContractorAccess, tokenMayUseOrg, v2 tokenRequestGuard); sessions,
+ * full/admin tokens, other users and code outside a request are unaffected.
+ */
+function tokenExcludesOrg(contractor_id: string, user_id: string): boolean {
+  const req = currentRequest()
+  const requester = req?.user as { user_id?: string } | undefined
+  if (!req || !requester || requester.user_id !== user_id) return false
+  return !tokenAllowsOrg(tokenOrgScope(req.__tokenInfo), contractor_id)
+}
+
 export async function has_permission(
   contractor_id: string,
   user_id: string,
   permission_name: keyof DBContractorRole,
 ) {
+  if (tokenExcludesOrg(contractor_id, user_id)) return false
   if (isActingSiteAdmin(user_id)) {
     return true
   }
@@ -40,7 +64,22 @@ export async function has_permission(
   return false
 }
 
+/**
+ * Whether the user is a member of the org, as a fact, ignoring the request's
+ * API-token grant. For checks that are not the requester acting for the org
+ * (e.g. "is this customer on the seller side?", which must not become false
+ * just because the customer's token wasn't granted the org).
+ */
+export async function isOrgMemberIgnoringToken(contractor_id: string, user_id: string) {
+  const members = await contractorDb.getContractorMembers({
+    contractor_id,
+    user_id,
+  })
+  return !!members.length
+}
+
 export async function is_member(contractor_id: string, user_id: string) {
+  if (tokenExcludesOrg(contractor_id, user_id)) return false
   // let roles = await database.getContractorRoles({contractor_id})
   const members = await contractorDb.getContractorMembers({
     contractor_id,

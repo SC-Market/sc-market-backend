@@ -5,6 +5,7 @@ import {
   adminAuthorized,
   requireModerationRead,
   requireModerationWrite,
+  requireTokenScopes,
 } from "../../../middleware/auth.js"
 import {
   writeRateLimit,
@@ -32,6 +33,7 @@ export const moderationRouter = express.Router()
 moderationRouter.post(
   "/report",
   userAuthorized,
+  requireTokenScopes("profile:write"),
   moderation_post_report_spec,
   writeRateLimit,
   moderation_post_report,
@@ -41,6 +43,7 @@ moderationRouter.post(
 moderationRouter.get(
   "/reports",
   userAuthorized,
+  requireTokenScopes("profile:read"),
   moderation_get_reports_spec,
   readRateLimit,
   moderation_get_reports,

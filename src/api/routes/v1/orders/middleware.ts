@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import { has_permission } from "../util/permissions.js"
 import { createErrorResponse } from "../util/response.js"
 import { NextFunction, Request, Response } from "express"
@@ -23,6 +24,10 @@ export async function related_to_order(
   }
 
   req.order = order
+
+  // An org's order: an API token must be granted the org (unless the user is
+  // only its customer, not a member of the org).
+  if (!(await tokenMayUseOrg(req, res, order.contractor_id))) return
 
   const assigned = order.assigned_id === user.user_id
   const customer = order.customer_id === user.user_id

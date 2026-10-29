@@ -5911,6 +5911,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsOrdersV2Controller_getOrdersByListing: Record<string, TsoaRoute.ParameterSchema> = {
                 listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/orders/by-listing/:listingId',
             authenticateMiddleware([{"loggedin":[]}]),
@@ -6644,6 +6645,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsListingsV2Controller_getInventorySummary: Record<string, TsoaRoute.ParameterSchema> = {
                 spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/listings/inventory-summary',
             authenticateMiddleware([{"loggedin":[]}]),
@@ -9003,6 +9005,7 @@ export function RegisterRoutes(app: Router) {
                 sort_order: {"default":"desc","in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":50,"in":"query","name":"page_size","dataType":"double"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-data/blueprints/inventory',
             authenticateMiddleware([{"loggedin":[]}]),

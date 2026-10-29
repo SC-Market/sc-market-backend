@@ -64,6 +64,7 @@ export class InventoryV2Controller extends BaseController {
 
   /**
    * List all inventory lots for the current user
+   * @summary List my inventory lots
    */
   @Get()
   public async getInventory(
@@ -82,6 +83,23 @@ export class InventoryV2Controller extends BaseController {
 
     let query = knex("listing_item_lots as lil")
       .where("lil.owner_id", userId)
+
+    // The user's lots in an org's listing are that org's stock: an API token
+    // sees them only for orgs it was granted (PUT /stock-lots/{id} refuses
+    // the others too). Unlisted lots and lots in personal listings stay.
+    const orgScope = this.tokenOrgScope()
+    if (orgScope !== null) {
+      query = query.where((qb) => {
+        qb.whereNull("lil.listing_id").orWhereNotExists(
+          knex("listings as own_l")
+            .join("shops as own_s", "own_s.shop_id", "own_l.shop_id")
+            .whereRaw("own_l.listing_id = lil.listing_id")
+            .whereNotNull("own_s.owner_contractor_id")
+            .whereNotIn("own_s.owner_contractor_id", [...orgScope])
+            .select(knex.raw("1")),
+        )
+      })
+    }
 
     if (game_item_id) query = query.where("lil.game_item_id", game_item_id)
     if (listing_id) query = query.where("lil.listing_id", listing_id)
@@ -143,6 +161,7 @@ export class InventoryV2Controller extends BaseController {
 
   /**
    * Create an unlisted inventory lot (personal inventory)
+   * @summary Create inventory lot
    */
   @Post()
   public async createInventoryLot(
@@ -193,6 +212,7 @@ export class InventoryV2Controller extends BaseController {
 
   /**
    * Link a lot to a listing (makes it available for sale)
+   * @summary List an inventory lot on a listing
    */
   @Post("{lotId}/list")
   public async linkToListing(
@@ -234,6 +254,7 @@ export class InventoryV2Controller extends BaseController {
 
   /**
    * Unlink a lot from its listing (returns to personal inventory)
+   * @summary Unlist an inventory lot
    */
   @Post("{lotId}/unlist")
   public async unlinkFromListing(
@@ -263,6 +284,7 @@ export class InventoryV2Controller extends BaseController {
 
   /**
    * Delete an inventory lot
+   * @summary Delete inventory lot
    */
   @Delete("{lotId}")
   public async deleteInventoryLot(

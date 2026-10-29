@@ -12,6 +12,7 @@
 import type { Knex } from "knex"
 import type { VariantAttributes } from "../../api/routes/v2/types/listings.types.js"
 import { getShopsForUser } from "../shops/shop-permissions.service.js"
+import type { TokenOrgScope } from "../../api/routes/v2/middleware/token-org-access.js"
 
 /** One listing variant a seller can fill the buy order from. */
 export interface FulfillmentOptionRow {
@@ -44,9 +45,16 @@ export function rankFulfillmentOptions<T extends FulfillmentOptionRow & { proble
   )
 }
 
-/** Shops `userId` can sell from (owns, or has manage_market in the owning org). */
-export async function getFulfillingShopIds(userId: string): Promise<string[]> {
-  const shops = await getShopsForUser(userId)
+/**
+ * Shops `userId` can sell from (owns, or has manage_market in the owning org),
+ * limited to the orgs of the request's API-token grant (`orgScope`; null for
+ * sessions and full/admin tokens).
+ */
+export async function getFulfillingShopIds(
+  userId: string,
+  orgScope: TokenOrgScope,
+): Promise<string[]> {
+  const shops = await getShopsForUser(userId, orgScope)
   return shops.filter((s) => s.permissions.can_manage).map((s) => s.shop_id)
 }
 

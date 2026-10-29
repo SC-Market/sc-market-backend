@@ -15,6 +15,7 @@
 import { Get, Post, Patch, Delete, Route, Tags, Body, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { memberOrgIdsQuery } from "../middleware/token-org-access.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
@@ -75,6 +76,7 @@ export class SuppliersV2Controller extends BaseController {
   // List my supplier roster
   // ---------------------------------------------------------------------------
 
+  /** @summary List my supplier roster */
   @Get()
   public async getMySuppliers(
     @Request() request: ExpressRequest,
@@ -117,6 +119,7 @@ export class SuppliersV2Controller extends BaseController {
   // Add a supplier
   // ---------------------------------------------------------------------------
 
+  /** @summary Add a supplier */
   @Post()
   public async addSupplier(
     @Body() body: AddSupplierRequest,
@@ -175,6 +178,7 @@ export class SuppliersV2Controller extends BaseController {
   // Update supplier tier / notes / status
   // ---------------------------------------------------------------------------
 
+  /** @summary Update a supplier relationship */
   @Patch("{relationshipId}")
   public async updateSupplier(
     @Path() relationshipId: string,
@@ -209,6 +213,7 @@ export class SuppliersV2Controller extends BaseController {
   // Remove supplier (hard delete)
   // ---------------------------------------------------------------------------
 
+  /** @summary Remove a supplier */
   @Delete("{relationshipId}")
   public async removeSupplier(
     @Path() relationshipId: string,
@@ -234,6 +239,7 @@ export class SuppliersV2Controller extends BaseController {
   // View roster entries where I am the supplier
   // ---------------------------------------------------------------------------
 
+  /** @summary List rosters I supply */
   @Get("as-supplier")
   public async getMyAggregators(
     @Request() request: ExpressRequest,
@@ -266,9 +272,13 @@ export class SuppliersV2Controller extends BaseController {
   // Helpers
   // ---------------------------------------------------------------------------
 
+  /**
+   * The orgs the user acts for here: their memberships, narrowed to the
+   * request's API-token org grant (every membership for sessions and
+   * full/admin tokens).
+   */
   private async getUserContractorIds(userId: string): Promise<string[]> {
-    const rows = await getKnex()("contractor_members")
-      .where({ user_id: userId })
+    const rows = await memberOrgIdsQuery(getKnex(), userId, this.tokenOrgScope())
       .select<ContractorMemberIdRow[]>("contractor_id")
     return rows.map((r) => r.contractor_id)
   }
@@ -282,7 +292,11 @@ export class SuppliersV2Controller extends BaseController {
       const member = await getKnex()("contractor_members")
         .where({ contractor_id: rel.aggregator_contractor_id, user_id: userId })
         .first()
-      if (member) return
+      if (member) {
+        // Acting for the org: an API token must be granted it.
+        await this.requireTokenOrgAccess(rel.aggregator_contractor_id)
+        return
+      }
     }
     throw this.throwForbidden("Not authorized to modify this supplier relationship")
   }

@@ -24,7 +24,7 @@ describe("listing visibility", () => {
   // visitors because the rule was "visibility != 'private'".
   it("shows anonymous viewers public listings only (no private, no unlisted)", () => {
     const q = knex("listing_search as ls")
-      .where(listingVisibleTo(knex, undefined, LS_COLUMNS))
+      .where(listingVisibleTo(knex, undefined, null, LS_COLUMNS))
       .toSQL()
     expect(q.sql).toBe(
       `select * from "listing_search" as "ls" where (${NOT_TEST_SHOP} and "ls"."visibility" = ?)`,
@@ -34,7 +34,7 @@ describe("listing visibility", () => {
 
   it("shows test shops' listings to test viewers only", () => {
     const q = knex("listing_search as ls")
-      .where(listingVisibleTo(knex, "user-1", LS_COLUMNS))
+      .where(listingVisibleTo(knex, "user-1", null, LS_COLUMNS))
       .toSQL()
     expect(q.sql).toContain(
       "((NOT EXISTS (SELECT 1 FROM shops _ts WHERE _ts.shop_id = ls.shop_id AND _ts.is_test)) OR EXISTS (SELECT 1 FROM accounts _tv WHERE _tv.user_id = ? AND _tv.is_test))",
@@ -44,7 +44,7 @@ describe("listing visibility", () => {
 
   it("lets a signed-in viewer see private listings only of orgs they belong to, never unlisted ones", () => {
     const q = knex("listing_search as ls")
-      .where(listingVisibleTo(knex, "user-1", LS_COLUMNS))
+      .where(listingVisibleTo(knex, "user-1", null, LS_COLUMNS))
       .toSQL()
     expect(q.sql).toContain(
       '"ls"."visibility" = ? or ("ls"."visibility" = ? and "ls"."shop_owner_contractor_id" is not null and exists',
@@ -71,7 +71,7 @@ describe("visibleActiveListingCountQuery (shop header / shop card count)", () =>
   // while the grid said "No active listings" — the count included the
   // org-internal (private) listings the grid hides.
   it("counts only active, public listings for anonymous viewers", () => {
-    const q = visibleActiveListingCountQuery(knex, "shop-1", undefined)
+    const q = visibleActiveListingCountQuery(knex, "shop-1", undefined, null)
       .count("* as count")
       .toSQL()
     expect(q.sql).toBe(
@@ -81,18 +81,18 @@ describe("visibleActiveListingCountQuery (shop header / shop card count)", () =>
   })
 
   it("applies exactly the grid's visibility filter for signed-in viewers", () => {
-    const count = visibleActiveListingCountQuery(knex, "shop-1", "user-1").toSQL()
+    const count = visibleActiveListingCountQuery(knex, "shop-1", "user-1", null).toSQL()
     const grid = knex("listing_search as ls")
       .where("ls.shop_id", "shop-1")
       .where("ls.status", "active")
-      .where(listingVisibleTo(knex, "user-1", LS_COLUMNS))
+      .where(listingVisibleTo(knex, "user-1", null, LS_COLUMNS))
       .toSQL()
     expect(count.sql).toBe(grid.sql)
     expect(count.bindings).toEqual(grid.bindings)
   })
 
   it("correlates with the outer shops query when given a column ref", () => {
-    const sub = visibleActiveListingCountQuery(knex, knex.ref("s.shop_id"), undefined)
+    const sub = visibleActiveListingCountQuery(knex, knex.ref("s.shop_id"), undefined, null)
       .select(knex.raw("COUNT(*)::integer"))
       .as("listing_count")
     const q = knex("shops as s").select("s.shop_id", sub).toSQL()

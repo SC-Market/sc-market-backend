@@ -8,6 +8,7 @@ import {
   requireMarketRead,
   requireMarketWrite,
   requireMarketAdmin,
+  requireTokenScopes,
 } from "../../../middleware/auth.js"
 import {
   criticalRateLimit,
@@ -128,6 +129,7 @@ marketRouter.post(
   "/listings/stats",
   market_post_listings_stats_spec,
   userAuthorized,
+  requireTokenScopes("market:read"),
   readRateLimit,
   get_listing_stats,
 )
@@ -192,6 +194,8 @@ marketRouter.get(
 
 marketRouter.get(
   "/listing/:listing_id/orders",
+  userAuthorized,
+  requireTokenScopes("orders:read"),
   can_manage_market_listing,
   market_get_listing_listing_id_orders_spec,
   readRateLimit,

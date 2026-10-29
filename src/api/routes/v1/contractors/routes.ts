@@ -6,6 +6,7 @@ import {
   requireContractorsRead,
   requireContractorsWrite,
   userAuthorized,
+  requireTokenScopes,
 } from "../../../middleware/auth.js"
 
 import {
@@ -330,6 +331,7 @@ contractorsRouter.put(
 contractorsRouter.get(
   "/:spectrum_id/languages",
   userAuthorized,
+  requireTokenScopes("contractors:read"),
   valid_contractor,
   readRateLimit,
   get_spectrum_id_languages,
@@ -338,6 +340,7 @@ contractorsRouter.get(
 contractorsRouter.put(
   "/:spectrum_id/languages",
   userAuthorized,
+  requireTokenScopes("contractors:write"),
   valid_contractor,
   org_permission("manage_org_details"),
   writeRateLimit,
@@ -451,6 +454,7 @@ contractorsRouter.post(
   "/:spectrum_id/accept",
   post_spectrum_id_accept_spec,
   userAuthorized,
+  requireTokenScopes("contractors:write"),
   valid_contractor,
   criticalRateLimit,
   post_spectrum_id_accept,
@@ -460,6 +464,7 @@ contractorsRouter.post(
   "/:spectrum_id/decline",
   post_spectrum_id_decline_spec,
   userAuthorized,
+  requireTokenScopes("contractors:write"),
   valid_contractor,
   criticalRateLimit,
   post_spectrum_id_decline,
@@ -479,6 +484,7 @@ contractorsRouter.get(
   "/:spectrum_id/settings/discord",
   get_spectrum_id_settings_discord_spec,
   userAuthorized,
+  requireTokenScopes("contractors:read"),
   org_permission("manage_webhooks"),
   readRateLimit,
   get_spectrum_id_settings_discord,
@@ -488,6 +494,7 @@ contractorsRouter.post(
   "/:spectrum_id/settings/discord/use_official",
   post_spectrum_id_settings_discord_use_official_spec,
   userAuthorized,
+  requireTokenScopes("contractors:write"),
   org_permission("manage_webhooks"),
   writeRateLimit,
   post_spectrum_id_settings_discord_use_official,
@@ -497,6 +504,7 @@ contractorsRouter.post(
   "/:spectrum_id/leave",
   post_spectrum_id_leave_spec,
   org_authorized,
+  requireTokenScopes("contractors:write"),
   writeRateLimit,
   post_spectrum_id_leave,
 )
@@ -505,6 +513,7 @@ contractorsRouter.post(
 contractorsRouter.get(
   "/:spectrum_id/blocklist",
   org_authorized,
+  requireTokenScopes("contractors:read"),
   org_permission("manage_blocklist"),
   get_spectrum_id_blocklist_spec,
   readRateLimit,
@@ -514,6 +523,7 @@ contractorsRouter.get(
 contractorsRouter.post(
   "/:spectrum_id/blocklist/block",
   org_authorized,
+  requireTokenScopes("contractors:write"),
   org_permission("manage_blocklist"),
   post_spectrum_id_blocklist_block_spec,
   criticalRateLimit,
@@ -523,6 +533,7 @@ contractorsRouter.post(
 contractorsRouter.delete(
   "/:spectrum_id/blocklist/unblock/:username",
   org_authorized,
+  requireTokenScopes("contractors:write"),
   org_permission("manage_blocklist"),
   delete_spectrum_id_blocklist_unblock_username_spec,
   criticalRateLimit,

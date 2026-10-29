@@ -17,6 +17,12 @@
  * - session_id / sessionId / offer_id / offerId, offers/{id}
  *                                    -> the offer session's org
  * A request that touches no org (personal resources) is not affected.
+ *
+ * Lists that name no org (GET /orders, /shops/mine, /offers/search, ...) are
+ * not covered by that: they build their seller side from the user's
+ * memberships. They narrow it with tokenOrgScope / memberOrgIdsQuery below, so
+ * a token sees only its granted orgs there too. has_permission / is_member
+ * (v1 util/permissions.ts) apply the same grant as a backstop.
  */
 
 import type { Knex } from "knex"
@@ -160,6 +166,79 @@ export async function orgIdsForRequest(
 }
 
 /**
+ * The orgs a request may act for, from its API token's `contractor_ids`.
+ * `null` means unrestricted: a session or JWT cookie request (no token), or a
+ * `full` / `admin` token (both are documented as working for all the user's
+ * orgs, as in v1 requireContractorAccess).
+ */
+export type TokenOrgScope = readonly string[] | null
+
+/** Shape of `req.__tokenInfo` this module reads. */
+export type TokenOrgGrant = Pick<TokenInfo, "scopes" | "contractor_ids">
+
+export function tokenOrgScope(tokenInfo: TokenOrgGrant | undefined): TokenOrgScope {
+  if (!tokenInfo) return null
+  const scopes = tokenInfo.scopes || []
+  if (scopes.includes("admin") || scopes.includes("full")) return null
+  return tokenInfo.contractor_ids || []
+}
+
+/**
+ * Whether a token scope lets the request act for `contractorId`. Personal
+ * resources (no org) are always allowed.
+ */
+export function tokenAllowsOrg(
+  scope: TokenOrgScope,
+  contractorId: string | null | undefined,
+): boolean {
+  if (!contractorId || scope === null) return true
+  return scope.includes(contractorId)
+}
+
+function orgDenied(): Error & { status: number } {
+  const err = new Error("Token does not have access to this contractor") as Error & {
+    status: number
+  }
+  err.status = 403
+  return err
+}
+
+/**
+ * Throws a 403 when the token may not act for `contractorId` and the user is
+ * a member of it. Outsiders are not refused: touching another org's resources
+ * as a customer (buying from its shop, reading its listings) needs no grant.
+ */
+export async function assertTokenMayUseOrg(
+  db: Knex,
+  tokenInfo: TokenOrgGrant | undefined,
+  contractorId: string | null | undefined,
+  userId: string,
+): Promise<void> {
+  const scope = tokenOrgScope(tokenInfo)
+  if (tokenAllowsOrg(scope, contractorId)) return
+  const member = await db("contractor_members")
+    .where({ contractor_id: contractorId, user_id: userId })
+    .first()
+  if (member) throw orgDenied()
+}
+
+/**
+ * Subquery: ids of the orgs `userId` is a member of that the token scope
+ * covers. Lists that show org data because the user belongs to the org use
+ * it in place of a bare contractor_members lookup, so a token sees only the
+ * orgs it was granted (sessions and full/admin tokens: every org).
+ */
+export function memberOrgIdsQuery(
+  db: Knex,
+  userId: string,
+  scope: TokenOrgScope,
+): Knex.QueryBuilder {
+  const q = db("contractor_members").select("contractor_id").where("user_id", userId)
+  if (scope !== null) q.whereIn("contractor_id", [...scope])
+  return q
+}
+
+/**
  * Throws a 403 when a token request touches an org the token wasn't granted.
  *
  * Only orgs the token's user belongs to are checked: those are the ones whose
@@ -173,24 +252,8 @@ export async function enforceTokenOrgAccess(
   req: Pick<Request, "params" | "query" | "body" | "path">,
   userId: string,
 ): Promise<void> {
-  if (!tokenInfo) return
-  const scopes = tokenInfo.scopes || []
-  if (scopes.includes("admin") || scopes.includes("full")) return
-
-  const allowed = new Set(tokenInfo.contractor_ids || [])
+  if (tokenOrgScope(tokenInfo) === null) return
   for (const org of await orgIdsForRequest(db, req)) {
-    if (allowed.has(org)) continue
-    const member = await db("contractor_members")
-      .where({ contractor_id: org, user_id: userId })
-      .first()
-    if (member) {
-      const err = new Error(
-        "Token does not have access to this contractor",
-      ) as Error & {
-        status: number
-      }
-      err.status = 403
-      throw err
-    }
+    await assertTokenMayUseOrg(db, tokenInfo, org, userId)
   }
 }

@@ -1,4 +1,8 @@
 import type { Knex } from "knex"
+import {
+  tokenAllowsOrg,
+  type TokenOrgScope,
+} from "../middleware/token-org-access.js"
 
 interface BuyOrderForFulfillment {
   buyer_id: string
@@ -20,6 +24,11 @@ interface BuyOrderForFulfillment {
  * someone else (private / roster-only), which the search endpoints already
  * hide from them.
  *
+ * `orgScope` is the request's API-token org grant (null for sessions and
+ * full/admin tokens): an order directed at an org, or at a roster the seller is
+ * on through an org, counts only for orgs the token may act for, as in
+ * buyOrderVisibleTo.
+ *
  * Returns null when allowed, otherwise { field, message }.
  */
 export async function buyOrderFulfillmentProblem(
@@ -31,6 +40,7 @@ export async function buyOrderFulfillmentProblem(
     | { quality_tier?: number | string | null }
     | null
     | undefined,
+  orgScope: TokenOrgScope,
 ): Promise<{ field: string; message: string } | null> {
   if (buyOrder.buyer_id === sellerId) {
     return {
@@ -81,6 +91,7 @@ export async function buyOrderFulfillmentProblem(
       buyOrder.target_supplier_id && buyOrder.target_supplier_id === sellerId
     const viaOrg =
       !!buyOrder.target_supplier_contractor_id &&
+      tokenAllowsOrg(orgScope, buyOrder.target_supplier_contractor_id) &&
       !!(await db("contractor_members")
         .where({
           contractor_id: buyOrder.target_supplier_contractor_id,
@@ -98,7 +109,9 @@ export async function buyOrderFulfillmentProblem(
       await db("contractor_members")
         .where({ user_id: sellerId })
         .select("contractor_id")
-    ).map((r: { contractor_id: string }) => r.contractor_id)
+    )
+      .map((r: { contractor_id: string }) => r.contractor_id)
+      .filter((id: string) => tokenAllowsOrg(orgScope, id))
     const rels = await db("supplier_relationships")
       .where({ aggregator_id: buyOrder.buyer_id, status: "active" })
       .select("supplier_id", "supplier_contractor_id")

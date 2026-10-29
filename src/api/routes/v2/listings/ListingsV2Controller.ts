@@ -869,6 +869,7 @@ export class ListingsV2Controller extends BaseController {
         listingVisibleTo(
           db,
           this.tryGetUserId(),
+          this.tokenOrgScope(),
           {
             visibility: "ls.visibility",
             ownerContractorId: "ls.shop_owner_contractor_id",
@@ -971,33 +972,6 @@ export class ListingsV2Controller extends BaseController {
     }
   }
 
-  /**
-   * Update an existing listing
-   *
-   * Updates listing metadata (title, description), pricing (base_price or per-variant prices),
-   * and stock lot details (quantities, listed status, locations). Validates ownership before
-   * allowing updates and prevents editing sold or cancelled listings.
-   *
-   * Requirements:
-   * - 17.1: PUT /api/v2/listings/:id endpoint
-   * - 17.2: Allow updating title and description
-   * - 17.3: Allow updating base_price for unified pricing mode
-   * - 17.4: Allow updating per-variant prices for per_variant pricing mode
-   * - 17.5: Allow updating stock lot quantities
-   * - 17.6: Allow updating stock lot listed status
-   * - 17.7: Prevent editing sold or cancelled listings
-   * - 17.8: Validate ownership before allowing updates
-   * - 17.9: Return updated listing with variant breakdown
-   * - 17.10: Log all modifications to Audit_Trail
-   * - 17.11: Use database transaction for atomicity
-   * - 17.12: Invalidate cache after updates
-   *
-   * @summary Update listing
-   * @param id Listing UUID
-   * @param requestBody Update request with optional fields
-   * @param request Express request for authentication
-   * @returns Updated listing with variant breakdown
-   */
   /**
    * Get my listings with variant information
    *
@@ -1201,6 +1175,40 @@ export class ListingsV2Controller extends BaseController {
   }
 
   /**
+   * Listed stock of the caller's personal shop, or of an org's shops with
+   * `spectrum_id`, summed per game item (the crafting calculator's materials).
+   *
+   * @summary Get inventory summary
+   */
+  @Get("inventory-summary")
+  @Security("loggedin")
+  public async getInventorySummary(
+    @Query() spectrum_id?: string,
+    @Request() request?: ExpressRequest,
+  ): Promise<InventorySummaryResponse> {
+    // TSOA builds controllers without the request: set it, or getUserId()
+    // finds no user and every call is a 401.
+    if (request) this.request = request
+    const db = getKnex(); const user_id = this.getUserId()
+    let query = db("listing_item_lots as lil").join("listing_items as li", "lil.item_id", "li.item_id")
+      .join("listings as l", "li.listing_id", "l.listing_id").join("game_items as gi", "li.game_item_id", "gi.id")
+      .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
+      .where("l.status", "active").where("lil.listed", true).where("lil.quantity_total", ">", 0)
+    if (spectrum_id) {
+      const org = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
+      if (org) { query = query.whereIn("l.shop_id", db("shops").where("owner_contractor_id", org.contractor_id).select("shop_id")) }
+      else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
+    } else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
+    const rows = await query.groupBy("li.game_item_id", "gi.name", "gi.type", "gi.image_url")
+      .select("li.game_item_id", "gi.name as game_item_name", "gi.type as game_item_type", "gi.image_url as game_item_icon",
+        db.raw("SUM(lil.quantity_total)::numeric as total_quantity"),
+        db.raw("AVG((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as avg_quality_value"),
+        db.raw("MAX((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as max_quality_value"))
+      .orderBy("gi.name")
+    return { materials: rows.map((r: any) => ({ game_item_id: r.game_item_id, game_item_name: r.game_item_name, game_item_type: r.game_item_type || undefined, game_item_icon: r.game_item_icon || undefined, total_quantity: parseFloat(r.total_quantity) || 0, avg_quality_value: r.avg_quality_value ? Math.round(parseFloat(r.avg_quality_value)) : undefined, max_quality_value: r.max_quality_value ? parseInt(r.max_quality_value) : undefined })) }
+  }
+
+  /**
    * Get listing detail with variant breakdown
    *
    * Retrieves complete listing information including seller details, game item information,
@@ -1225,30 +1233,6 @@ export class ListingsV2Controller extends BaseController {
    * @param id Listing UUID
    * @returns Complete listing detail with variant breakdown
    */
-
-  /** @summary Get inventory summary */
-  @Get("inventory-summary")
-  @Security("loggedin")
-  public async getInventorySummary(@Query() spectrum_id?: string): Promise<InventorySummaryResponse> {
-    const db = getKnex(); const user_id = this.getUserId()
-    let query = db("listing_item_lots as lil").join("listing_items as li", "lil.item_id", "li.item_id")
-      .join("listings as l", "li.listing_id", "l.listing_id").join("game_items as gi", "li.game_item_id", "gi.id")
-      .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
-      .where("l.status", "active").where("lil.listed", true).where("lil.quantity_total", ">", 0)
-    if (spectrum_id) {
-      const org = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
-      if (org) { query = query.whereIn("l.shop_id", db("shops").where("owner_contractor_id", org.contractor_id).select("shop_id")) }
-      else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
-    } else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
-    const rows = await query.groupBy("li.game_item_id", "gi.name", "gi.type", "gi.image_url")
-      .select("li.game_item_id", "gi.name as game_item_name", "gi.type as game_item_type", "gi.image_url as game_item_icon",
-        db.raw("SUM(lil.quantity_total)::numeric as total_quantity"),
-        db.raw("AVG((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as avg_quality_value"),
-        db.raw("MAX((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as max_quality_value"))
-      .orderBy("gi.name")
-    return { materials: rows.map((r: any) => ({ game_item_id: r.game_item_id, game_item_name: r.game_item_name, game_item_type: r.game_item_type || undefined, game_item_icon: r.game_item_icon || undefined, total_quantity: parseFloat(r.total_quantity) || 0, avg_quality_value: r.avg_quality_value ? Math.round(parseFloat(r.avg_quality_value)) : undefined, max_quality_value: r.max_quality_value ? parseInt(r.max_quality_value) : undefined })) }
-  }
-
   @Get("{id}")
   public async getListingDetail(
     id: string,
@@ -1519,37 +1503,31 @@ export class ListingsV2Controller extends BaseController {
   }
 
   /**
-   * Search listings with filters
+   * Update an existing listing
    *
-   * Searches active listings using full-text search, quality tier filters, price filters,
-   * and game item filters. Uses the listing_search view for optimized query performance.
+   * Updates listing metadata (title, description), pricing (base_price or per-variant prices),
+   * and stock lot details (quantities, listed status, locations). Validates ownership before
+   * allowing updates and prevents editing sold or cancelled listings.
    *
    * Requirements:
-   * - 15.1: GET /api/v2/listings/search endpoint
-   * - 15.2: Accept text query parameter for full-text search
-   * - 15.3: Accept game_item_id parameter for item filtering
-   * - 15.4: Accept quality_tier_min and quality_tier_max parameters
-   * - 15.5: Accept price_min and price_max parameters
-   * - 15.6: Accept page and page_size parameters for pagination
-   * - 15.7: Return listings with price_min, price_max, quality_tier_min, quality_tier_max
-   * - 15.8: Return total count for pagination
-   * - 15.9: Support sorting by created_at, price, quality, seller_rating
-   * - 15.10: Include seller information in results
-   * - 15.11: Include variant_count in results
-   * - 15.12: Execute queries within 50ms performance target
+   * - 17.1: PUT /api/v2/listings/:id endpoint
+   * - 17.2: Allow updating title and description
+   * - 17.3: Allow updating base_price for unified pricing mode
+   * - 17.4: Allow updating per-variant prices for per_variant pricing mode
+   * - 17.5: Allow updating stock lot quantities
+   * - 17.6: Allow updating stock lot listed status
+   * - 17.7: Prevent editing sold or cancelled listings
+   * - 17.8: Validate ownership before allowing updates
+   * - 17.9: Return updated listing with variant breakdown
+   * - 17.10: Log all modifications to Audit_Trail
+   * - 17.11: Use database transaction for atomicity
+   * - 17.12: Invalidate cache after updates
    *
-   * @summary Search listings
-   * @param text Full-text search query
-   * @param game_item_id Filter by specific game item UUID
-   * @param quality_tier_min Minimum quality tier (1-5)
-   * @param quality_tier_max Maximum quality tier (1-5)
-   * @param price_min Minimum price filter
-   * @param price_max Maximum price filter
-   * @param page Page number for pagination (default: 1)
-   * @param page_size Number of results per page (default: 20, max: 100)
-   * @param sort_by Sort field (default: created_at)
-   * @param sort_order Sort order (default: desc)
-   * @returns Search results with pagination metadata
+   * @summary Update listing
+   * @param id Listing UUID
+   * @param requestBody Update request with optional fields
+   * @param request Express request for authentication
+   * @returns Updated listing with variant breakdown
    */
   @Security("loggedin")
   @Put("{id}")

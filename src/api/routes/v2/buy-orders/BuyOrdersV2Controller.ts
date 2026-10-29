@@ -404,6 +404,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
   /**
    * Create a standing buy order
+   * @summary Create standing buy order
    */
   @Security("verified")
   @Post('standing')
@@ -469,6 +470,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
   /**
    * Search active standing buy orders
+   * @summary Search buy orders
    */
   @Get('search')
   public async searchBuyOrders(
@@ -497,7 +499,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
     // Visibility: public, plus roster_only / private orders this viewer is a
     // supplier for, plus their own (buy-order-visibility.ts).
-    query = query.where(buyOrderVisibleTo(db, userId))
+    query = query.where(buyOrderVisibleTo(db, userId, this.tokenOrgScope()))
 
     if (text && text.trim().length > 0) {
       query = query.whereRaw("gi.name ILIKE ?", [`%${text.trim()}%`])
@@ -533,6 +535,7 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Get active buy orders matching the seller's current inventory.
    * Joins against listing_items to find orders the seller can fulfill right now.
+   * @summary Buy orders matching my stock
    */
   @Security("loggedin")
   @Get('matches-for-seller')
@@ -549,7 +552,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
     // Find game_item_ids the seller's shops (owned, or managed for an org)
     // have active listings for: the shops fulfill accepts listings from
-    const sellerShopIds = await getFulfillingShopIds(sellerId)
+    const sellerShopIds = await getFulfillingShopIds(sellerId, this.tokenOrgScope())
     const sellerItemIds = db('listing_items as li')
       .join('listings as l', 'l.listing_id', 'li.listing_id')
       .whereIn('l.shop_id', sellerShopIds)
@@ -564,7 +567,7 @@ export class BuyOrdersV2Controller extends BaseController {
       .whereIn('bo.game_item_id', sellerItemIds)
       // Orders this seller may see (and so fulfill): public, roster_only if
       // on the buyer's roster, private if directed at them.
-      .where(buyOrderVisibleTo(db, sellerId))
+      .where(buyOrderVisibleTo(db, sellerId, this.tokenOrgScope()))
 
     const [{ count }] = await query.clone().clearSelect().clearOrder().count('* as count')
     const total = parseInt(String(count), 10)
@@ -581,6 +584,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
   /**
    * Get current user's buy orders
+   * @summary List my buy orders
    */
   @Security("loggedin")
   @Get('mine')
@@ -618,6 +622,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
   /**
    * Get a single buy order by ID with full details
+   * @summary Get buy order
    */
   @Get('{id}')
   public async getBuyOrderDetail(
@@ -638,7 +643,7 @@ export class BuyOrdersV2Controller extends BaseController {
       .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
       .where('bo.buy_order_id', id)
       .modify((q) => {
-        if (!this.isAdmin()) q.where(buyOrderVisibleTo(db, this.tryGetUserId()))
+        if (!this.isAdmin()) q.where(buyOrderVisibleTo(db, this.tryGetUserId(), this.tokenOrgScope()))
       })
       .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
       .first()
@@ -652,6 +657,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
   /**
    * Update a standing buy order
+   * @summary Update buy order
    */
   @Security("loggedin")
   @Put('{id}')
@@ -702,6 +708,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
   /**
    * Cancel a standing buy order
+   * @summary Cancel buy order
    */
   @Security("loggedin")
   @Delete('{id}')
@@ -747,11 +754,11 @@ export class BuyOrdersV2Controller extends BaseController {
     const db = getKnex()
     const buyOrder = await db('buy_orders_v2 as bo')
       .where('bo.buy_order_id', id)
-      .where(buyOrderVisibleTo(db, userId))
+      .where(buyOrderVisibleTo(db, userId, this.tokenOrgScope()))
       .first('bo.*')
     if (!buyOrder) this.throwNotFound('Buy order', id)
 
-    const shopIds = await getFulfillingShopIds(userId)
+    const shopIds = await getFulfillingShopIds(userId, this.tokenOrgScope())
     const rows = await queryFulfillmentOptionRows(db, shopIds, buyOrder.game_item_id)
     const checked = await Promise.all(
       rows.map(async (row) => {
@@ -761,6 +768,7 @@ export class BuyOrdersV2Controller extends BaseController {
           userId,
           row.price_per_unit,
           row.variant_attributes,
+          this.tokenOrgScope(),
         )
         return { ...row, problem: problem?.message ?? null }
       }),
@@ -892,6 +900,7 @@ export class BuyOrdersV2Controller extends BaseController {
         sellerId,
         Number(price),
         variant.attributes,
+        this.tokenOrgScope(),
       )
       if (problem) throw this.throwValidationError(problem.message, [problem])
       // Test and real parties never trade (services/test-accounts/isolation.ts).
@@ -983,6 +992,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * Decline a standing buy order that was targeted directly at you.
    * Sets declined_at + declined_by and flips the order back to 'public' visibility
    * so the buyer can retarget it or leave it open.
+   * @summary Decline a directed buy order
    */
   @Security("loggedin")
   @Post('decline')
@@ -1013,6 +1023,8 @@ export class BuyOrdersV2Controller extends BaseController {
     if (!isSelf && !isOrgMember) {
       throw this.throwForbidden('Only the targeted supplier can decline this buy order')
     }
+    // Declining for the org acts for it: the API token must be granted it.
+    if (!isSelf) await this.requireTokenOrgAccess(order.target_supplier_contractor_id)
 
     const [updated] = await db('buy_orders_v2')
       .where({ buy_order_id: body.buy_order_id })

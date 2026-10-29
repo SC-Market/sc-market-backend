@@ -41,7 +41,7 @@ import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { verifyDiscordThreadTarget } from "../../../../services/discord/verify-discord-target.js"
-import { has_permission, is_member } from "../../v1/util/permissions.js"
+import { has_permission, isOrgMemberIgnoringToken } from "../../v1/util/permissions.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import { createNotificationWebhook } from "../../v1/util/webhooks.js"
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
@@ -286,8 +286,9 @@ export class ShopsV2Controller extends BaseController {
   }
 
   /**
-   * List all shops the current user can manage.
-   * Includes personal shops and org shops where user has manage_market.
+   * List the current user's shops: their personal shop and the shops of
+   * every org they belong to, each with the user's permissions there. With an
+   * API token, only the orgs the token was granted (Full Access: all).
    *
    * @summary List my shops
    */
@@ -296,7 +297,7 @@ export class ShopsV2Controller extends BaseController {
   public async getMyShops(@Request() request: ExpressRequest): Promise<ShopResponse[]> {
     this.request = request
     const userId = this.getUserId()
-    const shops = await getShopsForUser(userId)
+    const shops = await getShopsForUser(userId, this.tokenOrgScope())
     return Promise.all(shops.map(async (shop) => {
       const response = await shopToResponse(shop)
       return { ...response, permissions: shop.permissions }
@@ -590,7 +591,7 @@ export class ShopsV2Controller extends BaseController {
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as rating_count"),
         db.raw("COALESCE((SELECT SUM(sr.rating)::integer FROM shop_ratings sr WHERE sr.shop_id = s.shop_id), 0) as total_rating"),
         // Only the listings this viewer can see (private ones are org-internal)
-        visibleActiveListingCountQuery(db, db.ref("s.shop_id"), viewerUserId)
+        visibleActiveListingCountQuery(db, db.ref("s.shop_id"), viewerUserId, this.tokenOrgScope())
           .select(db.raw("COUNT(*)::integer"))
           .as("listing_count"),
         db.raw("COALESCE((SELECT COUNT(*)::integer FROM services sv WHERE sv.shop_id = s.shop_id AND sv.status = 'active'), 0) as service_count"),
@@ -730,7 +731,7 @@ export class ShopsV2Controller extends BaseController {
     }
 
     // Listing count: only what this viewer's listings grid will show
-    const listingCount = await visibleActiveListingCountQuery(db, shop.shop_id, this.tryGetUserId())
+    const listingCount = await visibleActiveListingCountQuery(db, shop.shop_id, this.tryGetUserId(), this.tokenOrgScope())
       .count("* as count")
       .first()
 
@@ -1552,7 +1553,7 @@ async function reassignShopDataAfterTransfer(
   const isAssigneeAssociated = async (assignedId: string | null): Promise<boolean> => {
     if (!assignedId) return true // nothing assigned, nothing to clear
     if (newOwnerContractorId) {
-      return is_member(newOwnerContractorId, assignedId)
+      return isOrgMemberIgnoringToken(newOwnerContractorId, assignedId)
     }
     // Personal shop: only the new owner should remain assigned
     return assignedId === newOwnerUserId

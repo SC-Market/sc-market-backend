@@ -25,6 +25,7 @@ export class OnboardingV2Controller extends BaseController {
     super(request)
   }
 
+  /** @summary Get onboarding status */
   @Security("loggedin")
   @Get("status")
   public async getOnboardingStatus(
@@ -70,6 +71,7 @@ export class OnboardingV2Controller extends BaseController {
     }
   }
 
+  /** @summary Complete onboarding */
   @Security("loggedin")
   @Post("complete")
   public async completeOnboarding(

@@ -611,6 +611,7 @@ export class BlueprintsController extends BaseController {
     @Query() sort_order: "asc" | "desc" = "desc",
     @Query() page: number = 1,
     @Query() page_size: number = 50,
+    @Request() request?: ExpressRequest,
   ): Promise<{
     blueprints: Array<{
       blueprint_id: string
@@ -635,6 +636,9 @@ export class BlueprintsController extends BaseController {
     page: number
     page_size: number
   }> {
+    // TSOA builds controllers without the request: set it, or getUserId()
+    // finds no user and every call is a 401.
+    if (request) this.request = request
     const knex = getKnex()
 
     // Get user_id from authentication context
@@ -1458,6 +1462,7 @@ export class BlueprintsController extends BaseController {
    * Get org members who own a specific blueprint
    * @param blueprint_id Blueprint UUID
    * @param spectrum_id Org spectrum ID
+   * @summary List org members who own a blueprint
    */
   @Get("{blueprint_id}/org-owners/{spectrum_id}")
   @Security("loggedin")

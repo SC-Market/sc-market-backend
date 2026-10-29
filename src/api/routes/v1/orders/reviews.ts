@@ -4,7 +4,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import * as orderDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
-import { has_permission, is_member } from "../util/permissions.js"
+import { has_permission, isOrgMemberIgnoringToken } from "../util/permissions.js"
 import {
   createResponse,
   createErrorResponse,
@@ -288,14 +288,14 @@ export async function customerIsSeller(
   const customer = order.customer_id
   if (!customer) return false
   if (order.assigned_id === customer) return true
-  if (order.contractor_id && (await is_member(order.contractor_id, customer))) return true
+  if (order.contractor_id && (await isOrgMemberIgnoringToken(order.contractor_id, customer))) return true
   if (order.shop_id) {
     const shop = await database
       .knex("shops")
       .where("shop_id", order.shop_id)
       .first("owner_user_id", "owner_contractor_id")
     if (shop?.owner_user_id === customer) return true
-    if (shop?.owner_contractor_id && (await is_member(shop.owner_contractor_id, customer))) {
+    if (shop?.owner_contractor_id && (await isOrgMemberIgnoringToken(shop.owner_contractor_id, customer))) {
       return true
     }
   }

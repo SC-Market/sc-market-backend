@@ -1158,6 +1158,7 @@ export class MissionsController extends BaseController {
   /**
    * Get mission detail by mission_code (string identifier)
    * @param mission_code The mission code string (e.g., pu_eliminatespecific_lawful_stanton4_intro)
+   * @summary Get mission by code
    */
   @Get("by-code/{mission_code}")
   public async getMissionDetailByCode(

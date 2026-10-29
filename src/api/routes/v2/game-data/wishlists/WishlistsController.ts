@@ -11,6 +11,7 @@ import { Controller, Get, Post, Put, Delete, Route, Tags, Query, Path, Body, Sec
 import { redactToken } from "../../../../../util/redact.js"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
+import { memberOrgIdsQuery } from "../../middleware/token-org-access.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
   CreateWishlistRequest,
@@ -112,6 +113,7 @@ export class WishlistsController extends BaseController {
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
+    const orgScope = this.tokenOrgScope()
 
     logger.info("Fetching user wishlists", { user_id })
 
@@ -121,12 +123,11 @@ export class WishlistsController extends BaseController {
         .where(function () {
           this.where("w.user_id", user_id)
             .orWhere(function () {
-              // Include org lists where user is a member
+              // Include org lists where user is a member (with an API
+              // token: only the orgs it was granted)
               this.whereNotNull("w.organization_id")
                 .where("w.is_collaborative", true)
-                .whereIn("w.organization_id",
-                  knex("contractor_members").where("user_id", user_id).select("contractor_id")
-                )
+                .whereIn("w.organization_id", memberOrgIdsQuery(knex, user_id, orgScope))
             })
         })
         .groupBy("w.wishlist_id")
@@ -209,6 +210,19 @@ export class WishlistsController extends BaseController {
       this.throwValidationError("wishlist_name is required", [
         { field: "wishlist_name", message: "Wishlist name is required" },
       ])
+    }
+
+    // An org list shows up for every member of the org: only members may
+    // create one (any user could attach a list to any org), and an API token
+    // must be granted the org.
+    if (body.organization_id) {
+      const isMember = await knex("contractor_members")
+        .where({ user_id, contractor_id: body.organization_id })
+        .first()
+      if (!isMember) {
+        this.throwForbidden("You must be an org member to create a list for it")
+      }
+      await this.requireTokenOrgAccess(body.organization_id)
     }
 
     logger.info("Creating wishlist", { user_id, wishlist_name: body.wishlist_name })
@@ -636,19 +650,7 @@ export class WishlistsController extends BaseController {
         this.throwNotFound("Wishlist", wishlist_id)
       }
 
-      if (wishlist.user_id !== user_id && !wishlist.is_collaborative) {
-        this.throwForbidden("You do not have permission to add items to this wishlist")
-      }
-
-      // For org collaborative lists, verify membership
-      if (wishlist.user_id !== user_id && wishlist.is_collaborative && wishlist.organization_id) {
-        const isMember = await knex("contractor_members")
-          .where({ user_id, contractor_id: wishlist.organization_id })
-          .first()
-        if (!isMember) {
-          this.throwForbidden("You must be an org member to modify this list")
-        }
-      }
+      await this.requireCollaboratorAccess(wishlist, user_id, "add items to")
 
       // Verify game item exists
       const gameItem = await knex("game_items").where("id", body.game_item_id).first()
@@ -772,9 +774,7 @@ export class WishlistsController extends BaseController {
         this.throwNotFound("Wishlist", wishlist_id)
       }
 
-      if (wishlist.user_id !== user_id && !wishlist.is_collaborative) {
-        this.throwForbidden("You do not have permission to remove items from this wishlist")
-      }
+      await this.requireCollaboratorAccess(wishlist, user_id, "remove items from")
 
       // Verify item exists and belongs to this wishlist
       const item = await knex("wishlist_items").where("item_id", item_id).first()
@@ -860,9 +860,7 @@ export class WishlistsController extends BaseController {
         this.throwNotFound("Wishlist", wishlist_id)
       }
 
-      if (wishlist.user_id !== user_id && !wishlist.is_collaborative) {
-        this.throwForbidden("You do not have permission to update items in this wishlist")
-      }
+      await this.requireCollaboratorAccess(wishlist, user_id, "update items in")
 
       // Verify item exists and belongs to this wishlist
       const item = await knex("wishlist_items").where("item_id", item_id).first()
@@ -1151,5 +1149,31 @@ export class WishlistsController extends BaseController {
       token += chars.charAt(Math.floor(Math.random() * chars.length))
     }
     return token
+  }
+
+  /**
+   * Who may change a wishlist's items: its owner, or a collaborator. On an
+   * org's collaborative list a collaborator is a member of that org (and an
+   * API token must be granted the org). Removing and updating items used to
+   * skip the membership check, so any user could edit any org's list.
+   */
+  private async requireCollaboratorAccess(
+    wishlist: { user_id: string; is_collaborative: boolean; organization_id: string | null },
+    user_id: string,
+    action: string,
+  ): Promise<void> {
+    if (wishlist.user_id === user_id) return
+    if (!wishlist.is_collaborative) {
+      this.throwForbidden(`You do not have permission to ${action} this wishlist`)
+    }
+    if (wishlist.organization_id) {
+      const isMember = await getKnex()("contractor_members")
+        .where({ user_id, contractor_id: wishlist.organization_id })
+        .first()
+      if (!isMember) {
+        this.throwForbidden("You must be an org member to modify this list")
+      }
+      await this.requireTokenOrgAccess(wishlist.organization_id)
+    }
   }
 }

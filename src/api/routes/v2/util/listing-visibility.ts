@@ -21,6 +21,7 @@
  */
 
 import type { Knex } from "knex"
+import type { TokenOrgScope } from "../middleware/token-org-access.js"
 import {
   hiddenFromRealViewers,
   notTestShop,
@@ -54,10 +55,15 @@ export interface ListingVisibilityOptions {
  * plus private ones of orgs the viewer belongs to. Unlisted listings are
  * never included (they are link-only), unless `options.includeUnlisted`.
  * Pass `undefined` for anonymous viewers.
+ *
+ * `orgScope` is the request's API-token org grant (BaseController.tokenOrgScope):
+ * a token sees private listings only of the orgs it was granted. null
+ * (sessions, full/admin tokens, anonymous) applies membership alone.
  */
 export function listingVisibleTo(
   db: Knex,
   viewerUserId: string | undefined,
+  orgScope: TokenOrgScope,
   columns: ListingVisibilityColumns,
   options: ListingVisibilityOptions = {},
 ): (this: Knex.QueryBuilder) => void {
@@ -82,6 +88,9 @@ export function listingVisibleTo(
               columns.ownerContractorId,
             ])
             .where("contractor_members.user_id", viewerUserId)
+            .modify((q) => {
+              if (orgScope !== null) q.whereIn("contractor_members.contractor_id", [...orgScope])
+            })
           })
       })
     })
@@ -133,12 +142,13 @@ export function visibleActiveListingCountQuery(
   db: Knex,
   shopId: string | Knex.Ref<string, Record<string, string>>,
   viewerUserId: string | undefined,
+  orgScope: TokenOrgScope,
 ): Knex.QueryBuilder {
   return db("listing_search as ls")
     .where("ls.shop_id", shopId)
     .where("ls.status", "active")
     .where(
-      listingVisibleTo(db, viewerUserId, {
+      listingVisibleTo(db, viewerUserId, orgScope, {
         visibility: "ls.visibility",
         ownerContractorId: "ls.shop_owner_contractor_id",
         shopId: "ls.shop_id",

@@ -1,3 +1,4 @@
+import { requestTokenOrgScope, tokenMayUseOrg } from "../../../middleware/auth.js"
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../profiles/database.js"
@@ -40,6 +41,16 @@ export const search_orders: RequestHandler = async (req, res) => {
       return
     }
   }
+
+  // Naming an org (or an org's shop) acts for it: an API token must be
+  // granted it. Every other result is narrowed to the token's orgs below.
+  if (!(await tokenMayUseOrg(req, res, args.contractor_id))) return
+  if (args.shop_id) {
+    const shop = await database.knex("shops").where("shop_id", args.shop_id).first("owner_contractor_id")
+    if (!(await tokenMayUseOrg(req, res, shop?.owner_contractor_id))) return
+  }
+  args.viewer_id = user.user_id
+  args.org_scope = requestTokenOrgScope(req)
 
   if (args.shop_id) {
     const shop = await database.knex("shops").where("shop_id", args.shop_id).first()
@@ -122,6 +133,8 @@ export const get_order_metrics: RequestHandler = async (req, res) => {
     )
     return
   }
+
+  if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
   const metrics = await getContractorOrderMetrics(contractor.contractor_id, shop_id)
 
@@ -416,6 +429,9 @@ export const get_order_id: RequestHandler = async (req, res) => {
       return
     }
     const user = req.user as User | null | undefined
+
+    // An org's order: an API token must be granted the org.
+    if (!(await tokenMayUseOrg(req, res, order.contractor_id))) return
 
     if (user) {
       const unrelated = !(await is_related_to_order(order, user))

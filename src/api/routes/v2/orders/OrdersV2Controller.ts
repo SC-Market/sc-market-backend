@@ -356,9 +356,22 @@ export class OrdersV2Controller extends BaseController {
       // or manage_orders), or when it is assigned to them. orders.shop_id is
       // set on every order, V1-era ones included; market_orders rows are not
       // (cart checkouts never write them), so it is the only reliable link.
-      const sellerShopIds = await getShopIdsWithOrderAccess(userId)
+      //
+      // An API token sees the seller side only for the orgs it was granted:
+      // org shops outside its grant are dropped, and so are orders of those
+      // orgs assigned to the user (GET /orders/{id} refuses them too). Orders
+      // the user placed stay visible: they are the user's own.
+      const orgScope = this.tokenOrgScope()
+      const sellerShopIds = await getShopIdsWithOrderAccess(userId, orgScope)
       const sellsOrder = (qb: Knex.QueryBuilder) => {
-        qb.where("orders.assigned_id", userId)
+        qb.where((assigned) => {
+          assigned.where("orders.assigned_id", userId)
+          if (orgScope !== null) {
+            assigned.where((org) => {
+              org.whereNull("orders.contractor_id").orWhereIn("orders.contractor_id", [...orgScope])
+            })
+          }
+        })
         if (sellerShopIds.length) qb.orWhereIn("orders.shop_id", sellerShopIds)
       }
 
@@ -489,7 +502,11 @@ export class OrdersV2Controller extends BaseController {
   @Security("loggedin")
   public async getOrdersByListing(
     @Path() listingId: string,
+    @Request() request?: ExpressRequest,
   ): Promise<OrdersByListingResponse> {
+    // TSOA builds controllers without the request: set it, or getUserId()
+    // finds no user and every call is a 401.
+    if (request) this.request = request
     const knex = getKnex()
     const userId = this.getUserId()
 

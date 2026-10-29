@@ -1,3 +1,5 @@
+import { requestTokenOrgScope } from "../../../middleware/auth.js"
+import { tokenAllowsOrg } from "../../v2/middleware/token-org-access.js"
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
@@ -239,8 +241,10 @@ export const services_get_contractor_spectrum_id: RequestHandler = async (
 ) => {
   const user = req.user as User
 
+  // An API token not granted the org gets the public list (active only).
   const isAdmin =
     user &&
+    tokenAllowsOrg(requestTokenOrgScope(req), req.contractor!.contractor_id) &&
     (await has_permission(
       req.contractor!.contractor_id,
       user.user_id,

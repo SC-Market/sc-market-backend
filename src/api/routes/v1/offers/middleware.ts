@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../api-models.js"
 import { DBOfferSession } from "../../../../clients/database/db-models.js"
@@ -24,6 +25,10 @@ export async function related_to_offer(
   }
 
   req.offer_session = offer
+
+  // An org's offer: an API token must be granted the org (unless the user is
+  // only its customer, not a member of the org).
+  if (!(await tokenMayUseOrg(req, res, offer.contractor_id))) return
 
   const assigned = offer.assigned_id === user.user_id
   const customer = offer.customer_id === user.user_id

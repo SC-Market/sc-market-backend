@@ -37,6 +37,7 @@ commentRouter.post(
 commentRouter.post(
   "/:comment_id/delete",
   requireVerifiedUser,
+  requireCommentsWrite,
   writeRateLimit,
   post_comment_id_delete_spec,
   post_comment_id_delete,
@@ -45,6 +46,7 @@ commentRouter.post(
 commentRouter.post(
   "/:comment_id/update",
   requireVerifiedUser,
+  requireCommentsWrite,
   writeRateLimit,
   post_comment_id_update_spec,
   post_comment_id_update,
@@ -53,6 +55,7 @@ commentRouter.post(
 commentRouter.post(
   "/:comment_id/upvote",
   requireVerifiedUser,
+  requireCommentsWrite,
   writeRateLimit,
   post_comment_id_upvote_spec,
   post_comment_id_upvote,
@@ -61,6 +64,7 @@ commentRouter.post(
 commentRouter.post(
   "/:comment_id/downvote",
   requireVerifiedUser,
+  requireCommentsWrite,
   writeRateLimit,
   post_comment_id_downvote_spec,
   post_comment_id_downvote,

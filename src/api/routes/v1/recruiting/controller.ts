@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
@@ -245,6 +246,7 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
     res.status(400).json(createForbiddenErrorResponse("Missing permissions"))
     return
   }
+  if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
   const {
     title,

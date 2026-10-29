@@ -3,6 +3,9 @@ import {
   requireProfileRead,
   requireProfileWrite,
   userAuthorized,
+  requireTokenScopes,
+  requireSessionAuth,
+  anyTokenIdentity,
 } from "../../../middleware/auth.js"
 import {
   criticalRateLimit,
@@ -66,6 +69,7 @@ export const profileRouter = express.Router()
 profileRouter.post(
   "/auth/link",
   userAuthorized,
+  requireSessionAuth,
   criticalRateLimit,
   profile_post_auth_link,
 )
@@ -73,6 +77,7 @@ profileRouter.post(
 profileRouter.post(
   "/auth/sync-handle",
   userAuthorized,
+  requireTokenScopes("profile:write"),
   criticalRateLimit,
   profile_post_auth_sync_handle_spec,
   profile_post_auth_sync_handle,
@@ -81,6 +86,7 @@ profileRouter.post(
 profileRouter.post(
   "/auth/unlink",
   userAuthorized,
+  requireSessionAuth,
   criticalRateLimit,
   profile_post_auth_unlink_spec,
   profile_post_auth_unlink,
@@ -89,6 +95,7 @@ profileRouter.post(
 profileRouter.get(
   "/auth/ident",
   userAuthorized,
+  requireTokenScopes("profile:read"),
   criticalRateLimit,
   profile_get_auth_ident,
 )
@@ -186,6 +193,7 @@ profileRouter.get(
   "/availability/contractor/:spectrum_id",
   readRateLimit,
   userAuthorized,
+  requireTokenScopes("profile:read"),
   profile_get_availability_contractor_spectrum_id,
 )
 
@@ -214,8 +222,10 @@ profileRouter.get(
 
 profileRouter.get(
   "",
-  userAuthorized,
-  // Allow unverified users to read their own profile (needed for Discord login)
+  // Intentionally no token scope: this is identity (who the session or token
+  // belongs to), and the API token guide checks a token with it. Any valid
+  // token may call it. Unverified users may too (needed for Discord login).
+  anyTokenIdentity,
   readRateLimit,
   profile_get_root_spec,
   profile_get_root,
@@ -225,8 +235,11 @@ profileRouter.get(
   "/my_data",
   readRateLimit,
   userAuthorized,
+  // The full personal data export (every table that holds the user's data,
+  // their tokens' metadata included) is browser-session only: no API token,
+  // whatever its scopes. The site opens it as a plain link with the session.
+  requireSessionAuth,
   dataExportRateLimit,
-  requireProfileRead,
   profile_get_my_data,
 )
 
@@ -312,6 +325,7 @@ import { commonWriteRateLimit } from "../../../middleware/enhanced-ratelimiting.
 profileRouter.post(
   "/email",
   userAuthorized,
+  requireSessionAuth,
   emailManagementRoutes.add_email_spec,
   commonWriteRateLimit,
   emailManagementRoutes.addEmail,
@@ -322,6 +336,7 @@ profileRouter.post(
 profileRouter.patch(
   "/email",
   userAuthorized,
+  requireSessionAuth,
   emailManagementRoutes.update_email_spec,
   commonWriteRateLimit,
   emailManagementRoutes.updateEmail,
@@ -332,6 +347,7 @@ profileRouter.patch(
 profileRouter.delete(
   "/email",
   userAuthorized,
+  requireSessionAuth,
   emailManagementRoutes.delete_email_spec,
   commonWriteRateLimit,
   emailManagementRoutes.deleteEmail,
@@ -342,6 +358,7 @@ profileRouter.delete(
 profileRouter.post(
   "/email/verify",
   userAuthorized,
+  requireSessionAuth,
   emailManagementRoutes.request_verification_spec,
   commonWriteRateLimit,
   emailManagementRoutes.requestVerification,
@@ -360,6 +377,7 @@ profileRouter.get(
 profileRouter.patch(
   "/in-game",
   userAuthorized,
+  requireTokenScopes("profile:write"),
   writeRateLimit,
   profile_patch_in_game_status,
 )

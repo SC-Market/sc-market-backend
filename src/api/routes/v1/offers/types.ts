@@ -62,6 +62,12 @@ export interface OfferSearchQueryArguments {
   cost_max?: number
   date_from?: string
   date_to?: string
+  /**
+   * The request's API-token org grant (null/undefined: unrestricted). Offers
+   * of other orgs are left out unless `viewer_id` is their customer.
+   */
+  org_scope?: readonly string[] | null
+  viewer_id?: string
 }
 
 export interface OfferSearchQuery {

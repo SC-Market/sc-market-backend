@@ -5,6 +5,9 @@
  *                   (supplier_relationships, as a user or through an org);
  * - 'private'     — the one supplier it is directed at (target_supplier_id,
  *                   or a member of target_supplier_contractor_id).
+ * Org-based access (roster entry or target as an org) counts only for the
+ * orgs in `orgScope`, the request's API-token grant (null: every org, for
+ * sessions and full/admin tokens).
  * The buyer always sees their own orders. A test account's orders are only
  * visible to test accounts (services/test-accounts/isolation.ts).
  *
@@ -14,6 +17,10 @@
 
 import type { Knex } from "knex"
 import {
+  memberOrgIdsQuery,
+  type TokenOrgScope,
+} from "../middleware/token-org-access.js"
+import {
   hiddenFromRealViewers,
   notTestUser,
 } from "../../../../services/test-accounts/isolation.js"
@@ -22,6 +29,7 @@ import {
 export function buyOrderVisibleTo(
   db: Knex,
   viewerUserId: string | undefined,
+  orgScope: TokenOrgScope,
 ): (this: Knex.QueryBuilder) => void {
   return function () {
     this.whereRaw(hiddenFromRealViewers(db, notTestUser("bo.buyer_id"), viewerUserId))
@@ -29,9 +37,7 @@ export function buyOrderVisibleTo(
       this.where("bo.visibility", "public")
       return
     }
-    const viewerOrgs = db("contractor_members")
-      .select("contractor_id")
-      .where("user_id", viewerUserId)
+    const viewerOrgs = memberOrgIdsQuery(db, viewerUserId, orgScope)
     this.where(function () {
     this.where("bo.visibility", "public")
       .orWhere("bo.buyer_id", viewerUserId)

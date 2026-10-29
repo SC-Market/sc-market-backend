@@ -15,7 +15,7 @@ import { buyOrderVisibleTo } from "./buy-order-visibility.js"
 
 const pg = knexFactory({ client: "pg" })
 const sql = (viewer: string | undefined) =>
-  pg("buy_orders_v2 as bo").where(buyOrderVisibleTo(pg, viewer)).toSQL()
+  pg("buy_orders_v2 as bo").where(buyOrderVisibleTo(pg, viewer, null)).toSQL()
 
 describe("buyOrderVisibleTo", () => {
   it("anonymous visitors see public orders only", () => {

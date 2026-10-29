@@ -19,6 +19,13 @@ import { ValidationError as ValidationErrorType } from "../../v1/util/response.j
 import { isSiteAdmin } from "../../../util/site-role.js"
 import { adminLockError } from "../../../util/site-admin-policy.js"
 import { assertStepUp, stepUpError } from "../../../util/step-up.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
+import {
+  assertTokenMayUseOrg,
+  tokenAllowsOrg,
+  tokenOrgScope,
+  type TokenOrgScope,
+} from "../middleware/token-org-access.js"
 
 /**
  * Base controller class with common functionality
@@ -103,6 +110,38 @@ export abstract class BaseController extends Controller {
       throw new BusinessLogicError(
         ErrorCode.FORBIDDEN,
         "Admin access required",
+      )
+    }
+  }
+
+  /**
+   * The orgs this request's API token may act for (its contractor_ids), or
+   * null when unrestricted: browser sessions, JWT cookies, and full/admin
+   * tokens. Lists that include org data because the user belongs to the org
+   * filter it to these orgs (token-org-access.ts).
+   */
+  protected tokenOrgScope(): TokenOrgScope {
+    return tokenOrgScope(this.request?.__tokenInfo)
+  }
+
+  /**
+   * 403 when this request's API token may not act for `contractorId` (an org
+   * the user belongs to that the token wasn't granted). No-op for sessions
+   * and for personal resources (no org).
+   */
+  protected async requireTokenOrgAccess(
+    contractorId: string | null | undefined,
+  ): Promise<void> {
+    const user = this.request?.user as User | undefined
+    if (!user) return
+    if (tokenAllowsOrg(this.tokenOrgScope(), contractorId)) return
+    try {
+      await assertTokenMayUseOrg(getKnex(), this.request?.__tokenInfo, contractorId, user.user_id)
+    } catch (error) {
+      if ((error as { status?: number }).status !== 403) throw error
+      throw new BusinessLogicError(
+        ErrorCode.FORBIDDEN,
+        "Token does not have access to this contractor",
       )
     }
   }

@@ -13820,7 +13820,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "List my supplier roster"
 			},
 			"post": {
 				"operationId": "AddSupplier",
@@ -13854,7 +13855,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Add a supplier"
 			}
 		},
 		"/suppliers/{relationshipId}": {
@@ -13899,7 +13901,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Update a supplier relationship"
 			},
 			"delete": {
 				"operationId": "RemoveSupplier",
@@ -13940,7 +13943,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Remove a supplier"
 			}
 		},
 		"/suppliers/as-supplier": {
@@ -13985,7 +13989,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "List rosters I supply"
 			}
 		},
 		"/stock-lots": {
@@ -14300,7 +14305,7 @@
 						}
 					}
 				},
-				"description": "List all shops the current user can manage.\nIncludes personal shops and org shops where user has manage_market.",
+				"description": "List the current user's shops: their personal shop and the shops of\nevery org they belong to, each with the user's permissions there. With an\nAPI token, only the orgs the token was granted (Full Access: all).",
 				"summary": "List my shops",
 				"tags": [
 					"Shops"
@@ -15360,7 +15365,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Create requisition"
 			},
 			"get": {
 				"operationId": "GetRequisitions",
@@ -15429,7 +15435,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "List requisitions"
 			}
 		},
 		"/requisitions/{orderId}": {
@@ -15464,7 +15471,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get requisition"
 			}
 		},
 		"/requisitions/offer-items": {
@@ -15511,7 +15519,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Set an offer's requisition items"
 			}
 		},
 		"/requisitions/offer-items/{offerId}": {
@@ -15557,7 +15566,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get an offer's requisition items"
 			}
 		},
 		"/price-alerts/preferences": {
@@ -16014,7 +16024,8 @@
 						"loggedin": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"summary": "Get onboarding status"
 			}
 		},
 		"/onboarding/complete": {
@@ -16048,7 +16059,8 @@
 						"loggedin": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"summary": "Complete onboarding"
 			}
 		},
 		"/offers/search": {
@@ -16118,7 +16130,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "Search my offers"
 			}
 		},
 		"/offers/{sessionId}": {
@@ -16154,7 +16167,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get offer"
 			}
 		},
 		"/notification-preferences": {
@@ -16845,7 +16859,7 @@
 				"operationId": "GetMyListings",
 				"responses": {
 					"200": {
-						"description": "Updated listing with variant breakdown",
+						"description": "User's listings with pagination metadata",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -16855,8 +16869,8 @@
 						}
 					}
 				},
-				"description": "Update an existing listing\n\nUpdates listing metadata (title, description), pricing (base_price or per-variant prices),\nand stock lot details (quantities, listed status, locations). Validates ownership before\nallowing updates and prevents editing sold or cancelled listings.\n\nRequirements:\n- 17.1: PUT /api/v2/listings/:id endpoint\n- 17.2: Allow updating title and description\n- 17.3: Allow updating base_price for unified pricing mode\n- 17.4: Allow updating per-variant prices for per_variant pricing mode\n- 17.5: Allow updating stock lot quantities\n- 17.6: Allow updating stock lot listed status\n- 17.7: Prevent editing sold or cancelled listings\n- 17.8: Validate ownership before allowing updates\n- 17.9: Return updated listing with variant breakdown\n- 17.10: Log all modifications to Audit_Trail\n- 17.11: Use database transaction for atomicity\n- 17.12: Invalidate cache after updates",
-				"summary": "Update listing",
+				"description": "Get my listings with variant information\n\nRetrieves all listings owned by the authenticated user with variant breakdown,\nquantity information, and price ranges. Supports filtering by status, pagination,\nand sorting. Uses the listing_search view for optimized query performance.\n\nRequirements:\n- 18.1: GET /api/v2/listings/mine endpoint\n- 18.2: Return listings owned by current user\n- 18.3: Include variant breakdown for each listing\n- 18.4: Include quantity_available per variant\n- 18.5: Support filtering by status (active, sold, expired, cancelled)\n- 18.6: Support pagination with page and page_size parameters\n- 18.7: Support sorting by created_at, updated_at, price, quantity\n- 18.8: Include total count for pagination UI\n- 18.9: Include price range (min to max) for each listing\n- 18.10: Include quality tier range for each listing\n- 18.11: Include variant count for each listing\n- 18.12: Execute queries within 50ms performance target",
+				"summary": "Get my listings",
 				"tags": [
 					"Listings V2"
 				],
@@ -16954,7 +16968,7 @@
 				"operationId": "GetInventorySummary",
 				"responses": {
 					"200": {
-						"description": "Complete listing detail with variant breakdown",
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -16964,8 +16978,8 @@
 						}
 					}
 				},
-				"description": "Get listing detail with variant breakdown\n\nRetrieves complete listing information including seller details, game item information,\nand variant breakdown with quantities, prices, and locations. Returns 404 if listing\nnot found.\n\nRequirements:\n- 16.1: GET /api/v2/listings/:id endpoint\n- 16.2: Return listing metadata with seller information\n- 16.3: Return array of items with game_item details\n- 16.4: Return array of variants for each item with attributes\n- 16.5: Return quantity and price for each variant\n- 16.6: Return display_name for each variant\n- 16.7: Include location information for stock lots\n- 16.8: Include crafted_by information if applicable\n- 16.9: Return 404 if listing not found\n- 16.10: Include view count and timestamps\n- 16.11: Include seller rating and status\n- 16.12: Support image gallery with multiple photos",
-				"summary": "Get listing detail",
+				"description": "Listed stock of the caller's personal shop, or of an org's shops with\n`spectrum_id`, summed per game item (the crafting calculator's materials).",
+				"summary": "Get inventory summary",
 				"tags": [
 					"Listings V2"
 				],
@@ -16991,7 +17005,7 @@
 				"operationId": "GetListingDetail",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Complete listing detail with variant breakdown",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -17007,6 +17021,7 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "Listing UUID",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -17014,13 +17029,15 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"description": "Get listing detail with variant breakdown\n\nRetrieves complete listing information including seller details, game item information,\nand variant breakdown with quantities, prices, and locations. Returns 404 if listing\nnot found.\n\nRequirements:\n- 16.1: GET /api/v2/listings/:id endpoint\n- 16.2: Return listing metadata with seller information\n- 16.3: Return array of items with game_item details\n- 16.4: Return array of variants for each item with attributes\n- 16.5: Return quantity and price for each variant\n- 16.6: Return display_name for each variant\n- 16.7: Include location information for stock lots\n- 16.8: Include crafted_by information if applicable\n- 16.9: Return 404 if listing not found\n- 16.10: Include view count and timestamps\n- 16.11: Include seller rating and status\n- 16.12: Support image gallery with multiple photos",
+				"summary": "Get listing detail"
 			},
 			"put": {
 				"operationId": "UpdateListing",
 				"responses": {
 					"200": {
-						"description": "Search results with pagination metadata",
+						"description": "Updated listing with variant breakdown",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -17030,8 +17047,8 @@
 						}
 					}
 				},
-				"description": "Search listings with filters\n\nSearches active listings using full-text search, quality tier filters, price filters,\nand game item filters. Uses the listing_search view for optimized query performance.\n\nRequirements:\n- 15.1: GET /api/v2/listings/search endpoint\n- 15.2: Accept text query parameter for full-text search\n- 15.3: Accept game_item_id parameter for item filtering\n- 15.4: Accept quality_tier_min and quality_tier_max parameters\n- 15.5: Accept price_min and price_max parameters\n- 15.6: Accept page and page_size parameters for pagination\n- 15.7: Return listings with price_min, price_max, quality_tier_min, quality_tier_max\n- 15.8: Return total count for pagination\n- 15.9: Support sorting by created_at, price, quality, seller_rating\n- 15.10: Include seller information in results\n- 15.11: Include variant_count in results\n- 15.12: Execute queries within 50ms performance target",
-				"summary": "Search listings",
+				"description": "Update an existing listing\n\nUpdates listing metadata (title, description), pricing (base_price or per-variant prices),\nand stock lot details (quantities, listed status, locations). Validates ownership before\nallowing updates and prevents editing sold or cancelled listings.\n\nRequirements:\n- 17.1: PUT /api/v2/listings/:id endpoint\n- 17.2: Allow updating title and description\n- 17.3: Allow updating base_price for unified pricing mode\n- 17.4: Allow updating per-variant prices for per_variant pricing mode\n- 17.5: Allow updating stock lot quantities\n- 17.6: Allow updating stock lot listed status\n- 17.7: Prevent editing sold or cancelled listings\n- 17.8: Validate ownership before allowing updates\n- 17.9: Return updated listing with variant breakdown\n- 17.10: Log all modifications to Audit_Trail\n- 17.11: Use database transaction for atomicity\n- 17.12: Invalidate cache after updates",
+				"summary": "Update listing",
 				"tags": [
 					"Listings V2"
 				],
@@ -17042,6 +17059,7 @@
 				],
 				"parameters": [
 					{
+						"description": "Listing UUID",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -17055,10 +17073,12 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UpdateListingRequest"
+								"$ref": "#/components/schemas/UpdateListingRequest",
+								"description": "Update request with optional fields"
 							}
 						}
-					}
+					},
+					"description": "Update request with optional fields"
 				}
 			},
 			"delete": {
@@ -17465,7 +17485,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "List my inventory lots"
 			},
 			"post": {
 				"operationId": "CreateInventoryLot",
@@ -17508,7 +17529,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Create inventory lot"
 			}
 		},
 		"/inventory/{lotId}/list": {
@@ -17562,7 +17584,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "List an inventory lot on a listing"
 			}
 		},
 		"/inventory/{lotId}/unlist": {
@@ -17606,7 +17629,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Unlist an inventory lot"
 			}
 		},
 		"/inventory/{lotId}": {
@@ -17635,7 +17659,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Delete inventory lot"
 			}
 		},
 		"/integrations/scmdb/ingest/{token}": {
@@ -17834,7 +17859,8 @@
 							"$ref": "#/components/schemas/ImportSource"
 						}
 					}
-				]
+				],
+				"summary": "Start import job"
 			}
 		},
 		"/admin/imports/{jobId}": {
@@ -17884,7 +17910,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get import job status"
 			}
 		},
 		"/admin/imports": {
@@ -17922,7 +17949,8 @@
 						"loggedin": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"summary": "List import jobs"
 			}
 		},
 		"/images/upload": {
@@ -19891,7 +19919,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get mission by code"
 			}
 		},
 		"/game-data/missions/{mission_id}/blueprints": {
@@ -21364,7 +21393,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "List org members who own a blueprint"
 			}
 		},
 		"/game-data/blueprints/craftable": {
@@ -21543,7 +21573,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get dashboard layout"
 			},
 			"put": {
 				"operationId": "SaveLayout",
@@ -21578,7 +21609,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Save dashboard layout"
 			}
 		},
 		"/contract-alerts": {
@@ -21929,7 +21961,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Create standing buy order"
 			}
 		},
 		"/buy-orders/search": {
@@ -22044,7 +22077,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "Search buy orders"
 			}
 		},
 		"/buy-orders/matches-for-seller": {
@@ -22090,7 +22124,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "Buy orders matching my stock"
 			}
 		},
 		"/buy-orders/mine": {
@@ -22150,7 +22185,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "List my buy orders"
 			}
 		},
 		"/buy-orders/{id}": {
@@ -22182,7 +22218,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get buy order"
 			},
 			"put": {
 				"operationId": "UpdateBuyOrder",
@@ -22226,7 +22263,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Update buy order"
 			},
 			"delete": {
 				"operationId": "CancelBuyOrder",
@@ -22268,7 +22306,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Cancel buy order"
 			}
 		},
 		"/buy-orders/{id}/fulfillment-options": {
@@ -22389,7 +22428,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Decline a directed buy order"
 			}
 		},
 		"/availability/next": {
@@ -22435,7 +22475,8 @@
 							"type": "string"
 						}
 					}
-				]
+				],
+				"summary": "Get next available time"
 			}
 		},
 		"/auctions/{listingId}": {
@@ -22487,7 +22528,8 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"summary": "Get auction"
 			}
 		},
 		"/auctions/{listingId}/bids": {
@@ -22533,7 +22575,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Place bid"
 			}
 		},
 		"/analytics/price-history": {
@@ -23364,7 +23407,8 @@
 							}
 						}
 					}
-				}
+				},
+				"summary": "Request account deletion"
 			}
 		},
 		"/accounts/cancel-deletion": {
@@ -23398,7 +23442,8 @@
 						"loggedin": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"summary": "Cancel account deletion"
 			}
 		},
 		"/accounts/deletion-status": {
@@ -23424,7 +23469,8 @@
 						"loggedin": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"summary": "Get account deletion status"
 			}
 		},
 		"/accounts/deletion-precheck": {
@@ -23450,7 +23496,8 @@
 						"loggedin": []
 					}
 				],
-				"parameters": []
+				"parameters": [],
+				"summary": "Check before account deletion"
 			}
 		},
 		"/admin/identity/users": {

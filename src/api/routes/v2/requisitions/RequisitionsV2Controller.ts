@@ -21,8 +21,10 @@
 
 import { Post, Get, Route, Tags, Body, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
+import type { Knex } from "knex"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
+import { memberOrgIdsQuery } from "../middleware/token-org-access.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
@@ -118,6 +120,7 @@ export class RequisitionsV2Controller extends BaseController {
   // Create a requisition order
   // ---------------------------------------------------------------------------
 
+  /** @summary Create requisition */
   @Post()
   public async createRequisition(
     @Body() body: CreateRequisitionRequest,
@@ -258,6 +261,7 @@ export class RequisitionsV2Controller extends BaseController {
   // List requisitions
   // ---------------------------------------------------------------------------
 
+  /** @summary List requisitions */
   @Get()
   public async getRequisitions(
     @Request() request: ExpressRequest,
@@ -276,18 +280,28 @@ export class RequisitionsV2Controller extends BaseController {
 
     let query = knex("orders").where("orders.kind", "requisition")
 
+    // Supplier side: assigned to the user, or an org's. An API token sees
+    // only the orgs it was granted, assigned orders of other orgs included.
+    const orgScope = this.tokenOrgScope()
+    const supplies = (qb: Knex.QueryBuilder) => {
+      qb.where((assigned) => {
+        assigned.where("orders.assigned_id", userId)
+        if (orgScope !== null) {
+          assigned.where((org) => {
+            org.whereNull("orders.contractor_id").orWhereIn("orders.contractor_id", [...orgScope])
+          })
+        }
+      })
+      if (contractorIds.length) qb.orWhereIn("orders.contractor_id", contractorIds)
+    }
+
     if (role === "buyer") {
       query = query.where("orders.customer_id", userId)
     } else if (role === "supplier") {
-      query = query.where((qb) => {
-        qb.where("orders.assigned_id", userId)
-        if (contractorIds.length) qb.orWhereIn("orders.contractor_id", contractorIds)
-      })
+      query = query.where(supplies)
     } else {
       query = query.where((qb) => {
-        qb.where("orders.customer_id", userId)
-          .orWhere("orders.assigned_id", userId)
-        if (contractorIds.length) qb.orWhereIn("orders.contractor_id", contractorIds)
+        qb.where("orders.customer_id", userId).orWhere(supplies)
       })
     }
 
@@ -310,6 +324,7 @@ export class RequisitionsV2Controller extends BaseController {
   // Get single requisition
   // ---------------------------------------------------------------------------
 
+  /** @summary Get requisition */
   @Get("{orderId}")
   public async getRequisition(
     @Path() orderId: string,
@@ -340,6 +355,7 @@ export class RequisitionsV2Controller extends BaseController {
   // Set offer_requisition_items for a specific offer revision
   // ---------------------------------------------------------------------------
 
+  /** @summary Set an offer's requisition items */
   @Post("offer-items")
   public async setOfferRequisitionItems(
     @Body() body: SetOfferRequisitionItemsRequest,
@@ -416,6 +432,7 @@ export class RequisitionsV2Controller extends BaseController {
   // Get offer_requisition_items for a specific offer
   // ---------------------------------------------------------------------------
 
+  /** @summary Get an offer's requisition items */
   @Get("offer-items/{offerId}")
   public async getOfferRequisitionItems(
     @Path() offerId: string,
@@ -523,9 +540,13 @@ export class RequisitionsV2Controller extends BaseController {
     }
   }
 
+  /**
+   * The orgs the user acts for here: their memberships, narrowed to the
+   * request's API-token org grant (every membership for sessions and
+   * full/admin tokens).
+   */
   private async getUserContractorIds(userId: string): Promise<string[]> {
-    const rows = await getKnex()("contractor_members")
-      .where({ user_id: userId })
+    const rows = await memberOrgIdsQuery(getKnex(), userId, this.tokenOrgScope())
       .select<ContractorMemberIdRow[]>("contractor_id")
     return rows.map((r) => r.contractor_id)
   }

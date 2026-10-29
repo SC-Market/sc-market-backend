@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import { NextFunction, Request, Response } from "express"
 import * as contractorDb from "../contractors/database.js"
 import * as marketDb from "./database.js"
@@ -133,6 +134,9 @@ export async function can_manage_market_listing(
         return
       }
     }
+
+    // An org's listing: an API token must be granted the org.
+    if (!(await tokenMayUseOrg(req, res, listing.contractor_seller_id))) return
 
     req.market_listing = listing
     next()

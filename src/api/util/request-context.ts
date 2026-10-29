@@ -38,6 +38,11 @@ export function currentRequestUser(): User | undefined {
   return storage.getStore()?.req.user as User | undefined
 }
 
+/** The request currently being handled, or undefined outside a request. */
+export function currentRequest(): Request | undefined {
+  return storage.getStore()?.req
+}
+
 export function hasRequestContext(): boolean {
   return storage.getStore() !== undefined
 }

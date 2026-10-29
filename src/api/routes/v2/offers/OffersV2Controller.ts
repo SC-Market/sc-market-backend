@@ -8,6 +8,7 @@
 
 import { Get, Route, Tags, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
+import type { Knex } from "knex"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../../v1/profiles/database.js"
@@ -30,6 +31,7 @@ import {
 import logger from "../../../../logger/logger.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { clampPagination } from "../util/pagination.js"
+import { memberOrgIdsQuery } from "../middleware/token-org-access.js"
 
 /**
  * Row shape of the `offer_market_items_v2` join table. `price_per_unit` is a
@@ -63,6 +65,7 @@ export class OffersV2Controller extends BaseController {
 
   /**
    * Search offers for the current user
+   * @summary Search my offers
    */
   @Get("search")
   @Security("loggedin")
@@ -81,23 +84,28 @@ export class OffersV2Controller extends BaseController {
 
     let query = knex("offer_sessions")
 
+    // Seller side: offers assigned to the user or made to their orgs. An API
+    // token sees only the orgs it was granted (GET /offers/{id} refuses the
+    // others too); offers the user made as a customer stay visible.
+    const orgScope = this.tokenOrgScope()
+    const sellsOffer = (qb: Knex.QueryBuilder) => {
+      qb.where((assigned) => {
+        assigned.where("assigned_id", userId)
+        if (orgScope !== null) {
+          assigned.where((org) => {
+            org.whereNull("contractor_id").orWhereIn("contractor_id", [...orgScope])
+          })
+        }
+      }).orWhereIn("contractor_id", memberOrgIdsQuery(knex, userId, orgScope))
+    }
+
     if (role === "customer") {
       query = query.where("customer_id", userId)
     } else if (role === "seller") {
-      query = query.where((qb) => {
-        qb.where("assigned_id", userId).orWhereIn(
-          "contractor_id",
-          knex("contractor_members").where("user_id", userId).select("contractor_id"),
-        )
-      })
+      query = query.where(sellsOffer)
     } else {
       query = query.where((qb) => {
-        qb.where("customer_id", userId)
-          .orWhere("assigned_id", userId)
-          .orWhereIn(
-            "contractor_id",
-            knex("contractor_members").where("user_id", userId).select("contractor_id"),
-          )
+        qb.where("customer_id", userId).orWhere(sellsOffer)
       })
     }
 
@@ -123,6 +131,7 @@ export class OffersV2Controller extends BaseController {
    * (e.g. "search"). TSOA emits Express routes in declaration order, so a
    * "{sessionId}" registered first would swallow /offers/search and try to
    * load a session whose id is the literal string "search".
+   * @summary Get offer
    */
   @Get("{sessionId}")
   @Security("loggedin")

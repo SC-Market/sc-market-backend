@@ -35,7 +35,7 @@ const base = {
 describe("buyOrderFulfillmentProblem", () => {
   it("rejects a price above price_max", async () => {
     expect(
-      await buyOrderFulfillmentProblem(db(), base, "seller", 5000, {}),
+      await buyOrderFulfillmentProblem(db(), base, "seller", 5000, {}, null),
     ).toMatchObject({
       field: "listing_id",
     })
@@ -43,7 +43,7 @@ describe("buyOrderFulfillmentProblem", () => {
 
   it("accepts a price at or below price_max", async () => {
     expect(
-      await buyOrderFulfillmentProblem(db(), base, "seller", 1000, {}),
+      await buyOrderFulfillmentProblem(db(), base, "seller", 1000, {}, null),
     ).toBeNull()
   })
 
@@ -52,7 +52,7 @@ describe("buyOrderFulfillmentProblem", () => {
     expect(
       await buyOrderFulfillmentProblem(db(), bo, "seller", 10, {
         quality_tier: 2,
-      }),
+      }, null),
     ).toMatchObject({
       field: "variant_id",
     })
@@ -65,7 +65,7 @@ describe("buyOrderFulfillmentProblem", () => {
       target_supplier_id: "someone-else",
     }
     expect(
-      await buyOrderFulfillmentProblem(db(), bo, "seller", 10, {}),
+      await buyOrderFulfillmentProblem(db(), bo, "seller", 10, {}, null),
     ).not.toBeNull()
     expect(
       await buyOrderFulfillmentProblem(
@@ -74,6 +74,7 @@ describe("buyOrderFulfillmentProblem", () => {
         "seller",
         10,
         {},
+        null,
       ),
     ).toBeNull()
     expect(
@@ -87,6 +88,7 @@ describe("buyOrderFulfillmentProblem", () => {
         "org-seller",
         10,
         {},
+        null,
       ),
     ).toBeNull()
   })
@@ -94,16 +96,16 @@ describe("buyOrderFulfillmentProblem", () => {
   it("rejects a roster-only order for a seller not on the roster", async () => {
     const bo = { ...base, visibility: "roster_only" }
     expect(
-      await buyOrderFulfillmentProblem(db(), bo, "stranger", 10, {}),
+      await buyOrderFulfillmentProblem(db(), bo, "stranger", 10, {}, null),
     ).not.toBeNull()
     expect(
-      await buyOrderFulfillmentProblem(db(), bo, "roster-seller", 10, {}),
+      await buyOrderFulfillmentProblem(db(), bo, "roster-seller", 10, {}, null),
     ).toBeNull()
   })
 
   it("rejects fulfilling your own or an expired order", async () => {
     expect(
-      await buyOrderFulfillmentProblem(db(), base, "buyer", 10, {}),
+      await buyOrderFulfillmentProblem(db(), base, "buyer", 10, {}, null),
     ).not.toBeNull()
     expect(
       await buyOrderFulfillmentProblem(
@@ -112,6 +114,7 @@ describe("buyOrderFulfillmentProblem", () => {
         "s",
         10,
         {},
+        null,
       ),
     ).not.toBeNull()
   })

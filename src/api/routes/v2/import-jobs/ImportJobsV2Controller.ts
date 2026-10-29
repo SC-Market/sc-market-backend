@@ -100,6 +100,7 @@ export class ImportJobsV2Controller extends BaseController {
   /**
    * Start a bulk import job
    * @param source Import source: cstone-items, uex-items, or uex-attributes
+   * @summary Start import job
    */
   @Post("{source}")
   public async startImport(
@@ -143,6 +144,7 @@ export class ImportJobsV2Controller extends BaseController {
   /**
    * Get status of a specific import job
    * @param jobId The job ID returned from startImport
+   * @summary Get import job status
    */
   @Get("{jobId}")
   public async getJobStatus(
@@ -159,6 +161,7 @@ export class ImportJobsV2Controller extends BaseController {
 
   /**
    * List all import jobs (most recent first)
+   * @summary List import jobs
    */
   @Get("")
   public async listJobs(

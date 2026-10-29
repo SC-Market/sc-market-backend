@@ -429,7 +429,7 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
 
     it("market grid: anonymous and real viewers never see test shops' listings; test viewers see both", async () => {
       const grid = (viewer?: string) =>
-        db()("listing_search as ls").where("ls.status", "active").where(listingVisibleTo(db(), viewer, COLS)).select("ls.listing_id")
+        db()("listing_search as ls").where("ls.status", "active").where(listingVisibleTo(db(), viewer, null, COLS)).select("ls.listing_id")
       expect(ids(await grid(undefined))).toEqual(REAL_LISTINGS)
       expect(ids(await grid(REAL_USER))).toEqual(REAL_LISTINGS)
       expect(ids(await grid(REAL_ADMIN))).toEqual(REAL_LISTINGS)
@@ -465,7 +465,7 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
         { buy_order_id: uuid("e", 11), buyer_id: TEST_USER },
       ])
       const visible = async (viewer?: string) =>
-        (await db()("buy_orders_v2 as bo").where(buyOrderVisibleTo(db(), viewer)).pluck("bo.buy_order_id")).sort()
+        (await db()("buy_orders_v2 as bo").where(buyOrderVisibleTo(db(), viewer, null)).pluck("bo.buy_order_id")).sort()
       expect(await visible(undefined)).toEqual([uuid("e", 1)])
       expect(await visible(REAL_USER_2)).toEqual([uuid("e", 1)])
       expect(await visible(TEST_USER_2)).toEqual([uuid("e", 1), uuid("e", 11)])

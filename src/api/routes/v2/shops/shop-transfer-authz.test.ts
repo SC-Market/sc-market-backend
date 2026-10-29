@@ -27,6 +27,7 @@ vi.mock("../../../../clients/cdn/cdn.js", () => ({
 vi.mock("../../v1/util/permissions.js", () => ({
   has_permission: vi.fn(),
   is_member: vi.fn(),
+  isOrgMemberIgnoringToken: vi.fn(),
 }))
 vi.mock("../../v1/contractors/database.js", () => ({
   isContractorOwner: vi.fn(),

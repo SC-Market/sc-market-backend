@@ -23,6 +23,7 @@ export class AvailabilityV2Controller extends Controller {
    * Get a seller's next available time
    * @param username Username (for user sellers)
    * @param spectrum_id Spectrum ID (for contractor sellers)
+   * @summary Get next available time
    */
   @Get("next")
   @Security("loggedin")

@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import { NextFunction, Request, Response } from "express"
 import {
   createErrorResponse,
@@ -179,6 +180,8 @@ export async function contractorRecruiting(
         )
       return
     }
+    // An API token acts for this org only if it was granted it.
+    if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
     next()
   } else {

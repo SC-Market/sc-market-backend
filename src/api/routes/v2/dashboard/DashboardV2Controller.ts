@@ -27,6 +27,7 @@ export class DashboardV2Controller extends BaseController {
    * Get the saved dashboard layout for an owner. `owner_type`/`owner_id` default
    * to the authenticated user's personal dashboard. Returns null config when no
    * layout has been saved yet.
+   * @summary Get dashboard layout
    */
   @Security("loggedin")
   @Get("layout")
@@ -48,6 +49,7 @@ export class DashboardV2Controller extends BaseController {
    * Create or replace the dashboard layout for an owner. Requires edit access:
    * personal dashboards by their owner, org dashboards by members with
    * manage_org_details, shop dashboards by users who can manage the shop.
+   * @summary Save dashboard layout
    */
   @Security("loggedin")
   @Put("layout")

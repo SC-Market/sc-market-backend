@@ -1,6 +1,10 @@
 import { getKnex } from "../../clients/database/knex-db.js"
 import { has_permission, is_member } from "../../api/routes/v1/util/permissions.js"
 import { isContractorOwner } from "../../api/routes/v1/contractors/database.js"
+import {
+  memberOrgIdsQuery,
+  type TokenOrgScope,
+} from "../../api/routes/v2/middleware/token-org-access.js"
 
 export interface Shop {
   shop_id: string
@@ -65,16 +69,18 @@ export async function canManageShopOrders(
 
 /**
  * IDs of every shop (active or not) whose orders the user handles as the
- * seller, per canManageShopOrders.
+ * seller, per canManageShopOrders. `orgScope` is the request's API-token org
+ * grant (BaseController.tokenOrgScope): org shops outside it are left out;
+ * null (sessions, full/admin tokens) keeps every org.
  */
-export async function getShopIdsWithOrderAccess(userId: string): Promise<string[]> {
+export async function getShopIdsWithOrderAccess(
+  userId: string,
+  orgScope: TokenOrgScope,
+): Promise<string[]> {
   const db = getKnex()
   const shops: Pick<Shop, "shop_id" | "owner_user_id" | "owner_contractor_id">[] = await db("shops")
     .where("owner_user_id", userId)
-    .orWhereIn(
-      "owner_contractor_id",
-      db("contractor_members").select("contractor_id").where("user_id", userId),
-    )
+    .orWhereIn("owner_contractor_id", memberOrgIdsQuery(db, userId, orgScope))
     .select("shop_id", "owner_user_id", "owner_contractor_id")
   const allowed = await Promise.all(shops.map((shop) => canManageShopOrders(shop, userId)))
   return shops.filter((_, i) => allowed[i]).map((shop) => shop.shop_id)
@@ -141,6 +147,8 @@ export async function getShopBySlug(slug: string): Promise<Shop | null> {
 /**
  * Get all shops associated with a user (their own + orgs they're a member of).
  * Includes a `can_manage` flag indicating whether the user has manage_market permission.
+ * `orgScope` is the request's API-token org grant: org shops outside it are
+ * left out; null (sessions, full/admin tokens) keeps every org.
  */
 export interface ShopPermissions {
   can_manage: boolean
@@ -149,18 +157,16 @@ export interface ShopPermissions {
   manage_orders: boolean
 }
 
-export async function getShopsForUser(userId: string): Promise<(Shop & { permissions: ShopPermissions })[]> {
+export async function getShopsForUser(
+  userId: string,
+  orgScope: TokenOrgScope,
+): Promise<(Shop & { permissions: ShopPermissions })[]> {
   const db = getKnex()
 
   const shops = await db("shops")
     .where(function () {
       this.where("owner_user_id", userId)
-        .orWhereIn(
-          "owner_contractor_id",
-          db("contractor_members")
-            .select("contractor_id")
-            .where("user_id", userId),
-        )
+        .orWhereIn("owner_contractor_id", memberOrgIdsQuery(db, userId, orgScope))
     })
     .where("status", "active")
     .orderBy("created_at", "asc")

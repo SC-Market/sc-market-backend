@@ -19,6 +19,13 @@ import * as contractorDb from "../routes/v1/contractors/database.js"
 import logger from "../../logger/logger.js"
 import { isKnownSiteRole, isSiteAdmin } from "../util/site-role.js"
 import { adminLockResponse } from "../util/site-admin-policy.js"
+import { getKnex } from "../../clients/database/knex-db.js"
+import {
+  assertTokenMayUseOrg,
+  tokenAllowsOrg,
+  tokenOrgScope,
+  type TokenOrgScope,
+} from "../routes/v2/middleware/token-org-access.js"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -183,39 +190,102 @@ export const verifiedUserMiddleware = requireVerifiedUser
 
 // ── Scope validation ───────────────────────────────────────────────────────
 
+/**
+ * Marks a middleware as a token scope (or session-only) check, so tests can
+ * verify that every authenticated v1 route has one.
+ */
+export const TOKEN_SCOPE_CHECK = Symbol("tokenScopeCheck")
+type ScopeChecked<T> = T & { [TOKEN_SCOPE_CHECK]: readonly string[] }
+function markScopeCheck<T extends object>(fn: T, scopes: readonly string[]): ScopeChecked<T> {
+  return Object.assign(fn, { [TOKEN_SCOPE_CHECK]: scopes })
+}
+
 export function requireScopes(...requiredScopes: string[]) {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return markScopeCheck(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const isReadOnly = requiredScopes.every((s) => s.endsWith(":read"))
     if (!(await verifiedUser(req, res, isReadOnly))) return
 
     // Session / JWT cookie auth → full access, no scope check
     if (!isTokenAuth(req)) return next()
 
-    const tokenInfo = getTokenInfo(req)!
-    // Retired scopes (token-scope-catalog.ts) count for nothing.
-    const userScopes = effectiveTokenScopes(tokenInfo.scopes)
-
-    const isAdminScope = (s: string) =>
-      s.startsWith("admin:") || s === "admin" ||
-      s === "moderation:read" || s === "moderation:write"
-
-    const ok = requiredScopes.every((scope) => {
-      if (userScopes.includes(scope)) return true
-      if (userScopes.includes("admin")) return true
-      if (userScopes.includes("full") && !isAdminScope(scope)) return true
-      if (userScopes.includes("readonly") && scope.endsWith(":read") && !isAdminScope(scope)) return true
-      return false
-    })
-
-    if (!ok) {
+    if (!tokenGrantsScopes(req, requiredScopes)) {
       res.status(403).json(
         createErrorResponse(ErrorCode.FORBIDDEN, "Insufficient token permissions"),
       )
       return
     }
     next()
-  }
+  }, requiredScopes)
 }
+
+/** Whether the request's API token grants every one of `requiredScopes`. */
+function tokenGrantsScopes(req: Request, requiredScopes: string[]): boolean {
+  const tokenInfo = getTokenInfo(req)
+  if (!tokenInfo) return true
+  // Retired scopes (token-scope-catalog.ts) count for nothing.
+  const userScopes = effectiveTokenScopes(tokenInfo.scopes)
+
+  const isAdminScope = (s: string) =>
+    s.startsWith("admin:") || s === "admin" ||
+    s === "moderation:read" || s === "moderation:write"
+
+  return requiredScopes.every((scope) => {
+    if (userScopes.includes(scope)) return true
+    if (userScopes.includes("admin")) return true
+    if (userScopes.includes("full") && !isAdminScope(scope)) return true
+    if (userScopes.includes("readonly") && scope.endsWith(":read") && !isAdminScope(scope)) return true
+    return false
+  })
+}
+
+/**
+ * Token scope check alone, for routes whose authentication middleware
+ * (userAuthorized, requireVerifiedUser, ...) already decides who may call them.
+ * Unlike requireScopes it adds no RSI-verification requirement, so session
+ * users see no change; an API token without the scopes gets a 403.
+ */
+export function requireTokenScopes(...requiredScopes: string[]) {
+  return markScopeCheck((req: Request, res: Response, next: NextFunction): void => {
+    if (!tokenGrantsScopes(req, requiredScopes)) {
+      res.status(403).json(
+        createErrorResponse(ErrorCode.FORBIDDEN, "Insufficient token permissions"),
+      )
+      return
+    }
+    next()
+  }, requiredScopes)
+}
+
+/**
+ * Browser sessions only: an API token is refused with 403. For calls no token
+ * should make (account identity, email, the full data export), whatever its
+ * scopes. A Bearer `scm_` header counts even when the token is invalid, so a
+ * bad token can't be mistaken for a session.
+ */
+export const requireSessionAuth = markScopeCheck(function requireSessionAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
+  const authHeader = req.headers.authorization
+  if (isTokenAuth(req) || (authHeader && authHeader.startsWith("Bearer scm_"))) {
+    res.status(403).json(
+      createErrorResponse(ErrorCode.FORBIDDEN, "API tokens cannot use this endpoint"),
+    )
+    return
+  }
+  next()
+}, ["session-only"])
+
+/**
+ * Identity: who the token (or session) belongs to. Deliberately readable with
+ * any valid token, whatever its scopes: the API token guide tells token users
+ * to check a token with GET /api/v1/profile. Only authentication is required.
+ */
+export const anyTokenIdentity = markScopeCheck(
+  (req: Request, res: Response, next: NextFunction) => userAuthorized(req, res, next),
+  ["any-token"],
+)
 
 // ── Convenience scope middleware ────────────────────────────────────────────
 
@@ -245,6 +315,38 @@ export const requireMarketAdmin = requireScopes("admin")
 export const requireAdmin = requireScopes("admin")
 
 // ── Contractor access control ──────────────────────────────────────────────
+
+/** The orgs this request's API token may act for; null when unrestricted. */
+export function requestTokenOrgScope(req: Request): TokenOrgScope {
+  return tokenOrgScope(getTokenInfo(req))
+}
+
+/**
+ * For handlers and middleware that already resolved the org a request acts
+ * for: answers 403 and returns false when the request's API token wasn't
+ * granted that org and the user is a member of it (the v2 rule,
+ * token-org-access.ts). Sessions, full/admin tokens and personal resources
+ * (no org) pass.
+ */
+export async function tokenMayUseOrg(
+  req: Request,
+  res: Response,
+  contractorId: string | null | undefined,
+): Promise<boolean> {
+  const user = getUser(req)
+  if (!user) return true
+  if (tokenAllowsOrg(tokenOrgScope(getTokenInfo(req)), contractorId)) return true
+  try {
+    await assertTokenMayUseOrg(getKnex(), getTokenInfo(req), contractorId, user.user_id)
+    return true
+  } catch (error) {
+    if ((error as { status?: number }).status !== 403) throw error
+    res.status(403).json(
+      createErrorResponse(ErrorCode.FORBIDDEN, "Token does not have access to this contractor"),
+    )
+    return false
+  }
+}
 
 export function requireContractorAccess(contractorId: string) {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {

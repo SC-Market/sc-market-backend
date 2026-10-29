@@ -189,7 +189,7 @@ export class GameItemsV2Controller extends BaseController {
     const knex = getKnex()
     // Private listings are internal to the owning org; same rule as the
     // market grid (listing-visibility.ts).
-    const visible = listingVisibleTo(knex, this.tryGetUserId(), {
+    const visible = listingVisibleTo(knex, this.tryGetUserId(), this.tokenOrgScope(), {
       visibility: "l.visibility",
       ownerContractorId: "s.owner_contractor_id",
       shopId: "l.shop_id",
@@ -527,7 +527,7 @@ export class GameItemsV2Controller extends BaseController {
         .leftJoin("game_items as gi", db.raw("ls.game_item_id::text = gi.id::text"))
         .where("ls.status", "active")
         .where(
-          listingVisibleTo(db, this.tryGetUserId(), {
+          listingVisibleTo(db, this.tryGetUserId(), this.tokenOrgScope(), {
             visibility: "ls.visibility",
             ownerContractorId: "ls.shop_owner_contractor_id",
             shopId: "ls.shop_id",

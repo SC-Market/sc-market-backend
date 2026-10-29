@@ -30,11 +30,11 @@ vi.mock("./database.js", () => ({
 }))
 vi.mock("../util/permissions.js", () => ({
   has_permission: vi.fn(async () => false),
-  is_member: vi.fn(async () => false),
+  isOrgMemberIgnoringToken: vi.fn(async () => false),
 }))
 
 const orderDb = await import("./database.js")
-const { is_member } = await import("../util/permissions.js")
+const { isOrgMemberIgnoringToken: is_member } = await import("../util/permissions.js")
 const { post_order_review } = await import("./reviews.js")
 
 function res() {

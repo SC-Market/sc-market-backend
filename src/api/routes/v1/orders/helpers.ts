@@ -1287,6 +1287,19 @@ export async function search_orders_optimized(
       if (args.shop_id)
         qd = qd.where("orders.shop_id", args.shop_id)
 
+      // API-token org grant: other orgs' orders only where the viewer is the
+      // customer (their own purchases).
+      const orgScope = args.org_scope
+      const viewerId = args.viewer_id
+      if (orgScope && viewerId) {
+        qd = qd.where((scoped) => {
+          scoped
+            .whereNull("orders.contractor_id")
+            .orWhereIn("orders.contractor_id", [...orgScope])
+            .orWhere("orders.customer_id", viewerId)
+        })
+      }
+
       // Buyer username filter (partial match)
       if (args.buyer_username) {
         qd = qd.where(

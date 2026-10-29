@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import { rejectMixedRealm } from "../../../../services/test-accounts/isolation.js"
 import { RequestHandler } from "express"
 import * as profileDb from "../profiles/database.js"
@@ -295,6 +296,7 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
         )
       return
     }
+    if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
     const {
       amount,
@@ -545,6 +547,7 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
       )
     return
   }
+  if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
   const transactions = await transactionDb.getContractorTransactions(
     contractor.contractor_id,

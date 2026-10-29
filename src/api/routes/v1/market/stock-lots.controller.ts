@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 /**
  * Stock Lot API Controllers
  *
@@ -345,6 +346,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
         createErrorResponse({ message: "You cannot view this order's allocations" }),
       )
     }
+    if (!(await tokenMayUseOrg(req, res, order.contractor_id))) return
 
     // Get listing IDs from V1 market_orders and V2 order_market_items_v2
     const v1MarketOrders = await getKnex()("market_orders").where({ order_id }).select("listing_id")
@@ -528,6 +530,7 @@ export const manualAllocateOrder: RequestHandler = async (req, res) => {
       )
       return
     }
+    if (!(await tokenMayUseOrg(req, res, order.contractor_id))) return
     const foreign = await lotsOutsideOrder(
       order_id,
       allocations.map((a) => a.lot_id),

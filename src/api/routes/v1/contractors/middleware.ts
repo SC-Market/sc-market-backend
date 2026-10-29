@@ -12,6 +12,7 @@ import {
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 
 export async function valid_contractor(
   req: Request,
@@ -86,6 +87,9 @@ export async function org_authorized(
         )
       return
     }
+
+    // An API token acts for this org only if it was granted it.
+    if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
     if (!(await is_member(contractor.contractor_id, user.user_id))) {
       res.status(403).json(createForbiddenErrorResponse("Unauthorized"))
@@ -168,6 +172,9 @@ export function org_permission(permission_name: keyof DBContractorRole) {
           )
         return
       }
+
+      // An API token acts for this org only if it was granted it.
+      if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
       const hasPermission = await has_permission(
         contractor.contractor_id,

@@ -1,3 +1,4 @@
+import { tokenMayUseOrg } from "../../../middleware/auth.js"
 import {
   canViewTestEntity,
   isTestUser,
@@ -597,6 +598,7 @@ export const get_spectrum_id_customers: RequestHandler = async (req, res) => {
       )
     return
   }
+  if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
 
   const customers = await contractorDb.getContractorCustomers(
     contractor.contractor_id,

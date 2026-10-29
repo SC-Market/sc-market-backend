@@ -20,6 +20,7 @@ import {
   notTestShop,
 } from "../../../../services/test-accounts/isolation.js"
 import { listingVisibleTo } from "../util/listing-visibility.js"
+import type { TokenOrgScope } from "../middleware/token-org-access.js"
 import { canModifyListing } from "../util/listing-permissions.js"
 import { clampPagination } from "../util/pagination.js"
 import { isUuid } from "../util/short-slug.js"
@@ -38,6 +39,7 @@ export function auctionVisibleTo(
   db: Knex,
   viewerUserId: string | undefined,
   viewerIsAdmin: boolean,
+  orgScope: TokenOrgScope,
 ): (this: Knex.QueryBuilder) => void {
   const columns = {
     visibility: "l.visibility",
@@ -45,7 +47,7 @@ export function auctionVisibleTo(
     shopId: "l.shop_id",
   }
   return function () {
-    this.where(listingVisibleTo(db, viewerUserId, columns)).orWhere(function () {
+    this.where(listingVisibleTo(db, viewerUserId, orgScope, columns)).orWhere(function () {
       this.whereIn("l.visibility", viewerIsAdmin ? ["unlisted", "private"] : ["unlisted"])
         .whereRaw(hiddenFromRealViewers(db, notTestShop("l.shop_id"), viewerUserId))
     })
@@ -143,6 +145,7 @@ export class AuctionsV2Controller extends BaseController {
    *
    * @param page 1-based page of bids (default 1)
    * @param page_size Bids per page (default 20, max 100)
+   * @summary Get auction
    */
   @Get("{listingId}")
   public async getAuctionDetail(
@@ -162,7 +165,7 @@ export class AuctionsV2Controller extends BaseController {
     const listing = await knex("listings as l")
       .join("shops as s", "l.shop_id", "s.shop_id")
       .where("l.listing_id", listingId)
-      .where(auctionVisibleTo(knex, viewerId, this.isAdmin()))
+      .where(auctionVisibleTo(knex, viewerId, this.isAdmin(), this.tokenOrgScope()))
       .first<{ shop_id: string } | undefined>("l.shop_id")
     if (!listing) this.throwNotFound("Auction", listingId)
 
@@ -262,6 +265,7 @@ export class AuctionsV2Controller extends BaseController {
 
   /**
    * Place a bid on an auction listing
+   * @summary Place bid
    */
   @Post("{listingId}/bids")
   @Security("loggedin")
@@ -282,7 +286,7 @@ export class AuctionsV2Controller extends BaseController {
       const visible = await trx("listings as l")
         .join("shops as s", "l.shop_id", "s.shop_id")
         .where("l.listing_id", listingId)
-        .where(auctionVisibleTo(knex, userId, this.isAdmin()))
+        .where(auctionVisibleTo(knex, userId, this.isAdmin(), this.tokenOrgScope()))
         .first("l.listing_id")
       if (!visible) this.throwNotFound("Auction", listingId)
       const auction = await trx("auction_details_v2").where({ listing_id: listingId }).first()

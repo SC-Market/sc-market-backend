@@ -30,6 +30,7 @@ export class AccountDeletionV2Controller extends BaseController {
     super(request)
   }
 
+  /** @summary Request account deletion */
   @Security("loggedin")
   @Post("delete")
   public async requestDeletion(
@@ -51,6 +52,7 @@ export class AccountDeletionV2Controller extends BaseController {
     }
   }
 
+  /** @summary Cancel account deletion */
   @Security("loggedin")
   @Post("cancel-deletion")
   public async cancelDeletion(
@@ -64,6 +66,7 @@ export class AccountDeletionV2Controller extends BaseController {
     return { message: "Account deletion cancelled." }
   }
 
+  /** @summary Get account deletion status */
   @Security("loggedin")
   @Get("deletion-status")
   public async getDeletionStatus(
@@ -81,6 +84,7 @@ export class AccountDeletionV2Controller extends BaseController {
     }
   }
 
+  /** @summary Check before account deletion */
   @Security("loggedin")
   @Get("deletion-precheck")
   public async preDeletionCheck(

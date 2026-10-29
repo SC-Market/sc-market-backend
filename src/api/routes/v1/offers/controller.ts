@@ -1,3 +1,4 @@
+import { requestTokenOrgScope, tokenMayUseOrg } from "../../../middleware/auth.js"
 import { notifyOfferDecision } from "../../../../services/notify/offer-decisions.js"
 import { RequestHandler } from "express"
 import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
@@ -411,6 +412,16 @@ export const get_search: RequestHandler = async (req, res) => {
       return
     }
   }
+
+  // Naming an org (or an org's shop) acts for it: an API token must be
+  // granted it. Every other result is narrowed to the token's orgs below.
+  if (!(await tokenMayUseOrg(req, res, args.contractor_id))) return
+  if (args.shop_id) {
+    const shop = await database.knex("shops").where("shop_id", args.shop_id).first("owner_contractor_id")
+    if (!(await tokenMayUseOrg(req, res, shop?.owner_contractor_id))) return
+  }
+  args.viewer_id = user.user_id
+  args.org_scope = requestTokenOrgScope(req)
 
   if (args.shop_id) {
     const shop = await database.knex("shops").where("shop_id", args.shop_id).first()

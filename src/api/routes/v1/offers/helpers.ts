@@ -231,6 +231,19 @@ export async function search_offer_sessions_optimized(
       if (args.shop_id)
         qd = qd.where("offer_sessions.shop_id", args.shop_id)
 
+      // API-token org grant: other orgs' offers only where the viewer is the
+      // customer (their own offers).
+      const orgScope = args.org_scope
+      const viewerId = args.viewer_id
+      if (orgScope && viewerId) {
+        qd = qd.where((scoped: Knex.QueryBuilder) => {
+          scoped
+            .whereNull("offer_sessions.contractor_id")
+            .orWhereIn("offer_sessions.contractor_id", [...orgScope])
+            .orWhere("offer_sessions.customer_id", viewerId)
+        })
+      }
+
       // Buyer username filter (partial match)
       if (args.buyer_username) {
         qd = qd.where(

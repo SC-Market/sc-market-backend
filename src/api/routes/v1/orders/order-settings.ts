@@ -7,7 +7,10 @@ import {
   createNotFoundErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
-import { userAuthorized } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  requireTokenScopes,
+} from "../../../middleware/auth.js"
 import {
   readRateLimit,
   writeRateLimit,
@@ -50,6 +53,7 @@ function serializeOrderSetting(setting: DBOrderSetting): OrderSetting {
 orderSettingsRouter.get(
   "/settings",
   userAuthorized,
+  requireTokenScopes("orders:read"),
   readRateLimit,
   async (req, res) => {
     const user = req.user as User
@@ -77,6 +81,7 @@ orderSettingsRouter.get(
 orderSettingsRouter.post(
   "/settings",
   userAuthorized,
+  requireTokenScopes("orders:write"),
   writeRateLimit,
   async (req, res) => {
     const user = req.user as User
@@ -259,6 +264,7 @@ orderSettingsRouter.post(
 orderSettingsRouter.put(
   "/settings/:id",
   userAuthorized,
+  requireTokenScopes("orders:write"),
   writeRateLimit,
   async (req, res) => {
     const user = req.user as User
@@ -309,6 +315,7 @@ orderSettingsRouter.put(
 orderSettingsRouter.delete(
   "/settings/:id",
   userAuthorized,
+  requireTokenScopes("orders:write"),
   writeRateLimit,
   async (req, res) => {
     const user = req.user as User
@@ -352,6 +359,7 @@ orderSettingsRouter.delete(
 orderSettingsRouter.get(
   "/contractors/:spectrum_id/settings",
   userAuthorized,
+  requireTokenScopes("orders:read"),
   org_permission("manage_orders"),
   readRateLimit,
   async (req, res) => {
@@ -398,6 +406,7 @@ orderSettingsRouter.get(
 orderSettingsRouter.post(
   "/contractors/:spectrum_id/settings",
   userAuthorized,
+  requireTokenScopes("orders:write"),
   org_permission("manage_orders"),
   writeRateLimit,
   async (req, res) => {
@@ -598,6 +607,7 @@ orderSettingsRouter.post(
 orderSettingsRouter.put(
   "/contractors/:spectrum_id/settings/:id",
   userAuthorized,
+  requireTokenScopes("orders:write"),
   org_permission("manage_orders"),
   writeRateLimit,
   async (req, res) => {
@@ -658,6 +668,7 @@ orderSettingsRouter.put(
 orderSettingsRouter.delete(
   "/contractors/:spectrum_id/settings/:id",
   userAuthorized,
+  requireTokenScopes("orders:write"),
   org_permission("manage_orders"),
   writeRateLimit,
   async (req, res) => {
@@ -704,6 +715,7 @@ import { isAvailabilityRequired, hasAvailabilitySet } from "./helpers.js"
 orderSettingsRouter.get(
   "/availability/contractor/:spectrum_id/check",
   userAuthorized,
+  requireTokenScopes("orders:read"),
   valid_contractor,
   readRateLimit,
   async (req, res) => {
@@ -755,6 +767,7 @@ orderSettingsRouter.get(
 orderSettingsRouter.get(
   "/availability/user/:username/check",
   userAuthorized,
+  requireTokenScopes("orders:read"),
   validate_username("username"),
   readRateLimit,
   async (req, res) => {
@@ -805,6 +818,7 @@ orderSettingsRouter.get(
 orderSettingsRouter.get(
   "/limits/contractor/:spectrum_id/check",
   userAuthorized,
+  requireTokenScopes("orders:read"),
   valid_contractor,
   readRateLimit,
   async (req, res) => {
@@ -854,6 +868,7 @@ orderSettingsRouter.get(
 orderSettingsRouter.get(
   "/limits/user/:username/check",
   userAuthorized,
+  requireTokenScopes("orders:read"),
   validate_username("username"),
   readRateLimit,
   async (req, res) => {
