@@ -26,10 +26,11 @@ type TokenCheckedRequest = Request & {
  * public ones included (it is not served as anonymous either).
  * - auth/mfa, admin/mfa: two-factor state and enrollment/verification.
  * - admin/test-accounts: test-account management.
+ * - admin/identity: account identity fixes (services/identity-admin).
  * - debug: the viewer's resolved feature flags and per-user overrides
  *   (GET/POST debug/feature-flag, which the site uses for every user).
  */
-const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts", "debug"]
+const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts", "admin/identity", "debug"]
 
 export function isSessionOnlyPath(path: string): boolean {
   const clean = path.replace(/^\/+/, "").toLowerCase()

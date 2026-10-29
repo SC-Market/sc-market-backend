@@ -13178,6 +13178,388 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"IdentitySearchRow": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"rsi_confirmed": {
+						"type": "boolean"
+					},
+					"spectrum_user_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_provider_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_id_column": {
+						"type": "string",
+						"nullable": true
+					},
+					"banned": {
+						"type": "boolean"
+					},
+					"is_test": {
+						"type": "boolean"
+					},
+					"is_tombstone": {
+						"type": "boolean"
+					},
+					"deletion_pending": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"role",
+					"rsi_confirmed",
+					"spectrum_user_id",
+					"discord_provider_id",
+					"discord_id_column",
+					"banned",
+					"is_test",
+					"is_tombstone",
+					"deletion_pending"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentitySearchResponse": {
+				"properties": {
+					"users": {
+						"items": {
+							"$ref": "#/components/schemas/IdentitySearchRow"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"users"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentityProvider": {
+				"properties": {
+					"provider_type": {
+						"type": "string"
+					},
+					"provider_id": {
+						"type": "string"
+					},
+					"provider_username": {
+						"type": "string",
+						"nullable": true,
+						"description": "Discord username or RSI handle recorded at link time."
+					},
+					"is_primary": {
+						"type": "boolean"
+					},
+					"linked_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"last_used_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "Last login with this provider (token refresh at login)."
+					}
+				},
+				"required": [
+					"provider_type",
+					"provider_id",
+					"provider_username",
+					"is_primary",
+					"linked_at",
+					"last_used_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentitySession": {
+				"properties": {
+					"refreshed_at": {
+						"type": "string",
+						"description": "When this session last refreshed (refresh tokens rotate every ~15 min)."
+					},
+					"expires_at": {
+						"type": "string"
+					},
+					"user_agent": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"refreshed_at",
+					"expires_at",
+					"user_agent"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentityActionKind": {
+				"type": "string",
+				"enum": [
+					"username_released",
+					"discord_unlinked",
+					"spectrum_cleared",
+					"spectrum_set",
+					"account_deactivated",
+					"account_reactivated"
+				]
+			},
+			"IdentityAuditEntry": {
+				"properties": {
+					"audit_log_id": {
+						"type": "string"
+					},
+					"kind": {
+						"$ref": "#/components/schemas/IdentityActionKind"
+					},
+					"actor_user_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"actor_username": {
+						"type": "string",
+						"nullable": true
+					},
+					"reason": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"audit_log_id",
+					"kind",
+					"actor_user_id",
+					"actor_username",
+					"reason",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentityDetail": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"rsi_confirmed": {
+						"type": "boolean"
+					},
+					"spectrum_user_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_provider_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_id_column": {
+						"type": "string",
+						"nullable": true
+					},
+					"banned": {
+						"type": "boolean"
+					},
+					"is_test": {
+						"type": "boolean"
+					},
+					"is_tombstone": {
+						"type": "boolean"
+					},
+					"deletion_pending": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"deleted_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"deletion_scheduled_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_column_stale": {
+						"type": "boolean",
+						"description": "accounts.discord_id is set but no Discord provider matches it (stale legacy column)."
+					},
+					"providers": {
+						"items": {
+							"$ref": "#/components/schemas/IdentityProvider"
+						},
+						"type": "array"
+					},
+					"sessions": {
+						"items": {
+							"$ref": "#/components/schemas/IdentitySession"
+						},
+						"type": "array"
+					},
+					"username_twins": {
+						"items": {
+							"properties": {
+								"username": {
+									"type": "string"
+								},
+								"user_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"username",
+								"user_id"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"description": "Other accounts whose username differs only by case."
+					},
+					"recent_actions": {
+						"items": {
+							"$ref": "#/components/schemas/IdentityAuditEntry"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"role",
+					"rsi_confirmed",
+					"spectrum_user_id",
+					"discord_provider_id",
+					"discord_id_column",
+					"banned",
+					"is_test",
+					"is_tombstone",
+					"deletion_pending",
+					"created_at",
+					"deleted_at",
+					"deletion_scheduled_at",
+					"discord_column_stale",
+					"providers",
+					"sessions",
+					"username_twins",
+					"recent_actions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentityActionResponse": {
+				"properties": {
+					"audit_log_id": {
+						"type": "string"
+					},
+					"kind": {
+						"$ref": "#/components/schemas/IdentityActionKind"
+					},
+					"user": {
+						"$ref": "#/components/schemas/IdentityDetail"
+					}
+				},
+				"required": [
+					"audit_log_id",
+					"kind",
+					"user"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IdentityActionRequest": {
+				"properties": {
+					"reason": {
+						"type": "string",
+						"description": "Why (kept in the audit log, never shown to the user).",
+						"minLength": 5,
+						"maxLength": 500
+					}
+				},
+				"required": [
+					"reason"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UnlinkDiscordRequest": {
+				"properties": {
+					"reason": {
+						"type": "string",
+						"description": "Why (kept in the audit log, never shown to the user).",
+						"minLength": 5,
+						"maxLength": 500
+					},
+					"allow_no_login": {
+						"type": "boolean",
+						"description": "Unlink even though Discord is the account's only login method."
+					}
+				},
+				"required": [
+					"reason"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SpectrumFixRequest": {
+				"properties": {
+					"reason": {
+						"type": "string",
+						"description": "Why (kept in the audit log, never shown to the user).",
+						"minLength": 5,
+						"maxLength": 500
+					},
+					"mode": {
+						"type": "string",
+						"enum": [
+							"clear",
+							"set"
+						],
+						"description": "clear: remove the Spectrum id (and RSI verification); set: write spectrum_user_id."
+					},
+					"spectrum_user_id": {
+						"type": "string",
+						"description": "Required for \"set\". Digits only; refused if another account holds it.",
+						"pattern": "^[0-9]{1,20}$"
+					}
+				},
+				"required": [
+					"reason",
+					"mode"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -23060,6 +23442,315 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/admin/identity/users": {
+			"get": {
+				"operationId": "SearchIdentityUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentitySearchResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search accounts by user id, Discord id, Spectrum id (exact), username\n(prefix) or display name (substring). At most 25.",
+				"summary": "Search account identities",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "q",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/identity/users/{user_id}": {
+			"get": {
+				"operationId": "GetIdentityUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentityDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "An account's identity fields, linked logins, deletion state, active\nsessions and recent identity changes.",
+				"summary": "Get an account's identities",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "user_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/identity/users/{user_id}/release-username": {
+			"post": {
+				"operationId": "ReleaseIdentityUsername",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentityActionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Rename the account to a free placeholder username so its current handle\nis released. Needs a fresh two-factor step-up.",
+				"summary": "Release an account's username",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "user_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IdentityActionRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/identity/users/{user_id}/unlink-discord": {
+			"post": {
+				"operationId": "UnlinkIdentityDiscord",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentityActionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Unlink the account's Discord (provider and legacy column). Needs a fresh\ntwo-factor step-up.",
+				"summary": "Unlink an account's Discord",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "user_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UnlinkDiscordRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/identity/users/{user_id}/spectrum": {
+			"post": {
+				"operationId": "FixIdentitySpectrum",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentityActionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Clear or set the account's Spectrum id. Never moves an id from another\naccount. Needs a fresh two-factor step-up.",
+				"summary": "Fix an account's Spectrum link",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "user_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SpectrumFixRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/identity/users/{user_id}/deactivate": {
+			"post": {
+				"operationId": "DeactivateIdentityUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentityActionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deactivate the account and end its sessions. Needs a fresh two-factor\nstep-up.",
+				"summary": "Deactivate an account",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "user_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IdentityActionRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/identity/users/{user_id}/reactivate": {
+			"post": {
+				"operationId": "ReactivateIdentityUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IdentityActionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Reactivate a deactivated account. Needs a fresh two-factor step-up.",
+				"summary": "Reactivate an account",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "user_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IdentityActionRequest"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

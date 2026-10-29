@@ -40,6 +40,24 @@ function isPostgresConstraintError(
   )
 }
 
+/** Citizen ID sign-up: the RSI handle is another account's username. */
+function usernameTakenError(username: string): Error & { code: string } {
+  const error = new Error(
+    `Username "${username}" is already registered. Please log in with Discord first, then link your Citizen ID account in settings.`,
+  ) as Error & { code: string }
+  error.code = CitizenIDErrorCodes.USERNAME_TAKEN
+  return error
+}
+
+/** Citizen ID sign-up: the Spectrum ID belongs to another account. */
+function spectrumTakenError(spectrumId: string): Error & { code: string } {
+  const error = new Error(
+    `This Spectrum ID (${spectrumId}) is already associated with another account. Please log in with that account first, then link your Citizen ID account in settings.`,
+  ) as Error & { code: string }
+  error.code = CitizenIDErrorCodes.ALREADY_LINKED
+  return error
+}
+
 /**
  * Get Discord passport configuration
  */
@@ -429,18 +447,16 @@ export function createCitizenIDVerifyCallback(
         }
 
         // Sign up - check for conflicts before creating
-        // Check if username already exists (might be registered with Discord)
+        // Check if username already exists (might be registered with Discord).
+        // Any holder blocks the insert (accounts_username_key), verified or
+        // not, so any holder is USERNAME_TAKEN: log in with that account and
+        // link Citizen ID there, or ask an admin to release the name.
         const existingUser = await profileDb.findUser({
           username: citizenIDUsername,
         })
 
-        // If username exists and account is verified, user needs to login with Discord first
-        if (existingUser && existingUser.rsi_confirmed) {
-          const error = new Error(
-            `Username "${citizenIDUsername}" is already registered. Please log in with Discord first, then link your Citizen ID account in settings.`,
-          ) as Error & { code?: string }
-          error.code = CitizenIDErrorCodes.USERNAME_TAKEN
-          return done(error, undefined)
+        if (existingUser) {
+          return done(usernameTakenError(citizenIDUsername), undefined)
         }
 
         // Check if Spectrum ID is already in use by another account
@@ -449,11 +465,7 @@ export function createCitizenIDVerifyCallback(
           spectrum_user_id: rsiSpectrumId,
         })
         if (userWithSpectrumId) {
-          const error = new Error(
-            `This Spectrum ID (${rsiSpectrumId}) is already associated with another account. Please log in with that account first, then link your Citizen ID account in settings.`,
-          ) as Error & { code?: string }
-          error.code = CitizenIDErrorCodes.ALREADY_LINKED
-          return done(error, undefined)
+          return done(spectrumTakenError(rsiSpectrumId), undefined)
         }
 
         // Create new user (Citizen ID is verified, so we can create)
@@ -500,30 +512,20 @@ export function createCitizenIDVerifyCallback(
             }
           }
         } catch (createError: unknown) {
-          // Handle duplicate username constraint error
+          // Another sign-up took the username or Spectrum ID between the
+          // checks above and the insert: the same handled errors, never the
+          // raw Postgres error.
           if (
             isPostgresConstraintError(createError) &&
-            createError.code === "23505" &&
-            createError.constraint === "accounts_username_key"
+            createError.code === "23505"
           ) {
-            // Username was taken between check and create
-            // Check if it's a verified account
-            try {
-              const conflictingUser = await profileDb.getUser({
-                username: citizenIDUsername,
-              })
-              if (conflictingUser && conflictingUser.rsi_confirmed) {
-                const error = new Error(
-                  `Username "${citizenIDUsername}" is already registered. Please log in with Discord first, then link your Citizen ID account in settings.`,
-                ) as Error & { code?: string }
-                error.code = CitizenIDErrorCodes.USERNAME_TAKEN
-                return done(error, undefined)
-              }
-            } catch (lookupError) {
-              // If we can't look up the user, just pass through the original error
+            if (createError.constraint === "accounts_username_key") {
+              return done(usernameTakenError(citizenIDUsername), undefined)
+            }
+            if (createError.constraint === "accounts_spectrum_user_id_unique") {
+              return done(spectrumTakenError(rsiSpectrumId), undefined)
             }
           }
-          // Re-throw if it's not a duplicate username error
           throw createError
         }
 

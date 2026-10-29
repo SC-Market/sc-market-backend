@@ -10,12 +10,7 @@
 import { Body, Delete, Get, Path, Post, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
-import { BusinessLogicError } from "../../v1/util/errors.js"
-import { ErrorCode } from "../../v1/util/error-codes.js"
-import { getKeyring } from "../../../../services/mfa/config.js"
-import { getMfaService } from "../../../../services/mfa/instance.js"
-import { stepUpSatisfied } from "../../../../services/mfa/policy.js"
-import { stepUpError } from "../../../util/step-up.js"
+import { assertStrictStepUp } from "../../../util/step-up.js"
 import {
   createTestAccount,
   deleteTestAccount,
@@ -72,28 +67,12 @@ export class TestAccountsController extends BaseController {
     super(request)
   }
 
-  /**
-   * Step-up that does not depend on ADMIN_MFA_ENFORCE: the server must have
-   * the MFA key, the admin an authenticator, and this session a code from the
-   * last 10 minutes.
-   */
+  /** Strict step-up (src/api/util/step-up.ts), independent of ADMIN_MFA_ENFORCE. */
   private async requireStrictStepUp(): Promise<void> {
-    const request = this.request!
-    if (!getKeyring()) {
-      throw new BusinessLogicError(
-        ErrorCode.MFA_NOT_CONFIGURED,
-        "Two-factor authentication is not configured on this server",
-      )
-    }
-    const mfa = getMfaService()
-    const userId = this.getUserId()
-    if (!(await mfa.isEnrolled(userId))) {
-      throw new BusinessLogicError(
-        ErrorCode.MFA_ENROLLMENT_REQUIRED,
-        "Set up two-factor authentication before managing test accounts",
-      )
-    }
-    if (!stepUpSatisfied(request.auth, await mfa.mfaChangedAt(userId))) throw stepUpError()
+    await assertStrictStepUp(
+      this.request!,
+      "Set up two-factor authentication before managing test accounts",
+    )
   }
 
   private ctx() {

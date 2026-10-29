@@ -82,6 +82,8 @@ import { TestAccountsController } from './../admin/TestAccountsController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminIdentityController } from './../admin/AdminIdentityController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminController } from './../admin/AdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAlertsV2Controller } from './../admin/AdminAlertsV2Controller.js';
@@ -4191,6 +4193,138 @@ const models: TsoaRoute.Models = {
             "username": {"dataType":"string","required":true},
             "flag_name": {"dataType":"string","required":true},
             "enabled": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentitySearchRow": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "role": {"dataType":"string","required":true},
+            "rsi_confirmed": {"dataType":"boolean","required":true},
+            "spectrum_user_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "discord_provider_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "discord_id_column": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "banned": {"dataType":"boolean","required":true},
+            "is_test": {"dataType":"boolean","required":true},
+            "is_tombstone": {"dataType":"boolean","required":true},
+            "deletion_pending": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentitySearchResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"IdentitySearchRow"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentityProvider": {
+        "dataType": "refObject",
+        "properties": {
+            "provider_type": {"dataType":"string","required":true},
+            "provider_id": {"dataType":"string","required":true},
+            "provider_username": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "is_primary": {"dataType":"boolean","required":true},
+            "linked_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "last_used_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentitySession": {
+        "dataType": "refObject",
+        "properties": {
+            "refreshed_at": {"dataType":"string","required":true},
+            "expires_at": {"dataType":"string","required":true},
+            "user_agent": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentityActionKind": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["username_released"]},{"dataType":"enum","enums":["discord_unlinked"]},{"dataType":"enum","enums":["spectrum_cleared"]},{"dataType":"enum","enums":["spectrum_set"]},{"dataType":"enum","enums":["account_deactivated"]},{"dataType":"enum","enums":["account_reactivated"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentityAuditEntry": {
+        "dataType": "refObject",
+        "properties": {
+            "audit_log_id": {"dataType":"string","required":true},
+            "kind": {"ref":"IdentityActionKind","required":true},
+            "actor_user_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "actor_username": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reason": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentityDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "role": {"dataType":"string","required":true},
+            "rsi_confirmed": {"dataType":"boolean","required":true},
+            "spectrum_user_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "discord_provider_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "discord_id_column": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "banned": {"dataType":"boolean","required":true},
+            "is_test": {"dataType":"boolean","required":true},
+            "is_tombstone": {"dataType":"boolean","required":true},
+            "deletion_pending": {"dataType":"boolean","required":true},
+            "created_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "deleted_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "deletion_scheduled_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "discord_column_stale": {"dataType":"boolean","required":true},
+            "providers": {"dataType":"array","array":{"dataType":"refObject","ref":"IdentityProvider"},"required":true},
+            "sessions": {"dataType":"array","array":{"dataType":"refObject","ref":"IdentitySession"},"required":true},
+            "username_twins": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"username":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true}}},"required":true},
+            "recent_actions": {"dataType":"array","array":{"dataType":"refObject","ref":"IdentityAuditEntry"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentityActionResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "audit_log_id": {"dataType":"string","required":true},
+            "kind": {"ref":"IdentityActionKind","required":true},
+            "user": {"ref":"IdentityDetail","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IdentityActionRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "reason": {"dataType":"string","required":true,"validators":{"minLength":{"value":5},"maxLength":{"value":500}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UnlinkDiscordRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "reason": {"dataType":"string","required":true,"validators":{"minLength":{"value":5},"maxLength":{"value":500}}},
+            "allow_no_login": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumFixRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "reason": {"dataType":"string","required":true,"validators":{"minLength":{"value":5},"maxLength":{"value":500}}},
+            "mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["clear"]},{"dataType":"enum","enums":["set"]}],"required":true},
+            "spectrum_user_id": {"dataType":"string","validators":{"pattern":{"value":"^[0-9]{1,20}$"}}},
         },
         "additionalProperties": false,
     },
@@ -10308,6 +10442,235 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'removeUserOverride',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_searchIdentityUsers: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                q: {"in":"query","name":"q","required":true,"dataType":"string"},
+        };
+        app.get('/admin/identity/users',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.searchIdentityUsers)),
+
+            async function AdminIdentityController_searchIdentityUsers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_searchIdentityUsers, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'searchIdentityUsers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_getIdentityUser: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                user_id: {"in":"path","name":"user_id","required":true,"dataType":"string"},
+        };
+        app.get('/admin/identity/users/:user_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.getIdentityUser)),
+
+            async function AdminIdentityController_getIdentityUser(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_getIdentityUser, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'getIdentityUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_releaseIdentityUsername: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                user_id: {"in":"path","name":"user_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"IdentityActionRequest"},
+        };
+        app.post('/admin/identity/users/:user_id/release-username',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.releaseIdentityUsername)),
+
+            async function AdminIdentityController_releaseIdentityUsername(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_releaseIdentityUsername, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'releaseIdentityUsername',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_unlinkIdentityDiscord: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                user_id: {"in":"path","name":"user_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UnlinkDiscordRequest"},
+        };
+        app.post('/admin/identity/users/:user_id/unlink-discord',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.unlinkIdentityDiscord)),
+
+            async function AdminIdentityController_unlinkIdentityDiscord(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_unlinkIdentityDiscord, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'unlinkIdentityDiscord',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_fixIdentitySpectrum: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                user_id: {"in":"path","name":"user_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"SpectrumFixRequest"},
+        };
+        app.post('/admin/identity/users/:user_id/spectrum',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.fixIdentitySpectrum)),
+
+            async function AdminIdentityController_fixIdentitySpectrum(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_fixIdentitySpectrum, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'fixIdentitySpectrum',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_deactivateIdentityUser: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                user_id: {"in":"path","name":"user_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"IdentityActionRequest"},
+        };
+        app.post('/admin/identity/users/:user_id/deactivate',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.deactivateIdentityUser)),
+
+            async function AdminIdentityController_deactivateIdentityUser(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_deactivateIdentityUser, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'deactivateIdentityUser',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminIdentityController_reactivateIdentityUser: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                user_id: {"in":"path","name":"user_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"IdentityActionRequest"},
+        };
+        app.post('/admin/identity/users/:user_id/reactivate',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminIdentityController.prototype.reactivateIdentityUser)),
+
+            async function AdminIdentityController_reactivateIdentityUser(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminIdentityController_reactivateIdentityUser, request, response });
+
+                const controller = new AdminIdentityController();
+
+              await templateService.apiHandler({
+                methodName: 'reactivateIdentityUser',
                 controller,
                 response,
                 next,

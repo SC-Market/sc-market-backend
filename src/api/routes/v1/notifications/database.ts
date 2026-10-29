@@ -32,6 +32,7 @@ import * as marketDb from "../market/database.js"
 import * as offerDb from "../offers/database.js"
 import * as adminDb from "../admin/database.js"
 import logger from "../../../../logger/logger.js"
+import { identityNoticeEntity } from "../../../../services/identity-admin/notice-entity.js"
 import { listingPubliclyListed } from "../../v2/util/listing-visibility.js"
 
 /**
@@ -589,6 +590,10 @@ export async function getEntityByType(
         price: Number(listing.price_min),
         photo: listing.photo,
       }
+    }
+    case "audit_logs": {
+      // Identity changes made by an admin (account_identity_changed).
+      return identityNoticeEntity(entity_id)
     }
     case "admin_alerts": {
       const alerts = await adminDb.getAdminAlerts({ alert_id: entity_id })

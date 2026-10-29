@@ -9,7 +9,7 @@
  */
 
 import type { NextFunction, Request, Response } from "express"
-import { getMfaEnforcement } from "../../services/mfa/config.js"
+import { getKeyring, getMfaEnforcement } from "../../services/mfa/config.js"
 import { stepUpSatisfied } from "../../services/mfa/policy.js"
 import { getMfaService } from "../../services/mfa/instance.js"
 import { BusinessLogicError } from "../routes/v1/util/errors.js"
@@ -45,4 +45,29 @@ export async function requireStepUp(
   if (await isStepUpFresh(req)) return next()
   const err = stepUpError()
   res.status(403).json(createErrorResponse(err.code, err.message))
+}
+
+/**
+ * Step-up that does not depend on ADMIN_MFA_ENFORCE, for the most sensitive
+ * admin actions (test accounts, identity changes): the server must have the
+ * MFA key, the admin an authenticator, and this session a code from the last
+ * 10 minutes.
+ */
+export async function assertStrictStepUp(
+  req: Request,
+  enrollmentMessage: string,
+): Promise<void> {
+  if (!getKeyring()) {
+    throw new BusinessLogicError(
+      ErrorCode.MFA_NOT_CONFIGURED,
+      "Two-factor authentication is not configured on this server",
+    )
+  }
+  const userId = req.user?.user_id
+  if (!userId) throw stepUpError()
+  const mfa = getMfaService()
+  if (!(await mfa.isEnrolled(userId))) {
+    throw new BusinessLogicError(ErrorCode.MFA_ENROLLMENT_REQUIRED, enrollmentMessage)
+  }
+  if (!stepUpSatisfied(req.auth, await mfa.mfaChangedAt(userId))) throw stepUpError()
 }

@@ -125,6 +125,9 @@ export const CATALOG = {
   "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
   // Someone made an offer on your public contract (was order_contractor_applied).
   "contract.offer_received": event("contracts", "contract_offer_received", ALL),
+  // An admin changed your account's identity (services/identity-admin).
+  // Mandatory (account category); in-app and push only, no email template yet.
+  "account.identity_changed": event("account", "account_identity_changed", ["in_app", "push"]),
   // Owner decision (ships with the cutover; shadow-only until then): the four
   // order_status_* events become one, and offer_create + counter_offer_create
   // become one. They replace the per-status / per-type entries above at cutover.
