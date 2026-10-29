@@ -109,7 +109,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "clerk@example.test",
       ],
@@ -496,7 +496,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "boss@example.test",
       ],
@@ -707,7 +707,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "seller@example.test",
       ],
@@ -1044,7 +1044,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "seller@example.test",
       ],
@@ -1202,7 +1202,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "seller@example.test",
       ],
@@ -1408,7 +1408,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "customer@example.test",
       ],
@@ -1595,7 +1595,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "customer@example.test",
       ],
@@ -1780,7 +1780,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "customer@example.test",
       ],
@@ -1961,7 +1961,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "customer@example.test",
       ],
@@ -2119,7 +2119,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "clerk@example.test",
       ],

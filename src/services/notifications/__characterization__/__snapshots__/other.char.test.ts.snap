@@ -27,7 +27,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "alice@example.test",
       ],
@@ -54,7 +54,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "bob@example.test",
       ],
@@ -188,17 +188,21 @@ exports[`contractor_invite (9) > invitee gets in-app, push and email (owner deci
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 3500,
+      "html_length_bucket": 4000,
       "subject": "Contractor Invitation",
       "text": "SC Market
 https://sc-market.space
 
-Contractor Invitation Hello
-Invitee, You have been invited to join a contractor organization.
+Contractor Invitation
+
+Hello Invitee,
+
+You have been invited to join a contractor organization.
 
 Org acme
 
-Message: Join us
+Message:
+Join us
 
 View Invitation:
 https://sc-market.space/contractor/ACME
@@ -210,7 +214,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "invitee@example.test",
       ],
@@ -301,9 +305,9 @@ SC Market
 https://sc-market.space
 
 Unsubscribe:
-https://sc-market.space/settings?tab&#x3D;email
+https://sc-market.space/settings?tab=email
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "optedin@example.test",
       ],
@@ -378,9 +382,9 @@ SC Market
 https://sc-market.space
 
 Unsubscribe:
-https://sc-market.space/settings?tab&#x3D;email
+https://sc-market.space/settings?tab=email
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "newbie@example.test",
       ],
@@ -496,7 +500,7 @@ https://sc-market.space
 Unsubscribe:
 https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
-https://sc-market.space/settings?tab&#x3D;email",
+https://sc-market.space/settings?tab=email",
       "to": [
         "other@example.test",
       ],
