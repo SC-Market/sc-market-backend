@@ -25,13 +25,15 @@ import logger from "../../logger/logger.js"
 import { applySiteRolePolicy } from "../util/site-admin-policy.js"
 import { runInRequestContext } from "../util/request-context.js"
 import type { RequestAuth } from "../../services/mfa/policy.js"
+import { tokenUsage } from "../../services/public-api/usage-recorder.js"
+import { applyLegacyTokenDeprecation } from "../../services/public-api/legacy-deprecation.js"
 
 export async function populateUser(
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  await resolveUser(req)
+  await resolveUser(req, res)
   // Decide whether a site admin may use the role on this request, then run
   // the rest of the chain in a request context so has_permission() sees the
   // same effective user as req.user.
@@ -48,7 +50,7 @@ export function jwtAuthFor(req: Request, userId: string): RequestAuth | null {
   return { method: "jwt", sid: payload.sid, mfaAt: payload.mfa_at, amr: payload.amr }
 }
 
-async function resolveUser(req: Request): Promise<void> {
+async function resolveUser(req: Request, res: Response): Promise<void> {
   // 1. Session already populated by passport.session(). Legacy passport
   // sessions carry no MFA; a JWT cookie for the same user (set by every login
   // since JWT auth shipped) supplies the session's MFA claims.
@@ -92,15 +94,15 @@ async function resolveUser(req: Request): Promise<void> {
             }
             req.auth = {
               method: "token",
+              tokenKind: "legacy",
               tokenMfaAt: tokenRecord.mfa_at ?? null,
               tokenScopes: tokenRecord.scopes,
             }
-            // Fire-and-forget last_used update
-            database
-              .knex("api_tokens")
-              .where("id", tokenRecord.id)
-              .update({ last_used_at: new Date() })
-              .catch(() => {})
+            // last_used_at (at most once a minute) and the hourly usage
+            // rollup, batched by the recorder.
+            tokenUsage.record("legacy", tokenRecord.id, user.user_id, req.originalUrl)
+            // Deprecation headers, once LEGACY_API_TOKEN_SUNSET is set.
+            applyLegacyTokenDeprecation(res)
           }
         }
       }

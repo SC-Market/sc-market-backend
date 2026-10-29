@@ -26,6 +26,8 @@ export interface RequestAuth {
   /** api_tokens.mfa_at for token auth. */
   tokenMfaAt?: Date | null
   tokenScopes?: string[]
+  /** Token auth only: a legacy api_tokens token or a public API token. */
+  tokenKind?: "legacy" | "public"
 }
 
 const ADMIN_ONLY_SCOPES = new Set(["admin", "moderation:read", "moderation:write"])

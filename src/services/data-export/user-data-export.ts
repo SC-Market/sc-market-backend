@@ -449,6 +449,35 @@ export async function writeUserDataExport(
     ),
   )
   await out.array(
+    "public_api_tokens",
+    all(
+      knex("public_api_tokens")
+        .where(me)
+        .select(
+          "name",
+          "description",
+          "preset",
+          "scopes",
+          "contractor_ids",
+          "token_hint",
+          "created_at",
+          "updated_at",
+          "expires_at",
+          "last_used_at",
+          "revoked_at",
+        ),
+    ),
+  )
+  await out.array(
+    "api_token_usage",
+    all(
+      knex("api_token_usage_hourly")
+        .where(me)
+        .select("hour", "surface", "legacy_token_id", "public_token_id", "requests")
+        .orderBy("hour"),
+    ),
+  )
+  await out.array(
     "scmdb_sync_tokens",
     all(
       knex("scmdb_sync_tokens")

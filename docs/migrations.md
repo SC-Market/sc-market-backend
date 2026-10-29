@@ -91,11 +91,13 @@ at once:
 
 - Server pool: 15 per container. During a Lightsail deploy the old and new
   containers overlap, so 30.
+- Public API pool (`/api/public/v1`, routes/public/v1/limits.ts): 3 per
+  container, 6 during a deploy.
 - Migrations: 2 (only while the new container starts).
 - Game-data import: 2 while an import runs.
 - The discord bot container doesn't connect to the database.
 
-That is 34 at most for the backend, plus anything else on the same instance
+That is 40 at most for the backend, plus anything else on the same instance
 (sc-orgs' pool is max 10, admin sessions). Check
 `SELECT setting FROM pg_settings WHERE name = 'max_connections'` before
 raising the pool.

@@ -2116,6 +2116,264 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PublicScope": {
+				"type": "string",
+				"enum": [
+					"shops:read",
+					"listings:read",
+					"stock:read",
+					"orders:read",
+					"orders:write",
+					"offers:read",
+					"offers:write"
+				]
+			},
+			"PublicTokenPreset": {
+				"type": "string",
+				"enum": [
+					"shop_sync",
+					"order_desk",
+					"read_only"
+				],
+				"nullable": false
+			},
+			"PublicApiTokenPresetInfo": {
+				"properties": {
+					"id": {
+						"$ref": "#/components/schemas/PublicTokenPreset"
+					},
+					"scopes": {
+						"items": {
+							"$ref": "#/components/schemas/PublicScope"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"scopes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicApiTokenOrg": {
+				"properties": {
+					"contractor_id": {
+						"type": "string"
+					},
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"contractor_id",
+					"spectrum_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicApiTokenOptions": {
+				"properties": {
+					"scopes": {
+						"items": {
+							"$ref": "#/components/schemas/PublicScope"
+						},
+						"type": "array"
+					},
+					"presets": {
+						"items": {
+							"$ref": "#/components/schemas/PublicApiTokenPresetInfo"
+						},
+						"type": "array"
+					},
+					"default_lifetime_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_lifetime_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_active_tokens": {
+						"type": "number",
+						"format": "double"
+					},
+					"orgs": {
+						"items": {
+							"$ref": "#/components/schemas/PublicApiTokenOrg"
+						},
+						"type": "array",
+						"description": "Orgs the user can grant: the orgs they are a member of."
+					},
+					"legacy_sunset_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When legacy tokens stop working, once announced; null while not scheduled."
+					}
+				},
+				"required": [
+					"scopes",
+					"presets",
+					"default_lifetime_days",
+					"max_lifetime_days",
+					"max_active_tokens",
+					"orgs",
+					"legacy_sunset_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicApiTokenSummary": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"preset": {
+						"type": "string"
+					},
+					"scopes": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"orgs": {
+						"items": {
+							"$ref": "#/components/schemas/PublicApiTokenOrg"
+						},
+						"type": "array",
+						"description": "Orgs the token may act for. Empty: personal shops only."
+					},
+					"token_hint": {
+						"type": "string",
+						"description": "Last 4 characters of the token."
+					},
+					"expires_at": {
+						"type": "string"
+					},
+					"last_used_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"revoked_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"requests_30d": {
+						"type": "number",
+						"format": "double",
+						"description": "Requests in the last 30 days."
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"expired",
+							"revoked"
+						]
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"description",
+					"preset",
+					"scopes",
+					"orgs",
+					"token_hint",
+					"expires_at",
+					"last_used_at",
+					"revoked_at",
+					"created_at",
+					"requests_30d",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicApiTokenList": {
+				"properties": {
+					"tokens": {
+						"items": {
+							"$ref": "#/components/schemas/PublicApiTokenSummary"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"tokens"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreatedPublicApiToken": {
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "The token. Shown once: it can't be retrieved again."
+					},
+					"summary": {
+						"$ref": "#/components/schemas/PublicApiTokenSummary"
+					}
+				},
+				"required": [
+					"token",
+					"summary"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreatePublicApiTokenRequest": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"maxLength": 100
+					},
+					"description": {
+						"type": "string",
+						"nullable": true,
+						"maxLength": 500
+					},
+					"preset": {
+						"$ref": "#/components/schemas/PublicTokenPreset"
+					},
+					"org_spectrum_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Orgs to grant, by spectrum id. Empty: personal shops only."
+					},
+					"expires_in_days": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1,
+						"maximum": 365
+					}
+				},
+				"required": [
+					"name",
+					"preset",
+					"org_spectrum_ids",
+					"expires_in_days"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PriceAlertPreferences": {
 				"description": "Price alert (watchlist) notification preferences: one toggle per channel.",
 				"properties": {
@@ -12837,348 +13095,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ImportErrorResponse": {
-				"description": "Error response for import failures",
-				"properties": {
-					"success": {
-						"type": "boolean",
-						"enum": [
-							false
-						],
-						"nullable": false
-					},
-					"error": {
-						"type": "string"
-					},
-					"details": {
-						"type": "string"
-					},
-					"timestamp": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"success",
-					"error",
-					"timestamp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ImportGameDataResponse": {
-				"description": "Import summary returned by game data import endpoint",
-				"properties": {
-					"success": {
-						"type": "boolean"
-					},
-					"summary": {
-						"properties": {
-							"shopItemsRemoved": {
-								"type": "number",
-								"format": "double",
-								"description": "Shop inventory rows no longer in the game data, deleted"
-							},
-							"shopsRemoved": {
-								"type": "number",
-								"format": "double",
-								"description": "Shops no longer in the game data, deleted"
-							},
-							"shopItemsLinked": {
-								"type": "number",
-								"format": "double",
-								"description": "Shop inventory rows matched to a game item"
-							},
-							"shopItemsImported": {
-								"type": "number",
-								"format": "double"
-							},
-							"shopsImported": {
-								"type": "number",
-								"format": "double",
-								"description": "In-game shops upserted from shop-inventories.json (0 unless GAME_DATA_IMPORT_SHOPS=true)"
-							},
-							"blueprintsUpdated": {
-								"type": "number",
-								"format": "double"
-							},
-							"blueprintsInserted": {
-								"type": "number",
-								"format": "double"
-							},
-							"blueprintsProcessed": {
-								"type": "number",
-								"format": "double"
-							},
-							"missionsUpdated": {
-								"type": "number",
-								"format": "double"
-							},
-							"missionsInserted": {
-								"type": "number",
-								"format": "double"
-							},
-							"missionsProcessed": {
-								"type": "number",
-								"format": "double"
-							},
-							"fullSetsCreated": {
-								"type": "number",
-								"format": "double"
-							},
-							"nameChanges": {
-								"type": "number",
-								"format": "double"
-							},
-							"updated": {
-								"type": "number",
-								"format": "double"
-							},
-							"inserted": {
-								"type": "number",
-								"format": "double"
-							},
-							"matchedFuzzy": {
-								"type": "number",
-								"format": "double"
-							},
-							"matchedCStoneUUID": {
-								"type": "number",
-								"format": "double"
-							},
-							"matchedExact": {
-								"type": "number",
-								"format": "double"
-							},
-							"matched": {
-								"type": "number",
-								"format": "double"
-							},
-							"existingDBItems": {
-								"type": "number",
-								"format": "double"
-							},
-							"validP4KItems": {
-								"type": "number",
-								"format": "double"
-							},
-							"totalP4KItems": {
-								"type": "number",
-								"format": "double"
-							}
-						},
-						"required": [
-							"shopItemsRemoved",
-							"shopsRemoved",
-							"shopItemsLinked",
-							"shopItemsImported",
-							"shopsImported",
-							"blueprintsUpdated",
-							"blueprintsInserted",
-							"blueprintsProcessed",
-							"missionsUpdated",
-							"missionsInserted",
-							"missionsProcessed",
-							"fullSetsCreated",
-							"nameChanges",
-							"updated",
-							"inserted",
-							"matchedFuzzy",
-							"matchedCStoneUUID",
-							"matchedExact",
-							"matched",
-							"existingDBItems",
-							"validP4KItems",
-							"totalP4KItems"
-						],
-						"type": "object"
-					},
-					"errors": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array",
-						"description": "Warnings from the import steps (skipped records, steps not run)"
-					},
-					"timestamp": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"success",
-					"summary",
-					"errors",
-					"timestamp"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"GameDataImportJob": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"status": {
-						"type": "string",
-						"enum": [
-							"validating",
-							"extracting",
-							"importing",
-							"completed",
-							"failed"
-						]
-					},
-					"startedAt": {
-						"type": "string"
-					},
-					"completedAt": {
-						"type": "string",
-						"nullable": true
-					},
-					"progress": {
-						"type": "string",
-						"nullable": true
-					},
-					"result": {
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/ImportGameDataResponse"
-							}
-						],
-						"nullable": true
-					},
-					"error": {
-						"type": "string",
-						"nullable": true
-					},
-					"details": {
-						"type": "string",
-						"nullable": true
-					}
-				},
-				"required": [
-					"id",
-					"status",
-					"startedAt",
-					"completedAt",
-					"progress",
-					"result",
-					"error",
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AdminAlertAudiencePreview": {
-				"properties": {
-					"recipients": {
-						"type": "number",
-						"format": "double",
-						"description": "Users the alert would reach (the posting admin excluded)."
-					},
-					"verified_emails": {
-						"type": "number",
-						"format": "double",
-						"description": "Of those, how many have a verified email (email reach)."
-					},
-					"discord_linked": {
-						"type": "number",
-						"format": "double",
-						"description": "Of those, how many have Discord linked (Discord DM reach)."
-					}
-				},
-				"required": [
-					"recipients",
-					"verified_emails",
-					"discord_linked"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AdminAlertTargetType": {
-				"type": "string",
-				"enum": [
-					"all_users",
-					"org_members",
-					"org_owners",
-					"admins_only",
-					"specific_org"
-				]
-			},
-			"RequestDeletionResponse": {
-				"properties": {
-					"scheduledAt": {
-						"type": "string"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"scheduledAt",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"RequestDeletionBody": {
-				"properties": {
-					"reason": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"DeletionStatusResponse": {
-				"properties": {
-					"pending": {
-						"type": "boolean"
-					},
-					"scheduledAt": {
-						"type": "string"
-					},
-					"isTombstone": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"pending",
-					"isTombstone"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"DeletionPreCheckResponse": {
-				"properties": {
-					"canDelete": {
-						"type": "boolean"
-					},
-					"blockers": {
-						"items": {
-							"properties": {
-								"detail": {
-									"type": "string"
-								},
-								"type": {
-									"type": "string"
-								}
-							},
-							"required": [
-								"detail",
-								"type"
-							],
-							"type": "object"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"canDelete",
-					"blockers"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"IdentitySearchRow": {
 				"properties": {
 					"user_id": {
@@ -13561,6 +13477,348 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ImportErrorResponse": {
+				"description": "Error response for import failures",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"enum": [
+							false
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "string"
+					},
+					"details": {
+						"type": "string"
+					},
+					"timestamp": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"error",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ImportGameDataResponse": {
+				"description": "Import summary returned by game data import endpoint",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"summary": {
+						"properties": {
+							"shopItemsRemoved": {
+								"type": "number",
+								"format": "double",
+								"description": "Shop inventory rows no longer in the game data, deleted"
+							},
+							"shopsRemoved": {
+								"type": "number",
+								"format": "double",
+								"description": "Shops no longer in the game data, deleted"
+							},
+							"shopItemsLinked": {
+								"type": "number",
+								"format": "double",
+								"description": "Shop inventory rows matched to a game item"
+							},
+							"shopItemsImported": {
+								"type": "number",
+								"format": "double"
+							},
+							"shopsImported": {
+								"type": "number",
+								"format": "double",
+								"description": "In-game shops upserted from shop-inventories.json (0 unless GAME_DATA_IMPORT_SHOPS=true)"
+							},
+							"blueprintsUpdated": {
+								"type": "number",
+								"format": "double"
+							},
+							"blueprintsInserted": {
+								"type": "number",
+								"format": "double"
+							},
+							"blueprintsProcessed": {
+								"type": "number",
+								"format": "double"
+							},
+							"missionsUpdated": {
+								"type": "number",
+								"format": "double"
+							},
+							"missionsInserted": {
+								"type": "number",
+								"format": "double"
+							},
+							"missionsProcessed": {
+								"type": "number",
+								"format": "double"
+							},
+							"fullSetsCreated": {
+								"type": "number",
+								"format": "double"
+							},
+							"nameChanges": {
+								"type": "number",
+								"format": "double"
+							},
+							"updated": {
+								"type": "number",
+								"format": "double"
+							},
+							"inserted": {
+								"type": "number",
+								"format": "double"
+							},
+							"matchedFuzzy": {
+								"type": "number",
+								"format": "double"
+							},
+							"matchedCStoneUUID": {
+								"type": "number",
+								"format": "double"
+							},
+							"matchedExact": {
+								"type": "number",
+								"format": "double"
+							},
+							"matched": {
+								"type": "number",
+								"format": "double"
+							},
+							"existingDBItems": {
+								"type": "number",
+								"format": "double"
+							},
+							"validP4KItems": {
+								"type": "number",
+								"format": "double"
+							},
+							"totalP4KItems": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"shopItemsRemoved",
+							"shopsRemoved",
+							"shopItemsLinked",
+							"shopItemsImported",
+							"shopsImported",
+							"blueprintsUpdated",
+							"blueprintsInserted",
+							"blueprintsProcessed",
+							"missionsUpdated",
+							"missionsInserted",
+							"missionsProcessed",
+							"fullSetsCreated",
+							"nameChanges",
+							"updated",
+							"inserted",
+							"matchedFuzzy",
+							"matchedCStoneUUID",
+							"matchedExact",
+							"matched",
+							"existingDBItems",
+							"validP4KItems",
+							"totalP4KItems"
+						],
+						"type": "object"
+					},
+					"errors": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Warnings from the import steps (skipped records, steps not run)"
+					},
+					"timestamp": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"summary",
+					"errors",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameDataImportJob": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"validating",
+							"extracting",
+							"importing",
+							"completed",
+							"failed"
+						]
+					},
+					"startedAt": {
+						"type": "string"
+					},
+					"completedAt": {
+						"type": "string",
+						"nullable": true
+					},
+					"progress": {
+						"type": "string",
+						"nullable": true
+					},
+					"result": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ImportGameDataResponse"
+							}
+						],
+						"nullable": true
+					},
+					"error": {
+						"type": "string",
+						"nullable": true
+					},
+					"details": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"status",
+					"startedAt",
+					"completedAt",
+					"progress",
+					"result",
+					"error",
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAlertAudiencePreview": {
+				"properties": {
+					"recipients": {
+						"type": "number",
+						"format": "double",
+						"description": "Users the alert would reach (the posting admin excluded)."
+					},
+					"verified_emails": {
+						"type": "number",
+						"format": "double",
+						"description": "Of those, how many have a verified email (email reach)."
+					},
+					"discord_linked": {
+						"type": "number",
+						"format": "double",
+						"description": "Of those, how many have Discord linked (Discord DM reach)."
+					}
+				},
+				"required": [
+					"recipients",
+					"verified_emails",
+					"discord_linked"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAlertTargetType": {
+				"type": "string",
+				"enum": [
+					"all_users",
+					"org_members",
+					"org_owners",
+					"admins_only",
+					"specific_org"
+				]
+			},
+			"RequestDeletionResponse": {
+				"properties": {
+					"scheduledAt": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"scheduledAt",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RequestDeletionBody": {
+				"properties": {
+					"reason": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DeletionStatusResponse": {
+				"properties": {
+					"pending": {
+						"type": "boolean"
+					},
+					"scheduledAt": {
+						"type": "string"
+					},
+					"isTombstone": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"pending",
+					"isTombstone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DeletionPreCheckResponse": {
+				"properties": {
+					"canDelete": {
+						"type": "boolean"
+					},
+					"blockers": {
+						"items": {
+							"properties": {
+								"detail": {
+									"type": "string"
+								},
+								"type": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"detail",
+								"type"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"canDelete",
+					"blockers"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -13768,6 +14026,7 @@
 						}
 					}
 				},
+				"summary": "List my supplier roster",
 				"tags": [
 					"Suppliers V2"
 				],
@@ -13821,8 +14080,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "List my supplier roster"
+				]
 			},
 			"post": {
 				"operationId": "AddSupplier",
@@ -13838,6 +14096,7 @@
 						}
 					}
 				},
+				"summary": "Add a supplier",
 				"tags": [
 					"Suppliers V2"
 				],
@@ -13856,8 +14115,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Add a supplier"
+				}
 			}
 		},
 		"/suppliers/{relationshipId}": {
@@ -13875,6 +14133,7 @@
 						}
 					}
 				},
+				"summary": "Update a supplier relationship",
 				"tags": [
 					"Suppliers V2"
 				],
@@ -13902,8 +14161,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Update a supplier relationship"
+				}
 			},
 			"delete": {
 				"operationId": "RemoveSupplier",
@@ -13927,6 +14185,7 @@
 						}
 					}
 				},
+				"summary": "Remove a supplier",
 				"tags": [
 					"Suppliers V2"
 				],
@@ -13944,8 +14203,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Remove a supplier"
+				]
 			}
 		},
 		"/suppliers/as-supplier": {
@@ -13963,6 +14221,7 @@
 						}
 					}
 				},
+				"summary": "List rosters I supply",
 				"tags": [
 					"Suppliers V2"
 				],
@@ -13990,8 +14249,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "List rosters I supply"
+				]
 			}
 		},
 		"/stock-lots": {
@@ -15348,6 +15606,7 @@
 						}
 					}
 				},
+				"summary": "Create requisition",
 				"tags": [
 					"Requisitions V2"
 				],
@@ -15366,8 +15625,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Create requisition"
+				}
 			},
 			"get": {
 				"operationId": "GetRequisitions",
@@ -15383,6 +15641,7 @@
 						}
 					}
 				},
+				"summary": "List requisitions",
 				"tags": [
 					"Requisitions V2"
 				],
@@ -15436,8 +15695,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "List requisitions"
+				]
 			}
 		},
 		"/requisitions/{orderId}": {
@@ -15455,6 +15713,7 @@
 						}
 					}
 				},
+				"summary": "Get requisition",
 				"tags": [
 					"Requisitions V2"
 				],
@@ -15472,8 +15731,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get requisition"
+				]
 			}
 		},
 		"/requisitions/offer-items": {
@@ -15502,6 +15760,7 @@
 						}
 					}
 				},
+				"summary": "Set an offer's requisition items",
 				"tags": [
 					"Requisitions V2"
 				],
@@ -15520,8 +15779,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Set an offer's requisition items"
+				}
 			}
 		},
 		"/requisitions/offer-items/{offerId}": {
@@ -15550,6 +15808,7 @@
 						}
 					}
 				},
+				"summary": "Get an offer's requisition items",
 				"tags": [
 					"Requisitions V2"
 				],
@@ -15567,8 +15826,136 @@
 							"type": "string"
 						}
 					}
+				]
+			}
+		},
+		"/public-api-tokens/options": {
+			"get": {
+				"operationId": "GetPublicApiTokenOptions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicApiTokenOptions"
+								}
+							}
+						}
+					}
+				},
+				"description": "What a new public API token can be: presets and their scopes, lifetime\nbounds, and the orgs the user can grant.",
+				"summary": "Public API token options",
+				"tags": [
+					"Public API tokens"
 				],
-				"summary": "Get an offer's requisition items"
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/public-api-tokens": {
+			"get": {
+				"operationId": "ListPublicApiTokens",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicApiTokenList"
+								}
+							}
+						}
+					}
+				},
+				"description": "The user's public API tokens (never the secrets), newest first.",
+				"summary": "List public API tokens",
+				"tags": [
+					"Public API tokens"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreatePublicApiToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreatedPublicApiToken"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a public API token from a preset, with an org grant and an expiry.\nThe response holds the token itself, once.",
+				"summary": "Create public API token",
+				"tags": [
+					"Public API tokens"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePublicApiTokenRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/public-api-tokens/{tokenId}/revoke": {
+			"post": {
+				"operationId": "RevokePublicApiToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicApiTokenSummary"
+								}
+							}
+						}
+					}
+				},
+				"description": "Revoke a public API token. It stops working at once on this server and\nwithin 30 seconds everywhere.",
+				"summary": "Revoke public API token",
+				"tags": [
+					"Public API tokens"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "tokenId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/price-alerts/preferences": {
@@ -16017,6 +16404,7 @@
 						}
 					}
 				},
+				"summary": "Get onboarding status",
 				"tags": [
 					"Onboarding"
 				],
@@ -16025,8 +16413,7 @@
 						"loggedin": []
 					}
 				],
-				"parameters": [],
-				"summary": "Get onboarding status"
+				"parameters": []
 			}
 		},
 		"/onboarding/complete": {
@@ -16052,6 +16439,7 @@
 						}
 					}
 				},
+				"summary": "Complete onboarding",
 				"tags": [
 					"Onboarding"
 				],
@@ -16060,8 +16448,7 @@
 						"loggedin": []
 					}
 				],
-				"parameters": [],
-				"summary": "Complete onboarding"
+				"parameters": []
 			}
 		},
 		"/offers/search": {
@@ -16080,6 +16467,7 @@
 					}
 				},
 				"description": "Search offers for the current user",
+				"summary": "Search my offers",
 				"tags": [
 					"Offers V2"
 				],
@@ -16131,8 +16519,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "Search my offers"
+				]
 			}
 		},
 		"/offers/{sessionId}": {
@@ -16151,6 +16538,7 @@
 					}
 				},
 				"description": "Get offer session with V2 variant-enriched market listings\n\nNOTE: must stay declared *after* every literal-path GET on this route\n(e.g. \"search\"). TSOA emits Express routes in declaration order, so a\n\"{sessionId}\" registered first would swallow /offers/search and try to\nload a session whose id is the literal string \"search\".",
+				"summary": "Get offer",
 				"tags": [
 					"Offers V2"
 				],
@@ -16168,8 +16556,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get offer"
+				]
 			}
 		},
 		"/notification-preferences": {
@@ -17016,6 +17403,8 @@
 						}
 					}
 				},
+				"description": "Get listing detail with variant breakdown\n\nRetrieves complete listing information including seller details, game item information,\nand variant breakdown with quantities, prices, and locations. Returns 404 if listing\nnot found.\n\nRequirements:\n- 16.1: GET /api/v2/listings/:id endpoint\n- 16.2: Return listing metadata with seller information\n- 16.3: Return array of items with game_item details\n- 16.4: Return array of variants for each item with attributes\n- 16.5: Return quantity and price for each variant\n- 16.6: Return display_name for each variant\n- 16.7: Include location information for stock lots\n- 16.8: Include crafted_by information if applicable\n- 16.9: Return 404 if listing not found\n- 16.10: Include view count and timestamps\n- 16.11: Include seller rating and status\n- 16.12: Support image gallery with multiple photos",
+				"summary": "Get listing detail",
 				"tags": [
 					"Listings V2"
 				],
@@ -17030,9 +17419,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"description": "Get listing detail with variant breakdown\n\nRetrieves complete listing information including seller details, game item information,\nand variant breakdown with quantities, prices, and locations. Returns 404 if listing\nnot found.\n\nRequirements:\n- 16.1: GET /api/v2/listings/:id endpoint\n- 16.2: Return listing metadata with seller information\n- 16.3: Return array of items with game_item details\n- 16.4: Return array of variants for each item with attributes\n- 16.5: Return quantity and price for each variant\n- 16.6: Return display_name for each variant\n- 16.7: Include location information for stock lots\n- 16.8: Include crafted_by information if applicable\n- 16.9: Return 404 if listing not found\n- 16.10: Include view count and timestamps\n- 16.11: Include seller rating and status\n- 16.12: Support image gallery with multiple photos",
-				"summary": "Get listing detail"
+				]
 			},
 			"put": {
 				"operationId": "UpdateListing",
@@ -17070,6 +17457,7 @@
 					}
 				],
 				"requestBody": {
+					"description": "Update request with optional fields",
 					"required": true,
 					"content": {
 						"application/json": {
@@ -17078,8 +17466,7 @@
 								"description": "Update request with optional fields"
 							}
 						}
-					},
-					"description": "Update request with optional fields"
+					}
 				}
 			},
 			"delete": {
@@ -17435,6 +17822,7 @@
 					}
 				},
 				"description": "List all inventory lots for the current user",
+				"summary": "List my inventory lots",
 				"tags": [
 					"Inventory V2"
 				],
@@ -17486,8 +17874,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "List my inventory lots"
+				]
 			},
 			"post": {
 				"operationId": "CreateInventoryLot",
@@ -17512,6 +17899,7 @@
 					}
 				},
 				"description": "Create an unlisted inventory lot (personal inventory)",
+				"summary": "Create inventory lot",
 				"tags": [
 					"Inventory V2"
 				],
@@ -17530,8 +17918,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Create inventory lot"
+				}
 			}
 		},
 		"/inventory/{lotId}/list": {
@@ -17558,6 +17945,7 @@
 					}
 				},
 				"description": "Link a lot to a listing (makes it available for sale)",
+				"summary": "List an inventory lot on a listing",
 				"tags": [
 					"Inventory V2"
 				],
@@ -17585,8 +17973,7 @@
 							}
 						}
 					}
-				},
-				"summary": "List an inventory lot on a listing"
+				}
 			}
 		},
 		"/inventory/{lotId}/unlist": {
@@ -17613,6 +18000,7 @@
 					}
 				},
 				"description": "Unlink a lot from its listing (returns to personal inventory)",
+				"summary": "Unlist an inventory lot",
 				"tags": [
 					"Inventory V2"
 				],
@@ -17630,8 +18018,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Unlist an inventory lot"
+				]
 			}
 		},
 		"/inventory/{lotId}": {
@@ -17643,6 +18030,7 @@
 					}
 				},
 				"description": "Delete an inventory lot",
+				"summary": "Delete inventory lot",
 				"tags": [
 					"Inventory V2"
 				],
@@ -17660,8 +18048,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Delete inventory lot"
+				]
 			}
 		},
 		"/integrations/scmdb/ingest/{token}": {
@@ -17842,6 +18229,7 @@
 					}
 				},
 				"description": "Start a bulk import job",
+				"summary": "Start import job",
 				"tags": [
 					"Admin Imports"
 				],
@@ -17860,8 +18248,7 @@
 							"$ref": "#/components/schemas/ImportSource"
 						}
 					}
-				],
-				"summary": "Start import job"
+				]
 			}
 		},
 		"/admin/imports/{jobId}": {
@@ -17893,6 +18280,7 @@
 					}
 				},
 				"description": "Get status of a specific import job",
+				"summary": "Get import job status",
 				"tags": [
 					"Admin Imports"
 				],
@@ -17911,8 +18299,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get import job status"
+				]
 			}
 		},
 		"/admin/imports": {
@@ -17942,6 +18329,7 @@
 					}
 				},
 				"description": "List all import jobs (most recent first)",
+				"summary": "List import jobs",
 				"tags": [
 					"Admin Imports"
 				],
@@ -17950,8 +18338,7 @@
 						"loggedin": []
 					}
 				],
-				"parameters": [],
-				"summary": "List import jobs"
+				"parameters": []
 			}
 		},
 		"/images/upload": {
@@ -19906,6 +20293,7 @@
 					}
 				},
 				"description": "Get mission detail by mission_code (string identifier)",
+				"summary": "Get mission by code",
 				"tags": [
 					"Game Data - Missions"
 				],
@@ -19920,8 +20308,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get mission by code"
+				]
 			}
 		},
 		"/game-data/missions/{mission_id}/blueprints": {
@@ -21376,6 +21763,7 @@
 					}
 				},
 				"description": "Get org members who own a specific blueprint",
+				"summary": "List org members who own a blueprint",
 				"tags": [
 					"Game Data - Blueprints"
 				],
@@ -21403,8 +21791,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "List org members who own a blueprint"
+				]
 			}
 		},
 		"/game-data/blueprints/craftable": {
@@ -21558,6 +21945,7 @@
 					}
 				},
 				"description": "Get the saved dashboard layout for an owner. `owner_type`/`owner_id` default\nto the authenticated user's personal dashboard. Returns null config when no\nlayout has been saved yet.",
+				"summary": "Get dashboard layout",
 				"tags": [
 					"Dashboard V2"
 				],
@@ -21583,8 +21971,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get dashboard layout"
+				]
 			},
 			"put": {
 				"operationId": "SaveLayout",
@@ -21601,6 +21988,7 @@
 					}
 				},
 				"description": "Create or replace the dashboard layout for an owner. Requires edit access:\npersonal dashboards by their owner, org dashboards by members with\nmanage_org_details, shop dashboards by users who can manage the shop.",
+				"summary": "Save dashboard layout",
 				"tags": [
 					"Dashboard V2"
 				],
@@ -21619,8 +22007,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Save dashboard layout"
+				}
 			}
 		},
 		"/contract-alerts": {
@@ -21953,6 +22340,7 @@
 					}
 				},
 				"description": "Create a standing buy order",
+				"summary": "Create standing buy order",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -21971,8 +22359,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Create standing buy order"
+				}
 			}
 		},
 		"/buy-orders/search": {
@@ -21991,6 +22378,7 @@
 					}
 				},
 				"description": "Search active standing buy orders",
+				"summary": "Search buy orders",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22087,8 +22475,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "Search buy orders"
+				]
 			}
 		},
 		"/buy-orders/matches-for-seller": {
@@ -22107,6 +22494,7 @@
 					}
 				},
 				"description": "Get active buy orders matching the seller's current inventory.\nJoins against listing_items to find orders the seller can fulfill right now.",
+				"summary": "Buy orders matching my stock",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22134,8 +22522,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "Buy orders matching my stock"
+				]
 			}
 		},
 		"/buy-orders/mine": {
@@ -22154,6 +22541,7 @@
 					}
 				},
 				"description": "Get current user's buy orders",
+				"summary": "List my buy orders",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22195,8 +22583,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "List my buy orders"
+				]
 			}
 		},
 		"/buy-orders/{id}": {
@@ -22215,6 +22602,7 @@
 					}
 				},
 				"description": "Get a single buy order by ID with full details",
+				"summary": "Get buy order",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22228,8 +22616,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get buy order"
+				]
 			},
 			"put": {
 				"operationId": "UpdateBuyOrder",
@@ -22246,6 +22633,7 @@
 					}
 				},
 				"description": "Update a standing buy order",
+				"summary": "Update buy order",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22273,8 +22661,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Update buy order"
+				}
 			},
 			"delete": {
 				"operationId": "CancelBuyOrder",
@@ -22299,6 +22686,7 @@
 					}
 				},
 				"description": "Cancel a standing buy order",
+				"summary": "Cancel buy order",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22316,8 +22704,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Cancel buy order"
+				]
 			}
 		},
 		"/buy-orders/{id}/fulfillment-options": {
@@ -22420,6 +22807,7 @@
 					}
 				},
 				"description": "Decline a standing buy order that was targeted directly at you.\nSets declined_at + declined_by and flips the order back to 'public' visibility\nso the buyer can retarget it or leave it open.",
+				"summary": "Decline a directed buy order",
 				"tags": [
 					"Buy Orders V2"
 				],
@@ -22438,8 +22826,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Decline a directed buy order"
+				}
 			}
 		},
 		"/availability/next": {
@@ -22458,6 +22845,7 @@
 					}
 				},
 				"description": "Get a seller's next available time",
+				"summary": "Get next available time",
 				"tags": [
 					"Availability"
 				],
@@ -22485,8 +22873,7 @@
 							"type": "string"
 						}
 					}
-				],
-				"summary": "Get next available time"
+				]
 			}
 		},
 		"/auctions/{listingId}": {
@@ -22505,6 +22892,7 @@
 					}
 				},
 				"description": "Get auction details and bids for a listing.\n\nThe auction is visible exactly when its listing is: public listings to\neveryone, unlisted ones to whoever has the link, private ones to members\nof the owning org, and test shops' listings to test accounts only. Others\nget a 404.",
+				"summary": "Get auction",
 				"tags": [
 					"Auctions V2"
 				],
@@ -22538,8 +22926,7 @@
 							"type": "number"
 						}
 					}
-				],
-				"summary": "Get auction"
+				]
 			}
 		},
 		"/auctions/{listingId}/bids": {
@@ -22558,6 +22945,7 @@
 					}
 				},
 				"description": "Place a bid on an auction listing",
+				"summary": "Place bid",
 				"tags": [
 					"Auctions V2"
 				],
@@ -22585,8 +22973,7 @@
 							}
 						}
 					}
-				},
-				"summary": "Place bid"
+				}
 			}
 		},
 		"/analytics/price-history": {
@@ -23134,382 +23521,6 @@
 				]
 			}
 		},
-		"/admin/import-game-data": {
-			"post": {
-				"operationId": "ImportGameData",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"anyOf": [
-										{
-											"properties": {
-												"job_id": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"job_id"
-											],
-											"type": "object"
-										},
-										{
-											"$ref": "#/components/schemas/ImportErrorResponse"
-										}
-									]
-								}
-							}
-						}
-					}
-				},
-				"description": "Upload game data ZIP and start async import job",
-				"summary": "Start game data import",
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": []
-			},
-			"get": {
-				"operationId": "ListGameDataImportJobs",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"jobs": {
-											"items": {
-												"$ref": "#/components/schemas/GameDataImportJob"
-											},
-											"type": "array"
-										}
-									},
-									"required": [
-										"jobs"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "List all game data import jobs (most recent first)",
-				"summary": "List import jobs",
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/admin/import-game-data/{jobId}": {
-			"get": {
-				"operationId": "GetImportJobStatus",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"job": {
-											"allOf": [
-												{
-													"$ref": "#/components/schemas/GameDataImportJob"
-												}
-											],
-											"nullable": true
-										}
-									},
-									"required": [
-										"job"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get game data import job status",
-				"summary": "Poll import job",
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "jobId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/admin/expire-all-listings": {
-			"post": {
-				"operationId": "ExpireAllListings",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"affected": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"affected"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Expire all active listings (used after game wipes).\nSets all active listings to 'expired' status, requiring sellers to manually refresh.",
-				"summary": "Expire all active listings",
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/admin/active-listing-count": {
-			"get": {
-				"operationId": "GetActiveListingCount",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"count": {
-											"type": "number",
-											"format": "double"
-										}
-									},
-									"required": [
-										"count"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get count of active listings (for confirmation dialog).",
-				"summary": "Get active listing count",
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/admin/alerts/preview": {
-			"get": {
-				"operationId": "PreviewAdminAlertAudience",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AdminAlertAudiencePreview"
-								}
-							}
-						}
-					}
-				},
-				"description": "How many users an alert to this target would reach, and how many of them\nan email or a Discord DM would reach.",
-				"summary": "Preview an admin alert's audience",
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "target_type",
-						"required": true,
-						"schema": {
-							"$ref": "#/components/schemas/AdminAlertTargetType"
-						}
-					},
-					{
-						"description": "The org, when target_type is specific_org",
-						"in": "query",
-						"name": "target_spectrum_id",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/accounts/delete": {
-			"post": {
-				"operationId": "RequestDeletion",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/RequestDeletionResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Accounts V2"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/RequestDeletionBody"
-							}
-						}
-					}
-				},
-				"summary": "Request account deletion"
-			}
-		},
-		"/accounts/cancel-deletion": {
-			"post": {
-				"operationId": "CancelDeletion",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Accounts V2"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [],
-				"summary": "Cancel account deletion"
-			}
-		},
-		"/accounts/deletion-status": {
-			"get": {
-				"operationId": "GetDeletionStatus",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/DeletionStatusResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Accounts V2"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [],
-				"summary": "Get account deletion status"
-			}
-		},
-		"/accounts/deletion-precheck": {
-			"get": {
-				"operationId": "PreDeletionCheck",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/DeletionPreCheckResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Accounts V2"
-				],
-				"security": [
-					{
-						"loggedin": []
-					}
-				],
-				"parameters": [],
-				"summary": "Check before account deletion"
-			}
-		},
 		"/admin/identity/users": {
 			"get": {
 				"operationId": "SearchIdentityUsers",
@@ -23817,6 +23828,382 @@
 						}
 					}
 				}
+			}
+		},
+		"/admin/import-game-data": {
+			"post": {
+				"operationId": "ImportGameData",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"job_id": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"job_id"
+											],
+											"type": "object"
+										},
+										{
+											"$ref": "#/components/schemas/ImportErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Upload game data ZIP and start async import job",
+				"summary": "Start game data import",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"get": {
+				"operationId": "ListGameDataImportJobs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"jobs": {
+											"items": {
+												"$ref": "#/components/schemas/GameDataImportJob"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"jobs"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all game data import jobs (most recent first)",
+				"summary": "List import jobs",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/import-game-data/{jobId}": {
+			"get": {
+				"operationId": "GetImportJobStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"job": {
+											"allOf": [
+												{
+													"$ref": "#/components/schemas/GameDataImportJob"
+												}
+											],
+											"nullable": true
+										}
+									},
+									"required": [
+										"job"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get game data import job status",
+				"summary": "Poll import job",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "jobId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/expire-all-listings": {
+			"post": {
+				"operationId": "ExpireAllListings",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"affected": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"affected"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Expire all active listings (used after game wipes).\nSets all active listings to 'expired' status, requiring sellers to manually refresh.",
+				"summary": "Expire all active listings",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/active-listing-count": {
+			"get": {
+				"operationId": "GetActiveListingCount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"count"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get count of active listings (for confirmation dialog).",
+				"summary": "Get active listing count",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/alerts/preview": {
+			"get": {
+				"operationId": "PreviewAdminAlertAudience",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlertAudiencePreview"
+								}
+							}
+						}
+					}
+				},
+				"description": "How many users an alert to this target would reach, and how many of them\nan email or a Discord DM would reach.",
+				"summary": "Preview an admin alert's audience",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "target_type",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/AdminAlertTargetType"
+						}
+					},
+					{
+						"description": "The org, when target_type is specific_org",
+						"in": "query",
+						"name": "target_spectrum_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/accounts/delete": {
+			"post": {
+				"operationId": "RequestDeletion",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RequestDeletionResponse"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Request account deletion",
+				"tags": [
+					"Accounts V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestDeletionBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/accounts/cancel-deletion": {
+			"post": {
+				"operationId": "CancelDeletion",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Cancel account deletion",
+				"tags": [
+					"Accounts V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/accounts/deletion-status": {
+			"get": {
+				"operationId": "GetDeletionStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletionStatusResponse"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Get account deletion status",
+				"tags": [
+					"Accounts V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/accounts/deletion-precheck": {
+			"get": {
+				"operationId": "PreDeletionCheck",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletionPreCheckResponse"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Check before account deletion",
+				"tags": [
+					"Accounts V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		}
 	},

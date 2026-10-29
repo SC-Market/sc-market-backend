@@ -123,8 +123,8 @@
     "dev": "tsx watch src/server.ts",
     "buildrun": "build && start",
     "start": "tsx watch src/server.ts",
-    "build": "npm run tsoa:generate && tsc && npm run copy-templates",
-    "copy-templates": "mkdir -p dist/src/services/email/templates/notifications dist/src/services/email/templates/layouts dist/src/api/routes/v2/generated && cp -r src/services/email/templates/notifications/* dist/src/services/email/templates/notifications/ && cp -r src/services/email/templates/layouts/* dist/src/services/email/templates/layouts/ && cp src/api/routes/v2/generated/swagger.json dist/src/api/routes/v2/generated/swagger.json",
+    "build": "npm run tsoa:generate && npm run tsoa:public && npm run check:public-spec && tsc && npm run copy-templates",
+    "copy-templates": "mkdir -p dist/src/services/email/templates/notifications dist/src/services/email/templates/layouts dist/src/api/routes/v2/generated && cp -r src/services/email/templates/notifications/* dist/src/services/email/templates/notifications/ && cp -r src/services/email/templates/layouts/* dist/src/services/email/templates/layouts/ && cp src/api/routes/v2/generated/swagger.json dist/src/api/routes/v2/generated/swagger.json && mkdir -p dist/src/api/routes/public/v1/generated && cp src/api/routes/public/v1/generated/swagger.json dist/src/api/routes/public/v1/generated/swagger.json",
     "migrate:make": "tsx node_modules/.bin/knex migrate:make --knexfile knexfile.ts",
     "migrate:latest": "tsx node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
     "migrate:rollback": "tsx node_modules/.bin/knex migrate:rollback --knexfile knexfile.ts",
@@ -151,6 +151,8 @@
     "tsoa:spec": "tsoa spec",
     "tsoa:routes": "tsoa routes",
     "tsoa:generate": "tsoa spec-and-routes",
+    "tsoa:public": "tsoa spec-and-routes -c tsoa.public.cjs",
+    "check:public-spec": "tsx scripts/check-public-spec.ts",
     "generate:v2-client": "bash scripts/generate-v2-client.sh"
   },
   "eslintConfig": {

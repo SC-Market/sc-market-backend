@@ -42,6 +42,9 @@ declare global {
       // account is a site admin but this request may not use the role; req.user
       // then carries role "user".
       adminLocked?: import("../../api/util/site-admin-policy.js").AdminLockReason
+      // The public API token of a /api/public/v1 request (public/v1/auth.ts).
+      // Never set anywhere else: public tokens are refused outside that path.
+      publicApiToken?: import("../../clients/database/db-models.js").DBPublicApiToken
       // How this request authenticated, with its MFA claims (populate-user).
       auth?: import("../../services/mfa/policy.js").RequestAuth
       // Correlation id for log lines and the X-Request-Id response header

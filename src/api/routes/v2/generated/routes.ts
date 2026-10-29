@@ -16,6 +16,8 @@ import { ShopsV2Controller } from './../shops/ShopsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RequisitionsV2Controller } from './../requisitions/RequisitionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PublicApiTokensController } from './../public-api-tokens/PublicApiTokensController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { PriceAlertsV2Controller } from './../price-alerts/PriceAlertsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrdersV2Controller } from './../orders/OrdersV2Controller.js';
@@ -789,6 +791,98 @@ const models: TsoaRoute.Models = {
         "properties": {
             "offer_id": {"dataType":"string","required":true},
             "items": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferRequisitionItemInput"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicScope": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["shops:read"]},{"dataType":"enum","enums":["listings:read"]},{"dataType":"enum","enums":["stock:read"]},{"dataType":"enum","enums":["orders:read"]},{"dataType":"enum","enums":["orders:write"]},{"dataType":"enum","enums":["offers:read"]},{"dataType":"enum","enums":["offers:write"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicTokenPreset": {
+        "dataType": "refAlias",
+        "type": {"dataType":"enum","enums":["shop_sync","order_desk","read_only"],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicApiTokenPresetInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"ref":"PublicTokenPreset","required":true},
+            "scopes": {"dataType":"array","array":{"dataType":"refAlias","ref":"PublicScope"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicApiTokenOrg": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"string","required":true},
+            "spectrum_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicApiTokenOptions": {
+        "dataType": "refObject",
+        "properties": {
+            "scopes": {"dataType":"array","array":{"dataType":"refAlias","ref":"PublicScope"},"required":true},
+            "presets": {"dataType":"array","array":{"dataType":"refObject","ref":"PublicApiTokenPresetInfo"},"required":true},
+            "default_lifetime_days": {"dataType":"double","required":true},
+            "max_lifetime_days": {"dataType":"double","required":true},
+            "max_active_tokens": {"dataType":"double","required":true},
+            "orgs": {"dataType":"array","array":{"dataType":"refObject","ref":"PublicApiTokenOrg"},"required":true},
+            "legacy_sunset_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicApiTokenSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "preset": {"dataType":"string","required":true},
+            "scopes": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "orgs": {"dataType":"array","array":{"dataType":"refObject","ref":"PublicApiTokenOrg"},"required":true},
+            "token_hint": {"dataType":"string","required":true},
+            "expires_at": {"dataType":"string","required":true},
+            "last_used_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "revoked_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_at": {"dataType":"string","required":true},
+            "requests_30d": {"dataType":"double","required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["revoked"]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicApiTokenList": {
+        "dataType": "refObject",
+        "properties": {
+            "tokens": {"dataType":"array","array":{"dataType":"refObject","ref":"PublicApiTokenSummary"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreatedPublicApiToken": {
+        "dataType": "refObject",
+        "properties": {
+            "token": {"dataType":"string","required":true},
+            "summary": {"ref":"PublicApiTokenSummary","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreatePublicApiTokenRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"maxLength":{"value":100}}},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"validators":{"maxLength":{"value":500}}},
+            "preset": {"ref":"PublicTokenPreset","required":true},
+            "org_spectrum_ids": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "expires_in_days": {"dataType":"integer","required":true,"validators":{"minimum":{"value":1},"maximum":{"value":365}}},
         },
         "additionalProperties": false,
     },
@@ -5764,6 +5858,132 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOfferRequisitionItems',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPublicApiTokensController_getPublicApiTokenOptions: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/public-api-tokens/options',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController)),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController.prototype.getPublicApiTokenOptions)),
+
+            async function PublicApiTokensController_getPublicApiTokenOptions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPublicApiTokensController_getPublicApiTokenOptions, request, response });
+
+                const controller = new PublicApiTokensController();
+
+              await templateService.apiHandler({
+                methodName: 'getPublicApiTokenOptions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPublicApiTokensController_listPublicApiTokens: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/public-api-tokens',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController)),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController.prototype.listPublicApiTokens)),
+
+            async function PublicApiTokensController_listPublicApiTokens(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPublicApiTokensController_listPublicApiTokens, request, response });
+
+                const controller = new PublicApiTokensController();
+
+              await templateService.apiHandler({
+                methodName: 'listPublicApiTokens',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPublicApiTokensController_createPublicApiToken: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreatePublicApiTokenRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/public-api-tokens',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController)),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController.prototype.createPublicApiToken)),
+
+            async function PublicApiTokensController_createPublicApiToken(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPublicApiTokensController_createPublicApiToken, request, response });
+
+                const controller = new PublicApiTokensController();
+
+              await templateService.apiHandler({
+                methodName: 'createPublicApiToken',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPublicApiTokensController_revokePublicApiToken: Record<string, TsoaRoute.ParameterSchema> = {
+                tokenId: {"in":"path","name":"tokenId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/public-api-tokens/:tokenId/revoke',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController)),
+            ...(fetchMiddlewares<RequestHandler>(PublicApiTokensController.prototype.revokePublicApiToken)),
+
+            async function PublicApiTokensController_revokePublicApiToken(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPublicApiTokensController_revokePublicApiToken, request, response });
+
+                const controller = new PublicApiTokensController();
+
+              await templateService.apiHandler({
+                methodName: 'revokePublicApiToken',
                 controller,
                 response,
                 next,

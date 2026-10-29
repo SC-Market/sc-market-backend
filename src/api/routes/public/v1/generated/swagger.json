@@ -1,0 +1,281 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"PublicErrorCode": {
+				"type": "string",
+				"enum": [
+					"VALIDATION_ERROR",
+					"UNAUTHORIZED",
+					"INVALID_TOKEN",
+					"FORBIDDEN",
+					"INSUFFICIENT_SCOPE",
+					"ACCOUNT_BANNED",
+					"NOT_FOUND",
+					"CONFLICT",
+					"RATE_LIMIT_EXCEEDED",
+					"SERVICE_UNAVAILABLE",
+					"INTERNAL_SERVER_ERROR"
+				]
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"PublicValidationError": {
+				"properties": {
+					"field": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"field",
+					"message",
+					"code"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicErrorBody": {
+				"description": "The error body of every non-2xx public API response.",
+				"properties": {
+					"error": {
+						"properties": {
+							"validationErrors": {
+								"items": {
+									"$ref": "#/components/schemas/PublicValidationError"
+								},
+								"type": "array"
+							},
+							"details": {
+								"$ref": "#/components/schemas/Record_string.unknown_"
+							},
+							"message": {
+								"type": "string"
+							},
+							"code": {
+								"$ref": "#/components/schemas/PublicErrorCode"
+							}
+						},
+						"required": [
+							"message",
+							"code"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"error"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicScope": {
+				"type": "string",
+				"enum": [
+					"shops:read",
+					"listings:read",
+					"stock:read",
+					"orders:read",
+					"orders:write",
+					"offers:read",
+					"offers:write"
+				]
+			},
+			"PublicOrgRef": {
+				"properties": {
+					"contractor_id": {
+						"type": "string"
+					},
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"contractor_id",
+					"spectrum_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicMe": {
+				"properties": {
+					"user": {
+						"properties": {
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object"
+					},
+					"token": {
+						"properties": {
+							"created_at": {
+								"type": "string"
+							},
+							"last_used_at": {
+								"type": "string",
+								"nullable": true
+							},
+							"expires_at": {
+								"type": "string"
+							},
+							"orgs": {
+								"items": {
+									"$ref": "#/components/schemas/PublicOrgRef"
+								},
+								"type": "array",
+								"description": "Orgs the token may act for. Empty: personal shops only."
+							},
+							"scopes": {
+								"items": {
+									"$ref": "#/components/schemas/PublicScope"
+								},
+								"type": "array"
+							},
+							"preset": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"created_at",
+							"last_used_at",
+							"expires_at",
+							"orgs",
+							"scopes",
+							"preset",
+							"name",
+							"id"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"user",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicData_PublicMe_": {
+				"description": "Every success response: `{ \"data\": T }`.",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PublicMe"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"apiToken": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "scmp_live_…",
+				"description": "A public API token from SC Market account settings → API tokens. Legacy scm_ tokens are refused."
+			}
+		}
+	},
+	"info": {
+		"title": "SC Market Public API",
+		"version": "1.0.0",
+		"description": "The SC Market public API for shop and order tooling. Every operation needs an API token (Authorization: Bearer scmp_…) with the scope it lists. Create tokens in your SC Market account settings under API tokens.",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/me": {
+			"get": {
+				"operationId": "GetMe",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicData_PublicMe_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Missing, invalid, expired or revoked token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					},
+					"429": {
+						"description": "Rate limit exceeded",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PublicErrorBody"
+								}
+							}
+						}
+					}
+				},
+				"description": "The token making the request: its user, scopes, org grant and expiry.\nNeeds no scope.",
+				"summary": "Token introspection",
+				"tags": [
+					"Token"
+				],
+				"security": [
+					{
+						"apiToken": []
+					}
+				],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/api/public/v1"
+		}
+	]
+}

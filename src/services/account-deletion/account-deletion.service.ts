@@ -168,6 +168,10 @@ export async function requestDeletion(
       .where("user_id", userId)
       .whereNull("revoked_at")
       .update({ revoked_at: now })
+    await trx("public_api_tokens")
+      .where("user_id", userId)
+      .whereNull("revoked_at")
+      .update({ revoked_at: now })
   })
 
   logger.info("Account deletion requested", {
@@ -300,7 +304,9 @@ async function convertToTombstone(userId: string): Promise<void> {
     // transaction unless it is rolled back to a savepoint.
     const deletes: [string, (db: Knex.Transaction) => Promise<unknown>][] = [
       ["refresh_tokens", (db) => db("refresh_tokens").where("user_id", userId).delete()],
+      ["api_token_usage_hourly", (db) => db("api_token_usage_hourly").where("user_id", userId).delete()],
       ["api_tokens", (db) => db("api_tokens").where("user_id", userId).delete()],
+      ["public_api_tokens", (db) => db("public_api_tokens").where("user_id", userId).delete()],
       ["account_providers", (db) => db("account_providers").where("user_id", userId).delete()],
       ["account_integrations", (db) => db("account_integrations").where("user_id", userId).delete()],
       ["user_preferences", (db) => db("user_preferences").where("user_id", userId).delete()],

@@ -836,6 +836,27 @@ export interface DBApiToken {
   mfa_at?: Date | null
 }
 
+// migrations/20261029120000_public_api_tokens.ts
+/** A public API (/api/public/v1) token. Only the hash of the secret is stored. */
+export interface DBPublicApiToken {
+  id: string
+  user_id: string
+  name: string
+  description: string | null
+  token_hash: string
+  /** Last 4 characters of the token, to tell tokens apart in the UI. */
+  token_hint: string
+  preset: string
+  scopes: string[]
+  /** Orgs the token may act for; empty = personal shops only. */
+  contractor_ids: string[]
+  expires_at: Date
+  last_used_at: Date | null
+  revoked_at: Date | null
+  created_at: Date
+  updated_at: Date
+}
+
 export interface DBAccountIntegration {
   id: string
   user_id: string

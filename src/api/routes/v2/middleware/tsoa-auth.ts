@@ -29,8 +29,17 @@ type TokenCheckedRequest = Request & {
  * - admin/identity: account identity fixes (services/identity-admin).
  * - debug: the viewer's resolved feature flags and per-user overrides
  *   (GET/POST debug/feature-flag, which the site uses for every user).
+ * - public-api-tokens: public API token management (tokens can't mint or
+ *   revoke tokens).
  */
-const SESSION_ONLY_PREFIXES = ["auth/mfa", "admin/mfa", "admin/test-accounts", "admin/identity", "debug"]
+const SESSION_ONLY_PREFIXES = [
+  "auth/mfa",
+  "admin/mfa",
+  "admin/test-accounts",
+  "admin/identity",
+  "debug",
+  "public-api-tokens",
+]
 
 export function isSessionOnlyPath(path: string): boolean {
   const clean = path.replace(/^\/+/, "").toLowerCase()

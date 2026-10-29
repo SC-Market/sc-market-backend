@@ -210,6 +210,15 @@ export function buildLogRecord(
       record.route = requestRoute(req)
       const userId = req.user?.user_id
       if (userId) record.user_id = userId
+      // How the request authenticated, and which API token: separates token
+      // traffic (legacy and public) from cookie traffic in the logs.
+      const auth = req.auth
+      if (auth?.method) {
+        record.auth_method =
+          auth.method === "token" && auth.tokenKind === "public" ? "public_token" : auth.method
+      }
+      const tokenId = req.__tokenInfo?.id
+      if (tokenId) record.token_id = tokenId
     }
   }
 

@@ -46,6 +46,8 @@ const V1 = "^/api(?:/v1)?"
 export const CUSTOM_ORIGIN_DENYLIST: readonly SensitiveRoute[] = [
   // POST returns a raw scm_ token; listing/reading exposes token metadata.
   { pattern: new RegExp(`${V1}/tokens(?:/|$)`), why: "api tokens" },
+  // POST returns a raw scmp_ public API token.
+  { pattern: /^\/api\/v2\/public-api-tokens(?:\/|$)/, why: "public api tokens" },
   { pattern: /^\/auth\/sessions(?:\/|$)/, why: "session management" },
   { pattern: /^\/api\/auth\/test-login$/, why: "test-account login" },
   { pattern: new RegExp(`${V1}/admin(?:/|$)`), why: "admin" },

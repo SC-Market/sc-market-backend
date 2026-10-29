@@ -248,6 +248,16 @@ app.get("/favicon.ico", (req, res) => {
   }
 })
 
+// Public API (/api/public/v1): token-only, so it is mounted before sessions,
+// cookies, CORS, CSRF and passport, and never sees a browser credential.
+// Every other route refuses its tokens (scmp_), so they can't act on the site.
+import {
+  publicApiV1Router,
+} from "./api/routes/public/v1/router.js"
+import { refusePublicTokensElsewhere } from "./api/routes/public/v1/auth.js"
+app.use("/api/public/v1", publicApiV1Router)
+app.use(refusePublicTokensElsewhere)
+
 const pgSession = wrapPGSession(session)
 
 const dbConfig: { [key: string]: string } = JSON.parse(env.DATABASE_PASS!)
