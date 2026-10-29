@@ -5,10 +5,10 @@ Review Revision Requested Hello
 
 Your Review: Rating:
 {{review.rating}}/5
-{{#if review.content}}{{review.content}}{{/if}}
+{{#if review.content}}{{plainText review.content}}{{/if}}
 {{#if review.revision_message}}
   Revision Request:
-  {{review.revision_message}}
+{{plainText review.revision_message}}
 {{/if}}
 
 View Order:

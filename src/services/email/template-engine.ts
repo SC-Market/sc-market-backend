@@ -8,6 +8,11 @@ import fs from "fs/promises"
 import path from "path"
 import { fileURLToPath } from "url"
 import { EmailTemplateData } from "./email.service.types.js"
+import {
+  renderEmailMarkdown,
+  renderEmailPlainText,
+  type EmailMarkdownResult,
+} from "./email-markdown.js"
 import logger from "../../logger/logger.js"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -19,11 +24,45 @@ const __dirname = path.dirname(__filename)
 const templateCache = new Map<string, HandlebarsTemplateDelegate>()
 
 /**
+ * One Handlebars environment per part. The text/plain part is compiled with
+ * `noEscape` (HTML entities have no meaning there: "Bob's" used to arrive as
+ * "Bob&#x27;s"), and its `markdown` / `plainText` helpers return text instead
+ * of HTML, so both parts share the same template syntax.
+ */
+const environments = {
+  html: Handlebars.create(),
+  txt: Handlebars.create(),
+} as const
+
+type UserTextRenderer = (
+  source: string | null | undefined,
+  options: { readMoreUrl?: string },
+) => EmailMarkdownResult
+
+/**
+ * `{{markdown order.description}}` / `{{plainText invite.message}}`.
+ * In HTML the result is a SafeString of sanitized output, so templates never
+ * need a triple-stash for user text. The "read more" link of a truncated body
+ * points at the email's actionUrl.
+ */
+function userTextHelper(render: UserTextRenderer, type: "html" | "txt") {
+  return function (value: unknown, options: Handlebars.HelperOptions) {
+    const root = (options?.data?.root ?? {}) as { actionUrl?: string }
+    const result = render(typeof value === "string" ? value : "", {
+      readMoreUrl: root.actionUrl,
+    })
+    return type === "html"
+      ? new Handlebars.SafeString(result.html)
+      : result.text
+  }
+}
+
+/**
  * Register Handlebars helpers for email templates
  */
-function registerHelpers(): void {
+function registerHelpers(hb: typeof Handlebars): void {
   // Format date helper
-  Handlebars.registerHelper("formatDate", (date: Date | string) => {
+  hb.registerHelper("formatDate", (date: Date | string) => {
     if (!date) return ""
     const d = typeof date === "string" ? new Date(date) : date
     return d.toLocaleDateString("en-US", {
@@ -34,7 +73,7 @@ function registerHelpers(): void {
   })
 
   // Format datetime helper
-  Handlebars.registerHelper("formatDateTime", (date: Date | string) => {
+  hb.registerHelper("formatDateTime", (date: Date | string) => {
     if (!date) return ""
     const d = typeof date === "string" ? new Date(date) : date
     return d.toLocaleString("en-US", {
@@ -47,7 +86,7 @@ function registerHelpers(): void {
   })
 
   // Format currency helper (for aUEC)
-  Handlebars.registerHelper("formatCurrency", (amount: number | string) => {
+  hb.registerHelper("formatCurrency", (amount: number | string) => {
     if (amount === null || amount === undefined) return "0"
     const num = typeof amount === "string" ? parseFloat(amount) : amount
     return num.toLocaleString("en-US")
@@ -55,10 +94,10 @@ function registerHelpers(): void {
 
   // Numeric comparison, for subexpressions such as {{#if (gt count 1)}}
   // (dm-reminder pluralises with it).
-  Handlebars.registerHelper("gt", (a: unknown, b: unknown) => Number(a) > Number(b))
+  hb.registerHelper("gt", (a: unknown, b: unknown) => Number(a) > Number(b))
 
   // Conditional helper
-  Handlebars.registerHelper(
+  hb.registerHelper(
     "ifEquals",
     function (
       this: unknown,
@@ -71,22 +110,33 @@ function registerHelpers(): void {
   )
 
   // URL helper (ensures absolute URLs)
-  Handlebars.registerHelper("absoluteUrl", function (
-    this: { siteUrl?: string },
-    url: string,
-  ) {
-    if (!url) return ""
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      return url
-    }
-    // Assume relative URL, prepend site URL from context
-    const siteUrl = this.siteUrl || ""
-    return siteUrl ? `${siteUrl}${url.startsWith("/") ? url : `/${url}`}` : url
-  })
+  hb.registerHelper(
+    "absoluteUrl",
+    function (this: { siteUrl?: string }, url: string) {
+      if (!url) return ""
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        return url
+      }
+      // Assume relative URL, prepend site URL from context
+      const siteUrl = this.siteUrl || ""
+      return siteUrl
+        ? `${siteUrl}${url.startsWith("/") ? url : `/${url}`}`
+        : url
+    },
+  )
 }
 
 // Register helpers on first import
-registerHelpers()
+for (const type of ["html", "txt"] as const) {
+  const env = environments[type]
+  registerHelpers(env)
+  env.registerHelper("markdown", userTextHelper(renderEmailMarkdown, type))
+  env.registerHelper("plainText", userTextHelper(renderEmailPlainText, type))
+}
+
+function compile(type: "html" | "txt", source: string) {
+  return environments[type].compile(source, { noEscape: type === "txt" })
+}
 
 /**
  * Load a template from disk (with caching)
@@ -147,7 +197,7 @@ async function loadTemplate(
   for (const templatePath of possiblePaths) {
     try {
       const templateContent = await fs.readFile(templatePath, "utf-8")
-      const template = Handlebars.compile(templateContent)
+      const template = compile(type, templateContent)
       templateCache.set(cacheKey, template)
       return template
     } catch (error) {
@@ -219,7 +269,7 @@ async function loadBaseLayout(
   for (const templatePath of possiblePaths) {
     try {
       const templateContent = await fs.readFile(templatePath, "utf-8")
-      const template = Handlebars.compile(templateContent)
+      const template = compile(type, templateContent)
       templateCache.set(cacheKey, template)
       return template
     } catch (error) {

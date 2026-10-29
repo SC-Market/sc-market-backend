@@ -2,7 +2,7 @@ New Order Created Hello
 {{userDisplayName}}, A new order has been created:
 
 {{order.title}}
-{{#if order.description}}{{order.description}}{{/if}}
+{{#if order.description}}{{markdown order.description}}{{/if}}
 {{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
 Status:
 {{order.status}}

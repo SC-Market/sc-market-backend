@@ -10,7 +10,7 @@
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{order.title}}</h2>
   {{#if order.description}}
-    <p style="color: #b7b7b7;">{{order.description}}</p>
+    {{markdown order.description}}
   {{/if}}
   {{#if order.cost}}
     <p style="color: #b7b7b7;"><strong>Value:</strong>

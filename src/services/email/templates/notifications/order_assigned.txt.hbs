@@ -2,7 +2,7 @@ Order Assigned to You Hello
 {{userDisplayName}}, You have been assigned to a new order:
 
 {{order.title}}
-{{#if order.description}}{{order.description}}{{/if}}
+{{#if order.description}}{{markdown order.description}}{{/if}}
 {{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
 Status:
 {{order.status}}

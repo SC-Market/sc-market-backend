@@ -10,10 +10,11 @@
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{contractor.name}}</h2>
   {{#if contractor.description}}
-    <p style="color: #b7b7b7;">{{contractor.description}}</p>
+    {{markdown contractor.description}}
   {{/if}}
   {{#if invite.message}}
-    <p style="color: #b7b7b7;"><strong>Message:</strong> {{invite.message}}</p>
+    <p style="color: #b7b7b7; margin: 16px 0 6px 0;"><strong>Message:</strong></p>
+    {{plainText invite.message}}
   {{/if}}
 </div>
 

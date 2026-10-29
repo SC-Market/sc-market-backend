@@ -16,11 +16,11 @@
     <p style="color: #b7b7b7; margin: 5px 0;"><strong>Rating:</strong>
       {{review.rating}}/5</p>
     {{#if review.content}}
-      <p style="color: #b7b7b7; margin: 10px 0 0 0;">{{review.content}}</p>
+      <div style="margin: 10px 0 0 0;">{{plainText review.content}}</div>
     {{/if}}
     {{#if review.revision_message}}
-      <p style="color: #b7b7b7; margin: 15px 0 0 0;"><strong>Revision Request:</strong>
-        {{review.revision_message}}</p>
+      <p style="color: #b7b7b7; margin: 15px 0 5px 0;"><strong>Revision Request:</strong></p>
+      {{plainText review.revision_message}}
     {{/if}}
   </div>
 </div>

@@ -1,0 +1,141 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`contractor_invite email > renders the org description as Markdown (HTML snapshot) 1`] = `
+"<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contractor Invitation</title>
+    <style>
+      body {
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Helvetica,
+          Arial,
+          sans-serif;
+        line-height: 1.6;
+        color: #b7b7b7;
+        background-color: #0b0f1a;
+        margin: 0;
+        padding: 0;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #111828;
+        border: 1px solid rgb(45, 55, 72);
+      }
+      .email-header {
+        background: linear-gradient(135deg, #10b881 0%, #7a7efe 100%);
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
+      }
+      .email-header img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: contain;
+        display: block;
+        background-color: #111828;
+        padding: 4px;
+      }
+      .email-header h1 {
+        color: #ffffff;
+        margin: 0 0 0 16px;
+      }
+      .email-body {
+        padding: 40px 30px;
+        color: #b7b7b7;
+      }
+      .email-body h1,
+      .email-body h2,
+      .email-body h3 {
+        color: #e8e8e8;
+      }
+      .email-footer {
+        background-color: #111828;
+        padding: 30px;
+        text-align: center;
+        font-size: 12px;
+        color: #929ca1;
+        border-top: 1px solid rgb(45, 55, 72);
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #10b881;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-weight: 600;
+      }
+      .button:hover {
+        background-color: #0ea371;
+      }
+      .unsubscribe-link {
+        color: #929ca1;
+        text-decoration: none;
+        font-size: 12px;
+      }
+      .unsubscribe-link:hover {
+        color: #b7b7b7;
+        text-decoration: underline;
+      }
+      @media only screen and (max-width: 600px) {
+        .email-body {
+          padding: 20px 15px;
+        }
+        .button {
+          display: block;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="email-header">
+          <img src="https://sc-market.space/scmarket-logo.png" alt="SC Market" />
+        <h1>SC Market</h1>
+      </div>
+      <div class="email-body">
+        <h1 style="color: #e8e8e8;">Contractor Invitation</h1>
+
+<p style="color: #b7b7b7;">Hello Owner,</p>
+
+<p style="color: #b7b7b7;">You have been invited to join a contractor
+  organization.</p>
+
+<div
+  style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
+>
+  <h2 style="margin-top: 0; color: #e8e8e8;">Test Org</h2>
+    <h1 style="margin:16px 0 8px 0;font-size:22px;line-height:1.3;color:#e8e8e8">Test Org</h1><p style="margin:0 0 12px 0;color:#b7b7b7">We are a <strong>hauling</strong> and <em>mining</em> outfit.</p><h2 style="margin:16px 0 8px 0;font-size:19px;line-height:1.3;color:#e8e8e8">What we do</h2><ul style="margin:0 0 12px 0;padding-left:24px;color:#b7b7b7"><li style="margin:0 0 4px 0;color:#b7b7b7">Cargo runs</li><li style="margin:0 0 4px 0;color:#b7b7b7">Salvage</li></ul><p style="margin:0 0 12px 0;color:#b7b7b7">Join our <a href="https://discord.gg/example" target="_blank" rel="noopener noreferrer" style="color:#7a7efe;text-decoration:underline">Discord</a> &amp; say hi.</p>
+    <p style="color: #b7b7b7; margin: 16px 0 6px 0;"><strong>Message:</strong></p>
+    <p style="margin:0 0 12px 0;color:#b7b7b7">Hey, we'd love to have you.<br />See you in the 'verse!</p>
+</div>
+
+<p style="text-align: center;">
+  <a href="https://sc-market.space/contractor/TESTORG" class="button">View Invitation</a>
+</p>
+      </div>
+      <div class="email-footer">
+        <p style="margin: 0 0 10px 0;">
+          <a href="https://sc-market.space" class="unsubscribe-link">SC Market</a>
+        </p>
+        <p style="margin: 0;">
+          <a href="https://sc-market.space/email/unsubscribe/token123" class="unsubscribe-link">Unsubscribe</a>
+          |
+          <a href="https://sc-market.space/settings?tab&#x3D;email" class="unsubscribe-link">Manage
+            Preferences</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>"
+`;

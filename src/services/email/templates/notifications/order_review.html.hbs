@@ -14,7 +14,7 @@
     <p style="color: #b7b7b7; margin: 0;"><strong>Rating:</strong>
       {{review.rating}}/5</p>
     {{#if review.content}}
-      <p style="color: #b7b7b7; margin: 10px 0 0 0;">{{review.content}}</p>
+      <div style="margin: 10px 0 0 0;">{{plainText review.content}}</div>
     {{/if}}
     {{#if review.author}}
       <p style="color: #b7b7b7; margin: 10px 0 0 0;"><strong>By:</strong>

@@ -9,7 +9,7 @@
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{alert.title}}</h2>
   {{#if alert.content}}
-    <p style="color: #b7b7b7;">{{alert.content}}</p>
+    {{markdown alert.content}}
   {{/if}}
 </div>
 
