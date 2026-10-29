@@ -28,6 +28,10 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "dashboard_layouts.updated_by": { exclude: STAFF },
   "user_feature_overrides.user_id": { export: "feature_flag_overrides" },
   "activity_history.user_id": { export: "activity_days" },
+  "account_tombstone_failures.user_id": {
+    exclude:
+      "operational record of a failed account-deletion job (DB error text), only exists for accounts already being deleted",
+  },
 
   "user_emails.user_id": { export: "emails" },
   "email_verification_tokens.user_id": {
