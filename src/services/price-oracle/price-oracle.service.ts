@@ -36,6 +36,7 @@ import {
 } from "../../api/routes/v2/util/short-slug.js"
 import { notTestShop } from "../test-accounts/isolation.js"
 import type {
+  PublicFeedInfo,
   PriceOracleCurrent,
   PriceOracleDailyPoint,
   PriceOracleItem,
@@ -59,6 +60,14 @@ export const CURRENT_ASK_TIMEOUT = "2s"
 /** The unit note on every price document, index and file. */
 export const UNIT_NOTE =
   "All prices are in aUEC, Star Citizen's in-game currency (not real money), per unit."
+
+/** The feed envelope (see PublicFeedInfo). */
+export const PRICE_FEED_INFO: PublicFeedInfo = {
+  dataset: "prices",
+  version: 1,
+  terms:
+    "Free to use, no key needed. Attribution requested. Rate limits exist only to protect the service from abuse.",
+}
 
 export const PRICE_ATTRIBUTION =
   "Data: SC Market player listings (https://sc-market.space). Please credit SC Market and link to the item's page when citing."
@@ -472,6 +481,7 @@ export async function getPriceDocument(
   const changePct = num(latest?.change_pct_30d)
   const slug = formatShortSlug(item.id, item.name)
   return {
+    feed: PRICE_FEED_INFO,
     item: { id: item.id, slug, name: item.name, type: item.type },
     currency: "aUEC",
     unit_note: UNIT_NOTE,
@@ -520,6 +530,7 @@ export interface PriceIndexRow {
 }
 
 export interface PriceIndex {
+  feed: PublicFeedInfo
   /** UTC day of the snapshot, null before the first snapshot */
   date: string | null
   /** When the snapshot was computed */
@@ -544,6 +555,7 @@ export async function getPriceIndex(
   const day: string | null = latest?.day ?? null
   if (!day) {
     return {
+      feed: PRICE_FEED_INFO,
       date: null,
       as_of: null,
       currency: "aUEC",
@@ -594,6 +606,7 @@ export async function getPriceIndex(
     }
   })
   return {
+    feed: PRICE_FEED_INFO,
     date: day,
     as_of: asOf ? (asOf as Date).toISOString() : null,
     currency: "aUEC",
@@ -657,7 +670,7 @@ export function priceIndexMarkdown(index: PriceIndex): string {
     "",
     `Methodology: ${METHODOLOGY.text}`,
     "",
-    PRICE_ATTRIBUTION,
+    `${PRICE_ATTRIBUTION} ${PRICE_FEED_INFO.terms} Dataset "${PRICE_FEED_INFO.dataset}", version ${PRICE_FEED_INFO.version}.`,
     "",
     "| Item | Type | Lowest ask (aUEC) | Median ask (aUEC) | 30-day median (aUEC) | 30-day change | Listings | Sellers | Confidence |",
     "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",

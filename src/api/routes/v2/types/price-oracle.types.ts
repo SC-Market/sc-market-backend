@@ -98,8 +98,23 @@ export interface PriceOracleLinks {
   index: string
 }
 
-/** Player-market price document of one game item. */
+/**
+ * Envelope shared by every public data feed (prices now; missions,
+ * blueprints and items later): which dataset, its schema version, and the
+ * terms. Free to use; rate limits only protect against abuse.
+ */
+export interface PublicFeedInfo {
+  /** Dataset name, e.g. "prices" */
+  dataset: string
+  /** Schema version of the dataset; bumped only on a breaking change */
+  version: number
+  /** Usage terms: free, attribution requested */
+  terms: string
+}
+
+/** Player-listing price document of one game item. */
 export interface PriceOracleItem {
+  feed: PublicFeedInfo
   item: PriceOracleItemRef
   /** Always "aUEC" (in-game currency, not ISO 4217) */
   currency: "aUEC"

@@ -2009,6 +2009,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicFeedInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "dataset": {"dataType":"string","required":true},
+            "version": {"dataType":"double","required":true},
+            "terms": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PriceOracleItemRef": {
         "dataType": "refObject",
         "properties": {
@@ -2106,6 +2116,7 @@ const models: TsoaRoute.Models = {
     "PriceOracleItem": {
         "dataType": "refObject",
         "properties": {
+            "feed": {"ref":"PublicFeedInfo","required":true},
             "item": {"ref":"PriceOracleItemRef","required":true},
             "currency": {"dataType":"enum","enums":["aUEC"],"required":true},
             "unit_note": {"dataType":"string","required":true},

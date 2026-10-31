@@ -185,6 +185,10 @@ function keyPaths(v: unknown, prefix = ""): string[] {
 }
 
 const ALLOWED_DOC_KEYS = new Set([
+  ".feed",
+  ".feed.dataset",
+  ".feed.version",
+  ".feed.terms",
   ".item",
   ".item.id",
   ".item.slug",
@@ -355,6 +359,8 @@ describe("public documents carry no PII", () => {
     const index = await svc.getPriceIndex(db)
     expect(index.date).toBe("2026-10-31")
     expect(index.as_of).toBe("2026-10-31T06:00:00.000Z")
+    expect(index.feed).toEqual(svc.PRICE_FEED_INFO)
+    expect(svc.PRICE_FEED_INFO.terms).toMatch(/^Free to use/)
     expect(index.coverage).toEqual({ none: 0, low: 0, medium: 1, high: 0 })
     expect(index.items[0]).toEqual({
       slug: "1a2b3c4d--p4-ar-rifle-black-cmd",

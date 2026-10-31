@@ -5917,6 +5917,31 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PublicFeedInfo": {
+				"description": "Envelope shared by every public data feed (prices now; missions,\nblueprints and items later): which dataset, its schema version, and the\nterms. Free to use; rate limits only protect against abuse.",
+				"properties": {
+					"dataset": {
+						"type": "string",
+						"description": "Dataset name, e.g. \"prices\""
+					},
+					"version": {
+						"type": "number",
+						"format": "double",
+						"description": "Schema version of the dataset; bumped only on a breaking change"
+					},
+					"terms": {
+						"type": "string",
+						"description": "Usage terms: free, attribution requested"
+					}
+				},
+				"required": [
+					"dataset",
+					"version",
+					"terms"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PriceOracleItemRef": {
 				"description": "The game item a price document is about.",
 				"properties": {
@@ -6203,8 +6228,11 @@
 				"additionalProperties": false
 			},
 			"PriceOracleItem": {
-				"description": "Player-market price document of one game item.",
+				"description": "Player-listing price document of one game item.",
 				"properties": {
+					"feed": {
+						"$ref": "#/components/schemas/PublicFeedInfo"
+					},
 					"item": {
 						"$ref": "#/components/schemas/PriceOracleItemRef"
 					},
@@ -6249,6 +6277,7 @@
 					}
 				},
 				"required": [
+					"feed",
 					"item",
 					"currency",
 					"unit_note",
