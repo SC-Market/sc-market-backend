@@ -2,6 +2,10 @@ import { isTestUserId } from "../../../../services/test-accounts/isolation.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import * as contractorDb from "./database.js"
 import { get_sentinel } from "../profiles/helpers.js"
+import {
+  cleanVerifiedOrgDescription,
+  orgTextHasSentinel,
+} from "./verification.js"
 import { fetchRSIOrgDirect } from "../../../../clients/rsi/scraper.js"
 import { User } from "../api-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
@@ -192,13 +196,13 @@ export async function authorizeContractor(
     orgDetails?.history || "",
   ]
 
-  const sentinel = get_sentinel(user.user_id).toUpperCase()
+  const sentinel = get_sentinel(user.user_id)
 
-  if (override || choices.find((c) => c.toUpperCase().includes(sentinel))) {
+  if (override || orgTextHasSentinel(choices, sentinel)) {
     await createContractor({
       owner_id: user.user_id,
       spectrum_id,
-      description: choices[0].trim(),
+      description: cleanVerifiedOrgDescription(choices[0]),
       name: orgDetails?.name || spectrum_id,
       banner: orgDetails?.banner || "",
       logo: orgDetails?.logo || "",
