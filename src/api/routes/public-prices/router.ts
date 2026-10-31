@@ -79,7 +79,22 @@ export function createPriceFeedRateLimit(keyPrefix = "price_feed_ip") {
   }
 }
 
-type Body = { type: string; body: string; status: number }
+/**
+ * `provisional`: a result that may change any moment, e.g. the index before
+ * the first snapshot of a fresh deployment. Never kept in the in-process
+ * cache, and sent with the short Cache-Control so the edge doesn't keep it
+ * either.
+ */
+type Body = {
+  type: string
+  body: string
+  status: number
+  provisional?: boolean
+}
+
+/** An index with no snapshot or no priced items yet is provisional. */
+const isProvisionalIndex = (index: { date: string | null; count: number }) =>
+  index.date === null || index.count === 0
 
 export interface PriceFeedDeps {
   getPriceDocument: typeof getPriceDocument
@@ -117,7 +132,7 @@ export function createPublicPricesRouter(
     res.setHeader("Content-Type", b.type)
     res.setHeader(
       "Cache-Control",
-      b.status === 200
+      b.status === 200 && !b.provisional
         ? PRICE_FEED_CACHE_CONTROL
         : PRICE_FEED_NOT_FOUND_CACHE_CONTROL,
     )
@@ -131,7 +146,7 @@ export function createPublicPricesRouter(
         let b = cache.get(key)
         if (!b) {
           b = await build()
-          cache.set(key, b)
+          if (!b.provisional) cache.set(key, b)
         }
         send(res, b)
       } catch (error) {
@@ -148,23 +163,34 @@ export function createPublicPricesRouter(
 
   router.get(
     "/index.json",
-    cached("index.json", async () => json(await deps.getPriceIndex())),
+    cached("index.json", async () => {
+      const index = await deps.getPriceIndex()
+      return { ...json(index), provisional: isProvisionalIndex(index) }
+    }),
   )
   router.get(
     "/index.csv",
-    cached("index.csv", async () => ({
-      type: "text/csv; charset=utf-8",
-      body: priceIndexCsv(await deps.getPriceIndex()),
-      status: 200,
-    })),
+    cached("index.csv", async () => {
+      const index = await deps.getPriceIndex()
+      return {
+        type: "text/csv; charset=utf-8",
+        body: priceIndexCsv(index),
+        status: 200,
+        provisional: isProvisionalIndex(index),
+      }
+    }),
   )
   router.get(
     "/index.md",
-    cached("index.md", async () => ({
-      type: "text/markdown; charset=utf-8",
-      body: priceIndexMarkdown(await deps.getPriceIndex()),
-      status: 200,
-    })),
+    cached("index.md", async () => {
+      const index = await deps.getPriceIndex()
+      return {
+        type: "text/markdown; charset=utf-8",
+        body: priceIndexMarkdown(index),
+        status: 200,
+        provisional: isProvisionalIndex(index),
+      }
+    }),
   )
 
   router.get("/:slug.json", (req, res, next) => {

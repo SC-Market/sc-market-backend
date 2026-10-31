@@ -90,6 +90,40 @@ describe("public price feed", () => {
     expect(getPriceDocument).toHaveBeenCalledTimes(1)
   })
 
+  it("never caches an empty index (before the first snapshot), then caches the real one", async () => {
+    const empty = { ...INDEX, date: null, as_of: null, count: 0 }
+    const full = {
+      ...INDEX,
+      count: 1,
+      items: [{ slug: "1a2b3c4d--gun", name: "Gun" }],
+    }
+    const getPriceIndex = vi
+      .fn()
+      .mockResolvedValueOnce(empty)
+      .mockResolvedValueOnce(empty)
+      .mockResolvedValue(full)
+    const a = express()
+    a.use(
+      "/api/public/prices",
+      createPublicPricesRouter({
+        getPriceDocument: vi.fn(),
+        getPriceIndex,
+      } as never),
+    )
+    const first = await request(a).get("/api/public/prices/index.json")
+    expect(first.body.count).toBe(0)
+    expect(first.headers["cache-control"]).toBe(
+      PRICE_FEED_NOT_FOUND_CACHE_CONTROL,
+    )
+    const md = await request(a).get("/api/public/prices/index.md")
+    expect(md.headers["cache-control"]).toBe(PRICE_FEED_NOT_FOUND_CACHE_CONTROL)
+    const second = await request(a).get("/api/public/prices/index.json")
+    expect(second.body.count).toBe(1)
+    expect(second.headers["cache-control"]).toBe(PRICE_FEED_CACHE_CONTROL)
+    await request(a).get("/api/public/prices/index.json")
+    expect(getPriceIndex).toHaveBeenCalledTimes(3)
+  })
+
   it("404s unknown items and malformed slugs with a short cache", async () => {
     const { a, getPriceDocument } = app()
     const res = await request(a).get("/api/public/prices/deadbeef--nope.json")
