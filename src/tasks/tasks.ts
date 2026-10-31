@@ -16,6 +16,7 @@ import {
 import { processDmReminders } from "../services/dm-reminders/dm-reminder.service.js"
 import { pruneDeliveries } from "../services/notify/deliveries.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
+import { snapshot_game_item_prices } from "../services/price-oracle/price-oracle.service.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
 import { processEmailQueue } from "./email-queue-consumer.js"
 import {
@@ -77,6 +78,14 @@ export function start_tasks() {
     safe(snapshot_price_history_v2, "snapshot_price_history_v2")
     setInterval(() => safe(snapshot_price_history_v2, "snapshot_price_history_v2"), 6 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 50_000)
+
+  // Player-market price oracle: upsert today's (UTC) game_item_price_daily
+  // rows. Every 6 hours so a day always gets its row despite restarts; a
+  // re-run the same day overwrites that day's row.
+  setTimeout(() => {
+    safe(snapshot_game_item_prices, "snapshot_game_item_prices")
+    setInterval(() => safe(snapshot_game_item_prices, "snapshot_game_item_prices"), 6 * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 55_000)
 
   setTimeout(() => {
     safe(fetchAndInsertCommodities, "fetchAndInsertCommodities")

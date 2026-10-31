@@ -248,6 +248,13 @@ app.get("/favicon.ico", (req, res) => {
   }
 })
 
+// Public price feed (/api/public/prices): anonymous, read-only, aggregates
+// only (services/price-oracle). Mounted before sessions, cookies, CORS, CSRF,
+// passport and the public-token guard: it reads no credential of any kind.
+// Not under /api/public/v1, which is token-only.
+import { publicPricesRouter } from "./api/routes/public-prices/router.js"
+app.use("/api/public/prices", publicPricesRouter)
+
 // Public API (/api/public/v1): token-only, so it is mounted before sessions,
 // cookies, CORS, CSRF and passport, and never sees a browser credential.
 // Every other route refuses its tokens (scmp_), so they can't act on the site.

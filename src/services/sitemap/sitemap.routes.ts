@@ -9,8 +9,10 @@ import { getSitemapCache } from "./sitemap.service.js"
 // frontend's public/robots.txt.
 // This host serves only the JSON API and the sitemap files. Block only the API
 // surface; everything else (notably the sitemaps, which are not under /api/)
-// stays crawlable by default.
+// stays crawlable by default. The public price feed (/api/public/prices/) is
+// meant to be read and cited, so it is allowed.
 const ROBOTS_TXT = `User-agent: *
+Allow: /api/public/prices/
 Disallow: /api/
 
 Sitemap: https://api.sc-market.space/sitemap.xml

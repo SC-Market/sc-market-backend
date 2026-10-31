@@ -7,7 +7,7 @@
  * Requirements: 38.1-38.12
  */
 
-import { Controller, Get, Route, Tags, Query, Path, Request } from "tsoa"
+import { Controller, Get, Route, Tags, Query, Path, Request, Middlewares } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { listingVisibleTo, publiclyListedSql } from "../util/listing-visibility.js"
 import { BaseController } from "../base/BaseController.js"
@@ -25,6 +25,14 @@ import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
+import type { PriceOracleItem } from "../types/price-oracle.types.js"
+import { getPriceDocument } from "../../../../services/price-oracle/price-oracle.service.js"
+import {
+  PRICE_FEED_CACHE_CONTROL,
+  createPriceFeedRateLimit,
+} from "../../public-prices/router.js"
+
+const priceStatsRateLimit = createPriceFeedRateLimit("price_stats_v2_ip")
 
 /**
  * Row shape of the quality-distribution aggregate query. The integer columns are
@@ -127,6 +135,24 @@ export class GameItemsV2Controller extends BaseController {
       .orderBy("name")
       .limit(effectiveLimit)
       .select("name", "type", "id")
+  }
+
+  /**
+   * Player-market price stats of a game item: current asks (lowest, median,
+   * counts), the 30-day trend from the daily snapshot and 30-day sale stats.
+   * Aggregates only (no seller, buyer or listing ids). The same document as
+   * the public feed GET /api/public/prices/{slug}.json.
+   *
+   * @summary Get price stats for game item
+   * @param id Game item UUID or short slug
+   */
+  @Get("{id}/price-stats")
+  @Middlewares(priceStatsRateLimit)
+  public async getPriceStats(@Path() id: string): Promise<PriceOracleItem> {
+    const doc = await getPriceDocument(id)
+    if (!doc) this.throwNotFound("Game item", id)
+    this.setHeader("Cache-Control", PRICE_FEED_CACHE_CONTROL)
+    return doc
   }
 
   /**

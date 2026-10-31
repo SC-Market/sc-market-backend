@@ -2009,6 +2009,115 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleItemRef": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleCurrent": {
+        "dataType": "refObject",
+        "properties": {
+            "ask_count": {"dataType":"double","required":true},
+            "seller_count": {"dataType":"double","required":true},
+            "quantity_available": {"dataType":"double","required":true},
+            "lowest_ask": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "median_ask": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "highest_ask": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "outliers_excluded": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleDailyPoint": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "median_ask": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "lowest_ask": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "ask_count": {"dataType":"double","required":true},
+            "seller_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleTrend": {
+        "dataType": "refObject",
+        "properties": {
+            "days_with_data": {"dataType":"double","required":true},
+            "median_30d": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "change_pct": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "daily": {"dataType":"array","array":{"dataType":"refObject","ref":"PriceOracleDailyPoint"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleSales": {
+        "dataType": "refObject",
+        "properties": {
+            "count": {"dataType":"double","required":true},
+            "median_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleRules": {
+        "dataType": "refObject",
+        "properties": {
+            "min_listing_age_hours": {"dataType":"double","required":true},
+            "placeholder_price_max": {"dataType":"double","required":true},
+            "min_sellers_for_trim": {"dataType":"double","required":true},
+            "iqr_multiplier": {"dataType":"double","required":true},
+            "min_sellers_for_median": {"dataType":"double","required":true},
+            "min_days_for_trend": {"dataType":"double","required":true},
+            "trend_window_days": {"dataType":"double","required":true},
+            "min_sales_for_median": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleMethodology": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "rules": {"ref":"PriceOracleRules","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleLinks": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"string","required":true},
+            "json": {"dataType":"string","required":true},
+            "index": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PriceOracleItem": {
+        "dataType": "refObject",
+        "properties": {
+            "item": {"ref":"PriceOracleItemRef","required":true},
+            "currency": {"dataType":"enum","enums":["aUEC"],"required":true},
+            "unit_note": {"dataType":"string","required":true},
+            "as_of": {"dataType":"string","required":true},
+            "current": {"ref":"PriceOracleCurrent","required":true},
+            "trend_30d": {"ref":"PriceOracleTrend","required":true},
+            "sales_30d": {"ref":"PriceOracleSales","required":true},
+            "summary": {"dataType":"string","required":true},
+            "methodology": {"ref":"PriceOracleMethodology","required":true},
+            "attribution": {"dataType":"string","required":true},
+            "links": {"ref":"PriceOracleLinks","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GameItemCategory": {
         "dataType": "refObject",
         "properties": {
@@ -7616,6 +7725,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'searchGameItems',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameItemsV2Controller_getPriceStats: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/game-items/:id/price-stats',
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller.prototype.getPriceStats)),
+
+            async function GameItemsV2Controller_getPriceStats(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameItemsV2Controller_getPriceStats, request, response });
+
+                const controller = new GameItemsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getPriceStats',
                 controller,
                 response,
                 next,

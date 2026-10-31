@@ -5917,6 +5917,332 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PriceOracleItemRef": {
+				"description": "The game item a price document is about.",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"slug": {
+						"type": "string",
+						"description": "Short slug (`<8 hex>--<name>`), the feed's and the aggregate page's id"
+					},
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"slug",
+					"name",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleCurrent": {
+				"description": "Current asks: eligible public listings right now. All prices in aUEC per unit.",
+				"properties": {
+					"ask_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings counted (after outlier trimming)"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct sellers counted (after outlier trimming)"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Units available across the counted listings"
+					},
+					"lowest_ask": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Lowest counted ask; null without any counted seller"
+					},
+					"median_ask": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Median of the sellers' lowest asks; null below the minimum seller count"
+					},
+					"highest_ask": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Highest counted ask; null without any counted seller"
+					},
+					"outliers_excluded": {
+						"type": "number",
+						"format": "double",
+						"description": "Sellers left out as outliers or placeholder prices"
+					}
+				},
+				"required": [
+					"ask_count",
+					"seller_count",
+					"quantity_available",
+					"lowest_ask",
+					"median_ask",
+					"highest_ask",
+					"outliers_excluded"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleDailyPoint": {
+				"description": "One day of the 30-day trend (from the daily snapshot).",
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "UTC day, YYYY-MM-DD"
+					},
+					"median_ask": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"lowest_ask": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"ask_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"median_ask",
+					"lowest_ask",
+					"ask_count",
+					"seller_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleTrend": {
+				"properties": {
+					"days_with_data": {
+						"type": "number",
+						"format": "double",
+						"description": "Days in the window with a published daily median"
+					},
+					"median_30d": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Median of the daily medians; null below the minimum number of days"
+					},
+					"change_pct": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "% change, first to last daily median in the window; null below the minimum"
+					},
+					"daily": {
+						"items": {
+							"$ref": "#/components/schemas/PriceOracleDailyPoint"
+						},
+						"type": "array",
+						"description": "Daily points, oldest first"
+					}
+				},
+				"required": [
+					"days_with_data",
+					"median_30d",
+					"change_pct",
+					"daily"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleSales": {
+				"description": "Completed SC Market orders of the item in the last 30 days.",
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Completed sales (order lines) in the window"
+					},
+					"median_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Median per-unit sale price; null below the minimum sale count"
+					}
+				},
+				"required": [
+					"count",
+					"median_price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleRules": {
+				"properties": {
+					"min_listing_age_hours": {
+						"type": "number",
+						"format": "double"
+					},
+					"placeholder_price_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"min_sellers_for_trim": {
+						"type": "number",
+						"format": "double"
+					},
+					"iqr_multiplier": {
+						"type": "number",
+						"format": "double"
+					},
+					"min_sellers_for_median": {
+						"type": "number",
+						"format": "double"
+					},
+					"min_days_for_trend": {
+						"type": "number",
+						"format": "double"
+					},
+					"trend_window_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"min_sales_for_median": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"min_listing_age_hours",
+					"placeholder_price_max",
+					"min_sellers_for_trim",
+					"iqr_multiplier",
+					"min_sellers_for_median",
+					"min_days_for_trend",
+					"trend_window_days",
+					"min_sales_for_median"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleMethodology": {
+				"properties": {
+					"text": {
+						"type": "string",
+						"description": "Plain-text description of what is counted and how"
+					},
+					"rules": {
+						"$ref": "#/components/schemas/PriceOracleRules"
+					}
+				},
+				"required": [
+					"text",
+					"rules"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleLinks": {
+				"properties": {
+					"page": {
+						"type": "string",
+						"description": "Human-readable aggregate page"
+					},
+					"json": {
+						"type": "string",
+						"description": "This document as the public JSON feed"
+					},
+					"index": {
+						"type": "string",
+						"description": "Index of every priced item"
+					}
+				},
+				"required": [
+					"page",
+					"json",
+					"index"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceOracleItem": {
+				"description": "Player-market price document of one game item.",
+				"properties": {
+					"item": {
+						"$ref": "#/components/schemas/PriceOracleItemRef"
+					},
+					"currency": {
+						"type": "string",
+						"enum": [
+							"aUEC"
+						],
+						"nullable": false,
+						"description": "Always \"aUEC\" (in-game currency, not ISO 4217)"
+					},
+					"unit_note": {
+						"type": "string",
+						"description": "What the unit of every price is, in words"
+					},
+					"as_of": {
+						"type": "string",
+						"description": "When `current` was computed (ISO 8601)"
+					},
+					"current": {
+						"$ref": "#/components/schemas/PriceOracleCurrent"
+					},
+					"trend_30d": {
+						"$ref": "#/components/schemas/PriceOracleTrend"
+					},
+					"sales_30d": {
+						"$ref": "#/components/schemas/PriceOracleSales"
+					},
+					"summary": {
+						"type": "string",
+						"description": "One-sentence plain-text statement of the current numbers"
+					},
+					"methodology": {
+						"$ref": "#/components/schemas/PriceOracleMethodology"
+					},
+					"attribution": {
+						"type": "string",
+						"description": "How to credit the data when citing or reusing it"
+					},
+					"links": {
+						"$ref": "#/components/schemas/PriceOracleLinks"
+					}
+				},
+				"required": [
+					"item",
+					"currency",
+					"unit_note",
+					"as_of",
+					"current",
+					"trend_30d",
+					"sales_30d",
+					"summary",
+					"methodology",
+					"attribution",
+					"links"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GameItemCategory": {
 				"description": "Category entry",
 				"properties": {
@@ -18464,6 +18790,40 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/game-items/{id}/price-stats": {
+			"get": {
+				"operationId": "GetPriceStats",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PriceOracleItem"
+								}
+							}
+						}
+					}
+				},
+				"description": "Player-market price stats of a game item: current asks (lowest, median,\ncounts), the 30-day trend from the daily snapshot and 30-day sale stats.\nAggregates only (no seller, buyer or listing ids). The same document as\nthe public feed GET /api/public/prices/{slug}.json.",
+				"summary": "Get price stats for game item",
+				"tags": [
+					"Game Items V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID or short slug",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
