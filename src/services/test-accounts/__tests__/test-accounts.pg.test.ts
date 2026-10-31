@@ -134,9 +134,12 @@ async function createBaseSchema(knex: Knex) {
       listing_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       shop_id UUID NOT NULL REFERENCES shops(shop_id) ON DELETE SET NULL,
       seller_id UUID, seller_type TEXT,
-      status TEXT NOT NULL DEFAULT 'active', visibility TEXT NOT NULL DEFAULT 'public');
+      status TEXT NOT NULL DEFAULT 'active', visibility TEXT NOT NULL DEFAULT 'public',
+      title TEXT NOT NULL DEFAULT 'Listing', updated_at TIMESTAMPTZ NOT NULL DEFAULT now());
+    -- The columns the queries under test read (the real view has many more).
     CREATE VIEW listing_search AS
-      SELECT l.*, s.owner_user_id AS shop_owner_user_id, s.owner_contractor_id AS shop_owner_contractor_id
+      SELECT l.*, s.owner_user_id AS shop_owner_user_id, s.owner_contractor_id AS shop_owner_contractor_id,
+        NULL::uuid AS game_item_id, NULL::text AS game_item_name
       FROM listings l JOIN shops s ON s.shop_id = l.shop_id;
     CREATE TABLE orders (
       order_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

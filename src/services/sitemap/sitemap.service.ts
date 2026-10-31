@@ -248,8 +248,7 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
       { url: "/wiki/refinery", changefreq: EnumChangefreq.MONTHLY, priority: 0.6 },
       { url: "/mining", changefreq: EnumChangefreq.WEEKLY, priority: 0.7 },
       { url: "/mining/locations", changefreq: EnumChangefreq.MONTHLY, priority: 0.6 },
-      { url: "/login", changefreq: EnumChangefreq.YEARLY, priority: 0.3 },
-      { url: "/signup", changefreq: EnumChangefreq.YEARLY, priority: 0.4 },
+      { url: "/developers", changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
       // Legal pages: static HTML on Cloudflare Pages (frontend public/terms.html, privacy.html)
       { url: "/terms", changefreq: EnumChangefreq.YEARLY, priority: 0.2 },
       { url: "/privacy", changefreq: EnumChangefreq.YEARLY, priority: 0.2 },
