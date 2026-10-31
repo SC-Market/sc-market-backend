@@ -6,9 +6,9 @@ import {
   SitemapStream,
 } from "sitemap"
 import { Writable } from "node:stream"
+import type { Knex } from "knex"
 
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
-import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import { formatShortSlug } from "../../api/routes/v2/util/short-slug.js"
 import { listingPubliclyListed } from "../../api/routes/v2/util/listing-visibility.js"
 import * as recruitingDb from "../../api/routes/v1/recruiting/database.js"
@@ -65,6 +65,25 @@ function getSitemapIndexHostname(): string {
   return url.origin + "/"
 }
 
+/** Report a sitemap problem to BugSnag (outside development), tagged by section. */
+function reportSitemapError(error: unknown, section: string, subsection?: string): void {
+  if (process.env.NODE_ENV === "development") return
+  Bugsnag.notify(
+    error instanceof Error ? error : new Error(String(error)),
+    (event) => {
+      event.addMetadata("sitemap", { section, ...(subsection ? { subsection } : {}) })
+    },
+  )
+}
+
+/** Thrown (and reported) when a section that always has rows comes back empty. */
+export class EmptySitemapSectionError extends Error {
+  constructor(section: string) {
+    super(`Sitemap section "${section}" returned no URLs`)
+    this.name = "EmptySitemapSectionError"
+  }
+}
+
 /**
  * Build one dynamic section, isolating its failure. If the section's queries
  * throw, we log and skip that section instead of aborting the whole sitemap.
@@ -72,25 +91,126 @@ function getSitemapIndexHostname(): string {
  * generateSitemapCache() entirely, so every sitemap file — including unrelated
  * ones like shops — served a 500 and Google reported "sitemap could not be
  * read". Degrading one section to empty is far better than losing them all.
+ *
+ * A section that is never legitimately empty (`expectRows`) and comes back
+ * with no URLs is reported the same way: an empty section is dropped from the
+ * index, so a query that silently matches nothing looks exactly like a
+ * missing section. That is how the market section disappeared from the live
+ * index (an unqualified column in the test-shop filter matched no rows) with
+ * nothing in the logs or BugSnag.
  */
 async function collectSection(
   sections: SitemapSection[],
   name: string,
   build: () => Promise<SitemapItemLoose[]>,
+  options: { expectRows: boolean },
 ): Promise<void> {
+  let pages: SitemapItemLoose[]
   try {
-    sections.push({ name, pages: await build() })
+    pages = await build()
   } catch (error) {
     logger.error("Failed to build sitemap section", { section: name, error })
-    if (process.env.NODE_ENV !== "development") {
-      Bugsnag.notify(
-        error instanceof Error ? error : new Error(String(error)),
-        (event) => {
-          event.addMetadata("sitemap", { section: name })
-        },
-      )
-    }
+    reportSitemapError(error, name)
+    return
   }
+  if (pages.length === 0 && options.expectRows) {
+    const error = new EmptySitemapSectionError(name)
+    logger.error("Sitemap section is empty", { section: name })
+    reportSitemapError(error, name)
+  }
+  sections.push({ name, pages })
+}
+
+/** ISO date for <lastmod>, or undefined when the row has no usable timestamp. */
+function lastmod(value: unknown): string | undefined {
+  if (value === null || value === undefined || value === "") return undefined
+  const date = value instanceof Date ? value : new Date(String(value))
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString()
+}
+
+/** Every column is table-qualified: the test-shop filter is a correlated subquery. */
+const LISTING_SEARCH_PUBLIC = { status: "ls.status", visibility: "ls.visibility", shopId: "ls.shop_id" }
+
+/** Publicly listed listings and their game items' aggregate pages. */
+export async function marketSitemapPages(db: Knex): Promise<SitemapItemLoose[]> {
+  const listings: { listing_id: string; title: string; updated_at: unknown }[] =
+    await db("listing_search as ls")
+      .select("ls.listing_id", "ls.title", "ls.updated_at")
+      .where(listingPubliclyListed(db, LISTING_SEARCH_PUBLIC))
+
+  const aggregateItems: { game_item_id: string; game_item_name: string; updated_at: unknown }[] =
+    await db("listing_search as ls")
+      .select("ls.game_item_id", "ls.game_item_name")
+      .max("ls.updated_at as updated_at")
+      .where(listingPubliclyListed(db, LISTING_SEARCH_PUBLIC))
+      .whereNotNull("ls.game_item_id")
+      .groupBy("ls.game_item_id", "ls.game_item_name")
+
+  const pages: SitemapItemLoose[] = []
+  const seen = new Set<string>()
+  for (const listing of listings) {
+    // listing_search has one row per listing item: a bundle appears once per item.
+    if (seen.has(listing.listing_id)) continue
+    seen.add(listing.listing_id)
+    pages.push({
+      url: `/market/${formatShortSlug(listing.listing_id, listing.title)}`,
+      changefreq: EnumChangefreq.WEEKLY,
+      priority: 0.8,
+      lastmod: lastmod(listing.updated_at),
+    })
+  }
+  for (const item of aggregateItems) {
+    pages.push({
+      url: `/market/aggregate/${formatShortSlug(item.game_item_id, item.game_item_name || "")}`,
+      changefreq: EnumChangefreq.WEEKLY,
+      priority: 0.7,
+      lastmod: lastmod(item.updated_at),
+    })
+  }
+  return pages
+}
+
+/**
+ * Users whose profile has something on it: they own an active shop, sell a
+ * publicly listed listing, or have reviews. One URL each (the profile; its
+ * tabs are the same page). Every other confirmed account would be a thin page.
+ */
+export async function userSitemapPages(db: Knex): Promise<SitemapItemLoose[]> {
+  const users: { username: string }[] = await db("accounts as a")
+    .select("a.username")
+    .where("a.rsi_confirmed", true)
+    .where("a.is_test", false)
+    .whereNotNull("a.username")
+    .where(function () {
+      this.whereExists(function () {
+        this.select(db.raw("1"))
+          .from("shops as us")
+          .whereRaw("us.owner_user_id = a.user_id")
+          .where("us.status", "active")
+      })
+        .orWhereExists(function () {
+          this.select(db.raw("1"))
+            .from("listing_search as uls")
+            .whereRaw("uls.shop_owner_user_id = a.user_id")
+            .where(listingPubliclyListed(db, { status: "uls.status", visibility: "uls.visibility", shopId: "uls.shop_id" }))
+        })
+        .orWhereExists(function () {
+          // The reviews the profile shows (profiles/database.ts getUserReviews).
+          this.select(db.raw("1"))
+            .from("order_reviews as ur")
+            .join("orders as uo", "uo.order_id", "ur.order_id")
+            .whereRaw(
+              "((ur.role = 'customer' AND uo.contractor_id IS NULL AND uo.assigned_id = a.user_id) OR (ur.role = 'contractor' AND uo.customer_id = a.user_id))",
+            )
+        })
+    })
+    .orderBy("a.username")
+
+  return users.map((user) => ({
+    url: `/user/${user.username}`,
+    changefreq: EnumChangefreq.MONTHLY,
+    priority: 0.5,
+  }))
 }
 
 export async function collectSitemapSections(): Promise<SitemapSections> {
@@ -137,70 +257,37 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   })
 
   // ── Market listings ──
-  await collectSection(sections, "market", async () => {
-    const market_listings: { listing_id: string; title: string }[] = await db("listing_search")
-      .select("listing_id", "title")
-      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility", shopId: "shop_id" }))
-
-    const aggregateItems: { game_item_id: string; game_item_name: string }[] = await db("listing_search")
-      .select("game_item_id", "game_item_name")
-      .where(listingPubliclyListed(db, { status: "status", visibility: "visibility", shopId: "shop_id" }))
-      .whereNotNull("game_item_id")
-      .groupBy("game_item_id", "game_item_name")
-
-    const marketPages: SitemapItemLoose[] = []
-    for (const listing of market_listings) {
-      marketPages.push({
-        url: `/market/${formatShortSlug(listing.listing_id, listing.title)}`,
-        changefreq: EnumChangefreq.WEEKLY,
-        priority: 0.8,
-      })
-    }
-    for (const item of aggregateItems) {
-      marketPages.push({
-        url: `/market/aggregate/${formatShortSlug(item.game_item_id, item.game_item_name || "")}`,
-        changefreq: EnumChangefreq.WEEKLY,
-        priority: 0.7,
-      })
-    }
-    return marketPages
-  })
+  await collectSection(sections, "market", () => marketSitemapPages(db), { expectRows: true })
 
   // Test accounts, orgs and shops are never listed
   // (services/test-accounts/isolation.ts).
 
-  // ── Contractors ──
+  // ── Contractors ── (the org page only: its tabs canonicalise to it)
   await collectSection(sections, "contractors", async () => {
     const contractors = await contractorDb.getContractorListings({ is_test: false })
-    const contractorPages: SitemapItemLoose[] = []
-    for (const contractor of contractors) {
-      contractorPages.push(
-        { url: `/contractor/${contractor.spectrum_id}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
-        { url: `/contractor/${contractor.spectrum_id}/members`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
-      )
-    }
-    return contractorPages
-  })
+    return contractors.map((contractor) => ({
+      url: `/contractor/${contractor.spectrum_id}`,
+      changefreq: EnumChangefreq.MONTHLY,
+      priority: 0.5,
+    }))
+  }, { expectRows: true })
 
-  // ── Shops ──
+  // ── Shops ── (the shop page only: /services and /reviews canonicalise to it)
   await collectSection(sections, "shops", async () => {
-    const shops: { slug: string }[] = await db("shops")
-      .select("slug")
+    const shops: { slug: string; updated_at: unknown }[] = await db("shops")
+      .select("slug", "updated_at")
       .where("status", "active")
       .where("is_test", false)
       .whereNot("slug", "")
-    const shopPages: SitemapItemLoose[] = []
-    for (const shop of shops) {
-      shopPages.push(
-        { url: `/shops/${shop.slug}`, changefreq: EnumChangefreq.WEEKLY, priority: 0.7 },
-        { url: `/shops/${shop.slug}/services`, changefreq: EnumChangefreq.WEEKLY, priority: 0.5 },
-        { url: `/shops/${shop.slug}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-      )
-    }
-    return shopPages
-  })
+    return shops.map((shop) => ({
+      url: `/shops/${shop.slug}`,
+      changefreq: EnumChangefreq.WEEKLY,
+      priority: 0.7,
+      lastmod: lastmod(shop.updated_at),
+    }))
+  }, { expectRows: true })
 
-  // ── Recruiting ──
+  // ── Recruiting ── (can legitimately be empty)
   await collectSection(sections, "recruiting", async () => {
     const recruit_posts = await recruitingDb.getAllRecruitingPosts()
     const recruitPages: SitemapItemLoose[] = []
@@ -212,20 +299,22 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
       })
     }
     return recruitPages
-  })
+  }, { expectRows: false })
 
   // ── Wiki & Game Data ──
   await collectSection(sections, "wiki", async () => {
   const wikiPages: SitemapItemLoose[] = []
 
-  const wikiQueries = [
-    async () => {
-      const missions = await db("missions").select("mission_code", "mission_name").limit(5000)
+  // Each source fails (or comes back empty) on its own, reported by name.
+  const wikiQueries: { name: string; run: () => Promise<number> }[] = [
+    { name: "missions", run: async () => {
+      const missions = await db("missions").select("mission_code", "mission_name").limit(10000)
       for (const m of missions) {
         wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
-    },
-    async () => {
+      return missions.length
+    } },
+    { name: "blueprints", run: async () => {
       // The frontend route /blueprints/:slug and the detail API
       // (GET /api/v2/game-data/blueprints/{blueprint_id}) resolve the
       // blueprint name or the blueprint id, never blueprint_code (which
@@ -237,79 +326,72 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
         .where("is_active", true)
         .whereNotNull("blueprint_name")
         .orderBy("blueprint_name")
-        .limit(5000)
+        .limit(10000)
       const seen = new Set<string>()
       for (const b of blueprints) {
         if (!b.blueprint_name || seen.has(b.blueprint_name)) continue
         seen.add(b.blueprint_name)
         wikiPages.push({ url: `/blueprints/${encodeURIComponent(b.blueprint_name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
-    },
-    async () => {
+      return seen.size
+    } },
+    { name: "resources", run: async () => {
       const resources = await db("resources").select("resource_id", "resource_name").limit(5000)
       for (const r of resources) {
         wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
         wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
       }
-    },
-    async () => {
-      const items = await db("game_items").select("id", "name").limit(10000)
+      return resources.length
+    } },
+    { name: "items", run: async () => {
+      // More than 10k game items exist (11.5k in Oct 2026): the old 10k cap
+      // silently dropped the rest. Sections are chunked per 10k URLs anyway.
+      const items = await db("game_items").select("id", "name").limit(50000)
       for (const i of items) {
         wikiPages.push({ url: `/wiki/items/${formatShortSlug(i.id, i.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
-    },
-    async () => {
+      return items.length
+    } },
+    { name: "ships", run: async () => {
       const ships = await db("game_items").where("type", "Ship for Sale/Rental").select("id", "name").limit(2000)
       for (const s of ships) {
         wikiPages.push({ url: `/wiki/ships/${formatShortSlug(s.id, s.name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
       }
-    },
-    async () => {
+      return ships.length
+    } },
+    { name: "manufacturers", run: async () => {
       const manufacturers = await db("wiki_manufacturers").select("code", "name").limit(500)
       for (const m of manufacturers) {
         wikiPages.push({ url: `/wiki/manufacturers/${m.code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
       }
-    },
-    async () => {
+      return manufacturers.length
+    } },
+    { name: "ores", run: async () => {
       const ores = await db("mineable_elements").select("name").whereNotNull("name").limit(500)
       for (const o of ores) {
         wikiPages.push({ url: `/mining/ores/${encodeURIComponent(o.name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
       }
-    },
+      return ores.length
+    } },
   ]
 
   for (const query of wikiQueries) {
     try {
-      await query()
-    } catch (error) {
-      logger.warn("Failed to fetch game data section for sitemap", { error })
-      if (process.env.NODE_ENV !== "development") {
-        Bugsnag.notify(
-          error instanceof Error ? error : new Error(String(error)),
-          (event) => {
-            event.addMetadata("sitemap", { section: "wiki" })
-          },
-        )
+      const count = await query.run()
+      if (count === 0) {
+        logger.error("Sitemap game data source is empty", { section: "wiki", subsection: query.name })
+        reportSitemapError(new EmptySitemapSectionError(`wiki/${query.name}`), "wiki", query.name)
       }
+    } catch (error) {
+      logger.error("Failed to fetch game data section for sitemap", { section: "wiki", subsection: query.name, error })
+      reportSitemapError(error, "wiki", query.name)
     }
   }
     return wikiPages
-  })
+  }, { expectRows: true })
 
   // ── Users (last — lowest priority) ──
-  await collectSection(sections, "users", async () => {
-    const users = await profileDb.getUsersWhere({ rsi_confirmed: true, is_test: false })
-    const userPages: SitemapItemLoose[] = []
-    for (const user of users) {
-      userPages.push(
-        { url: `/user/${user.username}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 },
-        { url: `/user/${user.username}/services`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-        { url: `/user/${user.username}/market`, changefreq: EnumChangefreq.MONTHLY, priority: 0.4 },
-        { url: `/user/${user.username}/reviews`, changefreq: EnumChangefreq.MONTHLY, priority: 0.2 },
-      )
-    }
-    return userPages
-  })
+  await collectSection(sections, "users", () => userSitemapPages(db), { expectRows: true })
 
   const contentPages = await contentPagesPromise
   if (contentPages && contentPages.length > 0) {

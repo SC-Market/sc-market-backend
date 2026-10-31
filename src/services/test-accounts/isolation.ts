@@ -71,11 +71,18 @@ export function isTestIsolationDbError(err: unknown): boolean {
 
 // ── Public-surface filters ──────────────────────────────────────────────────
 
-const IDENT = /^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)?$/
+/**
+ * A table-qualified column ("l.shop_id"). Qualification is required: these
+ * predicates are correlated subqueries, and an unqualified name resolves to
+ * the subquery's own table first. notTestShop("shop_id") compared
+ * `_ts.shop_id = shop_id` (always true), so whenever any test shop existed it
+ * hid every row: that silently emptied the sitemap's market section.
+ */
+const IDENT = /^[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*$/
 
 function ident(column: string): string {
   if (typeof column !== "string" || !IDENT.test(column)) {
-    throw new Error(`Invalid column reference: ${String(column)}`)
+    throw new Error(`Invalid column reference (must be table-qualified): ${String(column)}`)
   }
   return column
 }

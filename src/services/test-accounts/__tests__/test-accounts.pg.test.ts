@@ -15,6 +15,7 @@ import express from "express"
 import cookieParser from "cookie-parser"
 import request from "supertest"
 import { PG_TEST_URL, createTestDatabase, dropTestDatabase } from "../../../test-utils/pg-test-db.js"
+import { marketSitemapPages } from "../../sitemap/sitemap.service.js"
 
 const DB = "pgtest_test_accounts"
 
@@ -443,6 +444,14 @@ describe.skipIf(!PG_TEST_URL)("test accounts on Postgres", () => {
       expect(ids(rows)).toEqual(REAL_LISTINGS)
       const raw = await db().raw(`SELECT l.listing_id FROM listings l WHERE ${publiclyListedSql("l")}`)
       expect(ids(raw.rows)).toEqual(REAL_LISTINGS)
+    })
+
+    it("the sitemap's market section lists the real listings while test shops exist", async () => {
+      // Regression: the section filtered with an unqualified "shop_id", which
+      // inside the test-shop subquery meant _ts.shop_id, so it matched no
+      // listing at all once any test shop existed.
+      const urls = (await marketSitemapPages(db())).map((p) => p.url).filter((u) => !u.includes("/aggregate/"))
+      expect(urls.length).toBe(REAL_LISTINGS.length)
     })
 
     it("seller, user, org and shop predicates", async () => {

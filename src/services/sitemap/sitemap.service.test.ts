@@ -1,4 +1,5 @@
 import { gunzipSync } from "node:zlib"
+import { createRequire } from "node:module"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import type { Mock } from "vitest"
 
@@ -28,6 +29,7 @@ type ChainMock = {
   groupBy: Mock
   limit: Mock
   orderBy: Mock
+  max: Mock
   then: (
     resolve: (value: SitemapRow[]) => unknown,
     reject?: (reason: Error) => unknown,
@@ -37,7 +39,7 @@ type ChainMock = {
 
 function createChainMock(resolveValue: SitemapRow[] = []): ChainMock {
   const chain = {} as ChainMock
-  const methods = ["select", "where", "whereNot", "whereNotNull", "groupBy", "limit", "orderBy"] as const
+  const methods = ["select", "where", "whereNot", "whereNotNull", "groupBy", "limit", "orderBy", "max"] as const
   for (const m of methods) {
     chain[m] = vi.fn(() => chain)
   }
@@ -55,8 +57,11 @@ vi.mock("../../clients/database/knex-db.js", () => ({
   getKnex: () => mockKnex,
 }))
 
-const bugsnagNotify = vi.fn()
-vi.mock("@bugsnag/js", () => ({ default: { notify: bugsnagNotify } }))
+// The service loads BugSnag with require() (the same CJS instance server.ts
+// starts), which vi.mock doesn't intercept: spy on that instance instead.
+const bugsnagNotify = vi
+  .spyOn(createRequire(import.meta.url)("@bugsnag/js") as { notify: (...args: unknown[]) => void }, "notify")
+  .mockImplementation(() => {})
 
 vi.mock("../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn() },
@@ -78,13 +83,41 @@ function manifestResponse(body: unknown): Response {
   })
 }
 
+import knexFactory, { type Knex } from "knex"
 import {
   generateSitemapCache,
   getSitemapCache,
   clearSitemapCache,
+  marketSitemapPages,
+  userSitemapPages,
   SITEMAP_DEGRADED_TTL_MS,
   SITEMAP_TTL_MS,
 } from "./sitemap.service.js"
+
+/**
+ * A real (connectionless) pg knex whose queries resolve to canned rows by
+ * table, so a test can both run a section builder and read the SQL it sent.
+ */
+function sqlRecordingKnex(rowsByTable: Record<string, SitemapRow[][]>) {
+  const real = knexFactory({ client: "pg" })
+  const queries: { table: string; sql: string }[] = []
+  const calls: Record<string, number> = {}
+  const db = ((table: string) => {
+    const builder = real(table)
+    const name = table.split(" ")[0]
+    const n = calls[name] ?? 0
+    calls[name] = n + 1
+    Object.assign(builder, {
+      then(resolve: (rows: SitemapRow[]) => unknown) {
+        queries.push({ table: name, sql: builder.toString() })
+        return Promise.resolve(resolve(rowsByTable[name]?.[n] ?? []))
+      },
+    })
+    return builder
+  }) as unknown as Knex
+  Object.assign(db, { raw: real.raw.bind(real) })
+  return { db, queries }
+}
 
 describe("generateSitemapCache", () => {
   it("produces a valid sitemap index with section-based keys", async () => {
@@ -251,5 +284,108 @@ describe("blueprint URLs", () => {
     expect(blueprintsQuery.where).toHaveBeenCalledWith("is_active", true)
 
     mockKnex.mockImplementation(() => createChainMock([]))
+  })
+})
+
+describe("market section", () => {
+  beforeEach(() => {
+    clearSitemapCache()
+    bugsnagNotify.mockClear()
+    fetchMock.mockResolvedValue(manifestResponse({ version: 1, pages: [] }))
+  })
+
+  it("lists each public listing once and each game item's aggregate page, with lastmod", async () => {
+    const { db } = sqlRecordingKnex({
+      listing_search: [
+        [
+          { listing_id: "5fdef409-3e25-4ea6-a008-4001f3e43515", title: "Irradiated Pearl", updated_at: new Date("2026-10-30T15:15:27Z") },
+          // A bundle has one listing_search row per item.
+          { listing_id: "5fdef409-3e25-4ea6-a008-4001f3e43515", title: "Irradiated Pearl", updated_at: new Date("2026-10-30T15:15:27Z") },
+        ],
+        [{ game_item_id: "e75d8c08-99fd-4754-8c65-9845e876ba3e", game_item_name: "Irradiated Pearl", updated_at: "2026-10-29T00:00:00Z" }],
+      ],
+    })
+    const pages = await marketSitemapPages(db)
+    expect(pages.map((p) => [p.url, p.lastmod])).toEqual([
+      ["/market/5fdef409--irradiated-pearl", "2026-10-30T15:15:27.000Z"],
+      ["/market/aggregate/e75d8c08--irradiated-pearl", "2026-10-29T00:00:00.000Z"],
+    ])
+  })
+
+  it("qualifies every column in the test-shop filter (an unqualified one matched no rows)", async () => {
+    const { db, queries } = sqlRecordingKnex({})
+    await marketSitemapPages(db)
+    expect(queries).toHaveLength(2)
+    for (const { sql } of queries) {
+      expect(sql).toContain("_ts.shop_id = ls.shop_id")
+      expect(sql).toContain(`"ls"."status" = 'active'`)
+      expect(sql).toContain(`"ls"."visibility" = 'public'`)
+      expect(sql).not.toMatch(/_ts\.shop_id = shop_id/)
+    }
+  })
+
+  it("puts sitemap-market-0.xml in the index when listings exist", async () => {
+    mockKnex.mockImplementation((table?: string) =>
+      table === "listing_search as ls"
+        ? createChainMock([{ listing_id: "5fdef409-3e25-4ea6-a008-4001f3e43515", title: "Pearl", game_item_id: "e75d8c08-99fd-4754-8c65-9845e876ba3e", game_item_name: "Pearl" }])
+        : createChainMock([]),
+    )
+    const { index, sitemaps } = await generateSitemapCache()
+    expect(gunzipSync(index).toString("utf8")).toMatch(/sitemap-market-0\.xml/)
+    const xml = gunzipSync(sitemaps.get("market-0")!).toString("utf8")
+    expect(xml).toContain("<loc>https://sc-market.space/market/5fdef409--pearl</loc>")
+    expect(xml).toContain("<loc>https://sc-market.space/market/aggregate/e75d8c08--pearl</loc>")
+    mockKnex.mockImplementation(() => createChainMock([]))
+  })
+
+  it("reports an empty market section to BugSnag instead of silently dropping it", async () => {
+    mockKnex.mockImplementation(() => createChainMock([]))
+    const { index } = await generateSitemapCache()
+    expect(gunzipSync(index).toString("utf8")).not.toContain("sitemap-market-")
+    const sections = bugsnagNotify.mock.calls.map(([error, onErrorArg]) => {
+      const meta: Record<string, unknown> = {}
+      const onError = onErrorArg as ((event: { addMetadata: (s: string, v: Record<string, unknown>) => void }) => void) | undefined
+      onError?.({ addMetadata: (_s: string, values: Record<string, unknown>) => Object.assign(meta, values) })
+      return [(error as Error).name, meta.section, meta.subsection]
+    })
+    expect(sections).toContainEqual(["EmptySitemapSectionError", "market", undefined])
+    expect(sections).toContainEqual(["EmptySitemapSectionError", "shops", undefined])
+    expect(sections).toContainEqual(["EmptySitemapSectionError", "wiki", "missions"])
+    // Recruiting can legitimately be empty.
+    expect(sections.some(([, section]) => section === "recruiting")).toBe(false)
+  })
+})
+
+describe("sitemap hygiene", () => {
+  beforeEach(() => {
+    clearSitemapCache()
+    fetchMock.mockResolvedValue(manifestResponse({ version: 1, pages: [] }))
+  })
+
+  it("lists shops once (no /services or /reviews tabs) with lastmod", async () => {
+    mockKnex.mockImplementation((table?: string) =>
+      table === "shops"
+        ? createChainMock([{ slug: "alpha", updated_at: new Date("2026-10-01T00:00:00Z") }])
+        : createChainMock([]),
+    )
+    const { sitemaps } = await generateSitemapCache()
+    const xml = gunzipSync(sitemaps.get("shops-0")!).toString("utf8")
+    expect(xml).toContain("<loc>https://sc-market.space/shops/alpha</loc>")
+    expect(xml).toContain("<lastmod>2026-10-01T00:00:00.000Z</lastmod>")
+    expect(xml).not.toContain("/services")
+    expect(xml).not.toContain("/reviews")
+    mockKnex.mockImplementation(() => createChainMock([]))
+  })
+
+  it("lists users once each, only those with a shop, a public listing or reviews", async () => {
+    const { db, queries } = sqlRecordingKnex({ accounts: [[{ username: "alice" }]] })
+    const pages = await userSitemapPages(db)
+    expect(pages.map((p) => p.url)).toEqual(["/user/alice"])
+    const [{ sql }] = queries
+    expect(sql).toContain(`"a"."is_test" = false`)
+    expect(sql).toContain("us.owner_user_id = a.user_id")
+    expect(sql).toContain("uls.shop_owner_user_id = a.user_id")
+    expect(sql).toContain("_ts.shop_id = uls.shop_id")
+    expect(sql).toContain("order_reviews")
   })
 })
