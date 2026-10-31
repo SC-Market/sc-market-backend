@@ -133,10 +133,22 @@ describe("summarySentence", () => {
     expect(
       svc.summarySentence("P4-AR Rifle", "2026-10-31", current, -8.2),
     ).toBe(
-      "As of 2026-10-31, the lowest ask for P4-AR Rifle on SC Market is 12,500 aUEC across 4 sellers (6 listings); median ask 15,000 aUEC; 30-day change -8.2%. (aUEC is Star Citizen's in-game currency.)",
+      "As of 2026-10-31, SC Market player listings for P4-AR Rifle: lowest ask 12,500 aUEC, median ask 15,000 aUEC, based on 6 listings from 4 sellers (medium confidence); 30-day change in the median -8.2%. aUEC is Star Citizen's in-game currency.",
     )
   })
-  it("leaves out what isn't published", () => {
+  it("says high confidence from 6 sellers", () => {
+    expect(
+      svc.summarySentence(
+        "Y",
+        "2026-10-31",
+        { ...current, seller_count: 6, ask_count: 9 },
+        null,
+      ),
+    ).toBe(
+      "As of 2026-10-31, SC Market player listings for Y: lowest ask 12,500 aUEC, median ask 15,000 aUEC, based on 9 listings from 6 sellers (high confidence). aUEC is Star Citizen's in-game currency.",
+    )
+  })
+  it("below the median minimum: the lowest ask only, low confidence, never a typical price", () => {
     expect(
       svc.summarySentence(
         "X",
@@ -145,7 +157,7 @@ describe("summarySentence", () => {
         null,
       ),
     ).toBe(
-      "As of 2026-10-31, the lowest ask for X on SC Market is 12,500 aUEC across 1 seller (1 listing). (aUEC is Star Citizen's in-game currency.)",
+      "As of 2026-10-31, the lowest asking price in SC Market player listings for X is 12,500 aUEC, based on 1 listing from 1 seller. Too few sellers for a typical price (low confidence). aUEC is Star Citizen's in-game currency.",
     )
     expect(
       svc.summarySentence(
@@ -155,7 +167,7 @@ describe("summarySentence", () => {
         null,
       ),
     ).toBe(
-      "As of 2026-10-31, there are no qualifying player listings for X on SC Market.",
+      "As of 2026-10-31, there are no qualifying SC Market player listings for X.",
     )
   })
 })
@@ -189,6 +201,8 @@ const ALLOWED_DOC_KEYS = new Set([
   ".current.median_ask",
   ".current.highest_ask",
   ".current.outliers_excluded",
+  ".current.confidence",
+  ".current.sample_note",
   ".trend_30d",
   ".trend_30d.days_with_data",
   ".trend_30d.median_30d",
@@ -268,6 +282,7 @@ describe("public documents carry no PII", () => {
   })
 
   it("the item document has only aggregate fields", async () => {
+    // Sample size and confidence travel with the numbers.
     const doc = await svc.getPriceDocument(
       "1a2b3c4d--p4-ar-rifle",
       db,
@@ -284,7 +299,11 @@ describe("public documents carry no PII", () => {
       ask_count: 3,
       lowest_ask: 11000,
       median_ask: null,
+      confidence: "low",
+      sample_note: "Based on 3 listings from 2 sellers on SC Market.",
     })
+    expect(doc!.summary).toContain("based on 3 listings from 2 sellers")
+    expect(doc!.summary).toContain("low confidence")
     expect(doc!.item.slug).toBe("1a2b3c4d--p4-ar-rifle")
     expect(doc!.links.json).toBe(
       "https://api.sc-market.space/api/public/prices/1a2b3c4d--p4-ar-rifle.json",
@@ -336,6 +355,7 @@ describe("public documents carry no PII", () => {
     const index = await svc.getPriceIndex(db)
     expect(index.date).toBe("2026-10-31")
     expect(index.as_of).toBe("2026-10-31T06:00:00.000Z")
+    expect(index.coverage).toEqual({ none: 0, low: 0, medium: 1, high: 0 })
     expect(index.items[0]).toEqual({
       slug: "1a2b3c4d--p4-ar-rifle-black-cmd",
       name: 'P4-AR Rifle, "Black" | =cmd',
@@ -344,6 +364,7 @@ describe("public documents carry no PII", () => {
       json: "https://api.sc-market.space/api/public/prices/1a2b3c4d--p4-ar-rifle-black-cmd.json",
       ask_count: 3,
       seller_count: 3,
+      confidence: "medium",
       lowest_ask: 10000,
       median_ask: 11000,
       median_30d: 10500,
@@ -351,13 +372,13 @@ describe("public documents carry no PII", () => {
     })
     const csv = svc.priceIndexCsv(index)
     expect(csv.split("\n")[1]).toBe(
-      '1a2b3c4d--p4-ar-rifle-black-cmd,"P4-AR Rifle, ""Black"" | =cmd",Weapon,10000,11000,10500,-4.5,3,3,https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd',
+      '1a2b3c4d--p4-ar-rifle-black-cmd,"P4-AR Rifle, ""Black"" | =cmd",Weapon,10000,11000,10500,-4.5,3,3,medium,https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd',
     )
     expect(index.unit_note).toContain("aUEC, Star Citizen's in-game currency")
     const md = svc.priceIndexMarkdown(index)
     expect(md).toContain("aUEC, Star Citizen's in-game currency")
     expect(md).toContain(
-      '| [P4-AR Rifle, "Black" \\| =cmd](https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd) | Weapon | 10,000 | 11,000 | 10,500 | -4.5% | 3 | 3 |',
+      '| [P4-AR Rifle, "Black" \\| =cmd](https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd) | Weapon | 10,000 | 11,000 | 10,500 | -4.5% | 3 | 3 | medium |',
     )
     for (const out of [JSON.stringify(index), csv, md])
       expect(out).not.toContain(SHOP_NAME)

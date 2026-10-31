@@ -23,6 +23,8 @@ export const PRICE_ORACLE_RULES = {
   iqrMultiplier: 1.5,
   /** A median ask needs at least this many sellers (after trimming). */
   minSellersForMedian: 3,
+  /** "high" confidence from this many sellers ("medium" from minSellersForMedian). */
+  minSellersForHighConfidence: 6,
   /** 30-day median and % change need this many days with a daily median. */
   minDaysForTrend: 7,
   /** Trend window, in days, including today. */
@@ -54,6 +56,28 @@ export interface AskStats {
   highestAsk: number | null
   /** Sellers dropped as outliers. */
   outliersExcluded: number
+}
+
+/**
+ * How much weight the numbers can bear, from the counted sellers:
+ * - none: no counted seller;
+ * - low: below minSellersForMedian: no median, show the listings instead;
+ * - medium: a median, from few sellers;
+ * - high: minSellersForHighConfidence or more sellers.
+ */
+export type PriceConfidence = "none" | "low" | "medium" | "high"
+
+export function priceConfidence(
+  sellerCount: number,
+  rules: Pick<
+    typeof PRICE_ORACLE_RULES,
+    "minSellersForMedian" | "minSellersForHighConfidence"
+  > = PRICE_ORACLE_RULES,
+): PriceConfidence {
+  if (sellerCount <= 0) return "none"
+  if (sellerCount < rules.minSellersForMedian) return "low"
+  if (sellerCount < rules.minSellersForHighConfidence) return "medium"
+  return "high"
 }
 
 /** Linear-interpolation quantile (type 7) of an ascending, non-empty array. */

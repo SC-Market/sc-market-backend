@@ -13,7 +13,7 @@
  * Eligible asks (eligibleSellerAsksSql) are the public market's: active,
  * visibility 'public', not a test shop (services/test-accounts), fixed price,
  * single or bulk listings (a bundle's price is not one item's price), sold per
- * unit (SCU commodities are UEX's ground), not expired, at least
+ * unit (SCU commodities are out of scope), not expired, at least
  * minListingAgeHours old, with a listed lot in stock and a price above the
  * placeholder price. Aggregates only leave this module: no seller, buyer or
  * listing identifier is ever selected into a result.
@@ -45,7 +45,9 @@ import {
   PRICE_ORACLE_RULES as RULES,
   computeAskStats,
   computeTrend,
+  priceConfidence,
   type AskStats,
+  type PriceConfidence,
   type SellerAsk,
 } from "./price-math.js"
 
@@ -59,15 +61,15 @@ export const UNIT_NOTE =
   "All prices are in aUEC, Star Citizen's in-game currency (not real money), per unit."
 
 export const PRICE_ATTRIBUTION =
-  "Data: SC Market player-market prices (https://sc-market.space). Please credit SC Market and link to the item's page when citing."
+  "Data: SC Market player listings (https://sc-market.space). Please credit SC Market and link to the item's page when citing."
 
 export const METHODOLOGY: PriceOracleMethodology = {
   text:
-    "Player-to-player asking prices on SC Market, in aUEC (Star Citizen's in-game currency) per unit. Counted: active, public, fixed-price listings sold per unit, " +
+    "Asking prices of SC Market player listings (player-to-player offers on SC Market only, not an in-game or market-wide price), in aUEC (Star Citizen's in-game currency) per unit. Counted: active, public, fixed-price listings sold per unit, " +
     `at least ${RULES.minListingAgeHours} hours old, in stock and priced above ${RULES.placeholderPriceMax} aUEC (placeholders); ` +
     "test accounts are excluded. Each seller counts once per item, at its lowest ask. " +
     `With ${RULES.minSellersForTrim} or more sellers, outliers outside 1.5x the interquartile range of the log prices are excluded. ` +
-    `A median is shown only with ${RULES.minSellersForMedian}+ sellers; the 30-day median and change need ${RULES.minDaysForTrend}+ days of daily medians ` +
+    `A median is shown only with ${RULES.minSellersForMedian}+ sellers (confidence: low below ${RULES.minSellersForMedian} sellers, medium below ${RULES.minSellersForHighConfidence}, high from ${RULES.minSellersForHighConfidence}); the 30-day median and change need ${RULES.minDaysForTrend}+ days of daily medians ` +
     `(snapshot once a day, UTC); a sale median needs ${RULES.minSalesForMedian}+ completed SC Market orders in 30 days. ` +
     "These are asking prices, not in-game terminal prices.",
   rules: {
@@ -76,6 +78,7 @@ export const METHODOLOGY: PriceOracleMethodology = {
     min_sellers_for_trim: RULES.minSellersForTrim,
     iqr_multiplier: RULES.iqrMultiplier,
     min_sellers_for_median: RULES.minSellersForMedian,
+    min_sellers_for_high_confidence: RULES.minSellersForHighConfidence,
     min_days_for_trend: RULES.minDaysForTrend,
     trend_window_days: RULES.trendWindowDays,
     min_sales_for_median: RULES.minSalesForMedian,
@@ -336,30 +339,46 @@ export function priceLinks(slug: string) {
 }
 
 const fmt = (n: number) => `${Math.round(n).toLocaleString("en-US")} aUEC`
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`
 
-/** The plain-text fact sentence (also what phase-2 pages render). */
+const UNIT_SENTENCE = "aUEC is Star Citizen's in-game currency."
+
+/** "Based on N listings from K sellers on SC Market." */
+export function sampleNote(askCount: number, sellerCount: number): string {
+  if (sellerCount <= 0) return "No qualifying SC Market player listings."
+  return `Based on ${plural(askCount, "listing")} from ${plural(sellerCount, "seller")} on SC Market.`
+}
+
+/**
+ * The plain-text facts (also what phase-2 pages render). Framed narrowly:
+ * SC Market player listings, never "the market price"; always with the
+ * sample size and confidence.
+ */
 export function summarySentence(
   name: string,
   date: string,
-  current: PriceOracleCurrent,
+  current: Omit<PriceOracleCurrent, "confidence" | "sample_note">,
   changePct: number | null,
 ): string {
   if (current.seller_count === 0 || current.lowest_ask === null) {
-    return `As of ${date}, there are no qualifying player listings for ${name} on SC Market.`
+    return `As of ${date}, there are no qualifying SC Market player listings for ${name}.`
   }
-  const unit = " (aUEC is Star Citizen's in-game currency.)"
-  const sellers = `${current.seller_count} seller${current.seller_count === 1 ? "" : "s"}`
-  const listings = `${current.ask_count} listing${current.ask_count === 1 ? "" : "s"}`
-  const parts = [
-    `As of ${date}, the lowest ask for ${name} on SC Market is ${fmt(current.lowest_ask)} across ${sellers} (${listings})`,
-  ]
-  if (current.median_ask !== null)
-    parts.push(`median ask ${fmt(current.median_ask)}`)
-  if (changePct !== null)
-    parts.push(
-      `30-day change ${changePct > 0 ? "+" : ""}${changePct.toFixed(1)}%`,
+  const sample = `based on ${plural(current.ask_count, "listing")} from ${plural(current.seller_count, "seller")}`
+  const confidence = priceConfidence(current.seller_count)
+  if (current.median_ask === null) {
+    return (
+      `As of ${date}, the lowest asking price in SC Market player listings for ${name} is ${fmt(current.lowest_ask)}, ${sample}. ` +
+      `Too few sellers for a typical price (low confidence). ${UNIT_SENTENCE}`
     )
-  return parts.join("; ") + "." + unit
+  }
+  const trend =
+    changePct === null
+      ? ""
+      : `; 30-day change in the median ${changePct > 0 ? "+" : ""}${changePct.toFixed(1)}%`
+  return (
+    `As of ${date}, SC Market player listings for ${name}: lowest ask ${fmt(current.lowest_ask)}, median ask ${fmt(current.median_ask)}, ` +
+    `${sample} (${confidence} confidence)${trend}. ${UNIT_SENTENCE}`
+  )
 }
 
 interface GameItemRow {
@@ -405,6 +424,8 @@ export async function currentAskStats(
 
 function toCurrent(s: AskStats): PriceOracleCurrent {
   return {
+    confidence: priceConfidence(s.sellerCount),
+    sample_note: sampleNote(s.askCount, s.sellerCount),
     ask_count: s.askCount,
     seller_count: s.sellerCount,
     quantity_available: s.quantityAvailable,
@@ -490,6 +511,8 @@ export interface PriceIndexRow {
   json: string
   ask_count: number
   seller_count: number
+  /** See PriceOracleCurrent.confidence */
+  confidence: PriceConfidence
   lowest_ask: number | null
   median_ask: number | null
   median_30d: number | null
@@ -504,6 +527,8 @@ export interface PriceIndex {
   currency: "aUEC"
   unit_note: string
   count: number
+  /** Priced items per confidence level: how much of the catalogue has enough data */
+  coverage: Record<PriceConfidence, number>
   items: PriceIndexRow[]
   methodology: PriceOracleMethodology
   attribution: string
@@ -524,6 +549,7 @@ export async function getPriceIndex(
       currency: "aUEC",
       unit_note: UNIT_NOTE,
       count: 0,
+      coverage: { none: 0, low: 0, medium: 0, high: 0 },
       items: [],
       methodology: METHODOLOGY,
       attribution: PRICE_ATTRIBUTION,
@@ -560,6 +586,7 @@ export async function getPriceIndex(
       json: links.json,
       ask_count: Number(r.ask_count),
       seller_count: Number(r.seller_count),
+      confidence: priceConfidence(Number(r.seller_count)),
       lowest_ask: num(r.lowest_ask),
       median_ask: num(r.median_ask),
       median_30d: num(r.median_30d),
@@ -572,6 +599,13 @@ export async function getPriceIndex(
     currency: "aUEC",
     unit_note: UNIT_NOTE,
     count: items.length,
+    coverage: items.reduce(
+      (c, i) => ({ ...c, [i.confidence]: c[i.confidence] + 1 }),
+      { none: 0, low: 0, medium: 0, high: 0 } as Record<
+        PriceConfidence,
+        number
+      >,
+    ),
     items,
     methodology: METHODOLOGY,
     attribution: PRICE_ATTRIBUTION,
@@ -588,6 +622,7 @@ const CSV_COLUMNS: (keyof PriceIndexRow)[] = [
   "change_pct_30d",
   "ask_count",
   "seller_count",
+  "confidence",
   "page",
 ]
 
@@ -612,18 +647,20 @@ function mdCell(v: string): string {
 
 export function priceIndexMarkdown(index: PriceIndex): string {
   const out = [
-    "# SC Market player-market prices (Star Citizen)",
+    "# SC Market player listings: asking prices (Star Citizen)",
     "",
     index.date
-      ? `Snapshot of ${index.date} (UTC), computed ${index.as_of}. Asking prices of player listings on SC Market. ${UNIT_NOTE}`
+      ? `Snapshot of ${index.date} (UTC), computed ${index.as_of}. Asking prices in SC Market player listings only (not an in-game or market-wide price); every row says how many listings and sellers it is based on. A median needs ${RULES.minSellersForMedian}+ sellers. ${UNIT_NOTE}`
       : "No snapshot yet.",
+    "",
+    `Coverage: ${index.count} items with listings; ${index.coverage.high} high, ${index.coverage.medium} medium and ${index.coverage.low} low confidence (low = under ${RULES.minSellersForMedian} sellers, no median).`,
     "",
     `Methodology: ${METHODOLOGY.text}`,
     "",
     PRICE_ATTRIBUTION,
     "",
-    "| Item | Type | Lowest ask (aUEC) | Median ask (aUEC) | 30-day median (aUEC) | 30-day change | Listings | Sellers |",
-    "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    "| Item | Type | Lowest ask (aUEC) | Median ask (aUEC) | 30-day median (aUEC) | 30-day change | Listings | Sellers | Confidence |",
+    "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
   ]
   const n = (v: number | null) =>
     v === null ? "–" : Math.round(v).toLocaleString("en-US")
@@ -633,7 +670,7 @@ export function priceIndexMarkdown(index: PriceIndex): string {
         r.change_pct_30d === null
           ? "–"
           : `${r.change_pct_30d > 0 ? "+" : ""}${r.change_pct_30d.toFixed(1)}%`
-      } | ${r.ask_count} | ${r.seller_count} |`,
+      } | ${r.ask_count} | ${r.seller_count} | ${r.confidence} |`,
     )
   }
   return out.join("\n") + "\n"

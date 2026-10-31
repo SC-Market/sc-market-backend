@@ -33,6 +33,13 @@ export interface PriceOracleCurrent {
   highest_ask: number | null
   /** Sellers left out as outliers or placeholder prices */
   outliers_excluded: number
+  /**
+   * Weight the numbers can bear: none (no listings), low (under 3 sellers: no
+   * median, show the listings themselves), medium (3-5 sellers), high (6+)
+   */
+  confidence: "none" | "low" | "medium" | "high"
+  /** The sample size in words, to show next to every number */
+  sample_note: string
 }
 
 /** One day of the 30-day trend (from the daily snapshot). */
@@ -70,6 +77,7 @@ export interface PriceOracleRules {
   min_sellers_for_trim: number
   iqr_multiplier: number
   min_sellers_for_median: number
+  min_sellers_for_high_confidence: number
   min_days_for_trend: number
   trend_window_days: number
   min_sales_for_median: number
@@ -102,7 +110,7 @@ export interface PriceOracleItem {
   current: PriceOracleCurrent
   trend_30d: PriceOracleTrend
   sales_30d: PriceOracleSales
-  /** One-sentence plain-text statement of the current numbers */
+  /** Plain-text statement of the current numbers, with sample size and confidence */
   summary: string
   methodology: PriceOracleMethodology
   /** How to credit the data when citing or reusing it */

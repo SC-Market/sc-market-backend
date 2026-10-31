@@ -5985,6 +5985,20 @@
 						"type": "number",
 						"format": "double",
 						"description": "Sellers left out as outliers or placeholder prices"
+					},
+					"confidence": {
+						"type": "string",
+						"enum": [
+							"none",
+							"low",
+							"medium",
+							"high"
+						],
+						"description": "Weight the numbers can bear: none (no listings), low (under 3 sellers: no\nmedian, show the listings themselves), medium (3-5 sellers), high (6+)"
+					},
+					"sample_note": {
+						"type": "string",
+						"description": "The sample size in words, to show next to every number"
 					}
 				},
 				"required": [
@@ -5994,7 +6008,9 @@
 					"lowest_ask",
 					"median_ask",
 					"highest_ask",
-					"outliers_excluded"
+					"outliers_excluded",
+					"confidence",
+					"sample_note"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -6115,6 +6131,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"min_sellers_for_high_confidence": {
+						"type": "number",
+						"format": "double"
+					},
 					"min_days_for_trend": {
 						"type": "number",
 						"format": "double"
@@ -6134,6 +6154,7 @@
 					"min_sellers_for_trim",
 					"iqr_multiplier",
 					"min_sellers_for_median",
+					"min_sellers_for_high_confidence",
 					"min_days_for_trend",
 					"trend_window_days",
 					"min_sales_for_median"
@@ -6214,7 +6235,7 @@
 					},
 					"summary": {
 						"type": "string",
-						"description": "One-sentence plain-text statement of the current numbers"
+						"description": "Plain-text statement of the current numbers, with sample size and confidence"
 					},
 					"methodology": {
 						"$ref": "#/components/schemas/PriceOracleMethodology"

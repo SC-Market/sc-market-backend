@@ -8,6 +8,7 @@ import {
   computeAskStats,
   computeTrend,
   median,
+  priceConfidence,
   quantile,
   trimOutliers,
   type SellerAsk,
@@ -132,5 +133,19 @@ describe("computeTrend", () => {
   it("orders by day whatever the input order", () => {
     const t = computeTrend(days([200, 200, 200, 200, 200, 200, 250]).reverse())
     expect(t.changePct).toBe(25)
+  })
+})
+
+describe("priceConfidence", () => {
+  it("none / low (no median) / medium / high by counted sellers", () => {
+    expect([0, 1, 2, 3, 5, 6, 40].map((n) => priceConfidence(n))).toEqual([
+      "none",
+      "low",
+      "low",
+      "medium",
+      "medium",
+      "high",
+      "high",
+    ])
   })
 })

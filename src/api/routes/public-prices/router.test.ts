@@ -36,6 +36,7 @@ const INDEX = {
   as_of: "2026-10-31T06:00:00.000Z",
   currency: "aUEC" as const,
   count: 0,
+  coverage: { none: 0, low: 0, medium: 0, high: 0 },
   items: [],
   methodology: { text: "m", rules: {} },
   attribution: "a",
@@ -79,7 +80,7 @@ describe("public price feed", () => {
     expect(csv.text.split("\n")[0]).toContain("slug,name,type,lowest_ask")
     const md = await request(a).get("/api/public/prices/index.md")
     expect(md.headers["content-type"]).toMatch(/^text\/markdown/)
-    expect(md.text).toContain("# SC Market player-market prices")
+    expect(md.text).toContain("# SC Market player listings: asking prices")
   })
 
   it("caches responses in process", async () => {
