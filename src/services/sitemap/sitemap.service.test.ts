@@ -177,6 +177,8 @@ describe("content (Help & Guides) section", () => {
           { path: "/guides", updated: "2026-10-25" },
           { path: "/guides/buying/buy-an-item", updated: "2026-10-24" },
           { path: "/about", updated: "2026-10-25" },
+          { path: "/changelog", updated: "2026-11-02" },
+          { path: "/changelog/2026-11-02", updated: "2026-11-02" },
           // Anything outside the content routes is ignored.
           { path: "https://evil.example/x", updated: "2026-10-25" },
           { path: "/market/x", updated: "2026-10-25" },
@@ -192,6 +194,8 @@ describe("content (Help & Guides) section", () => {
     expect(xml).toContain("<loc>https://sc-market.space/guides/buying/buy-an-item</loc>")
     expect(xml).toContain("<lastmod>2026-10-24")
     expect(xml).toContain("<loc>https://sc-market.space/about</loc>")
+    expect(xml).toContain("<loc>https://sc-market.space/changelog</loc>")
+    expect(xml).toContain("<loc>https://sc-market.space/changelog/2026-11-02</loc>")
     expect(xml).not.toContain("evil.example")
     expect(xml).not.toContain("/market/x")
     expect(ttlMs).toBe(SITEMAP_TTL_MS)

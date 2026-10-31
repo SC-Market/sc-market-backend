@@ -3,7 +3,7 @@ import { EnumChangefreq, SitemapItemLoose } from "sitemap"
 import logger from "../../logger/logger.js"
 
 /**
- * Help & Guides / About pages are Markdown compiled by the frontend build, so
+ * Help & Guides / About / changelog pages are Markdown compiled by the frontend build, so
  * the backend can't list them from the database. The frontend build publishes
  * a manifest of every content page at `<FRONTEND_URL>/content/manifest.json`
  * (a static Cloudflare Pages asset), which the sitemap fetches on each rebuild.
@@ -21,9 +21,13 @@ export interface ContentManifest {
   pages: { path: string; updated: string }[]
 }
 
-/** Only content paths: never an arbitrary URL a bad manifest could inject. */
+/**
+ * Only content paths: never an arbitrary URL a bad manifest could inject.
+ * /changelog/<YYYY-MM-DD> pages are listed once published (the frontend
+ * never puts a draft in the manifest).
+ */
 const CONTENT_PATH =
-  /^\/(?:guides|about|blog)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*){0,2}$/
+  /^\/(?:guides|about|blog|changelog)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*){0,2}$/
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
 function isManifest(value: unknown): value is ContentManifest {
