@@ -134,10 +134,10 @@ export async function resolveItemRewards(
       knex.raw("lower(p4k_file) AS p4k_file_lower"),
     )
     .where((q) => {
-      // knex expands an array binding into a list, hence ARRAY[?].
-      if (ids.size) q.orWhereRaw("p4k_id = ANY(ARRAY[?]::uuid[])", [[...ids]])
+      // An array binding goes to pg as one array parameter.
+      if (ids.size) q.orWhereRaw("p4k_id = ANY(?::uuid[])", [[...ids]])
       if (files.size)
-        q.orWhereRaw("lower(p4k_file) = ANY(ARRAY[?]::text[])", [[...files]])
+        q.orWhereRaw("lower(p4k_file) = ANY(?::text[])", [[...files]])
     })) as CandidateRow[]
 
   const byId = new Map<string, CandidateRow>()

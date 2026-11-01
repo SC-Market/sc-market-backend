@@ -270,10 +270,8 @@ export async function missionsRewardingItem(
   const candidates = (await knex("missions as m")
     .select(...MISSION_COLUMNS, "m.item_rewards")
     .where("m.version_id", versionId)
-    // knex expands an array binding into a list, hence ARRAY[?].
-    .whereRaw("mission_item_reward_keys(m.item_rewards) && ARRAY[?]::text[]", [
-      keys,
-    ])
+    // An array binding goes to pg as one array parameter.
+    .whereRaw("mission_item_reward_keys(m.item_rewards) && ?::text[]", [keys])
     .orderBy("m.mission_name")
     .orderBy("m.mission_id")
     .limit(ACQUISITION_LIMITS.itemRewardCandidates)) as (MissionRow & {

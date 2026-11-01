@@ -59,6 +59,7 @@ function db() {
 }
 
 let seq = 0
+let variant: string | null = null
 async function mission(
   name: string,
   item_rewards: unknown,
@@ -102,12 +103,15 @@ async function listing(shop: string, owner: string, price: number, qty = 2) {
     pricing_mode: "unified",
     base_price: price,
   })
-  const [v] = await db()("item_variants")
-    .insert({ game_item_id: SHIP, attributes: { quality_tier: seq } })
-    .returning("variant_id")
+  if (!variant) {
+    const [v] = await db()("item_variants")
+      .insert({ game_item_id: SHIP, attributes: { quality_tier: 1 } })
+      .returning("variant_id")
+    variant = v.variant_id
+  }
   await db()("listing_item_lots").insert({
     item_id,
-    variant_id: v.variant_id,
+    variant_id: variant,
     quantity_total: qty,
     owner_id: owner,
     listed: true,
@@ -145,20 +149,20 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
     await db()("game_items").insert([
       {
         id: SHIP,
-        name: "Anvil F7 Hornet Mk Wikelo",
+        name: "IA Hornet Wikelo",
         type: "Ship",
         p4k_id: SHIP_P4K,
         p4k_file: "anvl_hornet_f7_mk2_collector_mod",
       },
       {
         id: RIFLE,
-        name: "P4-AR Rifle",
+        name: "IA Rifle",
         type: "Weapon",
         p4k_file: "BEHR_Rifle_Ballistic_01",
       },
-      { id: TWIN_A, name: "Twin A", type: "Other", p4k_file: "twin_item" },
-      { id: TWIN_B, name: "Twin B", type: "Other", p4k_file: "twin_item" },
-      { id: ORE, name: "Quantainium", type: "Commodity" },
+      { id: TWIN_A, name: "IA Twin A", type: "Other", p4k_file: "twin_item" },
+      { id: TWIN_B, name: "IA Twin B", type: "Other", p4k_file: "twin_item" },
+      { id: ORE, name: "IA Ore", type: "Commodity" },
     ])
 
     // Direct item rewards: by p4k id (with a misleading ref), by class name only.
@@ -318,8 +322,8 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
     ])
     expect(got[0]).toEqual({
       id: SHIP,
-      slug: "10000000--anvil-f7-hornet-mk-wikelo",
-      name: "Anvil F7 Hornet Mk Wikelo",
+      slug: "10000000--ia-hornet-wikelo",
+      name: "IA Hornet Wikelo",
     })
   })
 
@@ -328,7 +332,7 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
     const plan = await db().transaction(async (trx) => {
       await trx.raw("SET LOCAL enable_seqscan = off")
       const { rows } = await trx.raw(
-        "EXPLAIN SELECT mission_id FROM missions WHERE mission_item_reward_keys(item_rewards) && ARRAY[?]::text[]",
+        "EXPLAIN SELECT mission_id FROM missions WHERE mission_item_reward_keys(item_rewards) && ?::text[]",
         [["file:twin_item"]],
       )
       return rows
@@ -355,7 +359,7 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
     expect(doc).not.toBeNull()
     expect(doc!.item).toMatchObject({
       id: SHIP,
-      slug: "10000000--anvil-f7-hornet-mk-wikelo",
+      slug: "10000000--ia-hornet-wikelo",
     })
     expect(doc!.freshness).toMatchObject({ game_version: "4.10.2-LIVE.1" })
     expect(doc!.listings).toMatchObject({
@@ -400,7 +404,7 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
     expect(doc!.blueprints.items[0]).toMatchObject({
       blueprint_name: "Hornet Blueprint",
       mission_count: 2,
-      ingredients: [{ game_item_id: ORE, name: "Quantainium", quantity: 4 }],
+      ingredients: [{ game_item_id: ORE, name: "IA Ore", quantity: 4 }],
     })
     expect(doc!.resource).toMatchObject({
       can_be_purchased: true,
