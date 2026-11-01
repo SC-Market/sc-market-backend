@@ -12449,6 +12449,82 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StorefrontCard": {
+				"properties": {
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"logo_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"tagline": {
+						"type": "string",
+						"description": "The org's tagline (its RSI headline, as imported at registration)."
+					},
+					"fields": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "The org's fields on SC Market (trading, freight, …)."
+					},
+					"active_listings": {
+						"type": "number",
+						"format": "double"
+					},
+					"completed_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"avg_rating": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"showcase": {
+						"type": "boolean",
+						"description": "A showcase org, listed first."
+					}
+				},
+				"required": [
+					"spectrum_id",
+					"name",
+					"logo_url",
+					"tagline",
+					"fields",
+					"active_listings",
+					"completed_orders",
+					"avg_rating",
+					"rating_count",
+					"showcase"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StorefrontsResponse": {
+				"properties": {
+					"storefronts": {
+						"items": {
+							"$ref": "#/components/schemas/StorefrontCard"
+						},
+						"type": "array",
+						"description": "Showcase orgs first, then by completed orders. At most 60."
+					}
+				},
+				"required": [
+					"storefronts"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"StorefrontTrust": {
 				"properties": {
 					"completed_orders": {
@@ -24084,6 +24160,30 @@
 						}
 					}
 				}
+			}
+		},
+		"/contractors/storefronts": {
+			"get": {
+				"operationId": "GetStorefronts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StorefrontsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting, showcase orgs first, then by completed orders. Read-only and\nanonymous; the frontend prerenders it at build time.",
+				"summary": "List org storefronts",
+				"tags": [
+					"Contractors"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/contractors/{spectrum_id}/storefront": {

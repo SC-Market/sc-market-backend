@@ -4031,6 +4031,31 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StorefrontCard": {
+        "dataType": "refObject",
+        "properties": {
+            "spectrum_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "tagline": {"dataType":"string","required":true},
+            "fields": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "active_listings": {"dataType":"double","required":true},
+            "completed_orders": {"dataType":"double","required":true},
+            "avg_rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rating_count": {"dataType":"double","required":true},
+            "showcase": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StorefrontsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "storefronts": {"dataType":"array","array":{"dataType":"refObject","ref":"StorefrontCard"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "StorefrontTrust": {
         "dataType": "refObject",
         "properties": {
@@ -10323,6 +10348,35 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'saveLayout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgStorefrontV2Controller_getStorefronts: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/contractors/storefronts',
+            ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller.prototype.getStorefronts)),
+
+            async function OrgStorefrontV2Controller_getStorefronts(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgStorefrontV2Controller_getStorefronts, request, response });
+
+                const controller = new OrgStorefrontV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getStorefronts',
                 controller,
                 response,
                 next,

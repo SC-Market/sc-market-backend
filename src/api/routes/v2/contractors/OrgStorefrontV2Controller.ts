@@ -11,13 +11,20 @@ import { is_member } from "../../v1/util/permissions.js"
 import { tsoaReadRateLimit } from "../../../middleware/tsoa-ratelimit.js"
 import { canViewTestEntity } from "../../../../services/test-accounts/isolation.js"
 import {
+  listStorefrontCards,
   loadOrgStorefront,
   type OrgStorefront,
+  type StorefrontCard,
 } from "../../../../services/storefront/storefront.js"
 import {
   getOrgBrandingStatus,
   type OrgBrandingStatus,
 } from "../../../../services/storefront/branding.js"
+
+export interface StorefrontsResponse {
+  /** Showcase orgs first, then by completed orders. At most 60. */
+  storefronts: StorefrontCard[]
+}
 
 export interface OrgStorefrontStatusResponse {
   spectrum_id: string
@@ -53,6 +60,20 @@ export class OrgStorefrontV2Controller extends BaseController {
       )
     if (!org || org.archived) this.throwNotFound("Contractor", spectrum_id)
     return org
+  }
+
+  /**
+   * The Storefronts hub: RSI-verified orgs with at least one public, active
+   * listing, showcase orgs first, then by completed orders. Read-only and
+   * anonymous; the frontend prerenders it at build time.
+   *
+   * @summary List org storefronts
+   */
+  @Get("storefronts")
+  @Middlewares(tsoaReadRateLimit)
+  public async getStorefronts(): Promise<StorefrontsResponse> {
+    this.setHeader("Cache-Control", "public, max-age=300")
+    return { storefronts: await listStorefrontCards() }
   }
 
   /**

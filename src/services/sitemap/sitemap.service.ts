@@ -265,6 +265,7 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
       { url: "/buyorders", changefreq: EnumChangefreq.ALWAYS, priority: 0.8 },
       { url: "/market/services", changefreq: EnumChangefreq.ALWAYS, priority: 0.8 },
       { url: "/shops", changefreq: EnumChangefreq.ALWAYS, priority: 0.9 },
+      { url: "/storefronts", changefreq: EnumChangefreq.WEEKLY, priority: 0.8 },
       { url: "/missions", changefreq: EnumChangefreq.WEEKLY, priority: 0.8 },
       { url: "/blueprints", changefreq: EnumChangefreq.WEEKLY, priority: 0.8 },
       { url: "/crafting/calculator", changefreq: EnumChangefreq.MONTHLY, priority: 0.7 },

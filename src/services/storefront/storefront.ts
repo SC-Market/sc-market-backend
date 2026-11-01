@@ -241,3 +241,117 @@ export async function loadOrgStorefront(
     recruiting,
   }
 }
+
+/**
+ * The orgs the Storefronts hub features first: the owner's org and a close
+ * partner (drafts/whitelabel-overhaul-plan.md §A10), in this order.
+ */
+export const SHOWCASE_STOREFRONTS: readonly string[] = ["BWINCORP", "MEDRUNNER"]
+
+export interface StorefrontCard {
+  spectrum_id: string
+  name: string
+  logo_url: string | null
+  /** The org's tagline (its RSI headline, as imported at registration). */
+  tagline: string
+  /** The org's fields on SC Market (trading, freight, …). */
+  fields: string[]
+  active_listings: number
+  completed_orders: number
+  avg_rating: number | null
+  rating_count: number
+  /** A showcase org, listed first. */
+  showcase: boolean
+}
+
+interface CardRow {
+  contractor_id: string
+  spectrum_id: string
+  name: string
+  description: string | null
+  logo_url: string | null
+  active_listings: number | string
+  completed_orders: number | string
+  avg_rating: string | number | null
+  rating_count: number | string
+}
+
+/** First line of an org description, plain and short. */
+export function tagline(description: string | null | undefined): string {
+  const line = (description ?? "")
+    .split(/\r?\n/)
+    .map((l) => l.replace(/[#*_>`~[\]]/g, "").trim())
+    .find((l) => l !== "")
+  if (!line) return ""
+  return line.length > 140 ? `${line.slice(0, 139).trimEnd()}…` : line
+}
+
+/** Hub order: showcase orgs first (in their order), then completed orders, then listings. */
+export function compareCards(a: StorefrontCard, b: StorefrontCard): number {
+  const ia = SHOWCASE_STOREFRONTS.indexOf(a.spectrum_id)
+  const ib = SHOWCASE_STOREFRONTS.indexOf(b.spectrum_id)
+  if (ia !== ib) return (ia === -1 ? Infinity : ia) - (ib === -1 ? Infinity : ib)
+  return (
+    b.completed_orders - a.completed_orders ||
+    b.active_listings - a.active_listings ||
+    a.name.localeCompare(b.name, "en")
+  )
+}
+
+export const MAX_STOREFRONT_CARDS = 60
+
+/**
+ * The Storefronts hub: RSI-verified orgs (never test or archived orgs)
+ * with at least one public, active listing. Being verified doubles as the
+ * hub's anti-impersonation filter.
+ */
+export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
+  const listed =
+    "ls.shop_owner_contractor_id = c.contractor_id AND ls.status = 'active' AND ls.visibility = 'public'"
+  const rows = (await db("contractors as c")
+    .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
+    .where("c.archived", false)
+    .whereRaw("c.is_test IS NOT TRUE")
+    .whereRaw("c.spectrum_id NOT LIKE '~%'")
+    .whereRaw(`EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed})`)
+    .select(
+      "c.contractor_id",
+      "c.spectrum_id",
+      "c.name",
+      "c.description",
+      db.raw(`${imageUrlSql("logo_img")} as logo_url`),
+      db.raw(`(SELECT COUNT(*)::integer FROM listing_search ls WHERE ${listed}) as active_listings`),
+      db.raw(
+        "(SELECT COALESCE(SUM(s.total_completed), 0)::integer FROM shops s WHERE s.owner_contractor_id = c.contractor_id AND s.status = 'active') as completed_orders",
+      ),
+      db.raw(
+        "(SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE s.owner_contractor_id = c.contractor_id) as avg_rating",
+      ),
+      db.raw(
+        "(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE s.owner_contractor_id = c.contractor_id) as rating_count",
+      ),
+    )) as CardRow[]
+
+  const ids = rows.map((r) => r.contractor_id)
+  const fieldRows: { contractor_id: string; field: string }[] = ids.length
+    ? await db("contractor_fields").whereIn("contractor_id", ids).select("contractor_id", "field")
+    : []
+  const fields = new Map<string, string[]>()
+  for (const f of fieldRows) fields.set(f.contractor_id, [...(fields.get(f.contractor_id) ?? []), f.field])
+
+  return rows
+    .map((r) => ({
+      spectrum_id: r.spectrum_id,
+      name: r.name,
+      logo_url: r.logo_url,
+      tagline: tagline(r.description),
+      fields: (fields.get(r.contractor_id) ?? []).sort(),
+      active_listings: num(r.active_listings),
+      completed_orders: num(r.completed_orders),
+      avg_rating: num(r.rating_count) > 0 ? round(num(r.avg_rating), 2) : null,
+      rating_count: num(r.rating_count),
+      showcase: SHOWCASE_STOREFRONTS.includes(r.spectrum_id),
+    }))
+    .sort(compareCards)
+    .slice(0, MAX_STOREFRONT_CARDS)
+}
