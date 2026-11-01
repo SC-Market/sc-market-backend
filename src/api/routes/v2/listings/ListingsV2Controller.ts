@@ -31,6 +31,8 @@ import {
   GetMyListingsResponse,
   InventorySummaryResponse,
 } from "../types/listings.types.js"
+import { getShopActivity, getOneShopActivity } from "../../../../services/seller-activity/seller-activity.service.js"
+import { NOTICE_DAYS_BEFORE, markRenewed, renewalColumns } from "../../../../services/listing-expiry/listing-expiry.service.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
@@ -960,6 +962,10 @@ export class ListingsV2Controller extends BaseController {
         visibility: row.visibility || "public",
       }))
 
+      // Seller activity for the shops on this page (one lookup).
+      const activity = await getShopActivity(listings.map((l) => l.shop_id), db)
+      for (const l of listings) l.shop_activity = activity.get(l.shop_id)
+
       logger.info("Search completed", {
         total,
         returned: listings.length,
@@ -1509,6 +1515,7 @@ export class ListingsV2Controller extends BaseController {
           rating: shopRating,
           logo_url: shopLogoUrl,
           languages: listing.shop_languages || ["en"],
+          activity: await getOneShopActivity(listing.shop_id, db),
         },
         items,
       }
@@ -1578,6 +1585,7 @@ export class ListingsV2Controller extends BaseController {
     // Set inside the transaction; watchlists are checked once it has committed,
     // because the check reads the listing's visibility and price from the DB.
     let mayTriggerPriceAlerts = false
+    let reactivated = false
 
     try {
       // Use database transaction for atomicity (Requirement 17.11)
@@ -1613,6 +1621,7 @@ export class ListingsV2Controller extends BaseController {
         }
 
         // A new price, or the listing becoming active/public, can satisfy watchlists.
+        reactivated = listing.status === "expired" && requestBody.status === "active"
         mayTriggerPriceAlerts =
           requestBody.base_price !== undefined ||
           (requestBody.variant_prices?.length ?? 0) > 0 ||
@@ -1620,8 +1629,11 @@ export class ListingsV2Controller extends BaseController {
           (requestBody.visibility === "public" && listing.visibility !== "public")
 
         // 3. Update listing metadata (title, description) (Requirement 17.2)
+        // A seller edit also starts a new listing month (as V1's
+        // extend_expiration trigger did); see services/listing-expiry.
         const listingUpdates: any = {
           updated_at: new Date(),
+          ...renewalColumns(trx),
         }
 
         if (requestBody.title !== undefined) {
@@ -1988,6 +2000,7 @@ export class ListingsV2Controller extends BaseController {
       if (mayTriggerPriceAlerts) {
         void checkWatchlistMatches(id)
       }
+      await markRenewed(getKnex(), [id], reactivated)
 
       // 8. Return updated listing with variant breakdown (Requirement 17.9)
       // TODO: Invalidate cache after updates (Requirement 17.12)
@@ -2055,29 +2068,35 @@ export class ListingsV2Controller extends BaseController {
         this.throwForbidden("You do not have permission to refresh this listing")
       }
 
-      // Verify listing is active or inactive (editable)
-      if (listing.status !== "active" && listing.status !== "inactive") {
+      // Active and inactive listings can be refreshed; an expired (paused)
+      // one is reactivated by it (listing expiry, or the admin's wipe).
+      if (!["active", "inactive", "expired"].includes(listing.status)) {
         this.throwValidationError(
           `Cannot refresh listing with status: ${listing.status}`,
           [
             {
               field: "status",
-              message: `Only active or inactive listings can be refreshed`,
+              message: `Only active, inactive or expired listings can be refreshed`,
             },
           ],
         )
       }
 
-      // 2. Enforce cooldown period (Requirement 49.3)
-      // Cooldown period: 24 hours
+      // 2. Enforce cooldown period (Requirement 49.3): one bump per 24 hours.
+      // A renew is always allowed: the listing is paused, or expires within
+      // the notice window (the "Still selling?" one-click link).
       const COOLDOWN_HOURS = 24
       const cooldownMs = COOLDOWN_HOURS * 60 * 60 * 1000
       const now = new Date()
       const lastUpdate = new Date(listing.updated_at)
       const timeSinceLastUpdate = now.getTime() - lastUpdate.getTime()
+      const paused = listing.status === "expired"
+      const expiresSoon =
+        !!listing.expires_at &&
+        new Date(listing.expires_at).getTime() <= now.getTime() + NOTICE_DAYS_BEFORE * 24 * 60 * 60 * 1000
+      const renewal = paused || expiresSoon
 
-      if (timeSinceLastUpdate < cooldownMs) {
-        const nextRefreshAt = new Date(lastUpdate.getTime() + cooldownMs)
+      if (!renewal && timeSinceLastUpdate < cooldownMs) {
         const hoursRemaining = Math.ceil((cooldownMs - timeSinceLastUpdate) / (60 * 60 * 1000))
 
         this.throwValidationError(
@@ -2091,12 +2110,16 @@ export class ListingsV2Controller extends BaseController {
         )
       }
 
-      // 3. Update listing updated_at timestamp (Requirement 49.2)
+      // 3. Bump updated_at (Requirement 49.2) and start a new listing month;
+      // reactivate a paused listing.
       await db("listings")
         .where({ listing_id: id })
         .update({
           updated_at: now,
+          ...renewalColumns(db),
+          ...(paused ? { status: "active" } : {}),
         })
+      if (renewal) await markRenewed(db, [id], paused)
 
       const nextRefreshAt = new Date(now.getTime() + cooldownMs)
 

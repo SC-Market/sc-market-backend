@@ -186,7 +186,7 @@ export async function writeUserDataExport(
     privacy:
       (await knex("account_settings")
         .where(me)
-        .select("discord_order_share", "discord_public")
+        .select("discord_order_share", "discord_public", "hide_online_status")
         .first()) ?? null,
     preferences:
       (await knex("user_preferences")
@@ -636,6 +636,14 @@ export async function writeUserDataExport(
       .where(me)
       .select("last_reminded_at")
       .first()) ?? null,
+  )
+  await out.array(
+    "dm_reminder_conversations",
+    all(
+      knex("dm_reminder_conversations")
+        .where(me)
+        .select("entity_id", "reminded_at"),
+    ),
   )
 
   // ── Organizations and shops ──────────────────────────────────────────────

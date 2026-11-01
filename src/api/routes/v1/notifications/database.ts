@@ -596,6 +596,12 @@ export async function getEntityByType(
       // Identity changes made by an admin (account_identity_changed).
       return identityNoticeEntity(entity_id)
     }
+    case "listing_expiry_notices": {
+      // "Still selling?" (listing_expiring): the shop's listings in the
+      // notice, entity id = the notice batch (services/listing-expiry).
+      const { noticeEntity } = await import("../../../../services/listing-expiry/listing-expiry.service.js")
+      return noticeEntity(entity_id)
+    }
     case "storefront_enquiries": {
       // A new branded storefront enquiry (storefront_enquiry_created), to site admins.
       return enquiryNoticeEntity(entity_id)

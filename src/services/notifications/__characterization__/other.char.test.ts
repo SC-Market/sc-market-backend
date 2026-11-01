@@ -133,7 +133,10 @@ describe("admin_alert (21)", () => {
   })
 })
 
-describe("dm_reminder (82)", () => {
+describe("dm_reminder (82): unread order/offer message reminder", () => {
+  // Tests see every message as post-cutover (the real cutover is the deploy).
+  const run = () => processDmReminders({ cutover: new Date(0) })
+
   async function unreadMessage(name: string, recipient: w.SeededUser, author: w.SeededUser, hoursAgo: number) {
     const order = await w.order(name, { customer: author, assigned: recipient })
     const db = getKnex()
@@ -142,60 +145,167 @@ describe("dm_reminder (82)", () => {
       .returning("notification_object_id")
     await db("notification_change").insert({ notification_object_id: obj.notification_object_id, actor_id: author.user_id })
     await db("notification").insert({ notification_object_id: obj.notification_object_id, notifier_id: recipient.user_id, read: false })
+    return { order, objectId: obj.notification_object_id as number }
+  }
+  const dmSends = (o: w.Observed) =>
+    (o.discord as { method: string; route: string }[]).filter((d) => /\/channels\/.+\/messages$/.test(d.route)).length
+  /** Pretend the last reminder (user and conversations) was `hours` ago. */
+  async function ageReminders(hours: number) {
+    const db = getKnex()
+    await db("dm_reminder_log").update({ last_reminded_at: db.raw(`NOW() - INTERVAL '${hours} hours'`) })
+    await db("dm_reminder_conversations").update({ reminded_at: db.raw(`NOW() - INTERVAL '${hours} hours'`) })
   }
 
-  it("opted-in user with a verified email and a >24 h unread message gets one reminder", async () => {
+  it("unread for 6 h and less than a day old: email (opted in) and Discord DM (default on)", async () => {
     const author = await w.user("author")
-    const optedIn = await w.user("optedin")
-    const notOptedIn = await w.user("quiet")
-    const unverified = await w.user("unverified", { email: "unverified" })
-    await w.emailOptIn(optedIn, ["dm_reminder"])
+    const emailOnly = await w.user("emailonly", { discord: false })
+    const dmUser = await w.user("dmuser", { email: "none" })
+    const unverified = await w.user("unverified", { email: "unverified", discord: false })
+    await w.emailOptIn(emailOnly, ["dm_reminder"])
     await w.emailOptIn(unverified, ["dm_reminder"])
-    await unreadMessage("old", optedIn, author, 30)
-    await unreadMessage("recent", optedIn, author, 2)
-    await unreadMessage("quiet", notOptedIn, author, 30)
-    await unreadMessage("unv", unverified, author, 30)
+    await unreadMessage("due", emailOnly, author, 7)
+    await unreadMessage("dm", dmUser, author, 7)
+    await unreadMessage("recent", dmUser, author, 2) // not unread long enough
+    await unreadMessage("stale", dmUser, author, 30) // older than a day: never backfilled
+    await unreadMessage("unv", unverified, author, 7) // no channel: unverified email, no Discord
 
-    await processDmReminders()
-    const first = await w.observe()
-    expect(w.summary(first)).toMatchInlineSnapshot(`
-      [
-        "in_app  user:optedin order_message (order:old)",
-        "in_app  user:optedin order_message (order:recent)",
-        "in_app  user:quiet order_message (order:quiet)",
-        "in_app  user:unverified order_message (order:unv)",
-        "email   optedin@example.test You have 1 unread message on SC Market",
-      ]
+    const stats = await run()
+    const obs = await w.observe()
+    expect({
+      stats,
+      emails: (obs.email as { to: string[]; subject: string }[]).map((e) => `${e.to.join(",")} ${e.subject}`),
+      dms: dmSends(obs),
+      errors: obs.errors,
+    }).toMatchInlineSnapshot(`
+      {
+        "dms": 1,
+        "emails": [
+          "emailonly@example.test You have unread messages in 1 conversation on SC Market",
+        ],
+        "errors": [],
+        "stats": {
+          "candidates": 2,
+          "capped": 0,
+          "discord_failed": 0,
+          "discord_sent": 1,
+          "email_sent": 1,
+          "errors": 0,
+          "users": 2,
+        },
+      }
     `)
-    expect(first).toMatchSnapshot()
   })
 
-  it("runs every 6 h: the next runs don't re-send; new unread activity a day later does", async () => {
+  it("messages before the cutover never trigger a reminder", async () => {
     const author = await w.user("author")
-    const optedIn = await w.user("optedin")
-    await w.emailOptIn(optedIn, ["dm_reminder"])
-    await unreadMessage("old", optedIn, author, 30)
+    const dmUser = await w.user("dmuser")
+    await unreadMessage("before", dmUser, author, 7)
+    await processDmReminders({ cutover: new Date(Date.now() + 3600_000) })
+    expect(dmSends(await w.observe())).toBe(0)
+  })
 
-    await processDmReminders()
-    await processDmReminders()
-    const afterTwoRuns = (await w.observe()).email.length
-    // A day later, nothing new: still no reminder about the same message.
-    await getKnex()("dm_reminder_log").update({ last_reminded_at: getKnex().raw(`NOW() - INTERVAL '25 hours'`) })
-    await processDmReminders()
-    const afterADay = (await w.observe()).email.length
-    // A new message (now older than 24 h) arrived after that reminder.
-    await getKnex()("dm_reminder_log").update({ last_reminded_at: getKnex().raw(`NOW() - INTERVAL '40 hours'`) })
-    await unreadMessage("newer", optedIn, author, 30)
-    await processDmReminders()
-    const obs = await w.observe()
-    expect({ errors: obs.errors.length, afterTwoRuns, afterADay, total: obs.email.length }).toMatchInlineSnapshot(`
+  it("dedupe: one digest per user per 24 h; a conversation is not reminded again until a new message", async () => {
+    const author = await w.user("author")
+    const dmUser = await w.user("dmuser")
+    const a = await unreadMessage("a", dmUser, author, 7)
+    await unreadMessage("b", dmUser, author, 8)
+
+    await run()
+    await run() // the next run (30 min later) sends nothing
+    const afterTwoRuns = dmSends(await w.observe())
+
+    // A day later, no new message: still nothing.
+    await ageReminders(25)
+    await run()
+    const afterADay = dmSends(await w.observe())
+
+    // A new message in conversation a (7 h ago, after the aged reminder).
+    await getKnex()("notification_object")
+      .where({ notification_object_id: a.objectId })
+      .update({ timestamp: getKnex().raw(`NOW() - INTERVAL '7 hours'`) })
+    await run()
+    const reminded = await getKnex()("dm_reminder_conversations").count("* as n").first()
+    expect({ afterTwoRuns, afterADay, total: dmSends(await w.observe()), conversations: Number(reminded?.n) })
+      .toMatchInlineSnapshot(`
       {
         "afterADay": 1,
         "afterTwoRuns": 1,
-        "errors": 0,
+        "conversations": 2,
         "total": 2,
       }
     `)
+  })
+
+  it("a new message inside the 24 h window waits: at most one reminder per user per day", async () => {
+    const author = await w.user("author")
+    const dmUser = await w.user("dmuser")
+    await unreadMessage("first", dmUser, author, 7)
+    await run()
+    await unreadMessage("second", dmUser, author, 7)
+    await run()
+    expect(dmSends(await w.observe())).toBe(1)
+  })
+
+  it("quiet if the user has read the message", async () => {
+    const author = await w.user("author")
+    const dmUser = await w.user("dmuser")
+    const { objectId } = await unreadMessage("read", dmUser, author, 7)
+    await getKnex()("notification").where({ notification_object_id: objectId }).update({ read: true })
+    const stats = await run()
+    expect({ candidates: stats.candidates, dms: dmSends(await w.observe()) }).toEqual({ candidates: 0, dms: 0 })
+  })
+
+  it("the Discord DM preference and the kill switch turn the DM off", async () => {
+    const author = await w.user("author")
+    const optedOut = await w.user("optedout")
+    await w.channelPref(optedOut, "dm_reminder", "discord", false)
+    await unreadMessage("x", optedOut, author, 7)
+    await run()
+    const afterOptOut = dmSends(await w.observe())
+
+    const other = await w.user("other")
+    await unreadMessage("y", other, author, 7)
+    process.env.DISCORD_DM_DISABLED_EVENTS = "reminder.unread_messages"
+    try {
+      await run()
+    } finally {
+      delete process.env.DISCORD_DM_DISABLED_EVENTS
+    }
+    expect({ afterOptOut, afterKillSwitch: dmSends(await w.observe()) }).toEqual({ afterOptOut: 0, afterKillSwitch: 0 })
+  })
+
+  it("a DM the bot can't deliver (50007) is recorded once and never retried", async () => {
+    const author = await w.user("author")
+    const dmUser = await w.user("dmuser")
+    const { recorder } = await import("../../../test-utils/notif-char/fakes.js")
+    recorder().discordFailures.set("/users/@me/channels", { status: 403, code: 50007 })
+    await unreadMessage("x", dmUser, author, 7)
+    const first = await run()
+    const second = await run()
+    const deliveries = await getKnex()("notification_deliveries")
+      .where({ event_key: "reminder.unread_messages", channel: "discord_dm" })
+      .select("status")
+    const attempts = (await w.observe()).discord.length
+    expect({ first: first.discord_failed, second: second.candidates, attempts, deliveries }).toEqual({
+      first: 1,
+      second: 0,
+      attempts: 1,
+      deliveries: [{ status: "failed" }],
+    })
+  })
+
+  it("per-run cap: the rest wait for the next run", async () => {
+    const author = await w.user("author")
+    const u1 = await w.user("u1")
+    const u2 = await w.user("u2")
+    await unreadMessage("m1", u1, author, 8)
+    await unreadMessage("m2", u2, author, 7)
+    const first = await processDmReminders({ cutover: new Date(0), maxUsers: 1 })
+    const second = await processDmReminders({ cutover: new Date(0), maxUsers: 1 })
+    expect({ first: [first.users, first.capped], second: [second.users, second.capped] }).toEqual({
+      first: [1, 1],
+      second: [1, 0],
+    })
   })
 })
 

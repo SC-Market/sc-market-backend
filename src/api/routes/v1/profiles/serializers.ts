@@ -25,7 +25,6 @@ export async function serializePublicProfile(
       market_order_template: "",
       rsi_confirmed: false,
       languages: [],
-      last_seen: null,
       in_game: false,
     }
   }
@@ -91,7 +90,8 @@ export async function serializePublicProfile(
       code,
       name: getLanguageName(code) || code,
     })),
-    last_seen: user.last_seen,
+    // No last_seen here: buyers only ever see a coarse bucket
+    // (services/seller-activity), and not at all if the user hides it.
     in_game: user.in_game,
   }
 }

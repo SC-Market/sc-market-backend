@@ -1,3 +1,4 @@
+import { parseRsiHandle } from "../../../../clients/rsi/handle.js"
 import {
   canViewTestEntity,
   isTestUser,
@@ -52,7 +53,18 @@ import {
 export const profile_post_auth_link: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
-    const username = req.body.username || ""
+    // A bare handle or any RSI citizen URL form (/citizens/x, /en/citizens/x, ...).
+    const username = parseRsiHandle(req.body.username)
+    if (!username) {
+      res.status(400).json(
+        createErrorResponse({
+          message:
+            "Enter your RSI handle or your RSI profile URL (https://robertsspaceindustries.com/citizens/<handle>)",
+          status: "error",
+        }),
+      )
+      return
+    }
 
     const result = await authorizeProfile(username, user.user_id)
     if (result.success) {

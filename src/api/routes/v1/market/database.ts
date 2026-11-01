@@ -443,16 +443,6 @@ export async function getMarketListingImagesResolved(
 }
 
 /**
- * Get expiring market listings.
- */
-export async function getExpiringMarketListings(): Promise<DBMarketListing[]> {
-  return knex()<DBMarketListing>("market_listings")
-    .where("expiration", "<=", knex().raw("now()"))
-    .andWhere("status", "active")
-    .select()
-}
-
-/**
  * Get a market order by where clause.
  * @throws Error if order not found
  */

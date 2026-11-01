@@ -33,6 +33,7 @@ export type NotificationEventKey =
   | "offer.countered"
   | "offer.message"
   | "market.bid"
+  | "listing.expiring"
   | "org.invite"
   | "org.member_joined"
   | "admin.alert"

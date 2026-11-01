@@ -38,6 +38,8 @@ import {
   type ShopSlugOwner,
 } from "../../../../services/shops/shop-slug.service.js"
 import { getShopMetrics } from "../../../../services/shops/shop-metrics.service.js"
+import { getOneShopActivity } from "../../../../services/seller-activity/seller-activity.service.js"
+import type { SellerActivity } from "../types/seller-activity.types.js"
 import { computeShopBadges } from "../../../../services/shops/shop-badges.service.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { verifyDiscordThreadTarget } from "../../../../services/discord/verify-discord-target.js"
@@ -202,6 +204,8 @@ export interface ShopPublicResponse {
   total_sales?: number
   /** Metrics for reputation/badges (included in detail view) */
   metrics?: ShopMetricsResponse
+  /** Seller activity: coarse last seen, typical reply time, completed orders (detail view) */
+  activity?: SellerActivity
 }
 
 export interface ShopReviewResponse {
@@ -758,6 +762,7 @@ export class ShopsV2Controller extends BaseController {
       listing_count: parseInt(String(listingCount?.count || 0), 10),
       total_sales: metrics.total_completed,
       metrics,
+      activity: await getOneShopActivity(shop.shop_id, db),
     }
   }
 

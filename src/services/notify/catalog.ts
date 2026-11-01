@@ -121,7 +121,13 @@ export const CATALOG = {
   // The admin picks the channels per alert (admin_alerts.channels); the chosen
   // ones ignore opt-outs.
   "admin.alert": event("announcements", "admin_alert", ALL),
-  "reminder.unread_messages": event("reminders", "dm_reminder", ["email"]),
+  // Owner decision (2026-11-01): Discord DM on by default (users with Discord
+  // linked), email still opt-in. Only this reminder DMs about messages; the
+  // order/offer/message events themselves stay DM-locked (DISCORD_DM_LOCKED).
+  "reminder.unread_messages": event("reminders", "dm_reminder", ["email", "discord_dm"], { discord_dm: true }),
+  // "Still selling?" 3 days before a listing expires (services/listing-expiry),
+  // to the shop's owner or the org members who manage its market.
+  "listing.expiring": event("market", "listing_expiring", ["in_app", "discord_dm"], { discord_dm: true }),
   "watchlist.price_alert": event("watchlist", "price_alert", ALL, { discord_dm: true }),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
   "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
@@ -157,6 +163,12 @@ const DISCORD_DM_LOCKED: EventKey[] = [
   "offer.received",
 ]
 for (const key of DISCORD_DM_LOCKED) (CATALOG[key] as EventDefinition).discordDmLocked = true
+
+// Listing expiry is off until the owner turns it on (services/listing-expiry,
+// LISTING_EXPIRY_ENABLED): keep its notice out of the settings until then.
+if (process.env.LISTING_EXPIRY_ENABLED !== "true") {
+  ;(CATALOG["listing.expiring"] as EventDefinition).shadowOnly = true
+}
 
 export function isMandatory(def: EventDefinition): boolean {
   return CATEGORIES[def.category].mandatory

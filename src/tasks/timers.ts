@@ -2,10 +2,7 @@ import { database, getKnex } from "../clients/database/knex-db.js"
 import * as profileDb from "../api/routes/v1/profiles/database.js"
 import * as marketDb from "../api/routes/v1/market/database.js"
 import { createOffer } from "../api/routes/v1/orders/helpers.js"
-import {
-  DBAuctionDetails,
-  DBMarketListing,
-} from "../clients/database/db-models.js"
+import { DBAuctionDetails } from "../clients/database/db-models.js"
 import { pushNotificationService } from "../services/push-notifications/push-notification.service.js"
 import fs from "node:fs"
 import path from "node:path"
@@ -67,21 +64,18 @@ export async function process_auctions() {
   )
 }
 
-export async function process_expiring_market_listing(
-  listing: DBMarketListing,
-) {
-  logger.info(`Expiring listing ${listing.listing_id}`)
-  await marketDb.updateMarketListing(listing.listing_id, { status: "inactive" })
-}
-
+/**
+ * Listing expiry on Market V2 (services/listing-expiry): assign missing
+ * expiry dates, send "Still selling?" notices, pause expired listings. One
+ * set-based UPDATE per step, driven by the database, so nothing is lost on a
+ * restart (this used to setTimeout per row of the V1 market_listings table,
+ * which the site no longer reads).
+ */
 export async function process_expiring_market_listings() {
-  const listings = await marketDb.getExpiringMarketListings()
-  listings.forEach((a) =>
-    setTimeout(
-      () => process_expiring_market_listing(a),
-      a.expiration.getTime() - new Date().getTime(),
-    ),
+  const { processListingExpiry } = await import(
+    "../services/listing-expiry/listing-expiry.service.js"
   )
+  await processListingExpiry()
 }
 
 export async function rebuild_search_view() {

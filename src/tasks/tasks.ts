@@ -13,7 +13,11 @@ import {
   process_account_deletions,
   purge_anonymous_listing_views,
 } from "./timers.js"
-import { processDmReminders } from "../services/dm-reminders/dm-reminder.service.js"
+import {
+  processDmReminders,
+  logReminderVolumeEstimate,
+} from "../services/dm-reminders/dm-reminder.service.js"
+import { refresh_shop_activity_stats } from "../services/seller-activity/seller-activity.service.js"
 import { pruneDeliveries } from "../services/notify/deliveries.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { snapshot_game_item_prices } from "../services/price-oracle/price-oracle.service.js"
@@ -129,11 +133,21 @@ export function start_tasks() {
     setInterval(() => safe(process_account_deletions, "process_account_deletions"), 60 * 60 * 1000)
   }, STARTUP_DELAY + 70_000)
 
-  // Send DM reminder emails for unread messages older than 24h (runs every 6 hours)
+  // Unread order/offer message reminders (email + Discord DM), every 30
+  // minutes: a message unread for 6 h gets its reminder within 6.5 h. The
+  // daily volume estimate is logged for the owner.
   setTimeout(() => {
-    safe(processDmReminders, "processDmReminders")
-    setInterval(() => safe(processDmReminders, "processDmReminders"), 6 * 60 * 60 * 1000)
+    safe(() => processDmReminders(), "processDmReminders")
+    setInterval(() => safe(() => processDmReminders(), "processDmReminders"), 30 * 60 * 1000)
+    safe(logReminderVolumeEstimate, "logReminderVolumeEstimate")
+    setInterval(() => safe(logReminderVolumeEstimate, "logReminderVolumeEstimate"), 24 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 80_000)
+
+  // Seller activity (last seen, reply time) for listings and shops, every 30 minutes.
+  setTimeout(() => {
+    safe(refresh_shop_activity_stats, "refresh_shop_activity_stats")
+    setInterval(() => safe(refresh_shop_activity_stats, "refresh_shop_activity_stats"), 30 * 60 * 1000)
+  }, STARTUP_DELAY + 85_000)
 
   // Drop notification delivery records past their retention window, daily
   setTimeout(() => {

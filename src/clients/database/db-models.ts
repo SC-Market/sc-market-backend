@@ -47,6 +47,8 @@ export interface DBAccountSettings {
   user_id: string
   discord_order_share: boolean
   discord_public: boolean
+  /** Buyers never see when this user was last active (services/seller-activity). */
+  hide_online_status: boolean
 }
 
 export interface MinimalUser {
@@ -56,7 +58,6 @@ export interface MinimalUser {
   rating: Rating
   badges?: BadgeData | null
   // discord_profile?: any
-  last_seen?: Date
   in_game?: boolean
 }
 
@@ -258,7 +259,6 @@ export interface MinimalContractor {
   avatar: string
   rating: Rating
   badges?: BadgeData | null
-  last_seen?: Date
   members_online?: number
 }
 

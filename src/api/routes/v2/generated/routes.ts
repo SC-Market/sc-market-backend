@@ -102,6 +102,8 @@ import { AdminController } from './../admin/AdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAlertsV2Controller } from './../admin/AdminAlertsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AccountPrivacyV2Controller } from './../accounts/AccountPrivacyV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AccountDeletionV2Controller } from './../accounts/AccountDeletionV2Controller.js';
 import { expressAuthentication } from './../middleware/tsoa-auth.js';
 // @ts-ignore - no great way to install types from subpackage
@@ -500,6 +502,27 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LastSeenBucket": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["today"]},{"dataType":"enum","enums":["this_week"]},{"dataType":"enum","enums":["this_month"]},{"dataType":"enum","enums":["over_a_month"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReplyTimeBucket": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["within_hour"]},{"dataType":"enum","enums":["within_hours"]},{"dataType":"enum","enums":["within_day"]},{"dataType":"enum","enums":["within_days"]},{"dataType":"enum","enums":["slow"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SellerActivity": {
+        "dataType": "refObject",
+        "properties": {
+            "last_seen": {"dataType":"union","subSchemas":[{"ref":"LastSeenBucket"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reply_time": {"dataType":"union","subSchemas":[{"ref":"ReplyTimeBucket"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reply_sample_size": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "completed_orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ShopPublicResponse": {
         "dataType": "refObject",
         "properties": {
@@ -522,6 +545,7 @@ const models: TsoaRoute.Models = {
             "service_count": {"dataType":"double"},
             "total_sales": {"dataType":"double"},
             "metrics": {"ref":"ShopMetricsResponse"},
+            "activity": {"ref":"SellerActivity"},
         },
         "additionalProperties": false,
     },
@@ -1431,7 +1455,6 @@ const models: TsoaRoute.Models = {
             "display_name": {"dataType":"string","required":true},
             "rating": {"ref":"Rating","required":true},
             "badges": {"dataType":"union","subSchemas":[{"ref":"BadgeData"},{"dataType":"enum","enums":[null]}]},
-            "last_seen": {"dataType":"datetime"},
             "in_game": {"dataType":"boolean"},
         },
         "additionalProperties": false,
@@ -1445,7 +1468,6 @@ const models: TsoaRoute.Models = {
             "avatar": {"dataType":"string","required":true},
             "rating": {"ref":"Rating","required":true},
             "badges": {"dataType":"union","subSchemas":[{"ref":"BadgeData"},{"dataType":"enum","enums":[null]}]},
-            "last_seen": {"dataType":"datetime"},
             "members_online": {"dataType":"double"},
         },
         "additionalProperties": false,
@@ -1603,7 +1625,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationEventKey": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationPreferenceCell": {
@@ -1872,6 +1894,7 @@ const models: TsoaRoute.Models = {
             "shop_rating_count": {"dataType":"double","required":true},
             "shop_badge_ids": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "shop_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "shop_activity": {"ref":"SellerActivity"},
             "price_min": {"dataType":"double","required":true},
             "price_max": {"dataType":"double","required":true},
             "quantity_available": {"dataType":"double","required":true},
@@ -1995,6 +2018,7 @@ const models: TsoaRoute.Models = {
             "rating": {"dataType":"double","required":true},
             "logo_url": {"dataType":"string"},
             "languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "activity": {"ref":"SellerActivity"},
         },
         "additionalProperties": false,
     },
@@ -5282,6 +5306,22 @@ const models: TsoaRoute.Models = {
     "AdminAlertTargetType": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["all_users"]},{"dataType":"enum","enums":["org_members"]},{"dataType":"enum","enums":["org_owners"]},{"dataType":"enum","enums":["admins_only"]},{"dataType":"enum","enums":["specific_org"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AccountPrivacySettings": {
+        "dataType": "refObject",
+        "properties": {
+            "hide_online_status": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateAccountPrivacyRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "hide_online_status": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RequestDeletionResponse": {
@@ -12438,6 +12478,69 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'previewAdminAlertAudience',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAccountPrivacyV2Controller_getAccountPrivacy: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/accounts/privacy',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AccountPrivacyV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AccountPrivacyV2Controller.prototype.getAccountPrivacy)),
+
+            async function AccountPrivacyV2Controller_getAccountPrivacy(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAccountPrivacyV2Controller_getAccountPrivacy, request, response });
+
+                const controller = new AccountPrivacyV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getAccountPrivacy',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAccountPrivacyV2Controller_updateAccountPrivacy: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateAccountPrivacyRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.put('/accounts/privacy',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AccountPrivacyV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AccountPrivacyV2Controller.prototype.updateAccountPrivacy)),
+
+            async function AccountPrivacyV2Controller_updateAccountPrivacy(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAccountPrivacyV2Controller_updateAccountPrivacy, request, response });
+
+                const controller = new AccountPrivacyV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateAccountPrivacy',
                 controller,
                 response,
                 next,

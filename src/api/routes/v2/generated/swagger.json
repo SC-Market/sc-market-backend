@@ -1137,6 +1137,68 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"LastSeenBucket": {
+				"type": "string",
+				"enum": [
+					"today",
+					"this_week",
+					"this_month",
+					"over_a_month"
+				],
+				"description": "When the seller was last active on SC Market, coarsely."
+			},
+			"ReplyTimeBucket": {
+				"type": "string",
+				"enum": [
+					"within_hour",
+					"within_hours",
+					"within_day",
+					"within_days",
+					"slow"
+				],
+				"description": "Typical (median) time to the seller's first reply in order and offer chats,\nlast 90 days: within an hour, within 6 hours, within a day, within 3 days,\nor slower (including buyers left unanswered)."
+			},
+			"SellerActivity": {
+				"properties": {
+					"last_seen": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/LastSeenBucket"
+							}
+						],
+						"nullable": true,
+						"description": "Coarse last-seen bucket; null if the seller hides it or has no activity yet."
+					},
+					"reply_time": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ReplyTimeBucket"
+							}
+						],
+						"nullable": true,
+						"description": "Typical reply time in order/offer chats; null below the minimum sample size."
+					},
+					"reply_sample_size": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Number of chats the reply time is based on; null when reply_time is null."
+					},
+					"completed_orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Orders this shop has completed."
+					}
+				},
+				"required": [
+					"last_seen",
+					"reply_time",
+					"reply_sample_size",
+					"completed_orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ShopPublicResponse": {
 				"properties": {
 					"shop_id": {
@@ -1218,6 +1280,10 @@
 					"metrics": {
 						"$ref": "#/components/schemas/ShopMetricsResponse",
 						"description": "Metrics for reputation/badges (included in detail view)"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/SellerActivity",
+						"description": "Seller activity: coarse last seen, typical reply time, completed orders (detail view)"
 					}
 				},
 				"required": [
@@ -4021,10 +4087,6 @@
 						],
 						"nullable": true
 					},
-					"last_seen": {
-						"type": "string",
-						"format": "date-time"
-					},
 					"in_game": {
 						"type": "boolean"
 					}
@@ -4059,10 +4121,6 @@
 							}
 						],
 						"nullable": true
-					},
-					"last_seen": {
-						"type": "string",
-						"format": "date-time"
 					},
 					"members_online": {
 						"type": "number",
@@ -4568,6 +4626,7 @@
 					"offer.countered",
 					"offer.message",
 					"market.bid",
+					"listing.expiring",
 					"org.invite",
 					"org.member_joined",
 					"admin.alert",
@@ -5358,6 +5417,10 @@
 						"type": "array",
 						"description": "Shop supported languages (ISO 639-1 codes)"
 					},
+					"shop_activity": {
+						"$ref": "#/components/schemas/SellerActivity",
+						"description": "Seller activity: coarse last seen, typical reply time, completed orders"
+					},
 					"price_min": {
 						"type": "number",
 						"format": "double",
@@ -5857,6 +5920,10 @@
 						},
 						"type": "array",
 						"description": "Shop supported languages (ISO 639-1 codes)"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/SellerActivity",
+						"description": "Seller activity: coarse last seen, typical reply time, completed orders"
 					}
 				},
 				"required": [
@@ -16174,6 +16241,31 @@
 					"admins_only",
 					"specific_org"
 				]
+			},
+			"AccountPrivacySettings": {
+				"properties": {
+					"hide_online_status": {
+						"type": "boolean",
+						"description": "Hide my online status: buyers never see when you were last active (on\nyour shops' listings, cards and shop page, or on an org's shop you help\nrun)."
+					}
+				},
+				"required": [
+					"hide_online_status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateAccountPrivacyRequest": {
+				"properties": {
+					"hide_online_status": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"hide_online_status"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"RequestDeletionResponse": {
 				"properties": {
@@ -27218,6 +27310,68 @@
 						}
 					}
 				]
+			}
+		},
+		"/accounts/privacy": {
+			"get": {
+				"operationId": "GetAccountPrivacy",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AccountPrivacySettings"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Get my privacy settings",
+				"tags": [
+					"Account Privacy V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "UpdateAccountPrivacy",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AccountPrivacySettings"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Update my privacy settings",
+				"tags": [
+					"Account Privacy V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAccountPrivacyRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/accounts/delete": {

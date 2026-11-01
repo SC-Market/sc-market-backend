@@ -1,3 +1,5 @@
+import type { SellerActivity } from "./seller-activity.types.js";
+
 /**
  * TypeScript interfaces for Market V2 Listings API
  * 
@@ -222,6 +224,9 @@ export interface ListingSearchResult {
   /** Shop supported languages (ISO 639-1 codes) */
   shop_languages: string[];
 
+  /** Seller activity: coarse last seen, typical reply time, completed orders */
+  shop_activity?: SellerActivity;
+
   /** Minimum price across all variants */
   price_min: number;
 
@@ -422,6 +427,9 @@ export interface SellerInfo {
 
   /** Shop supported languages (ISO 639-1 codes) */
   languages: string[];
+
+  /** Seller activity: coarse last seen, typical reply time, completed orders */
+  activity?: SellerActivity;
 }
 
 /**
