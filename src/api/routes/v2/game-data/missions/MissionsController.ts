@@ -29,11 +29,27 @@ import {
   HaulingOrder,
   EntitySpawn,
   UserMissionRating,
+  MissionHubKind,
+  MissionHubsResponse,
+  MissionHubDetailResponse,
+  MissionHubLinks,
 } from "./missions.types.js"
 import logger from "../../../../../logger/logger.js"
 import type { Knex } from "knex"
 import { clampPagination } from "../../util/pagination.js"
 import { formatShortSlug } from "../../util/short-slug.js"
+import { missionListQuery, toMissionSearchResult } from "./mission-list.js"
+import {
+  activeLiveVersionId,
+  findHub,
+  hubColumnSql,
+  hubSummary,
+  loadHubIndex,
+  loadHubRows,
+  buildHubIndex,
+  missionHubLinks,
+  relatedHubs,
+} from "./mission-hubs.js"
 import {
   parseStoredRewards,
   resolveItemRewards,
@@ -106,38 +122,6 @@ interface MissionRow {
   is_verified: boolean | null
   created_at: Date
   updated_at: Date
-}
-
-/** Row shape returned by the mission search query */
-interface MissionSearchRow {
-  mission_id: string
-  mission_code: string
-  mission_name: string
-  category: string
-  career_type: string | null
-  legal_status: Mission["legal_status"] | null
-  difficulty_level: number | null
-  star_system: string | null
-  planet_moon: string | null
-  faction: string | null
-  mission_giver_org: string | null
-  credit_reward_min: number | null
-  credit_reward_max: number | null
-  community_difficulty_avg: string | null
-  community_satisfaction_avg: string | null
-  is_chain_starter: boolean | null
-  is_chain_mission: boolean | null
-  is_shareable: boolean | null
-  is_unique_mission: boolean | null
-  is_illegal: boolean | null
-  reputation_reward: number | null
-  reward_scope: string | null
-  reputation_reward_faction: string | null
-  associated_event: string | null
-  blueprint_reward_count: number
-  blueprint_reward_names: string[] | null
-  ship_encounter_count: number
-  hauling_orders: HaulingOrder[] | null
 }
 
 /** Row shape returned by the mission blueprint reward pool query */
@@ -360,60 +344,7 @@ export class MissionsController extends BaseController {
       // ========================================================================
       // Part 2: Build mission search query with filters
       // ========================================================================
-      let missionsQuery = knex("missions as m")
-        .leftJoin(
-          knex("mission_blueprint_rewards as mbr")
-            .select("mission_id")
-            .count("* as blueprint_count")
-            .groupBy("mission_id")
-            .as("reward_counts"),
-          "m.mission_id",
-          "reward_counts.mission_id",
-        )
-        .leftJoin(
-          knex("mission_ship_encounters as mse")
-            .select("mission_id")
-            .select(knex.raw("SUM((SELECT SUM((w->>'shipCount')::int) FROM jsonb_array_elements(mse.waves::jsonb) w)) as total_ships"))
-            .groupBy("mission_id")
-            .as("ship_counts"),
-          "m.mission_id",
-          "ship_counts.mission_id",
-        )
-        .select<MissionSearchRow[]>(
-          "m.mission_id",
-          "m.mission_code",
-          "m.mission_name",
-          "m.category",
-          "m.career_type",
-          "m.legal_status",
-          "m.difficulty_level",
-          "m.star_system",
-          "m.planet_moon",
-          "m.faction",
-          "m.mission_giver_org",
-          "m.credit_reward_min",
-          "m.credit_reward_max",
-          "m.community_difficulty_avg",
-          "m.community_satisfaction_avg",
-          "m.is_chain_starter",
-          "m.is_chain_mission",
-          "m.is_shareable",
-          "m.is_unique_mission",
-          "m.is_illegal",
-          "m.reputation_reward",
-          "m.reward_scope",
-          "m.associated_event",
-          knex.raw("COALESCE(reward_counts.blueprint_count, 0)::integer as blueprint_reward_count"),
-          knex.raw(`(
-            SELECT json_agg(gi.name ORDER BY gi.name)
-            FROM mission_blueprint_rewards mbr2
-            JOIN blueprints b2 ON mbr2.blueprint_id = b2.blueprint_id
-            JOIN game_items gi ON b2.output_game_item_id = gi.id
-            WHERE mbr2.mission_id = m.mission_id
-          ) as blueprint_reward_names`),
-          knex.raw("COALESCE(ship_counts.total_ships, 0)::integer as ship_encounter_count"),
-          knex.raw(`(SELECT json_agg(json_build_object('resource_name', mho.resource_name, 'min_scu', mho.min_scu, 'max_scu', mho.max_scu)) FROM mission_hauling_orders mho WHERE mho.mission_id = m.mission_id) as hauling_orders`),
-        )
+      let missionsQuery = missionListQuery(knex)
         .where("m.version_id", effectiveVersionId)
 
       // Apply text search filter (Requirement 1.5: partial name matching)
@@ -552,7 +483,7 @@ export class MissionsController extends BaseController {
       // ========================================================================
       // Part 3: Get total count for pagination
       // ========================================================================
-      const countQuery = missionsQuery.clone().clearSelect().clearOrder().count("* as count")
+      const countQuery = missionsQuery.clone().clearSelect().clearOrder().count<Array<{ count: string | number }>>("* as count")
       const [{ count: totalCount }] = await countQuery
       const total = parseInt(String(totalCount), 10)
 
@@ -576,40 +507,7 @@ export class MissionsController extends BaseController {
       })
 
       // Transform results
-      const missions: MissionSearchResult[] = missionsResults.map((row) => ({
-        mission_id: row.mission_id,
-        mission_code: row.mission_code,
-        mission_name: row.mission_name,
-        category: row.category,
-        career_type: row.career_type || undefined,
-        legal_status: row.legal_status || undefined,
-        difficulty_level: row.difficulty_level || undefined,
-        star_system: row.star_system || undefined,
-        planet_moon: row.planet_moon || undefined,
-        faction: row.faction || undefined,
-        credit_reward_min: row.credit_reward_min || undefined,
-        credit_reward_max: row.credit_reward_max || undefined,
-        blueprint_reward_count: row.blueprint_reward_count || 0,
-        blueprint_reward_names: row.blueprint_reward_names || undefined,
-        community_difficulty_avg: row.community_difficulty_avg
-          ? parseFloat(row.community_difficulty_avg)
-          : undefined,
-        community_satisfaction_avg: row.community_satisfaction_avg
-          ? parseFloat(row.community_satisfaction_avg)
-          : undefined,
-        is_chain_starter: row.is_chain_starter || false,
-        is_chain_mission: row.is_chain_mission || false,
-        is_shareable: row.is_shareable || false,
-        is_unique_mission: row.is_unique_mission || false,
-        is_illegal: row.is_illegal ?? undefined,
-        reputation_reward: row.reputation_reward ?? undefined,
-        reward_scope: row.reward_scope || undefined,
-        reputation_reward_faction: row.reputation_reward_faction || undefined,
-        mission_giver_org: row.mission_giver_org || undefined,
-        associated_event: row.associated_event || undefined,
-        ship_encounter_count: row.ship_encounter_count || 0,
-        hauling_orders: row.hauling_orders || undefined,
-      }))
+      const missions: MissionSearchResult[] = missionsResults.map(toMissionSearchResult)
 
       return {
         missions,
@@ -808,6 +706,113 @@ export class MissionsController extends BaseController {
         event_name: r.event_name,
         mission_count: parseInt(String(r.mission_count), 10) || 0,
       })),
+    }
+  }
+
+  /**
+   * Every mission hub of the active LIVE version: mission givers, factions
+   * (whose reputation the missions pay), mission types and star systems,
+   * each with its slug and mission count, most missions first. A value
+   * needs at least two missions to be a hub; game-file placeholders are
+   * never one.
+   *
+   * @summary List mission hubs
+   */
+  @Get("hubs")
+  public async getMissionHubs(): Promise<MissionHubsResponse> {
+    const knex = getKnex()
+    const versionId = await activeLiveVersionId(knex)
+    if (!versionId) this.throwNotFound("Active LIVE game version", "LIVE")
+    const rows = await loadHubRows(knex, versionId)
+    const index = buildHubIndex(rows)
+    return {
+      version_id: versionId,
+      total_missions: rows.reduce((sum, row) => sum + row.n, 0),
+      givers: index.givers.map(hubSummary),
+      factions: index.factions.map(hubSummary),
+      types: index.types.map(hubSummary),
+      systems: index.systems.map(hubSummary),
+    }
+  }
+
+  /**
+   * One mission hub of the active LIVE version: its mission count, reward
+   * range, legal/illegal split and blueprint missions, the related hubs
+   * among its missions (a giver's systems, types and factions, and so on),
+   * and a page of its missions by name.
+   *
+   * @summary Get a mission hub
+   * @param kind givers, factions, types or systems
+   * @param slug The hub's slug (from GET /game-data/missions/hubs)
+   * @param page Page number (default: 1)
+   * @param page_size Missions per page (default: 100, max: 100)
+   */
+  @Get("hubs/{kind}/{slug}")
+  public async getMissionHub(
+    @Path() kind: MissionHubKind,
+    @Path() slug: string,
+    @Query() page: number = 1,
+    @Query() page_size: number = 100,
+  ): Promise<MissionHubDetailResponse> {
+    const knex = getKnex()
+    const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, {
+      defaultPageSize: 100,
+      maxPageSize: 100,
+    })
+    const versionId = await activeLiveVersionId(knex)
+    if (!versionId) this.throwNotFound("Active LIVE game version", "LIVE")
+    const rows = await loadHubRows(knex, versionId)
+    const index = buildHubIndex(rows)
+    const hub = findHub(index, kind, slug)
+    if (!hub) this.throwNotFound("Mission hub", `${kind}/${slug}`)
+
+    const inHub = (query: Knex.QueryBuilder) =>
+      query.where("m.version_id", versionId).whereRaw(`${hubColumnSql(kind)} = ANY(?)`, [hub.values])
+
+    const illegal = "(m.legal_status IS NOT DISTINCT FROM 'ILLEGAL' OR m.is_illegal IS TRUE)"
+    const [stats] = await inHub(knex("missions as m")).select<
+      Array<{
+        reward_min: string | null
+        reward_max: string | null
+        illegal_count: number
+        legal_count: number
+        blueprint_mission_count: number
+      }>
+    >(
+      knex.raw("min(m.credit_reward_min) FILTER (WHERE m.credit_reward_min > 0) as reward_min"),
+      knex.raw("max(COALESCE(m.credit_reward_max, m.credit_reward_min)) FILTER (WHERE COALESCE(m.credit_reward_max, m.credit_reward_min) > 0) as reward_max"),
+      knex.raw(`count(*) FILTER (WHERE ${illegal})::integer as illegal_count`),
+      knex.raw(
+        `count(*) FILTER (WHERE NOT ${illegal} AND (m.legal_status IS NOT DISTINCT FROM 'LEGAL' OR m.is_lawful IS TRUE OR m.is_illegal IS FALSE))::integer as legal_count`,
+      ),
+      knex.raw(
+        "count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mission_blueprint_rewards mbr WHERE mbr.mission_id = m.mission_id))::integer as blueprint_mission_count",
+      ),
+    )
+
+    const missionRows = await inHub(missionListQuery(knex))
+      .orderBy("m.mission_name", "asc")
+      .orderBy("m.mission_code", "asc")
+      .limit(validatedPageSize)
+      .offset((validatedPage - 1) * validatedPageSize)
+
+    const related = relatedHubs(rows, index, kind, hub.slug)
+    const number = (value: string | null) => (value === null ? undefined : Number(value))
+    return {
+      kind,
+      slug: hub.slug,
+      name: hub.name,
+      version_id: versionId,
+      mission_count: hub.mission_count,
+      reward_min: number(stats.reward_min),
+      reward_max: number(stats.reward_max),
+      legal_count: stats.legal_count,
+      illegal_count: stats.illegal_count,
+      blueprint_mission_count: stats.blueprint_mission_count,
+      ...related,
+      missions: missionRows.map(toMissionSearchResult),
+      page: validatedPage,
+      page_size: validatedPageSize,
     }
   }
 
@@ -1153,6 +1158,7 @@ export class MissionsController extends BaseController {
         entity_spawns: entity_spawns.length ? entity_spawns : undefined,
         user_completed,
         user_rating,
+        hubs: await this.missionHubs(knex, missionRow),
       }
     } catch (error) {
       logger.error("Failed to fetch mission detail", {
@@ -1589,6 +1595,24 @@ export class MissionsController extends BaseController {
   /**
    * Helper method to transform database row to Mission type
    */
+  /** The hubs a mission is in; none unless it is a mission of the active LIVE version. */
+  private async missionHubs(knex: Knex, row: MissionRow): Promise<MissionHubLinks | undefined> {
+    const liveVersionId = await activeLiveVersionId(knex)
+    if (!liveVersionId || row.version_id !== liveVersionId) return undefined
+    const index = await loadHubIndex(knex, liveVersionId)
+    const [values] = await knex("missions as m")
+      .where("m.mission_id", row.mission_id)
+      .select<Array<{ giver: string | null; faction: string | null; type: string | null; system: string | null }>>(
+        knex.raw(`${hubColumnSql("givers")} as giver`),
+        knex.raw(`${hubColumnSql("factions")} as faction`),
+        knex.raw(`${hubColumnSql("types")} as type`),
+        knex.raw(`${hubColumnSql("systems")} as system`),
+      )
+    if (!values) return undefined
+    const links = missionHubLinks(index, values)
+    return Object.values(links).some(Boolean) ? links : undefined
+  }
+
   private transformMissionRow(row: MissionRow): Mission {
     return {
       mission_id: row.mission_id,

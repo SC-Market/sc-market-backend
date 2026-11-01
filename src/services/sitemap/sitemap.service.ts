@@ -16,6 +16,13 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
 import { fetchContentSitemapPages } from "./content-manifest.js"
+import {
+  activeLiveVersion,
+  buildHubIndex,
+  loadHubRows,
+  MISSION_HUB_KINDS,
+  missionHubPath,
+} from "../../api/routes/v2/game-data/missions/mission-hubs.js"
 
 const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js") as {
@@ -213,6 +220,30 @@ export async function userSitemapPages(db: Knex): Promise<SitemapItemLoose[]> {
   }))
 }
 
+/**
+ * The mission hubs (/missions/givers, /missions/givers/<slug>, … for
+ * factions, types and systems) of the active LIVE version, dated by its last
+ * game-data import. Same hubs as GET /api/v2/game-data/missions/hubs.
+ */
+export async function missionHubSitemapPages(db: Knex): Promise<SitemapItemLoose[]> {
+  const version = await activeLiveVersion(db)
+  if (!version) return []
+  const index = buildHubIndex(await loadHubRows(db, version.version_id))
+  const updated = lastmod(version.last_data_update)
+  return MISSION_HUB_KINDS.flatMap((kind): SitemapItemLoose[] => {
+    if (index[kind].length === 0) return []
+    return [
+      { url: `/missions/${kind}`, changefreq: EnumChangefreq.WEEKLY, priority: 0.7, lastmod: updated },
+      ...index[kind].map((hub) => ({
+        url: missionHubPath(kind, hub.slug),
+        changefreq: EnumChangefreq.WEEKLY,
+        priority: 0.7,
+        lastmod: updated,
+      })),
+    ]
+  })
+}
+
 export async function collectSitemapSections(): Promise<SitemapSections> {
   const db = getKnex()
   const sections: SitemapSection[] = []
@@ -388,6 +419,9 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   }
     return wikiPages
   }, { expectRows: true })
+
+  // ── Mission hubs ── (by giver, faction, type and star system)
+  await collectSection(sections, "missions-hubs", () => missionHubSitemapPages(db), { expectRows: true })
 
   // ── Users (last — lowest priority) ──
   await collectSection(sections, "users", () => userSitemapPages(db), { expectRows: true })

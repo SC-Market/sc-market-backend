@@ -89,6 +89,7 @@ import {
   getSitemapCache,
   clearSitemapCache,
   marketSitemapPages,
+  missionHubSitemapPages,
   userSitemapPages,
   SITEMAP_DEGRADED_TTL_MS,
   SITEMAP_TTL_MS,
@@ -391,5 +392,41 @@ describe("sitemap hygiene", () => {
     expect(sql).toContain("uls.shop_owner_user_id = a.user_id")
     expect(sql).toContain("_ts.shop_id = uls.shop_id")
     expect(sql).toContain("order_reviews")
+  })
+})
+
+describe("missions-hubs section", () => {
+  it("lists each hub index and hub of the active LIVE version, dated by its last import", async () => {
+    const { db, queries } = sqlRecordingKnex({
+      game_versions: [[{ version_id: "live-1", last_data_update: new Date("2026-10-24T00:00:00Z") }]],
+      missions: [[
+        { giver: "Headhunters", faction: "Headhunters", type: "Mercenary", system: "Pyro", n: 12 },
+        { giver: "~mission(Contractor)", faction: null, type: "Bounty Hunter", system: "Stanton", n: 3 },
+        { giver: "Gloria Theolone", faction: null, type: "Delivery", system: "Terra", n: 1 },
+      ]],
+    })
+    const pages = await missionHubSitemapPages(db)
+    expect(pages.map((p) => p.url)).toEqual([
+      "/missions/givers",
+      "/missions/givers/headhunters",
+      "/missions/factions",
+      "/missions/factions/headhunters",
+      "/missions/types",
+      "/missions/types/mercenary",
+      "/missions/types/bounty-hunter",
+      "/missions/systems",
+      "/missions/systems/pyro",
+      "/missions/systems/stanton",
+    ])
+    expect(new Set(pages.map((p) => p.lastmod))).toEqual(new Set(["2026-10-24T00:00:00.000Z"]))
+    const versionSql = queries.find((q) => q.table === "game_versions")!.sql
+    expect(versionSql).toContain(`"version_type" = 'LIVE'`)
+    expect(versionSql).toContain(`"is_active" = true`)
+    expect(queries.find((q) => q.table === "missions")!.sql).toContain(`"m"."version_id" = 'live-1'`)
+  })
+
+  it("is empty without an active LIVE version", async () => {
+    const { db } = sqlRecordingKnex({})
+    expect(await missionHubSitemapPages(db)).toEqual([])
   })
 })

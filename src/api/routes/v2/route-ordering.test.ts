@@ -61,6 +61,7 @@ describe("v2 route ordering", () => {
       "/game-data/missions/:mission_id",
     ],
     ["/game-data/missions/events", "/game-data/missions/:mission_id"],
+    ["/game-data/missions/hubs", "/game-data/missions/:mission_id"],
     ["/game-data/blueprints/categories", "/game-data/blueprints/:blueprint_id"],
     ["/game-data/blueprints/inventory", "/game-data/blueprints/:blueprint_id"],
     ["/offers/search", "/offers/:sessionId"],

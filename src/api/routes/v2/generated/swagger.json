@@ -9018,6 +9018,10 @@
 						"type": "string",
 						"description": "Reputation scope (e.g., headhunter, salvage)"
 					},
+					"reputation_reward_faction": {
+						"type": "string",
+						"description": "Faction whose reputation the mission pays"
+					},
 					"mission_giver_org": {
 						"type": "string",
 						"description": "Mission giver organization"
@@ -9442,6 +9446,194 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MissionHubSummary": {
+				"description": "One hub: a giver, faction, type or star system with its missions.",
+				"properties": {
+					"slug": {
+						"type": "string",
+						"description": "URL slug (\"headhunters\", \"bounty-hunter\")"
+					},
+					"name": {
+						"type": "string",
+						"description": "Display name (\"Headhunters\", \"Bounty Hunter\")"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions in the hub (in a related-hub list: missions shared with the hub being viewed)"
+					}
+				},
+				"required": [
+					"slug",
+					"name",
+					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubsResponse": {
+				"description": "Every mission hub of the active LIVE version, most missions first.",
+				"properties": {
+					"version_id": {
+						"type": "string"
+					},
+					"total_missions": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions in the version"
+					},
+					"givers": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					},
+					"factions": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					},
+					"types": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					},
+					"systems": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"version_id",
+					"total_missions",
+					"givers",
+					"factions",
+					"types",
+					"systems"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubKind": {
+				"type": "string",
+				"enum": [
+					"givers",
+					"factions",
+					"types",
+					"systems"
+				],
+				"description": "How missions are grouped into hubs: by mission giver, by the faction whose\nreputation they pay, by mission type, by star system."
+			},
+			"MissionHubDetailResponse": {
+				"description": "One hub: what its missions have in common, related hubs, and a page of its missions.",
+				"properties": {
+					"kind": {
+						"$ref": "#/components/schemas/MissionHubKind"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"version_id": {
+						"type": "string"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions in the hub"
+					},
+					"reward_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Lowest positive aUEC reward among its missions"
+					},
+					"reward_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Highest aUEC reward among its missions"
+					},
+					"legal_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Legal missions (lawful, or not illegal)"
+					},
+					"illegal_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Illegal missions"
+					},
+					"blueprint_mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions that can reward a blueprint"
+					},
+					"givers": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array",
+						"description": "Related hubs: the hub's missions by giver / faction / type / system (empty for the hub's own kind)"
+					},
+					"factions": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					},
+					"types": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					},
+					"systems": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubSummary"
+						},
+						"type": "array"
+					},
+					"missions": {
+						"items": {
+							"$ref": "#/components/schemas/MissionSearchResult"
+						},
+						"type": "array",
+						"description": "This page of the hub's missions, by name"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"kind",
+					"slug",
+					"name",
+					"version_id",
+					"mission_count",
+					"legal_count",
+					"illegal_count",
+					"blueprint_mission_count",
+					"givers",
+					"factions",
+					"types",
+					"systems",
+					"missions",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MissionBlueprintReward": {
 				"description": "Blueprint reward in a mission reward pool",
 				"properties": {
@@ -9671,6 +9863,25 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MissionHubLinks": {
+				"description": "The hubs one mission is in.",
+				"properties": {
+					"giver": {
+						"$ref": "#/components/schemas/MissionHubSummary"
+					},
+					"faction": {
+						"$ref": "#/components/schemas/MissionHubSummary"
+					},
+					"type": {
+						"$ref": "#/components/schemas/MissionHubSummary"
+					},
+					"system": {
+						"$ref": "#/components/schemas/MissionHubSummary"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MissionDetailResponse": {
 				"description": "Response for mission detail endpoint",
 				"properties": {
@@ -9727,6 +9938,10 @@
 					"user_rating": {
 						"$ref": "#/components/schemas/UserMissionRating",
 						"description": "User's rating for this mission"
+					},
+					"hubs": {
+						"$ref": "#/components/schemas/MissionHubLinks",
+						"description": "The mission hubs this mission is in (its giver, faction, type and star\nsystem pages). Only for missions of the active LIVE version; a value\nwith too few missions has no hub."
 					}
 				},
 				"required": [
@@ -21363,6 +21578,95 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/game-data/missions/hubs": {
+			"get": {
+				"operationId": "GetMissionHubs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MissionHubsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Every mission hub of the active LIVE version: mission givers, factions\n(whose reputation the missions pay), mission types and star systems,\neach with its slug and mission count, most missions first. A value\nneeds at least two missions to be a hub; game-file placeholders are\nnever one.",
+				"summary": "List mission hubs",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/game-data/missions/hubs/{kind}/{slug}": {
+			"get": {
+				"operationId": "GetMissionHub",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MissionHubDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "One mission hub of the active LIVE version: its mission count, reward\nrange, legal/illegal split and blueprint missions, the related hubs\namong its missions (a giver's systems, types and factions, and so on),\nand a page of its missions by name.",
+				"summary": "Get a mission hub",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "givers, factions, types or systems",
+						"in": "path",
+						"name": "kind",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/MissionHubKind"
+						}
+					},
+					{
+						"description": "The hub's slug (from GET /game-data/missions/hubs)",
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Missions per page (default: 100, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 100,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/game-data/missions/{mission_id}": {

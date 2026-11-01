@@ -3011,6 +3011,7 @@ const models: TsoaRoute.Models = {
             "is_illegal": {"dataType":"boolean"},
             "reputation_reward": {"dataType":"double"},
             "reward_scope": {"dataType":"string"},
+            "reputation_reward_faction": {"dataType":"string"},
             "mission_giver_org": {"dataType":"string"},
             "associated_event": {"dataType":"string"},
             "ship_encounter_count": {"dataType":"double","required":true},
@@ -3132,6 +3133,58 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionHubSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "mission_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionHubsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "version_id": {"dataType":"string","required":true},
+            "total_missions": {"dataType":"double","required":true},
+            "givers": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "factions": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "types": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "systems": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionHubKind": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["givers"]},{"dataType":"enum","enums":["factions"]},{"dataType":"enum","enums":["types"]},{"dataType":"enum","enums":["systems"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionHubDetailResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "kind": {"ref":"MissionHubKind","required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "version_id": {"dataType":"string","required":true},
+            "mission_count": {"dataType":"double","required":true},
+            "reward_min": {"dataType":"double"},
+            "reward_max": {"dataType":"double"},
+            "legal_count": {"dataType":"double","required":true},
+            "illegal_count": {"dataType":"double","required":true},
+            "blueprint_mission_count": {"dataType":"double","required":true},
+            "givers": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "factions": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "types": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "systems": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionHubSummary"},"required":true},
+            "missions": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionSearchResult"},"required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MissionBlueprintReward": {
         "dataType": "refObject",
         "properties": {
@@ -3213,6 +3266,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionHubLinks": {
+        "dataType": "refObject",
+        "properties": {
+            "giver": {"ref":"MissionHubSummary"},
+            "faction": {"ref":"MissionHubSummary"},
+            "type": {"ref":"MissionHubSummary"},
+            "system": {"ref":"MissionHubSummary"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MissionDetailResponse": {
         "dataType": "refObject",
         "properties": {
@@ -3225,6 +3289,7 @@ const models: TsoaRoute.Models = {
             "entity_spawns": {"dataType":"array","array":{"dataType":"refObject","ref":"EntitySpawn"}},
             "user_completed": {"dataType":"boolean"},
             "user_rating": {"ref":"UserMissionRating"},
+            "hubs": {"ref":"MissionHubLinks"},
         },
         "additionalProperties": false,
     },
@@ -9006,6 +9071,68 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getGameEvents',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionHubs: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/game-data/missions/hubs',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionHubs)),
+
+            async function MissionsController_getMissionHubs(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionHubs, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionHubs',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionHub: Record<string, TsoaRoute.ParameterSchema> = {
+                kind: {"in":"path","name":"kind","required":true,"ref":"MissionHubKind"},
+                slug: {"in":"path","name":"slug","required":true,"dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":100,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/game-data/missions/hubs/:kind/:slug',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionHub)),
+
+            async function MissionsController_getMissionHub(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionHub, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionHub',
                 controller,
                 response,
                 next,

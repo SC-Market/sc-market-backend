@@ -149,6 +149,9 @@ export interface MissionSearchResult {
   /** Reputation scope (e.g., headhunter, salvage) */
   reward_scope?: string
 
+  /** Faction whose reputation the mission pays */
+  reputation_reward_faction?: string
+
   /** Mission giver organization */
   mission_giver_org?: string
 
@@ -377,6 +380,81 @@ export interface MissionDetailResponse {
 
   /** User's rating for this mission */
   user_rating?: UserMissionRating
+
+  /**
+   * The mission hubs this mission is in (its giver, faction, type and star
+   * system pages). Only for missions of the active LIVE version; a value
+   * with too few missions has no hub.
+   */
+  hubs?: MissionHubLinks
+}
+
+// ============================================================================
+// Mission Hubs
+// ============================================================================
+
+/**
+ * How missions are grouped into hubs: by mission giver, by the faction whose
+ * reputation they pay, by mission type, by star system.
+ */
+export type MissionHubKind = "givers" | "factions" | "types" | "systems"
+
+/** One hub: a giver, faction, type or star system with its missions. */
+export interface MissionHubSummary {
+  /** URL slug ("headhunters", "bounty-hunter") */
+  slug: string
+  /** Display name ("Headhunters", "Bounty Hunter") */
+  name: string
+  /** Missions in the hub (in a related-hub list: missions shared with the hub being viewed) */
+  mission_count: number
+}
+
+/** Every mission hub of the active LIVE version, most missions first. */
+export interface MissionHubsResponse {
+  version_id: string
+  /** Missions in the version */
+  total_missions: number
+  givers: MissionHubSummary[]
+  factions: MissionHubSummary[]
+  types: MissionHubSummary[]
+  systems: MissionHubSummary[]
+}
+
+/** The hubs one mission is in. */
+export interface MissionHubLinks {
+  giver?: MissionHubSummary
+  faction?: MissionHubSummary
+  type?: MissionHubSummary
+  system?: MissionHubSummary
+}
+
+/** One hub: what its missions have in common, related hubs, and a page of its missions. */
+export interface MissionHubDetailResponse {
+  kind: MissionHubKind
+  slug: string
+  name: string
+  version_id: string
+  /** Missions in the hub */
+  mission_count: number
+  /** Lowest positive aUEC reward among its missions */
+  reward_min?: number
+  /** Highest aUEC reward among its missions */
+  reward_max?: number
+  /** Legal missions (lawful, or not illegal) */
+  legal_count: number
+  /** Illegal missions */
+  illegal_count: number
+  /** Missions that can reward a blueprint */
+  blueprint_mission_count: number
+  /** Related hubs: the hub's missions by giver / faction / type / system (empty for the hub's own kind) */
+  givers: MissionHubSummary[]
+  factions: MissionHubSummary[]
+  types: MissionHubSummary[]
+  systems: MissionHubSummary[]
+  /** This page of the hub's missions, by name */
+  missions: MissionSearchResult[]
+  page: number
+  page_size: number
 }
 
 /** Ship encounter group (e.g. "Mission Targets", "Reinforcements") */
