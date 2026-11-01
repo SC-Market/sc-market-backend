@@ -363,23 +363,6 @@ describe("ListingsV2Controller.createListing", () => {
       ).rejects.toThrow()
     })
 
-    it("should reject listing without description", async () => {
-      const controller = new ListingsV2Controller(createMockRequest() as ExpressRequest)
-
-      const request: CreateListingRequest = {
-        title: "Title",
-        description: "",
-        game_item_id: testGameItemId,
-        pricing_mode: "unified",
-        base_price: 1000,
-        lots: [{ quantity: 10, variant_attributes: {} }],
-      }
-
-      await expect(
-        controller.createListing(request, createMockRequest() as ExpressRequest),
-      ).rejects.toThrow()
-    })
-
     it("should reject unified pricing without base_price", async () => {
       const controller = new ListingsV2Controller(createMockRequest() as ExpressRequest)
 

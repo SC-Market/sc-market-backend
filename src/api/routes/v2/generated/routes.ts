@@ -1858,7 +1858,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "title": {"dataType":"string","required":true},
-            "description": {"dataType":"string","required":true},
+            "description": {"dataType":"string"},
             "game_item_id": {"dataType":"string","required":true},
             "pricing_mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unified"]},{"dataType":"enum","enums":["per_variant"]}],"required":true},
             "base_price": {"dataType":"double"},

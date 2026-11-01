@@ -154,7 +154,7 @@ export class ListingsV2Controller extends BaseController {
             seller_type: sellerType,
             shop_id: shopId,
             title: requestBody.title,
-            description: requestBody.description,
+            description: requestBody.description ?? "",
             status: requestBody.status || "active",
             visibility: (sellerType === "contractor" && requestBody.visibility) || "public",
             sale_type: requestBody.sale_type || "fixed",
@@ -366,11 +366,6 @@ export class ListingsV2Controller extends BaseController {
         field: "title",
         message: "Title must be 500 characters or less",
       })
-    }
-
-    // Validate description
-    if (!request.description || request.description.trim().length === 0) {
-      errors.push({ field: "description", message: "Description is required" })
     }
 
     // Validate game_item_id
@@ -1652,13 +1647,8 @@ export class ListingsV2Controller extends BaseController {
         }
 
         if (requestBody.description !== undefined) {
-          // Validate description
-          if (!requestBody.description || requestBody.description.trim().length === 0) {
-            this.throwValidationError("Description cannot be empty", [
-              { field: "description", message: "Description is required" },
-            ])
-          }
-          listingUpdates.description = requestBody.description
+          // Description is optional; an empty one clears it
+          listingUpdates.description = requestBody.description ?? ""
         }
 
         if (requestBody.pickup_method !== undefined) {

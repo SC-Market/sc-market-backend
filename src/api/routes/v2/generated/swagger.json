@@ -5212,7 +5212,7 @@
 					},
 					"description": {
 						"type": "string",
-						"description": "Listing description (markdown supported)"
+						"description": "Optional listing description (markdown supported); defaults to empty"
 					},
 					"game_item_id": {
 						"type": "string",
@@ -5357,7 +5357,6 @@
 				},
 				"required": [
 					"title",
-					"description",
 					"game_item_id",
 					"pricing_mode",
 					"lots",

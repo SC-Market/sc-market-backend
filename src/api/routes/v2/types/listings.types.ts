@@ -73,8 +73,8 @@ export interface CreateListingRequest {
   /** Listing title (max 500 chars) */
   title: string;
   
-  /** Listing description (markdown supported) */
-  description: string;
+  /** Optional listing description (markdown supported); defaults to empty */
+  description?: string;
   
   /** Game item UUID being sold */
   game_item_id: string;
