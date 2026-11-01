@@ -5917,8 +5917,37 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PublicFeedLicense": {
+				"description": "Licence of the public data feeds: CC BY 4.0.",
+				"properties": {
+					"license": {
+						"type": "string",
+						"description": "SPDX identifier, \"CC-BY-4.0\""
+					},
+					"url": {
+						"type": "string",
+						"description": "Licence text"
+					},
+					"attribution": {
+						"type": "string",
+						"description": "The credit line to show when reusing the data"
+					},
+					"notice": {
+						"type": "string",
+						"description": "Rights notice: game data, and SC Market's aggregation and price data"
+					}
+				},
+				"required": [
+					"license",
+					"url",
+					"attribution",
+					"notice"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PublicFeedInfo": {
-				"description": "Envelope shared by every public data feed (prices now; missions,\nblueprints and items later): which dataset, its schema version, and the\nterms. Free to use; rate limits only protect against abuse.",
+				"description": "Envelope shared by every public data feed (prices, items; missions and\nblueprints later): which dataset, its schema version, the terms and the\nlicence (CC BY 4.0). Free to use; rate limits only protect against abuse.",
 				"properties": {
 					"dataset": {
 						"type": "string",
@@ -5931,13 +5960,17 @@
 					},
 					"terms": {
 						"type": "string",
-						"description": "Usage terms: free, attribution requested"
+						"description": "Usage terms in words: free, no key, CC BY 4.0 with attribution"
+					},
+					"license": {
+						"$ref": "#/components/schemas/PublicFeedLicense"
 					}
 				},
 				"required": [
 					"dataset",
 					"version",
-					"terms"
+					"terms",
+					"license"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -6289,6 +6322,599 @@
 					"methodology",
 					"attribution",
 					"links"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionListing": {
+				"description": "One live listing of the item (the same facts its public listing page shows).",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string",
+						"description": "Short slug of the listing page, /market/{slug}"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Lowest per-unit asking price in the listing, aUEC; null for auctions without a price"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Units in stock"
+					},
+					"sale_type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"listing_id",
+					"slug",
+					"title",
+					"price",
+					"quantity_available",
+					"sale_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionListings": {
+				"description": "Live listings summary plus the cheapest listings.",
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Active public listings of the item with stock (test accounts excluded)"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct sellers (shops) of those listings"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Units in stock across them"
+					},
+					"lowest_ask": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Lowest fixed-price per-unit ask above the placeholder price, aUEC; null\nwithout one. Unlike price.current.lowest_ask it includes listings younger\nthan 24 hours."
+					},
+					"page": {
+						"type": "string",
+						"description": "The item's market page (every listing)"
+					},
+					"top": {
+						"items": {
+							"$ref": "#/components/schemas/ItemAcquisitionListing"
+						},
+						"type": "array",
+						"description": "Up to 5 listings, cheapest real ask first (placeholder prices last)"
+					}
+				},
+				"required": [
+					"count",
+					"seller_count",
+					"quantity_available",
+					"lowest_ask",
+					"page",
+					"top"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionFreshness": {
+				"properties": {
+					"as_of": {
+						"type": "string",
+						"description": "When this document was computed (ISO 8601); listings and current asks are as of then"
+					},
+					"game_version": {
+						"type": "string",
+						"nullable": true,
+						"description": "Game version of the mission, blueprint and resource data, e.g. \"4.10.2-LIVE.12881860\"; null without an active LIVE version"
+					},
+					"game_data_updated_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When that game data was last imported (ISO 8601)"
+					},
+					"price_snapshot_date": {
+						"type": "string",
+						"nullable": true,
+						"description": "UTC day of this item's latest daily price snapshot (price.trend_30d); null when it has none"
+					}
+				},
+				"required": [
+					"as_of",
+					"game_version",
+					"game_data_updated_at",
+					"price_snapshot_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionPrice": {
+				"description": "Player-listing price stats: the price oracle's numbers for this item.",
+				"properties": {
+					"currency": {
+						"type": "string",
+						"enum": [
+							"aUEC"
+						],
+						"nullable": false,
+						"description": "Always \"aUEC\" (in-game currency, not ISO 4217)"
+					},
+					"unit_note": {
+						"type": "string"
+					},
+					"current": {
+						"$ref": "#/components/schemas/PriceOracleCurrent"
+					},
+					"trend_30d": {
+						"$ref": "#/components/schemas/PriceOracleTrend"
+					},
+					"sales_30d": {
+						"$ref": "#/components/schemas/PriceOracleSales"
+					},
+					"summary": {
+						"type": "string",
+						"description": "Plain-text statement of the numbers, with sample size and confidence"
+					},
+					"links": {
+						"$ref": "#/components/schemas/PriceOracleLinks",
+						"description": "links.json is the full price document, methodology included"
+					}
+				},
+				"required": [
+					"currency",
+					"unit_note",
+					"current",
+					"trend_30d",
+					"sales_30d",
+					"summary",
+					"links"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionMission": {
+				"description": "A mission that rewards the item, or the blueprint that crafts it.",
+				"properties": {
+					"mission_id": {
+						"type": "string"
+					},
+					"mission_code": {
+						"type": "string"
+					},
+					"mission_name": {
+						"type": "string"
+					},
+					"reward_kind": {
+						"type": "string",
+						"enum": [
+							"item",
+							"blueprint"
+						],
+						"description": "\"item\": completing the mission awards the item itself.\n\"blueprint\": the mission can award the blueprint that crafts the item."
+					},
+					"blueprint_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "The blueprint awarded (reward_kind \"blueprint\"), else null"
+					},
+					"drop_probability": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Drop chance in percent (0-100); null when the game data gives none (item rewards)"
+					},
+					"is_guaranteed": {
+						"type": "boolean",
+						"nullable": true,
+						"description": "Guaranteed blueprint drop; null when the game data doesn't say (item rewards)"
+					},
+					"category": {
+						"type": "string"
+					},
+					"mission_giver_org": {
+						"type": "string",
+						"nullable": true,
+						"description": "Mission giver (organisation)"
+					},
+					"faction": {
+						"type": "string",
+						"nullable": true
+					},
+					"star_system": {
+						"type": "string",
+						"nullable": true
+					},
+					"legal_status": {
+						"type": "string",
+						"enum": [
+							"LEGAL",
+							"ILLEGAL",
+							null
+						],
+						"nullable": true
+					},
+					"credit_reward_max": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"associated_event": {
+						"type": "string",
+						"nullable": true,
+						"description": "Seasonal event the mission belongs to, if any"
+					}
+				},
+				"required": [
+					"mission_id",
+					"mission_code",
+					"mission_name",
+					"reward_kind",
+					"blueprint_id",
+					"drop_probability",
+					"is_guaranteed",
+					"category",
+					"mission_giver_org",
+					"faction",
+					"star_system",
+					"legal_status",
+					"credit_reward_max",
+					"associated_event"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionMissions": {
+				"properties": {
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions that reward the item or its blueprint (one per mission and kind)"
+					},
+					"top": {
+						"items": {
+							"$ref": "#/components/schemas/ItemAcquisitionMission"
+						},
+						"type": "array",
+						"description": "Up to 10: item rewards first, then by drop chance, then name"
+					}
+				},
+				"required": [
+					"total",
+					"top"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionIngredient": {
+				"description": "A crafting ingredient.",
+				"properties": {
+					"game_item_id": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string",
+						"description": "Short slug of the ingredient's game item"
+					},
+					"name": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity_scu": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Quantity in SCU, for resources measured in SCU"
+					},
+					"min_quality": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Minimum quality (0-1000), when the slot requires one"
+					},
+					"slot_display_name": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"game_item_id",
+					"slug",
+					"name",
+					"quantity",
+					"quantity_scu",
+					"min_quality",
+					"slot_display_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionBlueprint": {
+				"description": "A blueprint that crafts the item.",
+				"properties": {
+					"blueprint_id": {
+						"type": "string"
+					},
+					"blueprint_code": {
+						"type": "string"
+					},
+					"blueprint_name": {
+						"type": "string"
+					},
+					"output_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rarity": {
+						"type": "string",
+						"nullable": true
+					},
+					"crafting_station_type": {
+						"type": "string",
+						"nullable": true
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions that can award this blueprint"
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/ItemAcquisitionIngredient"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_code",
+					"blueprint_name",
+					"output_quantity",
+					"tier",
+					"rarity",
+					"crafting_station_type",
+					"crafting_time_seconds",
+					"mission_count",
+					"ingredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionBlueprints": {
+				"properties": {
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ItemAcquisitionBlueprint"
+						},
+						"type": "array",
+						"description": "Up to 10, by name"
+					}
+				},
+				"required": [
+					"total",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionShop": {
+				"description": "An in-game NPC shop that sells or buys the item (game files).",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"location": {
+						"type": "string"
+					},
+					"buy_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Price the shop sells the item for, aUEC; null if it doesn't sell it"
+					},
+					"sell_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Price the shop pays for the item, aUEC; null if it doesn't buy it"
+					}
+				},
+				"required": [
+					"name",
+					"location",
+					"buy_price",
+					"sell_price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionShops": {
+				"properties": {
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"shops": {
+						"items": {
+							"$ref": "#/components/schemas/ItemAcquisitionShop"
+						},
+						"type": "array",
+						"description": "Up to 20, cheapest buy price first"
+					}
+				},
+				"required": [
+					"total",
+					"shops"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionResource": {
+				"description": "How a resource (crafting material, commodity) is obtained, from the game files.",
+				"properties": {
+					"can_be_mined": {
+						"type": "boolean"
+					},
+					"can_be_purchased": {
+						"type": "boolean"
+					},
+					"can_be_salvaged": {
+						"type": "boolean"
+					},
+					"can_be_looted": {
+						"type": "boolean"
+					},
+					"mining_locations": {
+						"properties": {},
+						"additionalProperties": {
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						},
+						"type": "object",
+						"nullable": true,
+						"description": "Location group -> locations, as extracted; null when unknown"
+					},
+					"purchase_locations": {
+						"properties": {},
+						"additionalProperties": {
+							"items": {
+								"type": "string"
+							},
+							"type": "array"
+						},
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"can_be_mined",
+					"can_be_purchased",
+					"can_be_salvaged",
+					"can_be_looted",
+					"mining_locations",
+					"purchase_locations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionLinks": {
+				"properties": {
+					"wiki": {
+						"type": "string",
+						"description": "Wiki item page"
+					},
+					"market": {
+						"type": "string",
+						"description": "Market page (all listings of the item)"
+					},
+					"json": {
+						"type": "string",
+						"description": "This document as the public JSON feed"
+					}
+				},
+				"required": [
+					"wiki",
+					"market",
+					"json"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ItemAcquisitionDocument": {
+				"description": "GET /api/v2/game-items/{id}/acquisition",
+				"properties": {
+					"feed": {
+						"$ref": "#/components/schemas/PublicFeedInfo"
+					},
+					"item": {
+						"$ref": "#/components/schemas/PriceOracleItemRef"
+					},
+					"as_of": {
+						"type": "string",
+						"description": "When the document was computed (ISO 8601); same as freshness.as_of"
+					},
+					"freshness": {
+						"$ref": "#/components/schemas/ItemAcquisitionFreshness"
+					},
+					"price": {
+						"$ref": "#/components/schemas/ItemAcquisitionPrice"
+					},
+					"missions": {
+						"$ref": "#/components/schemas/ItemAcquisitionMissions"
+					},
+					"blueprints": {
+						"$ref": "#/components/schemas/ItemAcquisitionBlueprints"
+					},
+					"in_game_shops": {
+						"$ref": "#/components/schemas/ItemAcquisitionShops",
+						"description": "In-game shops from the game files; total 0 when the data has none"
+					},
+					"resource": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ItemAcquisitionResource"
+							}
+						],
+						"nullable": true,
+						"description": "Set when the item is a resource with acquisition data, else null"
+					},
+					"attribution": {
+						"type": "string",
+						"description": "How to credit the data when citing or reusing it"
+					},
+					"links": {
+						"$ref": "#/components/schemas/ItemAcquisitionLinks"
+					},
+					"listings": {
+						"$ref": "#/components/schemas/ItemAcquisitionListings"
+					}
+				},
+				"required": [
+					"feed",
+					"item",
+					"as_of",
+					"freshness",
+					"price",
+					"missions",
+					"blueprints",
+					"in_game_shops",
+					"resource",
+					"attribution",
+					"links",
+					"listings"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -8464,18 +9090,31 @@
 				"additionalProperties": false
 			},
 			"ItemReward": {
-				"description": "Non-blueprint item reward",
+				"description": "An item a mission awards. `ref` is the game-file identifier;\n`game_item_id` and `game_item_slug` are the resolved SC Market game item\n(wiki/market pages), null when the reward matches no game item exactly.",
 				"properties": {
 					"name": {
 						"type": "string"
 					},
 					"ref": {
-						"type": "string"
+						"type": "string",
+						"description": "Game-file record path of the item"
+					},
+					"game_item_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Resolved game item UUID, null when unresolved"
+					},
+					"game_item_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Short slug of the resolved game item (`<8 hex>--<name>`), null when unresolved"
 					}
 				},
 				"required": [
 					"name",
-					"ref"
+					"ref",
+					"game_item_id",
+					"game_item_slug"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -8822,6 +9461,14 @@
 						"type": "string",
 						"description": "Output item name"
 					},
+					"output_game_item_id": {
+						"type": "string",
+						"description": "Game item the blueprint crafts (game_items.id)"
+					},
+					"output_game_item_slug": {
+						"type": "string",
+						"description": "Short slug of the output game item (`<8 hex>--<name>`)"
+					},
 					"output_item_icon": {
 						"type": "string",
 						"description": "Output item icon URL"
@@ -8854,6 +9501,8 @@
 					"blueprint_code",
 					"blueprint_name",
 					"output_item_name",
+					"output_game_item_id",
+					"output_game_item_slug",
 					"drop_probability",
 					"is_guaranteed"
 				],
@@ -18862,6 +19511,40 @@
 				},
 				"description": "Player-market price stats of a game item: current asks (lowest, median,\ncounts), the 30-day trend from the daily snapshot and 30-day sale stats.\nAggregates only (no seller, buyer or listing ids). The same document as\nthe public feed GET /api/public/prices/{slug}.json.",
 				"summary": "Get price stats for game item",
+				"tags": [
+					"Game Items V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID or short slug",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-items/{id}/acquisition": {
+			"get": {
+				"operationId": "GetAcquisition",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ItemAcquisitionDocument"
+								}
+							}
+						}
+					}
+				},
+				"description": "How to get a game item: SC Market player-listing price stats, live\nlistings (count, lowest ask, the cheapest few), the missions that reward\nthe item or its blueprint (drop chance, giver, system, legality), the\nblueprints that craft it with their ingredients, in-game shops and\nresource locations from the game files, and freshness (game version,\nas_of). Test accounts' listings are excluded. Cached for 5 minutes; the\npublic feed GET /api/public/items/{slug}.json serves the same document\nwithout listing references.",
+				"summary": "Get acquisition sources for game item",
 				"tags": [
 					"Game Items V2"
 				],

@@ -285,6 +285,12 @@ export interface MissionBlueprintReward {
   /** Output item name */
   output_item_name: string
 
+  /** Game item the blueprint crafts (game_items.id) */
+  output_game_item_id: string
+
+  /** Short slug of the output game item (`<8 hex>--<name>`) */
+  output_game_item_slug: string
+
   /** Output item icon URL */
   output_item_icon?: string
 
@@ -407,9 +413,19 @@ export interface EntitySpawn {
 }
 
 /** Non-blueprint item reward */
+/**
+ * An item a mission awards. `ref` is the game-file identifier;
+ * `game_item_id` and `game_item_slug` are the resolved SC Market game item
+ * (wiki/market pages), null when the reward matches no game item exactly.
+ */
 export interface ItemReward {
   name: string
+  /** Game-file record path of the item */
   ref: string
+  /** Resolved game item UUID, null when unresolved */
+  game_item_id: string | null
+  /** Short slug of the resolved game item (`<8 hex>--<name>`), null when unresolved */
+  game_item_slug: string | null
 }
 
 /** Game event/scenario (e.g. Luminalia, Invictus) */

@@ -33,6 +33,12 @@ import {
 import logger from "../../../../../logger/logger.js"
 import type { Knex } from "knex"
 import { clampPagination } from "../../util/pagination.js"
+import { formatShortSlug } from "../../util/short-slug.js"
+import {
+  parseStoredRewards,
+  resolveItemRewards,
+  type StoredItemReward,
+} from "../../../../../services/item-acquisition/reward-resolution.js"
 
 /**
  * Row shape of the `missions` table, as consumed by the mission serializers.
@@ -88,8 +94,8 @@ interface MissionRow {
   accept_locations: string[] | string | null
   /** jsonb — string when the driver hands back raw text */
   destinations: string[] | string | null
-  /** jsonb — string when the driver hands back raw text */
-  item_rewards: ItemReward[] | string | null
+  /** jsonb game-file refs (see services/item-acquisition/reward-resolution.ts) — string when the driver hands back raw text */
+  item_rewards: StoredItemReward[] | string | null
   /** jsonb — string when the driver hands back raw text */
   token_substitutions: Record<string, string> | string | null
   community_difficulty_avg: string | null
@@ -146,6 +152,7 @@ interface MissionBlueprintRewardRow {
   blueprint_id: string
   blueprint_code: string
   blueprint_name: string
+  output_game_item_id: string
   output_item_name: string
   output_item_icon: string | null
   rarity: string | null
@@ -910,7 +917,7 @@ export class MissionsController extends BaseController {
         time_to_complete: missionRow.time_to_complete || undefined,
         accept_locations: missionRow.accept_locations ? (typeof missionRow.accept_locations === "string" ? JSON.parse(missionRow.accept_locations) : missionRow.accept_locations) : undefined,
         destinations: missionRow.destinations ? (typeof missionRow.destinations === "string" ? JSON.parse(missionRow.destinations) : missionRow.destinations) : undefined,
-        item_rewards: missionRow.item_rewards ? (typeof missionRow.item_rewards === "string" ? JSON.parse(missionRow.item_rewards) : missionRow.item_rewards) : undefined,
+        item_rewards: await this.resolveMissionItemRewards(knex, missionRow.item_rewards),
         token_substitutions: missionRow.token_substitutions ? (typeof missionRow.token_substitutions === "string" ? JSON.parse(missionRow.token_substitutions) : missionRow.token_substitutions) : undefined,
         community_difficulty_avg: missionRow.community_difficulty_avg
           ? parseFloat(missionRow.community_difficulty_avg)
@@ -949,6 +956,7 @@ export class MissionsController extends BaseController {
           "b.blueprint_id",
           "b.blueprint_code",
           "b.blueprint_name",
+          "b.output_game_item_id",
           "gi.name as output_item_name",
           "gi.image_url as output_item_icon",
           "b.rarity",
@@ -982,6 +990,8 @@ export class MissionsController extends BaseController {
           blueprint_code: row.blueprint_code,
           blueprint_name: row.blueprint_name,
           output_item_name: row.output_item_name,
+          output_game_item_id: row.output_game_item_id,
+          output_game_item_slug: formatShortSlug(row.output_game_item_id, row.output_item_name),
           output_item_icon: row.output_item_icon || undefined,
           drop_probability: parseFloat(row.drop_probability),
           is_guaranteed: row.is_guaranteed || false,
@@ -1628,6 +1638,26 @@ export class MissionsController extends BaseController {
     }
   }
 
+
+  /**
+   * The mission's item rewards with the SC Market game item each resolves to
+   * (exact game-file match, else null: reward-resolution.ts). undefined when
+   * the mission awards no item.
+   */
+  private async resolveMissionItemRewards(
+    knex: Knex,
+    stored: MissionRow["item_rewards"],
+  ): Promise<ItemReward[] | undefined> {
+    const rewards = parseStoredRewards(stored)
+    if (!rewards.length) return undefined
+    const resolved = await resolveItemRewards(knex, rewards)
+    return rewards.map((r, i) => ({
+      name: typeof r.name === "string" ? r.name : "",
+      ref: typeof r.ref === "string" ? r.ref : "",
+      game_item_id: resolved[i]?.id ?? null,
+      game_item_slug: resolved[i]?.slug ?? null,
+    }))
+  }
 
   private async resolveStandingName(knex: Knex, code: string | null | undefined): Promise<string | undefined> {
     if (!code) return undefined

@@ -37,6 +37,7 @@ import {
 import { notTestShop } from "../test-accounts/isolation.js"
 import type {
   PublicFeedInfo,
+  PublicFeedLicense,
   PriceOracleCurrent,
   PriceOracleDailyPoint,
   PriceOracleItem,
@@ -61,12 +62,28 @@ export const CURRENT_ASK_TIMEOUT = "2s"
 export const UNIT_NOTE =
   "All prices are in aUEC, Star Citizen's in-game currency (not real money), per unit."
 
+/** Licence of every public data feed (owner decision: CC BY 4.0). */
+export const PUBLIC_FEED_LICENSE: PublicFeedLicense = {
+  license: "CC-BY-4.0",
+  url: "https://creativecommons.org/licenses/by/4.0/",
+  attribution: "Data: SC Market (sc-market.space)",
+  notice:
+    "Game data © Cloud Imperium Games; aggregation and price data by SC Market, CC BY 4.0.",
+}
+
+/** Terms in words, shared by every public data feed. */
+export const PUBLIC_FEED_TERMS =
+  "Free to use, no key needed, under CC BY 4.0 with attribution (see license). Rate limits exist only to protect the service from abuse."
+
+/** One line for file headers (Markdown) and the Link/notice HTTP headers. */
+export const PUBLIC_FEED_LICENSE_LINE = `License: CC BY 4.0 (${PUBLIC_FEED_LICENSE.url}). Attribution: "${PUBLIC_FEED_LICENSE.attribution}". ${PUBLIC_FEED_LICENSE.notice}`
+
 /** The feed envelope (see PublicFeedInfo). */
 export const PRICE_FEED_INFO: PublicFeedInfo = {
   dataset: "prices",
   version: 1,
-  terms:
-    "Free to use, no key needed. Attribution requested. Rate limits exist only to protect the service from abuse.",
+  terms: PUBLIC_FEED_TERMS,
+  license: PUBLIC_FEED_LICENSE,
 }
 
 export const PRICE_ATTRIBUTION =
@@ -671,6 +688,8 @@ export function priceIndexMarkdown(index: PriceIndex): string {
     `Methodology: ${METHODOLOGY.text}`,
     "",
     `${PRICE_ATTRIBUTION} ${PRICE_FEED_INFO.terms} Dataset "${PRICE_FEED_INFO.dataset}", version ${PRICE_FEED_INFO.version}.`,
+    "",
+    PUBLIC_FEED_LICENSE_LINE,
     "",
     "| Item | Type | Lowest ask (aUEC) | Median ask (aUEC) | 30-day median (aUEC) | 30-day change | Listings | Sellers | Confidence |",
     "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",

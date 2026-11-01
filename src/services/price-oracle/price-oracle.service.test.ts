@@ -189,6 +189,11 @@ const ALLOWED_DOC_KEYS = new Set([
   ".feed.dataset",
   ".feed.version",
   ".feed.terms",
+  ".feed.license",
+  ".feed.license.license",
+  ".feed.license.url",
+  ".feed.license.attribution",
+  ".feed.license.notice",
   ".item",
   ".item.id",
   ".item.slug",
@@ -361,6 +366,13 @@ describe("public documents carry no PII", () => {
     expect(index.as_of).toBe("2026-10-31T06:00:00.000Z")
     expect(index.feed).toEqual(svc.PRICE_FEED_INFO)
     expect(svc.PRICE_FEED_INFO.terms).toMatch(/^Free to use/)
+    expect(svc.PRICE_FEED_INFO.license).toEqual({
+      license: "CC-BY-4.0",
+      url: "https://creativecommons.org/licenses/by/4.0/",
+      attribution: "Data: SC Market (sc-market.space)",
+      notice:
+        "Game data © Cloud Imperium Games; aggregation and price data by SC Market, CC BY 4.0.",
+    })
     expect(index.coverage).toEqual({ none: 0, low: 0, medium: 1, high: 0 })
     expect(index.items[0]).toEqual({
       slug: "1a2b3c4d--p4-ar-rifle-black-cmd",
@@ -383,6 +395,9 @@ describe("public documents carry no PII", () => {
     expect(index.unit_note).toContain("aUEC, Star Citizen's in-game currency")
     const md = svc.priceIndexMarkdown(index)
     expect(md).toContain("aUEC, Star Citizen's in-game currency")
+    expect(md).toContain(
+      'License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Attribution: "Data: SC Market (sc-market.space)". Game data © Cloud Imperium Games; aggregation and price data by SC Market, CC BY 4.0.',
+    )
     expect(md).toContain(
       '| [P4-AR Rifle, "Black" \\| =cmd](https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd) | Weapon | 10,000 | 11,000 | 10,500 | -4.5% | 3 | 3 | medium |',
     )

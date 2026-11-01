@@ -25,6 +25,7 @@ import { LRUCache } from "lru-cache"
 import { RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible"
 import logger from "../../../logger/logger.js"
 import {
+  PUBLIC_FEED_LICENSE,
   getPriceDocument,
   getPriceIndex,
   priceIndexCsv,
@@ -80,6 +81,63 @@ export function createPriceFeedRateLimit(keyPrefix = "price_feed_ip") {
 }
 
 /**
+ * What every public data feed router (/api/public/prices, /api/public/items)
+ * starts with: read-only (405 otherwise), the per-IP limit (its own bucket
+ * per feed), and headers for public data readable from any origin, with the
+ * licence (CC BY 4.0) as a Link header on every response, CSV included.
+ */
+export function usePublicFeedBase(
+  router: express.Router,
+  rateLimitKeyPrefix: string,
+): void {
+  router.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.method !== "GET" && req.method !== "HEAD") {
+      res.setHeader("Allow", "GET, HEAD")
+      res.status(405).json({
+        error: { code: "METHOD_NOT_ALLOWED", message: "Read-only feed" },
+      })
+      return
+    }
+    next()
+  })
+  router.use(createPriceFeedRateLimit(rateLimitKeyPrefix))
+
+  // Public data, readable from any origin; no credentials are ever involved.
+  router.use((_req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin")
+    res.setHeader("X-Content-Type-Options", "nosniff")
+    res.setHeader("Link", `<${PUBLIC_FEED_LICENSE.url}>; rel="license"`)
+    next()
+  })
+}
+
+/** The 404 for unknown paths and the 500 handler (never cached) of a feed router. */
+export function usePublicFeedFallbacks(
+  router: express.Router,
+  notFoundMessage: string,
+): void {
+  router.use((_req, res) => {
+    res.setHeader("Cache-Control", PRICE_FEED_NOT_FOUND_CACHE_CONTROL)
+    res.status(404).json({
+      error: { code: "NOT_FOUND", message: notFoundMessage },
+    })
+  })
+
+  router.use(
+    (_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+      res.setHeader("Cache-Control", "no-store")
+      res.status(500).json({
+        error: { code: "INTERNAL_ERROR", message: "Feed unavailable" },
+      })
+    },
+  )
+}
+
+/** Feed slugs: a short slug, an 8-hex prefix or a UUID, lower case. */
+export const FEED_SLUG = /^[0-9a-f][0-9a-z_-]{0,199}$/
+
+/**
  * `provisional`: a result that may change any moment, e.g. the index before
  * the first snapshot of a fresh deployment. Never kept in the in-process
  * cache, and sent with the short Cache-Control so the edge doesn't keep it
@@ -107,25 +165,7 @@ export function createPublicPricesRouter(
   const router = express.Router()
   const cache = new LRUCache<string, Body>({ max: 2000, ttl: MEMORY_TTL_MS })
 
-  router.use((req: Request, res: Response, next: NextFunction) => {
-    if (req.method !== "GET" && req.method !== "HEAD") {
-      res.setHeader("Allow", "GET, HEAD")
-      res.status(405).json({
-        error: { code: "METHOD_NOT_ALLOWED", message: "Read-only feed" },
-      })
-      return
-    }
-    next()
-  })
-  router.use(createPriceFeedRateLimit())
-
-  // Public data, readable from any origin; no credentials are ever involved.
-  router.use((_req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin")
-    res.setHeader("X-Content-Type-Options", "nosniff")
-    next()
-  })
+  usePublicFeedBase(router, "price_feed_ip")
 
   const send = (res: Response, b: Body) => {
     res.status(b.status)
@@ -195,7 +235,7 @@ export function createPublicPricesRouter(
 
   router.get("/:slug.json", (req, res, next) => {
     const slug = String(req.params.slug ?? "").toLowerCase()
-    if (!/^[0-9a-f][0-9a-z_-]{0,199}$/.test(slug)) {
+    if (!FEED_SLUG.test(slug)) {
       send(
         res,
         json({ error: { code: "NOT_FOUND", message: "Unknown item" } }, 404),
@@ -210,21 +250,7 @@ export function createPublicPricesRouter(
     })(req, res, next)
   })
 
-  router.use((_req, res) => {
-    res.setHeader("Cache-Control", PRICE_FEED_NOT_FOUND_CACHE_CONTROL)
-    res.status(404).json({
-      error: { code: "NOT_FOUND", message: "No such price feed file" },
-    })
-  })
-
-  router.use(
-    (_err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-      res.setHeader("Cache-Control", "no-store")
-      res.status(500).json({
-        error: { code: "INTERNAL_ERROR", message: "Price feed unavailable" },
-      })
-    },
-  )
+  usePublicFeedFallbacks(router, "No such price feed file")
 
   return router
 }

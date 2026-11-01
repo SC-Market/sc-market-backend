@@ -98,18 +98,31 @@ export interface PriceOracleLinks {
   index: string
 }
 
+/** Licence of the public data feeds: CC BY 4.0. */
+export interface PublicFeedLicense {
+  /** SPDX identifier, "CC-BY-4.0" */
+  license: string
+  /** Licence text */
+  url: string
+  /** The credit line to show when reusing the data */
+  attribution: string
+  /** Rights notice: game data, and SC Market's aggregation and price data */
+  notice: string
+}
+
 /**
- * Envelope shared by every public data feed (prices now; missions,
- * blueprints and items later): which dataset, its schema version, and the
- * terms. Free to use; rate limits only protect against abuse.
+ * Envelope shared by every public data feed (prices, items; missions and
+ * blueprints later): which dataset, its schema version, the terms and the
+ * licence (CC BY 4.0). Free to use; rate limits only protect against abuse.
  */
 export interface PublicFeedInfo {
   /** Dataset name, e.g. "prices" */
   dataset: string
   /** Schema version of the dataset; bumped only on a breaking change */
   version: number
-  /** Usage terms: free, attribution requested */
+  /** Usage terms in words: free, no key, CC BY 4.0 with attribution */
   terms: string
+  license: PublicFeedLicense
 }
 
 /** Player-listing price document of one game item. */

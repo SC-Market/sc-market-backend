@@ -2009,12 +2009,24 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PublicFeedLicense": {
+        "dataType": "refObject",
+        "properties": {
+            "license": {"dataType":"string","required":true},
+            "url": {"dataType":"string","required":true},
+            "attribution": {"dataType":"string","required":true},
+            "notice": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PublicFeedInfo": {
         "dataType": "refObject",
         "properties": {
             "dataset": {"dataType":"string","required":true},
             "version": {"dataType":"double","required":true},
             "terms": {"dataType":"string","required":true},
+            "license": {"ref":"PublicFeedLicense","required":true},
         },
         "additionalProperties": false,
     },
@@ -2128,6 +2140,189 @@ const models: TsoaRoute.Models = {
             "methodology": {"ref":"PriceOracleMethodology","required":true},
             "attribution": {"dataType":"string","required":true},
             "links": {"ref":"PriceOracleLinks","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionListing": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "quantity_available": {"dataType":"double","required":true},
+            "sale_type": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionListings": {
+        "dataType": "refObject",
+        "properties": {
+            "count": {"dataType":"double","required":true},
+            "seller_count": {"dataType":"double","required":true},
+            "quantity_available": {"dataType":"double","required":true},
+            "lowest_ask": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "page": {"dataType":"string","required":true},
+            "top": {"dataType":"array","array":{"dataType":"refObject","ref":"ItemAcquisitionListing"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionFreshness": {
+        "dataType": "refObject",
+        "properties": {
+            "as_of": {"dataType":"string","required":true},
+            "game_version": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "game_data_updated_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "price_snapshot_date": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionPrice": {
+        "dataType": "refObject",
+        "properties": {
+            "currency": {"dataType":"enum","enums":["aUEC"],"required":true},
+            "unit_note": {"dataType":"string","required":true},
+            "current": {"ref":"PriceOracleCurrent","required":true},
+            "trend_30d": {"ref":"PriceOracleTrend","required":true},
+            "sales_30d": {"ref":"PriceOracleSales","required":true},
+            "summary": {"dataType":"string","required":true},
+            "links": {"ref":"PriceOracleLinks","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionMission": {
+        "dataType": "refObject",
+        "properties": {
+            "mission_id": {"dataType":"string","required":true},
+            "mission_code": {"dataType":"string","required":true},
+            "mission_name": {"dataType":"string","required":true},
+            "reward_kind": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["item"]},{"dataType":"enum","enums":["blueprint"]}],"required":true},
+            "blueprint_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "drop_probability": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "is_guaranteed": {"dataType":"union","subSchemas":[{"dataType":"boolean"},{"dataType":"enum","enums":[null]}],"required":true},
+            "category": {"dataType":"string","required":true},
+            "mission_giver_org": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "faction": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "star_system": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "legal_status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["LEGAL"]},{"dataType":"enum","enums":["ILLEGAL"]},{"dataType":"enum","enums":[null]}],"required":true},
+            "credit_reward_max": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "associated_event": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionMissions": {
+        "dataType": "refObject",
+        "properties": {
+            "total": {"dataType":"double","required":true},
+            "top": {"dataType":"array","array":{"dataType":"refObject","ref":"ItemAcquisitionMission"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionIngredient": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "quantity_scu": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "min_quality": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "slot_display_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionBlueprint": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_code": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "output_quantity": {"dataType":"double","required":true},
+            "tier": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rarity": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "crafting_station_type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "crafting_time_seconds": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "mission_count": {"dataType":"double","required":true},
+            "ingredients": {"dataType":"array","array":{"dataType":"refObject","ref":"ItemAcquisitionIngredient"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionBlueprints": {
+        "dataType": "refObject",
+        "properties": {
+            "total": {"dataType":"double","required":true},
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"ItemAcquisitionBlueprint"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionShop": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "location": {"dataType":"string","required":true},
+            "buy_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sell_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionShops": {
+        "dataType": "refObject",
+        "properties": {
+            "total": {"dataType":"double","required":true},
+            "shops": {"dataType":"array","array":{"dataType":"refObject","ref":"ItemAcquisitionShop"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionResource": {
+        "dataType": "refObject",
+        "properties": {
+            "can_be_mined": {"dataType":"boolean","required":true},
+            "can_be_purchased": {"dataType":"boolean","required":true},
+            "can_be_salvaged": {"dataType":"boolean","required":true},
+            "can_be_looted": {"dataType":"boolean","required":true},
+            "mining_locations": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"array","array":{"dataType":"string"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "purchase_locations": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"array","array":{"dataType":"string"}}},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionLinks": {
+        "dataType": "refObject",
+        "properties": {
+            "wiki": {"dataType":"string","required":true},
+            "market": {"dataType":"string","required":true},
+            "json": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemAcquisitionDocument": {
+        "dataType": "refObject",
+        "properties": {
+            "feed": {"ref":"PublicFeedInfo","required":true},
+            "item": {"ref":"PriceOracleItemRef","required":true},
+            "as_of": {"dataType":"string","required":true},
+            "freshness": {"ref":"ItemAcquisitionFreshness","required":true},
+            "price": {"ref":"ItemAcquisitionPrice","required":true},
+            "missions": {"ref":"ItemAcquisitionMissions","required":true},
+            "blueprints": {"ref":"ItemAcquisitionBlueprints","required":true},
+            "in_game_shops": {"ref":"ItemAcquisitionShops","required":true},
+            "resource": {"dataType":"union","subSchemas":[{"ref":"ItemAcquisitionResource"},{"dataType":"enum","enums":[null]}],"required":true},
+            "attribution": {"dataType":"string","required":true},
+            "links": {"ref":"ItemAcquisitionLinks","required":true},
+            "listings": {"ref":"ItemAcquisitionListings","required":true},
         },
         "additionalProperties": false,
     },
@@ -2840,6 +3035,8 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string","required":true},
             "ref": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "game_item_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -2942,6 +3139,8 @@ const models: TsoaRoute.Models = {
             "blueprint_code": {"dataType":"string","required":true},
             "blueprint_name": {"dataType":"string","required":true},
             "output_item_name": {"dataType":"string","required":true},
+            "output_game_item_id": {"dataType":"string","required":true},
+            "output_game_item_slug": {"dataType":"string","required":true},
             "output_item_icon": {"dataType":"string"},
             "drop_probability": {"dataType":"double","required":true},
             "is_guaranteed": {"dataType":"boolean","required":true},
@@ -7769,6 +7968,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getPriceStats',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameItemsV2Controller_getAcquisition: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/game-items/:id/acquisition',
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller.prototype.getAcquisition)),
+
+            async function GameItemsV2Controller_getAcquisition(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameItemsV2Controller_getAcquisition, request, response });
+
+                const controller = new GameItemsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getAcquisition',
                 controller,
                 response,
                 next,

@@ -27,12 +27,15 @@ import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
 import type { PriceOracleItem } from "../types/price-oracle.types.js"
 import { getPriceDocument } from "../../../../services/price-oracle/price-oracle.service.js"
+import type { ItemAcquisitionDocument } from "../types/item-acquisition.types.js"
+import { getAcquisitionDocument } from "../../../../services/item-acquisition/item-acquisition.service.js"
 import {
   PRICE_FEED_CACHE_CONTROL,
   createPriceFeedRateLimit,
 } from "../../public-prices/router.js"
 
 const priceStatsRateLimit = createPriceFeedRateLimit("price_stats_v2_ip")
+const acquisitionRateLimit = createPriceFeedRateLimit("item_acquisition_v2_ip")
 
 /**
  * Row shape of the quality-distribution aggregate query. The integer columns are
@@ -150,6 +153,28 @@ export class GameItemsV2Controller extends BaseController {
   @Middlewares(priceStatsRateLimit)
   public async getPriceStats(@Path() id: string): Promise<PriceOracleItem> {
     const doc = await getPriceDocument(id)
+    if (!doc) this.throwNotFound("Game item", id)
+    this.setHeader("Cache-Control", PRICE_FEED_CACHE_CONTROL)
+    return doc
+  }
+
+  /**
+   * How to get a game item: SC Market player-listing price stats, live
+   * listings (count, lowest ask, the cheapest few), the missions that reward
+   * the item or its blueprint (drop chance, giver, system, legality), the
+   * blueprints that craft it with their ingredients, in-game shops and
+   * resource locations from the game files, and freshness (game version,
+   * as_of). Test accounts' listings are excluded. Cached for 5 minutes; the
+   * public feed GET /api/public/items/{slug}.json serves the same document
+   * without listing references.
+   *
+   * @summary Get acquisition sources for game item
+   * @param id Game item UUID or short slug
+   */
+  @Get("{id}/acquisition")
+  @Middlewares(acquisitionRateLimit)
+  public async getAcquisition(@Path() id: string): Promise<ItemAcquisitionDocument> {
+    const doc = await getAcquisitionDocument(id)
     if (!doc) this.throwNotFound("Game item", id)
     this.setHeader("Cache-Control", PRICE_FEED_CACHE_CONTROL)
     return doc

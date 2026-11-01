@@ -254,6 +254,10 @@ app.get("/favicon.ico", (req, res) => {
 // Not under /api/public/v1, which is token-only.
 import { publicPricesRouter } from "./api/routes/public-prices/router.js"
 app.use("/api/public/prices", publicPricesRouter)
+// Public item acquisition feed (/api/public/items): same rules as the price
+// feed (services/item-acquisition).
+import { publicItemsRouter } from "./api/routes/public-items/router.js"
+app.use("/api/public/items", publicItemsRouter)
 
 // Public API (/api/public/v1): token-only, so it is mounted before sessions,
 // cookies, CORS, CSRF and passport, and never sees a browser credential.
