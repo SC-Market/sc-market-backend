@@ -60,6 +60,17 @@ export interface NotificationEmailData {
 }
 
 /**
+ * The exact preference scope to check at send time: an org id, or null for
+ * the recipient's Personal preferences. notify() sets it (it resolved the
+ * preference under this scope). Without it, the send-time check uses the
+ * contractor id passed, else the order's / offer's contractor_id in the data,
+ * as the legacy senders expect.
+ */
+export interface EmailPreferenceScope {
+  contractorId: string | null
+}
+
+/**
  * Email service interface
  */
 export interface EmailService {
@@ -76,6 +87,7 @@ export interface EmailService {
     data: NotificationEmailData,
     skipQueue?: boolean,
     contractorId?: string | null,
+    preferenceScope?: EmailPreferenceScope,
   ): Promise<boolean>
 
   // Email verification

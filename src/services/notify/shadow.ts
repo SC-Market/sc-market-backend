@@ -31,7 +31,7 @@
  * legacy does, so they add no difference.)
  *
  * Parity is proven when real traffic shows no unexpected difference; then the
- * event is switched to notify() and its legacy code removed.
+ * event is switched to notify() (cutover.ts) and no longer shadowed.
  *
  * The legacy side is captured by trace.ts at the legacy write points:
  * - in_app: notification rows inserted for the event's action;

@@ -9,7 +9,7 @@ import { sendMessage } from "../../clients/aws/sqs.js"
 import { env } from "../../config/env.js"
 import { checkEmailSQSConfiguration } from "../../clients/aws/sqs-config.js"
 import logger from "../../logger/logger.js"
-import { NotificationEmailData } from "./email.service.types.js"
+import type { EmailPreferenceScope, NotificationEmailData } from "./email.service.types.js"
 import { deliverableRecipients } from "../test-accounts/isolation.js"
 
 /**
@@ -42,6 +42,8 @@ interface NotificationEmailQueueMessage extends BaseEmailQueueMessage {
     userId: string
     notificationType: string
     data: NotificationEmailData
+    /** See EmailPreferenceScope; absent on legacy sends. */
+    preferenceScope?: EmailPreferenceScope
   }
 }
 
@@ -85,6 +87,7 @@ export interface EmailQueueService {
     notificationType: string,
     data: NotificationEmailData,
     priority?: "high" | "normal" | "low",
+    preferenceScope?: EmailPreferenceScope,
   ): Promise<void>
 
   /**
@@ -137,6 +140,7 @@ class SQSEmailQueueService implements EmailQueueService {
     notificationType: string,
     data: NotificationEmailData,
     priority: "high" | "normal" | "low" = "normal",
+    preferenceScope?: EmailPreferenceScope,
   ): Promise<void> {
     // A test account's actions never reach a real user (services/test-accounts).
     if ((await deliverableRecipients([userId])).length === 0) return
@@ -166,6 +170,7 @@ class SQSEmailQueueService implements EmailQueueService {
           userId,
           notificationType,
           data,
+          ...(preferenceScope ? { preferenceScope } : {}),
         },
         metadata: {
           created_at: new Date().toISOString(),

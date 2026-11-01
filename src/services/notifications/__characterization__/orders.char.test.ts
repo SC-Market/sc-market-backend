@@ -10,7 +10,7 @@
  *
  * An intended behaviour change must show up here as a reviewed diff.
  */
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, beforeEach, afterEach } from "vitest"
 import * as w from "../../../test-utils/notif-char/world.js"
 import { notificationService } from "../notification.service.js"
 import { initiateOrder, handleStatusUpdate, handleAssignedUpdate } from "../../../api/routes/v1/orders/helpers.js"
@@ -79,7 +79,6 @@ describe("order_create (1)", () => {
         "email   boss@example.test New Order Created",
         "discord POST /channels/900000000000000001/messages",
         "webhook shop-hook SC Market - Order Placed",
-        "shadow  order.created ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -106,7 +105,6 @@ describe("order_create (1)", () => {
         "webhook seller-shop-hook SC Market - Order Assigned",
         "webhook seller-hook SC Market - Order Assigned",
         "webhook seller-shop-hook SC Market - Order Placed",
-        "shadow  order.assigned ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -127,7 +125,6 @@ describe("order_create (1)", () => {
       [
         "in_app  user:boss order_create (order:o3)",
         "push    push:boss [order] New Order Created",
-        "shadow  order.created ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -152,10 +149,7 @@ describe("order_create (1)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:boss order_create (order:o4)",
-        "in_app  user:boss order_create (order:o4)",
         "push    push:boss [order] New Order Created",
-        "push    push:boss [order] New Order Created",
-        "shadow  order.created ok expected duplicate_role=2",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -187,7 +181,6 @@ describe("order_assigned (2)", () => {
         "discord PUT /channels/thread:o5/thread-members/discord:clerk",
         "webhook shop-hook SC Market - Order Assigned",
         "webhook clerk-hook SC Market - Order Assigned",
-        "shadow  order.assigned ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -208,7 +201,6 @@ describe("order_assigned (2)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:clerk order_assigned (order:o6)",
-        "shadow  order.assigned ok",
       ]
     `)
   })
@@ -253,7 +245,6 @@ describe("order_status_* (4-7)", () => {
         "discord POST /channels/thread:st-in-progress/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -270,7 +261,6 @@ describe("order_status_* (4-7)", () => {
         "discord PATCH /channels/thread:st-fulfilled",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -287,7 +277,6 @@ describe("order_status_* (4-7)", () => {
         "discord PATCH /channels/thread:st-cancelled",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -303,7 +292,6 @@ describe("order_status_* (4-7)", () => {
         "discord POST /channels/thread:st-not-started/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -328,7 +316,6 @@ describe("order_status_* (4-7)", () => {
         "push    push:clerk [order] Order Cancelled",
         "email   clerk@example.test Order Cancelled",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
-        "shadow  order.status_changed ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -364,8 +351,6 @@ describe("order_message (81)", () => {
         "discord POST /channels/thread:chat/messages",
         "ws      {"message_id":"uuid#1","content":"first message","author":"c",
         "ws      {"message_id":"uuid#2","content":"second message","author":"",
-        "shadow  order.message ok",
-        "shadow  order.message ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -393,8 +378,6 @@ describe("order_message (81)", () => {
         "push    push:seller [order] customer: two",
         "ws      {"message_id":"uuid#1","content":"one","author":"customer","",
         "ws      {"message_id":"uuid#2","content":"two","author":"customer","",
-        "shadow  order.message ok",
-        "shadow  order.message ok",
       ]
     `)
   })
@@ -552,6 +535,13 @@ describe("Discord order threads (specialised, not notifications)", () => {
 // Owner decisions planned in shadow mode (they ship with the cutover): the
 // shadow line marks them as expected differences, separate from mismatches.
 describe("shadow: expected differences", () => {
+  // Shadow mode itself (the rollback path, NOTIFY_LIVE_EVENTS=none): legacy sends, notify() is compared.
+  beforeEach(() => {
+    process.env.NOTIFY_LIVE_EVENTS = "none"
+  })
+  afterEach(() => {
+    delete process.env.NOTIFY_LIVE_EVENTS
+  })
   it("actor_excluded: an org manager ordering from their own org is notified today, not by the plan", async () => {
     const boss = await w.user("boss")
     const clerk = await w.user("clerk")

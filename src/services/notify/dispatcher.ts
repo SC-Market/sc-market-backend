@@ -153,7 +153,10 @@ export async function notify(
   if (!recipients.length) return result
 
   const channels = CHANNEL_ORDER.filter(
-    (c) => def.channels.includes(c) && (!opts.channels || opts.channels.includes(c)),
+    (c) =>
+      def.channels.includes(c) &&
+      (!opts.channels || opts.channels.includes(c)) &&
+      !(c === "discord_dm" && def.discordDmLocked),
   )
 
   try {

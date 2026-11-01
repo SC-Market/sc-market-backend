@@ -16,6 +16,7 @@ import logger from "../logger/logger.js"
 import { checkEmailSQSConfiguration } from "../clients/aws/sqs-config.js"
 import { emailService } from "../services/email/email.service.js"
 import { EmailQueueMessage } from "../services/email/email-queue.service.js"
+import type { EmailPreferenceScope } from "../services/email/email.service.types.js"
 
 // Track last warning time to avoid spam
 let lastConfigWarning = 0
@@ -113,6 +114,7 @@ export async function processEmailQueue() {
                 userId: string
                 notificationType: string
                 data: any
+                preferenceScope?: EmailPreferenceScope
               },
             )
             break
@@ -160,8 +162,9 @@ async function handleNotificationEmail(payload: {
   userId: string
   notificationType: string
   data: any
+  preferenceScope?: EmailPreferenceScope
 }) {
-  const { userId, notificationType, data } = payload
+  const { userId, notificationType, data, preferenceScope } = payload
 
   try {
     logger.debug(`Sending notification email to user ${userId}`, {
@@ -174,6 +177,8 @@ async function handleNotificationEmail(payload: {
       notificationType,
       data,
       true,
+      undefined,
+      preferenceScope,
     )
 
     if (sent) {

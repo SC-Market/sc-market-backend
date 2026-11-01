@@ -10,8 +10,8 @@
  * - email is opt-in (a missing email_notification_preferences row = off);
  * - Discord DM is opt-out where it exists (only price alerts DM today).
  *
- * Events are migrated onto notify() one family at a time; an event listed
- * here with `migrated: false` is still sent by its legacy code path.
+ * Events are migrated onto notify() one family at a time; the orders, offers
+ * and chat messages switch over per event (cutover.ts).
  */
 import type { UserChannel } from "./channels.js"
 
@@ -43,11 +43,13 @@ export interface EventDefinition {
   /** Value when the user has no preference row. */
   defaults: Partial<Record<UserChannel, boolean>>
   /**
-   * Still delivered by the legacy notification.service.ts code (notify()
-   * runs in shadow mode). Channels the legacy code has no sender for
-   * (Discord DM) can't be turned on until the event is switched over.
+   * Orders, offers and chat messages: the legacy code never sent them as a
+   * Discord DM, so Discord DM is not delivered for them (by notify(), live
+   * or shadow) and is shown locked ("coming soon") in the settings. Turning
+   * it on is a separate owner decision. Whether notify() or the legacy code
+   * sends these events is cutover.ts.
    */
-  legacyDelivery?: true
+  discordDmLocked?: true
   /**
    * Owner decision: one event for what used to be several notification
    * actions (the four order statuses; new offer and counter offer). The
@@ -135,8 +137,8 @@ export const CATALOG = {
   "offer.received": merged("offers", OFFER_ACTIONS, ALL),
 } as const satisfies Record<string, EventDefinition>
 
-/** Orders, offers and chat messages: shadow mode until parity is proven on real traffic. */
-const LEGACY_DELIVERY: EventKey[] = [
+/** Orders, offers and chat messages (see discordDmLocked). */
+const DISCORD_DM_LOCKED: EventKey[] = [
   "order.created",
   "order.assigned",
   "order.status.not_started",
@@ -150,7 +152,7 @@ const LEGACY_DELIVERY: EventKey[] = [
   "order.status_changed",
   "offer.received",
 ]
-for (const key of LEGACY_DELIVERY) (CATALOG[key] as EventDefinition).legacyDelivery = true
+for (const key of DISCORD_DM_LOCKED) (CATALOG[key] as EventDefinition).discordDmLocked = true
 
 export function isMandatory(def: EventDefinition): boolean {
   return CATEGORIES[def.category].mandatory

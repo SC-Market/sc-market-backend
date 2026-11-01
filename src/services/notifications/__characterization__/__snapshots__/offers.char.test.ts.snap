@@ -81,6 +81,9 @@ https://sc-market.space/settings?tab=email",
           },
         },
         "notificationType": "counter_offer_create",
+        "preferenceScope": {
+          "contractorId": null,
+        },
         "userId": "user:seller",
       },
       "type": "notification_email",
@@ -116,19 +119,7 @@ https://sc-market.space/settings?tab=email",
       "to": "push:seller",
     },
   ],
-  "shadow": [
-    {
-      "entity_id": "session:c1",
-      "event": "offer.received",
-      "exact": true,
-      "expected": {},
-      "extra": [],
-      "legacy": 3,
-      "match": true,
-      "missing": [],
-      "planned": 3,
-    },
-  ],
+  "shadow": [],
   "warnings": [],
   "webhooks": [
     {
@@ -302,6 +293,9 @@ https://sc-market.space/settings?tab=email",
           },
         },
         "notificationType": "offer_create",
+        "preferenceScope": {
+          "contractorId": null,
+        },
         "userId": "user:seller",
       },
       "type": "notification_email",
@@ -337,19 +331,7 @@ https://sc-market.space/settings?tab=email",
       "to": "push:seller",
     },
   ],
-  "shadow": [
-    {
-      "entity_id": "session:o2",
-      "event": "offer.received",
-      "exact": true,
-      "expected": {},
-      "extra": [],
-      "legacy": 3,
-      "match": true,
-      "missing": [],
-      "planned": 3,
-    },
-  ],
+  "shadow": [],
   "warnings": [],
   "webhooks": [
     {
@@ -392,7 +374,7 @@ https://sc-market.space/settings?tab=email",
 }
 `;
 
-exports[`offer_create (19) > offer to an org shop: managers get in-app + email but no push; alert post with Claim; thread queued 2`] = `
+exports[`offer_create (19) > offer to an org shop: managers get in-app, email and push (owner decision, cutover); alert post with Claim; thread queued 2`] = `
 {
   "discord": [
     {
@@ -540,31 +522,10 @@ https://sc-market.space/settings?tab=email",
           },
         },
         "notificationType": "offer_create",
-        "userId": "user:boss",
-      },
-      "type": "notification_email",
-    },
-    {
-      "metadata": {
-        "created_at": "<ts>",
-        "priority": "normal",
-      },
-      "payload": {
-        "data": {
-          "offer": {
-            "assigned_id": null,
-            "contractor_id": "org:acme",
-            "customer_id": "user:customer",
-            "discord_invite": null,
-            "id": "session:o1",
-            "shop_id": "shop:acme-shop",
-            "status": "active",
-            "thread_id": null,
-            "timestamp": "<ts>",
-          },
+        "preferenceScope": {
+          "contractorId": "org:acme",
         },
-        "notificationType": "offer_create",
-        "userId": "user:clerk",
+        "userId": "user:boss",
       },
       "type": "notification_email",
     },
@@ -588,22 +549,43 @@ https://sc-market.space/settings?tab=email",
       "to": "user:clerk",
     },
   ],
-  "push": [],
-  "shadow": [
+  "push": [
     {
-      "entity_id": "session:o1",
-      "event": "offer.received",
-      "exact": false,
-      "expected": {
-        "org_offer_push": 2,
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new offer has been submitted",
+        "data": {
+          "action": "offer_create",
+          "entityId": "session:o1",
+          "type": "offer",
+          "url": "https://sc-market.space/offer/session:o1",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "offer-session:o1",
+        "title": "New Offer",
       },
-      "extra": [],
-      "legacy": 3,
-      "match": true,
-      "missing": [],
-      "planned": 5,
+      "to": "push:boss",
+    },
+    {
+      "payload": {
+        "badge": "https://sc-market.space/android-chrome-192x192.png",
+        "body": "A new offer has been submitted",
+        "data": {
+          "action": "offer_create",
+          "entityId": "session:o1",
+          "type": "offer",
+          "url": "https://sc-market.space/offer/session:o1",
+        },
+        "icon": "https://sc-market.space/android-chrome-192x192.png",
+        "requireInteraction": false,
+        "tag": "offer-session:o1",
+        "title": "New Offer",
+      },
+      "to": "push:clerk",
     },
   ],
+  "shadow": [],
   "warnings": [],
   "webhooks": [
     {
@@ -671,7 +653,37 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
     },
   ],
   "discord_queue": [],
-  "email": [],
+  "email": [
+    {
+      "html_length_bucket": 4000,
+      "subject": "New Message on Offer",
+      "text": "SC Market
+https://sc-market.space
+
+New Message on Offer Hello
+Customer, A new message has been sent on your offer: Offer #session:m1
+
+Seller
+sent a message:
+
+hello
+
+View Offer:
+https://sc-market.space/offer/session:m1
+
+---
+SC Market
+https://sc-market.space
+
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
+Manage Preferences:
+https://sc-market.space/settings?tab=email",
+      "to": [
+        "customer@example.test",
+      ],
+    },
+  ],
   "email_queue": [
     {
       "metadata": {
@@ -700,6 +712,9 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
           },
         },
         "notificationType": "offer_message",
+        "preferenceScope": {
+          "contractorId": null,
+        },
         "userId": "user:customer",
       },
       "type": "notification_email",
@@ -717,52 +732,8 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
       "to": "user:customer",
     },
   ],
-  "push": [
-    {
-      "payload": {
-        "badge": "https://sc-market.space/android-chrome-192x192.png",
-        "body": "hello",
-        "data": {
-          "action": "offer_message",
-          "chatId": "chat:m1",
-          "entityId": "session:m1",
-          "type": "offer",
-          "url": "https://sc-market.space/messages/chat:m1",
-        },
-        "icon": "https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg",
-        "requireInteraction": false,
-        "tag": "chat-chat:m1",
-        "title": "seller: hello",
-      },
-      "to": "push:customer",
-    },
-  ],
-  "shadow": [
-    {
-      "entity_id": "session:m1",
-      "event": "offer.message",
-      "exact": false,
-      "expected": {
-        "customer_scope": 2,
-      },
-      "extra": [],
-      "legacy": 2,
-      "match": true,
-      "missing": [],
-      "planned": 2,
-    },
-    {
-      "entity_id": "session:m1",
-      "event": "offer.message",
-      "exact": true,
-      "expected": {},
-      "extra": [],
-      "legacy": 0,
-      "match": true,
-      "missing": [],
-      "planned": 0,
-    },
-  ],
+  "push": [],
+  "shadow": [],
   "warnings": [],
   "webhooks": [],
   "websocket": [

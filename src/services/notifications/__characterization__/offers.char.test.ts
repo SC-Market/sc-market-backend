@@ -29,7 +29,7 @@ function fakeRes() {
 const OFFER = { kind: "Delivery", cost: "40000", title: "Haul 40 SCU", description: "Please haul" }
 
 describe("offer_create (19)", () => {
-  it("offer to an org shop: managers get in-app + email but no push; alert post with Claim; thread queued", async () => {
+  it("offer to an org shop: managers get in-app, email and push (owner decision, cutover); alert post with Claim; thread queued", async () => {
     const customer = await w.user("customer")
     const boss = await w.user("boss")
     const clerk = await w.user("clerk")
@@ -56,12 +56,13 @@ describe("offer_create (19)", () => {
       [
         "in_app  user:boss offer_create (session:o1)",
         "in_app  user:clerk offer_create (session:o1)",
+        "push    push:boss [offer] New Offer",
+        "push    push:clerk [offer] New Offer",
         "email   boss@example.test New Offer Created",
         "discord POST /channels/900000000000000101/messages",
         "discord POST /channels/900000000000000101/invites",
         "dqueue  create_thread",
         "webhook shop-hook SC Market - Offer Received",
-        "shadow  offer.received ok expected org_offer_push=2",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -89,7 +90,6 @@ describe("offer_create (19)", () => {
         "email   seller@example.test New Offer Created",
         "discord POST /channels/900000000000000102/messages",
         "webhook shop-hook SC Market - Offer Received",
-        "shadow  offer.received ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -110,7 +110,6 @@ describe("offer_create (19)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:seller offer_create (session:o3)",
-        "shadow  offer.received ok",
       ]
     `)
   })
@@ -146,7 +145,6 @@ describe("counter_offer_create (20)", () => {
         "email   seller@example.test Counter Offer Received",
         "discord POST /channels/thread:c1/messages",
         "webhook shop-hook SC Market - Counter Offer Received",
-        "shadow  offer.received ok",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -189,8 +187,8 @@ describe("offer_message (18)", () => {
     const seller = await w.user("seller")
     const acme = await w.org("acme", [{ user: seller, perms: "owner" }])
     await w.emailOptIn(customer, ["offer_message"])
-    // Org-scoped: customer's personal push row applies? It is looked up with the
-    // session's contractor_id, so a personal "off" does not apply here.
+    // The customer is on Personal preferences (owner decision, customer_scope):
+    // the personal push "off" and email opt-in both apply on an org's offer.
     await w.pushPref(customer, "offer_message", false)
     const session = await w.offerSession("m1", {
       customer,
@@ -213,13 +211,11 @@ describe("offer_message (18)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:customer offer_message (session:m1)",
-        "push    push:customer [offer] seller: hello",
+        "email   customer@example.test New Message on Offer",
         "discord POST /channels/thread:m1/messages",
         "discord POST /channels/thread:m1/messages",
         "ws      {"message_id":"uuid#1","content":"hello","author":"seller","",
         "ws      {"message_id":"uuid#2","content":"are you there?","author":"",
-        "shadow  offer.message ok expected customer_scope=2",
-        "shadow  offer.message ok",
       ]
     `)
     expect(obs).toMatchSnapshot()

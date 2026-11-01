@@ -26,6 +26,17 @@ import { notify } from "../notify/dispatcher.js"
 import { withShadow, type ShadowPlan } from "../notify/shadow.js"
 import * as plans from "../notify/plans.js"
 import { orgMembersWithPermission } from "../notify/recipients.js"
+import { isLive, type CutoverEvent } from "../notify/cutover.js"
+import type { RenderedMessages } from "../notify/channels.js"
+
+/** The chat of an order or offer session, for the message push's link; undefined if it has none. */
+async function chatIdFor(where: { order_id: string } | { session_id: string }): Promise<string | undefined> {
+  try {
+    return (await chatDb.getChat(where)).chat_id
+  } catch {
+    return undefined
+  }
+}
 
 /** Shadow plans never break the legacy send: a planning error means no shadow. */
 async function shadowPlans(build: () => Promise<ShadowPlan[]>): Promise<ShadowPlan[]> {
@@ -113,19 +124,62 @@ export interface NotificationService {
  * be integrated in later phases.
  */
 class DatabaseNotificationService implements NotificationService {
-  // Orders, offers and chat messages still deliver through the legacy code
-  // below; notify() runs alongside in shadow mode (services/notify/shadow.ts)
-  // until real traffic shows parity.
+  // Orders, offers and chat messages: per event, notify() delivers live or
+  // the legacy code below delivers with notify() in shadow mode
+  // (services/notify/cutover.ts, shadow.ts). Webhooks and Discord threads are
+  // not user notifications and are sent the same way on both paths.
+
+  /**
+   * Live: notify() sends each plan (plans.ts) and the legacy sender is not
+   * called. Otherwise: the legacy sender, compared in shadow mode.
+   */
+  private async deliver(
+    event: CutoverEvent,
+    build: () => Promise<ShadowPlan[]>,
+    messages: () => Promise<RenderedMessages>,
+    legacy: () => Promise<void>,
+  ): Promise<void> {
+    const forEvent = async () => (await build()).filter((p) => p.event === event)
+    if (!isLive(event)) return withShadow(await shadowPlans(forEvent), legacy)
+    const planned = await forEvent()
+    if (!planned.length) return
+    const rendered = await messages()
+    for (const p of planned) {
+      await notify(p.event, p.recipients, { ...p.opts, messages: rendered })
+    }
+  }
 
   async createOrderNotification(order: DBOrder): Promise<void> {
-    return withShadow(await shadowPlans(() => plans.orderCreatedPlans(order)), () =>
-      this.legacyOrderNotification(order),
-    )
+    if (order.contractor_id) {
+      await this.deliver(
+        "order.created",
+        () => plans.orderCreatedPlans(order),
+        async () => ({
+          push: payloadFormatters.formatOrderNotificationPayload(order, "order_create"),
+          email: { data: { order } },
+        }),
+        () => this.createOrderContractorNotification(order),
+      )
+    }
+    if (order.assigned_id) {
+      await this.createOrderAssignedNotification(order)
+    }
+    // "Order Created" webhooks fire for every new order, assigned or not
+    await webhookService.sendOrderWebhooks(order)
   }
 
   async createOrderAssignedNotification(order: DBOrder, actorId?: string | null): Promise<void> {
-    return withShadow(await shadowPlans(async () => plans.orderAssignedPlans(order, actorId)), () =>
-      this.legacyOrderAssignedNotification(order),
+    if (!order.assigned_id) return
+    // "Order Assigned" webhooks: the shop's and the assignee's own
+    await webhookService.sendOrderAssignedWebhooks(order)
+    await this.deliver(
+      "order.assigned",
+      async () => plans.orderAssignedPlans(order, actorId),
+      async () => ({
+        push: payloadFormatters.formatOrderNotificationPayload(order, "order_assigned"),
+        email: { data: { order } },
+      }),
+      () => this.legacyOrderAssignedNotification(order),
     )
   }
 
@@ -134,15 +188,31 @@ class DatabaseNotificationService implements NotificationService {
     newStatus: string,
     actorId: string,
   ): Promise<void> {
-    return withShadow(
-      await shadowPlans(async () => plans.orderStatusPlans(order, newStatus, actorId)),
+    const action = `order_status_${newStatus.replace("-", "_")}`
+    await this.deliver(
+      "order.status_changed",
+      async () => plans.orderStatusPlans(order, newStatus, actorId),
+      async () => ({
+        push: payloadFormatters.formatOrderNotificationPayload(order, action),
+        email: { data: { order } },
+      }),
       () => this.legacyOrderStatusNotification(order, newStatus, actorId),
     )
+    // Send webhooks for order status changes
+    await webhookService.sendOrderStatusWebhooks(order, newStatus, actorId)
   }
 
   async createOrderMessageNotification(order: DBOrder, message: DBMessage): Promise<void> {
-    return withShadow(
-      await shadowPlans(async () => plans.chatMessagePlans({ kind: "order", order }, message)),
+    await this.deliver(
+      "order.message",
+      () => plans.chatMessagePlans({ kind: "order", order }, message),
+      async () => {
+        const chatId = await chatIdFor({ order_id: order.order_id })
+        return {
+          push: await payloadFormatters.formatOrderMessageNotificationPayload(order, message, chatId),
+          email: { data: { order, message } },
+        }
+      },
       () => this.legacyOrderMessageNotification(order, message),
     )
   }
@@ -151,8 +221,20 @@ class DatabaseNotificationService implements NotificationService {
     offer: DBOfferSession,
     type: "create" | "counteroffer",
   ): Promise<void> {
-    return withShadow(await shadowPlans(() => plans.offerPlans(offer, type)), () =>
-      this.legacyOfferNotification(offer, type),
+    await this.deliver(
+      "offer.received",
+      () => plans.offerPlans(offer, type),
+      async () => ({
+        push: payloadFormatters.formatOfferNotificationPayload(offer, type),
+        email: { data: { offer } },
+      }),
+      () => this.legacyOfferNotification(offer, type),
+    )
+    // Coordinate with delivery services
+    // await discordService.sendOfferDM(offer) // TODO: Re-enable when ready
+    await webhookService.sendOfferWebhooks(
+      offer,
+      type === "create" ? "offer_create" : "counter_offer_create",
     )
   }
 
@@ -160,24 +242,18 @@ class DatabaseNotificationService implements NotificationService {
     session: DBOfferSession,
     message: DBMessage,
   ): Promise<void> {
-    return withShadow(
-      await shadowPlans(async () => plans.chatMessagePlans({ kind: "offer", session }, message)),
+    await this.deliver(
+      "offer.message",
+      () => plans.chatMessagePlans({ kind: "offer", session }, message),
+      async () => {
+        const chatId = await chatIdFor({ session_id: session.id })
+        return {
+          push: await payloadFormatters.formatOfferMessageNotificationPayload(session, message, chatId),
+          email: { data: { offer: session, message } },
+        }
+      },
       () => this.legacyOfferMessageNotification(session, message),
     )
-  }
-  private async legacyOrderNotification(order: DBOrder): Promise<void> {
-    // Handle contractor notifications
-    if (order.contractor_id) {
-      await this.createOrderContractorNotification(order)
-    }
-
-    // Handle assigned user notifications
-    if (order.assigned_id) {
-      await this.createOrderAssignedNotification(order)
-    }
-
-    // "Order Created" webhooks fire for every new order, assigned or not
-    await webhookService.sendOrderWebhooks(order)
   }
 
   /**
@@ -322,9 +398,6 @@ class DatabaseNotificationService implements NotificationService {
     if (!order.assigned_id) {
       return
     }
-
-    // "Order Assigned" webhooks: the shop's and the assignee's own
-    await webhookService.sendOrderAssignedWebhooks(order)
 
     const action =
       await notificationDb.getNotificationActionByName("order_assigned")
@@ -708,9 +781,6 @@ class DatabaseNotificationService implements NotificationService {
         })
       }
     }
-
-    // Send webhooks for order status changes
-    await webhookService.sendOrderStatusWebhooks(order, newStatus, actorId)
   }
 
   private async legacyOfferNotification(
@@ -732,13 +802,6 @@ class DatabaseNotificationService implements NotificationService {
         type === "create" ? "offer_created" : "counter_offer_created",
       )
     }
-
-    // Coordinate with delivery services
-    // await discordService.sendOfferDM(offer) // TODO: Re-enable when ready
-    await webhookService.sendOfferWebhooks(
-      offer,
-      type === "create" ? "offer_create" : "counter_offer_create",
-    )
   }
 
   /**

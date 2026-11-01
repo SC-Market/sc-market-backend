@@ -21,7 +21,7 @@ export function editableChannels(event: EventKey): UserChannel[] {
   const def: EventDefinition = CATALOG[event]
   if (isMandatory(def)) return []
   return def.channels.filter(
-    (c) => (c !== "in_app" || event === "watchlist.price_alert") && !(c === "discord_dm" && def.legacyDelivery),
+    (c) => (c !== "in_app" || event === "watchlist.price_alert") && !(c === "discord_dm" && def.discordDmLocked),
   )
 }
 
@@ -76,7 +76,7 @@ export async function getMatrix(userId: string, contractorId: string | null): Pr
           const mandatory = isMandatory(def)
           const reason: MatrixCell["reason"] = mandatory || (c === "in_app" && !editable.includes(c))
             ? "always_on"
-            : c === "discord_dm" && def.legacyDelivery
+            : c === "discord_dm" && def.discordDmLocked
               ? "coming_soon"
               : c === "discord_dm" && !discordLinked
                 ? "discord_not_linked"

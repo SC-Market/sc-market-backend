@@ -26,6 +26,7 @@ import {
   EmailResult,
   NotificationEmailData,
   UserEmail,
+  type EmailPreferenceScope,
 } from "./email.service.types.js"
 import { renderEmailTemplate } from "./template-engine.js"
 import * as payloadFormatters from "./email-payload-formatters.js"
@@ -328,6 +329,7 @@ class SESEmailService implements EmailService {
     data: NotificationEmailData,
     skipQueue: boolean = false,
     contractorId?: string | null,
+    preferenceScope?: EmailPreferenceScope,
   ): Promise<boolean> {
     // Shadow-mode parity (services/notify/shadow.ts). The queue consumer
     // checks preferences with the contractor id found in the data.
@@ -348,6 +350,7 @@ class SESEmailService implements EmailService {
           notificationType,
           data,
           "normal",
+          preferenceScope,
         )
         logger.debug("Notification email queued", {
           userId,
@@ -400,9 +403,12 @@ class SESEmailService implements EmailService {
 
       // Check email preferences if action type is known
       if (actionTypeId !== null) {
-        // Determine contractor_id from data if not provided
-        let contractorIdToCheck: string | null = contractorId ?? null
-        if (contractorIdToCheck === null || contractorIdToCheck === undefined) {
+        // Determine contractor_id from data if not provided (legacy senders;
+        // notify() passes the exact scope, Personal included)
+        let contractorIdToCheck: string | null = preferenceScope
+          ? preferenceScope.contractorId
+          : (contractorId ?? null)
+        if (!preferenceScope && contractorIdToCheck === null) {
           // Try to extract from notification data
           const orderContractorId = readContractorId(data.order)
           const offerContractorId = readContractorId(data.offer)

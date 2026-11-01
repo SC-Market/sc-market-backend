@@ -2,7 +2,7 @@
  * Characterization: notification scoping by org and by permission
  * (owner-approved, drafts/notifications-design.md §8).
  */
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, beforeEach, afterEach } from "vitest"
 import * as w from "../../../test-utils/notif-char/world.js"
 import { notificationService } from "../notification.service.js"
 import { getKnex } from "../../../clients/database/knex-db.js"
@@ -44,6 +44,13 @@ describe("orgMembersWithPermission", () => {
 })
 
 describe("shadow: permission_scope and customer_scope", () => {
+  // Shadow mode itself (the rollback path, NOTIFY_LIVE_EVENTS=none): legacy sends, notify() is compared.
+  beforeEach(() => {
+    process.env.NOTIFY_LIVE_EVENTS = "none"
+  })
+  afterEach(() => {
+    delete process.env.NOTIFY_LIVE_EVENTS
+  })
   it("a banned manager is notified by legacy, not by the plan", async () => {
     const customer = await w.user("customer")
     const boss = await w.user("boss")
@@ -85,6 +92,13 @@ describe("shadow: permission_scope and customer_scope", () => {
 })
 
 describe("shadow: unassigned_to_managers", () => {
+  // Shadow mode itself (the rollback path, NOTIFY_LIVE_EVENTS=none): legacy sends, notify() is compared.
+  beforeEach(() => {
+    process.env.NOTIFY_LIVE_EVENTS = "none"
+  })
+  afterEach(() => {
+    delete process.env.NOTIFY_LIVE_EVENTS
+  })
   it("a customer's message on an unassigned org offer: legacy tells no org member; the plan tells manage_orders members", async () => {
     const customer = await w.user("customer")
     const boss = await w.user("boss")
@@ -112,6 +126,13 @@ describe("shadow: unassigned_to_managers", () => {
 })
 
 describe("actor: the member who assigns or claims", () => {
+  // Shadow mode itself (the rollback path, NOTIFY_LIVE_EVENTS=none): legacy sends, notify() is compared.
+  beforeEach(() => {
+    process.env.NOTIFY_LIVE_EVENTS = "none"
+  })
+  afterEach(() => {
+    delete process.env.NOTIFY_LIVE_EVENTS
+  })
   it("a member claiming an order for themselves is notified by legacy, not by the plan", async () => {
     const customer = await w.user("customer")
     const clerk = await w.user("clerk")
@@ -148,7 +169,6 @@ describe("org mute", () => {
         "in_app  user:boss order_create (order:mu)",
         "in_app  user:clerk order_create (order:mu)",
         "push    push:clerk [order] New Order Created",
-        "shadow  order.created ok",
       ]
     `)
   })
@@ -168,7 +188,6 @@ describe("org mute", () => {
       [
         "in_app  user:boss order_create (order:mu2)",
         "push    push:boss [order] New Order Created",
-        "shadow  order.created ok",
       ]
     `)
   })

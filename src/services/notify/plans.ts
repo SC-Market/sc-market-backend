@@ -1,8 +1,8 @@
 /**
- * Who notify() would notify for the order, offer and chat events, computed
- * independently of the legacy notification.service.ts code. Shadow mode
- * (shadow.ts) compares these plans with what the legacy code delivers; once
- * they agree on real traffic, these become the live implementation.
+ * Who notify() notifies for the order, offer and chat events, computed
+ * independently of the legacy notification.service.ts code. For a live event
+ * (cutover.ts) notify() sends these plans; for the others, shadow mode
+ * (shadow.ts) compares them with what the legacy code delivers.
  *
  * They already carry the owner's decisions that ship with the cutover; the
  * shadow lines report those as expected differences (shadow.ts):
@@ -95,7 +95,14 @@ export function orderAssignedPlans(order: DBOrder, actorId?: string | null): Sha
     {
       event: "order.assigned",
       recipients: party(order.assigned_id, order.contractor_id),
-      opts: { entityId: order.order_id, actorId: actorId ?? order.customer_id },
+      opts: {
+        entityId: order.order_id,
+        actorId: actorId ?? order.customer_id,
+        // One occurrence per assignment: an order can be unassigned and
+        // assigned to the same member again, and each assignment is notified
+        // (as legacy did). The call is not retried.
+        dedupeKey: `${order.order_id}:order_assigned:${order.assigned_id}:${randomUUID()}`,
+      },
     },
   ]
 }
