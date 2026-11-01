@@ -68,6 +68,8 @@ import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DashboardV2Controller } from './../dashboard/DashboardV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ContractorLinksV2Controller } from './../contractors/ContractorLinksV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ContractAlertsV2Controller } from './../contract-alerts/ContractAlertsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CartV2Controller } from './../cart/CartV2Controller.js';
@@ -4021,6 +4023,14 @@ const models: TsoaRoute.Models = {
             "owner_type": {"ref":"DashboardOwnerType","required":true},
             "owner_id": {"dataType":"string","required":true},
             "config": {"ref":"DashboardConfig","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ContractorSisterLinksResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "sc_orgs_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -10106,6 +10116,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'saveLayout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsContractorLinksV2Controller_getContractorSisterLinks: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/contractors/:spectrum_id/links',
+            ...(fetchMiddlewares<RequestHandler>(ContractorLinksV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ContractorLinksV2Controller.prototype.getContractorSisterLinks)),
+
+            async function ContractorLinksV2Controller_getContractorSisterLinks(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsContractorLinksV2Controller_getContractorSisterLinks, request, response });
+
+                const controller = new ContractorLinksV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getContractorSisterLinks',
                 controller,
                 response,
                 next,

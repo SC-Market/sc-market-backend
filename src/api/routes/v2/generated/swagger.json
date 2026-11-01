@@ -12449,6 +12449,20 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ContractorSisterLinksResponse": {
+				"properties": {
+					"sc_orgs_url": {
+						"type": "string",
+						"nullable": true,
+						"description": "The org's SC Orgs community page (https://sc-orgs.space/communities/<SID>), or null."
+					}
+				},
+				"required": [
+					"sc_orgs_url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ContractKind": {
 				"type": "string",
 				"enum": [
@@ -23434,6 +23448,39 @@
 						}
 					}
 				}
+			}
+		},
+		"/contractors/{spectrum_id}/links": {
+			"get": {
+				"operationId": "GetContractorSisterLinks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ContractorSisterLinksResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Sister-site links of an org (by spectrum ID): its SC Orgs community\npage, if SC Orgs has the same org. A failed lookup is just no link.",
+				"summary": "Get an org's sister-site links",
+				"tags": [
+					"Contractors"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/contract-alerts": {
