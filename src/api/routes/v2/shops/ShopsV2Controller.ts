@@ -54,6 +54,7 @@ import {
   hiddenFromRealViewers,
 } from "../../../../services/test-accounts/isolation.js"
 import { clampPagination } from "../util/pagination.js"
+import { imageUrlSql } from "../util/image-url-sql.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -1645,15 +1646,6 @@ function parseShopThreadChannel(
   if (!guild_id && !channel_id) return "clear"
   if (!DISCORD_ID.test(guild_id) || !DISCORD_ID.test(channel_id)) return "invalid"
   return { guild_id, channel_id }
-}
-
-/**
- * SQL for an image_resources row's public URL, the joined form of
- * resolveImageUrl: NULL when the join found no row. `alias` is a code literal.
- */
-function imageUrlSql(alias: string): string {
-  if (!/^[a-z_][a-z0-9_]*$/i.test(alias)) throw new Error(`imageUrlSql: invalid alias ${alias}`)
-  return `CASE WHEN ${alias}.resource_id IS NULL THEN NULL ELSE COALESCE(NULLIF(${alias}.external_url, ''), 'https://cdn.sc-market.space/' || ${alias}.filename) END`
 }
 
 async function resolveImageUrl(db: ReturnType<typeof getKnex>, resourceId: string | null): Promise<string | null> {

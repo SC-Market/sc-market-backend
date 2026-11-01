@@ -4780,6 +4780,30 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgCustomer": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "orders": {"dataType":"double","required":true},
+            "fulfilled_orders": {"dataType":"double","required":true},
+            "total_value": {"dataType":"double","required":true},
+            "last_order_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetOrgCustomersResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "spectrum_id": {"dataType":"string","required":true},
+            "customers": {"dataType":"array","array":{"dataType":"refObject","ref":"OrgCustomer"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PriceDataPoint": {
         "dataType": "refObject",
         "properties": {
@@ -11508,6 +11532,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOrgStats',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgAnalyticsV2Controller_getOrgCustomers: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"query","name":"spectrum_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/analytics/org-customers',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrgAnalyticsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrgAnalyticsV2Controller.prototype.getOrgCustomers)),
+
+            async function OrgAnalyticsV2Controller_getOrgCustomers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgAnalyticsV2Controller_getOrgCustomers, request, response });
+
+                const controller = new OrgAnalyticsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrgCustomers',
                 controller,
                 response,
                 next,

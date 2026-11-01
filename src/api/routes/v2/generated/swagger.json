@@ -14605,6 +14605,76 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OrgCustomer": {
+				"description": "One customer of an org: someone who placed orders with it (with the org\nitself or any shop it owns), cancelled orders left out.",
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					},
+					"orders": {
+						"type": "number",
+						"format": "double",
+						"description": "The customer's orders with the org, cancelled ones excluded."
+					},
+					"fulfilled_orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Of those, fulfilled."
+					},
+					"total_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Sum of those orders' totals (orders.cost is the order total), aUEC."
+					},
+					"last_order_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When the customer last placed one of those orders."
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"avatar",
+					"orders",
+					"fulfilled_orders",
+					"total_value",
+					"last_order_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOrgCustomersResponse": {
+				"properties": {
+					"spectrum_id": {
+						"type": "string"
+					},
+					"customers": {
+						"items": {
+							"$ref": "#/components/schemas/OrgCustomer"
+						},
+						"type": "array",
+						"description": "People who placed orders with the org (the org itself or any shop it\nowns), biggest order value first. Stats are per customer and leave\ncancelled orders out. Not the org's members (a member who ordered from\nthe org is listed like anyone else)."
+					}
+				},
+				"required": [
+					"spectrum_id",
+					"customers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PriceDataPoint": {
 				"description": "Price data point in time series",
 				"properties": {
@@ -25885,6 +25955,44 @@
 				},
 				"description": "Analytics of every shop an org owns, rolled up: views, unique viewers,\ncart adds, orders, sales and conversion per shop and in total, the\norg's most viewed listings, and, for members with Manage Orders only,\norders per member (plain counts, by name). For the org's members and\nsite admins.",
 				"summary": "Get org analytics (rollup of its shops)",
+				"tags": [
+					"Analytics V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The org's spectrum ID",
+						"in": "query",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/analytics/org-customers": {
+			"get": {
+				"operationId": "GetOrgCustomers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetOrgCustomersResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The org's customers: everyone who placed orders with the org or any of\nits shops, each with their own order count, fulfilled count, total\norder value (aUEC) and last order date. Cancelled orders are left out.\nFor the org's members and site admins.",
+				"summary": "Get an org's customers with per-customer order stats",
 				"tags": [
 					"Analytics V2"
 				],

@@ -15,8 +15,12 @@ import { has_permission, is_member } from "../../v1/util/permissions.js"
 import {
   conversionRate,
   sortMembersByName,
+  toOrgCustomers,
+  type OrgCustomer,
+  type OrgCustomerRow,
   type OrgMemberOrders,
 } from "../../../../services/storefront/org-analytics.js"
+import { imageUrlSql } from "../util/image-url-sql.js"
 
 export interface OrgShopStats {
   shop_id: string
@@ -68,6 +72,17 @@ export interface GetOrgStatsResponse {
   orders_by_member: OrgMemberOrders[] | null
   /** Open orders nobody has claimed yet; null without manage_orders. */
   unassigned_open_orders: number | null
+}
+
+export interface GetOrgCustomersResponse {
+  spectrum_id: string
+  /**
+   * People who placed orders with the org (the org itself or any shop it
+   * owns), biggest order value first. Stats are per customer and leave
+   * cancelled orders out. Not the org's members (a member who ordered from
+   * the org is listed like anyone else).
+   */
+  customers: OrgCustomer[]
 }
 
 const n = (v: unknown): number => {
@@ -288,6 +303,76 @@ export class OrgAnalyticsV2Controller extends BaseController {
       orders_by_member_visible: seeMembers,
       orders_by_member: ordersByMember,
       unassigned_open_orders: unassignedOpen,
+    }
+  }
+
+  /**
+   * The org's customers: everyone who placed orders with the org or any of
+   * its shops, each with their own order count, fulfilled count, total
+   * order value (aUEC) and last order date. Cancelled orders are left out.
+   * For the org's members and site admins.
+   *
+   * @summary Get an org's customers with per-customer order stats
+   * @param spectrum_id The org's spectrum ID
+   */
+  @Get("org-customers")
+  @Security("loggedin")
+  public async getOrgCustomers(
+    @Query() spectrum_id: string,
+    @Request() request?: ExpressRequest,
+  ): Promise<GetOrgCustomersResponse> {
+    if (request) this.request = request
+    const db = getKnex()
+    const org = await db("contractors")
+      .where({ spectrum_id })
+      .first<{ contractor_id: string; spectrum_id: string; archived: boolean } | undefined>(
+        "contractor_id",
+        "spectrum_id",
+        "archived",
+      )
+    if (!org || org.archived) this.throwNotFound("Contractor", spectrum_id)
+    if (!this.isAdmin() && !(await is_member(org.contractor_id, this.getUserId()))) {
+      this.throwForbidden("Only the org's members can see its customers")
+    }
+
+    // Every shop the org owns, inactive ones too: their past orders were
+    // still placed with the org. Orders link to the org by contractor_id
+    // (V1-era and org-addressed orders) or by the shop they were bought from.
+    const shopIds = (
+      await db("shops").where("owner_contractor_id", org.contractor_id).select<{ shop_id: string }[]>("shop_id")
+    ).map((s) => s.shop_id)
+
+    const rows = await db("orders as o")
+      .join("accounts as a", "a.user_id", "o.customer_id")
+      .leftJoin("image_resources as avatar_img", "avatar_img.resource_id", "a.avatar")
+      .where((w) => {
+        w.where("o.contractor_id", org.contractor_id)
+        if (shopIds.length) w.orWhereIn("o.shop_id", shopIds)
+      })
+      .whereNot("o.status", "cancelled")
+      .groupBy(
+        "a.user_id",
+        "a.username",
+        "a.display_name",
+        "avatar_img.resource_id",
+        "avatar_img.external_url",
+        "avatar_img.filename",
+      )
+      .select(
+        "a.user_id",
+        "a.username",
+        "a.display_name",
+        db.raw(`${imageUrlSql("avatar_img")} as avatar`),
+        db.raw("COUNT(*)::integer as orders"),
+        db.raw("COUNT(*) FILTER (WHERE o.status = 'fulfilled')::integer as fulfilled_orders"),
+        db.raw("COALESCE(SUM(o.cost), 0)::bigint as total_value"),
+        db.raw("MAX(o.timestamp) as last_order_at"),
+      )
+
+    this.setHeader("Cache-Control", "private, no-store")
+    return {
+      spectrum_id: org.spectrum_id,
+      customers: toOrgCustomers(rows as OrgCustomerRow[]),
     }
   }
 }
