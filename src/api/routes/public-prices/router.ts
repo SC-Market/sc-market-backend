@@ -24,6 +24,7 @@ import express, {
 import { LRUCache } from "lru-cache"
 import { RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible"
 import logger from "../../../logger/logger.js"
+import { isCloudflareIp } from "../../middleware/cloudflare-only.js"
 import {
   PUBLIC_FEED_LICENSE,
   getPriceDocument,
@@ -34,6 +35,26 @@ import {
 
 /** Per IP, per instance. Edge caching absorbs normal traffic before this. */
 export const PRICE_FEED_RATE_LIMIT = { points: 60, duration: 60 } as const
+
+/**
+ * The bucket for callers whose client IP is itself a Cloudflare address:
+ * Cloudflare Workers / Pages Functions, i.e. our own SSR and bridge Functions
+ * (sc-market-frontend src/ssr, src/bridge), which call these feeds
+ * anonymously from Cloudflare's shared egress IPs. Under the 60/min per-IP
+ * limit, one crawler burst through them would 429 every other crawler's item
+ * pages. There is no shared secret between the Functions and this API (they
+ * send only `Accept`), so this is not an exemption: one shared, larger bucket
+ * (per instance) for all Cloudflare-originated traffic. The IP is
+ * Cloudflare-asserted, not a header the caller picks: req.ip comes from the
+ * X-Forwarded-For entry Cloudflare appends (trust proxy 2, and
+ * cloudflare-only.ts rejects requests whose last hop isn't Cloudflare). Any
+ * Cloudflare customer's Worker lands in this bucket too, which is why it is
+ * bounded: these endpoints are read-only and served from in-process caches.
+ */
+export const PRICE_FEED_CLOUDFLARE_RATE_LIMIT = {
+  points: 600,
+  duration: 60,
+} as const
 
 /** Successful responses: browsers 5 min, the edge 15 min, then stale for 1 h while revalidating. */
 export const PRICE_FEED_CACHE_CONTROL =
@@ -46,27 +67,48 @@ export const PRICE_FEED_NOT_FOUND_CACHE_CONTROL =
 const MEMORY_TTL_MS = 5 * 60 * 1000
 
 /**
- * Per-IP limiter (in memory, per instance: no DB round trip) for the feed and
- * GET /api/v2/game-items/{id}/price-stats. Over the limit: 429, Retry-After,
- * never cached.
+ * Per-IP limiter (in memory, per instance: no DB round trip) for the feeds,
+ * GET /api/v2/game-items/{id}/price-stats and /acquisition. Requests whose
+ * client IP is a Cloudflare address (our edge Functions) share the larger
+ * PRICE_FEED_CLOUDFLARE_RATE_LIMIT bucket instead. Over the limit: 429,
+ * Retry-After, never cached.
  */
-export function createPriceFeedRateLimit(keyPrefix = "price_feed_ip") {
-  const limiter = new RateLimiterMemory({ keyPrefix, ...PRICE_FEED_RATE_LIMIT })
+export function createPriceFeedRateLimit(
+  keyPrefix = "price_feed_ip",
+  limits: {
+    perIp: { points: number; duration: number }
+    cloudflare: { points: number; duration: number }
+  } = {
+    perIp: PRICE_FEED_RATE_LIMIT,
+    cloudflare: PRICE_FEED_CLOUDFLARE_RATE_LIMIT,
+  },
+) {
+  const perIp = new RateLimiterMemory({ keyPrefix, ...limits.perIp })
+  const cloudflare = new RateLimiterMemory({
+    keyPrefix: `${keyPrefix}:cloudflare`,
+    ...limits.cloudflare,
+  })
   return async function priceFeedRateLimit(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
+    const ip = req.ip || "unknown"
+    const fromCloudflare = isCloudflareIp(ip)
+    const limiter = fromCloudflare ? cloudflare : perIp
+    const limit = fromCloudflare
+      ? limits.cloudflare.points
+      : limits.perIp.points
     try {
-      const r = await limiter.consume(req.ip || "unknown")
-      res.setHeader("X-RateLimit-Limit", String(PRICE_FEED_RATE_LIMIT.points))
+      const r = await limiter.consume(fromCloudflare ? "cloudflare" : ip)
+      res.setHeader("X-RateLimit-Limit", String(limit))
       res.setHeader("X-RateLimit-Remaining", String(r.remainingPoints))
       next()
     } catch (e) {
       if (!(e instanceof RateLimiterRes)) return next(e)
       const retryAfter = Math.max(1, Math.ceil(e.msBeforeNext / 1000))
       res.setHeader("Retry-After", String(retryAfter))
-      res.setHeader("X-RateLimit-Limit", String(PRICE_FEED_RATE_LIMIT.points))
+      res.setHeader("X-RateLimit-Limit", String(limit))
       res.setHeader("X-RateLimit-Remaining", "0")
       res.setHeader("Cache-Control", "no-store")
       res.status(429).json({
