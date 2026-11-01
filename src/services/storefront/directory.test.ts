@@ -20,8 +20,8 @@ describe("storefront directory decision", () => {
     expect(d).toMatchObject({ listed: true, reason: "listed", show_in_directory: true, can_change: true })
   })
 
-  it("an active service counts as public content", () => {
-    expect(decideDirectory({ ...org, public_listings: 0, active_services: 1 }).listed).toBe(true)
+  it("services alone don't list a storefront", () => {
+    expect(decideDirectory({ ...org, public_listings: 0, active_services: 4 }).reason).toBe("no_public_content")
   })
 
   it("members-only listings alone are not public content", () => {

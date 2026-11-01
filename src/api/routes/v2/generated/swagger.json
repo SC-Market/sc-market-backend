@@ -2289,7 +2289,7 @@
 					"active_services": {
 						"type": "number",
 						"format": "double",
-						"description": "Active services (in the shops that are shown, for an org)."
+						"description": "Active services (in the shops that are shown, for an org). Informational: they don't list a storefront."
 					}
 				},
 				"required": [
@@ -18060,7 +18060,7 @@
 						}
 					}
 				},
-				"description": "Turn \"Show in the public storefront directory\" (the Storefronts hub and\nthe homepage row) on or off for the org. Needs Manage Org Details. A\nmembers-only org (white-label site Internal with Require membership) is\nnever listed, so it can't be turned on (400). Listed also needs public\ncontent: a public, active listing or an active service.",
+				"description": "Turn \"Show in the public storefront directory\" (the Storefronts hub and\nthe homepage row) on or off for the org. Needs Manage Org Details. A\nmembers-only org (white-label site Internal with Require membership) is\nnever listed, so it can't be turned on (400). Listed also needs a public,\nactive listing in one of its shown shops.",
 				"summary": "Set whether an org is in the storefront directory",
 				"tags": [
 					"Contractors"

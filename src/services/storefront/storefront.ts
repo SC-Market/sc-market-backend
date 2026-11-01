@@ -304,16 +304,14 @@ export const MAX_STOREFRONT_CARDS = 60
 /**
  * The Storefronts hub (and the homepage row): RSI-verified orgs (never test
  * or archived orgs) listed in the public storefront directory (directory.ts):
- * "Show in the directory" left on, not members-only, and public content (a
- * public, active listing or an active service) in a shop that is itself
- * shown. Counts and stats only cover the shown shops. Being verified doubles
+ * "Show in the directory" left on, not members-only, and a public, active
+ * listing in a shop that is itself shown. Counts and stats only cover the shown shops. Being verified doubles
  * as the hub's anti-impersonation filter.
  */
 export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
   // The org's active shops that are shown in the directory (alias s).
   const shownShop = `s.owner_contractor_id = c.contractor_id AND s.status = 'active' AND ${shopShownSql("s")}`
   const listed = `ls.status = 'active' AND ls.visibility = 'public' AND ls.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
-  const service = `sv.status = 'active' AND (sv.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop}) OR (sv.shop_id IS NULL AND sv.contractor_id = c.contractor_id))`
   const rows = (await db("contractors as c")
     .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .where("c.archived", false)
@@ -321,9 +319,7 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
     .whereRaw("c.spectrum_id NOT LIKE '~%'")
     .whereRaw(orgShownSql("c"))
     .whereRaw(`NOT ${orgMembersOnlySql("c")}`)
-    .whereRaw(
-      `(EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed}) OR EXISTS (SELECT 1 FROM services sv WHERE ${service}))`,
-    )
+    .whereRaw(`EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed})`)
     .select(
       "c.contractor_id",
       "c.spectrum_id",

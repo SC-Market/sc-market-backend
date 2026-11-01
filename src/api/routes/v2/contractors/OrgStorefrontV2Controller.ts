@@ -161,8 +161,8 @@ export class OrgStorefrontV2Controller extends BaseController {
    * Turn "Show in the public storefront directory" (the Storefronts hub and
    * the homepage row) on or off for the org. Needs Manage Org Details. A
    * members-only org (white-label site Internal with Require membership) is
-   * never listed, so it can't be turned on (400). Listed also needs public
-   * content: a public, active listing or an active service.
+   * never listed, so it can't be turned on (400). Listed also needs a public,
+   * active listing in one of its shown shops.
    *
    * @summary Set whether an org is in the storefront directory
    */

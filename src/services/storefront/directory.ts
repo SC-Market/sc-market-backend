@@ -12,8 +12,9 @@
  *   have a branded subdomain, where members-only applies; it just isn't
  *   advertised publicly with an empty storefront;
  * - it has public content in a shop that is itself shown: at least one
- *   public, active listing or one active service. The showcase orgs follow
- *   the same rule (they are only sorted first).
+ *   public, active listing (members-only listings don't count, and neither
+ *   do services: many are years old and still "active"). The showcase orgs
+ *   follow the same rule (they are only sorted first).
  *
  * A shop's own setting decides whether that shop counts towards its org's
  * directory entry (its listings, services and stats). Personal shops aren't
@@ -31,7 +32,7 @@ export type DirectoryReason =
   | "hidden_by_setting"
   /** Members-only (white-label site Internal + Require membership): never listed. */
   | "members_only"
-  /** No public, active listing or active service (members-only listings don't count). */
+  /** No public, active listing (members-only listings don't count). */
   | "no_public_content"
   /** Orgs only: not RSI-verified (a "~" custom or test org). */
   | "not_verified"
@@ -54,7 +55,7 @@ export interface StorefrontDirectoryStatus {
   public_listings: number
   /** Members-only (private) active listings; they never count as public content. */
   private_listings: number
-  /** Active services (in the shops that are shown, for an org). */
+  /** Active services (in the shops that are shown, for an org). Informational: they don't list a storefront. */
   active_services: number
 }
 
@@ -79,7 +80,7 @@ export function decideDirectory(i: DirectoryInputs): StorefrontDirectoryStatus {
     if (i.hidden) return "hidden_by_setting"
     if (i.kind === "org" && !i.verified) return "not_verified"
     if (i.kind === "shop" && !i.org_owned) return "personal_shop"
-    if (i.public_listings + i.active_services <= 0) return "no_public_content"
+    if (i.public_listings <= 0) return "no_public_content"
     if (i.kind === "shop" && !i.org_listed) return "org_not_listed"
     return "listed"
   })()
