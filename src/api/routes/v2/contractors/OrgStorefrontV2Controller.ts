@@ -3,12 +3,11 @@
  * storefront (its home page, embeds, the Storefronts hub) and the branded
  * storefront unlock status shown in the org's settings.
  */
-import { Get, Middlewares, Path, Request, Route, Security, Tags } from "tsoa"
+import { Get, Path, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { is_member } from "../../v1/util/permissions.js"
-import { tsoaReadRateLimit } from "../../../middleware/tsoa-ratelimit.js"
 import { canViewTestEntity } from "../../../../services/test-accounts/isolation.js"
 import {
   listStorefrontCards,
@@ -72,12 +71,12 @@ export class OrgStorefrontV2Controller extends BaseController {
   /**
    * The Storefronts hub: RSI-verified orgs with at least one public, active
    * listing, showcase orgs first, then by completed orders. Read-only and
-   * anonymous; the frontend prerenders it at build time.
+   * anonymous (rate limited in api-router.ts); the frontend prerenders it
+   * at build time.
    *
    * @summary List org storefronts
    */
   @Get("storefronts")
-  @Middlewares(tsoaReadRateLimit)
   public async getStorefronts(): Promise<StorefrontsResponse> {
     this.setHeader("Cache-Control", "public, max-age=300")
     return { storefronts: await listStorefrontCards() }
@@ -88,13 +87,13 @@ export class OrgStorefrontV2Controller extends BaseController {
    * (completed orders, reviews, response time, members, active listings and
    * services), its shops, up to 6 services, whether it is RSI-verified, and
    * its SC Orgs recruiting card when SC Orgs has the org (a cached lookup
-   * that fails open: no card). Read-only and anonymous; its featured
+   * that fails open: no card). Read-only and anonymous (rate limited in
+   * api-router.ts); its featured
    * listings are `GET /listings/search?org=<spectrum_id>`.
    *
    * @summary Get an org's storefront
    */
   @Get("{spectrum_id}/storefront")
-  @Middlewares(tsoaReadRateLimit)
   public async getOrgStorefront(
     @Path() spectrum_id: string,
     @Request() request?: ExpressRequest,

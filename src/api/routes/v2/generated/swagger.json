@@ -24240,7 +24240,7 @@
 						}
 					}
 				},
-				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting, showcase orgs first, then by completed orders. Read-only and\nanonymous; the frontend prerenders it at build time.",
+				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting, showcase orgs first, then by completed orders. Read-only and\nanonymous (rate limited in api-router.ts); the frontend prerenders it\nat build time.",
 				"summary": "List org storefronts",
 				"tags": [
 					"Contractors"
@@ -24264,7 +24264,7 @@
 						}
 					}
 				},
-				"description": "An org's public storefront: trust stats rolled up from its shops\n(completed orders, reviews, response time, members, active listings and\nservices), its shops, up to 6 services, whether it is RSI-verified, and\nits SC Orgs recruiting card when SC Orgs has the org (a cached lookup\nthat fails open: no card). Read-only and anonymous; its featured\nlistings are `GET /listings/search?org=<spectrum_id>`.",
+				"description": "An org's public storefront: trust stats rolled up from its shops\n(completed orders, reviews, response time, members, active listings and\nservices), its shops, up to 6 services, whether it is RSI-verified, and\nits SC Orgs recruiting card when SC Orgs has the org (a cached lookup\nthat fails open: no card). Read-only and anonymous (rate limited in\napi-router.ts); its featured\nlistings are `GET /listings/search?org=<spectrum_id>`.",
 				"summary": "Get an org's storefront",
 				"tags": [
 					"Contractors"

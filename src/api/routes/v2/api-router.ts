@@ -20,7 +20,7 @@ import {
   multiplePhotoUpload,
   removeUploadsWhenDone,
 } from "../v1/util/upload.js"
-import { tsoaWriteRateLimit } from "../../middleware/tsoa-ratelimit.js"
+import { tsoaReadRateLimit, tsoaWriteRateLimit } from "../../middleware/tsoa-ratelimit.js"
 import { requireSecurity, tokenRequestGuard } from "./middleware/tsoa-auth.js"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -119,6 +119,16 @@ apiV2Router.post(
 // limited per token and per IP before the handler's DB lookup.
 import { scmdbIngestRateLimit } from "./integrations/scmdb/ingest-rate-limit.js"
 apiV2Router.post("/integrations/scmdb/ingest/:token", scmdbIngestRateLimit)
+
+// Org storefronts (OrgStorefrontV2Controller): anonymous reads for the org
+// home page, embeds on other sites and the Storefronts hub, rate limited
+// like the other anonymous reads. Middleware only (it calls next()), so the
+// TSOA routes still handle them; here rather than @Middlewares so the
+// generated routes don't build Postgres-backed limiters at import.
+apiV2Router.get(
+  ["/contractors/storefronts", "/contractors/:spectrum_id/storefront"],
+  tsoaReadRateLimit,
+)
 
 // NOTE: literal-path routes under a `{param}` path used to be hand-registered
 // here, because TSOA emitted `/game-data/resources/{resource_id}` before
