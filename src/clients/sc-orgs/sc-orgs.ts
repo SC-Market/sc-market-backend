@@ -45,15 +45,55 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 /** The community page URL from an API body, or null if it isn't this SID. */
 export function communityUrlFrom(sid: string, body: unknown): string | null {
+  return communityFrom(sid, body)?.url ?? null
+}
+
+/** What SC Market shows of an org's SC Orgs page (its recruiting card). */
+export interface ScOrgsCommunity {
+  /** https://sc-orgs.space/communities/<SID> */
+  url: string
+  headline: string | null
+  /** Members on SC Orgs (public ones). */
+  member_count: number | null
+  focus_tags: string[]
+  playstyle_tags: string[]
+  languages: string[]
+}
+
+function strings(value: unknown, max = 8): string[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter((v): v is string => typeof v === "string" && v.trim() !== "")
+    .map((v) => v.trim().slice(0, 40))
+    .slice(0, max)
+}
+
+/** The community from an API body, or null if it isn't this SID. */
+export function communityFrom(sid: string, body: unknown): ScOrgsCommunity | null {
   const data = isObject(body) ? body.data : undefined
   if (!isObject(data) || typeof data.sid !== "string") return null
   if (data.sid.toLowerCase() !== sid.toLowerCase() || !SID.test(data.sid))
     return null
-  return `${SC_ORGS_SITE}/communities/${encodeURIComponent(data.sid)}`
+  const headline =
+    typeof data.headline === "string" && data.headline.trim() !== ""
+      ? data.headline.trim().slice(0, 300)
+      : null
+  const members =
+    typeof data.member_count === "number" && Number.isFinite(data.member_count)
+      ? Math.max(0, Math.floor(data.member_count))
+      : null
+  return {
+    url: `${SC_ORGS_SITE}/communities/${encodeURIComponent(data.sid)}`,
+    headline,
+    member_count: members,
+    focus_tags: strings(data.focus_tags),
+    playstyle_tags: strings(data.playstyle_tags),
+    languages: strings(data.languages),
+  }
 }
 
 export class ScOrgsClient {
-  private cache = new LRUCache<string, { url: string | null }>({
+  private cache = new LRUCache<string, { community: ScOrgsCommunity | null }>({
     max: 5000,
     ttl: SC_ORGS_ANSWER_TTL_MS,
   })
@@ -62,18 +102,23 @@ export class ScOrgsClient {
 
   /** SC Orgs community page of the org with this spectrum ID, or null. Never throws. */
   async communityUrl(sid: string): Promise<string | null> {
+    return (await this.community(sid))?.url ?? null
+  }
+
+  /** The org's SC Orgs community (page and recruiting summary), or null. Never throws. */
+  async community(sid: string): Promise<ScOrgsCommunity | null> {
     if (!SID.test(sid)) return null
     const key = sid.toLowerCase()
     const hit = this.cache.get(key)
-    if (hit) return hit.url
+    if (hit) return hit.community
 
-    let url: string | null = null
+    let community: ScOrgsCommunity | null = null
     let ttl = SC_ORGS_ANSWER_TTL_MS
     try {
       const res = await this.fetchOrg(
         `${SC_ORGS_API}/api/v1/orgs/${encodeURIComponent(sid)}`,
       )
-      if (res.status === 200) url = communityUrlFrom(sid, res.body)
+      if (res.status === 200) community = communityFrom(sid, res.body)
       else if (res.status !== 404) ttl = SC_ORGS_ERROR_TTL_MS
     } catch (error) {
       logger.warn("SC Orgs community lookup failed", {
@@ -82,8 +127,8 @@ export class ScOrgsClient {
       })
       ttl = SC_ORGS_ERROR_TTL_MS
     }
-    this.cache.set(key, { url }, { ttl })
-    return url
+    this.cache.set(key, { community }, { ttl })
+    return community
   }
 }
 

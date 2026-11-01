@@ -548,6 +548,7 @@ export class ListingsV2Controller extends BaseController {
    * @param sort_by Sort field (default: created_at)
    * @param status Only 'active' is served (the default); other statuses return no results, except to site admins
    * @param sort_order Sort order (default: desc)
+   * @param org Only listings of the shops this org (spectrum ID) owns: an org's storefront, its embeds and its white-label market
    * @param include_unlisted Site admins only: also list unlisted (link-only) listings (the admin Market page, the admin "Show unlisted" toggle on shop pages). Ignored for everyone else.
    * @returns Search results with pagination metadata
    */
@@ -576,6 +577,7 @@ export class ListingsV2Controller extends BaseController {
     @Query() has_photos?: boolean,
     @Query() bulk_discount?: boolean,
     @Query() include_unlisted?: boolean,
+    @Query() org?: string,
     @Request() request?: ExpressRequest,
   ): Promise<SearchListingsResponse> {
     if (request) this.request = request
@@ -841,6 +843,14 @@ export class ListingsV2Controller extends BaseController {
       // Filter by shop
       if (shop_slug) {
         query = query.where('ls.shop_slug', shop_slug)
+      }
+
+      // Filter by owning org (every shop of the org)
+      if (org) {
+        query = query.whereIn(
+          'ls.shop_owner_contractor_id',
+          db('contractors').select('contractor_id').where('spectrum_id', org),
+        )
       }
 
       // Filter by pickup method (only when set and not 'any')

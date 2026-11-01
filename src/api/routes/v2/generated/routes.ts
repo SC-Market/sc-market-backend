@@ -4029,6 +4029,78 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StorefrontTrust": {
+        "dataType": "refObject",
+        "properties": {
+            "completed_orders": {"dataType":"double","required":true},
+            "avg_rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rating_count": {"dataType":"double","required":true},
+            "response_rate": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "avg_completion_hours": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "members": {"dataType":"double","required":true},
+            "active_listings": {"dataType":"double","required":true},
+            "active_services": {"dataType":"double","required":true},
+            "on_sc_market_since": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StorefrontShop": {
+        "dataType": "refObject",
+        "properties": {
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "listing_count": {"dataType":"double","required":true},
+            "service_count": {"dataType":"double","required":true},
+            "rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rating_count": {"dataType":"double","required":true},
+            "completed_orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StorefrontService": {
+        "dataType": "refObject",
+        "properties": {
+            "service_id": {"dataType":"string","required":true},
+            "service_name": {"dataType":"string","required":true},
+            "kind": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "cost": {"dataType":"double","required":true},
+            "payment_type": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ScOrgsCommunity": {
+        "dataType": "refObject",
+        "properties": {
+            "url": {"dataType":"string","required":true},
+            "headline": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "member_count": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "focus_tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "playstyle_tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgStorefront": {
+        "dataType": "refObject",
+        "properties": {
+            "spectrum_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "banner_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "verified": {"dataType":"boolean","required":true},
+            "trust": {"ref":"StorefrontTrust","required":true},
+            "shops": {"dataType":"array","array":{"dataType":"refObject","ref":"StorefrontShop"},"required":true},
+            "services": {"dataType":"array","array":{"dataType":"refObject","ref":"StorefrontService"},"required":true},
+            "recruiting": {"dataType":"union","subSchemas":[{"ref":"ScOrgsCommunity"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BrandingMembersCriterion": {
         "dataType": "refObject",
         "properties": {
@@ -7256,6 +7328,7 @@ export function RegisterRoutes(app: Router) {
                 has_photos: {"in":"query","name":"has_photos","dataType":"boolean"},
                 bulk_discount: {"in":"query","name":"bulk_discount","dataType":"boolean"},
                 include_unlisted: {"in":"query","name":"include_unlisted","dataType":"boolean"},
+                org: {"in":"query","name":"org","dataType":"string"},
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/listings/search',
@@ -10177,6 +10250,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'saveLayout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgStorefrontV2Controller_getOrgStorefront: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/contractors/:spectrum_id/storefront',
+            ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller.prototype.getOrgStorefront)),
+
+            async function OrgStorefrontV2Controller_getOrgStorefront(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgStorefrontV2Controller_getOrgStorefront, request, response });
+
+                const controller = new OrgStorefrontV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrgStorefront',
                 controller,
                 response,
                 next,

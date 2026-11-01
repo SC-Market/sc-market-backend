@@ -12449,6 +12449,256 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StorefrontTrust": {
+				"properties": {
+					"completed_orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Fulfilled orders, all of the org's shops."
+					},
+					"avg_rating": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Average review over all of the org's shops, 0–5; null without reviews."
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Share of fulfilled orders completed within 24 h, percent; null without any."
+					},
+					"avg_completion_hours": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Average hours from order to fulfilment; null without any."
+					},
+					"members": {
+						"type": "number",
+						"format": "double",
+						"description": "Members on SC Market."
+					},
+					"active_listings": {
+						"type": "number",
+						"format": "double"
+					},
+					"active_services": {
+						"type": "number",
+						"format": "double"
+					},
+					"on_sc_market_since": {
+						"type": "string",
+						"nullable": true,
+						"description": "When the org's first shop opened (ISO 8601); null without shops."
+					}
+				},
+				"required": [
+					"completed_orders",
+					"avg_rating",
+					"rating_count",
+					"response_rate",
+					"avg_completion_hours",
+					"members",
+					"active_listings",
+					"active_services",
+					"on_sc_market_since"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StorefrontShop": {
+				"properties": {
+					"slug": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"logo_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"listing_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Public, active listings."
+					},
+					"service_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Active services."
+					},
+					"rating": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Average review, 0–5; null without reviews."
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"completed_orders": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"slug",
+					"name",
+					"logo_url",
+					"listing_count",
+					"service_count",
+					"rating",
+					"rating_count",
+					"completed_orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StorefrontService": {
+				"properties": {
+					"service_id": {
+						"type": "string"
+					},
+					"service_name": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string",
+						"nullable": true
+					},
+					"cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"payment_type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"service_id",
+					"service_name",
+					"kind",
+					"cost",
+					"payment_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ScOrgsCommunity": {
+				"description": "What SC Market shows of an org's SC Orgs page (its recruiting card).",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "https://sc-orgs.space/communities/<SID>"
+					},
+					"headline": {
+						"type": "string",
+						"nullable": true
+					},
+					"member_count": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Members on SC Orgs (public ones)."
+					},
+					"focus_tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"playstyle_tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"url",
+					"headline",
+					"member_count",
+					"focus_tags",
+					"playstyle_tags",
+					"languages"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrgStorefront": {
+				"properties": {
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"logo_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"banner_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"verified": {
+						"type": "boolean",
+						"description": "Registered through RSI (SC Market's org verification)."
+					},
+					"trust": {
+						"$ref": "#/components/schemas/StorefrontTrust"
+					},
+					"shops": {
+						"items": {
+							"$ref": "#/components/schemas/StorefrontShop"
+						},
+						"type": "array",
+						"description": "Active shops, oldest first (the first is the org's main shop)."
+					},
+					"services": {
+						"items": {
+							"$ref": "#/components/schemas/StorefrontService"
+						},
+						"type": "array",
+						"description": "Up to 6 active services, newest first."
+					},
+					"recruiting": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ScOrgsCommunity"
+							}
+						],
+						"nullable": true,
+						"description": "The org's SC Orgs page (recruiting card), when SC Orgs has it."
+					}
+				},
+				"required": [
+					"spectrum_id",
+					"name",
+					"logo_url",
+					"banner_url",
+					"verified",
+					"trust",
+					"shops",
+					"services",
+					"recruiting"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"BrandingMembersCriterion": {
 				"properties": {
 					"met": {
@@ -18661,6 +18911,15 @@
 						"schema": {
 							"type": "boolean"
 						}
+					},
+					{
+						"description": "Only listings of the shops this org (spectrum ID) owns: an org's storefront, its embeds and its white-label market",
+						"in": "query",
+						"name": "org",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}
@@ -23598,6 +23857,39 @@
 						}
 					}
 				}
+			}
+		},
+		"/contractors/{spectrum_id}/storefront": {
+			"get": {
+				"operationId": "GetOrgStorefront",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrgStorefront"
+								}
+							}
+						}
+					}
+				},
+				"description": "An org's public storefront: trust stats rolled up from its shops\n(completed orders, reviews, response time, members, active listings and\nservices), its shops, up to 6 services, whether it is RSI-verified, and\nits SC Orgs recruiting card when SC Orgs has the org (a cached lookup\nthat fails open: no card). Read-only and anonymous; its featured\nlistings are `GET /listings/search?org=<spectrum_id>`.",
+				"summary": "Get an org's storefront",
+				"tags": [
+					"Contractors"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/contractors/{spectrum_id}/storefront/status": {

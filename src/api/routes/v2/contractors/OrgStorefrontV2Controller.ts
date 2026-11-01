@@ -1,12 +1,19 @@
 /**
- * Org storefronts (drafts/whitelabel-overhaul-plan.md): the branded
+ * Org storefronts (drafts/whitelabel-overhaul-plan.md): an org's public
+ * storefront (its home page, embeds, the Storefronts hub) and the branded
  * storefront unlock status shown in the org's settings.
  */
-import { Get, Path, Request, Route, Security, Tags } from "tsoa"
+import { Get, Middlewares, Path, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { is_member } from "../../v1/util/permissions.js"
+import { tsoaReadRateLimit } from "../../../middleware/tsoa-ratelimit.js"
+import { canViewTestEntity } from "../../../../services/test-accounts/isolation.js"
+import {
+  loadOrgStorefront,
+  type OrgStorefront,
+} from "../../../../services/storefront/storefront.js"
 import {
   getOrgBrandingStatus,
   type OrgBrandingStatus,
@@ -21,6 +28,9 @@ export interface OrgStorefrontStatusResponse {
 interface StorefrontOrgRow {
   contractor_id: string
   spectrum_id: string
+  name: string
+  avatar: string | null
+  banner: string | null
   archived: boolean
   is_test: boolean | null
 }
@@ -35,11 +45,42 @@ export class OrgStorefrontV2Controller extends BaseController {
       .first<StorefrontOrgRow | undefined>(
         "contractor_id",
         "spectrum_id",
+        "name",
+        "avatar",
+        "banner",
         "archived",
         "is_test",
       )
     if (!org || org.archived) this.throwNotFound("Contractor", spectrum_id)
     return org
+  }
+
+  /**
+   * An org's public storefront: trust stats rolled up from its shops
+   * (completed orders, reviews, response time, members, active listings and
+   * services), its shops, up to 6 services, whether it is RSI-verified, and
+   * its SC Orgs recruiting card when SC Orgs has the org (a cached lookup
+   * that fails open: no card). Read-only and anonymous; its featured
+   * listings are `GET /listings/search?org=<spectrum_id>`.
+   *
+   * @summary Get an org's storefront
+   */
+  @Get("{spectrum_id}/storefront")
+  @Middlewares(tsoaReadRateLimit)
+  public async getOrgStorefront(
+    @Path() spectrum_id: string,
+    @Request() request?: ExpressRequest,
+  ): Promise<OrgStorefront> {
+    if (request) this.request = request
+    const org = await this.storefrontOrg(spectrum_id)
+    if (org.is_test && !canViewTestEntity(request?.user)) {
+      this.throwNotFound("Contractor", spectrum_id)
+    }
+    this.setHeader(
+      "Cache-Control",
+      org.is_test ? "private, no-store" : "public, max-age=60",
+    )
+    return loadOrgStorefront(org)
   }
 
   /**
