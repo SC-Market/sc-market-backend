@@ -33,6 +33,7 @@ import * as offerDb from "../offers/database.js"
 import * as adminDb from "../admin/database.js"
 import logger from "../../../../logger/logger.js"
 import { identityNoticeEntity } from "../../../../services/identity-admin/notice-entity.js"
+import { enquiryNoticeEntity } from "../../../../services/storefront/enquiries.js"
 import { listingPubliclyListed } from "../../v2/util/listing-visibility.js"
 
 /**
@@ -594,6 +595,10 @@ export async function getEntityByType(
     case "audit_logs": {
       // Identity changes made by an admin (account_identity_changed).
       return identityNoticeEntity(entity_id)
+    }
+    case "storefront_enquiries": {
+      // A new branded storefront enquiry (storefront_enquiry_created), to site admins.
+      return enquiryNoticeEntity(entity_id)
     }
     case "admin_alerts": {
       const alerts = await adminDb.getAdminAlerts({ alert_id: entity_id })

@@ -48,6 +48,9 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "discord_channel_setups.owner_id": { export: "discord_channels" },
   "order_alert_subscriptions.user_id": { export: "discord_order_alerts" },
   "contract_alert_subscriptions.user_id": { export: "contract_alerts" },
+  "storefront_enquiries.submitted_by": { export: "storefront_enquiries" },
+  "storefront_enquiries.handled_by": { exclude: STAFF },
+  "storefront_directory_hidden.updated_by": { exclude: STAFF },
   "notification_webhooks.user_id": { export: "webhooks" },
 
   "refresh_tokens.user_id": { export: "refresh_tokens" },

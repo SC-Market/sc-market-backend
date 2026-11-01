@@ -130,6 +130,10 @@ export const CATALOG = {
   // An admin changed your account's identity (services/identity-admin).
   // Mandatory (account category); in-app and push only, no email template yet.
   "account.identity_changed": event("account", "account_identity_changed", ["in_app", "push"]),
+  // To site admins: an org or shop asked for a branded storefront
+  // (services/storefront/enquiries.ts). In-app only; the account category
+  // makes it mandatory and keeps it out of the settings matrix.
+  "admin.storefront_enquiry": event("account", "storefront_enquiry_created", ["in_app"]),
   // Owner decision (ships with the cutover; shadow-only until then): the four
   // order_status_* events become one, and offer_create + counter_offer_create
   // become one. They replace the per-status / per-type entries above at cutover.

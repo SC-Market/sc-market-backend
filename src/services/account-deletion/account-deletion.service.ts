@@ -339,6 +339,8 @@ async function convertToTombstone(userId: string): Promise<void> {
       ["contractor_member_roles", (db) => db("contractor_member_roles").where("user_id", userId).delete()],
       ["user_availability", (db) => db("user_availability").where("user_id", userId).delete()],
       ["account_settings", (db) => db("account_settings").where("user_id", userId).delete()],
+      // The org's or shop's storefront request stays, anonymized.
+      ["storefront_enquiries", (db) => db("storefront_enquiries").where("submitted_by", userId).update({ submitted_by: null })],
     ]
 
     for (const [table, fn] of deletes) {

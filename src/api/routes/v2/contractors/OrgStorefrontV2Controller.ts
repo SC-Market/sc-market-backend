@@ -3,11 +3,11 @@
  * storefront (its home page, embeds, the Storefronts hub) and the branded
  * storefront unlock status shown in the org's settings.
  */
-import { Get, Path, Request, Route, Security, Tags } from "tsoa"
+import { Body, Get, Path, Put, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { is_member } from "../../v1/util/permissions.js"
+import { has_permission, is_member } from "../../v1/util/permissions.js"
 import { canViewTestEntity } from "../../../../services/test-accounts/isolation.js"
 import {
   listStorefrontCards,
@@ -24,6 +24,11 @@ import {
   loadOnboardingInputs,
   type OnboardingChecklist,
 } from "../../../../services/storefront/onboarding.js"
+import {
+  getOrgDirectoryStatus,
+  setDirectoryShown,
+  type StorefrontDirectoryStatus,
+} from "../../../../services/storefront/directory.js"
 
 export interface StorefrontsResponse {
   /** Showcase orgs first, then by completed orders. At most 60. */
@@ -36,6 +41,13 @@ export interface OrgStorefrontStatusResponse {
   branding: OrgBrandingStatus
   /** The storefront onboarding checklist: verify, shop, listing, Discord, members, branding. */
   onboarding: OnboardingChecklist
+  /** Whether the org is listed in the public storefront directory, and why. */
+  directory: StorefrontDirectoryStatus
+}
+
+export interface StorefrontDirectoryRequest {
+  /** "Show in the public storefront directory". */
+  show_in_directory: boolean
 }
 
 interface StorefrontOrgRow {
@@ -131,15 +143,55 @@ export class OrgStorefrontV2Controller extends BaseController {
     if (!this.isAdmin() && !(await is_member(org.contractor_id, this.getUserId()))) {
       this.throwForbidden("Only the org's members can see its storefront status")
     }
-    const [branding, onboarding] = await Promise.all([
+    const [branding, onboarding, directory] = await Promise.all([
       getOrgBrandingStatus(org),
       loadOnboardingInputs(org.contractor_id),
+      getOrgDirectoryStatus(org),
     ])
     this.setHeader("Cache-Control", "private, no-store")
     return {
       spectrum_id: org.spectrum_id,
       branding,
       onboarding: buildChecklist(branding, onboarding),
+      directory,
     }
+  }
+
+  /**
+   * Turn "Show in the public storefront directory" (the Storefronts hub and
+   * the homepage row) on or off for the org. Needs Manage Org Details. A
+   * members-only org (white-label site Internal with Require membership) is
+   * never listed, so it can't be turned on (400). Listed also needs public
+   * content: a public, active listing or an active service.
+   *
+   * @summary Set whether an org is in the storefront directory
+   */
+  @Put("{spectrum_id}/storefront/directory")
+  @Security("loggedin")
+  public async setOrgStorefrontDirectory(
+    @Path() spectrum_id: string,
+    @Body() body: StorefrontDirectoryRequest,
+    @Request() request?: ExpressRequest,
+  ): Promise<StorefrontDirectoryStatus> {
+    if (request) this.request = request
+    const org = await this.storefrontOrg(spectrum_id)
+    await this.requireTokenOrgAccess(org.contractor_id)
+    if (!(await has_permission(org.contractor_id, this.getUserId(), "manage_org_details"))) {
+      this.throwForbidden("Manage Org Details is needed to change the storefront directory setting")
+    }
+    if (typeof body?.show_in_directory !== "boolean") {
+      this.throwValidationError("show_in_directory must be true or false", [
+        { field: "show_in_directory", message: "Must be true or false" },
+      ])
+    }
+    const current = await getOrgDirectoryStatus(org)
+    if (body.show_in_directory && !current.can_change) {
+      this.throwValidationError("Members-only storefronts aren't listed in the public directory", [
+        { field: "show_in_directory", message: "Members-only storefronts aren't listed" },
+      ])
+    }
+    await setDirectoryShown({ contractor_id: org.contractor_id }, body.show_in_directory, this.getUserId())
+    this.setHeader("Cache-Control", "private, no-store")
+    return getOrgDirectoryStatus(org)
   }
 }

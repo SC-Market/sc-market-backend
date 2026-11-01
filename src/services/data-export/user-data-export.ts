@@ -346,6 +346,26 @@ export async function writeUserDataExport(
     ),
   )
   await out.array(
+    "storefront_enquiries",
+    all(
+      knex("storefront_enquiries as e")
+        .leftJoin("contractors as c", "c.contractor_id", "e.contractor_id")
+        .leftJoin("shops as s", "s.shop_id", "e.shop_id")
+        .where("e.submitted_by", userId)
+        .select(
+          "e.target_type",
+          "c.spectrum_id as org",
+          "s.slug as shop",
+          "e.requested_subdomain",
+          "e.message",
+          "e.contact_method",
+          "e.status",
+          "e.created_at",
+          "e.updated_at",
+        ),
+    ),
+  )
+  await out.array(
     "webhooks",
     all(
       knex("notification_webhooks")

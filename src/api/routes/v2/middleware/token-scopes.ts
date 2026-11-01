@@ -71,6 +71,8 @@ const DOMAIN_PREFIXES: Array<{ prefix: string; domain: string }> = [
   { prefix: "dashboard", domain: "profile" },
   { prefix: "game-data/wishlists", domain: "profile" },
   { prefix: "my-domain", domain: "contractors" },
+  // Branded storefront enquiries for an org or shop (org settings).
+  { prefix: "storefront-enquiries", domain: "contractors" },
   // Private per-user data that used to fall through to "any :read".
   { prefix: "watchlist", domain: "market" },
   { prefix: "price-alerts", domain: "market" },

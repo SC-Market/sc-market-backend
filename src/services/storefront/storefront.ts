@@ -8,6 +8,7 @@ import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { scOrgsClient, type ScOrgsCommunity } from "../../clients/sc-orgs/sc-orgs.js"
 import { isRsiVerifiedOrg } from "./branding.js"
+import { orgMembersOnlySql, orgShownSql, shopShownSql } from "./directory.js"
 
 /** Public URL of an image_resources row joined as `alias` (a code literal). */
 function imageUrlSql(alias: string): string {
@@ -301,34 +302,43 @@ export function compareCards(a: StorefrontCard, b: StorefrontCard): number {
 export const MAX_STOREFRONT_CARDS = 60
 
 /**
- * The Storefronts hub: RSI-verified orgs (never test or archived orgs)
- * with at least one public, active listing. Being verified doubles as the
- * hub's anti-impersonation filter.
+ * The Storefronts hub (and the homepage row): RSI-verified orgs (never test
+ * or archived orgs) listed in the public storefront directory (directory.ts):
+ * "Show in the directory" left on, not members-only, and public content (a
+ * public, active listing or an active service) in a shop that is itself
+ * shown. Counts and stats only cover the shown shops. Being verified doubles
+ * as the hub's anti-impersonation filter.
  */
 export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
-  const listed =
-    "ls.shop_owner_contractor_id = c.contractor_id AND ls.status = 'active' AND ls.visibility = 'public'"
+  // The org's active shops that are shown in the directory (alias s).
+  const shownShop = `s.owner_contractor_id = c.contractor_id AND s.status = 'active' AND ${shopShownSql("s")}`
+  const listed = `ls.status = 'active' AND ls.visibility = 'public' AND ls.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
+  const service = `sv.status = 'active' AND (sv.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop}) OR (sv.shop_id IS NULL AND sv.contractor_id = c.contractor_id))`
   const rows = (await db("contractors as c")
     .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .where("c.archived", false)
     .whereRaw("c.is_test IS NOT TRUE")
     .whereRaw("c.spectrum_id NOT LIKE '~%'")
-    .whereRaw(`EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed})`)
+    .whereRaw(orgShownSql("c"))
+    .whereRaw(`NOT ${orgMembersOnlySql("c")}`)
+    .whereRaw(
+      `(EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed}) OR EXISTS (SELECT 1 FROM services sv WHERE ${service}))`,
+    )
     .select(
       "c.contractor_id",
       "c.spectrum_id",
       "c.name",
       "c.description",
       db.raw(`${imageUrlSql("logo_img")} as logo_url`),
-      db.raw(`(SELECT COUNT(*)::integer FROM listing_search ls WHERE ${listed}) as active_listings`),
+      db.raw(`(SELECT COUNT(DISTINCT ls.listing_id)::integer FROM listing_search ls WHERE ${listed}) as active_listings`),
       db.raw(
-        "(SELECT COALESCE(SUM(s.total_completed), 0)::integer FROM shops s WHERE s.owner_contractor_id = c.contractor_id AND s.status = 'active') as completed_orders",
+        `(SELECT COALESCE(SUM(s.total_completed), 0)::integer FROM shops s WHERE ${shownShop}) as completed_orders`,
       ),
       db.raw(
-        "(SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE s.owner_contractor_id = c.contractor_id) as avg_rating",
+        `(SELECT AVG(sr.rating)::numeric(3,2) FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE ${shownShop}) as avg_rating`,
       ),
       db.raw(
-        "(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE s.owner_contractor_id = c.contractor_id) as rating_count",
+        `(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE ${shownShop}) as rating_count`,
       ),
     )) as CardRow[]
 

@@ -129,6 +129,13 @@ apiV2Router.get(
   ["/contractors/storefronts", "/contractors/:spectrum_id/storefront"],
   tsoaReadRateLimit,
 )
+// Storefront settings and branded storefront enquiries: writes, rate limited
+// like the other writes (one open enquiry per org or shop on top).
+apiV2Router.post("/storefront-enquiries", tsoaWriteRateLimit)
+apiV2Router.put(
+  ["/contractors/:spectrum_id/storefront/directory", "/shops/:shopId/storefront/directory"],
+  tsoaWriteRateLimit,
+)
 
 // NOTE: literal-path routes under a `{param}` path used to be hand-registered
 // here, because TSOA emitted `/game-data/resources/{resource_id}` before
