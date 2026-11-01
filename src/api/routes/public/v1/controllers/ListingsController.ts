@@ -10,7 +10,6 @@ import {
   Tags,
 } from "tsoa"
 import type { Request as ExpressRequest } from "express"
-import { getKnex } from "../../../../../clients/database/knex-db.js"
 import { ListingsV2Controller } from "../../../v2/listings/ListingsV2Controller.js"
 import { StockLotsV2Controller } from "../../../v2/stock-lots/StockLotsV2Controller.js"
 import type { GetListingDetailResponse } from "../../../v2/types/listings.types.js"
@@ -70,13 +69,7 @@ export class ListingsController extends Controller {
     @Query() page_size?: number,
   ): Promise<PublicData<GetStockLotsResponse>> {
     const shop = await reachableListingShop(request, listingId)
-    // The stock-lot list covers the user's own shops, or an org's shops by
-    // spectrum id (members only).
-    const org = shop.owner_contractor_id
-      ? await getKnex()("contractors")
-          .where("contractor_id", shop.owner_contractor_id)
-          .first("spectrum_id")
-      : undefined
+    // Scoped to the listing's shop (its owner, or any member of the owning org).
     const lots = await hidingForbidden("Listing", () =>
       new StockLotsV2Controller(request).getStockLots(
         listingId,
@@ -86,9 +79,10 @@ export class ListingsController extends Controller {
         undefined,
         undefined,
         undefined,
-        org?.spectrum_id,
+        undefined,
         page,
         page_size ?? DEFAULT_PAGE_SIZE,
+        shop.shop_id,
         request,
       ),
     )

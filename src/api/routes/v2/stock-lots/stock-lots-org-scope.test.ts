@@ -42,6 +42,7 @@ describe("getStockLots spectrum_id scope", () => {
         "ORG",
         1,
         20,
+        undefined,
         { user: { user_id: "stranger", role: "user" } } as never,
       ),
     ).rejects.toMatchObject({ code: "FORBIDDEN" })

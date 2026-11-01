@@ -5742,6 +5742,7 @@ export function RegisterRoutes(app: Router) {
                 spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
+                shop_id: {"in":"query","name":"shop_id","dataType":"string"},
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/stock-lots',

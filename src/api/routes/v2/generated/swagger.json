@@ -16929,6 +16929,15 @@
 							"format": "double",
 							"type": "number"
 						}
+					},
+					{
+						"description": "Only lots of this shop's listings (takes precedence over spectrum_id)",
+						"in": "query",
+						"name": "shop_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}

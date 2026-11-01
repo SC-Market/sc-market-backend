@@ -14,6 +14,7 @@ import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { canModifyListing } from "../util/listing-permissions.js"
 import { is_member } from "../../v1/util/permissions.js"
+import { canViewShopPrivate } from "../../../../services/shops/shop-permissions.service.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateStockLotRequest,
@@ -172,6 +173,7 @@ export class StockLotsV2Controller extends BaseController {
    * @param quality_tier_max Maximum quality tier (1-5)
    * @param page Page number for pagination (default: 1)
    * @param page_size Number of results per page (default: 20, max: 100)
+   * @param shop_id Only lots of this shop's listings (takes precedence over spectrum_id)
    * @returns Stock lots with pagination metadata
    */
   @Get()
@@ -187,6 +189,7 @@ export class StockLotsV2Controller extends BaseController {
     @Query() spectrum_id?: string,
     @Query() page?: number,
     @Query() page_size?: number,
+    @Query() shop_id?: string,
     @Request() request?: ExpressRequest,
   ): Promise<GetStockLotsResponse> {
     if (request) this.request = request
@@ -243,6 +246,18 @@ export class StockLotsV2Controller extends BaseController {
       }
     }
 
+    // shop_id scopes the query to one shop (a seller with several shops, or
+    // an org shop); anyone who may see that shop's private data may read it.
+    if (shop_id) {
+      const shop = await knex("shops")
+        .where("shop_id", shop_id)
+        .first("shop_id", "owner_user_id", "owner_contractor_id")
+      if (!shop) this.throwNotFound("Shop", shop_id)
+      if (!this.isAdmin() && !(await canViewShopPrivate(shop, this.getUserId()))) {
+        this.throwForbidden("You cannot view this shop's stock")
+      }
+    }
+
     try {
       const userId = this.getUserId()
 
@@ -261,7 +276,9 @@ export class StockLotsV2Controller extends BaseController {
         .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
         // Only show lots from listings the user can manage (via shop ownership)
         .where(function () {
-          if (spectrum_id) {
+          if (shop_id) {
+            this.where("lst.shop_id", shop_id)
+          } else if (spectrum_id) {
             // Scoped to a specific org's shops
             this.whereIn("lst.shop_id", knex("shops").whereIn("owner_contractor_id", knex("contractors").select("contractor_id").where("spectrum_id", spectrum_id)).select("shop_id"))
           } else {
