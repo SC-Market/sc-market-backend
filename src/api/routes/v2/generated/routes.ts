@@ -4178,11 +4178,37 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OnboardingStepKey": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["verify"]},{"dataType":"enum","enums":["shop"]},{"dataType":"enum","enums":["listing"]},{"dataType":"enum","enums":["discord"]},{"dataType":"enum","enums":["members"]},{"dataType":"enum","enums":["branding"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OnboardingStep": {
+        "dataType": "refObject",
+        "properties": {
+            "key": {"ref":"OnboardingStepKey","required":true},
+            "done": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OnboardingChecklist": {
+        "dataType": "refObject",
+        "properties": {
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"OnboardingStep"},"required":true},
+            "done_count": {"dataType":"double","required":true},
+            "total": {"dataType":"double","required":true},
+            "shop_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OrgStorefrontStatusResponse": {
         "dataType": "refObject",
         "properties": {
             "spectrum_id": {"dataType":"string","required":true},
             "branding": {"ref":"OrgBrandingStatus","required":true},
+            "onboarding": {"ref":"OnboardingChecklist","required":true},
         },
         "additionalProperties": false,
     },

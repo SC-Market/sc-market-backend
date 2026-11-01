@@ -12908,6 +12908,64 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OnboardingStepKey": {
+				"type": "string",
+				"enum": [
+					"verify",
+					"shop",
+					"listing",
+					"discord",
+					"members",
+					"branding"
+				]
+			},
+			"OnboardingStep": {
+				"properties": {
+					"key": {
+						"$ref": "#/components/schemas/OnboardingStepKey"
+					},
+					"done": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"key",
+					"done"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OnboardingChecklist": {
+				"properties": {
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/OnboardingStep"
+						},
+						"type": "array"
+					},
+					"done_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "The org's main (oldest active) shop, for the steps' links; null without one."
+					}
+				},
+				"required": [
+					"steps",
+					"done_count",
+					"total",
+					"shop_slug"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OrgStorefrontStatusResponse": {
 				"properties": {
 					"spectrum_id": {
@@ -12916,11 +12974,16 @@
 					"branding": {
 						"$ref": "#/components/schemas/OrgBrandingStatus",
 						"description": "Whether branding is unlocked, why, and what is still missing."
+					},
+					"onboarding": {
+						"$ref": "#/components/schemas/OnboardingChecklist",
+						"description": "The storefront onboarding checklist: verify, shop, listing, Discord, members, branding."
 					}
 				},
 				"required": [
 					"spectrum_id",
-					"branding"
+					"branding",
+					"onboarding"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -24234,7 +24297,7 @@
 						}
 					}
 				},
-				"description": "The org's branded storefront status, for its members: whether branding\n(theme, logo and title on its subdomain, site and sidebar settings) is\nunlocked, by a staff grant or by the criteria (RSI-verified, 3+ members\non SC Market, a listing or an order in the last 30 days), and which\ncriteria are still missing.",
+				"description": "The org's branded storefront status, for its members: whether branding\n(theme, logo and title on its subdomain, site and sidebar settings) is\nunlocked, by a staff grant or by the criteria (RSI-verified, 3+ members\non SC Market, a listing or an order in the last 30 days), and which\ncriteria are still missing; and the onboarding checklist (verify, open\na shop, first listing, connect Discord, members, branding).",
 				"summary": "Get an org's storefront status (members)",
 				"tags": [
 					"Contractors"

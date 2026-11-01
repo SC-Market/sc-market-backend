@@ -20,6 +20,11 @@ import {
   getOrgBrandingStatus,
   type OrgBrandingStatus,
 } from "../../../../services/storefront/branding.js"
+import {
+  buildChecklist,
+  loadOnboardingInputs,
+  type OnboardingChecklist,
+} from "../../../../services/storefront/onboarding.js"
 
 export interface StorefrontsResponse {
   /** Showcase orgs first, then by completed orders. At most 60. */
@@ -30,6 +35,8 @@ export interface OrgStorefrontStatusResponse {
   spectrum_id: string
   /** Whether branding is unlocked, why, and what is still missing. */
   branding: OrgBrandingStatus
+  /** The storefront onboarding checklist: verify, shop, listing, Discord, members, branding. */
+  onboarding: OnboardingChecklist
 }
 
 interface StorefrontOrgRow {
@@ -109,7 +116,8 @@ export class OrgStorefrontV2Controller extends BaseController {
    * (theme, logo and title on its subdomain, site and sidebar settings) is
    * unlocked, by a staff grant or by the criteria (RSI-verified, 3+ members
    * on SC Market, a listing or an order in the last 30 days), and which
-   * criteria are still missing.
+   * criteria are still missing; and the onboarding checklist (verify, open
+   * a shop, first listing, connect Discord, members, branding).
    *
    * @summary Get an org's storefront status (members)
    */
@@ -124,9 +132,15 @@ export class OrgStorefrontV2Controller extends BaseController {
     if (!this.isAdmin() && !(await is_member(org.contractor_id, this.getUserId()))) {
       this.throwForbidden("Only the org's members can see its storefront status")
     }
+    const [branding, onboarding] = await Promise.all([
+      getOrgBrandingStatus(org),
+      loadOnboardingInputs(org.contractor_id),
+    ])
+    this.setHeader("Cache-Control", "private, no-store")
     return {
       spectrum_id: org.spectrum_id,
-      branding: await getOrgBrandingStatus(org),
+      branding,
+      onboarding: buildChecklist(branding, onboarding),
     }
   }
 }
