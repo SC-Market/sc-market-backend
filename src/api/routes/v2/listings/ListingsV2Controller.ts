@@ -577,8 +577,9 @@ export class ListingsV2Controller extends BaseController {
     @Query() has_photos?: boolean,
     @Query() bulk_discount?: boolean,
     @Query() include_unlisted?: boolean,
-    @Query() org?: string,
     @Request() request?: ExpressRequest,
+    // After `request`: callers (and tests) pass the arguments positionally.
+    @Query() org?: string,
   ): Promise<SearchListingsResponse> {
     if (request) this.request = request
     const db = getKnex()

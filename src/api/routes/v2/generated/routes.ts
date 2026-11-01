@@ -7452,8 +7452,8 @@ export function RegisterRoutes(app: Router) {
                 has_photos: {"in":"query","name":"has_photos","dataType":"boolean"},
                 bulk_discount: {"in":"query","name":"bulk_discount","dataType":"boolean"},
                 include_unlisted: {"in":"query","name":"include_unlisted","dataType":"boolean"},
-                org: {"in":"query","name":"org","dataType":"string"},
                 request: {"in":"request","name":"request","dataType":"object"},
+                org: {"in":"query","name":"org","dataType":"string"},
         };
         app.get('/listings/search',
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),

@@ -16,6 +16,9 @@ import { RESERVED_SHOP_SLUGS } from "../../../../services/shops/reserved-shop-sl
 // The v1 router's rate limiter opens a Postgres store at import; routes only.
 vi.mock("../../../middleware/enhanced-ratelimiting.js", () => ({
   readRateLimit: (_req: unknown, _res: unknown, next: () => void) => next(),
+  // tsoa-ratelimit.ts builds its limiters with these at import.
+  createRateLimit: () => (_req: unknown, _res: unknown, next: () => void) => next(),
+  createHourBasedRateLimit: () => (_req: unknown, _res: unknown, next: () => void) => next(),
 }))
 
 interface Layer {
