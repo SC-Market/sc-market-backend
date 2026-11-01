@@ -82,6 +82,8 @@ import { AvailabilityV2Controller } from './../availability/AvailabilityV2Contro
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuctionsV2Controller } from './../auctions/AuctionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrgAnalyticsV2Controller } from './../analytics/OrgAnalyticsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AnalyticsV2Controller } from './../analytics/AnalyticsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { TestAccountsController } from './../admin/TestAccountsController.js';
@@ -4565,6 +4567,77 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "amount": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgShopStats": {
+        "dataType": "refObject",
+        "properties": {
+            "shop_id": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "views": {"dataType":"double","required":true},
+            "unique_viewers": {"dataType":"double","required":true},
+            "cart_adds": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+            "conversion_rate": {"dataType":"double","required":true},
+            "completed_orders": {"dataType":"double","required":true},
+            "active_listings": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgStatsTotals": {
+        "dataType": "refObject",
+        "properties": {
+            "views": {"dataType":"double","required":true},
+            "unique_viewers": {"dataType":"double","required":true},
+            "cart_adds": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+            "conversion_rate": {"dataType":"double","required":true},
+            "completed_orders": {"dataType":"double","required":true},
+            "active_listings": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgTopListing": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "shop_slug": {"dataType":"string","required":true},
+            "views": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgMemberOrders": {
+        "dataType": "refObject",
+        "properties": {
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "assigned": {"dataType":"double","required":true},
+            "completed": {"dataType":"double","required":true},
+            "open": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetOrgStatsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "spectrum_id": {"dataType":"string","required":true},
+            "shops": {"dataType":"array","array":{"dataType":"refObject","ref":"OrgShopStats"},"required":true},
+            "totals": {"ref":"OrgStatsTotals","required":true},
+            "top_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OrgTopListing"},"required":true},
+            "orders_by_member_visible": {"dataType":"boolean","required":true},
+            "orders_by_member": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"OrgMemberOrders"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "unassigned_open_orders": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -11029,6 +11102,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'placeBid',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgAnalyticsV2Controller_getOrgStats: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"query","name":"spectrum_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/analytics/org-stats',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrgAnalyticsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrgAnalyticsV2Controller.prototype.getOrgStats)),
+
+            async function OrgAnalyticsV2Controller_getOrgStats(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgAnalyticsV2Controller_getOrgStats, request, response });
+
+                const controller = new OrgAnalyticsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrgStats',
                 controller,
                 response,
                 next,
