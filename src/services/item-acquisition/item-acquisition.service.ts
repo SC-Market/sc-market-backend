@@ -49,7 +49,7 @@ import {
   getPriceDocument,
 } from "../price-oracle/price-oracle.service.js"
 import {
-  itemKeys,
+  gameItemRewardKeys,
   parseStoredRewards,
   resolveItemRewards,
 } from "./reward-resolution.js"
@@ -265,7 +265,7 @@ export async function missionsRewardingItem(
   item: ItemRow,
   versionId: string,
 ): Promise<ItemAcquisitionMission[]> {
-  const keys = itemKeys(item)
+  const keys = await gameItemRewardKeys(knex, item)
   if (!keys.length) return []
   const candidates = (await knex("missions as m")
     .select(...MISSION_COLUMNS, "m.item_rewards")

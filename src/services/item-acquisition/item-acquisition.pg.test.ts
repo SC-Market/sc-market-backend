@@ -46,6 +46,7 @@ const RIFLE = uuid("1", 2) // resolved by class name only
 const TWIN_A = uuid("1", 3) // two items share one class name: ambiguous
 const TWIN_B = uuid("1", 4)
 const ORE = uuid("1", 5) // ingredient and resource
+const SABRE = uuid("1", 6) // a ship: no p4k columns, linked through wiki_ships
 const SHIP_REF =
   "file://./../../../../../libs/foundry/records/entities/spaceships/ANVL_Hornet_F7_Mk2_Collector_Mod.json"
 const SELLER = uuid("b", 1)
@@ -163,6 +164,19 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
       { id: TWIN_A, name: "IA Twin A", type: "Other", p4k_file: "twin_item" },
       { id: TWIN_B, name: "IA Twin B", type: "Other", p4k_file: "twin_item" },
       { id: ORE, name: "IA Ore", type: "Commodity" },
+      { id: SABRE, name: "IA Sabre Wikelo", type: "Ship for Sale/Rental" },
+    ])
+    await db()("wiki_ships").insert({
+      version_id: VERSION,
+      ship_code: "AEGS_Sabre_IA_Collector",
+      name: "IA Sabre Wikelo",
+    })
+    missionIds.ship = await mission("Sabre Mod", [
+      {
+        name: "IA Sabre Wikelo",
+        ref: "file://./../spaceships/aegs_sabre_ia_collector.json",
+        itemId: uuid("9", 8),
+      },
     ])
 
     // Direct item rewards: by p4k id (with a misleading ref), by class name only.
@@ -311,6 +325,7 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
       { name: "twin", ref: "twin_item.json" },
       { name: "unknown", ref: "nothing_like_it.json", itemId: uuid("9", 9) },
       { name: "empty", ref: "" },
+      { name: "ship", ref: "spaceships/AEGS_Sabre_IA_Collector.json" },
     ])
     expect(got.map((g) => g?.id ?? null)).toEqual([
       SHIP,
@@ -319,6 +334,7 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
       null,
       null,
       null,
+      SABRE,
     ])
     expect(got[0]).toEqual({
       id: SHIP,
@@ -352,6 +368,14 @@ describe.skipIf(!PG_TEST_URL)("item acquisition (real SQL)", () => {
       .where("id", TWIN_A)
       .first("id", "name", "type", "p4k_id", "p4k_file")
     expect(await svc.missionsRewardingItem(db(), twin, VERSION)).toEqual([])
+    const sabre = await db()("game_items")
+      .where("id", SABRE)
+      .first("id", "name", "type", "p4k_id", "p4k_file")
+    expect(
+      (await svc.missionsRewardingItem(db(), sabre, VERSION)).map(
+        (m) => m.mission_id,
+      ),
+    ).toEqual([missionIds.ship])
   })
 
   it("builds the acquisition document from the active LIVE version, real shops only", async () => {

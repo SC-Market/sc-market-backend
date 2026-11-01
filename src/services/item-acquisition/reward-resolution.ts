@@ -10,12 +10,20 @@
  * - `itemId` (when the extractor resolved it) is the entity record UUID,
  *   stored as game_items.p4k_id (unique).
  * - The basename of `ref` is the record's class name, stored as
- *   game_items.p4k_file.
+ *   game_items.p4k_file for items, and as wiki_ships.ship_code for ships.
  *
- * Resolution is exact, never by display name: the p4k_id match wins; else a
- * p4k_file match counts only when exactly one game item has that file (two
- * items with one file is ambiguous, so the reward stays unresolved). An
- * unresolved reward gets game_item_id null.
+ * Resolution is exact, in this order:
+ *
+ * 1. game_items.p4k_id = itemId;
+ * 2. else game_items.p4k_file = class name, when exactly one game item has
+ *    that file (two is ambiguous: unresolved);
+ * 3. else, when no game item has that file, wiki_ships.ship_code = class
+ *    name, joined to the game item of the same name (game_items.name is
+ *    unique; it is how the import links ships, and ships that matched an
+ *    existing game item by name have no p4k_id/p4k_file), when that gives
+ *    exactly one game item.
+ *
+ * An unresolved reward gets game_item_id null.
  *
  * rewardKeys() mirrors the SQL function mission_item_reward_keys() of
  * migration 20261031120000, whose GIN index serves the reverse lookup
@@ -68,17 +76,34 @@ export function rewardKeys(reward: StoredItemReward): string[] {
   return keys
 }
 
-/** Index keys of a game item (what a reward of it would carry). */
-export function itemKeys(item: {
-  p4k_id: string | null
-  p4k_file: string | null
-}): string[] {
+/**
+ * Index keys of a game item (what a reward of it would carry): its p4k_id,
+ * its p4k_file and the ship codes of wiki ships of the same name.
+ */
+export function itemKeys(
+  item: { p4k_id: string | null; p4k_file: string | null },
+  shipCodes: readonly string[] = [],
+): string[] {
   const keys: string[] = []
   if (item.p4k_id && UUID.test(item.p4k_id))
     keys.push(`id:${item.p4k_id.toLowerCase()}`)
-  const file = item.p4k_file ? item.p4k_file.toLowerCase() : ""
-  if (file) keys.push(`file:${file}`)
+  const files = [item.p4k_file ?? "", ...shipCodes].map((f) => f.toLowerCase())
+  for (const file of new Set(files)) if (file) keys.push(`file:${file}`)
   return keys
+}
+
+/** itemKeys() with the item's ship codes looked up (wiki_ships, small). */
+export async function gameItemRewardKeys(
+  knex: Knex,
+  item: { name: string; p4k_id: string | null; p4k_file: string | null },
+): Promise<string[]> {
+  const rows = (await knex("wiki_ships")
+    .distinct(knex.raw("lower(ship_code) AS code"))
+    .where("name", item.name)) as { code: string }[]
+  return itemKeys(
+    item,
+    rows.map((r) => r.code),
+  )
 }
 
 /**
@@ -108,9 +133,10 @@ interface CandidateRow {
 }
 
 /**
- * Resolves rewards to game items with one indexed query (p4k_id, and
- * lower(p4k_file) via idx_game_items_p4k_file_lower). Returns one entry per
- * reward, in order: the item, or null when it doesn't resolve exactly.
+ * Resolves rewards to game items: one indexed game_items query (p4k_id, and
+ * lower(p4k_file) via idx_game_items_p4k_file_lower), plus one wiki_ships
+ * query for class names no game item has. Returns one entry per reward, in
+ * order: the item, or null when it doesn't resolve exactly.
  */
 export async function resolveItemRewards(
   knex: Knex,
@@ -151,12 +177,33 @@ export async function resolveItemRewards(
     }
   }
 
+  // Ships: class names no game item has as p4k_file.
+  const shipCodes = [...files].filter((f) => !byFile.has(f))
+  const byShip = new Map<string, { id: string; name: string }[]>()
+  if (shipCodes.length) {
+    const shipRows = (await knex("wiki_ships as ws")
+      .join("game_items as gi", "gi.name", "ws.name")
+      .distinct(knex.raw("lower(ws.ship_code) AS code"), "gi.id", "gi.name")
+      .whereRaw("lower(ws.ship_code) = ANY(?::text[])", [shipCodes])) as {
+      code: string
+      id: string
+      name: string
+    }[]
+    for (const row of shipRows) {
+      const list = byShip.get(row.code) ?? []
+      list.push(row)
+      byShip.set(row.code, list)
+    }
+  }
+
   return rewards.map((r) => {
     const id = rewardP4kId(r)
-    let hit = id ? byId.get(id) : undefined
-    if (!hit) {
-      const file = refClassName(r.ref)
-      const matches = file ? byFile.get(file) : undefined
+    let hit: { id: string; name: string } | undefined = id
+      ? byId.get(id)
+      : undefined
+    const file = refClassName(r.ref)
+    if (!hit && file) {
+      const matches = byFile.get(file) ?? byShip.get(file)
       if (matches && matches.length === 1) hit = matches[0]
     }
     return hit

@@ -37,6 +37,9 @@ describe("mission item reward keys", () => {
       }),
     ).toEqual(rewardKeys({ ref: REF, itemId: P4K }))
     expect(itemKeys({ p4k_id: null, p4k_file: null })).toEqual([])
+    expect(
+      itemKeys({ p4k_id: null, p4k_file: null }, ["AEGS_Sabre", "aegs_sabre"]),
+    ).toEqual(["file:aegs_sabre"])
   })
 
   it("parses stored rewards: array, JSON text, anything else is none", () => {
