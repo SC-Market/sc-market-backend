@@ -379,13 +379,15 @@ const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g
 const ISO = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z/g
 /** Random tokens (unsubscribe, verification): 64 hex chars. */
 const TOKEN = /\b[0-9a-f]{64}\b/g
+/** Signed unsubscribe links (services/email/unsubscribe-token.ts). */
+const SIGNED_TOKEN = /\bu1\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g
 
 /** Replace ids with labels and timestamps with "<ts>", recursively. */
 export function normalize<T>(value: T): T {
   if (value === null || value === undefined) return value
   if (value instanceof Date) return "<ts>" as unknown as T
   if (typeof value === "string") {
-    let s = value.replace(UUID, (m) => labels.get(m) ?? unknownId(m)).replace(ISO, "<ts>").replace(TOKEN, "<token>")
+    let s = value.replace(UUID, (m) => labels.get(m) ?? unknownId(m)).replace(ISO, "<ts>").replace(TOKEN, "<token>").replace(SIGNED_TOKEN, "<token>")
     for (const [id, l] of labels) {
       if (/^\d{15,}$/.test(id) && s.includes(id)) s = s.split(id).join(l)
     }

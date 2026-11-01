@@ -310,7 +310,7 @@ describe("dm_reminder (82): unread order/offer message reminder", () => {
 })
 
 describe("email verification (transactional)", () => {
-  it("queued, then sent by the consumer with a token link; unsubscribe link points at /settings?tab=email", async () => {
+  it("queued, then sent by the consumer with a token link; no unsubscribe link (transactional), only Manage Preferences", async () => {
     const u = await w.user("newbie", { email: "unverified" })
     await emailService.sendVerificationEmail(u.user_id, u.email!)
     const obs = await w.observe()

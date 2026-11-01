@@ -102,6 +102,15 @@
         {{/if}}
         <h1>{{siteName}}</h1>
       </div>
+      {{#if defaultsNotice}}
+      <div style="background-color: #1f2a30; border-left: 4px solid #10b981; padding: 14px 20px; color: #e0e0e0; font-size: 14px;">
+        We turned on email for order updates, offers and unread messages.
+        Turn off with one click:
+        <a href="{{defaultsNotice.unsubscribeUrl}}" style="color: #10b981;">Turn these emails off</a>
+        |
+        <a href="{{defaultsNotice.preferencesUrl}}" style="color: #10b981;">Manage preferences</a>
+      </div>
+      {{/if}}
       <div class="email-body">
         {{{body}}}
       </div>
@@ -110,8 +119,10 @@
           <a href="{{siteUrl}}" class="unsubscribe-link">{{siteName}}</a>
         </p>
         <p style="margin: 0;">
+          {{#if unsubscribeUrl}}
           <a href="{{unsubscribeUrl}}" class="unsubscribe-link">Unsubscribe</a>
           |
+          {{/if}}
           <a href="{{preferencesUrl}}" class="unsubscribe-link">Manage
             Preferences</a>
         </p>

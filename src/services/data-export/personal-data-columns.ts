@@ -86,6 +86,7 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "notification_deliveries.user_id": { export: "notification_deliveries" },
   "dm_reminder_log.user_id": { export: "dm_reminders" },
   "dm_reminder_conversations.user_id": { export: "dm_reminder_conversations" },
+  "email_defaults_notices.user_id": { export: "email_defaults_notice" },
 
   "contractor_members.user_id": { export: "org_memberships" },
   "contractor_member_roles.user_id": { export: "org_memberships.roles" },

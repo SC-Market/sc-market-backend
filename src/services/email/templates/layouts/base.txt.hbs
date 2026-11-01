@@ -1,13 +1,22 @@
 {{siteName}}
 {{#if siteUrl}}{{siteUrl}}{{/if}}
 
+{{#if defaultsNotice}}
+We turned on email for order updates, offers and unread messages. Turn off with one click:
+{{defaultsNotice.unsubscribeUrl}}
+Manage preferences:
+{{defaultsNotice.preferencesUrl}}
+
+{{/if}}
 {{{body}}}
 
 ---
 {{siteName}}
 {{#if siteUrl}}{{siteUrl}}{{/if}}
 
+{{#if unsubscribeUrl}}
 Unsubscribe:
 {{unsubscribeUrl}}
+{{/if}}
 Manage Preferences:
 {{preferencesUrl}}

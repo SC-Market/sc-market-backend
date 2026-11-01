@@ -417,25 +417,63 @@ export const update_email_preferences_spec = oapi.path({
   },
 })
 
+const unsubscribeTokenParam = {
+  name: "token",
+  in: "path" as const,
+  required: true,
+  schema: { type: "string" as const },
+  description: "Signed unsubscribe token from the email",
+}
+
 export const unsubscribe_spec = oapi.path({
   tags: ["Email"],
-  summary: "Unsubscribe from email notifications",
+  summary: "One-click unsubscribe from an email category",
   description:
-    "Unsubscribe from email notifications using unsubscribe token. Redirects to frontend.",
+    "No login: the signed token is the credential. Turns off the email category the link was sent for (all=true: every email that can be turned off). Also the RFC 8058 List-Unsubscribe-Post target. Idempotent.",
   parameters: [
+    unsubscribeTokenParam,
     {
-      name: "token",
-      in: "path",
-      required: true,
-      schema: {
-        type: "string",
-      },
-      description: "Unsubscribe token",
+      name: "all",
+      in: "query",
+      required: false,
+      schema: { type: "string", enum: ["true"] },
+      description: "Turn off every notification email that can be turned off",
     },
   ],
   responses: {
-    302: {
-      description: "Redirects to frontend unsubscribe page",
+    200: {
+      description: "Unsubscribed",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  success: { type: "boolean" },
+                  scope: { type: "string", description: "Category turned off, or 'all'" },
+                  label: { type: "string", description: "What was turned off, in words" },
+                  message: { type: "string" },
+                },
+                required: ["success", "scope", "label", "message"],
+              },
+            },
+            required: ["data"],
+          },
+        },
+      },
     },
+    400: { description: "Invalid unsubscribe link" },
+  },
+})
+
+export const unsubscribe_page_spec = oapi.path({
+  tags: ["Email"],
+  summary: "Open the unsubscribe confirmation page",
+  description: "Redirects to the frontend page, which unsubscribes on open. Never unsubscribes by itself.",
+  parameters: [unsubscribeTokenParam],
+  responses: {
+    302: { description: "Redirect to the confirmation page" },
   },
 })

@@ -24,8 +24,6 @@ https://sc-market.space/news
 SC Market
 https://sc-market.space
 
-Unsubscribe:
-https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
 https://sc-market.space/settings?tab=email",
       "to": [
@@ -51,8 +49,6 @@ https://sc-market.space/news
 SC Market
 https://sc-market.space
 
-Unsubscribe:
-https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
 https://sc-market.space/settings?tab=email",
       "to": [
@@ -314,7 +310,7 @@ SC Market
 https://sc-market.space
 
 Unsubscribe:
-https://sc-market.space/settings?tab=email
+https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
 https://sc-market.space/settings?tab=email",
       "to": [
@@ -366,7 +362,7 @@ https://sc-market.space/settings?tab=email",
 }
 `;
 
-exports[`email verification (transactional) > queued, then sent by the consumer with a token link; unsubscribe link points at /settings?tab=email 2`] = `
+exports[`email verification (transactional) > queued, then sent by the consumer with a token link; no unsubscribe link (transactional), only Manage Preferences 2`] = `
 {
   "discord": [],
   "discord_queue": [],
@@ -390,8 +386,6 @@ email, you can safely ignore it.
 SC Market
 https://sc-market.space
 
-Unsubscribe:
-https://sc-market.space/settings?tab=email
 Manage Preferences:
 https://sc-market.space/settings?tab=email",
       "to": [

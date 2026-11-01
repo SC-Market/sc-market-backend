@@ -11,6 +11,8 @@
 import { env } from "../../config/env.js"
 import { redactToken } from "../../util/redact.js"
 import { sendEmailViaSES } from "../../clients/aws/ses.js"
+import { preferencesUrl, unsubscribeLinksFor } from "./unsubscribe-token.js"
+import { markDefaultsNoticeShown, pendingDefaultsNotice } from "./defaults-notice.js"
 import * as userEmailDb from "../../api/routes/v1/email/user-email-database.js"
 import * as emailPreferenceDb from "../../api/routes/v1/email/database.js"
 import * as emailVerificationDb from "../../api/routes/v1/email/verification-database.js"
@@ -122,6 +124,7 @@ class SESEmailService implements EmailService {
         options.text,
         options.from,
         options.replyTo,
+        options.headers,
       )
 
       logger.info("Email sent successfully", {
@@ -220,8 +223,8 @@ class SESEmailService implements EmailService {
         siteUrl: baseUrl,
         logoUrl: `${baseUrl}/scmarket-logo.png`,
         verificationUrl: verificationUrl,
-        unsubscribeUrl: `${baseUrl}/settings?tab=email`, // Verification emails don't need unsubscribe tokens
-        preferencesUrl: `${baseUrl}/settings?tab=email`,
+        // Transactional: no unsubscribe link (nothing to unsubscribe from).
+        preferencesUrl: preferencesUrl(),
       }
 
       const html = await renderEmailTemplate(
@@ -401,24 +404,25 @@ class SESEmailService implements EmailService {
         )
       }
 
+      // The preference scope of this email: notify() passes the exact one
+      // (Personal included); legacy senders pass a contractor id or leave it
+      // to the order's / offer's contractor_id in the data. The check below
+      // and the unsubscribe link use it.
+      let contractorIdToCheck: string | null = preferenceScope
+        ? preferenceScope.contractorId
+        : (contractorId ?? null)
+      if (!preferenceScope && contractorIdToCheck === null) {
+        const orderContractorId = readContractorId(data.order)
+        const offerContractorId = readContractorId(data.offer)
+        if (orderContractorId) {
+          contractorIdToCheck = orderContractorId
+        } else if (offerContractorId) {
+          contractorIdToCheck = offerContractorId
+        }
+      }
+
       // Check email preferences if action type is known
       if (actionTypeId !== null) {
-        // Determine contractor_id from data if not provided (legacy senders;
-        // notify() passes the exact scope, Personal included)
-        let contractorIdToCheck: string | null = preferenceScope
-          ? preferenceScope.contractorId
-          : (contractorId ?? null)
-        if (!preferenceScope && contractorIdToCheck === null) {
-          // Try to extract from notification data
-          const orderContractorId = readContractorId(data.order)
-          const offerContractorId = readContractorId(data.offer)
-          if (orderContractorId) {
-            contractorIdToCheck = orderContractorId
-          } else if (offerContractorId) {
-            contractorIdToCheck = offerContractorId
-          }
-        }
-
         // Defaults and mandatory events come from the notify() catalog:
         // invites email by default (owner decision), admin alerts always.
         const { emailDefaultFor } = await import("../notify/catalog.js")
@@ -643,6 +647,17 @@ class SESEmailService implements EmailService {
           return false
       }
 
+      // One-click unsubscribe for this email's category and scope (no link
+      // for mandatory categories), and the one-time defaults notice.
+      const links = unsubscribeLinksFor(userId, notificationType, contractorIdToCheck)
+      templateData = {
+        ...templateData,
+        unsubscribeUrl: links.unsubscribeUrl,
+        preferencesUrl: links.preferencesUrl,
+      }
+      const notice = await pendingDefaultsNotice(userId)
+      if (notice) templateData.defaultsNotice = notice
+
       // Render email templates
       const html = await renderEmailTemplate(
         notificationType,
@@ -661,7 +676,9 @@ class SESEmailService implements EmailService {
         subject: templateData.notificationTitle,
         html,
         text,
+        headers: links.headers,
       })
+      if (notice && result.status === "sent") await markDefaultsNoticeShown(userId)
 
       if (result.status === "failed") {
         logger.error("Failed to send notification email", {

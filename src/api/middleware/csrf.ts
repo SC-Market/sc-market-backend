@@ -77,6 +77,10 @@ export const CSRF_EXEMPT_PATHS: readonly RegExp[] = [
   // Browser-generated CSP violation reports (application/csp-report or
   // application/reports+json). A write-only log sink with no auth effect.
   /^\/api(?:\/v1)?\/csp-report$/,
+  // RFC 8058 one-click unsubscribe: mail providers POST
+  // application/x-www-form-urlencoded "List-Unsubscribe=One-Click". The
+  // signed token in the path is the credential; cookies grant nothing here.
+  /^\/api(?:\/v1)?\/email\/unsubscribe\/[^/]+$/,
 ]
 
 export interface CsrfOptions {

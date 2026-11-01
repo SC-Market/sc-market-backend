@@ -187,14 +187,29 @@ vi.mock("@aws-sdk/client-ses", () => {
         return { MessageId: `ses-${recorder().email.length}` }
       }
       if (cmd instanceof SendRawEmailCommand) {
+        // Decoded into the same shape as SendEmail (clients/aws/mime.ts
+        // builds it), so a message sent raw for its List-Unsubscribe
+        // headers records like any other. Headers are asserted in
+        // clients/aws/mime.test.ts and services/email/unsubscribe-token.test.ts.
         const raw = Buffer.from(i.RawMessage.Data).toString("utf8")
+        const head = raw.split("\r\n\r\n")[0]
+        const header = (name: string) => new RegExp(`^${name}: (.*)$`, "m").exec(head)?.[1]
+        const decodeWord = (v: string) =>
+          v.replace(/=\?UTF-8\?B\?([^?]*)\?=/g, (_m, b64) => Buffer.from(b64, "base64").toString("utf8"))
+        const body = (type: string) => {
+          const m = new RegExp(
+            `Content-Type: ${type}; charset=UTF-8\\r\\nContent-Transfer-Encoding: base64\\r\\n\\r\\n([A-Za-z0-9+/=\\r\\n]*?)\\r\\n--`,
+          ).exec(raw)
+          return Buffer.from((m?.[1] ?? "").replace(/\r\n/g, ""), "base64").toString("utf8")
+        }
+        const replyTo = header("Reply-To")
         recorder().email.push({
           to: i.Destinations ?? [],
           source: i.Source ?? "",
-          subject: /^Subject: (.*)$/m.exec(raw)?.[1] ?? "",
-          html: "",
-          text: "",
-          raw,
+          subject: decodeWord(header("Subject") ?? ""),
+          html: body("text/html"),
+          text: body("text/plain"),
+          replyTo: replyTo ? [replyTo] : undefined,
         })
         return { MessageId: `ses-${recorder().email.length}` }
       }

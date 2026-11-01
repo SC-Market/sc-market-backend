@@ -252,6 +252,17 @@ describe("csrfProtection", () => {
       expect(res.status).toBe(200)
     })
 
+    it("lets mail providers post RFC 8058 one-click unsubscribes (form body, no Origin)", async () => {
+      for (const path of ["/api/email/unsubscribe/u1.abc.def", "/api/v1/email/unsubscribe/u1.abc.def"]) {
+        const res = await request(app())
+          .post(path)
+          .set("Content-Type", "application/x-www-form-urlencoded")
+          .send("List-Unsubscribe=One-Click")
+        expect(res.status).toBe(200)
+      }
+      expect(CSRF_EXEMPT_PATHS.some((re) => re.test("/api/v1/email/preferences"))).toBe(false)
+    })
+
     it("only exempts the ingest route, not the rest of the integration", () => {
       expect(
         CSRF_EXEMPT_PATHS.some((re) =>

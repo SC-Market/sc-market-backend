@@ -4,6 +4,8 @@ import { emailService } from "../email/email.service.js"
 import { renderEmailTemplate } from "../email/template-engine.js"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
+import { unsubscribeLinksFor } from "../email/unsubscribe-token.js"
+import { markDefaultsNoticeShown, pendingDefaultsNotice } from "../email/defaults-notice.js"
 import { notify } from "../notify/dispatcher.js"
 import { discordDmDisabled } from "../notify/kill-switch.js"
 
@@ -132,6 +134,8 @@ export function candidatesQuery(knex: Knex, opts: ReminderOptions = {}): Knex.Qu
           .whereRaw("enp.user_id = a.user_id")
           .where("enp.action_type_id", DM_REMINDER_ACTION_TYPE_ID)
           .where("enp.enabled", true)
+          // Personal: what the unsubscribe link and the settings write.
+          .whereNull("enp.contractor_id")
       }).orWhereExists(function () {
         this.select(knex.raw("1"))
           .from("account_providers as ap")
@@ -227,6 +231,8 @@ async function emailEligible(knex: Knex, userIds: string[]): Promise<Map<string,
       this.on("enp.user_id", "=", "ue.user_id")
         .andOn("enp.action_type_id", "=", knex.raw("?", [DM_REMINDER_ACTION_TYPE_ID]))
         .andOn("enp.enabled", "=", knex.raw("true"))
+        // Personal: what the unsubscribe link and the settings write.
+        .andOnNull("enp.contractor_id")
     })
     .whereIn("ue.user_id", userIds)
     .where("ue.email_verified", true)
@@ -238,6 +244,9 @@ async function emailEligible(knex: Knex, userIds: string[]): Promise<Map<string,
 async function sendEmail(digest: ReminderDigest, email: string): Promise<boolean> {
   const base = baseUrl()
   const n = digest.conversations.length
+  // One-click unsubscribe (no login) and the one-time defaults notice.
+  const links = unsubscribeLinksFor(digest.user_id, "dm_reminder", null)
+  const notice = await pendingDefaultsNotice(digest.user_id)
   const templateData = {
     userName: digest.username,
     userDisplayName: digest.display_name || digest.username,
@@ -249,9 +258,10 @@ async function sendEmail(digest: ReminderDigest, email: string): Promise<boolean
     siteName: "SC Market",
     siteUrl: base,
     logoUrl: `${base}/scmarket-logo.png`,
-    unsubscribeUrl: `${base}/settings?tab=email`,
-    preferencesUrl: `${base}/settings?tab=email`,
+    unsubscribeUrl: links.unsubscribeUrl,
+    preferencesUrl: links.preferencesUrl,
     unreadCount: n,
+    ...(notice ? { defaultsNotice: notice } : {}),
   }
   const html = await renderEmailTemplate("dm-reminder", templateData, "html")
   const text = await renderEmailTemplate("dm-reminder", templateData, "txt")
@@ -260,7 +270,9 @@ async function sendEmail(digest: ReminderDigest, email: string): Promise<boolean
     subject: `You have unread messages in ${n} conversation${n > 1 ? "s" : ""} on SC Market`,
     html,
     text,
+    headers: links.headers,
   })
+  if (notice && result.status === "sent") await markDefaultsNoticeShown(digest.user_id)
   return result.status === "sent"
 }
 

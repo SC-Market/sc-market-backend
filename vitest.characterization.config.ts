@@ -38,6 +38,8 @@ export default defineConfig({
     env: {
       NODE_ENV: "test",
       FRONTEND_URL: "https://sc-market.space",
+      BACKEND_URL: "https://api.sc-market.space",
+      SESSION_SECRET: "fake-session-secret",
       CDN_URL: "https://cdn.sc-market.space",
       AWS_REGION: "us-east-2",
       BACKEND_ACCESS_KEY_ID: "AKIAFAKEFAKEFAKE",

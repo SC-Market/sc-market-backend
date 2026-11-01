@@ -12,6 +12,8 @@ export interface EmailOptions {
   text: string
   from?: string
   replyTo?: string
+  /** Extra headers (RFC 8058 List-Unsubscribe); sent raw when present. */
+  headers?: Record<string, string>
 }
 
 /**
@@ -43,9 +45,11 @@ export interface EmailTemplateData {
   siteUrl: string
   logoUrl?: string
 
-  // Unsubscribe
-  unsubscribeUrl: string
+  // Unsubscribe: no link for mandatory categories and transactional email
+  unsubscribeUrl?: string
   preferencesUrl: string
+  /** One-time notice that the key email defaults were turned on (email_defaults_notices). */
+  defaultsNotice?: { unsubscribeUrl: string; preferencesUrl: string }
 
   // Notification-specific data
   [key: string]: unknown // Order, offer, message data, etc.

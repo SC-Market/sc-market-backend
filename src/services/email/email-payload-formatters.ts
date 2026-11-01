@@ -19,6 +19,7 @@ import { EmailTemplateData } from "./email.service.types.js"
 import { env } from "../../config/env.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as marketDb from "../../api/routes/v1/market/database.js"
+import { unsubscribeLinksFor } from "./unsubscribe-token.js"
 
 /**
  * Base URL for the application
@@ -35,50 +36,6 @@ const getSiteName = (): string => {
 }
 
 /**
- * Generate unsubscribe URL with token
- */
-const getUnsubscribeUrl = async (
-  userId: string,
-  emailId: string,
-  email: string,
-): Promise<string> => {
-  const baseUrl = getBaseUrl()
-  // Generate or get existing unsubscribe token
-  const unsubscribeTokenDb =
-    await import("../../api/routes/v1/email/unsubscribe-database.js")
-
-  // Check for existing active token
-  const activeTokens = await unsubscribeTokenDb.getActiveUnsubscribeTokens(
-    userId,
-    emailId,
-  )
-
-  let token: string
-  if (activeTokens.length > 0) {
-    // Reuse existing token
-    token = activeTokens[0].token
-  } else {
-    // Create new token
-    const tokenRecord = await unsubscribeTokenDb.createUnsubscribeToken(
-      userId,
-      emailId,
-      email,
-    )
-    token = tokenRecord.token
-  }
-
-  return `${baseUrl}/email/unsubscribe/${token}`
-}
-
-/**
- * Generate preferences URL
- */
-const getPreferencesUrl = (): string => {
-  const baseUrl = getBaseUrl()
-  return `${baseUrl}/settings?tab=email`
-}
-
-/**
  * Base template data with common fields
  */
 async function getBaseTemplateData(
@@ -90,19 +47,8 @@ async function getBaseTemplateData(
     throw new Error(`User not found: ${userId}`)
   }
 
-  // Get user's email to generate unsubscribe token
-  const userEmailDb =
-    await import("../../api/routes/v1/email/user-email-database.js")
-  const userEmail = await userEmailDb.getPrimaryEmail(userId)
-
-  let unsubscribeUrl = `${getBaseUrl()}/settings?tab=email`
-  if (userEmail) {
-    unsubscribeUrl = await getUnsubscribeUrl(
-      userId,
-      userEmail.email_id,
-      userEmail.email,
-    )
-  }
+  // Personal-scope links; sendNotificationEmail sets the exact scope's.
+  const links = unsubscribeLinksFor(userId, notificationType, null)
 
   return {
     userName: user.username,
@@ -112,8 +58,8 @@ async function getBaseTemplateData(
     siteName: getSiteName(),
     siteUrl: getBaseUrl(),
     logoUrl: `${getBaseUrl()}/scmarket-logo.png`,
-    unsubscribeUrl,
-    preferencesUrl: getPreferencesUrl(),
+    unsubscribeUrl: links.unsubscribeUrl,
+    preferencesUrl: links.preferencesUrl,
   }
 }
 

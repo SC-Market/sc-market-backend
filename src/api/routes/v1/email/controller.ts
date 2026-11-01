@@ -883,131 +883,99 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
 }
 
 /**
- * POST /api/email/unsubscribe/:token
- * Unsubscribe from email notifications via token (no auth required)
- * Also supports ?json=true query param to return JSON instead of redirecting
+ * Resolve an unsubscribe token: a signed link (unsubscribe-token.ts) or one
+ * of the stored 64-hex tokens the emails carried before (they meant
+ * "unsubscribe from all" and keep working, any number of times).
+ */
+async function resolveUnsubscribe(
+  token: string,
+  all: boolean,
+): Promise<
+  | { ok: true; userId: string; label: string; turnedOff: number; scope: string }
+  | { ok: false }
+> {
+  const { verifyUnsubscribeToken, isLegacyUnsubscribeToken } = await import(
+    "../../../../services/email/unsubscribe-token.js"
+  )
+  const { applyUnsubscribe, applyUnsubscribeAll } = await import(
+    "../../../../services/email/unsubscribe.js"
+  )
+  const claim = verifyUnsubscribeToken(token)
+  if (claim) {
+    const result = all
+      ? await applyUnsubscribeAll(claim.userId)
+      : await applyUnsubscribe(claim.userId, claim.scope, claim.contractorId)
+    const scope = all
+      ? "all"
+      : claim.scope.kind === "category"
+        ? claim.scope.category
+        : claim.scope.kind === "action"
+          ? claim.scope.action
+          : "key_defaults"
+    return { ok: true, userId: claim.userId, ...result, scope }
+  }
+  if (isLegacyUnsubscribeToken(token)) {
+    const unsubscribeTokenDb = await import("./unsubscribe-database.js")
+    const record = await unsubscribeTokenDb.getUnsubscribeToken(token)
+    if (!record) return { ok: false }
+    if (!record.used_at) await unsubscribeTokenDb.markUnsubscribeTokenAsUsed(record)
+    const result = await applyUnsubscribeAll(record.user_id)
+    return { ok: true, userId: record.user_id, ...result, scope: "all" }
+  }
+  return { ok: false }
+}
+
+/**
+ * POST /api/v1/email/unsubscribe/:token (also /api/email/...)
+ *
+ * One-click unsubscribe, no login: the signed token is the credential. Called
+ * by the confirmation page (/email/unsubscribe/:token) and by mail providers
+ * for RFC 8058 List-Unsubscribe-Post (body "List-Unsubscribe=One-Click",
+ * which needs no parsing: any POST with a valid token unsubscribes).
+ * `?all=true` turns off every email the user can turn off.
+ * Idempotent: repeating it succeeds and changes nothing.
  */
 export const unsubscribe: RequestHandler = async (req, res) => {
   const { token } = req.params
-  const returnJson = req.query.json === "true"
-
-  if (!token) {
-    if (returnJson) {
+  const all = req.query.all === "true"
+  try {
+    const result = token ? await resolveUnsubscribe(token, all) : { ok: false as const }
+    if (!result.ok) {
       res
         .status(400)
-        .json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            "Unsubscribe token is required",
-          ),
-        )
+        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "This unsubscribe link is not valid"))
       return
     }
-    const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
-    res.redirect(`${frontendUrl}/email/unsubscribe?error=invalid_token`)
-    return
-  }
-
-  try {
-    // Get unsubscribe token
-    const unsubscribeTokenDb = await import("./unsubscribe-database.js")
-    const tokenRecord = await unsubscribeTokenDb.getUnsubscribeToken(token)
-
-    if (!tokenRecord) {
-      if (returnJson) {
-        res
-          .status(400)
-          .json(
-            createErrorResponse(
-              ErrorCode.VALIDATION_ERROR,
-              "Invalid unsubscribe token",
-            ),
-          )
-        return
-      }
-      const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
-      res.redirect(`${frontendUrl}/email/unsubscribe?error=invalid_token`)
-      return
-    }
-
-    // Check if token was already used
-    if (tokenRecord.used_at) {
-      if (returnJson) {
-        res
-          .status(400)
-          .json(
-            createErrorResponse(
-              ErrorCode.VALIDATION_ERROR,
-              "This unsubscribe link has already been used",
-            ),
-          )
-        return
-      }
-      const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
-      res.redirect(`${frontendUrl}/email/unsubscribe?error=already_used`)
-      return
-    }
-
-    // Mark token as used
-    await unsubscribeTokenDb.markUnsubscribeTokenAsUsed(tokenRecord)
-
-    // Disable all email preferences for this user
-    const preferences = await emailPreferenceDb.getEmailPreferences(
-      tokenRecord.user_id,
-    )
-
-    // Count how many were enabled before disabling
-    const enabledCount = preferences.filter((p) => p.enabled).length
-
-    // Disable all preferences (even if already disabled, to ensure consistency)
-    const updatePromises = preferences.map((pref) =>
-      emailPreferenceDb.updateEmailPreference(pref.preference_id, {
-        enabled: false,
+    logger.info("Unsubscribed from email notifications", {
+      user_id: result.userId,
+      scope: result.scope,
+      turned_off: result.turnedOff,
+    })
+    res.json(
+      createResponse({
+        success: true,
+        scope: result.scope,
+        label: result.label,
+        message: `You won't get emails about ${result.label} any more.`,
       }),
     )
-    await Promise.all(updatePromises)
-
-    logger.info("Disabled all email preferences for user", {
-      user_id: tokenRecord.user_id,
-      email: tokenRecord.email,
-      total_preferences: preferences.length,
-      previously_enabled_count: enabledCount,
-    })
-
-    logger.info("User unsubscribed from email notifications", {
-      user_id: tokenRecord.user_id,
-      email: tokenRecord.email,
-    })
-
-    if (returnJson) {
-      res.json(
-        createResponse({
-          success: true,
-          message: "Successfully unsubscribed from email notifications",
-          userId: tokenRecord.user_id,
-          email: tokenRecord.email,
-        }),
-      )
-      return
-    }
-
-    // Redirect to frontend with success
-    const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
-    res.redirect(`${frontendUrl}/email/unsubscribe?success=true`)
   } catch (error) {
     logger.error("Failed to process unsubscribe", { error, token: redactToken(token) })
-    if (returnJson) {
-      res
-        .status(500)
-        .json(
-          createErrorResponse(
-            ErrorCode.INTERNAL_SERVER_ERROR,
-            "Failed to process unsubscribe",
-          ),
-        )
-      return
-    }
-    const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
-    res.redirect(`${frontendUrl}/email/unsubscribe?error=unsubscribe_failed`)
+    res
+      .status(500)
+      .json(createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to process unsubscribe"))
   }
+}
+
+/**
+ * GET /api/v1/email/unsubscribe/:token
+ *
+ * A mail client that doesn't do RFC 8058 one-click opens the
+ * List-Unsubscribe URL in the browser. A GET must not unsubscribe (link
+ * scanners prefetch URLs), so send the user to the confirmation page, which
+ * unsubscribes on open.
+ */
+export const unsubscribePage: RequestHandler = (req, res) => {
+  const frontendUrl = env.FRONTEND_URL || "https://sc-market.space"
+  res.redirect(302, `${frontendUrl}/email/unsubscribe/${encodeURIComponent(req.params.token ?? "")}`)
 }

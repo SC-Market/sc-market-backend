@@ -10,6 +10,7 @@ import {
 import { STSClient, AssumeRoleCommand } from "@aws-sdk/client-sts"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
+import { buildRawEmail } from "./mime.js"
 
 /**
  * Get temporary credentials by assuming the IAM role
@@ -63,7 +64,8 @@ export async function createSESClient() {
 }
 
 /**
- * Send email via AWS SES
+ * Send email via AWS SES. With extra headers (List-Unsubscribe) the message
+ * is sent raw (SendRawEmail), since SendEmail can't set headers.
  */
 export async function sendEmailViaSES(
   to: string,
@@ -72,12 +74,32 @@ export async function sendEmailViaSES(
   textBody: string,
   fromEmail?: string,
   replyTo?: string,
+  headers?: Record<string, string>,
 ): Promise<string> {
   const sesClient = await createSESClient()
   const from = fromEmail || env.EMAIL_FROM_ADDRESS
 
   if (!from) {
     throw new Error("EMAIL_FROM_ADDRESS not configured")
+  }
+
+  if (headers && Object.keys(headers).length) {
+    const source = env.EMAIL_FROM_NAME ? `${env.EMAIL_FROM_NAME} <${from}>` : from
+    const reply = replyTo || env.EMAIL_REPLY_TO || undefined
+    const raw = buildRawEmail({ from: source, to, replyTo: reply, subject, html: htmlBody, text: textBody, headers })
+    try {
+      const response = await sesClient.send(
+        new SendRawEmailCommand({
+          Source: source,
+          Destinations: [to],
+          RawMessage: { Data: Buffer.from(raw, "utf8") },
+        }),
+      )
+      return response.MessageId || ""
+    } catch (error) {
+      logger.error("Failed to send raw email via SES:", error)
+      throw error
+    }
   }
 
   const command = new SendEmailCommand({

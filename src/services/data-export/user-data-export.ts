@@ -645,6 +645,13 @@ export async function writeUserDataExport(
         .select("entity_id", "reminded_at"),
     ),
   )
+  await out.value(
+    "email_defaults_notice",
+    (await knex("email_defaults_notices")
+      .where(me)
+      .select("created_at", "shown_at")
+      .first()) ?? null,
+  )
 
   // ── Organizations and shops ──────────────────────────────────────────────
   await out.array(

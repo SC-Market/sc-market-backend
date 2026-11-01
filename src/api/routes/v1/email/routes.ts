@@ -14,6 +14,7 @@ import {
   getEmailPreferences,
   updateEmailPreferences,
   unsubscribe,
+  unsubscribePage,
 } from "./controller.js"
 import {
   add_email_spec,
@@ -24,6 +25,7 @@ import {
   get_email_preferences_spec,
   update_email_preferences_spec,
   unsubscribe_spec,
+  unsubscribe_page_spec,
 } from "./openapi.js"
 
 /**
@@ -37,7 +39,8 @@ export const emailRouter = express.Router()
  * GET    /notification-types   - Get available notification types
  * GET    /preferences          - Get email notification preferences
  * PATCH  /preferences          - Update email notification preferences
- * POST   /unsubscribe/:token   - Unsubscribe via token (no auth)
+ * POST   /unsubscribe/:token   - One-click unsubscribe via signed token (no auth, RFC 8058)
+ * GET    /unsubscribe/:token   - Redirect to the confirmation page (no auth)
  */
 
 // Get available notification types
@@ -72,9 +75,14 @@ emailRouter.patch(
   updateEmailPreferences,
 )
 
-// Unsubscribe from emails (no auth required)
-// POST /api/v1/email/unsubscribe/:token
+// Unsubscribe from emails (no auth: the signed token is the credential).
+// POST /api/v1/email/unsubscribe/:token — the confirmation page and mail
+// providers' List-Unsubscribe-Post one-click (CSRF-exempt, csrf.ts).
+// No rate limit: providers post from shared IPs, and an invalid token costs
+// one HMAC (no database work).
 emailRouter.post("/unsubscribe/:token", unsubscribe_spec, unsubscribe)
+// GET: a mail client opening the List-Unsubscribe URL; never unsubscribes.
+emailRouter.get("/unsubscribe/:token", unsubscribe_page_spec, unsubscribePage)
 
 /**
  * Email management routes (to be added to profileRouter)
