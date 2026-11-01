@@ -17,6 +17,7 @@ import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import type { DBEmailNotificationPreference } from "./database.js"
+import { applyKeyEmailDefaults } from "../../../../services/notify/email-defaults.js"
 
 /**
  * POST /api/v1/profile/email
@@ -121,6 +122,21 @@ export const addEmail: RequestHandler = async (req, res) => {
       }
     }
 
+    // No types picked (onboarding, or nothing ticked in the dialog): the key
+    // events default to on (services/notify/email-defaults.ts). A picked list
+    // is the user's choice and gets no defaults.
+    let defaultsApplied: string[] = []
+    if (!notificationTypeIds?.length) {
+      try {
+        defaultsApplied = await applyKeyEmailDefaults(user.user_id)
+      } catch (defaultsError) {
+        logger.warn("Failed to apply key email defaults after adding email", {
+          error: defaultsError,
+          user_id: user.user_id,
+        })
+      }
+    }
+
     // Send verification email (this can fail, but email is already created)
     // If this fails, we still return success since email was added
     try {
@@ -140,6 +156,7 @@ export const addEmail: RequestHandler = async (req, res) => {
       email_id: userEmail.email_id,
       email: email,
       preferences_created: preferencesCreated,
+      defaults_applied: defaultsApplied,
     })
 
     res.status(201).json(
@@ -147,7 +164,7 @@ export const addEmail: RequestHandler = async (req, res) => {
         email_id: userEmail.email_id,
         email: userEmail.email,
         email_verified: userEmail.email_verified,
-        preferences_created: preferencesCreated,
+        preferences_created: preferencesCreated + defaultsApplied.length,
         message: "Email address added. Please check your email to verify.",
       }),
     )
