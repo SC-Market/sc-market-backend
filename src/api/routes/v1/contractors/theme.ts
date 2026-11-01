@@ -13,14 +13,11 @@ import {
   createResponse,
   createErrorResponse,
   createNotFoundErrorResponse,
-  createForbiddenErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
-import {
-  DBOrgTheme,
-  DBOrgPremiumTier,
-} from "../../../../clients/database/db-models.js"
+import { DBOrgTheme } from "../../../../clients/database/db-models.js"
+import { requireWhiteLabelTier } from "./premium-gate.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 const knex = () => getKnex()
@@ -109,16 +106,6 @@ function stripNonEditableBackgroundTokensFromThemeData(data: {
   return { light, dark }
 }
 
-async function requireActivePremium(
-  contractorId: string,
-): Promise<DBOrgPremiumTier | null> {
-  const row = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-    .where({ contractor_id: contractorId })
-    .whereNull("revoked_at")
-    .first()
-  return row ?? null
-}
-
 // GET /:spectrum_id/theme — public, returns org theme
 contractorThemeRouter.get("/", valid_contractor, readRateLimit, async (req, res) => {
   try {
@@ -151,15 +138,10 @@ contractorThemeRouter.put(
   requireContractorsWrite,
   org_permission("manage_theme"),
   writeRateLimit,
+  requireWhiteLabelTier,
   async (req, res) => {
     try {
       const contractor = req.contractor!
-      const premium = await requireActivePremium(contractor.contractor_id)
-      if (!premium || premium.tier !== "white_label") {
-        res.status(403).json(createForbiddenErrorResponse("Organization does not have white_label premium tier"))
-        return
-      }
-
       const { theme_data, favicon_url } = req.body
       const validated = validateThemeData(theme_data)
       if (typeof validated === "string") {
@@ -224,13 +206,14 @@ contractorThemeRouter.put(
   },
 )
 
-// DELETE /:spectrum_id/theme — reset org theme
+// DELETE /:spectrum_id/theme — reset org theme (requires manage_theme + white_label tier)
 contractorThemeRouter.delete(
   "/",
   userAuthorized,
   requireContractorsWrite,
   org_permission("manage_theme"),
   writeRateLimit,
+  requireWhiteLabelTier,
   async (req, res) => {
     try {
       const contractor = req.contractor!

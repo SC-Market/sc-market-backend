@@ -368,6 +368,7 @@ import {
   verifyAccessToken,
 } from "./api/util/jwt.js"
 import { populateUser } from "./api/middleware/populate-user.js"
+import { whiteLabelMembershipGate } from "./api/middleware/whitelabel-membership.js"
 
 app.use(populateUser)
 
@@ -410,6 +411,11 @@ app.use(
 )
 
 app.use(addTranslationToRequestWithUser)
+
+// Internal / members-only white-label sites: API requests from that org's
+// custom domain need a signed-in user (and org membership when required),
+// the same rule WhiteLabelAuthGate applies in the frontend.
+app.use("/api", whiteLabelMembershipGate())
 
 app.use("/api", apiRouter)
 app.use("/api/v1", apiV1Router)
