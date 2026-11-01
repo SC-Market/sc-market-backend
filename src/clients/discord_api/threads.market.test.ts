@@ -48,6 +48,12 @@ vi.mock("../../logger/logger.js", () => ({
 vi.mock("../../services/market-v2/variant.service.js", () => ({
   getOrCreateVariant: vi.fn(async () => "variant-default"),
 }))
+// Bot listings are linked to the game item their title names (exactly one).
+vi.mock("../../services/market-v2/game-item-match.service.js", () => ({
+  matchGameItemByName: vi.fn(async (_db: unknown, title: string) =>
+    title === "Arrowhead Sniper Rifle" ? "gi-arrowhead" : null,
+  ),
+}))
 vi.mock("../../services/watchlist/watchlist.service.js", () => ({
   checkWatchlistMatches: vi.fn(async () => []),
 }))
@@ -234,6 +240,30 @@ describe("POST /threads/market/create shop resolution", () => {
       shop_id: "shop-personal", seller_id: OWNER.user_id, seller_type: "user",
     })
     expect(res.body).toEqual({ result: "Success", listing_id: created?.listing_id })
+  })
+
+  // Regression: /listing create always stored game_item_id null.
+  it("links the listing to the game item its title names", async () => {
+    const res = await request(app())
+      .post("/threads/market/create")
+      .send({ ...body, title: "Arrowhead Sniper Rifle", discord_id: "d-owner" })
+
+    expect(res.status).toBe(200)
+    const listing = state.db.tables.listings.find((l) => l.title === "Arrowhead Sniper Rifle")
+    const item = state.db.tables.listing_items.find((i) => i.listing_id === listing?.listing_id)
+    expect(item?.game_item_id).toBe("gi-arrowhead")
+    const lot = state.db.tables.listing_item_lots.find((l) => l.listing_id === listing?.listing_id)
+    expect(lot?.game_item_id).toBe("gi-arrowhead")
+  })
+
+  it("leaves a title that names no single game item unlinked", async () => {
+    const res = await request(app())
+      .post("/threads/market/create")
+      .send({ ...body, discord_id: "d-owner" })
+
+    expect(res.status).toBe(200)
+    const listing = state.db.tables.listings.find((l) => l.title === "New thing")
+    expect(state.db.tables.listing_items.find((i) => i.listing_id === listing?.listing_id)?.game_item_id).toBeNull()
   })
 
   it("creates in the org shop for a manage_market member", async () => {
