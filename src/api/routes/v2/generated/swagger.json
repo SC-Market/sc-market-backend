@@ -12449,6 +12449,156 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BrandingMembersCriterion": {
+				"properties": {
+					"met": {
+						"type": "boolean"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Members of the org on SC Market."
+					},
+					"required": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"met",
+					"count",
+					"required"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BrandingActivityCriterion": {
+				"properties": {
+					"met": {
+						"type": "boolean"
+					},
+					"recent_listings": {
+						"type": "number",
+						"format": "double",
+						"description": "The org's listings created or updated in the window."
+					},
+					"recent_orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Orders placed with the org (or its shops) in the window."
+					},
+					"window_days": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"met",
+					"recent_listings",
+					"recent_orders",
+					"window_days"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BrandingCriteria": {
+				"properties": {
+					"rsi_verified": {
+						"type": "boolean",
+						"description": "Registered through RSI (not a \"~\" custom org, not a test org)."
+					},
+					"members": {
+						"$ref": "#/components/schemas/BrandingMembersCriterion"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/BrandingActivityCriterion"
+					}
+				},
+				"required": [
+					"rsi_verified",
+					"members",
+					"activity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BrandingCriterionKey": {
+				"type": "string",
+				"enum": [
+					"rsi_verified",
+					"members",
+					"activity"
+				]
+			},
+			"OrgBrandingStatus": {
+				"properties": {
+					"unlocked": {
+						"type": "boolean",
+						"description": "Branding can be used (theme, logo, title, site and sidebar settings)."
+					},
+					"source": {
+						"type": "string",
+						"enum": [
+							"grant",
+							"criteria",
+							null
+						],
+						"nullable": true,
+						"description": "Why it is unlocked: a staff grant or the criteria; null while locked."
+					},
+					"eligible": {
+						"type": "boolean",
+						"description": "The unlock criteria are met (independently of a staff grant)."
+					},
+					"criteria": {
+						"$ref": "#/components/schemas/BrandingCriteria"
+					},
+					"missing": {
+						"items": {
+							"$ref": "#/components/schemas/BrandingCriterionKey"
+						},
+						"type": "array",
+						"description": "Criteria not met yet, in display order. Empty when eligible."
+					},
+					"reason": {
+						"type": "string",
+						"description": "One English sentence saying why (for logs, support and the API docs)."
+					},
+					"custom_domain": {
+						"type": "string",
+						"nullable": true,
+						"description": "The org's subdomain, when staff have provisioned one."
+					}
+				},
+				"required": [
+					"unlocked",
+					"source",
+					"eligible",
+					"criteria",
+					"missing",
+					"reason",
+					"custom_domain"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrgStorefrontStatusResponse": {
+				"properties": {
+					"spectrum_id": {
+						"type": "string"
+					},
+					"branding": {
+						"$ref": "#/components/schemas/OrgBrandingStatus",
+						"description": "Whether branding is unlocked, why, and what is still missing."
+					}
+				},
+				"required": [
+					"spectrum_id",
+					"branding"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ContractorSisterLinksResponse": {
 				"properties": {
 					"sc_orgs_url": {
@@ -23448,6 +23598,43 @@
 						}
 					}
 				}
+			}
+		},
+		"/contractors/{spectrum_id}/storefront/status": {
+			"get": {
+				"operationId": "GetOrgStorefrontStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrgStorefrontStatusResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The org's branded storefront status, for its members: whether branding\n(theme, logo and title on its subdomain, site and sidebar settings) is\nunlocked, by a staff grant or by the criteria (RSI-verified, 3+ members\non SC Market, a listing or an order in the last 30 days), and which\ncriteria are still missing.",
+				"summary": "Get an org's storefront status (members)",
+				"tags": [
+					"Contractors"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/contractors/{spectrum_id}/links": {

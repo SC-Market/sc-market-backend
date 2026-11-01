@@ -68,6 +68,8 @@ import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DashboardV2Controller } from './../dashboard/DashboardV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrgStorefrontV2Controller } from './../contractors/OrgStorefrontV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ContractorLinksV2Controller } from './../contractors/ContractorLinksV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ContractAlertsV2Controller } from './../contract-alerts/ContractAlertsV2Controller.js';
@@ -4023,6 +4025,65 @@ const models: TsoaRoute.Models = {
             "owner_type": {"ref":"DashboardOwnerType","required":true},
             "owner_id": {"dataType":"string","required":true},
             "config": {"ref":"DashboardConfig","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BrandingMembersCriterion": {
+        "dataType": "refObject",
+        "properties": {
+            "met": {"dataType":"boolean","required":true},
+            "count": {"dataType":"double","required":true},
+            "required": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BrandingActivityCriterion": {
+        "dataType": "refObject",
+        "properties": {
+            "met": {"dataType":"boolean","required":true},
+            "recent_listings": {"dataType":"double","required":true},
+            "recent_orders": {"dataType":"double","required":true},
+            "window_days": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BrandingCriteria": {
+        "dataType": "refObject",
+        "properties": {
+            "rsi_verified": {"dataType":"boolean","required":true},
+            "members": {"ref":"BrandingMembersCriterion","required":true},
+            "activity": {"ref":"BrandingActivityCriterion","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BrandingCriterionKey": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["rsi_verified"]},{"dataType":"enum","enums":["members"]},{"dataType":"enum","enums":["activity"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgBrandingStatus": {
+        "dataType": "refObject",
+        "properties": {
+            "unlocked": {"dataType":"boolean","required":true},
+            "source": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["grant"]},{"dataType":"enum","enums":["criteria"]},{"dataType":"enum","enums":[null]}],"required":true},
+            "eligible": {"dataType":"boolean","required":true},
+            "criteria": {"ref":"BrandingCriteria","required":true},
+            "missing": {"dataType":"array","array":{"dataType":"refAlias","ref":"BrandingCriterionKey"},"required":true},
+            "reason": {"dataType":"string","required":true},
+            "custom_domain": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgStorefrontStatusResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "spectrum_id": {"dataType":"string","required":true},
+            "branding": {"ref":"OrgBrandingStatus","required":true},
         },
         "additionalProperties": false,
     },
@@ -10116,6 +10177,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'saveLayout',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrgStorefrontV2Controller_getOrgStorefrontStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/contractors/:spectrum_id/storefront/status',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller.prototype.getOrgStorefrontStatus)),
+
+            async function OrgStorefrontV2Controller_getOrgStorefrontStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrgStorefrontV2Controller_getOrgStorefrontStatus, request, response });
+
+                const controller = new OrgStorefrontV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrgStorefrontStatus',
                 controller,
                 response,
                 next,

@@ -10,7 +10,7 @@ import { User } from "../api-models.js"
 import { DBOrgWhitelabelConfig, DBOrgSidebarConfig } from "../../../../clients/database/db-models.js"
 import { validateRedirectPath } from "../../../util/oauth-state.js"
 import { effectiveRequireMembership } from "./whitelabel-rules.js"
-import { requireWhiteLabelTier } from "./premium-gate.js"
+import { requireBrandingUnlocked } from "./premium-gate.js"
 
 const knex = () => getKnex()
 
@@ -43,7 +43,7 @@ whitelabelConfigRouter.put(
   requireContractorsWrite,
   org_permission("manage_org_details"),
   writeRateLimit,
-  requireWhiteLabelTier,
+  requireBrandingUnlocked,
   async (req, res) => {
     try {
       const contractor = req.contractor!
@@ -137,7 +137,7 @@ whitelabelConfigRouter.put(
   requireContractorsWrite,
   org_permission("manage_org_details"),
   writeRateLimit,
-  requireWhiteLabelTier,
+  requireBrandingUnlocked,
   async (req, res) => {
     try {
       const contractor = req.contractor!

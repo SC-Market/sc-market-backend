@@ -6,6 +6,7 @@ import {
   createForbiddenErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
+import { getOrgBrandingStatus } from "../../../../services/storefront/branding.js"
 
 /** The org's active (not revoked) premium tier row, if any. */
 export async function getActivePremium(
@@ -51,3 +52,34 @@ export function whiteLabelTierGuard(
 }
 
 export const requireWhiteLabelTier = whiteLabelTierGuard()
+
+type GuardedOrg = { contractor_id: string; spectrum_id: string; is_test?: boolean | null }
+
+/**
+ * Express middleware for the branding write endpoints (theme, site settings,
+ * sidebar): 403 unless req.contractor's branding is unlocked, by a staff
+ * grant or by the unlock criteria (services/storefront/branding.ts). Mount
+ * it after valid_contractor/org_permission, which set req.contractor.
+ */
+export function brandingGuard(
+  isUnlocked: (org: GuardedOrg) => Promise<boolean> = async (org) =>
+    (await getOrgBrandingStatus(org)).unlocked,
+) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!(await isUnlocked(req.contractor as GuardedOrg))) {
+        res
+          .status(403)
+          .json(createForbiddenErrorResponse("Branding is not unlocked for this organization"))
+        return
+      }
+      next()
+    } catch {
+      res
+        .status(500)
+        .json(createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to check branding"))
+    }
+  }
+}
+
+export const requireBrandingUnlocked = brandingGuard()

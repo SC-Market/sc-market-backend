@@ -17,7 +17,7 @@ import {
 import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { DBOrgTheme } from "../../../../clients/database/db-models.js"
-import { requireWhiteLabelTier } from "./premium-gate.js"
+import { requireBrandingUnlocked } from "./premium-gate.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 const knex = () => getKnex()
@@ -131,14 +131,14 @@ contractorThemeRouter.get("/", valid_contractor, readRateLimit, async (req, res)
   }
 })
 
-// PUT /:spectrum_id/theme — update org theme (requires manage_theme + white_label tier)
+// PUT /:spectrum_id/theme — update org theme (requires manage_theme + unlocked branding)
 contractorThemeRouter.put(
   "/",
   userAuthorized,
   requireContractorsWrite,
   org_permission("manage_theme"),
   writeRateLimit,
-  requireWhiteLabelTier,
+  requireBrandingUnlocked,
   async (req, res) => {
     try {
       const contractor = req.contractor!
@@ -206,14 +206,14 @@ contractorThemeRouter.put(
   },
 )
 
-// DELETE /:spectrum_id/theme — reset org theme (requires manage_theme + white_label tier)
+// DELETE /:spectrum_id/theme — reset org theme (requires manage_theme + unlocked branding)
 contractorThemeRouter.delete(
   "/",
   userAuthorized,
   requireContractorsWrite,
   org_permission("manage_theme"),
   writeRateLimit,
-  requireWhiteLabelTier,
+  requireBrandingUnlocked,
   async (req, res) => {
     try {
       const contractor = req.contractor!
