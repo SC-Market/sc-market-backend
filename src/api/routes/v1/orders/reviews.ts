@@ -13,7 +13,7 @@ import {
   createConflictErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
-import { DBOrder, DBReview } from "../../../../clients/database/db-models.js"
+import { DBOrder, DBReview, OrderStatus } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 
 export async function requestReviewRevision(req: Request, res: Response) {
@@ -302,6 +302,11 @@ export async function customerIsSeller(
   return false
 }
 
+export const REVIEWABLE_ORDER_STATUSES: readonly OrderStatus[] = [
+  "fulfilled",
+  "cancelled",
+]
+
 export const post_order_review: RequestHandler = async (req, res, next) => {
   const order_id = req.params["order_id"]
   let order: DBOrder
@@ -372,6 +377,21 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
     res
       .status(403)
       .json(createForbiddenErrorResponse("You cannot review your own order"))
+    return
+  }
+
+  // Reviews come from finished orders only: fulfilled, or cancelled (so a
+  // seller who never showed up can still be reviewed). Open orders can't be.
+  if (!REVIEWABLE_ORDER_STATUSES.includes(order.status as OrderStatus)) {
+    res
+      .status(409)
+      .json(
+        createErrorResponse(
+          ErrorCode.ORDER_NOT_FINISHED,
+          "You can review this order once it is completed or cancelled",
+          { status: order.status },
+        ),
+      )
     return
   }
 
