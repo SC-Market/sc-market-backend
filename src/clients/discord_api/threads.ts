@@ -16,6 +16,10 @@ import { chatServer } from "../messaging/websocket.js"
 import logger from "../../logger/logger.js"
 import { withTransaction } from "../database/transaction.js"
 import { getOrCreateVariant } from "../../services/market-v2/variant.service.js"
+import {
+  matchGameItemByName,
+  matchGameItemsByName,
+} from "../../services/market-v2/game-item-match.service.js"
 import { checkWatchlistMatches } from "../../services/watchlist/watchlist.service.js"
 import {
   addWatchlistItem,
@@ -526,6 +530,7 @@ threadRouter.post("/market/create", async (req, res) => {
 
   try {
     const seller = await resolveListingSeller(user.user_id, contractor_spectrum_id)
+    const gameItemId = await matchGameItemByName(getKnex(), title)
 
     const result = await withTransaction(async (trx) => {
       const [listing] = await trx("listings")
@@ -545,7 +550,7 @@ threadRouter.post("/market/create", async (req, res) => {
       const [listingItem] = await trx("listing_items")
         .insert({
           listing_id: listing.listing_id,
-          game_item_id: null,
+          game_item_id: gameItemId,
           pricing_mode: "unified",
           base_price: price,
           display_order: 0,
@@ -554,7 +559,7 @@ threadRouter.post("/market/create", async (req, res) => {
         })
         .returning("*")
 
-      const variantId = await getOrCreateVariant(null, { quality_tier: undefined })
+      const variantId = await getOrCreateVariant(gameItemId, { quality_tier: undefined })
 
       await trx("listing_item_lots").insert({
         item_id: listingItem.item_id,
@@ -563,7 +568,7 @@ threadRouter.post("/market/create", async (req, res) => {
         location_id: null,
         owner_id: user.user_id,
         listed: true,
-        game_item_id: null,
+        game_item_id: gameItemId,
         listing_id: listing.listing_id,
         created_at: new Date(),
         updated_at: new Date(),
@@ -718,9 +723,14 @@ threadRouter.post("/market/import-uex", async (req, res) => {
 
   try {
     const seller = await resolveListingSeller(user.user_id)
+    const gameItemIds = await matchGameItemsByName(
+      getKnex(),
+      listings.map((item) => item.title),
+    )
     let imported = 0
 
     for (const item of listings) {
+      const gameItemId = gameItemIds.get(item.title) ?? null
       try {
         await withTransaction(async (trx) => {
           const [listing] = await trx("listings")
@@ -740,7 +750,7 @@ threadRouter.post("/market/import-uex", async (req, res) => {
           const [listingItem] = await trx("listing_items")
             .insert({
               listing_id: listing.listing_id,
-              game_item_id: null,
+              game_item_id: gameItemId,
               pricing_mode: "unified",
               base_price: item.price,
               display_order: 0,
@@ -762,7 +772,7 @@ threadRouter.post("/market/import-uex", async (req, res) => {
             variantAttrs.crafted_source = sourceMap[item.source] || "unknown"
           }
 
-          const variantId = await getOrCreateVariant(null, Object.keys(variantAttrs).length > 0 ? variantAttrs : { quality_tier: undefined })
+          const variantId = await getOrCreateVariant(gameItemId, Object.keys(variantAttrs).length > 0 ? variantAttrs : { quality_tier: undefined })
 
           await trx("listing_item_lots").insert({
             item_id: listingItem.item_id,
@@ -771,7 +781,7 @@ threadRouter.post("/market/import-uex", async (req, res) => {
             location_id: null,
             owner_id: user.user_id,
             listed: true,
-            game_item_id: null,
+            game_item_id: gameItemId,
             listing_id: listing.listing_id,
             created_at: new Date(),
             updated_at: new Date(),

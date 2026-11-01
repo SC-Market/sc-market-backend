@@ -12,6 +12,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
+import { matchGameItemsByName } from "../../../../services/market-v2/game-item-match.service.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { canModifyListing } from "../util/listing-permissions.js"
 import { is_member } from "../../v1/util/permissions.js"
@@ -2385,9 +2386,15 @@ export class ListingsV2Controller extends BaseController {
       ])
     }
 
-    // Import confirmed — create listings
+    // Import confirmed — create listings, linked to a game item when the
+    // title names exactly one
+    const gameItemIds = await matchGameItemsByName(
+      db,
+      requestBody.listings.map((item) => item.title),
+    )
     let imported = 0
     for (const item of requestBody.listings) {
+      const gameItemId = gameItemIds.get(item.title) ?? null
       try {
         await withTransaction(async (trx) => {
           const [listing] = await trx("listings")
@@ -2409,7 +2416,7 @@ export class ListingsV2Controller extends BaseController {
           const [listingItem] = await trx("listing_items")
             .insert({
               listing_id: listing.listing_id,
-              game_item_id: null,
+              game_item_id: gameItemId,
               pricing_mode: "unified",
               base_price: item.price,
               display_order: 0,
@@ -2428,7 +2435,7 @@ export class ListingsV2Controller extends BaseController {
           }
 
           const variantId = await getOrCreateVariant(
-            null,
+            gameItemId,
             Object.keys(variantAttrs).length > 0 ? variantAttrs : { quality_tier: undefined },
           )
 
@@ -2439,7 +2446,7 @@ export class ListingsV2Controller extends BaseController {
             location_id: null,
             owner_id: userId,
             listed: true,
-            game_item_id: null,
+            game_item_id: gameItemId,
             listing_id: listing.listing_id,
             created_at: new Date(),
             updated_at: new Date(),
