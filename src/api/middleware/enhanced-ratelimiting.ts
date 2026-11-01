@@ -8,6 +8,7 @@ import { database } from "../../clients/database/knex-db.js"
 import { User } from "../routes/v1/api-models.js"
 import logger from "../../logger/logger.js"
 import { isSiteAdmin } from "../util/site-role.js"
+import { isCloudflareIp } from "./cloudflare-only.js"
 
 // User tier types
 export type UserTier = "anonymous" | "authenticated" | "admin"
@@ -72,6 +73,26 @@ export function createMemoryFallback(): RateLimiterMemory {
   })
 }
 
+/**
+ * Anonymous GET/HEAD requests whose client IP is itself a Cloudflare address:
+ * Cloudflare Workers / Pages Functions, i.e. our SSR and bridge Functions
+ * (sc-market-frontend src/ssr, src/bridge). They call the API anonymously
+ * (only `Accept`, no shared secret) from Cloudflare's shared egress IPs, so
+ * under the per-IP bucket every crawler rendering through them shared one
+ * 120-point bucket and a single burst 429'd all SSR. They share this larger
+ * bucket instead: one key, Postgres-backed like the others, so the cap holds
+ * across instances. The IP is Cloudflare-asserted, not caller-chosen: req.ip
+ * is the X-Forwarded-For entry Cloudflare appends (trust proxy 2), and
+ * cloudflare-only.ts rejects requests whose last hop isn't Cloudflare. Any
+ * Cloudflare customer's Worker lands here too, hence a hard cap and reads
+ * only: writes and authenticated requests keep their normal buckets.
+ * No blockDuration: blocking would lock our own SSR out past the window.
+ */
+export const CLOUDFLARE_ANONYMOUS_READ_LIMIT = {
+  points: 1200,
+  duration: 60,
+} as const
+
 // Create rate limiters for each tier
 export const rateLimiters = {
   anonymous: createRateLimiter({
@@ -80,6 +101,12 @@ export const rateLimiters = {
     blockDuration: 60, // 1 minute
     inMemoryBlockOnConsumed: 120,
     keyPrefix: "scmarket:anon",
+  }),
+  cloudflareAnonymousRead: createRateLimiter({
+    ...CLOUDFLARE_ANONYMOUS_READ_LIMIT,
+    blockDuration: 0,
+    inMemoryBlockOnConsumed: CLOUDFLARE_ANONYMOUS_READ_LIMIT.points,
+    keyPrefix: "scmarket:anon:cloudflare",
   }),
   authenticated: createRateLimiter({
     points: 500,
@@ -152,6 +179,21 @@ export function generateRateLimitKey(req: Request, userTier: UserTier): string {
   return `user:${user?.user_id}:ip:${ip}`
 }
 
+/**
+ * True for the requests that use the shared Cloudflare-egress bucket:
+ * anonymous, GET or HEAD, client IP in Cloudflare's ranges.
+ */
+export function isCloudflareAnonymousRead(
+  req: Request,
+  userTier: UserTier,
+): boolean {
+  return (
+    userTier === "anonymous" &&
+    (req.method === "GET" || req.method === "HEAD") &&
+    isCloudflareIp(req.ip || "")
+  )
+}
+
 // Create rate limit response
 export function createRateLimitResponse(
   rateLimiterRes: RateLimiterRes,
@@ -193,11 +235,16 @@ export function setRateLimitHeaders(
 export function createRateLimit(tieredConfig: TieredRateLimit) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const userTier = detectUserTier(req)
-    const key = generateRateLimitKey(req, userTier)
+    const cloudflareRead = isCloudflareAnonymousRead(req, userTier)
+    const key = cloudflareRead
+      ? "cloudflare"
+      : generateRateLimitKey(req, userTier)
     const endpoint = req.path
 
     // Get the appropriate rate limiter for the user tier
-    const rateLimiter = rateLimiters[userTier]
+    const rateLimiter = cloudflareRead
+      ? rateLimiters.cloudflareAnonymousRead
+      : rateLimiters[userTier]
     const config = tieredConfig[userTier]
 
     if (!rateLimiter || !config) {
