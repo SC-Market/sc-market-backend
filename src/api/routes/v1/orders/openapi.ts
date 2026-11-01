@@ -1187,7 +1187,7 @@ export const post_order_id_review_spec = oapi.validPath({
   summary: "Leave a review on an order",
   deprecated: false,
   description:
-    "Leave a review on a finished order (fulfilled or cancelled). Returns 409 ORDER_NOT_FINISHED while the order is still not-started or in-progress.",
+    "Leave a review on a finished order (fulfilled or cancelled), or on an order still open 14+ days after it started. Otherwise returns 409 ORDER_NOT_FINISHED.",
   operationId: "postReview",
   tags: ["Order Reviews"],
   parameters: [

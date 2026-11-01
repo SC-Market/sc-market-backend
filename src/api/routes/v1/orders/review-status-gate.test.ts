@@ -1,7 +1,8 @@
 /**
  * Reviews are only allowed on finished orders: fulfilled, or cancelled (a
- * no-show seller must stay reviewable). Open orders are refused with 409
- * ORDER_NOT_FINISHED.
+ * no-show seller must stay reviewable), or on an order still open 14 days
+ * after it started (so a seller can't block reviews by never closing it).
+ * Anything else is refused with 409 ORDER_NOT_FINISHED.
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
@@ -40,10 +41,18 @@ function res() {
   } as unknown as Response
 }
 
-async function review(status: string, role: "customer" | "contractor") {
+const DAY = 24 * 60 * 60 * 1000
+const daysAgo = (n: number) => new Date(Date.now() - n * DAY)
+
+async function review(
+  status: string,
+  role: "customer" | "contractor",
+  timestamp: Date = daysAgo(1),
+) {
   ;(orderDb.getOrder as Mock).mockResolvedValue({
     order_id: "o1",
     status,
+    timestamp,
     customer_id: "buyer",
     assigned_id: "seller",
     contractor_id: null,
@@ -86,6 +95,22 @@ describe("post_order_review status gate", () => {
       })
     }
   }
+
+  for (const status of ["not-started", "in-progress"]) {
+    for (const role of ["customer", "contractor"] as const) {
+      it(`allows a ${role} review of a ${status} order open 14+ days`, async () => {
+        const r = await review(status, role, daysAgo(15))
+        expect(r.status).not.toHaveBeenCalledWith(409)
+        expect(orderDb.createOrderReview).toHaveBeenCalledTimes(1)
+      })
+    }
+  }
+
+  it("still refuses an open order at 13 days", async () => {
+    const r = await review("in-progress", "customer", daysAgo(13))
+    expect(r.status).toHaveBeenCalledWith(409)
+    expect(orderDb.createOrderReview).not.toHaveBeenCalled()
+  })
 
   it("still refuses a non-party before revealing the order status", async () => {
     ;(orderDb.getOrder as Mock).mockResolvedValue({

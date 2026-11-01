@@ -307,6 +307,30 @@ export const REVIEWABLE_ORDER_STATUSES: readonly OrderStatus[] = [
   "cancelled",
 ]
 
+/** An order left open this long can be reviewed anyway (no sandbagging). */
+export const REVIEW_OPEN_ORDER_AFTER_DAYS = 14
+
+/**
+ * Reviews come from finished orders: fulfilled, or cancelled (so a seller who
+ * never showed up can still be reviewed). An order still open 14 days after it
+ * started is reviewable too, so a seller can't block reviews by never closing
+ * it. "Started" is orders.timestamp: the order row is created when the offer
+ * is accepted or the purchase is made; there is no separate accepted_at.
+ */
+export function isOrderReviewable(
+  order: Pick<DBOrder, "status" | "timestamp">,
+  now: Date = new Date(),
+): boolean {
+  if (REVIEWABLE_ORDER_STATUSES.includes(order.status as OrderStatus)) {
+    return true
+  }
+  const started = new Date(order.timestamp).getTime()
+  if (Number.isNaN(started)) return false
+  return (
+    now.getTime() - started >= REVIEW_OPEN_ORDER_AFTER_DAYS * 24 * 60 * 60 * 1000
+  )
+}
+
 export const post_order_review: RequestHandler = async (req, res, next) => {
   const order_id = req.params["order_id"]
   let order: DBOrder
@@ -380,16 +404,14 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
     return
   }
 
-  // Reviews come from finished orders only: fulfilled, or cancelled (so a
-  // seller who never showed up can still be reviewed). Open orders can't be.
-  if (!REVIEWABLE_ORDER_STATUSES.includes(order.status as OrderStatus)) {
+  if (!isOrderReviewable(order)) {
     res
       .status(409)
       .json(
         createErrorResponse(
           ErrorCode.ORDER_NOT_FINISHED,
-          "You can review this order once it is completed or cancelled",
-          { status: order.status },
+          "You can review this order once it is completed or cancelled, or 14 days after it started",
+          { status: order.status, started_at: order.timestamp },
         ),
       )
     return
