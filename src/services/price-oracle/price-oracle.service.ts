@@ -664,10 +664,20 @@ function csvCell(v: unknown): string {
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }
 
+/**
+ * The licence in every CSV row: a CSV has no header block for it, and a row
+ * copied into a spreadsheet keeps its credit. Last column, so readers that
+ * go by position are unaffected (additive: feed version unchanged).
+ */
+export const CSV_ATTRIBUTION = `${PUBLIC_FEED_LICENSE.attribution}, CC BY 4.0`
+
 export function priceIndexCsv(index: PriceIndex): string {
-  const lines = [CSV_COLUMNS.join(",")]
+  const attribution = csvCell(CSV_ATTRIBUTION)
+  const lines = [[...CSV_COLUMNS, "attribution"].join(",")]
   for (const r of index.items)
-    lines.push(CSV_COLUMNS.map((c) => csvCell(r[c])).join(","))
+    lines.push(
+      [...CSV_COLUMNS.map((c) => csvCell(r[c])), attribution].join(","),
+    )
   return lines.join("\n") + "\n"
 }
 

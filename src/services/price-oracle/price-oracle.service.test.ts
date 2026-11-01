@@ -390,7 +390,10 @@ describe("public documents carry no PII", () => {
     })
     const csv = svc.priceIndexCsv(index)
     expect(csv.split("\n")[1]).toBe(
-      '1a2b3c4d--p4-ar-rifle-black-cmd,"P4-AR Rifle, ""Black"" | =cmd",Weapon,10000,11000,10500,-4.5,3,3,medium,https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd',
+      '1a2b3c4d--p4-ar-rifle-black-cmd,"P4-AR Rifle, ""Black"" | =cmd",Weapon,10000,11000,10500,-4.5,3,3,medium,https://sc-market.space/market/aggregate/1a2b3c4d--p4-ar-rifle-black-cmd,"Data: SC Market (sc-market.space), CC BY 4.0"',
+    )
+    expect(csv.split("\n")[0]).toBe(
+      "slug,name,type,lowest_ask,median_ask,median_30d,change_pct_30d,ask_count,seller_count,confidence,page,attribution",
     )
     expect(index.unit_note).toContain("aUEC, Star Citizen's in-game currency")
     const md = svc.priceIndexMarkdown(index)
