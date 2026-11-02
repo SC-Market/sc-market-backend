@@ -1628,11 +1628,12 @@ export async function getContractorOrderMetrics(
     )
     .first()
 
-  // Get top customers
+  // Get top customers. Cancelled orders don't make anyone a top customer.
   const topCustomers = await database
     .knex("orders")
     .join("accounts", "orders.customer_id", "=", "accounts.user_id")
     .where(whereClause)
+    .whereNot("orders.status", "cancelled")
     .groupBy("orders.customer_id", "accounts.username")
     .select(
       "accounts.username",
@@ -1871,6 +1872,8 @@ export async function getUserOrderMetrics(
   >()
 
   for (const order of orders) {
+    // Cancelled orders don't make anyone a top customer.
+    if (order.status === "cancelled") continue
     const customer_id = order.customer_id
     if (!customerStats.has(customer_id)) {
       customerStats.set(customer_id, { order_count: 0, total_value: 0 })
