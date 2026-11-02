@@ -20,8 +20,12 @@ describe("storefront directory decision", () => {
     expect(d).toMatchObject({ listed: true, reason: "listed", show_in_directory: true, can_change: true })
   })
 
-  it("services alone don't list a storefront", () => {
-    expect(decideDirectory({ ...org, public_listings: 0, active_services: 4 }).reason).toBe("no_public_content")
+  it("services alone list a storefront (service-only orgs, owner decision 2026-11-01)", () => {
+    expect(decideDirectory({ ...org, public_listings: 0, active_services: 4 })).toMatchObject({
+      listed: true,
+      reason: "listed",
+    })
+    expect(decideDirectory({ ...org, public_listings: 0, active_services: 0 }).reason).toBe("no_public_content")
   })
 
   it("members-only listings alone are not public content", () => {
@@ -51,7 +55,13 @@ describe("storefront directory decision", () => {
 
   it("personal shops aren't in the directory; org shops follow their org", () => {
     const shop = { ...org, kind: "shop" as const }
-    expect(decideDirectory({ ...shop, org_owned: false }).reason).toBe("personal_shop")
+    // No setting for a personal shop: it reads off and can't be changed.
+    expect(decideDirectory({ ...shop, org_owned: false })).toMatchObject({
+      listed: false,
+      reason: "personal_shop",
+      show_in_directory: false,
+      can_change: false,
+    })
     expect(decideDirectory({ ...shop, org_owned: true, org_listed: false }).reason).toBe("org_not_listed")
     expect(decideDirectory({ ...shop, org_owned: true, org_listed: true }).listed).toBe(true)
     expect(decideDirectory({ ...shop, org_owned: true, org_listed: true, members_only: true }).reason).toBe(

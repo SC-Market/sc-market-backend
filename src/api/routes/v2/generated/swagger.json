@@ -1819,6 +1819,16 @@
 						"type": "number",
 						"format": "double"
 					},
+					"active_services": {
+						"type": "number",
+						"format": "double",
+						"description": "Active services in the shown shops. An org with services and no listings is a service-only org (tagged \"Services\")."
+					},
+					"services_shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Slug of the shown shop with the most active services (its Services tab\nis where a service-only org's card links); null without services."
+					},
 					"completed_orders": {
 						"type": "number",
 						"format": "double"
@@ -1844,6 +1854,8 @@
 					"tagline",
 					"fields",
 					"active_listings",
+					"active_services",
+					"services_shop_slug",
 					"completed_orders",
 					"avg_rating",
 					"rating_count",
@@ -2329,7 +2341,7 @@
 					},
 					"can_change": {
 						"type": "boolean",
-						"description": "Whether the setting can be changed now (false while members-only: forced off)."
+						"description": "Whether the setting can be changed now (false while members-only: forced off; false for personal shops: no setting)."
 					},
 					"listed": {
 						"type": "boolean",
@@ -2355,7 +2367,7 @@
 					"active_services": {
 						"type": "number",
 						"format": "double",
-						"description": "Active services (in the shops that are shown, for an org). Informational: they don't list a storefront."
+						"description": "Active services (in the shops that are shown, for an org). One lists a storefront like a public listing."
 					}
 				},
 				"required": [
@@ -18171,7 +18183,7 @@
 						}
 					}
 				},
-				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting, showcase orgs first, then by completed orders. Read-only and\nanonymous (rate limited in api-router.ts); the frontend prerenders it\nat build time.",
+				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting or active service (service-only orgs included), showcase orgs\nfirst, then by completed orders. Read-only and\nanonymous (rate limited in api-router.ts); the frontend prerenders it\nat build time.",
 				"summary": "List org storefronts",
 				"tags": [
 					"Contractors"
@@ -18347,7 +18359,7 @@
 						}
 					}
 				},
-				"description": "Turn \"Show in the public storefront directory\" on or off for the shop.\nA shop of a members-only org can't be turned on (400).",
+				"description": "Turn \"Show in the public storefront directory\" on or off for the shop.\nA shop of a members-only org can't be turned on (400). Personal shops\nhave no such setting (the directory lists orgs): 400.",
 				"summary": "Set whether a shop is in the storefront directory",
 				"tags": [
 					"Shops"
@@ -25074,7 +25086,7 @@
 						}
 					}
 				},
-				"description": "Ask SC Market staff for a branded storefront on a subdomain of\nsc-market.space, for an org (Manage Org Details) or a shop (its\nmanagers). One open enquiry per org or shop (409 while one is open).\nSite admins get an in-app notification; a test org or shop notifies\nnobody.",
+				"description": "Ask SC Market staff for a branded storefront on a subdomain of\nsc-market.space, for an org (Manage Org Details) or a shop (its\nmanagers). One open enquiry per org or shop (409 while one is open).\nSite admins get an in-app notification, and staff an email and a\nDiscord post (when configured); a test org or shop notifies nobody.",
 				"summary": "Enquire about a branded storefront",
 				"tags": [
 					"Contractors"

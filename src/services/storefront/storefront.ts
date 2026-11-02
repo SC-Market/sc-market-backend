@@ -258,6 +258,13 @@ export interface StorefrontCard {
   /** The org's fields on SC Market (trading, freight, …). */
   fields: string[]
   active_listings: number
+  /** Active services in the shown shops. An org with services and no listings is a service-only org (tagged "Services"). */
+  active_services: number
+  /**
+   * Slug of the shown shop with the most active services (its Services tab
+   * is where a service-only org's card links); null without services.
+   */
+  services_shop_slug: string | null
   completed_orders: number
   avg_rating: number | null
   rating_count: number
@@ -272,6 +279,8 @@ interface CardRow {
   description: string | null
   logo_url: string | null
   active_listings: number | string
+  active_services: number | string
+  services_shop_slug: string | null
   completed_orders: number | string
   avg_rating: string | number | null
   rating_count: number | string
@@ -287,7 +296,7 @@ export function tagline(description: string | null | undefined): string {
   return line.length > 140 ? `${line.slice(0, 139).trimEnd()}…` : line
 }
 
-/** Hub order: showcase orgs first (in their order), then completed orders, then listings. */
+/** Hub order: showcase orgs first (in their order), then completed orders, then listings, then services. */
 export function compareCards(a: StorefrontCard, b: StorefrontCard): number {
   const ia = SHOWCASE_STOREFRONTS.indexOf(a.spectrum_id)
   const ib = SHOWCASE_STOREFRONTS.indexOf(b.spectrum_id)
@@ -295,31 +304,29 @@ export function compareCards(a: StorefrontCard, b: StorefrontCard): number {
   return (
     b.completed_orders - a.completed_orders ||
     b.active_listings - a.active_listings ||
+    b.active_services - a.active_services ||
     a.name.localeCompare(b.name, "en")
   )
 }
 
 export const MAX_STOREFRONT_CARDS = 60
 
-/**
- * The Storefronts hub (and the homepage row): RSI-verified orgs (never test
- * or archived orgs) listed in the public storefront directory (directory.ts):
- * "Show in the directory" left on, not members-only, and a public, active
- * listing in a shop that is itself shown. Counts and stats only cover the shown shops. Being verified doubles
- * as the hub's anti-impersonation filter.
- */
-export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
+/** The hub's org query, one row per listed org (see listStorefrontCards). */
+export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
   // The org's active shops that are shown in the directory (alias s).
   const shownShop = `s.owner_contractor_id = c.contractor_id AND s.status = 'active' AND ${shopShownSql("s")}`
   const listed = `ls.status = 'active' AND ls.visibility = 'public' AND ls.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
-  const rows = (await db("contractors as c")
+  const offered = `sv.status = 'active' AND sv.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
+  return db("contractors as c")
     .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .where("c.archived", false)
     .whereRaw("c.is_test IS NOT TRUE")
     .whereRaw("c.spectrum_id NOT LIKE '~%'")
     .whereRaw(orgShownSql("c"))
     .whereRaw(`NOT ${orgMembersOnlySql("c")}`)
-    .whereRaw(`EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed})`)
+    .whereRaw(
+      `(EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed}) OR EXISTS (SELECT 1 FROM services sv WHERE ${offered}))`,
+    )
     .select(
       "c.contractor_id",
       "c.spectrum_id",
@@ -327,6 +334,10 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
       "c.description",
       db.raw(`${imageUrlSql("logo_img")} as logo_url`),
       db.raw(`(SELECT COUNT(DISTINCT ls.listing_id)::integer FROM listing_search ls WHERE ${listed}) as active_listings`),
+      db.raw(`(SELECT COUNT(*)::integer FROM services sv WHERE ${offered}) as active_services`),
+      db.raw(
+        `(SELECT s.slug FROM shops s JOIN services sv ON sv.shop_id = s.shop_id AND sv.status = 'active' WHERE ${shownShop} GROUP BY s.shop_id, s.slug ORDER BY COUNT(*) DESC, s.slug LIMIT 1) as services_shop_slug`,
+      ),
       db.raw(
         `(SELECT COALESCE(SUM(s.total_completed), 0)::integer FROM shops s WHERE ${shownShop}) as completed_orders`,
       ),
@@ -336,7 +347,19 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
       db.raw(
         `(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE ${shownShop}) as rating_count`,
       ),
-    )) as CardRow[]
+    )
+}
+
+/**
+ * The Storefronts hub (and the homepage row): RSI-verified orgs (never test
+ * or archived orgs) listed in the public storefront directory (directory.ts):
+ * "Show in the directory" left on, not members-only, and a public, active
+ * listing or an active service in a shop that is itself shown (service-only
+ * orgs included, owner decision 2026-11-01). Counts and stats only cover the
+ * shown shops. Being verified doubles as the hub's anti-impersonation filter.
+ */
+export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
+  const rows = (await storefrontCardsQuery(db)) as CardRow[]
 
   const ids = rows.map((r) => r.contractor_id)
   const fieldRows: { contractor_id: string; field: string }[] = ids.length
@@ -353,6 +376,8 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
       tagline: tagline(r.description),
       fields: (fields.get(r.contractor_id) ?? []).sort(),
       active_listings: num(r.active_listings),
+      active_services: num(r.active_services),
+      services_shop_slug: r.services_shop_slug ?? null,
       completed_orders: num(r.completed_orders),
       avg_rating: num(r.rating_count) > 0 ? round(num(r.avg_rating), 2) : null,
       rating_count: num(r.rating_count),

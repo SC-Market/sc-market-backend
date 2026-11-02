@@ -724,6 +724,8 @@ const models: TsoaRoute.Models = {
             "tagline": {"dataType":"string","required":true},
             "fields": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "active_listings": {"dataType":"double","required":true},
+            "active_services": {"dataType":"double","required":true},
+            "services_shop_slug": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "completed_orders": {"dataType":"double","required":true},
             "avg_rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
             "rating_count": {"dataType":"double","required":true},

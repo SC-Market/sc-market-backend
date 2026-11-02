@@ -82,7 +82,8 @@ export class OrgStorefrontV2Controller extends BaseController {
 
   /**
    * The Storefronts hub: RSI-verified orgs with at least one public, active
-   * listing, showcase orgs first, then by completed orders. Read-only and
+   * listing or active service (service-only orgs included), showcase orgs
+   * first, then by completed orders. Read-only and
    * anonymous (rate limited in api-router.ts); the frontend prerenders it
    * at build time.
    *

@@ -12,13 +12,15 @@
  *   have a branded subdomain, where members-only applies; it just isn't
  *   advertised publicly with an empty storefront;
  * - it has public content in a shop that is itself shown: at least one
- *   public, active listing (members-only listings don't count, and neither
- *   do services: many are years old and still "active"). The showcase orgs
- *   follow the same rule (they are only sorted first).
+ *   public, active listing (members-only listings don't count) or active
+ *   service. Owner decision (2026-11-01): service-only orgs are listed too,
+ *   tagged "Services" on the hub. The showcase orgs follow the same rule
+ *   (they are only sorted first).
  *
  * A shop's own setting decides whether that shop counts towards its org's
  * directory entry (its listings, services and stats). Personal shops aren't
- * in the directory (it lists orgs); their setting is kept for when it does.
+ * in the directory (it lists orgs), so they have no setting (owner decision
+ * 2026-11-01): it reads off and can't be changed.
  */
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
@@ -32,11 +34,11 @@ export type DirectoryReason =
   | "hidden_by_setting"
   /** Members-only (white-label site Internal + Require membership): never listed. */
   | "members_only"
-  /** No public, active listing (members-only listings don't count). */
+  /** No public, active listing (members-only listings don't count) and no active service. */
   | "no_public_content"
   /** Orgs only: not RSI-verified (a "~" custom or test org). */
   | "not_verified"
-  /** Shops only: a personal shop; the directory lists orgs. */
+  /** Shops only: a personal shop; the directory lists orgs (no setting). */
   | "personal_shop"
   /** Shops only: its org isn't listed (see org_reason). */
   | "org_not_listed"
@@ -44,7 +46,7 @@ export type DirectoryReason =
 export interface StorefrontDirectoryStatus {
   /** The setting: "Show in the public storefront directory". Default true. */
   show_in_directory: boolean
-  /** Whether the setting can be changed now (false while members-only: forced off). */
+  /** Whether the setting can be changed now (false while members-only: forced off; false for personal shops: no setting). */
   can_change: boolean
   /** Shown in the directory right now. */
   listed: boolean
@@ -55,7 +57,7 @@ export interface StorefrontDirectoryStatus {
   public_listings: number
   /** Members-only (private) active listings; they never count as public content. */
   private_listings: number
-  /** Active services (in the shops that are shown, for an org). Informational: they don't list a storefront. */
+  /** Active services (in the shops that are shown, for an org). One lists a storefront like a public listing. */
   active_services: number
 }
 
@@ -75,18 +77,19 @@ export interface DirectoryInputs {
 
 /** The directory decision, from what was loaded (pure). */
 export function decideDirectory(i: DirectoryInputs): StorefrontDirectoryStatus {
+  const personal = i.kind === "shop" && !i.org_owned
   const reason: DirectoryReason = (() => {
+    if (personal) return "personal_shop"
     if (i.members_only) return "members_only"
     if (i.hidden) return "hidden_by_setting"
     if (i.kind === "org" && !i.verified) return "not_verified"
-    if (i.kind === "shop" && !i.org_owned) return "personal_shop"
-    if (i.public_listings <= 0) return "no_public_content"
+    if (i.public_listings <= 0 && i.active_services <= 0) return "no_public_content"
     if (i.kind === "shop" && !i.org_listed) return "org_not_listed"
     return "listed"
   })()
   return {
-    show_in_directory: !i.hidden && !i.members_only,
-    can_change: !i.members_only,
+    show_in_directory: !personal && !i.hidden && !i.members_only,
+    can_change: !personal && !i.members_only,
     listed: reason === "listed",
     reason,
     members_only: i.members_only,
@@ -136,12 +139,11 @@ const n = (v: unknown) => {
   return Number.isFinite(x) ? x : 0
 }
 
-/** Listing and service counts over some shops (a subquery of shop ids). */
-async function contentCounts(
-  db: Knex,
-  shopIds: Knex.QueryBuilder,
-  orgServicesOf: string | null,
-): Promise<ContentCounts> {
+/**
+ * Listing and service counts over some shops (a subquery of shop ids). Only
+ * services in those shops count, as on the hub and the org's storefront.
+ */
+async function contentCounts(db: Knex, shopIds: Knex.QueryBuilder): Promise<ContentCounts> {
   const [listings, services] = await Promise.all([
     db("listing_search as ls")
       .whereIn("ls.shop_id", shopIds.clone())
@@ -150,14 +152,7 @@ async function contentCounts(
         db.raw("COUNT(DISTINCT ls.listing_id) FILTER (WHERE ls.visibility = 'public')::integer as public_listings"),
         db.raw("COUNT(DISTINCT ls.listing_id) FILTER (WHERE ls.visibility = 'private')::integer as private_listings"),
       ),
-    db("services")
-      .where("status", "active")
-      .where((q) => {
-        q.whereIn("shop_id", shopIds.clone())
-        if (orgServicesOf) q.orWhere((q2) => q2.whereNull("shop_id").where("contractor_id", orgServicesOf))
-      })
-      .count("* as count")
-      .first(),
+    db("services").where("status", "active").whereIn("shop_id", shopIds.clone()).count("* as count").first(),
   ])
   return {
     public_listings: n(listings?.public_listings),
@@ -185,7 +180,7 @@ export async function getOrgDirectoryStatus(
   const [hidden, members_only, counts] = await Promise.all([
     isHidden(db, { contractor_id: org.contractor_id }),
     membersOnly(db, org.contractor_id),
-    contentCounts(db, shownShops, org.contractor_id),
+    contentCounts(db, shownShops),
   ])
   return decideDirectory({
     kind: "org",
@@ -215,7 +210,7 @@ export async function getShopDirectoryStatus(
   const [hidden, members_only, counts, orgStatus] = await Promise.all([
     isHidden(db, { shop_id: shop.shop_id }),
     org ? membersOnly(db, org.contractor_id) : Promise.resolve(false),
-    contentCounts(db, own, null),
+    contentCounts(db, own),
     org && !org.archived ? getOrgDirectoryStatus(org, db) : Promise.resolve(null),
   ])
   return decideDirectory({

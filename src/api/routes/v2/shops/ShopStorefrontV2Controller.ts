@@ -50,7 +50,8 @@ export class ShopStorefrontV2Controller extends BaseController {
 
   /**
    * Turn "Show in the public storefront directory" on or off for the shop.
-   * A shop of a members-only org can't be turned on (400).
+   * A shop of a members-only org can't be turned on (400). Personal shops
+   * have no such setting (the directory lists orgs): 400.
    *
    * @summary Set whether a shop is in the storefront directory
    */
@@ -63,6 +64,11 @@ export class ShopStorefrontV2Controller extends BaseController {
   ): Promise<StorefrontDirectoryStatus> {
     if (request) this.request = request
     const shop = await this.managedShop(shopId)
+    if (!shop.owner_contractor_id) {
+      this.throwValidationError("Personal shops aren't listed in the storefront directory", [
+        { field: "show_in_directory", message: "Personal shops have no directory setting" },
+      ])
+    }
     if (typeof body?.show_in_directory !== "boolean") {
       this.throwValidationError("show_in_directory must be true or false", [
         { field: "show_in_directory", message: "Must be true or false" },
