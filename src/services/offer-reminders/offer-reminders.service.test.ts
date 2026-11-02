@@ -44,6 +44,7 @@ function due(over: Partial<import("./offer-reminders.service.js").DueOffer> = {}
     first_due: true,
     final_due: false,
     buyer_due: false,
+    final_sent: false,
     ...over,
   }
 }
@@ -124,7 +125,15 @@ describe("dueOffersSql", () => {
     expect(flat).toContain("(st.offer_at > now() - INTERVAL '72 hours' AND st.offer_at <= now() - INTERVAL '24 hours') AS first_due")
     expect(flat).toContain("(st.offer_at <= now() - INTERVAL '72 hours' AND st.offer_at > now() - INTERVAL '120 hours') AS final_due")
     expect(flat).toContain(
-      "(st.final_sent_at IS NOT NULL AND st.final_sent_at <= now() - INTERVAL '24 hours' AND st.final_sent_at > now() - INTERVAL '72 hours') AS buyer_due",
+      "WHEN st.final_sent_at IS NOT NULL THEN st.final_sent_at <= now() - INTERVAL '24 hours' AND st.final_sent_at > now() - INTERVAL '72 hours'",
+    )
+    expect(flat).toContain("(st.final_sent_at IS NOT NULL) AS final_sent")
+  })
+
+  it("no final nudge (nobody on the seller side to remind): the buyer is told at 96 h anyway", () => {
+    expect(svc.BUYER_FALLBACK_HOURS).toBe(96)
+    expect(flat).toContain(
+      "ELSE st.offer_at <= now() - INTERVAL '96 hours' AND st.offer_at > now() - INTERVAL '144 hours' END AS buyer_due",
     )
     expect(flat).toContain("o.timestamp > now() - INTERVAL '192 hours'")
   })
@@ -216,8 +225,25 @@ describe("processOfferReminders", () => {
     expect(stats.capped_daily).toBe(1)
   })
 
+  it("the buyer stage without a seller reminder is recorded as such", async () => {
+    // An org offer whose seller side has nobody to remind: no final nudge.
+    world({ offers: [due({ assigned_id: null, contractor_id: ORG, first_due: false, buyer_due: true, final_sent: false })] })
+    await svc.processOfferReminders()
+    expect(h.notify.mock.calls.map((c) => [c[0], c[1][0].userId])).toEqual([["reminder.offer_waiting_buyer", BUYER]])
+    const insert = tracker.history.insert.find((q) => q.sql.includes("offer_reminders"))!
+    expect(insert.sql).toContain('"seller_reminded"')
+    expect(insert.bindings).toEqual(expect.arrayContaining([BUYER, "buyer", false]))
+  })
+
+  it("seller reminders leave seller_reminded empty", async () => {
+    world({ offers: [due()] })
+    await svc.processOfferReminders()
+    const insert = tracker.history.insert.find((q) => q.sql.includes("offer_reminders"))!
+    expect(insert.bindings).toEqual(expect.arrayContaining([SELLER, "first", null]))
+  })
+
   it("the buyer stage goes to the customer", async () => {
-    world({ offers: [due({ first_due: false, buyer_due: true })] })
+    world({ offers: [due({ first_due: false, buyer_due: true, final_sent: true })] })
     await svc.processOfferReminders()
     const [event, recipients, opts] = h.notify.mock.calls[0]
     expect(event).toBe("reminder.offer_waiting_buyer")

@@ -17,7 +17,11 @@
  *   the seller side, saying the buyer will be told;
  * - "buyer"  (reminder.offer_waiting_buyer): BUYER_AFTER_FINAL_HOURS (24 h)
  *   after the final nudge went out, to the customer: it is still waiting,
- *   keep waiting, message the seller or withdraw.
+ *   keep waiting, message the seller or withdraw. When no final nudge went
+ *   out (no one on the seller side could be reminded, e.g. an org with no
+ *   remindable manage_orders member), the buyer is told anyway at
+ *   BUYER_FALLBACK_HOURS (96 h) after the offer; offer_reminders records
+ *   that case as seller_reminded = false.
  * A stage is only sent within STAGE_WINDOW_HOURS of becoming due (a stage
  * deferred longer, e.g. by the caps, is skipped, never sent stale), and the
  * first stage only before the final one is due.
@@ -71,6 +75,8 @@ export const LEGACY_ACTIONS: Record<Stage, string> = {
 export const FIRST_AFTER_HOURS = 24
 export const FINAL_AFTER_HOURS = 72
 export const BUYER_AFTER_FINAL_HOURS = 24
+/** The buyer is told at this offer age when no final nudge was sent. */
+export const BUYER_FALLBACK_HOURS = FINAL_AFTER_HOURS + BUYER_AFTER_FINAL_HOURS
 export const STAGE_WINDOW_HOURS = 48
 /** Offer revisions before this (the deploy) are never reminded about. */
 export const OFFER_REMINDER_CUTOVER = new Date("2026-11-02T18:00:00Z")
@@ -99,6 +105,8 @@ export interface DueOffer {
   first_due: boolean
   final_due: boolean
   buyer_due: boolean
+  /** Whether a final nudge went out to the seller side (the buyer stage records it). */
+  final_sent: boolean
 }
 
 export interface ReminderOptions {
@@ -118,6 +126,7 @@ export function dueOffersSql(cutover: Date): { sql: string; bindings: Knex.RawBi
   const window = STAGE_WINDOW_HOURS
   const buyerAfter = BUYER_AFTER_FINAL_HOURS
   const oldest = final + buyerAfter + window * 2
+  const fallback = BUYER_FALLBACK_HOURS
   const sql = `
     WITH pending AS (
       SELECT s.id AS session_id,
@@ -170,9 +179,15 @@ export function dueOffersSql(cutover: Date): { sql: string; bindings: Knex.RawBi
              AND st.offer_at <= now() - INTERVAL '${first} hours') AS first_due,
            (st.offer_at <= now() - INTERVAL '${final} hours'
              AND st.offer_at > now() - INTERVAL '${final + window} hours') AS final_due,
-           (st.final_sent_at IS NOT NULL
-             AND st.final_sent_at <= now() - INTERVAL '${buyerAfter} hours'
-             AND st.final_sent_at > now() - INTERVAL '${buyerAfter + window} hours') AS buyer_due
+           (st.final_sent_at IS NOT NULL) AS final_sent,
+           CASE
+             WHEN st.final_sent_at IS NOT NULL THEN
+               st.final_sent_at <= now() - INTERVAL '${buyerAfter} hours'
+               AND st.final_sent_at > now() - INTERVAL '${buyerAfter + window} hours'
+             -- No seller reminder could be sent: tell the buyer anyway.
+             ELSE st.offer_at <= now() - INTERVAL '${fallback} hours'
+               AND st.offer_at > now() - INTERVAL '${fallback + window} hours'
+           END AS buyer_due
     FROM staged st
     JOIN accounts cu ON cu.user_id = st.customer_id
     LEFT JOIN shops sh ON sh.shop_id = st.shop_id
@@ -408,6 +423,8 @@ async function claim(knex: Knex, d: Digest): Promise<DueOffer[]> {
         session_id: o.session_id,
         offer_id: o.offer_id,
         stage: d.stage,
+        // Buyer stage: whether the seller side got a final nudge first.
+        seller_reminded: d.stage === "buyer" ? o.final_sent : null,
       })),
     )
     .onConflict(["offer_id", "stage", "user_id"])
