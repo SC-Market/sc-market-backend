@@ -13,6 +13,11 @@ import {
   SHOP_IMPORT_DISABLED_NOTE,
   shopImportEnabled,
 } from "../../../../services/game-data/shop-inventories.js"
+import {
+  getPagesDeployHookStatus,
+  PagesDeployHookStatus,
+  requestPagesRebuild,
+} from "../../../../services/game-data/pages-deploy-hook.js"
 import AdmZip from "adm-zip"
 import * as fs from "fs"
 import * as path from "path"
@@ -129,6 +134,22 @@ export class AdminController extends BaseController {
     return { job }
   }
 
+  /**
+   * The frontend rebuild a successful import triggers (the Cloudflare Pages
+   * deploy hook, at most once per 30 minutes): whether it is configured, the
+   * last POST and its result, and when a coalesced one is due.
+   * @summary Frontend rebuild (deploy hook) status
+   */
+  @Get("pages-deploy-hook")
+  @Security("loggedin")
+  public async getPagesDeployHookStatus(
+    @Request() request: ExpressRequest,
+  ): Promise<PagesDeployHookStatus> {
+    this.request = request
+    this.requireAdmin()
+    return getPagesDeployHookStatus()
+  }
+
   // ── Background runner ──────────────────────────────────────────────
 
   private async runImport(
@@ -214,6 +235,14 @@ export class AdminController extends BaseController {
       }
 
       logger.info("Game data import completed", { jobId: job.id, adminUserId, stats })
+
+      // Rebuild the frontend's prerendered game-data pages (debounced; never
+      // throws, and a failure there doesn't fail the import).
+      try {
+        requestPagesRebuild()
+      } catch (hookErr) {
+        logger.error("pages deploy hook request failed", { jobId: job.id, error: String(hookErr) })
+      }
     } catch (err) {
       job.status = "failed"
       job.completedAt = new Date().toISOString()

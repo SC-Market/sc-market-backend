@@ -530,6 +530,10 @@ logger.info(`Admin MFA enforcement: ${getMfaEnforcement()}`)
 import { logStaffAlertConfig } from "./services/storefront/staff-alerts.js"
 logStaffAlertConfig()
 
+// Frontend rebuild after game-data imports: warn once if the hook is unset.
+import { logPagesDeployHookConfig } from "./services/game-data/pages-deploy-hook.js"
+logPagesDeployHookConfig()
+
 // Start the app
 logger.info(`server up on port ${hostname()}:${backend_port}`)
 httpServer.listen(backend_port)

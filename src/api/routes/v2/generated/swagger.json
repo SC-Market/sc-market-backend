@@ -18097,6 +18097,48 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PagesDeployHookStatus": {
+				"description": "What the admin import page shows (GET /admin/pages-deploy-hook).",
+				"properties": {
+					"configured": {
+						"type": "boolean",
+						"description": "CF_PAGES_DEPLOY_HOOK_URL is set."
+					},
+					"last_triggered_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When the hook was last POSTed (ISO), whatever the result."
+					},
+					"last_result": {
+						"type": "string",
+						"enum": [
+							"ok",
+							"failed",
+							null
+						],
+						"nullable": true
+					},
+					"last_error": {
+						"type": "string",
+						"nullable": true,
+						"description": "Why the last POST failed (never contains the hook URL)."
+					},
+					"next_trigger_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When a coalesced POST is due (ISO), if one is pending."
+					}
+				},
+				"required": [
+					"configured",
+					"last_triggered_at",
+					"last_result",
+					"last_error",
+					"next_trigger_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AdminAlertAudiencePreview": {
 				"properties": {
 					"recipients": {
@@ -29826,6 +29868,34 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/pages-deploy-hook": {
+			"get": {
+				"operationId": "GetPagesDeployHookStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PagesDeployHookStatus"
+								}
+							}
+						}
+					}
+				},
+				"description": "The frontend rebuild a successful import triggers (the Cloudflare Pages\ndeploy hook, at most once per 30 minutes): whether it is configured, the\nlast POST and its result, and when a coalesced one is due.",
+				"summary": "Frontend rebuild (deploy hook) status",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/expire-all-listings": {

@@ -74,6 +74,12 @@ interface Environment {
   STAFF_ALERT_EMAIL?: string // Staff inbox for the alert email (sent through SES)
   STAFF_DISCORD_WEBHOOK_URL?: string // Discord webhook for the staff channel (secret: never logged)
 
+  // Cloudflare Pages deploy hook of the frontend's production branch, POSTed
+  // after a successful game-data import so the prerendered game-data pages
+  // rebuild (services/game-data/pages-deploy-hook.ts; at most once per 30
+  // min). A secret: never logged. Unset: no rebuild (warned once at startup).
+  CF_PAGES_DEPLOY_HOOK_URL?: string
+
   // Other
   NODE_ENV?: string
   // "true" | "false": reject requests that bypass Cloudflare. Unset means on
