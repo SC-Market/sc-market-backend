@@ -12952,6 +12952,83 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"EmailBounceKind": {
+				"type": "string",
+				"enum": [
+					"hard",
+					"soft",
+					"complaint"
+				],
+				"description": "Why the address is undeliverable: a hard bounce, soft bounces in a row, or a spam complaint."
+			},
+			"EmailDeliverabilityResponse": {
+				"properties": {
+					"has_email": {
+						"type": "boolean",
+						"description": "The user has a primary email address."
+					},
+					"email_verified": {
+						"type": "boolean",
+						"description": "It is verified."
+					},
+					"undeliverable": {
+						"type": "boolean",
+						"description": "Marked undeliverable: nothing is emailed to it until it is re-verified."
+					},
+					"bounced_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When it was marked undeliverable (ISO 8601), or null."
+					},
+					"bounce_type": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/EmailBounceKind"
+							}
+						],
+						"nullable": true
+					},
+					"last_delivered_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "The last delivery SES confirmed (ISO 8601), or null if none was recorded."
+					},
+					"reverify_available_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "A re-verification email can't be requested before this (ISO 8601); null: now."
+					}
+				},
+				"required": [
+					"has_email",
+					"email_verified",
+					"undeliverable",
+					"bounced_at",
+					"bounce_type",
+					"last_delivered_at",
+					"reverify_available_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EmailReverifyResponse": {
+				"properties": {
+					"sent": {
+						"type": "boolean",
+						"description": "A verification email was sent to the address."
+					},
+					"reverify_available_at": {
+						"type": "string",
+						"description": "When the next one can be requested (ISO 8601)."
+					}
+				},
+				"required": [
+					"sent",
+					"reverify_available_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Record_string.boolean_": {
 				"properties": {},
 				"additionalProperties": {
@@ -15815,7 +15892,11 @@
 					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "A verified primary email, not unsubscribed from announcement emails. No bounce data exists."
+						"description": "A verified primary email that is not marked undeliverable (bounced or complained), not unsubscribed from announcement emails."
+					},
+					"email_confirmed": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Reachable by email, and SES confirmed a delivery to the address in the last email_delivered_window_days (a subset of email)."
 					},
 					"push": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -15839,6 +15920,7 @@
 					"discord_dm",
 					"discord_dm_confirmed",
 					"email",
+					"email_confirmed",
 					"push",
 					"any",
 					"none",
@@ -15868,7 +15950,11 @@
 					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "A verified primary email, not unsubscribed from announcement emails. No bounce data exists."
+						"description": "A verified primary email that is not marked undeliverable (bounced or complained), not unsubscribed from announcement emails."
+					},
+					"email_confirmed": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Reachable by email, and SES confirmed a delivery to the address in the last email_delivered_window_days (a subset of email)."
 					},
 					"push": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -15889,6 +15975,7 @@
 					"discord_dm",
 					"discord_dm_confirmed",
 					"email",
+					"email_confirmed",
 					"push",
 					"any",
 					"none"
@@ -15917,9 +16004,14 @@
 								"type": "boolean",
 								"description": "Push has no per-delivery result (dead subscriptions are deleted)."
 							},
+							"email_delivered_window_days": {
+								"type": "number",
+								"format": "double",
+								"description": "How recent an email delivery counts for email_confirmed."
+							},
 							"email_delivery_results": {
 								"type": "boolean",
-								"description": "Email bounces and complaints are not recorded."
+								"description": "SES bounces, complaints and deliveries are recorded (bounced addresses are not reachable)."
 							},
 							"discord_dm_result_retention_days": {
 								"type": "number",
@@ -15933,6 +16025,7 @@
 						},
 						"required": [
 							"push_delivery_results",
+							"email_delivered_window_days",
 							"email_delivery_results",
 							"discord_dm_result_retention_days",
 							"discord_dm_delivery_results"
@@ -25227,6 +25320,62 @@
 						}
 					}
 				}
+			}
+		},
+		"/email/deliverability": {
+			"get": {
+				"operationId": "GetEmailDeliverability",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EmailDeliverabilityResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Whether the current user's email address is marked undeliverable\n(bounced or complained), and when SES last confirmed a delivery",
+				"summary": "Get my email deliverability",
+				"tags": [
+					"Email"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/email/deliverability/reverify": {
+			"post": {
+				"operationId": "ReverifyEmail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EmailReverifyResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Send a verification email to the current user's undeliverable address.\nFollowing its link marks the address deliverable again. One per\n15 minutes.",
+				"summary": "Re-verify my bounced email",
+				"tags": [
+					"Email"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/debug/feature-flag": {

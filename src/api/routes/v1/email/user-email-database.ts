@@ -11,6 +11,34 @@ import { DBUserEmail } from "../../../../clients/database/db-models.js"
  */
 const knex = () => getKnex()
 
+/** Bounce fields of an address that is deliverable again. */
+const CLEARED_BOUNCE = {
+  email_bounced_at: null,
+  bounce_type: null,
+  bounce_subtype: null,
+  soft_bounce_count: 0,
+} satisfies Partial<DBUserEmail>
+
+/** Bounce and delivery fields of an address with no history. */
+const NO_DELIVERY_HISTORY = {
+  ...CLEARED_BOUNCE,
+  last_delivered_at: null,
+} satisfies Partial<DBUserEmail>
+
+/**
+ * True when the address is on a user's email row marked undeliverable
+ * (email_bounced_at: a hard bounce, a complaint, or soft bounces in a row).
+ * The send path skips such addresses (email.service.ts sendEmail). Matched
+ * case-insensitively, as SES reports the address the way it was sent.
+ */
+export async function isAddressUndeliverable(email: string): Promise<boolean> {
+  const row = await knex()("user_emails")
+    .whereRaw("lower(email) = lower(?)", [email])
+    .whereNotNull("email_bounced_at")
+    .first("email_id")
+  return !!row
+}
+
 /**
  * Get user's primary email address.
  * @param userId - User ID
@@ -129,6 +157,9 @@ export async function updateUserEmail(
 ): Promise<DBUserEmail | null> {
   const updateData: Partial<DBUserEmail> = {
     ...updates,
+    // A new address starts with no delivery history: the old one's bounce
+    // (or deliveries) say nothing about it.
+    ...(updates.email !== undefined ? NO_DELIVERY_HISTORY : {}),
     updated_at: new Date(),
   }
 
@@ -180,6 +211,9 @@ export async function verifyUserEmail(
     .update({
       email_verified: true,
       verified_at: new Date(),
+      // Following the link proves the address takes mail again: re-verifying
+      // is how a user clears a bounce (Settings › Email).
+      ...CLEARED_BOUNCE,
       updated_at: new Date(),
     })
     .returning("*")

@@ -31,6 +31,7 @@ function row(bucket: string, n: Partial<Record<string, number>>) {
     "discord_dm",
     "discord_dm_confirmed",
     "email",
+    "email_confirmed",
     "push",
     "any",
     "none",
@@ -93,12 +94,24 @@ describe("reachabilitySql: who counts", () => {
     )
   })
 
-  it("email: a verified primary address, not unsubscribed from announcement emails", () => {
-    expect(flat).toContain("e.is_primary = true AND e.email_verified = true")
+  it("email: a verified primary address, not bounced, not unsubscribed from announcement emails", () => {
+    expect(flat).toContain(
+      "e.is_primary = true AND e.email_verified = true AND e.email_bounced_at IS NULL",
+    )
     expect(flat).toContain(
       "ep.contractor_id IS NULL AND na.action = ? AND ep.enabled = false",
     )
-    expect(bindings).toEqual(["admin_alert"])
+    expect(bindings).toEqual([90, "admin_alert"])
+  })
+
+  it("email confirmed: reachable by email, and SES confirmed a delivery in the window", () => {
+    expect(flat).toContain(
+      "e.is_primary = true AND e.last_delivered_at > now() - make_interval(days => ?) ) AS email_delivered",
+    )
+    expect(flat).toContain(
+      "BOOL_OR(uc.email_verified AND NOT uc.email_unsubscribed AND uc.email_delivered)",
+    )
+    expect(service.EMAIL_DELIVERED_WINDOW_DAYS).toBe(90)
   })
 
   it("push: at least one subscription", () => {
@@ -143,6 +156,8 @@ describe("toReport", () => {
           discord_dm_confirmed_listings: 5,
           email_sellers: 3,
           email_listings: 9,
+          email_confirmed_sellers: 1,
+          email_confirmed_listings: 4,
           push_sellers: 1,
           push_listings: 2,
           any_sellers: 7,
@@ -182,6 +197,10 @@ describe("toReport", () => {
       sellers: 2,
       listings: 5,
     })
+    expect(report.buckets[3].email_confirmed).toEqual({
+      sellers: 1,
+      listings: 4,
+    })
     expect(report.totals).toMatchObject({
       sellers: 14,
       listings: 52,
@@ -198,7 +217,8 @@ describe("toReport", () => {
     expect(report.signals).toEqual({
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: 90,
-      email_delivery_results: false,
+      email_delivery_results: true,
+      email_delivered_window_days: 90,
       push_delivery_results: false,
     })
     expect(report.email_category).toBe("announcements")
@@ -232,7 +252,7 @@ describe("GET /admin/seller-reachability", () => {
       user: admin,
     } as never)
     expect(h.raw).toHaveBeenCalledTimes(1)
-    expect(h.raw.mock.calls[0][1]).toEqual(["admin_alert"])
+    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert"])
     expect(report.buckets[1]).toMatchObject({
       bucket: "this_week",
       sellers: 2,

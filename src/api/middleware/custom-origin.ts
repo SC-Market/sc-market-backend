@@ -59,6 +59,7 @@ export const CUSTOM_ORIGIN_DENYLIST: readonly SensitiveRoute[] = [
   },
   { pattern: /^\/api\/v2\/auth\/mfa(?:\/|$)/, why: "two-factor auth" },
   { pattern: /^\/api\/v2\/accounts(?:\/|$)/, why: "account deletion" },
+  { pattern: /^\/api\/v2\/email(?:\/|$)/, why: "email address deliverability" },
   {
     pattern: new RegExp(
       `${V1}/profile/(?:email|links|auth|webhook|webhooks|my_data)(?:/|$)`,

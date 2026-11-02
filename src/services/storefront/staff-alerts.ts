@@ -149,7 +149,7 @@ async function sendEmailAlert(to: string, c: AlertContent): Promise<void> {
     renderEmailTemplate(STAFF_ALERT_EMAIL_TEMPLATE, data, "txt"),
   ])
   const result = await emailService.sendEmail({ to, subject, html, text })
-  if (result.status === "failed") throw new Error(result.error ?? "email not sent")
+  if (result.status !== "sent") throw new Error(result.error ?? "email not sent")
 }
 
 /**

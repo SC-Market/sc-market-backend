@@ -24,12 +24,16 @@
  *   DELIVERY_RETENTION_DAYS (90). Users never DMed in that window count as
  *   reachable but unconfirmed; `discord_dm_confirmed` counts those whose
  *   last DM was delivered.
- * - Email: a verified primary address, not unsubscribed from announcement
- *   emails (admin alerts: the category staff would use to reach sellers;
- *   no Personal email preference row for admin_alert with enabled = false).
- *   There is NO delivery signal: SES bounces and complaints are not recorded
- *   (email.service.ts handleBounce is not wired), so a verified address may
- *   still bounce.
+ * - Email: a verified primary address that is not marked undeliverable
+ *   (user_emails.email_bounced_at: a hard bounce, a spam complaint or soft
+ *   bounces in a row, recorded from SES feedback by
+ *   services/email/email-feedback.ts; the send path skips such addresses),
+ *   not unsubscribed from announcement emails (admin alerts: the category
+ *   staff would use to reach sellers; no Personal email preference row for
+ *   admin_alert with enabled = false). `email_confirmed` counts those whose
+ *   address SES confirmed a delivery to in the last
+ *   EMAIL_DELIVERED_WINDOW_DAYS (user_emails.last_delivered_at). Those never
+ *   emailed in that window count as reachable but unconfirmed.
  * - Push: at least one push subscription. Subscriptions are deleted when a
  *   push service answers 404/410/403, so a stored one is not known to be
  *   dead, but there is NO per-delivery result either (the push adapter
@@ -55,6 +59,9 @@ export const REACHABILITY_BUCKETS: readonly ReachabilityBucket[] = [
   "unknown",
 ]
 
+/** "Delivered recently" for email: an SES Delivery notification within this many days. */
+export const EMAIL_DELIVERED_WINDOW_DAYS = 90
+
 /** The email category the report checks unsubscribes for (catalog legacyAction). */
 export const REACHABILITY_EMAIL_ACTION = "admin_alert"
 
@@ -62,6 +69,7 @@ const CHANNELS = [
   "discord_dm",
   "discord_dm_confirmed",
   "email",
+  "email_confirmed",
   "push",
   "any",
   "none",
@@ -125,7 +133,13 @@ export function reachabilitySql(): {
              EXISTS (
                SELECT 1 FROM user_emails e
                WHERE e.user_id = a.user_id AND e.is_primary = true AND e.email_verified = true
+                 AND e.email_bounced_at IS NULL
              ) AS email_verified,
+             EXISTS (
+               SELECT 1 FROM user_emails e
+               WHERE e.user_id = a.user_id AND e.is_primary = true
+                 AND e.last_delivered_at > now() - make_interval(days => ?)
+             ) AS email_delivered,
              EXISTS (
                SELECT 1 FROM email_notification_preferences ep
                JOIN notification_actions na ON na.action_type_id = ep.action_type_id
@@ -145,6 +159,7 @@ export function reachabilitySql(): {
              COALESCE(BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed'), false) AS discord_dm,
              COALESCE(BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'sent'), false) AS discord_dm_confirmed,
              COALESCE(BOOL_OR(uc.email_verified AND NOT uc.email_unsubscribed), false) AS email,
+             COALESCE(BOOL_OR(uc.email_verified AND NOT uc.email_unsubscribed AND uc.email_delivered), false) AS email_confirmed,
              COALESCE(BOOL_OR(uc.push), false) AS push
       FROM contacts c
       JOIN user_channels uc ON uc.user_id = c.user_id
@@ -162,6 +177,7 @@ export function reachabilitySql(): {
              COALESCE(ps.discord_dm, false) AS discord_dm,
              COALESCE(ps.discord_dm_confirmed, false) AS discord_dm_confirmed,
              COALESCE(ps.email, false) AS email,
+             COALESCE(ps.email_confirmed, false) AS email_confirmed,
              COALESCE(ps.push, false) AS push
       FROM seller_listings sl
       LEFT JOIN per_seller ps ON ps.seller_key = sl.seller_key
@@ -175,6 +191,8 @@ export function reachabilitySql(): {
            COALESCE(SUM(listings) FILTER (WHERE discord_dm_confirmed), 0)::integer AS discord_dm_confirmed_listings,
            COUNT(*) FILTER (WHERE email)::integer AS email_sellers,
            COALESCE(SUM(listings) FILTER (WHERE email), 0)::integer AS email_listings,
+           COUNT(*) FILTER (WHERE email_confirmed)::integer AS email_confirmed_sellers,
+           COALESCE(SUM(listings) FILTER (WHERE email_confirmed), 0)::integer AS email_confirmed_listings,
            COUNT(*) FILTER (WHERE push)::integer AS push_sellers,
            COALESCE(SUM(listings) FILTER (WHERE push), 0)::integer AS push_listings,
            COUNT(*) FILTER (WHERE discord_dm OR email OR push)::integer AS any_sellers,
@@ -184,7 +202,7 @@ export function reachabilitySql(): {
     FROM rows
     GROUP BY bucket
   `
-  return { sql, bindings: [REACHABILITY_EMAIL_ACTION] }
+  return { sql, bindings: [EMAIL_DELIVERED_WINDOW_DAYS, REACHABILITY_EMAIL_ACTION] }
 }
 
 type Row = {
@@ -203,6 +221,7 @@ function emptyBucket(bucket: ReachabilityBucket): SellerReachabilityBucket {
     discord_dm: zero(),
     discord_dm_confirmed: zero(),
     email: zero(),
+    email_confirmed: zero(),
     push: zero(),
     any: zero(),
     none: zero(),
@@ -246,7 +265,8 @@ export function toReport(
     signals: {
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: DELIVERY_RETENTION_DAYS,
-      email_delivery_results: false,
+      email_delivery_results: true,
+      email_delivered_window_days: EMAIL_DELIVERED_WINDOW_DAYS,
       push_delivery_results: false,
     },
     email_category: "announcements",

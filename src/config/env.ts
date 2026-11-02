@@ -64,6 +64,10 @@ interface Environment {
   EMAIL_FROM_NAME?: string // From name for emails (e.g., "SC Market")
   EMAIL_FROM_ADDRESS?: string // From email address (must be verified in SES)
   EMAIL_REPLY_TO?: string // Reply-to email address (optional)
+  // ARN of the SNS topic SES publishes bounce, complaint and delivery
+  // notifications to (POST /api/webhooks/ses/feedback). Unset or malformed:
+  // the webhook refuses every request.
+  SES_FEEDBACK_SNS_TOPIC_ARN?: string
 
   // Staff alerts for new storefront enquiries (services/storefront/staff-alerts.ts).
   // Unset: that channel is skipped (a warning is logged once at startup).

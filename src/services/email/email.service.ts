@@ -45,6 +45,10 @@ import {
   DBAdminAlert,
 } from "../../clients/database/db-models.js"
 import { deliverableRecipients } from "../test-accounts/isolation.js"
+import type { Knex } from "knex"
+import { getKnex } from "../../clients/database/knex-db.js"
+import type { EmailBounceType } from "../../clients/database/db-models.js"
+import { recordBounce, recordDelivery, type BounceOutcome } from "./email-feedback.js"
 
 /**
  * NotificationEmailData is an open bag of caller-supplied entities, so its
@@ -85,6 +89,7 @@ class SESEmailService implements EmailService {
       email: email.email,
       email_verified: email.email_verified,
       is_primary: email.is_primary,
+      email_bounced_at: email.email_bounced_at,
     }
   }
 
@@ -114,6 +119,15 @@ class SESEmailService implements EmailService {
           status: "failed",
           error: "Email service not configured",
         }
+      }
+
+      // Undeliverable addresses (hard bounce, complaint, soft bounces in a
+      // row; email-feedback.ts) get nothing until the user re-verifies.
+      if (!options.toBouncedAddress && (await userEmailDb.isAddressUndeliverable(options.to))) {
+        logger.info("Email not sent: address is marked undeliverable", {
+          subject: options.subject,
+        })
+        return { status: "suppressed", error: "Address is marked undeliverable" }
       }
 
       // Send via AWS SES
@@ -244,6 +258,8 @@ class SESEmailService implements EmailService {
         subject: "Verify Your Email Address - SC Market",
         html,
         text,
+        // Re-verifying is how a bounced address is cleared.
+        toBouncedAddress: true,
       })
 
       logger.info("Verification email sent", {
@@ -388,6 +404,13 @@ class SESEmailService implements EmailService {
       if (!userEmail.email_verified) {
         logger.debug(
           `Email not verified for user ${userId}, skipping email notification`,
+        )
+        return false
+      }
+
+      if (userEmail.email_bounced_at) {
+        logger.debug(
+          `Email undeliverable (bounced) for user ${userId}, skipping email notification`,
         )
         return false
       }
@@ -696,7 +719,7 @@ class SESEmailService implements EmailService {
       })
       if (notice && result.status === "sent") await markDefaultsNoticeShown(userId)
 
-      if (result.status === "failed") {
+      if (result.status !== "sent") {
         logger.error("Failed to send notification email", {
           userId,
           email: userEmail.email,
@@ -725,58 +748,31 @@ class SESEmailService implements EmailService {
   }
 
   /**
-   * Mark email as invalid (e.g., after bounce)
+   * A bounce or complaint SES reported for an address (SES feedback webhook,
+   * email-feedback.ts): hard bounces and complaints mark it undeliverable,
+   * soft bounces count toward SOFT_BOUNCE_LIMIT.
    */
-  async markEmailAsInvalid(userId: string, reason: string): Promise<void> {
-    try {
-      const userEmail = await this.getUserEmail(userId)
-      if (!userEmail) {
-        return
-      }
-
-      // Update email to mark as invalid (we could add an invalid flag to the table)
-      // For now, we'll just log it
-      logger.warn("Email marked as invalid", {
-        userId,
-        email: userEmail.email,
-        reason,
-      })
-
-      // TODO: Add invalid flag to user_emails table or handle bounces differently
-    } catch (error) {
-      logger.error("Failed to mark email as invalid", {
-        error,
-        userId,
-        reason,
-      })
+  async handleBounce(
+    email: string,
+    type: EmailBounceType,
+    subtype: string | null,
+    db: Knex | Knex.Transaction = getKnex(),
+  ): Promise<BounceOutcome> {
+    const outcome = await recordBounce(db, email, type, subtype)
+    if (outcome.matched === 0) {
+      logger.info("SES feedback for an address that is no user's", { type, subtype })
+    } else {
+      logger.warn("Email bounce recorded", { type, subtype, ...outcome })
     }
+    return outcome
   }
 
-  /**
-   * Handle email bounce
-   */
-  async handleBounce(email: string, reason: string): Promise<void> {
-    try {
-      const userEmail = await userEmailDb.getUserEmailByAddress(email)
-      if (!userEmail) {
-        logger.warn("Bounce received for unknown email", { email, reason })
-        return
-      }
-
-      await this.markEmailAsInvalid(userEmail.user_id, `Bounce: ${reason}`)
-
-      logger.warn("Email bounce handled", {
-        userId: userEmail.user_id,
-        email,
-        reason,
-      })
-    } catch (error) {
-      logger.error("Failed to handle email bounce", {
-        error,
-        email,
-        reason,
-      })
-    }
+  /** A delivery SES reported for an address (SES feedback webhook). Returns rows matched. */
+  async handleDelivery(
+    email: string,
+    db: Knex | Knex.Transaction = getKnex(),
+  ): Promise<number> {
+    return recordDelivery(db, email)
   }
 }
 

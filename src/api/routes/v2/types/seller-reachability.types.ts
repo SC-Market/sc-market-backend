@@ -26,8 +26,10 @@ export interface SellerReachabilityCounts {
   discord_dm: ReachabilityCount
   /** Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm). */
   discord_dm_confirmed: ReachabilityCount
-  /** A verified primary email, not unsubscribed from announcement emails. No bounce data exists. */
+  /** A verified primary email that is not marked undeliverable (bounced or complained), not unsubscribed from announcement emails. */
   email: ReachabilityCount
+  /** Reachable by email, and SES confirmed a delivery to the address in the last email_delivered_window_days (a subset of email). */
+  email_confirmed: ReachabilityCount
   /** At least one push subscription. No per-delivery result exists. */
   push: ReachabilityCount
   /** At least one of Discord DM, email or push. */
@@ -51,8 +53,10 @@ export interface SellerReachabilityReport {
     discord_dm_delivery_results: boolean
     /** How long those results are kept. */
     discord_dm_result_retention_days: number
-    /** Email bounces and complaints are not recorded. */
+    /** SES bounces, complaints and deliveries are recorded (bounced addresses are not reachable). */
     email_delivery_results: boolean
+    /** How recent an email delivery counts for email_confirmed. */
+    email_delivered_window_days: number
     /** Push has no per-delivery result (dead subscriptions are deleted). */
     push_delivery_results: boolean
   }

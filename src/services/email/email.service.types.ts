@@ -2,6 +2,10 @@
  * Email service types and interfaces
  */
 
+import type { Knex } from "knex"
+import type { EmailBounceType } from "../../clients/database/db-models.js"
+import type { BounceOutcome } from "./email-feedback.js"
+
 /**
  * Email sending options
  */
@@ -14,6 +18,12 @@ export interface EmailOptions {
   replyTo?: string
   /** Extra headers (RFC 8058 List-Unsubscribe); sent raw when present. */
   headers?: Record<string, string>
+  /**
+   * Send even if the address is marked undeliverable (bounced or complained).
+   * Only the verification email sets it: following its link is how a user
+   * clears a bounce (Settings › Email).
+   */
+  toBouncedAddress?: boolean
 }
 
 /**
@@ -21,7 +31,8 @@ export interface EmailOptions {
  */
 export interface EmailResult {
   messageId?: string
-  status: "sent" | "failed"
+  /** suppressed: not sent, the address is marked undeliverable (email-feedback.ts). */
+  status: "sent" | "failed" | "suppressed"
   error?: string
 }
 
@@ -103,9 +114,14 @@ export interface EmailService {
   getUserEmail(userId: string): Promise<UserEmail | null>
   isEmailVerified(userId: string): Promise<boolean>
 
-  // Bounce handling
-  markEmailAsInvalid(userId: string, reason: string): Promise<void>
-  handleBounce(email: string, reason: string): Promise<void>
+  // SES feedback (email-feedback.ts), from the SES feedback webhook
+  handleBounce(
+    email: string,
+    type: EmailBounceType,
+    subtype: string | null,
+    db?: Knex | Knex.Transaction,
+  ): Promise<BounceOutcome>
+  handleDelivery(email: string, db?: Knex | Knex.Transaction): Promise<number>
 }
 
 /**
@@ -117,4 +133,6 @@ export interface UserEmail {
   email: string
   email_verified: boolean
   is_primary: boolean
+  /** Undeliverable since (bounce or complaint); null when deliverable. */
+  email_bounced_at: Date | null
 }

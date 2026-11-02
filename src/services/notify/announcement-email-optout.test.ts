@@ -57,6 +57,7 @@ vi.mock("../test-accounts/isolation.js", () => ({
   deliverableRecipients: async (ids: string[]) => ids,
 }))
 vi.mock("../../api/routes/v1/email/user-email-database.js", () => ({
+  isAddressUndeliverable: async () => false,
   getPrimaryEmail: async (userId: string) => ({
     email_id: "em1",
     user_id: userId,

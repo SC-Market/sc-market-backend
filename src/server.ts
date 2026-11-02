@@ -259,6 +259,13 @@ app.use("/api/public/prices", publicPricesRouter)
 import { publicItemsRouter } from "./api/routes/public-items/router.js"
 app.use("/api/public/items", publicItemsRouter)
 
+// SES bounce / complaint / delivery notifications from Amazon SNS. The SNS
+// message signature (and the configured topic) is the credential; mounted
+// before sessions, cookies, CORS, CSRF and passport, it reads none of them.
+// Refuses everything until SES_FEEDBACK_SNS_TOPIC_ARN is set.
+import { sesFeedbackRouter } from "./api/routes/webhooks/ses-feedback.js"
+app.use("/api/webhooks/ses", sesFeedbackRouter)
+
 // Public API (/api/public/v1): token-only, so it is mounted before sessions,
 // cookies, CORS, CSRF and passport, and never sees a browser credential.
 // Every other route refuses its tokens (scmp_), so they can't act on the site.

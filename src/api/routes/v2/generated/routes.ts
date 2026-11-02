@@ -70,6 +70,8 @@ import { CraftingController } from './../game-data/crafting/CraftingController.j
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BlueprintsController } from './../game-data/blueprints/BlueprintsController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { EmailDeliverabilityController } from './../email/EmailDeliverabilityController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DashboardV2Controller } from './../dashboard/DashboardV2Controller.js';
@@ -4234,6 +4236,34 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EmailBounceKind": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["hard"]},{"dataType":"enum","enums":["soft"]},{"dataType":"enum","enums":["complaint"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EmailDeliverabilityResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "has_email": {"dataType":"boolean","required":true},
+            "email_verified": {"dataType":"boolean","required":true},
+            "undeliverable": {"dataType":"boolean","required":true},
+            "bounced_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "bounce_type": {"dataType":"union","subSchemas":[{"ref":"EmailBounceKind"},{"dataType":"enum","enums":[null]}],"required":true},
+            "last_delivered_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reverify_available_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EmailReverifyResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "sent": {"dataType":"boolean","required":true},
+            "reverify_available_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Record_string.boolean_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"boolean"},"validators":{}},
@@ -5218,6 +5248,7 @@ const models: TsoaRoute.Models = {
             "discord_dm": {"ref":"ReachabilityCount","required":true},
             "discord_dm_confirmed": {"ref":"ReachabilityCount","required":true},
             "email": {"ref":"ReachabilityCount","required":true},
+            "email_confirmed": {"ref":"ReachabilityCount","required":true},
             "push": {"ref":"ReachabilityCount","required":true},
             "any": {"ref":"ReachabilityCount","required":true},
             "none": {"ref":"ReachabilityCount","required":true},
@@ -5234,6 +5265,7 @@ const models: TsoaRoute.Models = {
             "discord_dm": {"ref":"ReachabilityCount","required":true},
             "discord_dm_confirmed": {"ref":"ReachabilityCount","required":true},
             "email": {"ref":"ReachabilityCount","required":true},
+            "email_confirmed": {"ref":"ReachabilityCount","required":true},
             "push": {"ref":"ReachabilityCount","required":true},
             "any": {"ref":"ReachabilityCount","required":true},
             "none": {"ref":"ReachabilityCount","required":true},
@@ -5247,7 +5279,7 @@ const models: TsoaRoute.Models = {
             "generated_at": {"dataType":"string","required":true},
             "buckets": {"dataType":"array","array":{"dataType":"refObject","ref":"SellerReachabilityBucket"},"required":true},
             "totals": {"ref":"SellerReachabilityCounts","required":true},
-            "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
+            "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivered_window_days":{"dataType":"double","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
             "email_category": {"dataType":"enum","enums":["announcements"],"required":true},
         },
         "additionalProperties": false,
@@ -10856,6 +10888,68 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'findCraftableBlueprints',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmailDeliverabilityController_getEmailDeliverability: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/email/deliverability',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(EmailDeliverabilityController)),
+            ...(fetchMiddlewares<RequestHandler>(EmailDeliverabilityController.prototype.getEmailDeliverability)),
+
+            async function EmailDeliverabilityController_getEmailDeliverability(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmailDeliverabilityController_getEmailDeliverability, request, response });
+
+                const controller = new EmailDeliverabilityController();
+
+              await templateService.apiHandler({
+                methodName: 'getEmailDeliverability',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsEmailDeliverabilityController_reverifyEmail: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/email/deliverability/reverify',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(EmailDeliverabilityController)),
+            ...(fetchMiddlewares<RequestHandler>(EmailDeliverabilityController.prototype.reverifyEmail)),
+
+            async function EmailDeliverabilityController_reverifyEmail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsEmailDeliverabilityController_reverifyEmail, request, response });
+
+                const controller = new EmailDeliverabilityController();
+
+              await templateService.apiHandler({
+                methodName: 'reverifyEmail',
                 controller,
                 response,
                 next,

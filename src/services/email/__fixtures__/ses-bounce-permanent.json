@@ -1,0 +1,27 @@
+{
+  "notificationType": "Bounce",
+  "bounce": {
+    "feedbackId": "0100018f-hard-bounce-feedback-000000",
+    "bounceType": "Permanent",
+    "bounceSubType": "General",
+    "bouncedRecipients": [
+      {
+        "emailAddress": "Gone.Seller@example.test",
+        "action": "failed",
+        "status": "5.1.1",
+        "diagnosticCode": "smtp; 550 5.1.1 user unknown"
+      }
+    ],
+    "timestamp": "2026-11-02T10:00:01.000Z",
+    "remoteMtaIp": "192.0.2.10",
+    "reportingMTA": "dsn; a8-1.smtp-out.amazonses.com"
+  },
+  "mail": {
+    "timestamp": "2026-11-02T10:00:00.000Z",
+    "source": "SC Market <noreply@sc-market.space>",
+    "sourceArn": "arn:aws:ses:us-east-2:123456789012:identity/sc-market.space",
+    "sendingAccountId": "123456789012",
+    "messageId": "0100018f-mail-hard-000000",
+    "destination": ["Gone.Seller@example.test"]
+  }
+}

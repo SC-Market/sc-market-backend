@@ -1,0 +1,18 @@
+{
+  "notificationType": "Complaint",
+  "complaint": {
+    "feedbackId": "0100018f-complaint-feedback-000000",
+    "complaintSubType": null,
+    "complainedRecipients": [{ "emailAddress": "annoyed@example.test" }],
+    "timestamp": "2026-11-02T10:05:00.000Z",
+    "userAgent": "ExampleFeedbackLoop/1.0",
+    "complaintFeedbackType": "abuse"
+  },
+  "mail": {
+    "timestamp": "2026-11-02T10:00:00.000Z",
+    "source": "SC Market <noreply@sc-market.space>",
+    "sendingAccountId": "123456789012",
+    "messageId": "0100018f-mail-complaint-000000",
+    "destination": ["annoyed@example.test"]
+  }
+}

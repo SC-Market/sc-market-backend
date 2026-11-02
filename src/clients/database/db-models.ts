@@ -876,7 +876,19 @@ export interface DBUserEmail {
   created_at: Date
   updated_at: Date
   verified_at: Date | null
+  /** Undeliverable since (hard bounce, complaint, or soft bounces in a row); cleared by re-verifying. */
+  email_bounced_at: Date | null
+  bounce_type: EmailBounceType | null
+  /** SES bounceSubType / complaintFeedbackType of the bounce that set email_bounced_at. */
+  bounce_subtype: string | null
+  /** Soft (Transient) bounces since the last delivery. */
+  soft_bounce_count: number
+  /** Last SES Delivery notification for this address. */
+  last_delivered_at: Date | null
 }
+
+/** Why an address is undeliverable (user_emails.bounce_type). */
+export type EmailBounceType = "hard" | "soft" | "complaint"
 
 export type DiscordSetupOwnerType = "shop" | "org" | "user"
 
