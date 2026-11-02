@@ -29,7 +29,9 @@ export interface Shop {
 }
 
 /**
- * Check if a user can manage a shop (edit settings, create listings, manage stock).
+ * Check if a user can manage a shop: edit its settings and create, edit and
+ * remove its listings. Stock lots have the wider canManageShopStock, orders
+ * canManageShopOrders.
  *
  * Returns true if:
  * - Shop is user-owned and user is the owner
@@ -165,7 +167,8 @@ export async function getShopBySlug(slug: string): Promise<Shop | null> {
 
 /**
  * Get all shops associated with a user (their own + orgs they're a member of).
- * Includes a `can_manage` flag indicating whether the user has manage_market permission.
+ * Includes a `can_manage` flag: canManageShop (settings and listings, i.e.
+ * manage_market in an org shop). `manage_stock` alone only allows the lots.
  * `orgScope` is the request's API-token org grant: org shops outside it are
  * left out; null (sessions, full/admin tokens) keeps every org.
  */
