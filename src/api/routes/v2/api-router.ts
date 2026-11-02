@@ -133,6 +133,9 @@ apiV2Router.get(
 // token in the path is the credential), rate limited per IP like the other
 // anonymous reads and writes.
 apiV2Router.get("/still-selling/:token", tsoaReadRateLimit)
+// The admin's "Send test DM to me" (also capped at 5 per hour per admin in
+// services/dm-campaigns/still-selling.service.ts sendTestDm).
+apiV2Router.post("/admin/dm-campaigns/still-selling/test", tsoaWriteRateLimit)
 apiV2Router.post(["/still-selling/:token", "/still-selling/:token/feedback"], tsoaWriteRateLimit)
 // Storefront settings and branded storefront enquiries: writes, rate limited
 // like the other writes (one open enquiry per org or shop on top).

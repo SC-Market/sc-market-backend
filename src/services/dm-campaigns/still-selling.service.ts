@@ -873,3 +873,152 @@ export async function applyAction(
     test: false,
   }
 }
+
+// ---------------------------------------------------------------------------
+// "Send test DM to me" (Admin › Market; owner-approved 2026-11-02): the real
+// campaign DM, to the requesting admin only. Separate from the campaign send
+// path (startCampaign / runCampaign), which keeps its kill switch, cap and
+// recipient rows unchanged.
+
+/** discord_dm_attempts source of test DMs. */
+export const TEST_SOURCE = "campaign:still-selling:test"
+/** At most this many test DMs per admin per hour. */
+export const TEST_DMS_PER_HOUR = 5
+
+type TestListing = {
+  listing_id: string
+  updated_at: Date | string
+  slug: string
+}
+
+/**
+ * The live listings the user sells (their own shops, and org shops where
+ * they hold manage_market or manage_orders): the stale ones if any, else all.
+ * Read only, for the test DM's numbers. Exported for tests.
+ */
+export async function testListingsFor(
+  db: Knex,
+  userId: string,
+  now = new Date(),
+): Promise<TestListing[]> {
+  const result = await db.raw(
+    `
+    SELECT l.listing_id, l.updated_at, s.slug
+    FROM listings l
+    JOIN shops s ON s.shop_id = l.shop_id
+    WHERE ${liveListingSql("l")}
+      AND s.status = 'active'
+      AND (
+        s.owner_user_id = ?
+        OR EXISTS (
+          SELECT 1 FROM contractor_roles cr
+          JOIN contractor_member_roles cmr ON cmr.role_id = cr.role_id
+          JOIN contractor_members cm
+            ON cm.contractor_id = cr.contractor_id AND cm.user_id = cmr.user_id
+          WHERE cr.contractor_id = s.owner_contractor_id
+            AND cmr.user_id = ?
+            AND (cr.manage_orders = true OR cr.manage_market = true)
+        )
+      )
+    LIMIT 500
+    `,
+    [userId, userId],
+  )
+  const rows = (result?.rows ?? []) as TestListing[]
+  const cutoff = now.getTime() - STALE_DAYS * 86_400_000
+  const stale = rows.filter((r) => new Date(r.updated_at).getTime() < cutoff)
+  return stale.length ? stale : rows
+}
+
+export type TestSendResult =
+  | {
+      ok: true
+      /** The admin sells nothing live: sample numbers were used. */
+      sample: boolean
+      message: RenderedMessage
+    }
+  | {
+      ok: false
+      reason: "no_discord" | "rate_limited" | "failed"
+      error?: string
+    }
+
+/**
+ * Send the campaign DM to `userId`, the requesting admin, and no one else:
+ * the same rendering, language and buttons, with test links (they change
+ * nothing) and a "Test message" footer. Works with the kill switch off
+ * because its only possible recipient is the caller. Never reads or writes
+ * dm_campaign_recipients.
+ */
+export async function sendTestDm(
+  userId: string,
+  opts: { locale?: string | null } = {},
+  deps: CampaignDeps = {},
+  campaign = CAMPAIGN,
+): Promise<TestSendResult> {
+  const d = resolve(deps)
+  const now = d.now()
+  const recent = await d
+    .db("discord_dm_attempts")
+    .where({ user_id: userId, source: TEST_SOURCE })
+    .where("created_at", ">", d.db.raw("now() - INTERVAL '1 hour'"))
+    .count({ n: "*" })
+  if (
+    Number((recent?.[0] as { n?: unknown } | undefined)?.n ?? 0) >=
+    TEST_DMS_PER_HOUR
+  ) {
+    return { ok: false, reason: "rate_limited" }
+  }
+  const account = await d
+    .db("accounts as a")
+    .leftJoin("account_providers as p", function () {
+      this.on("p.user_id", "=", "a.user_id").andOnVal(
+        "p.provider_type",
+        "=",
+        "discord",
+      )
+    })
+    .where("a.user_id", userId)
+    .first("a.locale", "p.provider_id")
+  if (!account?.provider_id) return { ok: false, reason: "no_discord" }
+  const real = await testListingsFor(d.db, userId, now)
+  const sample = !real.length
+  const token = (action: CampaignAction) =>
+    createCampaignActionToken({ campaign, userId, action, test: true }, { now })
+  const newest = real.reduce(
+    (m, l) => Math.max(m, new Date(l.updated_at).getTime()),
+    0,
+  )
+  const rendered = renderStillSelling({
+    locale: campaignLocale(opts.locale || account.locale),
+    listings: sample ? 3 : real.length,
+    months: sample ? 2 : monthsSince(new Date(newest), now),
+    keepUrl: actionPageUrl(token("keep")),
+    pauseUrl: actionPageUrl(token("pause")),
+    manageUrl: `${frontendUrl()}${sample ? "/dashboard/shops" : managePath(real.map((l) => l.slug))}`,
+  })
+  const message: RenderedMessage = {
+    ...rendered,
+    text:
+      `${rendered.text}\n-# Test message: only you got this, and its buttons change nothing.` +
+      (sample ? " You have no live listings, so the numbers are made up." : ""),
+  }
+  let result: Awaited<ReturnType<ReturnType<typeof resolve>["send"]>>
+  try {
+    result = await d.send(
+      String(account.provider_id),
+      toDiscordMessage(message),
+      {
+        userId,
+        source: TEST_SOURCE,
+      },
+    )
+  } catch (error) {
+    result = {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    }
+  }
+  if (!result.ok) return { ok: false, reason: "failed", error: result.error }
+  return { ok: true, sample, message }
+}

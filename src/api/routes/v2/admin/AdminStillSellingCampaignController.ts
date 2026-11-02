@@ -8,6 +8,7 @@
 import { Body, Get, Post, Query, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { ErrorCode } from "../../v1/util/error-codes.js"
 import {
   BATCH_PAUSE_MS,
   BATCH_SIZE,
@@ -23,7 +24,9 @@ import {
   eligibleRecipients,
   requestStop,
   runState,
+  TEST_DMS_PER_HOUR,
   sampleMessage,
+  sendTestDm,
   startCampaign,
 } from "../../../../services/dm-campaigns/still-selling.service.js"
 import { feedbackSummary } from "../../../../services/dm-campaigns/still-selling-feedback.js"
@@ -33,6 +36,8 @@ import type {
   StillSellingLocale,
   StillSellingSendRequest,
   StillSellingSendResponse,
+  StillSellingTestRequest,
+  StillSellingTestResponse,
 } from "../types/still-selling.types.js"
 
 @Route("admin/dm-campaigns/still-selling")
@@ -140,5 +145,50 @@ export class AdminStillSellingCampaignController extends BaseController {
     this.request = request
     this.requireAdmin()
     return { run: requestStop() }
+  }
+
+  /**
+   * Send the campaign DM to yourself (the requesting admin) and no one else:
+   * same text, language and buttons, test links that change nothing, a
+   * "Test message" footer. Uses your own live listing counts, or sample
+   * numbers if you have none. Works while the campaign switch is off (it can
+   * only reach you); never creates or uses a campaign recipient row. At most
+   * 5 per hour.
+   *
+   * @summary Send the "Still selling?" test DM to me
+   */
+  @Post("test")
+  @Security("loggedin")
+  public async sendStillSellingTestDm(
+    @Request() request: ExpressRequest,
+    @Body() body: StillSellingTestRequest,
+  ): Promise<StillSellingTestResponse> {
+    this.request = request
+    this.requireAdmin()
+    await this.requireStepUp()
+    const result = await sendTestDm(this.getUserId(), {
+      locale: body?.locale ?? null,
+    })
+    if (!result.ok) {
+      if (result.reason === "rate_limited") {
+        this.setStatus(429)
+        this.throwBusinessError(
+          ErrorCode.RATE_LIMIT_EXCEEDED,
+          `At most ${TEST_DMS_PER_HOUR} test DMs per hour`,
+        )
+      }
+      if (result.reason === "no_discord") {
+        this.throwConflict("Link your Discord account to receive the test DM", {
+          reason: "no_discord",
+        })
+      }
+      this.throwConflict(
+        `Discord refused the DM: ${result.error ?? "unknown error"}`,
+        {
+          reason: "failed",
+        },
+      )
+    }
+    return { sample: result.sample, message: result.message }
   }
 }

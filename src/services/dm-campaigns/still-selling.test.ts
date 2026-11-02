@@ -966,3 +966,137 @@ describe("feedback", () => {
     expect(s.test.texts).toHaveLength(1)
   })
 })
+
+describe("Send test DM to me", () => {
+  const ADMIN = U1
+  const ADMIN_DISCORD = "123456789012345678"
+
+  function setupDb(
+    opts: {
+      recent?: number
+      discord?: string | null
+      listings?: unknown[]
+    } = {},
+  ) {
+    tracker.on
+      .select("discord_dm_attempts")
+      .response([{ n: String(opts.recent ?? 0) }])
+    tracker.on
+      .select("accounts")
+      .response({
+        locale: "en",
+        provider_id: opts.discord === undefined ? ADMIN_DISCORD : opts.discord,
+      })
+    tracker.on.any(/FROM listings l/).response({ rows: opts.listings ?? [] })
+  }
+
+  it("reaches only the caller, works with the switch off, never touches recipient rows", async () => {
+    setupDb()
+    const send = vi.fn(async () => ({ ok: true as const }))
+    const r = await svc.sendTestDm(
+      ADMIN,
+      {},
+      { send, enabled: () => false, now: () => NOW },
+    )
+    expect(r).toMatchObject({ ok: true, sample: true })
+    expect(send).toHaveBeenCalledTimes(1)
+    expect(send).toHaveBeenCalledWith(ADMIN_DISCORD, expect.anything(), {
+      userId: ADMIN,
+      source: "campaign:still-selling:test",
+    })
+    expect(
+      tracker.history.all.some((q) => q.sql.includes("dm_campaign_recipients")),
+    ).toBe(false)
+    expect(tracker.history.insert).toHaveLength(0)
+    expect(tracker.history.update).toHaveLength(0)
+    // The caller's own Discord id is looked up by their own user id only.
+    const acct = tracker.history.select.find((q) => q.sql.includes("accounts"))!
+    expect(acct.bindings).toContain(ADMIN)
+  })
+
+  it("buttons are test links for the caller; sample numbers say so in the footer", async () => {
+    setupDb()
+    const send = vi.fn(async () => ({ ok: true as const }))
+    const r = await svc.sendTestDm(
+      ADMIN,
+      { locale: "de" },
+      { send, now: () => NOW },
+    )
+    if (!r.ok) throw new Error("expected ok")
+    expect(r.message.locale).toBe("de")
+    expect(r.message.text).toMatch(/^Sie haben 3 Angebote/)
+    expect(r.message.text).toMatch(/Test message/)
+    expect(r.message.text).toMatch(/numbers are made up/)
+    for (const b of r.message.buttons.slice(0, 2)) {
+      const tok = b.url.split("/still-selling/")[1]
+      expect(tokens.verifyCampaignActionToken(tok, { now: NOW })).toMatchObject(
+        {
+          ok: true,
+          claim: { userId: ADMIN, test: true },
+        },
+      )
+    }
+  })
+
+  it("uses the admin's real live listing counts when there are some", async () => {
+    const old = new Date(NOW.getTime() - 95 * 86_400_000)
+    setupDb({
+      listings: [
+        { listing_id: L1, updated_at: old, slug: "mine" },
+        { listing_id: L2, updated_at: old, slug: "mine" },
+      ],
+    })
+    const send = vi.fn(async () => ({ ok: true as const }))
+    const r = await svc.sendTestDm(ADMIN, {}, { send, now: () => NOW })
+    if (!r.ok) throw new Error("expected ok")
+    expect(r.sample).toBe(false)
+    expect(r.message.text).toMatch(
+      /^You have 2 listings on SC Market that haven't been updated in 3 months/,
+    )
+    expect(r.message.text).not.toMatch(/made up/)
+    expect(r.message.buttons[2].url).toMatch(/\/shop\/mine\/listings$/)
+  })
+
+  it(`at most ${"5"} per hour per admin, counted from discord_dm_attempts`, async () => {
+    setupDb({ recent: 5 })
+    const send = vi.fn()
+    expect(await svc.sendTestDm(ADMIN, {}, { send, now: () => NOW })).toEqual({
+      ok: false,
+      reason: "rate_limited",
+    })
+    expect(send).not.toHaveBeenCalled()
+    const q = tracker.history.select.find((x) =>
+      x.sql.includes("discord_dm_attempts"),
+    )!
+    expect(q.bindings).toEqual(
+      expect.arrayContaining([ADMIN, "campaign:still-selling:test"]),
+    )
+    expect(svc.TEST_DMS_PER_HOUR).toBe(5)
+  })
+
+  it("no Discord linked: nothing is sent", async () => {
+    setupDb({ discord: null })
+    const send = vi.fn()
+    expect(await svc.sendTestDm(ADMIN, {}, { send, now: () => NOW })).toEqual({
+      ok: false,
+      reason: "no_discord",
+    })
+    expect(send).not.toHaveBeenCalled()
+  })
+
+  it("real sends still require the switch, after a test DM too", async () => {
+    setupDb()
+    const send = vi.fn(async () => ({ ok: true as const }))
+    await svc.sendTestDm(ADMIN, {}, { send, now: () => NOW })
+    delete process.env[svc.KILL_SWITCH_ENV]
+    const real = vi.fn()
+    expect(
+      await svc.startCampaign(10, { reachable: everyoneReachable, send: real }),
+    ).toEqual({
+      ok: false,
+      reason: "disabled",
+    })
+    expect(real).not.toHaveBeenCalled()
+    expect(svc.runState().running).toBe(false)
+  })
+})

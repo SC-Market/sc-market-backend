@@ -115,6 +115,18 @@ export interface StillSellingSendResponse {
   run: StillSellingRunState
 }
 
+export interface StillSellingTestRequest {
+  /** Language of the test DM (default: the admin's own). */
+  locale?: StillSellingLocale
+}
+
+/** "Send test DM to me": what was sent, to the caller only. */
+export interface StillSellingTestResponse {
+  /** The admin has no live listings, so sample numbers were used. */
+  sample: boolean
+  message: StillSellingSampleMessage
+}
+
 export type StillSellingAction = "keep" | "pause"
 
 export interface StillSellingActionListing {

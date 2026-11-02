@@ -5537,6 +5537,23 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingTestResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "sample": {"dataType":"boolean","required":true},
+            "message": {"ref":"StillSellingSampleMessage","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingTestRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "locale": {"ref":"StillSellingLocale"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ReachabilityBucket": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["today"]},{"dataType":"enum","enums":["this_week"]},{"dataType":"enum","enums":["this_month"]},{"dataType":"enum","enums":["over_a_month"]},{"dataType":"enum","enums":["unknown"]}],"validators":{}},
@@ -13239,6 +13256,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'stopStillSellingCampaign',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminStillSellingCampaignController_sendStillSellingTestDm: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"StillSellingTestRequest"},
+        };
+        app.post('/admin/dm-campaigns/still-selling/test',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController.prototype.sendStillSellingTestDm)),
+
+            async function AdminStillSellingCampaignController_sendStillSellingTestDm(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminStillSellingCampaignController_sendStillSellingTestDm, request, response });
+
+                const controller = new AdminStillSellingCampaignController();
+
+              await templateService.apiHandler({
+                methodName: 'sendStillSellingTestDm',
                 controller,
                 response,
                 next,

@@ -16688,6 +16688,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StillSellingTestResponse": {
+				"description": "\"Send test DM to me\": what was sent, to the caller only.",
+				"properties": {
+					"sample": {
+						"type": "boolean",
+						"description": "The admin has no live listings, so sample numbers were used."
+					},
+					"message": {
+						"$ref": "#/components/schemas/StillSellingSampleMessage"
+					}
+				},
+				"required": [
+					"sample",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingTestRequest": {
+				"properties": {
+					"locale": {
+						"$ref": "#/components/schemas/StillSellingLocale",
+						"description": "Language of the test DM (default: the admin's own)."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ReachabilityBucket": {
 				"type": "string",
 				"enum": [
@@ -29238,6 +29266,44 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/admin/dm-campaigns/still-selling/test": {
+			"post": {
+				"operationId": "SendStillSellingTestDm",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingTestResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Send the campaign DM to yourself (the requesting admin) and no one else:\nsame text, language and buttons, test links that change nothing, a\n\"Test message\" footer. Uses your own live listing counts, or sample\nnumbers if you have none. Works while the campaign switch is off (it can\nonly reach you); never creates or uses a campaign recipient row. At most\n5 per hour.",
+				"summary": "Send the \"Still selling?\" test DM to me",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StillSellingTestRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/admin/seller-reachability": {
