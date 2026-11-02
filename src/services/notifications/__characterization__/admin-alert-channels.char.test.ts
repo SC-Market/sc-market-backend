@@ -1,7 +1,9 @@
 /**
  * Characterization: admin alert delivery channels (admin_alerts.channels).
- * The admin picks the channels; the chosen ones ignore user opt-outs and the
- * others never send. Test accounts never receive real alerts.
+ * The admin picks the channels; the others never send. In-app, push and
+ * Discord DM ignore user opt-outs; email respects them (owner decision
+ * 2026-11-01: only legal, security and dispute emails may ignore them).
+ * Test accounts never receive real alerts.
  */
 import { describe, expect, it } from "vitest"
 import * as w from "../../../test-utils/notif-char/world.js"
@@ -26,7 +28,7 @@ async function alert(created_by: string, channels: string[], target_type = "all_
   return row
 }
 
-/** Everyone opted out of every channel: chosen channels still deliver. */
+/** Opted out of every channel: the chosen ones still deliver, except email. */
 async function optOutEverything(u: w.SeededUser) {
   await w.pushPref(u, "admin_alert", false)
   await w.emailPref(u, "admin_alert", false)
@@ -45,7 +47,7 @@ const COMBOS: string[][] = [
 
 describe("admin alert channels", () => {
   it.each(COMBOS.map((c) => [c.join("+"), c]))(
-    "%s: exactly those channels, opt-outs ignored",
+    "%s: exactly those channels, opt-outs ignored except email's",
     async (_name, channels) => {
       const admin = await w.user("admin", { role: "admin" })
       const alice = await w.user("alice")
@@ -58,7 +60,7 @@ describe("admin alert channels", () => {
       const dms = (obs.discord as { route: string }[]).filter((d) => d.route.includes("/messages")).length
       expect({ channels: [...new Set(lines)].filter((l) => l !== "discord").sort(), dms }).toEqual({
         channels: (channels as string[])
-          .filter((c) => c !== "discord_dm")
+          .filter((c) => c !== "discord_dm" && c !== "email")
           .sort(),
         dms: (channels as string[]).includes("discord_dm") ? 1 : 0,
       })
@@ -87,12 +89,23 @@ describe("admin alert channels", () => {
         "summary": [
           "in_app  user:alice admin_alert (alert:in_app+push+email+discord_dm)",
           "push    push:alice [admin_alert] Maintenance",
-          "email   alice@example.test Admin Alert",
           "discord POST /users/@me/channels",
           "discord POST /channels/dm-discord:alice/messages",
         ],
       }
     `)
+  })
+
+  it("email: on by default, off for a user who turned it off or unsubscribed", async () => {
+    const admin = await w.user("admin", { role: "admin" })
+    await w.user("alice")
+    const bob = await w.user("bob")
+    await w.emailPref(bob, "admin_alert", false)
+
+    await notificationService.createAdminAlertNotification(await alert(admin.user_id, ["in_app", "email"]))
+
+    const lines = w.summary(await w.observe()).filter((l) => l.startsWith("email"))
+    expect(lines).toEqual(["email   alice@example.test Admin Alert"])
   })
 
   it("isolation: delivered while acting as a test account, it reaches no real user on any channel", async () => {

@@ -12,16 +12,18 @@
  * before (no inheritance from the personal settings).
  */
 import { getKnex } from "../../clients/database/knex-db.js"
-import { CATALOG, CATEGORIES, isMandatory, type CategoryId, type EventDefinition, type EventKey } from "./catalog.js"
+import { CATALOG, CATEGORIES, isMandatoryOn, type CategoryId, type EventDefinition, type EventKey } from "./catalog.js"
 import type { UserChannel } from "./channels.js"
 import { actionTypeId, recipientKey, resolvePreferences } from "./preferences.js"
 
 /** Channels a user can switch for an event (in-app is always on except for price alerts, as today). */
 export function editableChannels(event: EventKey): UserChannel[] {
   const def: EventDefinition = CATALOG[event]
-  if (isMandatory(def)) return []
   return def.channels.filter(
-    (c) => (c !== "in_app" || event === "watchlist.price_alert") && !(c === "discord_dm" && def.discordDmLocked),
+    (c) =>
+      !isMandatoryOn(def, c) &&
+      (c !== "in_app" || event === "watchlist.price_alert") &&
+      !(c === "discord_dm" && def.discordDmLocked),
   )
 }
 
@@ -73,7 +75,7 @@ export async function getMatrix(userId: string, contractorId: string | null): Pr
       events.push({
         event,
         cells: def.channels.map((c) => {
-          const mandatory = isMandatory(def)
+          const mandatory = isMandatoryOn(def, c)
           const reason: MatrixCell["reason"] = mandatory || (c === "in_app" && !editable.includes(c))
             ? "always_on"
             : c === "discord_dm" && def.discordDmLocked

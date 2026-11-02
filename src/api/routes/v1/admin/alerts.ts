@@ -184,7 +184,7 @@ adminOapi.schema("AdminAlertCreate", {
       type: "array",
       items: { type: "string", enum: ["in_app", "push", "email", "discord_dm"] },
       description:
-        "Delivery channels. in_app is always added. Default: in_app and push. Chosen channels ignore user opt-outs; others never send.",
+        "Delivery channels. in_app is always added. Default: in_app and push. Chosen channels ignore user opt-outs except email, which respects the user's email opt-outs and unsubscribes; others never send.",
     },
     confirm_email_all_users: {
       type: "boolean",

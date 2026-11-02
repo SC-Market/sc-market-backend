@@ -20,7 +20,7 @@
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
-import { eventDefinition, isMandatory, type EventKey } from "./catalog.js"
+import { eventDefinition, isMandatoryOn, type EventKey } from "./catalog.js"
 import type {
   DeliveryResult,
   RenderedMessages,
@@ -275,7 +275,7 @@ export async function notify(
             legacyAction: occurrenceAction,
             recipient,
             idempotencyKey: keyOf(d),
-            mandatory: isMandatory(def),
+            mandatory: isMandatoryOn(def, channel),
           })
         } catch (err) {
           outcome = { status: "retryable", error: err instanceof Error ? err.message : String(err) }

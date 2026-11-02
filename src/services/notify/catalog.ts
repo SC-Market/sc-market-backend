@@ -16,21 +16,23 @@
 import type { UserChannel } from "./channels.js"
 
 export const CATEGORIES = {
-  orders: { orgScoped: true, mandatory: false },
-  order_messages: { orgScoped: true, mandatory: false },
-  offers: { orgScoped: true, mandatory: false },
-  offer_messages: { orgScoped: true, mandatory: false },
-  market: { orgScoped: true, mandatory: false },
-  reviews: { orgScoped: true, mandatory: false },
-  watchlist: { orgScoped: false, mandatory: false },
-  org: { orgScoped: false, mandatory: false },
+  orders: { orgScoped: true, mandatory: false, emailMandatory: false },
+  order_messages: { orgScoped: true, mandatory: false, emailMandatory: false },
+  offers: { orgScoped: true, mandatory: false, emailMandatory: false },
+  offer_messages: { orgScoped: true, mandatory: false, emailMandatory: false },
+  market: { orgScoped: true, mandatory: false, emailMandatory: false },
+  reviews: { orgScoped: true, mandatory: false, emailMandatory: false },
+  watchlist: { orgScoped: false, mandatory: false, emailMandatory: false },
+  org: { orgScoped: false, mandatory: false, emailMandatory: false },
   // Activity inside an org you help run (members joining).
-  org_members: { orgScoped: true, mandatory: false },
-  // Owner decision: admin alerts can't be turned off (shown locked on).
-  announcements: { orgScoped: false, mandatory: true },
-  reminders: { orgScoped: false, mandatory: false },
-  contracts: { orgScoped: true, mandatory: false },
-  account: { orgScoped: false, mandatory: true },
+  org_members: { orgScoped: true, mandatory: false, emailMandatory: false },
+  // Owner decision: admin alerts can't be turned off in-app, push or Discord
+  // DM (shown locked on). Owner decision (2026-11-01): their email respects
+  // the user's email opt-outs and unsubscribe links (on by default).
+  announcements: { orgScoped: false, mandatory: true, emailMandatory: false },
+  reminders: { orgScoped: false, mandatory: false, emailMandatory: false },
+  contracts: { orgScoped: true, mandatory: false, emailMandatory: false },
+  account: { orgScoped: false, mandatory: true, emailMandatory: false },
 } as const
 export type CategoryId = keyof typeof CATEGORIES
 
@@ -116,11 +118,12 @@ export const CATALOG = {
   "org.invite": event("org", "contractor_invite", ALL, { email: true }),
   // Owner decision (§8): to members with manage_invites; in-app only by default.
   "org.member_joined": event("org_members", "org_member_joined", ["in_app", "push", "discord_dm"], { push: false }),
-  // Mandatory (category): delivered on in-app and push whatever the preferences.
-  // Owner decision: email too, mandatory like the other channels.
-  // The admin picks the channels per alert (admin_alerts.channels); the chosen
-  // ones ignore opt-outs.
-  "admin.alert": event("announcements", "admin_alert", ALL),
+  // Mandatory (category): delivered in-app, push and Discord DM whatever the
+  // preferences. Email is on by default but respects the user's email
+  // opt-outs and unsubscribes (owner decision 2026-11-01; only legal,
+  // security and dispute emails may ignore them, see emailMandatory).
+  // The admin picks the channels per alert (admin_alerts.channels).
+  "admin.alert": event("announcements", "admin_alert", ALL, { email: true }),
   // Owner decision (2026-11-01): Discord DM on by default (users with Discord
   // linked), email still opt-in. Only this reminder DMs about messages; the
   // order/offer/message events themselves stay DM-locked (DISCORD_DM_LOCKED).
@@ -174,6 +177,18 @@ export function isMandatory(def: EventDefinition): boolean {
   return CATEGORIES[def.category].mandatory
 }
 
+/**
+ * Whether this channel of the event ignores the user's preferences. Email is
+ * forced only for categories marked emailMandatory: owner decision
+ * (2026-11-01), only legal, security and dispute emails may ignore the
+ * user's email opt-outs and unsubscribes. No category sends one today.
+ */
+export function isMandatoryOn(def: EventDefinition, channel: UserChannel): boolean {
+  const category = CATEGORIES[def.category]
+  if (!category.mandatory) return false
+  return channel === "email" ? category.emailMandatory : true
+}
+
 export type EventKey = keyof typeof CATALOG
 
 export function eventDefinition(key: EventKey): EventDefinition {
@@ -190,7 +205,7 @@ export function eventDefinition(key: EventKey): EventDefinition {
 export function emailDefaultFor(action: string): { mandatory: boolean; defaultOn: boolean } {
   for (const def of Object.values(CATALOG) as EventDefinition[]) {
     if (def.legacyAction !== action || !def.channels.includes("email")) continue
-    return { mandatory: isMandatory(def), defaultOn: !!def.defaults.email }
+    return { mandatory: isMandatoryOn(def, "email"), defaultOn: !!def.defaults.email }
   }
   return { mandatory: false, defaultOn: false }
 }

@@ -11,7 +11,7 @@
  */
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
-import { CATALOG, CATEGORIES, isMandatory, type CategoryId, type EventDefinition } from "../notify/catalog.js"
+import { CATALOG, isMandatoryOn, type CategoryId, type EventDefinition } from "../notify/catalog.js"
 import { KEY_EMAIL_ACTIONS } from "../notify/email-defaults.js"
 import type { UnsubscribeScope } from "./unsubscribe-token.js"
 
@@ -50,7 +50,7 @@ export function actionsForScope(scope: UnsubscribeScope | { kind: "all" }): stri
   } else if (scope.kind === "key_defaults") {
     actions = [...KEY_EMAIL_ACTIONS]
   } else {
-    actions = defs.filter((d) => !isMandatory(d)).flatMap(actionsOf)
+    actions = defs.filter((d) => !isMandatoryOn(d, "email")).flatMap(actionsOf)
   }
   return [...new Set(actions)]
 }
@@ -76,7 +76,12 @@ export async function applyUnsubscribe(
   db: Knex = getKnex(),
 ): Promise<UnsubscribeResult> {
   const label = labelForScope(scope)
-  if (scope.kind === "category" && CATEGORIES[scope.category].mandatory) {
+  if (
+    scope.kind === "category" &&
+    (Object.values(CATALOG) as EventDefinition[]).some(
+      (d) => d.category === scope.category && isMandatoryOn(d, "email"),
+    )
+  ) {
     return { turnedOff: 0, label }
   }
   const wanted = actionsForScope(scope)
@@ -122,7 +127,8 @@ export async function applyUnsubscribe(
 
 /**
  * Turn off every notification email the user can turn off: all Personal
- * events, and every org-scoped row they have. Mandatory announcements stay.
+ * events, and every org-scoped row they have (announcements included; only
+ * emailMandatory categories stay).
  */
 export async function applyUnsubscribeAll(userId: string, db: Knex = getKnex()): Promise<UnsubscribeResult> {
   const personal = await applyUnsubscribe(userId, { kind: "all" }, null, db)

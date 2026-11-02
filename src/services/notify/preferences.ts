@@ -20,7 +20,8 @@
  * Org mute (notification_org_mutes, owner decision): for a recipient on an
  * org's side (contractorId set) of an org-scoped category, a mute (until
  * NULL, or still in the future) turns push, email and Discord DM off; in-app
- * stays as resolved. Mandatory events ignore preferences and mutes.
+ * stays as resolved. Mandatory events ignore preferences and mutes, except
+ * on email unless the category is emailMandatory (catalog isMandatoryOn).
  *
  * Lookups are batched: one query per table for all recipients of an event.
  *
@@ -32,7 +33,7 @@
  */
 import { getKnex } from "../../clients/database/knex-db.js"
 import type { UserChannel, UserRecipient } from "./channels.js"
-import { CATEGORIES, isMandatory, type EventDefinition } from "./catalog.js"
+import { CATEGORIES, isMandatory, isMandatoryOn, type EventDefinition } from "./catalog.js"
 
 export type PreferenceMatrix = Map<string, Partial<Record<UserChannel, boolean>>>
 
@@ -109,7 +110,9 @@ async function resolveExplicit(
   const userIds = [...new Set(recipients.map((r) => r.userId))]
   const out: PreferenceMatrix = new Map()
   if (!userIds.length) return out
-  if (isMandatory(def)) {
+  // Mandatory channels are on whatever the rows say; the rest are read below.
+  const forced = channels.filter((c) => isMandatoryOn(def, c))
+  if (forced.length === channels.length) {
     for (const r of recipients) {
       out.set(recipientKey(r), Object.fromEntries(channels.map((c) => [c, true])))
     }
@@ -165,7 +168,7 @@ async function resolveExplicit(
           orgRow?.enabled ??
           (generic as GenericRow[]).find((row) => row.user_id === r.userId && row.channel === channel)?.enabled
       }
-      prefs[c] = value
+      prefs[c] = forced.includes(c) ? true : value
     }
     out.set(recipientKey(r), prefs)
   }

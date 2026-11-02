@@ -25,7 +25,7 @@
  */
 import { createHmac, timingSafeEqual } from "node:crypto"
 import { env } from "../../config/env.js"
-import { CATALOG, CATEGORIES, type CategoryId, type EventDefinition } from "../notify/catalog.js"
+import { CATALOG, CATEGORIES, isMandatoryOn, type CategoryId, type EventDefinition } from "../notify/catalog.js"
 
 export type UnsubscribeScope =
   | { kind: "category"; category: CategoryId }
@@ -123,12 +123,12 @@ function catalogDefFor(action: string): EventDefinition | undefined {
 /**
  * What the unsubscribe link of an email for `action` turns off: the action's
  * catalog category, or the action alone when it is not in the catalog. Null
- * for mandatory categories (they can't be turned off).
+ * when the category's email can't be turned off (catalog isMandatoryOn).
  */
 export function unsubscribeScopeFor(action: string): UnsubscribeScope | null {
   const def = catalogDefFor(action)
   if (!def) return { kind: "action", action }
-  if (CATEGORIES[def.category].mandatory) return null
+  if (isMandatoryOn(def, "email")) return null
   return { kind: "category", category: def.category }
 }
 

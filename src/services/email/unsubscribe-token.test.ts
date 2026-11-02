@@ -62,8 +62,8 @@ describe("what a link turns off", () => {
     expect(unsubscribeScopeFor("market_item_offer")).toEqual({ kind: "action", action: "market_item_offer" })
   })
 
-  it("is nothing for mandatory announcements (owner decision: can't be turned off)", () => {
-    expect(unsubscribeScopeFor("admin_alert")).toBeNull()
+  it("is the announcements category (owner decision 2026-11-01: announcement emails respect unsubscribes)", () => {
+    expect(unsubscribeScopeFor("admin_alert")).toEqual({ kind: "category", category: "announcements" })
   })
 })
 
@@ -90,11 +90,15 @@ describe("links and RFC 8058 headers", () => {
     expect(verifyUnsubscribeToken(token)?.scope).toEqual({ kind: "category", category: "offers" })
   })
 
-  it("has no unsubscribe link or headers for announcements", () => {
+  it("gives announcements an unsubscribe link and one-click headers", () => {
+    env.BACKEND_URL = "https://api.sc-market.space"
+    env.FRONTEND_URL = "https://sc-market.space"
     env.SESSION_SECRET = SECRET
     const links = unsubscribeLinksFor(USER, "admin_alert", null)
-    expect(links.unsubscribeUrl).toBeUndefined()
-    expect(links.headers).toEqual({})
+    expect(links.unsubscribeUrl).toMatch(/^https:\/\/sc-market\.space\/email\/unsubscribe\/u1\./)
+    const token = links.unsubscribeUrl!.split("/").pop()!
+    expect(links.headers["List-Unsubscribe-Post"]).toBe("List-Unsubscribe=One-Click")
+    expect(verifyUnsubscribeToken(token)?.scope).toEqual({ kind: "category", category: "announcements" })
   })
 
   it("sends no List-Unsubscribe header without an https backend URL", () => {

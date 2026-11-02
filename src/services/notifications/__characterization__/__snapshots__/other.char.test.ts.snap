@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`admin_alert (21) > all_users: everyone not banned except the admin who posted it; mandatory (push and email even when turned off) 2`] = `
+exports[`admin_alert (21) > all_users: everyone not banned except the admin who posted it; push mandatory, email respects opt-outs 2`] = `
 {
   "discord": [],
   "discord_queue": [],
@@ -24,35 +24,12 @@ https://sc-market.space/news
 SC Market
 https://sc-market.space
 
+Unsubscribe:
+https://sc-market.space/email/unsubscribe/<token>
 Manage Preferences:
 https://sc-market.space/settings?tab=email",
       "to": [
         "alice@example.test",
-      ],
-    },
-    {
-      "html_length_bucket": 3500,
-      "subject": "Admin Alert",
-      "text": "SC Market
-https://sc-market.space
-
-Admin Alert Hello
-Bob, You have a new admin alert:
-
-Maintenance
-Down at 10:00
-
-View Alert:
-https://sc-market.space/news
-
----
-SC Market
-https://sc-market.space
-
-Manage Preferences:
-https://sc-market.space/settings?tab=email",
-      "to": [
-        "bob@example.test",
       ],
     },
   ],
@@ -86,38 +63,6 @@ https://sc-market.space/settings?tab=email",
           "contractorId": null,
         },
         "userId": "user:alice",
-      },
-      "type": "notification_email",
-    },
-    {
-      "metadata": {
-        "created_at": "<ts>",
-        "priority": "normal",
-      },
-      "payload": {
-        "data": {
-          "alert": {
-            "active": true,
-            "alert_id": "alert:all_users",
-            "channels": [
-              "in_app",
-              "push",
-              "email",
-            ],
-            "content": "Down at 10:00",
-            "created_at": "<ts>",
-            "created_by": "user:admin",
-            "link": "https://sc-market.space/news",
-            "target_contractor_id": null,
-            "target_type": "all_users",
-            "title": "Maintenance",
-          },
-        },
-        "notificationType": "admin_alert",
-        "preferenceScope": {
-          "contractorId": null,
-        },
-        "userId": "user:bob",
       },
       "type": "notification_email",
     },

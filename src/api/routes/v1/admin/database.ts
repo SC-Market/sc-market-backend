@@ -318,8 +318,9 @@ export async function getUsersForAlertTarget(
 
 /**
  * Audience of an alert before it is sent: recipients (not the posting
- * admin), and how many of them have a verified email or a linked Discord
- * account.
+ * admin), how many of them have a verified email and haven't turned
+ * announcement emails off (Personal scope, as sent), and how many have a
+ * linked Discord account.
  */
 export async function getAlertAudienceCounts(
   targetType: string,
@@ -330,7 +331,20 @@ export async function getAlertAudienceCounts(
   if (!ids.length) return { recipients: 0, verified_emails: 0, discord_linked: 0 }
   const real = ids
   const [emails, discord] = await Promise.all([
-    knex()("user_emails").whereIn("user_id", real).where("email_verified", true).countDistinct({ n: "user_id" }).first(),
+    knex()("user_emails")
+      .whereIn("user_id", real)
+      .where("email_verified", true)
+      .whereNotExists(
+        knex()("email_notification_preferences as p")
+          .join("notification_actions as a", "a.action_type_id", "p.action_type_id")
+          .whereRaw("p.user_id = user_emails.user_id")
+          .where("a.action", "admin_alert")
+          .whereNull("p.contractor_id")
+          .where("p.enabled", false)
+          .select(knex().raw("1")),
+      )
+      .countDistinct({ n: "user_id" })
+      .first(),
     knex()("account_providers")
       .whereIn("user_id", real)
       .where("provider_type", "discord")
