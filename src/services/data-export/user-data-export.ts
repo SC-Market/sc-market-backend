@@ -1223,6 +1223,15 @@ export async function writeUserDataExport(
     ),
   )
   await out.array(
+    "dismissed_hints",
+    all(
+      knex("user_dismissed_hints")
+        .where(me)
+        .orderBy("dismissed_at", "asc")
+        .select("hint_key", "dismissed_at"),
+    ),
+  )
+  await out.array(
     "wishlists",
     all(
       knex("wishlists as w")

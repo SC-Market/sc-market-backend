@@ -274,6 +274,7 @@ describe("P0-6: private per-user prefixes are scoped, retired scopes grant nothi
     ["/price-alerts", "market"],
     ["/contract-alerts", "market"],
     ["/notification-preferences", "notifications"],
+    ["/hints/dismissed", "profile"],
     ["/integrations/scmdb/status", "profile"],
     ["/analytics/seller-stats", "market"],
     ["/analytics/listing-stats", "market"],

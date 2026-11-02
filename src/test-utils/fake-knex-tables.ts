@@ -4,7 +4,8 @@
  *
  * Supported: db.transaction(fn) (runs fn on the same fake; no rollback),
  * db(table).where({...} | col, val).whereIn(col, vals).orderBy(col, dir)
- * .first(...) / .select(...) / .forUpdate() / .update({...}) / .del() / .insert(row | rows).returning("*"), awaiting
+ * .first(...) / .select(...) / .forUpdate() / .update({...}) / .del() / .insert(row | rows).returning("*"),
+ * .insert(...).onConflict(cols).ignore() (skips rows clashing on cols), awaiting
  * a builder yields the matching rows. Anything else is undefined on the
  * builder and fails loudly, so a query shape the fake doesn't model can't
  * pass a test vacuously.
@@ -108,6 +109,23 @@ class FakeBuilder implements PromiseLike<Row[]> {
     this.pendingInsert = list.map((v) => ({ [pk]: `fake-${nextId++}`, ...v }))
     this.rows.push(...this.pendingInsert)
     return this
+  }
+
+  /** Only `.ignore()`: drop pending inserts that clash with an existing row on `columns`. */
+  onConflict(columns: string | string[]): { ignore: () => FakeBuilder } {
+    const cols = Array.isArray(columns) ? columns : [columns]
+    return {
+      ignore: () => {
+        const pending = new Set(this.pendingInsert ?? [])
+        const clashes = (row: Row) =>
+          this.rows.some((r) => !pending.has(r) && cols.every((c) => r[c] === row[c]))
+        const skipped = new Set([...pending].filter(clashes))
+        const kept = this.rows.filter((r) => !skipped.has(r))
+        this.rows.splice(0, this.rows.length, ...kept)
+        this.pendingInsert = (this.pendingInsert ?? []).filter((r) => !skipped.has(r))
+        return this
+      },
+    }
   }
 
   async returning(..._cols: unknown[]): Promise<Row[]> {

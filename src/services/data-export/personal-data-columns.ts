@@ -151,6 +151,7 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "cart_items_v2.user_id": { export: "cart" },
 
   "watchlist_items.user_id": { export: "watchlist" },
+  "user_dismissed_hints.user_id": { export: "dismissed_hints" },
   "wishlists.user_id": { export: "wishlists" },
   "user_blueprint_inventory.user_id": { export: "blueprint_inventory" },
   "crafting_history.user_id": { export: "crafting_history" },

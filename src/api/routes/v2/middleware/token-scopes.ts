@@ -78,6 +78,8 @@ const DOMAIN_PREFIXES: Array<{ prefix: string; domain: string }> = [
   { prefix: "price-alerts", domain: "market" },
   { prefix: "contract-alerts", domain: "market" },
   { prefix: "notification-preferences", domain: "notifications" },
+  // Dismissed inline help hints: per-user UI state, like onboarding.
+  { prefix: "hints", domain: "profile" },
   // Market analytics: price history and quality distribution (public) and the
   // caller's own seller-stats / listing-stats (private). There is no dedicated
   // analytics scope; market:read governs market data.

@@ -6561,6 +6561,41 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DismissedHintsResponse": {
+				"description": "Inline help hints (first-use cards) the signed-in user has dismissed.\nHint keys are chosen by the frontend; a dismissed hint never shows again.",
+				"properties": {
+					"hint_keys": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Keys of every hint this user has dismissed."
+					}
+				},
+				"required": [
+					"hint_keys"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DismissedHint": {
+				"properties": {
+					"hint_key": {
+						"type": "string",
+						"description": "The dismissed hint's key, e.g. \"stock.lots-vs-quantity\"."
+					},
+					"dismissed_at": {
+						"type": "string",
+						"description": "When the user first dismissed it."
+					}
+				},
+				"required": [
+					"hint_key",
+					"dismissed_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HealthResponse": {
 				"properties": {
 					"status": {
@@ -21158,6 +21193,72 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/hints/dismissed": {
+			"get": {
+				"operationId": "GetDismissedHints",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DismissedHintsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Keys of every inline help hint the current user has dismissed",
+				"summary": "List my dismissed hints",
+				"tags": [
+					"Hints"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/hints/dismissed/{hint_key}": {
+			"put": {
+				"operationId": "DismissHint",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DismissedHint"
+								}
+							}
+						}
+					}
+				},
+				"description": "Dismiss an inline help hint for good. Dismissing it again is a no-op.",
+				"summary": "Dismiss a hint",
+				"tags": [
+					"Hints"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Lower-case letters, digits, dots, dashes and underscores (at most 64)",
+						"in": "path",
+						"name": "hint_key",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/health": {

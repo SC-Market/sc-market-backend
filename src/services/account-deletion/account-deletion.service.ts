@@ -317,6 +317,7 @@ async function convertToTombstone(userId: string): Promise<void> {
       ["crafting_history", (db) => db("crafting_history").where("user_id", userId).delete()],
       ["cart_items_v2", (db) => db("cart_items_v2").where("user_id", userId).delete()],
       ["watchlist_items", (db) => db("watchlist_items").where("user_id", userId).delete()],
+      ["user_dismissed_hints", (db) => db("user_dismissed_hints").where("user_id", userId).delete()],
       ["push_subscriptions", (db) => db("push_subscriptions").where("user_id", userId).delete()],
       ["push_notification_preferences", (db) => db("push_notification_preferences").where("user_id", userId).delete()],
       ["email_notification_preferences", (db) => db("email_notification_preferences").where("user_id", userId).delete()],

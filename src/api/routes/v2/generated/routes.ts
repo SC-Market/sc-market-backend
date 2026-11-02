@@ -48,6 +48,8 @@ import { ImportJobsV2Controller } from './../import-jobs/ImportJobsV2Controller.
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImagesV2Controller } from './../images/ImagesV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { HintsV2Controller } from './../hints/HintsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './../health/HealthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GameItemsV2Controller } from './../game-items/GameItemsV2Controller.js';
@@ -2232,6 +2234,23 @@ const models: TsoaRoute.Models = {
         "properties": {
             "resource_id": {"dataType":"string","required":true},
             "url": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DismissedHintsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "hint_keys": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DismissedHint": {
+        "dataType": "refObject",
+        "properties": {
+            "hint_key": {"dataType":"string","required":true},
+            "dismissed_at": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -8597,6 +8616,69 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'uploadImage',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsHintsV2Controller_getDismissedHints: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/hints/dismissed',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(HintsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(HintsV2Controller.prototype.getDismissedHints)),
+
+            async function HintsV2Controller_getDismissedHints(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsHintsV2Controller_getDismissedHints, request, response });
+
+                const controller = new HintsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getDismissedHints',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsHintsV2Controller_dismissHint: Record<string, TsoaRoute.ParameterSchema> = {
+                hint_key: {"in":"path","name":"hint_key","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.put('/hints/dismissed/:hint_key',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(HintsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(HintsV2Controller.prototype.dismissHint)),
+
+            async function HintsV2Controller_dismissHint(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsHintsV2Controller_dismissHint, request, response });
+
+                const controller = new HintsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'dismissHint',
                 controller,
                 response,
                 next,
