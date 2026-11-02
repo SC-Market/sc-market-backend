@@ -9,6 +9,7 @@ export type DiscordInstallSource =
   | "guide"
   | "faq"
   | "footer"
+  | "discord_app"
   | "other"
 
 export interface DiscordInstallClickRequest {

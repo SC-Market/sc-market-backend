@@ -32,6 +32,10 @@ describe("recordInstallClick", () => {
     expect(q.sql).not.toMatch(/user_id|ip|created_at/)
   })
 
+  it("the Developer Portal's custom install link counts as discord_app", () => {
+    expect(clicks.normalizeSource("discord_app")).toBe("discord_app")
+  })
+
   it("an unknown surface counts as other; an unknown type is ignored", async () => {
     tracker.on.insert("discord_install_clicks").response([])
     await clicks.recordInstallClick("server", "<script>")

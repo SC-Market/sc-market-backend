@@ -5588,7 +5588,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DiscordInstallSource": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["settings_notifications"]},{"dataType":"enum","enums":["settings_discord"]},{"dataType":"enum","enums":["org_discord"]},{"dataType":"enum","enums":["shop_dashboard"]},{"dataType":"enum","enums":["shop_settings"]},{"dataType":"enum","enums":["shop_hint"]},{"dataType":"enum","enums":["guide"]},{"dataType":"enum","enums":["faq"]},{"dataType":"enum","enums":["footer"]},{"dataType":"enum","enums":["other"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["settings_notifications"]},{"dataType":"enum","enums":["settings_discord"]},{"dataType":"enum","enums":["org_discord"]},{"dataType":"enum","enums":["shop_dashboard"]},{"dataType":"enum","enums":["shop_settings"]},{"dataType":"enum","enums":["shop_hint"]},{"dataType":"enum","enums":["guide"]},{"dataType":"enum","enums":["faq"]},{"dataType":"enum","enums":["footer"]},{"dataType":"enum","enums":["discord_app"]},{"dataType":"enum","enums":["other"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DiscordInstallClickCount": {

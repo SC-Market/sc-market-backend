@@ -16863,6 +16863,7 @@
 					"guide",
 					"faq",
 					"footer",
+					"discord_app",
 					"other"
 				],
 				"description": "Where an \"Add SC Market to Discord\" link was (services/discord/install-clicks.ts INSTALL_SOURCES)."
