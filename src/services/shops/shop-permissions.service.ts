@@ -52,6 +52,25 @@ export async function canManageShop(
 }
 
 /**
+ * Check if a user can write a shop's stock lots (create, edit, delete, move).
+ *
+ * The owning user, or an org member with manage_market or manage_stock. The
+ * Manage Stock role permission is "Add, edit, and remove stock lots": it
+ * covers lots only, not the listings themselves (those need canManageShop).
+ */
+export async function canManageShopStock(
+  shop: Pick<Shop, "shop_id" | "owner_user_id" | "owner_contractor_id">,
+  userId: string,
+): Promise<boolean> {
+  if (shop.owner_user_id) return shop.owner_user_id === userId
+  if (!shop.owner_contractor_id) return false
+  return (
+    (await has_permission(shop.owner_contractor_id, userId, "manage_market")) ||
+    has_permission(shop.owner_contractor_id, userId, "manage_stock")
+  )
+}
+
+/**
  * Check if a user handles a shop's orders as its seller: the owning user, or
  * an org member with manage_market or manage_orders.
  */

@@ -12,7 +12,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { canModifyListing } from "../util/listing-permissions.js"
+import { canModifyListingStock } from "../util/listing-permissions.js"
 import { is_member } from "../../v1/util/permissions.js"
 import { canViewShopPrivate } from "../../../../services/shops/shop-permissions.service.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
@@ -116,7 +116,7 @@ export class StockLotsV2Controller extends BaseController {
       this.throwNotFound('Listing item', requestBody.item_id)
     }
 
-    if (!(await canModifyListing({ shop_id: item.shop_id }, userId))) {
+    if (!(await canModifyListingStock({ shop_id: item.shop_id }, userId))) {
       this.throwForbidden('You do not have permission to add stock to this listing')
     }
 
@@ -502,7 +502,7 @@ export class StockLotsV2Controller extends BaseController {
         }
 
         // Verify ownership
-        if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) {
+        if (!(await canModifyListingStock({ shop_id: lot.shop_id }, userId))) {
           this.throwForbidden("You do not have permission to update this stock lot")
         }
 
@@ -760,7 +760,7 @@ export class StockLotsV2Controller extends BaseController {
             }
 
             // Verify ownership
-            if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) {
+            if (!(await canModifyListingStock({ shop_id: lot.shop_id }, userId))) {
               results.push({
                 lot_id: update.lot_id,
                 success: false,
@@ -898,7 +898,7 @@ export class StockLotsV2Controller extends BaseController {
       .first()
 
     if (!lot) throw this.throwNotFound("Stock lot", id)
-    if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) throw this.throwForbidden("You do not own this stock lot")
+    if (!(await canModifyListingStock({ shop_id: lot.shop_id }, userId))) throw this.throwForbidden("You do not own this stock lot")
 
     // Units held for open orders would have nowhere to go back to.
     if ((await activeAllocatedByLot(db, [id])).get(id)) {

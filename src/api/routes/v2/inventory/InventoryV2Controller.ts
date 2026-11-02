@@ -230,8 +230,8 @@ export class InventoryV2Controller extends BaseController {
 
     const listing = await knex("listings").where({ listing_id: requestBody.listing_id }).first()
     if (!listing) throw this.throwNotFound("Listing", requestBody.listing_id)
-    const { canModifyListing } = await import("../util/listing-permissions.js")
-    if (!(await canModifyListing({ shop_id: listing.shop_id }, userId))) {
+    const { canModifyListingStock } = await import("../util/listing-permissions.js")
+    if (!(await canModifyListingStock({ shop_id: listing.shop_id }, userId))) {
       throw this.throwForbidden("You don't own this listing")
     }
 

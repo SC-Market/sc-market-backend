@@ -44,7 +44,7 @@ vi.mock("../../../../clients/database/knex-db.js", () => {
   knex.raw = (sql: string) => sql
   return { getKnex: () => knex, database: { knex } }
 })
-vi.mock("../util/listing-permissions.js", () => ({ canModifyListing: async () => true }))
+vi.mock("../util/listing-permissions.js", () => ({ canModifyListingStock: async () => true }))
 vi.mock("../../../../clients/cdn/cdn.js", () => ({ cdn: {} }))
 vi.mock("../../../../services/audit/audit.service.js", () => ({ auditService: {} }))
 
