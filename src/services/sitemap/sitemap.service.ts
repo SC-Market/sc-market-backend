@@ -18,6 +18,12 @@ import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
 import { fetchContentSitemapPages } from "./content-manifest.js"
 import {
+  loadSitemapFileState,
+  saveSitemapFileChanges,
+  type SitemapFileChange,
+  type StoredSitemapFile,
+} from "./sitemap-file-state.js"
+import {
   activeLiveVersion,
   buildHubIndex,
   loadHubRows,
@@ -60,7 +66,7 @@ export interface SitemapSection {
 export interface SitemapFileMeta {
   /** Hash of the file's URL entries: unchanged content keeps its lastmod. */
   hash: string
-  /** When this file's content last changed (or was first built by this process). */
+  /** When this file's content last changed (stored in sitemap_file_state). */
   changedAt: string
   /** The index's <lastmod> for this file (W3C datetime). */
   lastmod: string
@@ -560,12 +566,24 @@ function hashPages(pages: SitemapItemLoose[]): string {
  * - otherwise: when the file's content last changed, i.e. the generation that
  *   first produced these exact entries. A rebuild with the same URLs keeps the
  *   old time, so it isn't "now" on every request or every 6-hour rebuild.
+ *   The hash and time are stored in sitemap_file_state, so a deploy or
+ *   restart keeps them too; `last_changed_at` only moves when the hash does.
+ *   If the table can't be read, this process's previous build is used.
  */
 export async function generateSitemapCache(
   previous: SitemapCache | null = null,
   now: Date = new Date(),
 ): Promise<SitemapCache> {
+  const db = getKnex()
+  let stored: Map<string, StoredSitemapFile> | null = null
+  try {
+    stored = await loadSitemapFileState(db)
+  } catch (error) {
+    logger.error("Failed to load sitemap file state", { error })
+    reportSitemapError(error, "file-state")
+  }
   const { sections, complete } = await collectSitemapSections()
+  const changes: SitemapFileChange[] = []
   const hostname = getSitemapHostname()
   const indexHostname = getSitemapIndexHostname()
   const sitemaps = new Map<string, Buffer>()
@@ -595,8 +613,12 @@ export async function generateSitemapCache(
       const chunk = pages.slice(i * SITEMAP_URL_LIMIT, (i + 1) * SITEMAP_URL_LIMIT)
       const key = `${section.name}-${i}`
       const hash = hashPages(chunk)
-      const before = previous?.files.get(key)
+      const storedFile = stored?.get(key)
+      const before = storedFile ?? previous?.files.get(key)
       const changedAt = before && before.hash === hash ? before.changedAt : generatedAt
+      if (stored && (storedFile?.hash !== hash || storedFile.changedAt !== changedAt)) {
+        changes.push({ key, hash, changedAt })
+      }
       const urlLastmods = chunk.map((page) => (typeof page.lastmod === "string" ? page.lastmod : undefined))
       const lastmod =
         (urlLastmods.every((value) => value !== undefined) && newestLastmod(urlLastmods)) || changedAt
@@ -605,6 +627,17 @@ export async function generateSitemapCache(
       indexEntries.push(
         `<sitemap><loc>${indexHostname}sitemap-${key}.xml</loc><lastmod>${lastmod}</lastmod></sitemap>`,
       )
+    }
+  }
+
+  // Only written when the stored state could be read: never overwrite real
+  // times with this build's guesses.
+  if (stored) {
+    try {
+      await saveSitemapFileChanges(db, changes)
+    } catch (error) {
+      logger.error("Failed to save sitemap file state", { error })
+      reportSitemapError(error, "file-state")
     }
   }
 
