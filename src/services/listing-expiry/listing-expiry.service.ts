@@ -256,20 +256,26 @@ export async function sendExpiryNotices(knex: Knex, stats: ExpiryRunStats, maxSh
   for (const batch of batches) {
     try {
       // Claim first (one notice per listing and expiry): a failure below is
-      // never retried.
-      const claimed: { listing_id: string }[] = await knex("listing_expiry_notices")
-        .insert(
-          batch.listings.map((l) => ({
-            batch_id: batch.batch_id,
-            listing_id: l.listing_id,
-            shop_id: batch.shop_id,
-            expires_at: l.expires_at,
-          })),
-        )
-        .onConflict(["listing_id", "expires_at"])
-        .ignore()
-        .returning("listing_id")
-      const claimedIds = new Set(claimed.map((c) => c.listing_id))
+      // never retried. expires_at is copied in SQL, not round-tripped through
+      // a JS Date: Postgres keeps microseconds, a Date only milliseconds, and
+      // the pause step matches the notice to the listing by exact equality.
+      // The due condition is repeated so a listing renewed since the select
+      // is not claimed for its new date.
+      const claimed: { rows: { listing_id: string }[] } = await knex.raw(
+        `
+        INSERT INTO listing_expiry_notices (batch_id, listing_id, shop_id, expires_at)
+        SELECT ?::uuid, l.listing_id, l.shop_id, l.expires_at
+        FROM listings l
+        WHERE l.listing_id = ANY(?::uuid[])
+          AND l.status = 'active'
+          AND l.expires_at IS NOT NULL
+          AND l.expires_at <= now() + INTERVAL '${NOTICE_DAYS_BEFORE} days'
+        ON CONFLICT (listing_id, expires_at) DO NOTHING
+        RETURNING listing_id
+        `,
+        [batch.batch_id, batch.listings.map((l) => l.listing_id)],
+      )
+      const claimedIds = new Set(claimed.rows.map((c) => c.listing_id))
       batch.listings = batch.listings.filter((l) => claimedIds.has(l.listing_id))
       if (!batch.listings.length) continue
       stats.notice_batches++
@@ -299,25 +305,31 @@ export async function sendExpiryNotices(knex: Knex, stats: ExpiryRunStats, maxSh
 
 /** Step 3: pause expired listings whose notice went out long enough ago. */
 export async function pauseExpired(knex: Knex): Promise<string[]> {
+  // One statement: the notice is matched on the listing's exact expires_at
+  // (microseconds), which a JS Date round trip would lose.
   const result = await knex.raw(`
-    UPDATE listings l
-    SET status = 'expired'
-    WHERE l.status = 'active'
-      AND l.expires_at <= now()
-      AND EXISTS (
-        SELECT 1 FROM listing_expiry_notices n
-        WHERE n.listing_id = l.listing_id
-          AND n.expires_at = l.expires_at
-          AND n.notified_at <= now() - INTERVAL '${MIN_NOTICE_HOURS} hours'
-      )
-    RETURNING l.listing_id, l.expires_at
+    WITH paused AS (
+      UPDATE listings l
+      SET status = 'expired'
+      WHERE l.status = 'active'
+        AND l.expires_at <= now()
+        AND EXISTS (
+          SELECT 1 FROM listing_expiry_notices n
+          WHERE n.listing_id = l.listing_id
+            AND n.expires_at = l.expires_at
+            AND n.notified_at <= now() - INTERVAL '${MIN_NOTICE_HOURS} hours'
+        )
+      RETURNING l.listing_id, l.expires_at
+    ), recorded AS (
+      UPDATE listing_expiry_notices n
+      SET paused_at = now()
+      FROM paused p
+      WHERE n.listing_id = p.listing_id AND n.expires_at = p.expires_at
+      RETURNING n.listing_id
+    )
+    SELECT listing_id FROM paused
   `)
-  const rows: { listing_id: string; expires_at: Date }[] = result?.rows ?? []
-  for (const r of rows) {
-    await knex("listing_expiry_notices")
-      .where({ listing_id: r.listing_id, expires_at: r.expires_at })
-      .update({ paused_at: knex.fn.now() })
-  }
+  const rows: { listing_id: string }[] = result?.rows ?? []
   return rows.map((r) => r.listing_id)
 }
 

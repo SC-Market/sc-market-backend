@@ -148,11 +148,17 @@ describe("dm_reminder (82): unread order/offer message reminder", () => {
   }
   const dmSends = (o: w.Observed) =>
     (o.discord as { method: string; route: string }[]).filter((d) => /\/channels\/.+\/messages$/.test(d.route)).length
-  /** Pretend the last reminder (user and conversations) was `hours` ago. */
-  async function ageReminders(hours: number) {
+  /**
+   * Pretend `hours` have passed: the reminders (user and conversations) and
+   * the messages all move back together, so a reminder still comes after the
+   * message it was about.
+   */
+  async function passTime(hours: number) {
     const db = getKnex()
-    await db("dm_reminder_log").update({ last_reminded_at: db.raw(`NOW() - INTERVAL '${hours} hours'`) })
-    await db("dm_reminder_conversations").update({ reminded_at: db.raw(`NOW() - INTERVAL '${hours} hours'`) })
+    const back = (col: string) => db.raw(`?? - INTERVAL '${hours} hours'`, [col])
+    await db("dm_reminder_log").update({ last_reminded_at: back("last_reminded_at") })
+    await db("dm_reminder_conversations").update({ reminded_at: back("reminded_at") })
+    await db("notification_object").update({ timestamp: back("timestamp") })
   }
 
   it("unread for 6 h and less than a day old: email (opted in) and Discord DM (default on)", async () => {
@@ -214,7 +220,7 @@ describe("dm_reminder (82): unread order/offer message reminder", () => {
     const afterTwoRuns = dmSends(await w.observe())
 
     // A day later, no new message: still nothing.
-    await ageReminders(25)
+    await passTime(25)
     await run()
     const afterADay = dmSends(await w.observe())
 

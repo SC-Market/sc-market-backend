@@ -801,7 +801,7 @@ exports[`order_message (81) > chat messages: coalesced in-app row; the second un
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 3500,
+      "html_length_bucket": 4000,
       "subject": "New Message on Order",
       "text": "SC Market
 https://sc-market.space
@@ -1328,7 +1328,7 @@ exports[`order_status_* (4-7) > assignee sets fulfilled: thread archived 2`] = `
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 3500,
+      "html_length_bucket": 4000,
       "subject": "Order Fulfilled",
       "text": "SC Market
 https://sc-market.space

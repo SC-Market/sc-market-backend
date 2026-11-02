@@ -16,9 +16,16 @@ vi.mock("../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn() },
   external_resource_regex: /^$/,
 }))
-vi.mock("../../clients/database/knex-db.js", () => ({
-  database: { knex: vi.fn() },
-  getKnex: vi.fn(),
+// No database: user notifications go through notify() (mocked below).
+vi.mock("../../clients/database/knex-db.js", async () =>
+  (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(),
+)
+// Orders are live on notify() (services/notify/cutover.ts); it needs the
+// database and is covered by the notification characterization suite. Here
+// only that it is asked, next to the webhooks.
+vi.mock("../notify/dispatcher.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  notify: vi.fn(async () => ({ planned: [], delivered: [], failed: [], duplicate: [] })),
 }))
 vi.mock("../../api/routes/v1/notifications/database.js", () => ({
   getNotificationWebhooksByAction: vi.fn(),
@@ -61,6 +68,7 @@ vi.mock("../../api/util/webhook-ip-guard.js", () => ({
   })),
 }))
 
+const { notify } = await import("../notify/dispatcher.js")
 const notificationDb = await import("../../api/routes/v1/notifications/database.js")
 const orderDb = await import("../../api/routes/v1/orders/database.js")
 const webhookUtil = await import("../../api/routes/v1/util/webhooks.js")
@@ -121,6 +129,7 @@ describe("shop webhook events", () => {
   it("assigning an order sends Order Assigned", async () => {
     await notificationService.createOrderAssignedNotification(order)
     expect(postedTo().sort()).toEqual(["seller-order_assigned", "shop-1-order_assigned"])
+    expect(notify).toHaveBeenCalledWith("order.assigned", expect.anything(), expect.anything())
   })
 
   it("there is no site-wide Public Order Created feed (retired)", async () => {

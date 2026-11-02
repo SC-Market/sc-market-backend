@@ -18,14 +18,9 @@ import { buildSchema } from "../../test-utils/full-schema.js"
 const DB = "pgtest_email_unsubscribe"
 const state: { db: Knex | null } = { db: null }
 
-vi.mock("../../clients/database/knex-db.js", () => ({
-  getKnex: () => state.db,
-  database: {
-    get knex() {
-      return state.db
-    },
-  },
-}))
+vi.mock("../../clients/database/knex-db.js", async () =>
+  (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(() => state.db),
+)
 vi.mock("../../logger/logger.js", () => ({
   default: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }))
@@ -80,16 +75,16 @@ describe.skipIf(!PG_TEST_URL)("key email defaults backfill and unsubscribe (Post
     actionId = new Map(actions.map((a) => [a.action, Number(a.action_type_id)]))
 
     await db("accounts").insert([
-      { user_id: U.fresh, username: "bf_fresh" },
-      { user_id: U.optedOut, username: "bf_optedout" },
-      { user_id: U.partial, username: "bf_partial" },
-      { user_id: U.unverified, username: "bf_unverified" },
-      { user_id: U.banned, username: "bf_banned", banned: true },
-      { user_id: U.deleted, username: "bf_deleted", deleted_at: new Date("2026-09-01") },
-      { user_id: U.test, username: "~testbackfill", is_test: true },
-      { user_id: U.unsubscribed, username: "bf_unsub" },
-      { user_id: U.noEmail, username: "bf_noemail" },
-      { user_id: U.orgOnly, username: "bf_orgonly" },
+      { user_id: U.fresh, username: "bf_fresh", display_name: "bf_fresh" },
+      { user_id: U.optedOut, username: "bf_optedout", display_name: "bf_optedout" },
+      { user_id: U.partial, username: "bf_partial", display_name: "bf_partial" },
+      { user_id: U.unverified, username: "bf_unverified", display_name: "bf_unverified" },
+      { user_id: U.banned, username: "bf_banned", display_name: "bf_banned", banned: true },
+      { user_id: U.deleted, username: "bf_deleted", display_name: "bf_deleted", deleted_at: new Date("2026-09-01") },
+      { user_id: U.test, username: "~testbackfill", display_name: "~testbackfill", is_test: true },
+      { user_id: U.unsubscribed, username: "bf_unsub", display_name: "bf_unsub" },
+      { user_id: U.noEmail, username: "bf_noemail", display_name: "bf_noemail" },
+      { user_id: U.orgOnly, username: "bf_orgonly", display_name: "bf_orgonly" },
     ])
     const verified = [U.fresh, U.optedOut, U.partial, U.banned, U.deleted, U.test, U.unsubscribed, U.orgOnly]
     await db("user_emails").insert([
