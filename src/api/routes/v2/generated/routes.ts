@@ -5298,6 +5298,25 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingListingAge": {
+        "dataType": "refObject",
+        "properties": {
+            "days_30_60": {"dataType":"double","required":true},
+            "days_60_90": {"dataType":"double","required":true},
+            "days_90_plus": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingTopRecipient": {
+        "dataType": "refObject",
+        "properties": {
+            "display_name": {"dataType":"string","required":true},
+            "listings": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "StillSellingLocale": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["en"]},{"dataType":"enum","enums":["de"]},{"dataType":"enum","enums":["es"]},{"dataType":"enum","enums":["fr"]},{"dataType":"enum","enums":["ja"]},{"dataType":"enum","enums":["uk"]},{"dataType":"enum","enums":["zh-CN"]},{"dataType":"enum","enums":["zh-TW"]}],"validators":{}},
@@ -5358,7 +5377,13 @@ const models: TsoaRoute.Models = {
             "kill_switch_env": {"dataType":"string","required":true},
             "enabled": {"dataType":"boolean","required":true},
             "recipients": {"dataType":"double","required":true},
+            "sellers": {"dataType":"double","required":true},
             "listings": {"dataType":"double","required":true},
+            "listing_age": {"ref":"StillSellingListingAge","required":true},
+            "max_recipients": {"dataType":"double","required":true},
+            "max_recipients_env": {"dataType":"string","required":true},
+            "over_cap": {"dataType":"boolean","required":true},
+            "top_recipients": {"dataType":"array","array":{"dataType":"refObject","ref":"StillSellingTopRecipient"},"required":true},
             "sample": {"ref":"StillSellingSampleMessage","required":true},
             "progress": {"ref":"StillSellingProgress","required":true},
             "run": {"ref":"StillSellingRunState","required":true},

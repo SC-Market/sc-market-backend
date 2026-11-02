@@ -14,6 +14,9 @@ import {
   CAMPAIGN,
   INACTIVE_DAYS,
   KILL_SWITCH_ENV,
+  MAX_RECIPIENTS_ENV,
+  maxRecipients,
+  summarize,
   STALE_DAYS,
   campaignEnabled,
   campaignProgress,
@@ -51,14 +54,19 @@ export class AdminStillSellingCampaignController extends BaseController {
     this.request = request
     this.requireAdmin()
     this.setHeader("Cache-Control", "private, no-store")
-    const recipients = await eligibleRecipients()
-    const listings = new Set(recipients.flatMap((r) => r.listing_ids))
+    const summary = summarize(await eligibleRecipients(), maxRecipients())
     return {
       campaign: CAMPAIGN,
       kill_switch_env: KILL_SWITCH_ENV,
       enabled: campaignEnabled(),
-      recipients: recipients.length,
-      listings: listings.size,
+      recipients: summary.recipients,
+      sellers: summary.sellers,
+      listings: summary.listings,
+      listing_age: summary.listing_age,
+      max_recipients: summary.cap,
+      max_recipients_env: MAX_RECIPIENTS_ENV,
+      over_cap: summary.over_cap,
+      top_recipients: summary.top,
       sample: sampleMessage(campaignLocale(locale)),
       progress: await campaignProgress(),
       run: runState(),
@@ -104,11 +112,13 @@ export class AdminStillSellingCampaignController extends BaseController {
         disabled: `Sending is off: set ${KILL_SWITCH_ENV}=true to enable it`,
         running: "A send is already running",
         nothing_to_send: "No one is left to send to",
+        over_cap: `${result.recipients} people are eligible, more than the cap of ${result.cap} (${MAX_RECIPIENTS_ENV}); check the eligibility before raising it`,
         count_changed: `More people are eligible now (${result.recipients}) than confirmed (${expected}); run the dry run again`,
       }
       this.throwConflict(messages[result.reason], {
         reason: result.reason,
         recipients: result.recipients,
+        cap: result.cap,
       })
     }
     return { run: result.state }

@@ -16025,6 +16025,46 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StillSellingListingAge": {
+				"properties": {
+					"days_30_60": {
+						"type": "number",
+						"format": "double"
+					},
+					"days_60_90": {
+						"type": "number",
+						"format": "double"
+					},
+					"days_90_plus": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"days_30_60",
+					"days_60_90",
+					"days_90_plus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingTopRecipient": {
+				"properties": {
+					"display_name": {
+						"type": "string"
+					},
+					"listings": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"display_name",
+					"listings"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"StillSellingLocale": {
 				"type": "string",
 				"enum": [
@@ -16196,10 +16236,38 @@
 						"format": "double",
 						"description": "People the campaign would DM now (not contacted yet, DM-reachable)."
 					},
+					"sellers": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct sellers (users and orgs) behind those people."
+					},
 					"listings": {
 						"type": "number",
 						"format": "double",
-						"description": "Distinct stale listings their DMs would be about."
+						"description": "Distinct stale live listings their DMs would be about."
+					},
+					"listing_age": {
+						"$ref": "#/components/schemas/StillSellingListingAge",
+						"description": "Those listings by days since their last update."
+					},
+					"max_recipients": {
+						"type": "number",
+						"format": "double",
+						"description": "Hard cap on recipients: above it, Send is refused even with the switch on."
+					},
+					"max_recipients_env": {
+						"type": "string"
+					},
+					"over_cap": {
+						"type": "boolean",
+						"description": "More people are eligible than max_recipients."
+					},
+					"top_recipients": {
+						"items": {
+							"$ref": "#/components/schemas/StillSellingTopRecipient"
+						},
+						"type": "array",
+						"description": "The 10 people with the most listings (display name and count only), for a sanity check."
 					},
 					"sample": {
 						"$ref": "#/components/schemas/StillSellingSampleMessage",
@@ -16233,7 +16301,13 @@
 					"kill_switch_env",
 					"enabled",
 					"recipients",
+					"sellers",
 					"listings",
+					"listing_age",
+					"max_recipients",
+					"max_recipients_env",
+					"over_cap",
+					"top_recipients",
 					"sample",
 					"progress",
 					"run",

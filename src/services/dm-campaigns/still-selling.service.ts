@@ -79,6 +79,20 @@ export const KEEP_COOLDOWN_HOURS = 24
 /** At most this many listing titles on the landing page. */
 export const MAX_LISTED = 20
 
+export const MAX_RECIPIENTS_ENV = "STILL_SELLING_MAX_RECIPIENTS"
+export const DEFAULT_MAX_RECIPIENTS = 150
+
+/**
+ * Hard cap on the number of people (STILL_SELLING_MAX_RECIPIENTS, default
+ * 150): when more are eligible, Send is refused even with the switch on.
+ */
+export function maxRecipients(e: NodeJS.ProcessEnv = process.env): number {
+  const raw = e[MAX_RECIPIENTS_ENV]
+  if (raw === undefined || raw.trim() === "") return DEFAULT_MAX_RECIPIENTS
+  const n = Number(raw)
+  return Number.isInteger(n) && n >= 0 ? n : DEFAULT_MAX_RECIPIENTS
+}
+
 /** Read on every check: STILL_SELLING_CAMPAIGN_ENABLED=true turns sending on. */
 export function campaignEnabled(e: NodeJS.ProcessEnv = process.env): boolean {
   return e[KILL_SWITCH_ENV] === "true"
@@ -93,9 +107,35 @@ export interface Candidate {
   user_id: string
   discord_id: string
   locale: string | null
+  display_name?: string | null
   listing_ids: string[]
+  /** listing id -> its updated_at (for the dry run's age buckets). */
+  listing_updated?: Record<string, string | Date>
+  /** The sellers ('u:<user>' / 'c:<org>') the person is contacted for. */
+  seller_keys?: string[]
   newest_update: Date
   shop_slugs: string[]
+}
+
+/**
+ * A listing that is live on the market right now, the only kind that can
+ * make anyone eligible or count in "N listings": status 'active' (not
+ * inactive, sold, expired = paused, or cancelled = archived), visibility
+ * public, not a test shop's, with listed stock (a listed lot with
+ * quantity_total > 0). V2 listings only; V1 market_listings and orders are
+ * not read. Exported for tests.
+ */
+export function liveListingSql(alias: string): string {
+  if (!/^[a-z_][a-z0-9_]*$/i.test(alias))
+    throw new Error(`Invalid alias: ${alias}`)
+  return `${publiclyListedSql(alias)}
+        AND EXISTS (
+          SELECT 1 FROM listing_items li
+          JOIN listing_item_lots lil ON lil.item_id = li.item_id
+          WHERE li.listing_id = ${alias}.listing_id
+            AND lil.listed = true
+            AND lil.quantity_total > 0
+        )`
 }
 
 /**
@@ -115,7 +155,7 @@ export function candidatesSql(campaign = CAMPAIGN): {
              s.owner_user_id, s.owner_contractor_id
       FROM listings l
       JOIN shops s ON s.shop_id = l.shop_id
-      WHERE ${publiclyListedSql("l")}
+      WHERE ${liveListingSql("l")}
         AND s.status = 'active'
         AND (s.owner_user_id IS NOT NULL OR s.owner_contractor_id IS NOT NULL)
         AND l.updated_at < now() - make_interval(days => ?)
@@ -151,7 +191,10 @@ export function candidatesSql(campaign = CAMPAIGN): {
     SELECT c.user_id,
            dp.provider_id AS discord_id,
            a.locale,
+           a.display_name,
            array_agg(DISTINCT st.listing_id) AS listing_ids,
+           jsonb_object_agg(st.listing_id::text, st.updated_at) AS listing_updated,
+           array_agg(DISTINCT c.seller_key) AS seller_keys,
            MAX(st.updated_at) AS newest_update,
            array_agg(DISTINCT st.slug) AS shop_slugs
     FROM contacts c
@@ -172,7 +215,7 @@ export function candidatesSql(campaign = CAMPAIGN): {
         SELECT 1 FROM dm_campaign_recipients r
         WHERE r.campaign = ? AND r.user_id = c.user_id
       )
-    GROUP BY c.user_id, dp.provider_id, a.locale
+    GROUP BY c.user_id, dp.provider_id, a.locale, a.display_name
     ORDER BY c.user_id
   `
   return { sql, bindings: [STALE_DAYS, INACTIVE_DAYS, campaign] }
@@ -192,6 +235,7 @@ export interface CampaignDeps {
   now?: () => Date
   enabled?: () => boolean
   canModify?: (listing: { shop_id: string }, userId: string) => Promise<boolean>
+  maxRecipients?: () => number
 }
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
@@ -213,6 +257,7 @@ function resolve(deps: CampaignDeps) {
     now: deps.now ?? (() => new Date()),
     enabled: deps.enabled ?? (() => campaignEnabled()),
     canModify: deps.canModify ?? canModifyListing,
+    maxRecipients: deps.maxRecipients ?? (() => maxRecipients()),
   }
 }
 
@@ -504,7 +549,13 @@ export type StartResult =
   | { ok: true; state: RunState }
   | {
       ok: false
-      reason: "disabled" | "running" | "count_changed" | "nothing_to_send"
+      reason:
+        | "disabled"
+        | "running"
+        | "count_changed"
+        | "nothing_to_send"
+        | "over_cap"
+      cap?: number
       recipients?: number
     }
 
@@ -522,6 +573,9 @@ export async function startCampaign(
   if (!d.enabled()) return { ok: false, reason: "disabled" }
   if (state.running) return { ok: false, reason: "running" }
   const recipients = (await eligibleRecipients(deps, campaign)).length
+  const cap = d.maxRecipients()
+  if (recipients > cap)
+    return { ok: false, reason: "over_cap", recipients, cap }
   if (recipients === 0)
     return { ok: false, reason: "nothing_to_send", recipients }
   if (recipients > expectedRecipients)
@@ -544,6 +598,65 @@ export async function startCampaign(
 export function requestStop(): RunState {
   if (state.running) state.stopRequested = true
   return runState()
+}
+
+export interface DryRunSummary {
+  recipients: number
+  /** Distinct sellers (users, orgs) behind them. */
+  sellers: number
+  listings: number
+  /** Their listings by days since last update: 30-60, 60-90, 90+. */
+  listing_age: { days_30_60: number; days_60_90: number; days_90_plus: number }
+  cap: number
+  over_cap: boolean
+  /** The 10 people with the most listings: display name and count only. */
+  top: { display_name: string; listings: number }[]
+}
+
+/** The dry run's numbers from the eligible recipients (pure; exported for tests). */
+export function summarize(
+  people: Candidate[],
+  cap: number,
+  now = new Date(),
+): DryRunSummary {
+  const updated = new Map<string, number>()
+  for (const p of people) {
+    for (const id of p.listing_ids) {
+      const at = p.listing_updated?.[id]
+      updated.set(
+        id,
+        at ? new Date(at).getTime() : new Date(p.newest_update).getTime(),
+      )
+    }
+  }
+  const age = { days_30_60: 0, days_60_90: 0, days_90_plus: 0 }
+  for (const t of updated.values()) {
+    const days = (now.getTime() - t) / 86_400_000
+    if (days >= 90) age.days_90_plus++
+    else if (days >= 60) age.days_60_90++
+    else age.days_30_60++
+  }
+  const sellers = new Set(people.flatMap((p) => p.seller_keys ?? []))
+  const top = [...people]
+    .sort(
+      (a, b) =>
+        b.listing_ids.length - a.listing_ids.length ||
+        a.user_id.localeCompare(b.user_id),
+    )
+    .slice(0, 10)
+    .map((p) => ({
+      display_name: p.display_name || "(no display name)",
+      listings: p.listing_ids.length,
+    }))
+  return {
+    recipients: people.length,
+    sellers: sellers.size,
+    listings: updated.size,
+    listing_age: age,
+    cap,
+    over_cap: people.length > cap,
+    top,
+  }
 }
 
 // ---------------------------------------------------------------------------

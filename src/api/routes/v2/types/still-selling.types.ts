@@ -63,6 +63,17 @@ export interface StillSellingRunState {
   sent_this_run: number
 }
 
+export interface StillSellingListingAge {
+  days_30_60: number
+  days_60_90: number
+  days_90_plus: number
+}
+
+export interface StillSellingTopRecipient {
+  display_name: string
+  listings: number
+}
+
 export interface StillSellingDryRun {
   campaign: string
   /** The kill switch: nothing is sent unless this env var is "true". */
@@ -70,8 +81,19 @@ export interface StillSellingDryRun {
   enabled: boolean
   /** People the campaign would DM now (not contacted yet, DM-reachable). */
   recipients: number
-  /** Distinct stale listings their DMs would be about. */
+  /** Distinct sellers (users and orgs) behind those people. */
+  sellers: number
+  /** Distinct stale live listings their DMs would be about. */
   listings: number
+  /** Those listings by days since their last update. */
+  listing_age: StillSellingListingAge
+  /** Hard cap on recipients: above it, Send is refused even with the switch on. */
+  max_recipients: number
+  max_recipients_env: string
+  /** More people are eligible than max_recipients. */
+  over_cap: boolean
+  /** The 10 people with the most listings (display name and count only), for a sanity check. */
+  top_recipients: StillSellingTopRecipient[]
   /** A rendered DM with fake data (3 listings, 2 months) and placeholder links. */
   sample: StillSellingSampleMessage
   progress: StillSellingProgress

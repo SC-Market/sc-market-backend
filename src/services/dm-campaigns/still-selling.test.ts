@@ -303,6 +303,140 @@ describe("throttling", () => {
   })
 })
 
+/** The WHERE of the stale-listings CTE: the only place listings make anyone eligible. */
+function staleWhere(): string {
+  const { sql } = svc.candidatesSql()
+  const cte = sql.slice(
+    sql.indexOf("WITH stale AS"),
+    sql.indexOf("sellers AS ("),
+  )
+  return cte.slice(cte.indexOf("WHERE"))
+}
+
+describe("eligibility: only live listings count", () => {
+  it("requires status 'active' and nothing else (one status test, no OR / IN)", () => {
+    const where = staleWhere()
+    expect(where.match(/l\.status\s*(=|IN|<>|!=)/g)).toEqual(["l.status ="])
+    expect(where).toMatch(/l\.status = 'active'/)
+    expect(where).not.toMatch(/\bOR\s+l\.status|l\.status\s+IN/i)
+  })
+
+  it.each(["inactive", "sold", "expired", "cancelled", "archived", "paused"])(
+    "a %s listing can't make anyone eligible or count in N",
+    (status) => {
+      // The only status the predicate accepts is 'active'; no other status
+      // value appears anywhere in the eligibility query.
+      const { sql } = svc.candidatesSql()
+      expect(sql).not.toContain(`'${status}'`)
+      expect(staleWhere()).toMatch(/l\.status = 'active'/)
+    },
+  )
+
+  it.each(["private", "unlisted"])(
+    "a %s listing doesn't count (public only)",
+    (visibility) => {
+      expect(staleWhere()).toMatch(/l\.visibility = 'public'/)
+      expect(svc.candidatesSql().sql).not.toContain(`'${visibility}'`)
+    },
+  )
+
+  it("needs listed stock: a listed lot with quantity_total > 0", () => {
+    const where = staleWhere()
+    expect(where).toMatch(
+      /EXISTS \(\s*SELECT 1 FROM listing_items li\s+JOIN listing_item_lots lil ON lil\.item_id = li\.item_id\s+WHERE li\.listing_id = l\.listing_id\s+AND lil\.listed = true\s+AND lil\.quantity_total > 0/,
+    )
+  })
+
+  it("staleness is measured on those live listings, test shops and test orgs out", () => {
+    const where = staleWhere()
+    expect(where).toMatch(
+      /l\.updated_at < now\(\) - make_interval\(days => \?\)/,
+    )
+    expect(where).toMatch(/_ts\.is_test/)
+    expect(where).toMatch(/c\.is_test/)
+    // The N in the DM and the listing ids come only from that CTE.
+    const { sql } = svc.candidatesSql()
+    expect(sql).toMatch(/array_agg\(DISTINCT st\.listing_id\) AS listing_ids/)
+    expect(sql).toMatch(/JOIN stale st ON st\.seller_key = c\.seller_key/)
+  })
+
+  it("reads V2 listings only: no V1 market tables, no orders", () => {
+    const { sql } = svc.candidatesSql()
+    for (const t of [
+      "market_listings",
+      "market_unique_listings",
+      "market_orders",
+      "orders",
+      "offer_sessions",
+    ]) {
+      expect(sql).not.toMatch(new RegExp(`\\b${t}\\b`))
+    }
+    expect(sql).toMatch(/FROM listings l/)
+  })
+})
+
+describe("hard cap", () => {
+  it(`${"STILL_SELLING_MAX_RECIPIENTS"}: default 150, a non-negative integer otherwise`, () => {
+    expect(svc.maxRecipients({})).toBe(150)
+    expect(svc.maxRecipients({ STILL_SELLING_MAX_RECIPIENTS: "40" })).toBe(40)
+    expect(svc.maxRecipients({ STILL_SELLING_MAX_RECIPIENTS: "lots" })).toBe(
+      150,
+    )
+    expect(svc.maxRecipients({ STILL_SELLING_MAX_RECIPIENTS: "-1" })).toBe(150)
+  })
+
+  it("more eligible than the cap: Send is refused even with the switch on", async () => {
+    simulateCampaignTable([1, 2, 3, 4].map(candidate))
+    const send = vi.fn()
+    const r = await svc.startCampaign(100, {
+      reachable: everyoneReachable,
+      send,
+      enabled: () => true,
+      maxRecipients: () => 3,
+    })
+    expect(r).toEqual({ ok: false, reason: "over_cap", recipients: 4, cap: 3 })
+    expect(send).not.toHaveBeenCalled()
+    expect(svc.runState().running).toBe(false)
+  })
+})
+
+describe("dry run summary", () => {
+  it("sellers, listings by age, cap warning and the 10 largest by display name", () => {
+    const day = 86_400_000
+    const at = (d: number) => new Date(NOW.getTime() - d * day).toISOString()
+    const people = Array.from({ length: 12 }, (_, i) => ({
+      ...candidate(i + 1),
+      display_name: `Seller ${i + 1}`,
+      listing_ids: Array.from({ length: i + 1 }, (_, j) => `l-${i}-${j}`),
+      listing_updated: Object.fromEntries(
+        Array.from({ length: i + 1 }, (_, j) => [
+          `l-${i}-${j}`,
+          at(j % 3 === 0 ? 45 : j % 3 === 1 ? 75 : 200),
+        ]),
+      ),
+      seller_keys: [i < 2 ? "c:org" : `u:${i}`],
+    }))
+    const s = svc.summarize(people, 10, NOW)
+    expect(s.recipients).toBe(12)
+    expect(s.sellers).toBe(11) // two org members, one org
+    expect(s.listings).toBe(78)
+    expect(
+      s.listing_age.days_30_60 +
+        s.listing_age.days_60_90 +
+        s.listing_age.days_90_plus,
+    ).toBe(78)
+    expect(s.listing_age).toEqual({
+      days_30_60: 30,
+      days_60_90: 26,
+      days_90_plus: 22,
+    })
+    expect(s.over_cap).toBe(true)
+    expect(s.top).toHaveLength(10)
+    expect(s.top[0]).toEqual({ display_name: "Seller 12", listings: 12 })
+    expect(Object.keys(s.top[0]).sort()).toEqual(["display_name", "listings"])
+  })
+})
+
 describe("one DM per person", () => {
   it("the candidates query leaves out anyone already claimed for the campaign", () => {
     const { sql, bindings } = svc.candidatesSql("still_selling_2026_11")
@@ -516,13 +650,11 @@ describe("the links' actions", () => {
   }
 
   beforeEach(() => {
-    tracker.on
-      .select("dm_campaign_recipients")
-      .response({
-        listing_ids: [L1, L2, L3, L4],
-        kept_at: null,
-        paused_at: null,
-      })
+    tracker.on.select("dm_campaign_recipients").response({
+      listing_ids: [L1, L2, L3, L4],
+      kept_at: null,
+      paused_at: null,
+    })
     tracker.on.select("listings").response(listings)
     tracker.on.update("dm_campaign_recipients").response(1)
   })
