@@ -1,4 +1,4 @@
-import { notTestUser } from "../../../../services/test-accounts/isolation.js"
+import { notTestOrder } from "../../../../services/test-accounts/isolation.js"
 /**
  * Order-related database operations.
  * This module contains all database queries specific to orders,
@@ -280,14 +280,15 @@ export async function getOrderStats() {
 /**
  * Get order analytics with optional time range.
  */
-// Admin analytics leave test accounts' orders out (services/test-accounts):
-// every party of an order is in one realm, so the customer decides.
-const REAL_ORDER = notTestUser("orders.customer_id")
-
+// Admin analytics leave out orders involving a test buyer, seller, org or shop
+// (services/test-accounts) unless `includeTest` is set.
 export async function getOrderAnalytics(options?: {
   startTime?: number
   endTime?: number
+  includeTest?: boolean
 }) {
+  const REAL_ORDER = options?.includeTest ? "TRUE" : notTestOrder("orders")
+  const REAL_O = options?.includeTest ? "TRUE" : notTestOrder("o")
   // Build time filter query builder
   const buildTimeFilter = (query: any) => {
     if (options?.startTime && options?.endTime) {
@@ -404,7 +405,7 @@ export async function getOrderAnalytics(options?: {
   const topShops = await knex()("orders as o")
     .join("shops as s", "o.shop_id", "s.shop_id")
     .whereNotNull("o.shop_id")
-    .whereRaw(notTestUser("o.customer_id"))
+    .whereRaw(REAL_O)
     .select(
       "s.name",
       "s.slug",
@@ -421,7 +422,7 @@ export async function getOrderAnalytics(options?: {
   // Get top users by fulfilled orders
   const topUsers = await knex()("orders as o")
     .join("accounts as a", "o.customer_id", "a.user_id")
-    .where("a.is_test", false)
+    .whereRaw(REAL_O)
     .select(
       "a.username",
       knex().raw(

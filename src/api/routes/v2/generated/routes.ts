@@ -110,6 +110,8 @@ import { AdminStillSellingCampaignController } from './../admin/AdminStillSellin
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminSellerReachabilityController } from './../admin/AdminSellerReachabilityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminOrdersV2Controller } from './../admin/AdminOrdersV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminIdentityController } from './../admin/AdminIdentityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminController } from './../admin/AdminController.js';
@@ -5611,6 +5613,170 @@ const models: TsoaRoute.Models = {
             "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivered_window_days":{"dataType":"double","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_user_install_counts_as_dm":{"dataType":"boolean","required":true},"discord_shared_server_fresh_days":{"dataType":"double","required":true},"discord_shared_server_checked_at":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"discord_dm_closed_code":{"dataType":"double","required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
             "email_category": {"dataType":"enum","enums":["announcements"],"required":true},
             "install_clicks": {"dataType":"array","array":{"dataType":"refObject","ref":"DiscordInstallClickCount"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderCounts": {
+        "dataType": "refObject",
+        "properties": {
+            "fulfilled": {"dataType":"double","required":true},
+            "in-progress": {"dataType":"double","required":true},
+            "not-started": {"dataType":"double","required":true},
+            "cancelled": {"dataType":"double","required":true},
+            "unassigned": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderRating": {
+        "dataType": "refObject",
+        "properties": {
+            "avg_rating": {"dataType":"double","required":true},
+            "rating_count": {"dataType":"double","required":true},
+            "total_rating": {"dataType":"double","required":true},
+            "streak": {"dataType":"double","required":true},
+            "total_orders": {"dataType":"double"},
+            "response_rate": {"dataType":"double"},
+            "total_assignments": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderContractor": {
+        "dataType": "refObject",
+        "properties": {
+            "spectrum_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "avatar": {"dataType":"string","required":true},
+            "rating": {"ref":"AdminOrderRating","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderUser": {
+        "dataType": "refObject",
+        "properties": {
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "avatar": {"dataType":"string","required":true},
+            "rating": {"ref":"AdminOrderRating","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderShop": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderStatus": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["fulfilled"]},{"dataType":"enum","enums":["in-progress"]},{"dataType":"enum","enums":["not-started"]},{"dataType":"enum","enums":["cancelled"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderStub": {
+        "dataType": "refObject",
+        "properties": {
+            "order_id": {"dataType":"string","required":true},
+            "contractor": {"dataType":"union","subSchemas":[{"ref":"AdminOrderContractor"},{"dataType":"enum","enums":[null]}],"required":true},
+            "assigned_to": {"dataType":"union","subSchemas":[{"ref":"AdminOrderUser"},{"dataType":"enum","enums":[null]}],"required":true},
+            "customer": {"ref":"AdminOrderUser","required":true},
+            "shop": {"dataType":"union","subSchemas":[{"ref":"AdminOrderShop"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"ref":"AdminOrderStatus","required":true},
+            "timestamp": {"dataType":"string","required":true},
+            "service_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "cost": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "kind": {"dataType":"string","required":true},
+            "payment_type": {"dataType":"string","required":true},
+            "count": {"dataType":"double","required":true},
+            "is_test": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrdersPage": {
+        "dataType": "refObject",
+        "properties": {
+            "item_counts": {"ref":"AdminOrderCounts","required":true},
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderStub"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderSearchStatus": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["fulfilled"]},{"dataType":"enum","enums":["in-progress"]},{"dataType":"enum","enums":["not-started"]},{"dataType":"enum","enums":["cancelled"]},{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["past"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderSortMethod": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["title"]},{"dataType":"enum","enums":["customer_name"]},{"dataType":"enum","enums":["status"]},{"dataType":"enum","enums":["timestamp"]},{"dataType":"enum","enums":["contractor_name"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderPeriodTotals": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "in_progress": {"dataType":"double","required":true},
+            "fulfilled": {"dataType":"double","required":true},
+            "cancelled": {"dataType":"double","required":true},
+            "not_started": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderMonthTotals": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "in_progress": {"dataType":"double","required":true},
+            "fulfilled": {"dataType":"double","required":true},
+            "cancelled": {"dataType":"double","required":true},
+            "not_started": {"dataType":"double","required":true},
+            "average_fulfilled_value": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderTopShop": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "fulfilled_orders": {"dataType":"double","required":true},
+            "total_orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderTopUser": {
+        "dataType": "refObject",
+        "properties": {
+            "username": {"dataType":"string","required":true},
+            "fulfilled_orders": {"dataType":"double","required":true},
+            "total_orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminOrderAnalytics": {
+        "dataType": "refObject",
+        "properties": {
+            "daily_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderPeriodTotals"},"required":true},
+            "weekly_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderPeriodTotals"},"required":true},
+            "monthly_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderMonthTotals"},"required":true},
+            "top_shops": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderTopShop"},"required":true},
+            "top_users": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderTopUser"},"required":true},
+            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"total_value":{"dataType":"double","required":true},"completed_orders":{"dataType":"double","required":true},"active_orders":{"dataType":"double","required":true},"total_orders":{"dataType":"double","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -13092,6 +13258,80 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getSellerReachability',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminOrdersV2Controller_listAdminOrders: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                status: {"in":"query","name":"status","ref":"AdminOrderSearchStatus"},
+                unassigned: {"in":"query","name":"unassigned","dataType":"boolean"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                sort_method: {"in":"query","name":"sort_method","ref":"AdminOrderSortMethod"},
+                reverse_sort: {"in":"query","name":"reverse_sort","dataType":"boolean"},
+                buyer_username: {"in":"query","name":"buyer_username","dataType":"string"},
+                seller_username: {"in":"query","name":"seller_username","dataType":"string"},
+                has_market_listings: {"in":"query","name":"has_market_listings","dataType":"boolean"},
+                has_service: {"in":"query","name":"has_service","dataType":"boolean"},
+                include_test: {"in":"query","name":"include_test","dataType":"boolean"},
+        };
+        app.get('/admin/orders',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminOrdersV2Controller.prototype.listAdminOrders)),
+
+            async function AdminOrdersV2Controller_listAdminOrders(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminOrdersV2Controller_listAdminOrders, request, response });
+
+                const controller = new AdminOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'listAdminOrders',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminOrdersV2Controller_getAdminOrderAnalytics: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                include_test: {"in":"query","name":"include_test","dataType":"boolean"},
+        };
+        app.get('/admin/orders/analytics',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminOrdersV2Controller.prototype.getAdminOrderAnalytics)),
+
+            async function AdminOrdersV2Controller_getAdminOrderAnalytics(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminOrdersV2Controller_getAdminOrderAnalytics, request, response });
+
+                const controller = new AdminOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminOrderAnalytics',
                 controller,
                 response,
                 next,

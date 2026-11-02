@@ -102,6 +102,23 @@ export function notTestShop(column: string): string {
 }
 
 /**
+ * An order (or offer session) none of whose parties is in the test realm:
+ * not the buyer (customer_id), the assigned seller (assigned_id), the org
+ * (contractor_id) or the shop (shop_id). `table` is the table name or alias
+ * the query uses for orders ("orders", "o").
+ */
+export function notTestOrder(table: string): string {
+  return [
+    notTestUser(`${table}.customer_id`),
+    notTestUser(`${table}.assigned_id`),
+    notTestContractor(`${table}.contractor_id`),
+    notTestShop(`${table}.shop_id`),
+  ]
+    .map((p) => `(${p})`)
+    .join(" AND ")
+}
+
+/**
  * A polymorphic seller (seller_type "user" | "contractor" | "shop" with one
  * id column). Compares as text, so it works whatever the id column type.
  */

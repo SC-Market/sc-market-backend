@@ -55,6 +55,11 @@ export interface OrderSearchQueryArguments {
    */
   org_scope?: readonly string[] | null
   viewer_id?: string
+  /**
+   * Leave out orders involving a test buyer, seller, org or shop
+   * (services/test-accounts). The admin orders list sets it by default.
+   */
+  exclude_test?: boolean
 }
 
 export interface OrderSearchQuery {

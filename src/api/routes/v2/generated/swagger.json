@@ -17000,6 +17000,489 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AdminOrderCounts": {
+				"description": "Orders matching the filters (status aside), per status.",
+				"properties": {
+					"fulfilled": {
+						"type": "number",
+						"format": "double"
+					},
+					"in-progress": {
+						"type": "number",
+						"format": "double"
+					},
+					"not-started": {
+						"type": "number",
+						"format": "double"
+					},
+					"cancelled": {
+						"type": "number",
+						"format": "double"
+					},
+					"unassigned": {
+						"type": "number",
+						"format": "double",
+						"description": "Active orders with no assigned seller."
+					}
+				},
+				"required": [
+					"fulfilled",
+					"in-progress",
+					"not-started",
+					"cancelled",
+					"unassigned"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderRating": {
+				"description": "Admin › Orders (services/admin-orders): every order on the site and the\norder stats. Orders involving a test buyer, seller, org or shop\n(services/test-accounts) are left out unless include_test is set.",
+				"properties": {
+					"avg_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"streak": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_assignments": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"avg_rating",
+					"rating_count",
+					"total_rating",
+					"streak"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderContractor": {
+				"properties": {
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"rating": {
+						"$ref": "#/components/schemas/AdminOrderRating"
+					}
+				},
+				"required": [
+					"spectrum_id",
+					"name",
+					"avatar",
+					"rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderUser": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"rating": {
+						"$ref": "#/components/schemas/AdminOrderRating"
+					}
+				},
+				"required": [
+					"username",
+					"display_name",
+					"avatar",
+					"rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderShop": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"name",
+					"slug",
+					"avatar"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderStatus": {
+				"type": "string",
+				"enum": [
+					"fulfilled",
+					"in-progress",
+					"not-started",
+					"cancelled"
+				]
+			},
+			"AdminOrderStub": {
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"contractor": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/AdminOrderContractor"
+							}
+						],
+						"nullable": true
+					},
+					"assigned_to": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/AdminOrderUser"
+							}
+						],
+						"nullable": true
+					},
+					"customer": {
+						"$ref": "#/components/schemas/AdminOrderUser"
+					},
+					"shop": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/AdminOrderShop"
+							}
+						],
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/AdminOrderStatus"
+					},
+					"timestamp": {
+						"type": "string",
+						"description": "ISO 8601 creation time."
+					},
+					"service_name": {
+						"type": "string",
+						"nullable": true
+					},
+					"cost": {
+						"type": "string",
+						"description": "aUEC, as a decimal string."
+					},
+					"title": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"payment_type": {
+						"type": "string"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Market items on the order."
+					},
+					"is_test": {
+						"type": "boolean",
+						"description": "The buyer, the assigned seller, the org or the shop is in the test realm."
+					}
+				},
+				"required": [
+					"order_id",
+					"contractor",
+					"assigned_to",
+					"customer",
+					"shop",
+					"status",
+					"timestamp",
+					"service_name",
+					"cost",
+					"title",
+					"kind",
+					"payment_type",
+					"count",
+					"is_test"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrdersPage": {
+				"properties": {
+					"item_counts": {
+						"$ref": "#/components/schemas/AdminOrderCounts"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/AdminOrderStub"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"item_counts",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderSearchStatus": {
+				"type": "string",
+				"enum": [
+					"fulfilled",
+					"in-progress",
+					"not-started",
+					"cancelled",
+					"active",
+					"past"
+				]
+			},
+			"AdminOrderSortMethod": {
+				"type": "string",
+				"enum": [
+					"title",
+					"customer_name",
+					"status",
+					"timestamp",
+					"contractor_name"
+				]
+			},
+			"AdminOrderPeriodTotals": {
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "YYYY-MM-DD, the start of the day, week or month."
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"in_progress": {
+						"type": "number",
+						"format": "double"
+					},
+					"fulfilled": {
+						"type": "number",
+						"format": "double"
+					},
+					"cancelled": {
+						"type": "number",
+						"format": "double"
+					},
+					"not_started": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"total",
+					"in_progress",
+					"fulfilled",
+					"cancelled",
+					"not_started"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderMonthTotals": {
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "YYYY-MM-DD, the start of the day, week or month."
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"in_progress": {
+						"type": "number",
+						"format": "double"
+					},
+					"fulfilled": {
+						"type": "number",
+						"format": "double"
+					},
+					"cancelled": {
+						"type": "number",
+						"format": "double"
+					},
+					"not_started": {
+						"type": "number",
+						"format": "double"
+					},
+					"average_fulfilled_value": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"total",
+					"in_progress",
+					"fulfilled",
+					"cancelled",
+					"not_started",
+					"average_fulfilled_value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderTopShop": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"fulfilled_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"slug",
+					"fulfilled_orders",
+					"total_orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderTopUser": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"fulfilled_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"username",
+					"fulfilled_orders",
+					"total_orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminOrderAnalytics": {
+				"properties": {
+					"daily_totals": {
+						"items": {
+							"$ref": "#/components/schemas/AdminOrderPeriodTotals"
+						},
+						"type": "array",
+						"description": "The last 30 days."
+					},
+					"weekly_totals": {
+						"items": {
+							"$ref": "#/components/schemas/AdminOrderPeriodTotals"
+						},
+						"type": "array",
+						"description": "The last 12 weeks."
+					},
+					"monthly_totals": {
+						"items": {
+							"$ref": "#/components/schemas/AdminOrderMonthTotals"
+						},
+						"type": "array",
+						"description": "The last 12 months."
+					},
+					"top_shops": {
+						"items": {
+							"$ref": "#/components/schemas/AdminOrderTopShop"
+						},
+						"type": "array"
+					},
+					"top_users": {
+						"items": {
+							"$ref": "#/components/schemas/AdminOrderTopUser"
+						},
+						"type": "array"
+					},
+					"summary": {
+						"properties": {
+							"total_value": {
+								"type": "number",
+								"format": "double",
+								"description": "aUEC of fulfilled orders."
+							},
+							"completed_orders": {
+								"type": "number",
+								"format": "double"
+							},
+							"active_orders": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_orders": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"total_value",
+							"completed_orders",
+							"active_orders",
+							"total_orders"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"daily_totals",
+					"weekly_totals",
+					"monthly_totals",
+					"top_shops",
+					"top_users",
+					"summary"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IdentitySearchRow": {
 				"properties": {
 					"user_id": {
@@ -28741,6 +29224,169 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/admin/orders": {
+			"get": {
+				"operationId": "ListAdminOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminOrdersPage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Every order on the site, newest first by default, with per-status counts\nfor the same filters. Orders involving a test buyer, seller, org or shop\nare left out, counts included, unless include_test is true; each order\nsays whether it is a test order.",
+				"summary": "List all orders",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "active: not started or in progress; past: fulfilled or cancelled",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/AdminOrderSearchStatus"
+						}
+					},
+					{
+						"description": "Only active orders with no assigned seller",
+						"in": "query",
+						"name": "unassigned",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "1-based",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_method",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/AdminOrderSortMethod"
+						}
+					},
+					{
+						"in": "query",
+						"name": "reverse_sort",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Partial match on the buyer's username",
+						"in": "query",
+						"name": "buyer_username",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Partial match on the assigned seller's username or the org's Spectrum ID",
+						"in": "query",
+						"name": "seller_username",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "has_market_listings",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "has_service",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Also orders involving test accounts, orgs or shops",
+						"in": "query",
+						"name": "include_test",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/admin/orders/analytics": {
+			"get": {
+				"operationId": "GetAdminOrderAnalytics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminOrderAnalytics"
+								}
+							}
+						}
+					}
+				},
+				"description": "Daily (30 days), weekly (12 weeks) and monthly (12 months) order counts,\nthe top shops and buyers by fulfilled orders, and totals. Orders\ninvolving a test buyer, seller, org or shop are left out unless\ninclude_test is true.",
+				"summary": "Order stats",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Also count orders involving test accounts, orgs or shops",
+						"in": "query",
+						"name": "include_test",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
 			}
 		},
 		"/admin/identity/users": {

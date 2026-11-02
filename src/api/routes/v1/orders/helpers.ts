@@ -1,4 +1,4 @@
-import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
+import { assertSameRealm, notTestOrder } from "../../../../services/test-accounts/isolation.js"
 import { Knex } from "knex"
 import {
   DBAggregateListingComplete,
@@ -1197,7 +1197,7 @@ export async function search_orders(
 }
 
 // Type for the optimized query result with all joined data
-interface OptimizedOrderRow {
+export interface OptimizedOrderRow {
   // Order fields
   order_id: string
   customer_id: string
@@ -1237,6 +1237,9 @@ interface OptimizedOrderRow {
   shop_name: string | null
   shop_slug: string | null
   shop_avatar: string | null
+
+  /** Any party (buyer, assigned seller, org, shop) is in the test realm. */
+  is_test: boolean
 }
 
 // Optimized version that includes all related data in a single query
@@ -1296,6 +1299,8 @@ export async function search_orders_optimized(
             .orWhere("orders.customer_id", viewerId)
         })
       }
+
+      if (args.exclude_test) qd = qd.whereRaw(notTestOrder("orders"))
 
       // Buyer username filter (partial match)
       if (args.buyer_username) {
@@ -1506,6 +1511,10 @@ export async function search_orders_optimized(
       "shops.name as shop_name",
       "shops.slug as shop_slug",
       "shops.logo as shop_avatar",
+      // Whether any party is a test account, org or shop (services/test-accounts).
+      database.knex.raw(
+        "(COALESCE(customer_account.is_test, false) OR COALESCE(assigned_account.is_test, false) OR COALESCE(contractors.is_test, false) OR COALESCE(shops.is_test, false)) AS is_test",
+      ),
     )
     .groupBy(
       "orders.order_id",
