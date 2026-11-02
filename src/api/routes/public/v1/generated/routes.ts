@@ -371,7 +371,6 @@ const models: TsoaRoute.Models = {
             "display_name": {"dataType":"string","required":true},
             "rating": {"ref":"Rating","required":true},
             "badges": {"dataType":"union","subSchemas":[{"ref":"BadgeData"},{"dataType":"enum","enums":[null]}]},
-            "last_seen": {"dataType":"datetime"},
             "in_game": {"dataType":"boolean"},
         },
         "additionalProperties": false,
@@ -385,7 +384,6 @@ const models: TsoaRoute.Models = {
             "avatar": {"dataType":"string","required":true},
             "rating": {"ref":"Rating","required":true},
             "badges": {"dataType":"union","subSchemas":[{"ref":"BadgeData"},{"dataType":"enum","enums":[null]}]},
-            "last_seen": {"dataType":"datetime"},
             "members_online": {"dataType":"double"},
         },
         "additionalProperties": false,
@@ -630,6 +628,27 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LastSeenBucket": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["today"]},{"dataType":"enum","enums":["this_week"]},{"dataType":"enum","enums":["this_month"]},{"dataType":"enum","enums":["over_a_month"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReplyTimeBucket": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["within_hour"]},{"dataType":"enum","enums":["within_hours"]},{"dataType":"enum","enums":["within_day"]},{"dataType":"enum","enums":["within_days"]},{"dataType":"enum","enums":["slow"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SellerActivity": {
+        "dataType": "refObject",
+        "properties": {
+            "last_seen": {"dataType":"union","subSchemas":[{"ref":"LastSeenBucket"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reply_time": {"dataType":"union","subSchemas":[{"ref":"ReplyTimeBucket"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reply_sample_size": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "completed_orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SellerInfo": {
         "dataType": "refObject",
         "properties": {
@@ -639,6 +658,7 @@ const models: TsoaRoute.Models = {
             "rating": {"dataType":"double","required":true},
             "logo_url": {"dataType":"string"},
             "languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "activity": {"ref":"SellerActivity"},
         },
         "additionalProperties": false,
     },

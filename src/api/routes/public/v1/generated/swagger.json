@@ -1087,10 +1087,6 @@
 						],
 						"nullable": true
 					},
-					"last_seen": {
-						"type": "string",
-						"format": "date-time"
-					},
 					"in_game": {
 						"type": "boolean"
 					}
@@ -1125,10 +1121,6 @@
 							}
 						],
 						"nullable": true
-					},
-					"last_seen": {
-						"type": "string",
-						"format": "date-time"
 					},
 					"members_online": {
 						"type": "number",
@@ -1921,6 +1913,68 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"LastSeenBucket": {
+				"type": "string",
+				"enum": [
+					"today",
+					"this_week",
+					"this_month",
+					"over_a_month"
+				],
+				"description": "When the seller was last active on SC Market, coarsely."
+			},
+			"ReplyTimeBucket": {
+				"type": "string",
+				"enum": [
+					"within_hour",
+					"within_hours",
+					"within_day",
+					"within_days",
+					"slow"
+				],
+				"description": "Typical (median) time to the seller's first reply in order and offer chats,\nlast 90 days: within an hour, within 6 hours, within a day, within 3 days,\nor slower (including buyers left unanswered)."
+			},
+			"SellerActivity": {
+				"properties": {
+					"last_seen": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/LastSeenBucket"
+							}
+						],
+						"nullable": true,
+						"description": "Coarse last-seen bucket; null if the seller hides it or has no activity yet."
+					},
+					"reply_time": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ReplyTimeBucket"
+							}
+						],
+						"nullable": true,
+						"description": "Typical reply time in order/offer chats; null below the minimum sample size."
+					},
+					"reply_sample_size": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Number of chats the reply time is based on; null when reply_time is null."
+					},
+					"completed_orders": {
+						"type": "number",
+						"format": "double",
+						"description": "Orders this shop has completed."
+					}
+				},
+				"required": [
+					"last_seen",
+					"reply_time",
+					"reply_sample_size",
+					"completed_orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SellerInfo": {
 				"description": "Shop information for a listing's seller",
 				"properties": {
@@ -1951,6 +2005,10 @@
 						},
 						"type": "array",
 						"description": "Shop supported languages (ISO 639-1 codes)"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/SellerActivity",
+						"description": "Seller activity: coarse last seen, typical reply time, completed orders"
 					}
 				},
 				"required": [
