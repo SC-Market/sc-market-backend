@@ -975,50 +975,6 @@ export const get_spectrum_id_members_csv_spec = oapi.validPath({
   security: [],
 })
 
-export const get_spectrum_id_customers_spec = oapi.validPath({
-  summary: "Get Contractor Customers",
-  deprecated: false,
-  description: "",
-  operationId: "getContractorCustomers",
-  tags: ["Contractor", "Contractors"],
-  parameters: [
-    {
-      name: "spectrum_id",
-      in: "path",
-      description: "",
-      required: true,
-      example: "",
-      schema: {
-        type: "string",
-        minLength: 3,
-        maxLength: 50,
-      },
-    },
-  ],
-  responses: {
-    "200": {
-      description: "OK - Successful request with response body",
-      content: {
-        "application/json": {
-          schema: {
-            properties: {
-              data: {
-                type: "array",
-                items: oapi.schema("MinimalUser"), // TODO: Make it full user type
-              },
-            },
-            required: ["data"],
-            type: "object",
-            title: "SearchContractorMembersOk",
-          },
-        },
-      },
-      headers: {},
-    },
-    "404": Response404,
-  },
-})
-
 export const get_spectrum_id_reviews_spec = oapi.validPath({
   summary: "Get contractor reviews",
   deprecated: false,

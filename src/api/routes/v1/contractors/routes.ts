@@ -38,7 +38,6 @@ import {
   get_spectrum_id,
   get_spectrum_id_audit_logs,
   get_spectrum_id_blocklist,
-  get_spectrum_id_customers,
   get_spectrum_id_invites,
   get_spectrum_id_members,
   get_spectrum_id_members_csv,
@@ -84,7 +83,6 @@ import {
   get_search_query_spec,
   get_spectrum_id_audit_logs_spec,
   get_spectrum_id_blocklist_spec,
-  get_spectrum_id_customers_spec,
   get_spectrum_id_invites_spec,
   get_spectrum_id_members_csv_spec,
   get_spectrum_id_members_search_query_spec,
@@ -181,16 +179,6 @@ contractorsRouter.get(
   valid_contractor,
   requireContractorAccessFromSpectrumId(),
   get_spectrum_id_members_csv,
-)
-
-contractorsRouter.get(
-  "/:spectrum_id/customers",
-  userAuthorized,
-  requireContractorsRead,
-  get_spectrum_id_customers_spec,
-  readRateLimit,
-  valid_contractor,
-  get_spectrum_id_customers,
 )
 
 contractorsRouter.get(

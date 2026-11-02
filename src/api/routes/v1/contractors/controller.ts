@@ -577,47 +577,6 @@ export const get_spectrum_id_members_csv: RequestHandler = async (
     .json(members.map((m) => m.username).join("\n"))
 }
 
-export const get_spectrum_id_customers: RequestHandler = async (req, res) => {
-  const user = req.user as User
-  const contractor: Contractor = req.contractor!
-
-  const contractors = await contractorDb.getUserContractors({
-    "contractor_members.user_id": user.user_id,
-  })
-
-  const unrelated =
-    contractors.filter((c) => c.contractor_id === contractor!.contractor_id)
-      .length === 0
-  if (unrelated) {
-    res
-      .status(403)
-      .json(
-        createForbiddenErrorResponse(
-          "You are not authorized to view this data",
-        ),
-      )
-    return
-  }
-  if (!(await tokenMayUseOrg(req, res, contractor.contractor_id))) return
-
-  const customers = await contractorDb.getContractorCustomers(
-    contractor.contractor_id,
-  )
-  res.json(
-    await Promise.all(
-      customers.map(async (customer) => {
-        const prof = await profileDb.getMinimalUser({
-          user_id: customer.user_id,
-        })
-        return {
-          ...prof,
-          spent: customer.spent,
-        }
-      }),
-    ),
-  )
-}
-
 export const get_spectrum_id_reviews: RequestHandler = async (
   req,
   res,

@@ -805,21 +805,6 @@ export async function getMembersWithMatchingRole(
 }
 
 /**
- * Get contractor customers (users who have placed orders with this contractor).
- */
-export async function getContractorCustomers(contractor_id: string): Promise<
-  (DBUser & {
-    spent: number
-  })[]
-> {
-  return knex()<DBUser & { spent: number }>("accounts")
-    .join("orders", "accounts.user_id", "=", "orders.customer_id")
-    .where({ "orders.contractor_id": contractor_id })
-    .groupBy("accounts.user_id")
-    .select("accounts.*", knex().raw("SUM(orders.cost) as spent"))
-}
-
-/**
  * Get contractor reviews.
  */
 export async function getContractorReviews(
