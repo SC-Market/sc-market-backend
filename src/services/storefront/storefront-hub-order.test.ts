@@ -19,13 +19,13 @@ const storefront = await import("./storefront.js")
 const ranking = await import("../seller-activity/seller-ranking.js")
 
 const pg = knexFactory({ client: "pg" })
-const built = () => storefront.storefrontCardsQuery(pg).toSQL()
+const built = () => storefront.storefrontCardsQuery(pg, { limit: 24, offset: 48 }).toSQL()
 
-/** The query's ORDER BY clause (without the LIMIT). */
+/** The query's ORDER BY clause (without the LIMIT / OFFSET). */
 function orderBy(sql: string): string {
   const at = sql.lastIndexOf(" order by ")
   expect(at, "the hub query has an ORDER BY").toBeGreaterThan(0)
-  return sql.slice(at + " order by ".length).replace(/ limit \?$/, "")
+  return sql.slice(at + " order by ".length).replace(/ limit \? offset \?$/, "")
 }
 
 /** Splits an ORDER BY clause into its top-level items. */
@@ -62,12 +62,9 @@ describe("hub ordering SQL", () => {
     ])
   })
 
-  it("binds the showcase orgs in their order and caps the hub", () => {
-    expect(bindings.slice(-3)).toEqual([
-      ...storefront.SHOWCASE_STOREFRONTS,
-      storefront.MAX_STOREFRONT_CARDS,
-    ])
-    expect(sql).toMatch(/ limit \?$/)
+  it("binds the showcase orgs in their order, then the page's limit and offset", () => {
+    expect(bindings.slice(-4)).toEqual([...storefront.SHOWCASE_STOREFRONTS, 24, 48])
+    expect(sql).toMatch(/ limit \? offset \?$/)
   })
 
   it("ends on contractor_id, the unique key (deterministic for SSR, prerender and client)", () => {
@@ -153,12 +150,14 @@ describe("listStorefrontCards", () => {
 
   it("returns the cards in the query's order, stale ones included (no re-sort, no filter)", async () => {
     // The query put the stale ZETA (more orders) after the fresh ALPHA.
+    // First match wins: the count and the field lookups also read contractors.
+    tracker.on.select(/^select count\(\*\)/).response([{ count: 3 }])
+    tracker.on.select(/from "contractor_fields"/).response([])
     tracker.on
       .select(/from "contractors" as "c"/)
       .response([row("BWINCORP", 0), row("ALPHA", 1), row("ZETA", 500)])
-    tracker.on.select(/from "contractor_fields"/).response([])
 
-    const cards = await storefront.listStorefrontCards()
+    const { storefronts: cards } = await storefront.listStorefrontCards({ limit: 24, offset: 0 })
 
     expect(cards.map((c) => c.spectrum_id)).toEqual([
       "BWINCORP",
@@ -167,9 +166,11 @@ describe("listStorefrontCards", () => {
     ])
     expect(cards[0].showcase).toBe(true)
     const hub = tracker.history.select.find((q) =>
-      q.sql.includes('from "contractors" as "c"'),
+      q.sql.startsWith('select "c"."contractor_id"'),
     )!
     expect(hub.sql).toContain(storefront.storefrontStaleSql())
-    expect(hub.bindings.at(-1)).toBe(storefront.MAX_STOREFRONT_CARDS)
+    // Page 1: LIMIT 24, no OFFSET (knex leaves out OFFSET 0).
+    expect(hub.sql).toMatch(/ limit \$\d+$/)
+    expect(hub.bindings.at(-1)).toBe(24)
   })
 })

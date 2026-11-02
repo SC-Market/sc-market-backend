@@ -1871,11 +1871,35 @@
 							"$ref": "#/components/schemas/StorefrontCard"
 						},
 						"type": "array",
-						"description": "Showcase orgs first, then by completed orders. At most 60."
+						"description": "This page: showcase orgs first, stale orgs last, then by completed orders."
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Every listed org (with `field`: every one with that field)."
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					},
+					"fields": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Focus chips: the most common fields among all listed orgs, most common first (at most 10)."
 					}
 				},
 				"required": [
-					"storefronts"
+					"storefronts",
+					"total",
+					"page",
+					"page_size",
+					"fields"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -19200,13 +19224,43 @@
 						}
 					}
 				},
-				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting or active service (service-only orgs included), showcase orgs\nfirst, then by completed orders. Read-only and\nanonymous (rate limited in api-router.ts); the frontend prerenders it\nat build time.",
+				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting or active service (service-only orgs included), showcase orgs\nfirst, then by completed orders, a page at a time (the order ends on a\nunique key, so pages never overlap). Read-only and anonymous (rate\nlimited in api-router.ts); the frontend prerenders page 1 at build time.",
 				"summary": "List org storefronts",
 				"tags": [
 					"Contractors"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"description": "Page number, from 1.",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Cards per page (default 24, at most 60).",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Only orgs with this field (one of `fields`).",
+						"in": "query",
+						"name": "field",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/contractors/{spectrum_id}/storefront": {

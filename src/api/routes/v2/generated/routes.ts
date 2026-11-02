@@ -748,6 +748,10 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "storefronts": {"dataType":"array","array":{"dataType":"refObject","ref":"StorefrontCard"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+            "fields": {"dataType":"array","array":{"dataType":"string"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -6924,6 +6928,9 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsOrgStorefrontV2Controller_getStorefronts: Record<string, TsoaRoute.ParameterSchema> = {
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                field: {"in":"query","name":"field","dataType":"string"},
         };
         app.get('/contractors/storefronts',
             ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller)),

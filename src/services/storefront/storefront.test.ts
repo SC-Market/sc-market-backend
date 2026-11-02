@@ -34,7 +34,7 @@ describe("Storefronts hub", async () => {
 
   it("lists orgs with a public listing or an active service in a shown shop, with services counted", async () => {
     const { default: knexFactory } = await import("knex")
-    const sql = storefrontCardsQuery(knexFactory({ client: "pg" })).toSQL().sql
+    const sql = storefrontCardsQuery(knexFactory({ client: "pg" }), { limit: 24, offset: 0 }).toSQL().sql
     expect(sql).toContain(
       "(EXISTS (SELECT 1 FROM listing_search ls WHERE ls.status = 'active' AND ls.visibility = 'public'",
     )

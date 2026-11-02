@@ -300,7 +300,12 @@ export function tagline(description: string | null | undefined): string {
   return line.length > 140 ? `${line.slice(0, 139).trimEnd()}…` : line
 }
 
-export const MAX_STOREFRONT_CARDS = 60
+/** Cards per hub page when the caller sends no page_size (the frontend's STOREFRONTS_PAGE_SIZE). */
+export const STOREFRONTS_DEFAULT_PAGE_SIZE = 24
+/** Largest hub page_size (the hub used to be one page of at most 60). */
+export const STOREFRONTS_MAX_PAGE_SIZE = 60
+/** Focus chips the hub offers: the most common fields among all listed orgs. */
+export const STOREFRONT_HUB_FIELDS = 10
 
 /**
  * Stale storefronts (owner decision 2026-11-02): an org whose freshest
@@ -369,11 +374,14 @@ export function orderStorefrontCards(qb: Knex.QueryBuilder): Knex.QueryBuilder {
     .orderBy("c.contractor_id", "asc")
 }
 
-/** The hub's org query, one row per listed org, in hub order, capped (see listStorefrontCards). */
-export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
-  const { shownShop, listed, offered } = hubSql()
+/**
+ * The orgs the hub lists (alias c), one row each, unordered and without
+ * columns: the filter shared by a page of cards, the total and the focus
+ * chips. `field`: only orgs with that field (contractor_fields).
+ */
+function listedOrgsQuery(db: Knex, field?: string): Knex.QueryBuilder {
+  const { listed, offered } = hubSql()
   const query = db("contractors as c")
-    .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .where("c.archived", false)
     .whereRaw("c.is_test IS NOT TRUE")
     .whereRaw("c.spectrum_id NOT LIKE '~%'")
@@ -382,6 +390,31 @@ export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
     .whereRaw(
       `(EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed}) OR EXISTS (SELECT 1 FROM services sv WHERE ${offered}))`,
     )
+  if (field) {
+    query.whereExists((q) =>
+      q.select(db.raw("1")).from("contractor_fields as cf").whereRaw("cf.contractor_id = c.contractor_id").where("cf.field", field),
+    )
+  }
+  return query
+}
+
+export interface StorefrontPageQuery {
+  /** Cards per page (clamped by the controller, at most STOREFRONTS_MAX_PAGE_SIZE). */
+  limit: number
+  offset: number
+  /** Only orgs with this field. */
+  field?: string
+}
+
+/**
+ * One page of the hub's orgs, one row per org, in hub order
+ * (orderStorefrontCards, which ends on contractor_id, so pages never
+ * overlap or skip an org).
+ */
+export function storefrontCardsQuery(db: Knex, page: StorefrontPageQuery): Knex.QueryBuilder {
+  const { shownShop, listed, offered } = hubSql()
+  const query = listedOrgsQuery(db, page.field)
+    .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .select(
       "c.contractor_id",
       "c.spectrum_id",
@@ -403,7 +436,35 @@ export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
         `(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE ${shownShop}) as rating_count`,
       ),
     )
-  return orderStorefrontCards(query).limit(MAX_STOREFRONT_CARDS)
+  return orderStorefrontCards(query).limit(page.limit).offset(page.offset)
+}
+
+/** How many orgs the hub lists (with `field`: how many have it). */
+export function storefrontCountQuery(db: Knex, field?: string): Knex.QueryBuilder {
+  return listedOrgsQuery(db, field).count({ count: "*" }).first()
+}
+
+/**
+ * The hub's focus chips: the STOREFRONT_HUB_FIELDS most common fields among
+ * every listed org (not just one page), most common first, then by name.
+ */
+export function storefrontFieldsQuery(db: Knex): Knex.QueryBuilder {
+  return db("contractor_fields as cf")
+    .whereIn("cf.contractor_id", listedOrgsQuery(db).select("c.contractor_id"))
+    .groupBy("cf.field")
+    .select("cf.field")
+    .orderByRaw("COUNT(*) DESC")
+    .orderBy("cf.field", "asc")
+    .limit(STOREFRONT_HUB_FIELDS)
+}
+
+export interface StorefrontCardsPage {
+  /** This page's cards, in hub order. */
+  storefronts: StorefrontCard[]
+  /** Every listed org (with the field filter: every one with the field). */
+  total: number
+  /** The focus chips (storefrontFieldsQuery). */
+  fields: string[]
 }
 
 /**
@@ -414,10 +475,17 @@ export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
  * orgs included, owner decision 2026-11-01). Counts and stats only cover the
  * shown shops. Being verified doubles as the hub's anti-impersonation filter.
  * Ordered by the query (orderStorefrontCards): stale orgs rank lower, never
- * hidden.
+ * hidden. Paginated (page.limit / page.offset), with the total and the
+ * focus chips; `page.field` keeps only orgs with that field.
  */
-export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
-  const rows = (await storefrontCardsQuery(db)) as CardRow[]
+export async function listStorefrontCards(
+  page: StorefrontPageQuery,
+  db: Knex = getKnex(),
+): Promise<StorefrontCardsPage> {
+  // One after another: an anonymous read, kept to one pool connection.
+  const rows = (await storefrontCardsQuery(db, page)) as CardRow[]
+  const counted = (await storefrontCountQuery(db, page.field)) as { count: number | string } | undefined
+  const fieldList = (await storefrontFieldsQuery(db)) as { field: string }[]
 
   const ids = rows.map((r) => r.contractor_id)
   const fieldRows: { contractor_id: string; field: string }[] = ids.length
@@ -426,7 +494,7 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
   const fields = new Map<string, string[]>()
   for (const f of fieldRows) fields.set(f.contractor_id, [...(fields.get(f.contractor_id) ?? []), f.field])
 
-  return rows.map((r) => ({
+  const storefronts = rows.map((r) => ({
     spectrum_id: r.spectrum_id,
     name: r.name,
     logo_url: r.logo_url,
@@ -440,4 +508,5 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
     rating_count: num(r.rating_count),
     showcase: SHOWCASE_STOREFRONTS.includes(r.spectrum_id),
   }))
+  return { storefronts, total: num(counted?.count), fields: fieldList.map((f) => f.field) }
 }

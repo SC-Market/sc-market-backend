@@ -3,15 +3,18 @@
  * storefront (its home page, embeds, the Storefronts hub) and the branded
  * storefront unlock status shown in the org's settings.
  */
-import { Body, Get, Path, Put, Request, Route, Security, Tags } from "tsoa"
+import { Body, Get, Path, Put, Query, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { has_permission, is_member } from "../../v1/util/permissions.js"
 import { canViewTestEntity } from "../../../../services/test-accounts/isolation.js"
+import { clampPagination } from "../util/pagination.js"
 import {
   listStorefrontCards,
   loadOrgStorefront,
+  STOREFRONTS_DEFAULT_PAGE_SIZE,
+  STOREFRONTS_MAX_PAGE_SIZE,
   type OrgStorefront,
   type StorefrontCard,
 } from "../../../../services/storefront/storefront.js"
@@ -31,8 +34,14 @@ import {
 } from "../../../../services/storefront/directory.js"
 
 export interface StorefrontsResponse {
-  /** Showcase orgs first, then by completed orders. At most 60. */
+  /** This page: showcase orgs first, stale orgs last, then by completed orders. */
   storefronts: StorefrontCard[]
+  /** Every listed org (with `field`: every one with that field). */
+  total: number
+  page: number
+  page_size: number
+  /** Focus chips: the most common fields among all listed orgs, most common first (at most 10). */
+  fields: string[]
 }
 
 export interface OrgStorefrontStatusResponse {
@@ -83,16 +92,33 @@ export class OrgStorefrontV2Controller extends BaseController {
   /**
    * The Storefronts hub: RSI-verified orgs with at least one public, active
    * listing or active service (service-only orgs included), showcase orgs
-   * first, then by completed orders. Read-only and
-   * anonymous (rate limited in api-router.ts); the frontend prerenders it
-   * at build time.
+   * first, then by completed orders, a page at a time (the order ends on a
+   * unique key, so pages never overlap). Read-only and anonymous (rate
+   * limited in api-router.ts); the frontend prerenders page 1 at build time.
    *
    * @summary List org storefronts
+   * @param page Page number, from 1.
+   * @param page_size Cards per page (default 24, at most 60).
+   * @param field Only orgs with this field (one of `fields`).
    */
   @Get("storefronts")
-  public async getStorefronts(): Promise<StorefrontsResponse> {
+  public async getStorefronts(
+    @Query() page?: number,
+    @Query() page_size?: number,
+    @Query() field?: string,
+  ): Promise<StorefrontsResponse> {
+    const pagination = clampPagination(page, page_size, {
+      defaultPageSize: STOREFRONTS_DEFAULT_PAGE_SIZE,
+      maxPageSize: STOREFRONTS_MAX_PAGE_SIZE,
+    })
+    const onlyField = field?.trim() || undefined
     this.setHeader("Cache-Control", "public, max-age=300")
-    return { storefronts: await listStorefrontCards() }
+    const result = await listStorefrontCards({
+      limit: pagination.page_size,
+      offset: pagination.offset,
+      field: onlyField,
+    })
+    return { ...result, page: pagination.page, page_size: pagination.page_size }
   }
 
   /**
