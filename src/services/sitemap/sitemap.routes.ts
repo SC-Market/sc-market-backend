@@ -1,4 +1,4 @@
-import type { Application } from "express"
+import type { Application, Response } from "express"
 import { gunzipSync } from "node:zlib"
 
 import logger from "../../logger/logger.js"
@@ -19,6 +19,22 @@ Disallow: /api/
 Sitemap: https://api.sc-market.space/sitemap.xml
 `
 
+/**
+ * Browser/CDN lifetime of a sitemap file: an hour, like the main-host proxy's
+ * edge cache (frontend src/bridge/sitemapProxy.ts). The files are rebuilt
+ * every 6 hours, so neither layer can serve one stale for long.
+ */
+export const SITEMAP_CACHE_CONTROL = "public, max-age=3600"
+
+/** Headers for a served sitemap file; Last-Modified lets crawlers send If-Modified-Since. */
+function setSitemapHeaders(res: Response, lastmod: string | undefined): void {
+  res.set("Content-Type", "application/xml; charset=utf-8")
+  res.set("Cross-Origin-Resource-Policy", "cross-origin")
+  res.set("Cache-Control", SITEMAP_CACHE_CONTROL)
+  if (lastmod) res.set("Last-Modified", new Date(lastmod).toUTCString())
+}
+
+// Express answers HEAD with the GET handler (headers only).
 export function setupSitemapRoutes(app: Application): void {
   app.get("/robots.txt", function (_req, res) {
     res.set("Content-Type", "text/plain; charset=utf-8")
@@ -27,10 +43,9 @@ export function setupSitemapRoutes(app: Application): void {
   })
   app.get("/sitemap.xml", async function (_req, res) {
     try {
-      const { index } = await getSitemapCache()
+      const { index, indexLastmod } = await getSitemapCache()
       const xml = gunzipSync(index)
-      res.set("Content-Type", "application/xml; charset=utf-8")
-      res.set("Cross-Origin-Resource-Policy", "cross-origin")
+      setSitemapHeaders(res, indexLastmod)
       res.send(xml)
     } catch (error) {
       logger.error("Error generating sitemap index", { error })
@@ -46,7 +61,14 @@ export function setupSitemapRoutes(app: Application): void {
     }
 
     try {
-      const { sitemaps } = await getSitemapCache()
+      const { sitemaps, files, unavailable } = await getSitemapCache()
+      if (unavailable.has(key)) {
+        // Listed in the index, but its section hasn't built yet: retry soon.
+        res.set("Retry-After", "600")
+        res.set("Cache-Control", "no-store")
+        res.status(503).json({ error: "Sitemap temporarily unavailable" }).end()
+        return
+      }
       const sitemap = sitemaps.get(key)
       if (!sitemap) {
         res.status(404).json({ error: "Sitemap not found" }).end()
@@ -54,8 +76,7 @@ export function setupSitemapRoutes(app: Application): void {
       }
 
       const xml = gunzipSync(sitemap)
-      res.set("Content-Type", "application/xml; charset=utf-8")
-      res.set("Cross-Origin-Resource-Policy", "cross-origin")
+      setSitemapHeaders(res, files.get(key)?.lastmod)
       res.send(xml)
     } catch (error) {
       logger.error("Error generating sitemap file", {

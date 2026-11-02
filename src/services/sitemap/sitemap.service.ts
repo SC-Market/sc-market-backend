@@ -1,4 +1,5 @@
-import { createGzip } from "node:zlib"
+import { createHash } from "node:crypto"
+import { createGzip, gzipSync } from "node:zlib"
 import { createRequire } from "node:module"
 import {
   EnumChangefreq,
@@ -45,18 +46,48 @@ export const SITEMAP_DEGRADED_TTL_MS = 15 * 60 * 1000
 export interface SitemapSection {
   name: string
   pages: SitemapItemLoose[]
+  /**
+   * The section couldn't be fully built this time (its query threw, a section
+   * that always has rows came back empty, one of its sources failed, or the
+   * content manifest was unavailable). Its last good pages are served instead,
+   * else whatever `pages` it did get, else a 503: it never drops out of the
+   * index.
+   */
+  failed?: boolean
+}
+
+/** One sitemap file's <lastmod> and the content it was computed from. */
+export interface SitemapFileMeta {
+  /** Hash of the file's URL entries: unchanged content keeps its lastmod. */
+  hash: string
+  /** When this file's content last changed (or was first built by this process). */
+  changedAt: string
+  /** The index's <lastmod> for this file (W3C datetime). */
+  lastmod: string
 }
 
 export interface SitemapCache {
   index: Buffer
   sitemaps: Map<string, Buffer>
+  /** Per file key (e.g. "wiki-1"): its lastmod, for the index and Last-Modified. */
+  files: Map<string, SitemapFileMeta>
+  /**
+   * Files the index lists that can't be served yet: their section failed with
+   * no earlier copy to fall back on (cold start). They answer 503 so a crawler
+   * retries, instead of the section silently vanishing from the index.
+   */
+  unavailable: Set<string>
+  /** Each section's pages as last built successfully, reused when it fails. */
+  sectionPages: Map<string, SitemapItemLoose[]>
+  /** Newest lastmod in the index (its Last-Modified). */
+  indexLastmod: string | undefined
   /** How long this cache stays fresh (shorter when a source was missing). */
   ttlMs: number
 }
 
 export interface SitemapSections {
   sections: SitemapSection[]
-  /** False when the content manifest couldn't be fetched this time. */
+  /** False when any section failed this time (see SitemapSection.failed). */
   complete: boolean
 }
 
@@ -83,6 +114,21 @@ function reportSitemapError(error: unknown, section: string, subsection?: string
   )
 }
 
+/**
+ * Thrown by a section builder when some of its sources failed: the section is
+ * marked failed, with the pages it did get as a fallback for a cold start.
+ */
+export class PartialSitemapSectionError extends Error {
+  constructor(
+    section: string,
+    readonly pages: SitemapItemLoose[],
+    readonly failedSources: string[],
+  ) {
+    super(`Sitemap section "${section}" is missing ${failedSources.join(", ")}`)
+    this.name = "PartialSitemapSectionError"
+  }
+}
+
 /** Thrown (and reported) when a section that always has rows comes back empty. */
 export class EmptySitemapSectionError extends Error {
   constructor(section: string) {
@@ -105,6 +151,10 @@ export class EmptySitemapSectionError extends Error {
  * missing section. That is how the market section disappeared from the live
  * index (an unqualified column in the test-shop filter matched no rows) with
  * nothing in the logs or BugSnag.
+ *
+ * Either way the section is marked failed rather than dropped: the index keeps
+ * listing it (with its last good pages, or a 503 until it builds), so a crawler
+ * never reads an index with sections missing.
  */
 async function collectSection(
   sections: SitemapSection[],
@@ -116,14 +166,22 @@ async function collectSection(
   try {
     pages = await build()
   } catch (error) {
+    if (error instanceof PartialSitemapSectionError) {
+      // Each failed source was already reported by name.
+      sections.push({ name, pages: error.pages, failed: true })
+      return
+    }
     logger.error("Failed to build sitemap section", { section: name, error })
     reportSitemapError(error, name)
+    sections.push({ name, pages: [], failed: true })
     return
   }
   if (pages.length === 0 && options.expectRows) {
     const error = new EmptySitemapSectionError(name)
     logger.error("Sitemap section is empty", { section: name })
     reportSitemapError(error, name)
+    sections.push({ name, pages, failed: true })
+    return
   }
   sections.push({ name, pages })
 }
@@ -339,9 +397,9 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   // Each source fails (or comes back empty) on its own, reported by name.
   const wikiQueries: { name: string; run: () => Promise<number> }[] = [
     { name: "missions", run: async () => {
-      const missions = await db("missions").select("mission_code", "mission_name").limit(10000)
+      const missions = await db("missions").select("mission_code", "mission_name", "updated_at").limit(10000)
       for (const m of missions) {
-        wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+        wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6, lastmod: lastmod(m.updated_at) })
       }
       return missions.length
     } },
@@ -353,24 +411,33 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
       // name: the API resolves a name to one blueprint, so rows sharing a name
       // (e.g. across game versions) are the same page.
       const blueprints = await db("blueprints")
-        .select("blueprint_name")
+        .select("blueprint_name", "updated_at")
         .where("is_active", true)
         .whereNotNull("blueprint_name")
         .orderBy("blueprint_name")
         .limit(10000)
-      const seen = new Set<string>()
+      // The page's lastmod is the newest row with that name.
+      const byName = new Map<string, SitemapItemLoose>()
       for (const b of blueprints) {
-        if (!b.blueprint_name || seen.has(b.blueprint_name)) continue
-        seen.add(b.blueprint_name)
-        wikiPages.push({ url: `/blueprints/${encodeURIComponent(b.blueprint_name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6 })
+        if (!b.blueprint_name) continue
+        const updated = lastmod(b.updated_at)
+        const page = byName.get(b.blueprint_name)
+        if (page) {
+          page.lastmod = newestLastmod([page.lastmod, updated])
+          continue
+        }
+        const added: SitemapItemLoose = { url: `/blueprints/${encodeURIComponent(b.blueprint_name)}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6, lastmod: updated }
+        byName.set(b.blueprint_name, added)
+        wikiPages.push(added)
       }
-      return seen.size
+      return byName.size
     } },
     { name: "resources", run: async () => {
-      const resources = await db("resources").select("resource_id", "resource_name").limit(5000)
+      const resources = await db("resources").select("resource_id", "resource_name", "updated_at").limit(5000)
       for (const r of resources) {
-        wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
-        wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5 })
+        const updated = lastmod(r.updated_at)
+        wikiPages.push({ url: `/resources/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5, lastmod: updated })
+        wikiPages.push({ url: `/wiki/commodities/${formatShortSlug(r.resource_id, r.resource_name || "")}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.5, lastmod: updated })
       }
       return resources.length
     } },
@@ -406,6 +473,7 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
     } },
   ]
 
+  const failedSources: string[] = []
   for (const query of wikiQueries) {
     try {
       const count = await query.run()
@@ -416,8 +484,12 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
     } catch (error) {
       logger.error("Failed to fetch game data section for sitemap", { section: "wiki", subsection: query.name, error })
       reportSitemapError(error, "wiki", query.name)
+      failedSources.push(query.name)
     }
   }
+    // A failed source would shrink the section (wiki-1 would vanish): keep
+    // the last good copy instead.
+    if (failedSources.length > 0) throw new PartialSitemapSectionError("wiki", wikiPages, failedSources)
     return wikiPages
   }, { expectRows: true })
 
@@ -428,12 +500,12 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   await collectSection(sections, "users", () => userSitemapPages(db), { expectRows: true })
 
   const contentPages = await contentPagesPromise
-  if (contentPages && contentPages.length > 0) {
-    // Right after "static": the hand-written pages come first in the index.
-    sections.splice(1, 0, { name: "content", pages: contentPages })
-  }
+  // Right after "static": the hand-written pages come first in the index.
+  // Unavailable (null) is a failure, not "no content": it keeps its place.
+  if (contentPages === null) sections.splice(1, 0, { name: "content", pages: [], failed: true })
+  else if (contentPages.length > 0) sections.splice(1, 0, { name: "content", pages: contentPages })
 
-  return { sections, complete: contentPages !== null }
+  return { sections, complete: sections.every((section) => !section.failed) }
 }
 
 async function generateSectionSitemap(
@@ -457,37 +529,95 @@ async function generateSectionSitemap(
   return Buffer.concat(chunks)
 }
 
-export async function generateSitemapCache(): Promise<SitemapCache> {
+/** Newest of some ISO lastmods, or undefined when there are none. */
+function newestLastmod(values: (string | undefined)[]): string | undefined {
+  let newest: string | undefined
+  let newestMs = -Infinity
+  for (const value of values) {
+    if (!value) continue
+    const ms = new Date(value).getTime()
+    if (!Number.isNaN(ms) && ms > newestMs) {
+      newestMs = ms
+      newest = new Date(ms).toISOString()
+    }
+  }
+  return newest
+}
+
+/** A file's entries, hashed: the same URLs (and lastmods) give the same hash. */
+function hashPages(pages: SitemapItemLoose[]): string {
+  return createHash("sha256").update(JSON.stringify(pages)).digest("hex")
+}
+
+/**
+ * Build the index and section files. `previous` is the last cache this process
+ * built: a failed section reuses its pages, and a file whose content hasn't
+ * changed keeps its lastmod.
+ *
+ * Index <lastmod>, per file:
+ * - every URL in it has a lastmod: the newest of them (market, shops, content,
+ *   mission hubs);
+ * - otherwise: when the file's content last changed, i.e. the generation that
+ *   first produced these exact entries. A rebuild with the same URLs keeps the
+ *   old time, so it isn't "now" on every request or every 6-hour rebuild.
+ */
+export async function generateSitemapCache(
+  previous: SitemapCache | null = null,
+  now: Date = new Date(),
+): Promise<SitemapCache> {
   const { sections, complete } = await collectSitemapSections()
   const hostname = getSitemapHostname()
   const indexHostname = getSitemapIndexHostname()
   const sitemaps = new Map<string, Buffer>()
+  const files = new Map<string, SitemapFileMeta>()
+  const unavailable = new Set<string>()
+  const sectionPages = new Map<string, SitemapItemLoose[]>()
   const indexEntries: string[] = []
+  const generatedAt = now.toISOString()
 
   for (const section of sections) {
-    const chunks: SitemapItemLoose[][] = []
-    for (let i = 0; i < section.pages.length; i += SITEMAP_URL_LIMIT) {
-      chunks.push(section.pages.slice(i, i + SITEMAP_URL_LIMIT))
+    const pages = section.failed
+      ? (previous?.sectionPages.get(section.name) ?? (section.pages.length > 0 ? section.pages : undefined))
+      : section.pages
+    if (!pages) {
+      // Failed with nothing to fall back on: still listed, served as a 503.
+      const key = `${section.name}-0`
+      unavailable.add(key)
+      indexEntries.push(`<sitemap><loc>${indexHostname}sitemap-${key}.xml</loc></sitemap>`)
+      continue
     }
-    if (chunks.length === 0) continue
+    // Only a section that may legitimately be empty (recruiting) gets here
+    // with no pages: an empty <urlset> isn't valid, so it isn't listed.
+    if (pages.length === 0) continue
+    sectionPages.set(section.name, pages)
 
-    for (let i = 0; i < chunks.length; i++) {
+    for (let i = 0; i * SITEMAP_URL_LIMIT < pages.length; i++) {
+      const chunk = pages.slice(i * SITEMAP_URL_LIMIT, (i + 1) * SITEMAP_URL_LIMIT)
       const key = `${section.name}-${i}`
-      const buffer = await generateSectionSitemap(chunks[i], hostname)
-      sitemaps.set(key, buffer)
+      const hash = hashPages(chunk)
+      const before = previous?.files.get(key)
+      const changedAt = before && before.hash === hash ? before.changedAt : generatedAt
+      const urlLastmods = chunk.map((page) => (typeof page.lastmod === "string" ? page.lastmod : undefined))
+      const lastmod =
+        (urlLastmods.every((value) => value !== undefined) && newestLastmod(urlLastmods)) || changedAt
+      sitemaps.set(key, await generateSectionSitemap(chunk, hostname))
+      files.set(key, { hash, changedAt, lastmod })
       indexEntries.push(
-        `<sitemap><loc>${indexHostname}sitemap-${key}.xml</loc></sitemap>`,
+        `<sitemap><loc>${indexHostname}sitemap-${key}.xml</loc><lastmod>${lastmod}</lastmod></sitemap>`,
       )
     }
   }
 
   const indexXml = `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${indexEntries.join("")}</sitemapindex>`
-  const { gzipSync } = await import("node:zlib")
   const index = gzipSync(Buffer.from(indexXml, "utf-8"))
 
   return {
     index,
     sitemaps,
+    files,
+    unavailable,
+    sectionPages,
+    indexLastmod: newestLastmod([...files.values()].map((file) => file.lastmod)),
     ttlMs: complete ? SITEMAP_TTL_MS : SITEMAP_DEGRADED_TTL_MS,
   }
 }
@@ -506,7 +636,7 @@ function startRegeneration(): Promise<SitemapCache> {
 
   generationPromise = (async () => {
     try {
-      const generated = await generateSitemapCache()
+      const generated = await generateSitemapCache(cache)
       cache = generated
       cacheGeneratedAt = Date.now()
       return generated

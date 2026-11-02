@@ -84,6 +84,7 @@ function manifestResponse(body: unknown): Response {
 }
 
 import knexFactory, { type Knex } from "knex"
+import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 import {
   generateSitemapCache,
   getSitemapCache,
@@ -149,15 +150,18 @@ describe("generateSitemapCache", () => {
       return createChainMock([])
     })
 
-    // Must not throw — the failing section is swallowed.
-    const { index, sitemaps } = await generateSitemapCache()
+    // Must not throw — the failing section is isolated.
+    const { index, sitemaps, unavailable } = await generateSitemapCache()
 
     const indexXml = gunzipSync(index).toString("utf8")
     // Static section (never fails) is still present…
     expect(sitemaps.has("static-0")).toBe(true)
     expect(indexXml).toContain("sitemap-static-0.xml")
-    // …and shops is absent rather than 500-ing the whole index.
+    // …and shops stays in the index (no earlier copy: its file is a 503 so a
+    // crawler retries), rather than 500-ing the whole index or vanishing.
+    expect(indexXml).toContain("<loc>https://api.sc-market.space/sitemap-shops-0.xml</loc></sitemap>")
     expect(sitemaps.has("shops-0")).toBe(false)
+    expect(unavailable.has("shops-0")).toBe(true)
 
     // Reset for any subsequent tests.
     mockKnex.mockImplementation(() => createChainMock([]))
@@ -186,7 +190,7 @@ describe("content (Help & Guides) section", () => {
         ],
       }),
     )
-    const { index, sitemaps, ttlMs } = await generateSitemapCache()
+    const { index, sitemaps, unavailable } = await generateSitemapCache()
 
     expect(String(fetchMock.mock.calls[0][0])).toBe("https://sc-market.space/content/manifest.json")
     expect(gunzipSync(index).toString("utf8")).toContain("sitemap-content-0.xml")
@@ -199,7 +203,7 @@ describe("content (Help & Guides) section", () => {
     expect(xml).toContain("<loc>https://sc-market.space/changelog/2026-11-02</loc>")
     expect(xml).not.toContain("evil.example")
     expect(xml).not.toContain("/market/x")
-    expect(ttlMs).toBe(SITEMAP_TTL_MS)
+    expect(unavailable.has("content-0")).toBe(false)
   })
 
   it.each([
@@ -285,7 +289,7 @@ describe("blueprint URLs", () => {
       "https://sc-market.space/blueprints/BP%20Odd%2FName%20%232",
     ])
     // Never blueprint_code: the detail API answers it with 404.
-    expect(blueprintsQuery.select).toHaveBeenCalledWith("blueprint_name")
+    expect(blueprintsQuery.select).toHaveBeenCalledWith("blueprint_name", "updated_at")
     expect(blueprintsQuery.where).toHaveBeenCalledWith("is_active", true)
 
     mockKnex.mockImplementation(() => createChainMock([]))
@@ -343,10 +347,11 @@ describe("market section", () => {
     mockKnex.mockImplementation(() => createChainMock([]))
   })
 
-  it("reports an empty market section to BugSnag instead of silently dropping it", async () => {
+  it("reports an empty market section to BugSnag and keeps it in the index", async () => {
     mockKnex.mockImplementation(() => createChainMock([]))
-    const { index } = await generateSitemapCache()
-    expect(gunzipSync(index).toString("utf8")).not.toContain("sitemap-market-")
+    const { index, unavailable } = await generateSitemapCache()
+    expect(gunzipSync(index).toString("utf8")).toContain("sitemap-market-0.xml")
+    expect(unavailable.has("market-0")).toBe(true)
     const sections = bugsnagNotify.mock.calls.map(([error, onErrorArg]) => {
       const meta: Record<string, unknown> = {}
       const onError = onErrorArg as ((event: { addMetadata: (s: string, v: Record<string, unknown>) => void }) => void) | undefined
@@ -428,5 +433,139 @@ describe("missions-hubs section", () => {
   it("is empty without an active LIVE version", async () => {
     const { db } = sqlRecordingKnex({})
     expect(await missionHubSitemapPages(db)).toEqual([])
+  })
+})
+
+describe("index <lastmod>", () => {
+  const W3C_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/
+
+  /** Index entries as [file key, lastmod or undefined]. */
+  function indexEntries(index: Buffer): [string, string | undefined][] {
+    const xml = gunzipSync(index).toString("utf8")
+    return [...xml.matchAll(/<sitemap><loc>[^<]*\/sitemap-([a-z-]+-\d+)\.xml<\/loc>(?:<lastmod>([^<]*)<\/lastmod>)?<\/sitemap>/g)].map(
+      (m) => [m[1], m[2]],
+    )
+  }
+
+  const listing = (id: string, updated: string) => ({
+    listing_id: id,
+    title: "Pearl",
+    game_item_id: null,
+    updated_at: new Date(updated),
+  })
+
+  /** Rows per table; an array of arrays gives each successive query its own rows. */
+  function stubTables(rows: Record<string, SitemapRow[] | SitemapRow[][]>) {
+    const calls: Record<string, number> = {}
+    mockKnex.mockImplementation((table?: string) => {
+      const name = table ?? ""
+      const n = calls[name] ?? 0
+      calls[name] = n + 1
+      const value = rows[name] ?? []
+      const perCall = Array.isArray(value[0]) ? (value as SitemapRow[][])[n] : (value as SitemapRow[])
+      return createChainMock(perCall ?? [])
+    })
+  }
+
+  beforeEach(() => {
+    clearSitemapCache()
+    fetchMock.mockResolvedValue(manifestResponse({ version: 1, pages: [] }))
+  })
+
+  it("gives every built file a W3C lastmod: the newest URL lastmod when every URL has one", async () => {
+    stubTables({
+      // The listings query, then the (empty) aggregate-items query.
+      "listing_search as ls": [
+        [
+          listing("5fdef409-3e25-4ea6-a008-4001f3e43515", "2026-10-20T10:00:00Z"),
+          listing("6fdef409-3e25-4ea6-a008-4001f3e43515", "2026-10-29T12:30:00Z"),
+        ],
+        [],
+      ],
+      shops: [{ slug: "alpha", updated_at: new Date("2026-10-01T00:00:00Z") }],
+    })
+    const now = new Date("2026-11-02T08:00:00Z")
+    const { index, files, indexLastmod } = await generateSitemapCache(null, now)
+    const entries = new Map(indexEntries(index))
+
+    expect(entries.get("market-0")).toBe("2026-10-29T12:30:00.000Z")
+    expect(entries.get("shops-0")).toBe("2026-10-01T00:00:00.000Z")
+    // Static URLs carry no lastmod: the file is dated by when it was built.
+    expect(entries.get("static-0")).toBe(now.toISOString())
+    for (const [key, value] of entries) {
+      if (files.has(key)) expect(value).toMatch(W3C_DATETIME)
+    }
+    expect(indexLastmod).toBe(now.toISOString())
+  })
+
+  it("keeps a file's lastmod across rebuilds while its content is unchanged", async () => {
+    stubTables({ shops: [{ slug: "alpha", updated_at: new Date("2026-10-01T00:00:00Z") }] })
+    const first = await generateSitemapCache(null, new Date("2026-11-01T00:00:00Z"))
+    const second = await generateSitemapCache(first, new Date("2026-11-01T06:00:00Z"))
+    expect(new Map(indexEntries(second.index)).get("static-0")).toBe("2026-11-01T00:00:00.000Z")
+
+    // Different contractors list: that file's lastmod moves to the rebuild time.
+    vi.mocked(contractorDb.getContractorListings).mockResolvedValueOnce([
+      { spectrum_id: "SCMARKET" } as never,
+    ])
+    const third = await generateSitemapCache(second, new Date("2026-11-01T12:00:00Z"))
+    const entries = new Map(indexEntries(third.index))
+    expect(entries.get("contractors-0")).toBe("2026-11-01T12:00:00.000Z")
+    expect(entries.get("static-0")).toBe("2026-11-01T00:00:00.000Z")
+  })
+
+  it("serves a failed section's last good copy (with its lastmod) instead of dropping it", async () => {
+    stubTables({ shops: [{ slug: "alpha", updated_at: new Date("2026-10-01T00:00:00Z") }] })
+    const good = await generateSitemapCache(null, new Date("2026-11-01T00:00:00Z"))
+
+    mockKnex.mockImplementation((table?: string) => {
+      if (table === "shops") {
+        const chain = createChainMock([])
+        chain.then = (_resolve, reject) => reject?.(new Error("statement timeout"))
+        return chain
+      }
+      return createChainMock([])
+    })
+    const degraded = await generateSitemapCache(good, new Date("2026-11-01T06:00:00Z"))
+    expect(new Map(indexEntries(degraded.index)).get("shops-0")).toBe("2026-10-01T00:00:00.000Z")
+    expect(gunzipSync(degraded.sitemaps.get("shops-0")!).toString("utf8")).toContain("/shops/alpha</loc>")
+    expect(degraded.unavailable.has("shops-0")).toBe(false)
+    expect(degraded.ttlMs).toBe(SITEMAP_DEGRADED_TTL_MS)
+  })
+
+  it("keeps the last good wiki section when one of its sources fails, so wiki-1 can't vanish", async () => {
+    const items = Array.from({ length: 10_001 }, (_, i) => ({
+      id: `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`,
+      name: `Item ${i}`,
+    }))
+    stubTables({ game_items: items })
+    const good = await generateSitemapCache(null, new Date("2026-11-01T00:00:00Z"))
+    expect(good.sitemaps.has("wiki-1")).toBe(true)
+
+    mockKnex.mockImplementation((table?: string) => {
+      if (table === "game_items") {
+        const chain = createChainMock([])
+        chain.then = (_resolve, reject) => reject?.(new Error("statement timeout"))
+        return chain
+      }
+      return createChainMock([])
+    })
+    const degraded = await generateSitemapCache(good, new Date("2026-11-01T06:00:00Z"))
+    expect(indexEntries(degraded.index).map(([key]) => key)).toContain("wiki-1")
+    expect(degraded.sitemaps.get("wiki-1")).toEqual(good.sitemaps.get("wiki-1"))
+  })
+
+  it("dates game-data wiki URLs by their rows' updated_at", async () => {
+    stubTables({
+      missions: [{ mission_code: "m1", mission_name: "M", updated_at: new Date("2026-10-30T00:00:00Z") }],
+      blueprints: [
+        { blueprint_name: "BP_A", updated_at: new Date("2026-10-01T00:00:00Z") },
+        { blueprint_name: "BP_A", updated_at: new Date("2026-10-15T00:00:00Z") },
+      ],
+    })
+    const { sitemaps } = await generateSitemapCache()
+    const xml = gunzipSync(sitemaps.get("wiki-0")!).toString("utf8")
+    expect(xml).toMatch(/\/missions\/m1<\/loc><lastmod>2026-10-30T00:00:00\.000Z<\/lastmod>/)
+    expect(xml).toMatch(/\/blueprints\/BP_A<\/loc><lastmod>2026-10-15T00:00:00\.000Z<\/lastmod>/)
   })
 })
