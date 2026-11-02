@@ -516,6 +516,10 @@ attributeDefinitionCache.warmUp().catch((error) => {
 // Admin MFA enforcement state (logs an error if on but not configured).
 logger.info(`Admin MFA enforcement: ${getMfaEnforcement()}`)
 
+// Staff storefront enquiry alerts: warn once per unset channel.
+import { logStaffAlertConfig } from "./services/storefront/staff-alerts.js"
+logStaffAlertConfig()
+
 // Start the app
 logger.info(`server up on port ${hostname()}:${backend_port}`)
 httpServer.listen(backend_port)

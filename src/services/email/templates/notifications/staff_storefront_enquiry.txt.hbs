@@ -1,0 +1,17 @@
+New storefront enquiry
+
+{{enquiry.requester}} asked SC Market staff for a branded storefront.
+
+{{enquiry.target_name}}
+{{enquiry.target_label}}: {{enquiry.target_handle}}
+Requested by: {{enquiry.requester}}
+Subdomain: {{enquiry.subdomain}}
+Contact: {{enquiry.contact}}
+{{#if enquiry.message}}
+
+Message:
+{{plainText enquiry.message}}
+{{/if}}
+
+Open in Admin:
+{{actionUrl}}

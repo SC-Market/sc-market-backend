@@ -98,6 +98,7 @@ const hostileData: EmailTemplateData = {
   alert: { title: "Alert", content: hostile },
   contractor: { name: "Org", description: hostile },
   invite: { message: hostile },
+  enquiry: { target_name: "Org", requester: "r", message: hostile },
   listing: {
     title: "Listing",
     description: hostile,
@@ -126,7 +127,7 @@ const hostileData: EmailTemplateData = {
 
 // Every template that shows user- or org-authored text.
 const userTextFields =
-  /\b(alert\.content|contractor\.description|invite\.message|listing\.description|message\.content|order\.description|review\.content|review\.revision_message)\b/
+  /\b(alert\.content|contractor\.description|enquiry\.message|invite\.message|listing\.description|message\.content|order\.description|review\.content|review\.revision_message)\b/
 const templates = readdirSync(notificationsDir)
   .filter((f) => f.endsWith(".html.hbs") && !f.startsWith("."))
   .filter((f) =>
@@ -141,7 +142,7 @@ it("never interpolates user text without the markdown / plainText helper", () =>
     .filter((f) =>
       bare.test(readFileSync(path.join(notificationsDir, f), "utf-8")),
     )
-  expect(templates.length).toBe(15)
+  expect(templates.length).toBe(16)
   expect(offenders).toEqual([])
 })
 

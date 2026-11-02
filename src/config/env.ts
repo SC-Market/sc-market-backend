@@ -65,6 +65,11 @@ interface Environment {
   EMAIL_FROM_ADDRESS?: string // From email address (must be verified in SES)
   EMAIL_REPLY_TO?: string // Reply-to email address (optional)
 
+  // Staff alerts for new storefront enquiries (services/storefront/staff-alerts.ts).
+  // Unset: that channel is skipped (a warning is logged once at startup).
+  STAFF_ALERT_EMAIL?: string // Staff inbox for the alert email (sent through SES)
+  STAFF_DISCORD_WEBHOOK_URL?: string // Discord webhook for the staff channel (secret: never logged)
+
   // Other
   NODE_ENV?: string
   // "true" | "false": reject requests that bypass Cloudflare. Unset means on

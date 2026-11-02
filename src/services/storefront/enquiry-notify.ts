@@ -11,8 +11,8 @@ import { siteAdminIds, type EnquiryTarget, type StorefrontEnquiry } from "./enqu
  * Tell the site admins about a new enquiry: an in-app notification (event
  * admin.storefront_enquiry; the frontend links it to Admin › Premium). A test org or shop's
  * enquiry notifies nobody (test accounts never cause notifications to real
- * users); it is still listed for admins, marked as a test. There is no staff
- * Discord channel or webhook to post to. Best effort: never throws.
+ * users); it is still listed for admins, marked as a test. The staff email
+ * and Discord webhook alerts are staff-alerts.ts. Best effort: never throws.
  */
 export async function notifyAdminsOfEnquiry(
   enquiry: StorefrontEnquiry,

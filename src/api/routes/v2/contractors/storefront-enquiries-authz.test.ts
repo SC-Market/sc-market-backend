@@ -27,12 +27,14 @@ vi.mock("../../../../services/storefront/enquiries.js", async (importOriginal) =
   return { ...original, createEnquiry: vi.fn(), latestEnquiry: vi.fn(), subdomainTaken: vi.fn() }
 })
 vi.mock("../../../../services/storefront/enquiry-notify.js", () => ({ notifyAdminsOfEnquiry: vi.fn() }))
+vi.mock("../../../../services/storefront/staff-alerts.js", () => ({ queueStaffEnquiryAlerts: vi.fn() }))
 
 const { StorefrontEnquiriesV2Controller } = await import("./StorefrontEnquiriesV2Controller.js")
 const { has_permission } = await import("../../v1/util/permissions.js")
 const { canManageShop, getShopById } = await import("../../../../services/shops/shop-permissions.service.js")
 const enquiries = await import("../../../../services/storefront/enquiries.js")
 const { notifyAdminsOfEnquiry } = await import("../../../../services/storefront/enquiry-notify.js")
+const { queueStaffEnquiryAlerts } = await import("../../../../services/storefront/staff-alerts.js")
 
 const USER = { user_id: "u1", role: "user" }
 const ORG = { contractor_id: "c1", spectrum_id: "TESTORG", name: "Test Org", archived: false, is_test: false }
@@ -98,6 +100,11 @@ describe("POST /storefront-enquiries", () => {
       "u1",
     )
     expect(notifyAdminsOfEnquiry).toHaveBeenCalledWith(ENQUIRY, expect.objectContaining({ id: "c1" }), "u1")
+    // Staff email + Discord alerts are queued after the save, not awaited.
+    expect(queueStaffEnquiryAlerts).toHaveBeenCalledWith(ENQUIRY, expect.objectContaining({ id: "c1", name: "Test Org" }))
+    expect((enquiries.createEnquiry as Mock).mock.invocationCallOrder[0]).toBeLessThan(
+      (queueStaffEnquiryAlerts as Mock).mock.invocationCallOrder[0],
+    )
   })
 
   it("rejects a bad subdomain, a taken one and an over-long message", async () => {
@@ -122,6 +129,7 @@ describe("POST /storefront-enquiries", () => {
     ;(enquiries.createEnquiry as Mock).mockRejectedValue(new enquiries.OpenEnquiryExistsError(ENQUIRY as any))
     expect(await status(controller().createStorefrontEnquiry(body(), { user: USER } as any))).toBe("CONFLICT")
     expect(notifyAdminsOfEnquiry).not.toHaveBeenCalled()
+    expect(queueStaffEnquiryAlerts).not.toHaveBeenCalled()
   })
 
   it("a shop needs its managers; a test shop is marked as test", async () => {

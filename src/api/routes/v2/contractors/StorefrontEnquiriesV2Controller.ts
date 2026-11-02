@@ -24,6 +24,7 @@ import {
   type StorefrontEnquiry,
 } from "../../../../services/storefront/enquiries.js"
 import { notifyAdminsOfEnquiry } from "../../../../services/storefront/enquiry-notify.js"
+import { queueStaffEnquiryAlerts } from "../../../../services/storefront/staff-alerts.js"
 
 export interface CreateStorefrontEnquiryRequest {
   /** "org" or "shop". */
@@ -98,8 +99,8 @@ export class StorefrontEnquiriesV2Controller extends BaseController {
    * Ask SC Market staff for a branded storefront on a subdomain of
    * sc-market.space, for an org (Manage Org Details) or a shop (its
    * managers). One open enquiry per org or shop (409 while one is open).
-   * Site admins get an in-app notification; a test org or shop notifies
-   * nobody.
+   * Site admins get an in-app notification, and staff an email and a
+   * Discord post (when configured); a test org or shop notifies nobody.
    *
    * @summary Enquire about a branded storefront
    */
@@ -159,6 +160,8 @@ export class StorefrontEnquiriesV2Controller extends BaseController {
       throw err
     }
     await notifyAdminsOfEnquiry(enquiry, target, this.getUserId())
+    // Staff email and Discord alerts, in the background (never fail this).
+    queueStaffEnquiryAlerts(enquiry, target)
     this.setHeader("Cache-Control", "no-store")
     return { enquiry }
   }
