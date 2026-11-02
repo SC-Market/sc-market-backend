@@ -25,6 +25,10 @@ import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
+import {
+  sellerActiveJoinedSql,
+  sellerActivityTieBreakSql,
+} from "../../../../services/seller-activity/seller-ranking.js"
 import type { PriceOracleItem } from "../types/price-oracle.types.js"
 import { getPriceDocument } from "../../../../services/price-oracle/price-oracle.service.js"
 import type { ItemAcquisitionDocument } from "../types/item-acquisition.types.js"
@@ -485,6 +489,12 @@ export class GameItemsV2Controller extends BaseController {
             `${priceExpr} ${validatedSortOrder}`,
           )
       }
+      // Ties (same price, tier, ...): sellers seen recently first, then a
+      // stable key (services/seller-activity/seller-ranking.ts).
+      listingsQuery = listingsQuery
+        .orderByRaw(sellerActivityTieBreakSql("l.shop_id"))
+        .orderBy("l.listing_id", "asc")
+        .orderBy("lil.variant_id", "asc")
 
       // Apply pagination (Requirement 38.9)
       const offset = (validatedPage - 1) * validatedPageSize
@@ -576,6 +586,8 @@ export class GameItemsV2Controller extends BaseController {
     try {
       let query = db("listing_search as ls")
         .leftJoin("game_items as gi", db.raw("ls.game_item_id::text = gi.id::text"))
+        // One row per shop (primary key): the seller-activity tie-breaker.
+        .leftJoin("shop_activity_stats as sas", "sas.shop_id", "ls.shop_id")
         .where("ls.status", "active")
         .where(
           listingVisibleTo(db, this.tryGetUserId(), this.tokenOrgScope(), {
@@ -654,6 +666,14 @@ export class GameItemsV2Controller extends BaseController {
         case "shop_count": query = query.orderByRaw(`COUNT(DISTINCT ls.shop_id) ${sortDir}`); break
         default: query = query.orderByRaw(`SUM(ls.quantity_available) ${sortDir}`); break
       }
+      // Ties: items with more listings from sellers seen recently first
+      // (services/seller-activity/seller-ranking.ts), then a stable key.
+      query = query
+        .orderByRaw(
+          `COUNT(DISTINCT ls.listing_id) FILTER (WHERE ${sellerActiveJoinedSql("sas.last_active_at")}) DESC`,
+        )
+        .orderBy("ls.game_item_id", "asc")
+        .orderBy("ls.title", "asc")
 
       const rows: GameItemAggregateRow[] = await query
         .limit(validatedPageSize)

@@ -98,6 +98,8 @@ import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminControlle
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminStorefrontEnquiriesController } from './../admin/AdminStorefrontEnquiriesController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminSellerReachabilityController } from './../admin/AdminSellerReachabilityController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminIdentityController } from './../admin/AdminIdentityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminController } from './../admin/AdminController.js';
@@ -1619,7 +1621,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationCategoryId": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["orders"]},{"dataType":"enum","enums":["order_messages"]},{"dataType":"enum","enums":["offers"]},{"dataType":"enum","enums":["offer_messages"]},{"dataType":"enum","enums":["market"]},{"dataType":"enum","enums":["reviews"]},{"dataType":"enum","enums":["watchlist"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["org_members"]},{"dataType":"enum","enums":["announcements"]},{"dataType":"enum","enums":["reminders"]},{"dataType":"enum","enums":["contracts"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["orders"]},{"dataType":"enum","enums":["order_messages"]},{"dataType":"enum","enums":["offers"]},{"dataType":"enum","enums":["offer_messages"]},{"dataType":"enum","enums":["market"]},{"dataType":"enum","enums":["reviews"]},{"dataType":"enum","enums":["watchlist"]},{"dataType":"enum","enums":["org"]},{"dataType":"enum","enums":["org_members"]},{"dataType":"enum","enums":["announcements"]},{"dataType":"enum","enums":["reminders"]},{"dataType":"enum","enums":["contracts"]},{"dataType":"enum","enums":["storefront"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationChannelId": {
@@ -1629,7 +1631,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationEventKey": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]},{"dataType":"enum","enums":["storefront.enquiry_accepted"]},{"dataType":"enum","enums":["storefront.enquiry_declined"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationPreferenceCell": {
@@ -5190,6 +5192,63 @@ const models: TsoaRoute.Models = {
         "properties": {
             "status": {"ref":"EnquiryStatus"},
             "staff_note": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"validators":{"maxLength":{"value":1000}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReachabilityBucket": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["today"]},{"dataType":"enum","enums":["this_week"]},{"dataType":"enum","enums":["this_month"]},{"dataType":"enum","enums":["over_a_month"]},{"dataType":"enum","enums":["unknown"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReachabilityCount": {
+        "dataType": "refObject",
+        "properties": {
+            "sellers": {"dataType":"double","required":true},
+            "listings": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SellerReachabilityBucket": {
+        "dataType": "refObject",
+        "properties": {
+            "sellers": {"dataType":"double","required":true},
+            "listings": {"dataType":"double","required":true},
+            "discord_dm": {"ref":"ReachabilityCount","required":true},
+            "discord_dm_confirmed": {"ref":"ReachabilityCount","required":true},
+            "email": {"ref":"ReachabilityCount","required":true},
+            "push": {"ref":"ReachabilityCount","required":true},
+            "any": {"ref":"ReachabilityCount","required":true},
+            "none": {"ref":"ReachabilityCount","required":true},
+            "bucket": {"ref":"ReachabilityBucket","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SellerReachabilityCounts": {
+        "dataType": "refObject",
+        "properties": {
+            "sellers": {"dataType":"double","required":true},
+            "listings": {"dataType":"double","required":true},
+            "discord_dm": {"ref":"ReachabilityCount","required":true},
+            "discord_dm_confirmed": {"ref":"ReachabilityCount","required":true},
+            "email": {"ref":"ReachabilityCount","required":true},
+            "push": {"ref":"ReachabilityCount","required":true},
+            "any": {"ref":"ReachabilityCount","required":true},
+            "none": {"ref":"ReachabilityCount","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SellerReachabilityReport": {
+        "dataType": "refObject",
+        "properties": {
+            "generated_at": {"dataType":"string","required":true},
+            "buckets": {"dataType":"array","array":{"dataType":"refObject","ref":"SellerReachabilityBucket"},"required":true},
+            "totals": {"ref":"SellerReachabilityCounts","required":true},
+            "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
+            "email_category": {"dataType":"enum","enums":["announcements"],"required":true},
         },
         "additionalProperties": false,
     },
@@ -12225,6 +12284,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'updateStorefrontEnquiry',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSellerReachabilityController_getSellerReachability: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/seller-reachability',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSellerReachabilityController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSellerReachabilityController.prototype.getSellerReachability)),
+
+            async function AdminSellerReachabilityController_getSellerReachability(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSellerReachabilityController_getSellerReachability, request, response });
+
+                const controller = new AdminSellerReachabilityController();
+
+              await templateService.apiHandler({
+                methodName: 'getSellerReachability',
                 controller,
                 response,
                 next,

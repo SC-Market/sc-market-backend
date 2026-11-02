@@ -18,6 +18,7 @@ export type NotificationCategoryId =
   | "announcements"
   | "reminders"
   | "contracts"
+  | "storefront"
 
 export type NotificationEventKey =
   | "order.created"
@@ -43,6 +44,8 @@ export type NotificationEventKey =
   | "offer.rejected"
   | "contract.public_created"
   | "contract.offer_received"
+  | "storefront.enquiry_accepted"
+  | "storefront.enquiry_declined"
 
 export interface NotificationPreferenceCell {
   channel: NotificationChannelId

@@ -351,7 +351,11 @@ export async function siteAdminIds(db: Knex = getKnex()): Promise<string[]> {
     .pluck("user_id")
 }
 
-/** The entity of a storefront_enquiry_created in-app notification (admins only). */
+/**
+ * The entity of a storefront enquiry in-app notification: created (to site
+ * admins), accepted or declined (to the person who sent it). No staff note,
+ * no contact details.
+ */
 export interface StorefrontEnquiryNotice {
   enquiry_id: string
   target_type: EnquiryTargetType

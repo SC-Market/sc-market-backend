@@ -36,6 +36,10 @@ import {
 } from "../types/listings.types.js"
 import { uexImportSkipReason } from "../../../../services/uex/uex-import-validation.js"
 import { getShopActivity, getOneShopActivity } from "../../../../services/seller-activity/seller-activity.service.js"
+import {
+  defaultListingRankSql,
+  sellerActivityTieBreakSql,
+} from "../../../../services/seller-activity/seller-ranking.js"
 import { NOTICE_DAYS_BEFORE, markRenewed, renewalColumns } from "../../../../services/listing-expiry/listing-expiry.service.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
@@ -546,7 +550,7 @@ export class ListingsV2Controller extends BaseController {
    * @param price_max Maximum price filter
    * @param page Page number for pagination (default: 1)
    * @param page_size Number of results per page (default: 20, max: 100)
-   * @param sort_by Sort field (default: created_at)
+   * @param sort_by Sort field. Without sort_by and sort_order: newest first, with listings of sellers inactive for 30+ days ranked lower (never hidden). Explicit sorts are kept as chosen; seller activity only breaks ties.
    * @param status Only 'active' is served (the default); other statuses return no results, except to site admins
    * @param sort_order Sort order (default: desc)
    * @param org Only listings of the shops this org (spectrum ID) owns: an org's storefront, its embeds and its white-label market
@@ -896,32 +900,42 @@ export class ListingsV2Controller extends BaseController {
       const [{ count: totalCount }] = await countQuery
       const total = parseInt(String(totalCount), 10)
 
-      // Apply sorting (Requirement 15.9)
-      switch (validatedSortBy) {
-        case "price":
-          query = query.orderBy("ls.price_min", validatedSortOrder)
-          break
-        case "quality":
-          query = query.orderBy("ls.quality_tier_max", validatedSortOrder)
-          break
-        case "shop_rating": {
-          const ratingDir = validatedSortOrder === "asc" ? "ASC" : "DESC"
-          query = query.orderByRaw(
-            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${ratingDir}`,
-          )
-          break
+      // Apply sorting (Requirement 15.9). Without sort_by (and sort_order):
+      // the default order, newest first with inactive sellers' listings
+      // ranked lower (services/seller-activity/seller-ranking.ts). An
+      // explicit sort is kept as chosen; seller activity only breaks its
+      // ties, then listing_id makes the order stable.
+      if (!sort_by && !sort_order) {
+        query = query.orderByRaw(defaultListingRankSql("ls.created_at", "ls.shop_id"))
+      } else {
+        switch (validatedSortBy) {
+          case "price":
+            query = query.orderBy("ls.price_min", validatedSortOrder)
+            break
+          case "quality":
+            query = query.orderBy("ls.quality_tier_max", validatedSortOrder)
+            break
+          case "shop_rating": {
+            const ratingDir = validatedSortOrder === "asc" ? "ASC" : "DESC"
+            query = query.orderByRaw(
+              `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${ratingDir}`,
+            )
+            break
+          }
+          case "updated_at":
+            query = query.orderBy("ls.updated_at", validatedSortOrder)
+            break
+          case "quantity":
+            query = query.orderBy("ls.quantity_available", validatedSortOrder)
+            break
+          case "created_at":
+          default:
+            query = query.orderBy("ls.created_at", validatedSortOrder)
+            break
         }
-        case "updated_at":
-          query = query.orderBy("ls.updated_at", validatedSortOrder)
-          break
-        case "quantity":
-          query = query.orderBy("ls.quantity_available", validatedSortOrder)
-          break
-        case "created_at":
-        default:
-          query = query.orderBy("ls.created_at", validatedSortOrder)
-          break
+        query = query.orderByRaw(sellerActivityTieBreakSql("ls.shop_id"))
       }
+      query = query.orderBy("ls.listing_id", "asc")
 
       // Apply pagination (Requirement 15.6)
       const offset = (validatedPage - 1) * validatedPageSize

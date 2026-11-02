@@ -404,3 +404,38 @@ export async function formatPriceAlertEmailData(
     watch,
   } as EmailTemplateData
 }
+
+/** The enquiry an enquiry decision email is about (services/storefront/enquiry-notify.ts). */
+export interface StorefrontEnquiryEmailData {
+  enquiry_id: string
+  target_type: "org" | "shop"
+  target: string
+  target_name: string
+  requested_subdomain: string
+  status: string
+}
+
+/** Storefront enquiry accepted / declined, to the person who sent it. */
+export async function formatStorefrontEnquiryDecisionEmailData(
+  enquiry: StorefrontEnquiryEmailData,
+  notificationType: "storefront_enquiry_accepted" | "storefront_enquiry_declined",
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, notificationType)
+  const accepted = notificationType === "storefront_enquiry_accepted"
+  const subdomain = `${enquiry.requested_subdomain}.sc-market.space`
+  const name = enquiry.target_name || enquiry.target
+  const handle = encodeURIComponent(enquiry.target)
+  return {
+    ...baseData,
+    notificationTitle: accepted ? "Storefront enquiry accepted" : "Storefront enquiry declined",
+    notificationBody: accepted
+      ? `SC Market staff accepted your branded storefront enquiry for ${name} (${subdomain}).`
+      : `SC Market staff declined your branded storefront enquiry for ${name} (${subdomain}).`,
+    actionUrl:
+      enquiry.target_type === "org"
+        ? `${getBaseUrl()}/org/${handle}/manage/storefront`
+        : `${getBaseUrl()}/shop/${handle}/settings`,
+    enquiry: { ...enquiry, target_name: name, subdomain },
+  } as EmailTemplateData
+}

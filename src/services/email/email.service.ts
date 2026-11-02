@@ -639,6 +639,22 @@ class SESEmailService implements EmailService {
           )
           break
 
+        case "storefront_enquiry_accepted":
+        case "storefront_enquiry_declined":
+          if (!data.enquiry) {
+            logger.warn(
+              `Missing enquiry data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatStorefrontEnquiryDecisionEmailData(
+            data.enquiry as payloadFormatters.StorefrontEnquiryEmailData,
+            notificationType,
+            userId,
+          )
+          break
+
         default:
           logger.warn(
             `Unknown notification type for email: ${notificationType}`,

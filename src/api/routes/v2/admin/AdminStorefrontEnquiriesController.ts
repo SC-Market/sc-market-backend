@@ -17,6 +17,7 @@ import {
   type AdminStorefrontEnquiry,
   type EnquiryStatus,
 } from "../../../../services/storefront/enquiries.js"
+import { notifySubmitterOfDecision } from "../../../../services/storefront/enquiry-notify.js"
 
 export interface UpdateStorefrontEnquiryRequest {
   status?: EnquiryStatus
@@ -58,7 +59,8 @@ export class AdminStorefrontEnquiriesController extends BaseController {
   /**
    * Change an enquiry's status (open, in progress, completed, declined) or
    * its staff note. Reopening fails with 409 while the org or shop has
-   * another open enquiry.
+   * another open enquiry. Setting completed (accepted) or declined notifies
+   * the person who sent the enquiry, once per decision, by their preferences.
    *
    * @summary Update a storefront enquiry
    */
@@ -92,6 +94,9 @@ export class AdminStorefrontEnquiriesController extends BaseController {
       throw err
     }
     if (!updated) this.throwNotFound("Storefront enquiry", enquiry_id)
+    // Accepted (completed) or declined: tell the person who sent it (once per
+    // decision; best effort, never fails the update).
+    if (body.status !== undefined) await notifySubmitterOfDecision(updated, this.getUserId())
     this.setHeader("Cache-Control", "no-store")
     return updated
   }

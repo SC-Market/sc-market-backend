@@ -603,7 +603,9 @@ export async function getEntityByType(
       return noticeEntity(entity_id)
     }
     case "storefront_enquiries": {
-      // A new branded storefront enquiry (storefront_enquiry_created), to site admins.
+      // A new branded storefront enquiry (storefront_enquiry_created), to site
+      // admins; accepted / declined (storefront_enquiry_accepted, _declined),
+      // to the person who sent it. No staff note or contact details.
       return enquiryNoticeEntity(entity_id)
     }
     case "admin_alerts": {

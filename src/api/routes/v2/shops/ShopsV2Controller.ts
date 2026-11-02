@@ -57,6 +57,7 @@ import {
 } from "../../../../services/test-accounts/isolation.js"
 import { clampPagination } from "../util/pagination.js"
 import { imageUrlSql } from "../util/image-url-sql.js"
+import { sellerActivityTieBreakSql } from "../../../../services/seller-activity/seller-ranking.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -652,6 +653,10 @@ export class ShopsV2Controller extends BaseController {
       const columnMap: Record<string, string> = { name: "s.name", created_at: "s.created_at" }
       query = query.orderBy(columnMap[sortBy] || "s.created_at", direction)
     }
+    // Ties in the chosen sort (many shops have no ratings or sales yet):
+    // sellers seen recently first, then a stable key
+    // (services/seller-activity/seller-ranking.ts).
+    query = query.orderByRaw(sellerActivityTieBreakSql("s.shop_id")).orderBy("s.shop_id", "asc")
 
     const offset = (validatedPage - 1) * validatedPageSize
     const rows = await query.limit(validatedPageSize).offset(offset)

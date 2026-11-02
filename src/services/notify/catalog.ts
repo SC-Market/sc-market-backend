@@ -32,6 +32,9 @@ export const CATEGORIES = {
   announcements: { orgScoped: false, mandatory: true, emailMandatory: false },
   reminders: { orgScoped: false, mandatory: false, emailMandatory: false },
   contracts: { orgScoped: true, mandatory: false, emailMandatory: false },
+  // Replies to a branded storefront enquiry you sent (services/storefront).
+  // Personal: it goes to the person who sent it, whatever org or shop it was for.
+  storefront: { orgScoped: false, mandatory: false, emailMandatory: false },
   account: { orgScoped: false, mandatory: true, emailMandatory: false },
 } as const
 export type CategoryId = keyof typeof CATEGORIES
@@ -143,6 +146,13 @@ export const CATALOG = {
   // (services/storefront/enquiries.ts). In-app only; the account category
   // makes it mandatory and keeps it out of the settings matrix.
   "admin.storefront_enquiry": event("account", "storefront_enquiry_created", ["in_app"]),
+  // To the person who sent a storefront enquiry, when staff accept it (status
+  // completed: the storefront is set up) or decline it. Owner decision
+  // (2026-11-01): through notify() with their preferences. It answers their
+  // own request, so email is on by default (still opt-out and unsubscribable);
+  // Discord DM follows the usual off-by-default.
+  "storefront.enquiry_accepted": event("storefront", "storefront_enquiry_accepted", ALL, { email: true }),
+  "storefront.enquiry_declined": event("storefront", "storefront_enquiry_declined", ALL, { email: true }),
   // Owner decision (ships with the cutover; shadow-only until then): the four
   // order_status_* events become one, and offer_create + counter_offer_create
   // become one. They replace the per-status / per-type entries above at cutover.

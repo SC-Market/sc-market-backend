@@ -29,6 +29,7 @@ describe("matrix", () => {
         "announcements: in_app=on(locked) push=on(locked) email=on discord_dm=on(locked)",
         "reminders: email=off discord_dm=on",
         "contracts: in_app=on(locked) push=on discord_dm=off email=off",
+        "storefront: in_app=on(locked) push=on email=on discord_dm=off",
       ]
     `)
   })

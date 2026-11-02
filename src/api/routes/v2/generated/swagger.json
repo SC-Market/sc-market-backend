@@ -4609,7 +4609,8 @@
 					"org_members",
 					"announcements",
 					"reminders",
-					"contracts"
+					"contracts",
+					"storefront"
 				]
 			},
 			"NotificationChannelId": {
@@ -4647,7 +4648,9 @@
 					"offer.accepted",
 					"offer.rejected",
 					"contract.public_created",
-					"contract.offer_received"
+					"contract.offer_received",
+					"storefront.enquiry_accepted",
+					"storefront.enquiry_declined"
 				]
 			},
 			"NotificationPreferenceCell": {
@@ -15760,6 +15763,202 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ReachabilityBucket": {
+				"type": "string",
+				"enum": [
+					"today",
+					"this_week",
+					"this_month",
+					"over_a_month",
+					"unknown"
+				],
+				"description": "The seller's last_seen, with the buyer-facing \"Last seen\" cut-offs; unknown: an org with no member who manages orders or the market."
+			},
+			"ReachabilityCount": {
+				"properties": {
+					"sellers": {
+						"type": "number",
+						"format": "double",
+						"description": "Sellers (a user, or an org) in this bucket reachable this way."
+					},
+					"listings": {
+						"type": "number",
+						"format": "double",
+						"description": "Their publicly listed listings."
+					}
+				},
+				"required": [
+					"sellers",
+					"listings"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SellerReachabilityBucket": {
+				"properties": {
+					"sellers": {
+						"type": "number",
+						"format": "double",
+						"description": "Sellers with at least one publicly listed listing."
+					},
+					"listings": {
+						"type": "number",
+						"format": "double"
+					},
+					"discord_dm": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Discord linked, and the last Discord DM attempt (if any, last 90 days) did not fail."
+					},
+					"discord_dm_confirmed": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm)."
+					},
+					"email": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "A verified primary email, not unsubscribed from announcement emails. No bounce data exists."
+					},
+					"push": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "At least one push subscription. No per-delivery result exists."
+					},
+					"any": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "At least one of Discord DM, email or push."
+					},
+					"none": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "None of them."
+					},
+					"bucket": {
+						"$ref": "#/components/schemas/ReachabilityBucket"
+					}
+				},
+				"required": [
+					"sellers",
+					"listings",
+					"discord_dm",
+					"discord_dm_confirmed",
+					"email",
+					"push",
+					"any",
+					"none",
+					"bucket"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SellerReachabilityCounts": {
+				"properties": {
+					"sellers": {
+						"type": "number",
+						"format": "double",
+						"description": "Sellers with at least one publicly listed listing."
+					},
+					"listings": {
+						"type": "number",
+						"format": "double"
+					},
+					"discord_dm": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Discord linked, and the last Discord DM attempt (if any, last 90 days) did not fail."
+					},
+					"discord_dm_confirmed": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm)."
+					},
+					"email": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "A verified primary email, not unsubscribed from announcement emails. No bounce data exists."
+					},
+					"push": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "At least one push subscription. No per-delivery result exists."
+					},
+					"any": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "At least one of Discord DM, email or push."
+					},
+					"none": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "None of them."
+					}
+				},
+				"required": [
+					"sellers",
+					"listings",
+					"discord_dm",
+					"discord_dm_confirmed",
+					"email",
+					"push",
+					"any",
+					"none"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SellerReachabilityReport": {
+				"properties": {
+					"generated_at": {
+						"type": "string"
+					},
+					"buckets": {
+						"items": {
+							"$ref": "#/components/schemas/SellerReachabilityBucket"
+						},
+						"type": "array",
+						"description": "Every bucket, in order (today, this week, this month, over a month, unknown)."
+					},
+					"totals": {
+						"$ref": "#/components/schemas/SellerReachabilityCounts"
+					},
+					"signals": {
+						"properties": {
+							"push_delivery_results": {
+								"type": "boolean",
+								"description": "Push has no per-delivery result (dead subscriptions are deleted)."
+							},
+							"email_delivery_results": {
+								"type": "boolean",
+								"description": "Email bounces and complaints are not recorded."
+							},
+							"discord_dm_result_retention_days": {
+								"type": "number",
+								"format": "double",
+								"description": "How long those results are kept."
+							},
+							"discord_dm_delivery_results": {
+								"type": "boolean",
+								"description": "Discord DMs sent through notify() record sent / failed per attempt."
+							}
+						},
+						"required": [
+							"push_delivery_results",
+							"email_delivery_results",
+							"discord_dm_result_retention_days",
+							"discord_dm_delivery_results"
+						],
+						"type": "object",
+						"description": "Which channels have a recorded delivery result, so the UI can say how far \"reachable\" is checked."
+					},
+					"email_category": {
+						"type": "string",
+						"enum": [
+							"announcements"
+						],
+						"nullable": false,
+						"description": "The email category whose unsubscribes are checked."
+					}
+				},
+				"required": [
+					"generated_at",
+					"buckets",
+					"totals",
+					"signals",
+					"email_category"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IdentitySearchRow": {
 				"properties": {
 					"user_id": {
@@ -20076,7 +20275,7 @@
 						}
 					},
 					{
-						"description": "Sort field (default: created_at)",
+						"description": "Sort field. Without sort_by and sort_order: newest first, with listings of sellers inactive for 30+ days ranked lower (never hidden). Explicit sorts are kept as chosen; seller activity only breaks ties.",
 						"in": "query",
 						"name": "sort_by",
 						"required": false,
@@ -26949,7 +27148,7 @@
 						}
 					}
 				},
-				"description": "Change an enquiry's status (open, in progress, completed, declined) or\nits staff note. Reopening fails with 409 while the org or shop has\nanother open enquiry.",
+				"description": "Change an enquiry's status (open, in progress, completed, declined) or\nits staff note. Reopening fails with 409 while the org or shop has\nanother open enquiry. Setting completed (accepted) or declined notifies\nthe person who sent the enquiry, once per decision, by their preferences.",
 				"summary": "Update a storefront enquiry",
 				"tags": [
 					"Admin"
@@ -26979,6 +27178,34 @@
 						}
 					}
 				}
+			}
+		},
+		"/admin/seller-reachability": {
+			"get": {
+				"operationId": "GetSellerReachability",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SellerReachabilityReport"
+								}
+							}
+						}
+					}
+				},
+				"description": "Sellers with publicly listed listings, bucketed by when they were last\nseen, and how many of them (and their listings) Discord DM, email and\npush can reach. Counts only.",
+				"summary": "Seller reachability report",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/identity/users": {

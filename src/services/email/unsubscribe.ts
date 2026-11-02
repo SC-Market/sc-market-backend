@@ -29,6 +29,7 @@ export const CATEGORY_LABELS: Record<CategoryId, string> = {
   announcements: "announcements",
   reminders: "unread message reminders",
   contracts: "public contract offers",
+  storefront: "storefront enquiry replies",
   account: "account notices",
 }
 
