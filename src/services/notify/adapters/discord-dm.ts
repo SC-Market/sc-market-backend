@@ -9,7 +9,11 @@ export const discordDmAdapter: UserChannelAdapter<RESTPostAPIChannelMessageJSONB
   async send(message, ctx) {
     const discordId = await profileDb.getUserDiscordId(ctx.recipient.userId)
     if (!discordId) return { status: "skipped", reason: "no linked Discord account" }
-    const result = await discordService.trySendDirectMessage(discordId, message)
+    // Recorded in discord_dm_attempts (sent / failed with Discord's error code).
+    const result = await discordService.trySendDirectMessage(discordId, message, {
+      userId: ctx.recipient.userId,
+      source: `notify:${ctx.eventKey}`,
+    })
     if (result.ok) return { status: "sent" }
     // 50007: the user does not accept DMs from the bot (or shares no server).
     if (result.code === 50007) return { status: "permanent", error: result.error }

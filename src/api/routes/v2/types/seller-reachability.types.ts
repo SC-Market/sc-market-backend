@@ -26,6 +26,10 @@ export interface SellerReachabilityCounts {
   discord_dm: ReachabilityCount
   /** Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm). */
   discord_dm_confirmed: ReachabilityCount
+  /** Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed or no shared server); an org: every contact with Discord linked. */
+  discord_dm_closed: ReachabilityCount
+  /** Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent). Not part of any / none. */
+  discord_shared_server: ReachabilityCount
   /** A verified primary email that is not marked undeliverable (bounced or complained), not unsubscribed from announcement emails. */
   email: ReachabilityCount
   /** Reachable by email, and SES confirmed a delivery to the address in the last email_delivered_window_days (a subset of email). */
@@ -49,10 +53,16 @@ export interface SellerReachabilityReport {
   totals: SellerReachabilityCounts
   /** Which channels have a recorded delivery result, so the UI can say how far "reachable" is checked. */
   signals: {
-    /** Discord DMs sent through notify() record sent / failed per attempt. */
+    /** Every Discord DM attempt (backend and bot) is recorded: sent, or failed with Discord's error code. */
     discord_dm_delivery_results: boolean
     /** How long those results are kept. */
     discord_dm_result_retention_days: number
+    /** The Discord error code counted as "DM failed (closed)" (50007). */
+    discord_dm_closed_code: number
+    /** When the bot's server membership was last checked (ISO time), or null if never. */
+    discord_shared_server_checked_at: string | null
+    /** A membership result older than this many days is not counted. */
+    discord_shared_server_fresh_days: number
     /** SES bounces, complaints and deliveries are recorded (bounced addresses are not reachable). */
     email_delivery_results: boolean
     /** How recent an email delivery counts for email_confirmed. */

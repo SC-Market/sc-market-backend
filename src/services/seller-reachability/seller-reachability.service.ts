@@ -18,12 +18,21 @@
  *
  * Channels, and how "reliable" each one is (what signal exists):
  * - Discord DM: a linked Discord account, and the user's last Discord DM
- *   attempt through notify() (notification_deliveries, channel discord_dm)
- *   did not fail. That table records every DM's result (sent / failed: the
- *   bot can't DM them, e.g. 50007 no shared server or DMs closed), kept
- *   DELIVERY_RETENTION_DAYS (90). Users never DMed in that window count as
- *   reachable but unconfirmed; `discord_dm_confirmed` counts those whose
- *   last DM was delivered.
+ *   attempt did not fail. discord_dm_attempts (services/discord/dm-attempts.ts)
+ *   records every DM SC Market tries, from the backend (notify() and direct
+ *   sends) and from the bot (reported over the backend SQS queue): sent, or
+ *   failed with Discord's error code, kept DM_ATTEMPT_RETENTION_DAYS (90).
+ *   Users never DMed in that window count as reachable but unconfirmed;
+ *   `discord_dm_confirmed` counts those whose last DM was delivered.
+ *   `discord_dm_closed`: not reachable by DM because the last DM failed with
+ *   50007 (DMs closed or no shared server); for an org, that holds for every
+ *   contact with Discord linked.
+ * - Shares a server with the bot (`discord_shared_server`, a passive signal:
+ *   no DM is sent): Discord linked and discord_guild_presence says the
+ *   account is a member of at least one server the bot is in, checked within
+ *   PRESENCE_FRESH_DAYS (services/discord/guild-presence.ts). A bot can
+ *   normally DM only such users (or ones who installed the app for their
+ *   account, which no API shows). Not part of "any" / "none".
  * - Email: a verified primary address that is not marked undeliverable
  *   (user_emails.email_bounced_at: a hard bounce, a spam complaint or soft
  *   bounces in a row, recorded from SES feedback by
@@ -43,7 +52,8 @@
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { publiclyListedSql } from "../../api/routes/v2/util/listing-visibility.js"
-import { DELIVERY_RETENTION_DAYS } from "../notify/deliveries.js"
+import { DM_ATTEMPT_RETENTION_DAYS, DM_CLOSED_CODE } from "../discord/dm-attempts.js"
+import { PRESENCE_FRESH_DAYS } from "../discord/guild-presence.js"
 import type {
   ReachabilityBucket,
   ReachabilityCount,
@@ -68,6 +78,8 @@ export const REACHABILITY_EMAIL_ACTION = "admin_alert"
 const CHANNELS = [
   "discord_dm",
   "discord_dm_confirmed",
+  "discord_dm_closed",
+  "discord_shared_server",
   "email",
   "email_confirmed",
   "push",
@@ -123,13 +135,8 @@ export function reachabilitySql(): {
                SELECT 1 FROM account_providers p
                WHERE p.user_id = a.user_id AND p.provider_type = 'discord'
              ) AS discord_linked,
-             (
-               SELECT d.status FROM notification_deliveries d
-               WHERE d.user_id = a.user_id AND d.channel = 'discord_dm'
-                 AND d.status IN ('sent', 'failed')
-               ORDER BY d.created_at DESC
-               LIMIT 1
-             ) AS last_dm_status,
+             ld.status AS last_dm_status,
+             ld.error_code AS last_dm_error_code,
              EXISTS (
                SELECT 1 FROM user_emails e
                WHERE e.user_id = a.user_id AND e.is_primary = true AND e.email_verified = true
@@ -146,8 +153,20 @@ export function reachabilitySql(): {
                WHERE ep.user_id = a.user_id AND ep.contractor_id IS NULL
                  AND na.action = ? AND ep.enabled = false
              ) AS email_unsubscribed,
-             EXISTS (SELECT 1 FROM push_subscriptions ps WHERE ps.user_id = a.user_id) AS push
+             EXISTS (SELECT 1 FROM push_subscriptions ps WHERE ps.user_id = a.user_id) AS push,
+             EXISTS (
+               SELECT 1 FROM discord_guild_presence gp
+               WHERE gp.user_id = a.user_id AND gp.shares_server = true
+                 AND gp.checked_at > now() - make_interval(days => ?)
+             ) AS shares_server
       FROM accounts a
+      LEFT JOIN LATERAL (
+        SELECT d.status, d.error_code FROM discord_dm_attempts d
+        WHERE d.user_id = a.user_id
+          AND d.created_at > now() - make_interval(days => ?)
+        ORDER BY d.created_at DESC, d.attempt_id DESC
+        LIMIT 1
+      ) ld ON true
       WHERE a.user_id IN (SELECT user_id FROM contacts)
         AND a.deleted_at IS NULL
         AND a.is_tombstone = false
@@ -158,6 +177,12 @@ export function reachabilitySql(): {
              MAX(uc.last_seen) AS last_seen,
              COALESCE(BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed'), false) AS discord_dm,
              COALESCE(BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'sent'), false) AS discord_dm_confirmed,
+             COALESCE(
+               NOT BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed')
+               AND BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'failed' AND uc.last_dm_error_code = ?),
+               false
+             ) AS discord_dm_closed,
+             COALESCE(BOOL_OR(uc.discord_linked AND uc.shares_server), false) AS discord_shared_server,
              COALESCE(BOOL_OR(uc.email_verified AND NOT uc.email_unsubscribed), false) AS email,
              COALESCE(BOOL_OR(uc.email_verified AND NOT uc.email_unsubscribed AND uc.email_delivered), false) AS email_confirmed,
              COALESCE(BOOL_OR(uc.push), false) AS push
@@ -176,6 +201,8 @@ export function reachabilitySql(): {
              END AS bucket,
              COALESCE(ps.discord_dm, false) AS discord_dm,
              COALESCE(ps.discord_dm_confirmed, false) AS discord_dm_confirmed,
+             COALESCE(ps.discord_dm_closed, false) AS discord_dm_closed,
+             COALESCE(ps.discord_shared_server, false) AS discord_shared_server,
              COALESCE(ps.email, false) AS email,
              COALESCE(ps.email_confirmed, false) AS email_confirmed,
              COALESCE(ps.push, false) AS push
@@ -189,6 +216,10 @@ export function reachabilitySql(): {
            COALESCE(SUM(listings) FILTER (WHERE discord_dm), 0)::integer AS discord_dm_listings,
            COUNT(*) FILTER (WHERE discord_dm_confirmed)::integer AS discord_dm_confirmed_sellers,
            COALESCE(SUM(listings) FILTER (WHERE discord_dm_confirmed), 0)::integer AS discord_dm_confirmed_listings,
+           COUNT(*) FILTER (WHERE discord_dm_closed)::integer AS discord_dm_closed_sellers,
+           COALESCE(SUM(listings) FILTER (WHERE discord_dm_closed), 0)::integer AS discord_dm_closed_listings,
+           COUNT(*) FILTER (WHERE discord_shared_server)::integer AS discord_shared_server_sellers,
+           COALESCE(SUM(listings) FILTER (WHERE discord_shared_server), 0)::integer AS discord_shared_server_listings,
            COUNT(*) FILTER (WHERE email)::integer AS email_sellers,
            COALESCE(SUM(listings) FILTER (WHERE email), 0)::integer AS email_listings,
            COUNT(*) FILTER (WHERE email_confirmed)::integer AS email_confirmed_sellers,
@@ -198,17 +229,29 @@ export function reachabilitySql(): {
            COUNT(*) FILTER (WHERE discord_dm OR email OR push)::integer AS any_sellers,
            COALESCE(SUM(listings) FILTER (WHERE discord_dm OR email OR push), 0)::integer AS any_listings,
            COUNT(*) FILTER (WHERE NOT (discord_dm OR email OR push))::integer AS none_sellers,
-           COALESCE(SUM(listings) FILTER (WHERE NOT (discord_dm OR email OR push)), 0)::integer AS none_listings
+           COALESCE(SUM(listings) FILTER (WHERE NOT (discord_dm OR email OR push)), 0)::integer AS none_listings,
+           (SELECT MAX(checked_at) FROM discord_guild_presence) AS presence_checked_at
     FROM rows
     GROUP BY bucket
   `
-  return { sql, bindings: [EMAIL_DELIVERED_WINDOW_DAYS, REACHABILITY_EMAIL_ACTION] }
+  // Placeholders in the order they appear in the statement.
+  return {
+    sql,
+    bindings: [
+      EMAIL_DELIVERED_WINDOW_DAYS,
+      REACHABILITY_EMAIL_ACTION,
+      PRESENCE_FRESH_DAYS,
+      DM_ATTEMPT_RETENTION_DAYS,
+      DM_CLOSED_CODE,
+    ],
+  }
 }
 
 type Row = {
   bucket: string
   sellers: number | string
   listings: number | string
+  presence_checked_at?: Date | string | null
 } & Record<`${ChannelKey}_${"sellers" | "listings"}`, number | string>
 
 const zero = (): ReachabilityCount => ({ sellers: 0, listings: 0 })
@@ -220,6 +263,8 @@ function emptyBucket(bucket: ReachabilityBucket): SellerReachabilityBucket {
     listings: 0,
     discord_dm: zero(),
     discord_dm_confirmed: zero(),
+    discord_dm_closed: zero(),
+    discord_shared_server: zero(),
     email: zero(),
     email_confirmed: zero(),
     push: zero(),
@@ -258,13 +303,19 @@ export function toReport(
       totals[c].listings += b[c].listings
     }
   }
+  const checkedRaw = rows.find((r) => r.presence_checked_at)?.presence_checked_at ?? null
+  const checkedAt = checkedRaw ? new Date(checkedRaw) : null
   return {
     generated_at: now.toISOString(),
     buckets,
     totals,
     signals: {
       discord_dm_delivery_results: true,
-      discord_dm_result_retention_days: DELIVERY_RETENTION_DAYS,
+      discord_dm_result_retention_days: DM_ATTEMPT_RETENTION_DAYS,
+      discord_dm_closed_code: DM_CLOSED_CODE,
+      discord_shared_server_checked_at:
+        checkedAt && !Number.isNaN(checkedAt.getTime()) ? checkedAt.toISOString() : null,
+      discord_shared_server_fresh_days: PRESENCE_FRESH_DAYS,
       email_delivery_results: true,
       email_delivered_window_days: EMAIL_DELIVERED_WINDOW_DAYS,
       push_delivery_results: false,

@@ -31,6 +31,15 @@ import {
   ThreadCreationResult,
 } from "./discord.service.types.js"
 import { DiscordChannelRef, getThreadChannel } from "./channel-setups.js"
+import { recordDmAttempt } from "./dm-attempts.js"
+
+/** Who a DM is for and which path sends it (discord_dm_attempts.source). */
+export interface DmAttemptContext {
+  /** The SC Market user; looked up from the Discord id when absent. */
+  userId?: string | null
+  /** e.g. "notify:reminder.unread_messages". */
+  source: string
+}
 
 /**
  * Service interface for Discord operations.
@@ -43,10 +52,16 @@ export interface DiscordService {
     userId: string,
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void>
-  /** Like sendDirectMessage, but reports the failure (Discord error code 50007 = DMs closed). */
+  /**
+   * Like sendDirectMessage, but reports the failure (Discord error code
+   * 50007 = DMs closed). Every attempt is recorded in discord_dm_attempts
+   * (services/discord/dm-attempts.ts); `attempt` names the SC Market user
+   * (looked up from the Discord id when absent) and the sending path.
+   */
   trySendDirectMessage(
     userId: string,
     message: RESTPostAPIChannelMessageJSONBody,
+    attempt?: DmAttemptContext,
   ): Promise<{ ok: true } | { ok: false; error: string; code?: number; status?: number }>
 
   // Thread management
@@ -115,16 +130,33 @@ class RestDiscordService implements DiscordService {
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void> {
     // Don't throw - Discord errors are expected and should be logged but not fail the operation
-    await this.trySendDirectMessage(userId, message)
+    await this.trySendDirectMessage(userId, message, { source: "backend:direct" })
   }
 
   async trySendDirectMessage(
     userId: string,
     message: RESTPostAPIChannelMessageJSONBody,
+    attempt: DmAttemptContext = { source: "backend:direct" },
   ): Promise<{ ok: true } | { ok: false; error: string; code?: number; status?: number }> {
     // Test accounts have no Discord; any DM caused by one would reach a real
-    // user (services/test-accounts).
+    // user (services/test-accounts). Not an attempt: nothing is recorded.
     if (actingAsTestAccount()) return { ok: false, error: "suppressed for a test account" }
+    const result = await this.postDirectMessage(userId, message)
+    await recordDmAttempt({
+      userId: attempt.userId ?? null,
+      discordId: userId,
+      source: attempt.source,
+      status: result.ok ? "sent" : "failed",
+      errorCode: result.ok ? null : result.code,
+      httpStatus: result.ok ? null : result.status,
+    })
+    return result
+  }
+
+  private async postDirectMessage(
+    userId: string,
+    message: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<{ ok: true } | { ok: false; error: string; code?: number; status?: number }> {
     try {
       const channel: APIChannel = (await this.rest.post(Routes.userChannels(), {
         body: {

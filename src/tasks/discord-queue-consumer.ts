@@ -11,10 +11,11 @@ import { rest } from "../services/discord/discord.service.js"
 import { checkDiscordSQSConfiguration } from "../clients/aws/sqs-config.js"
 import { chatServer } from "../clients/messaging/websocket.js"
 import { serializeMessage } from "../api/routes/v1/chats/serializers.js"
+import { recordBotDmResult } from "../services/discord/dm-attempts.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
-  type: "status_update" | "message_received" | "thread_created" | "error"
+  type: "status_update" | "message_received" | "thread_created" | "error" | "dm_result"
   payload: any
   metadata: {
     discord_message_id?: string
@@ -74,6 +75,12 @@ export async function processDiscordQueue() {
             break
           case "error":
             handleBotError(body.payload, body.metadata)
+            break
+          case "dm_result":
+            // A DM the bot sent itself: recorded with every other DM attempt
+            // (services/discord/dm-attempts.ts). Only the bot can write to
+            // this queue (AWS credentials).
+            await recordBotDmResult(body.payload)
             break
           default:
             logger.warn("Unknown message type:", body.type)

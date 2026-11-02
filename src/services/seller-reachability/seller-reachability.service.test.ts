@@ -30,6 +30,8 @@ function row(bucket: string, n: Partial<Record<string, number>>) {
   for (const c of [
     "discord_dm",
     "discord_dm_confirmed",
+    "discord_dm_closed",
+    "discord_shared_server",
     "email",
     "email_confirmed",
     "push",
@@ -81,17 +83,39 @@ describe("reachabilitySql: who counts", () => {
     )
   })
 
-  it("Discord DM: linked, and the last DM attempt's recorded result was not a failure", () => {
+  it("Discord DM: linked, and the last DM attempt (any path, discord_dm_attempts, 90 days) was not a failure", () => {
     expect(flat).toContain("p.provider_type = 'discord'")
     expect(flat).toContain(
-      "WHERE d.user_id = a.user_id AND d.channel = 'discord_dm' AND d.status IN ('sent', 'failed') ORDER BY d.created_at DESC LIMIT 1",
+      "LEFT JOIN LATERAL ( SELECT d.status, d.error_code FROM discord_dm_attempts d WHERE d.user_id = a.user_id AND d.created_at > now() - make_interval(days => ?) ORDER BY d.created_at DESC, d.attempt_id DESC LIMIT 1 ) ld ON true",
     )
+    expect(flat).not.toContain("notification_deliveries")
     expect(flat).toContain(
       "BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed')",
     )
     expect(flat).toContain(
       "BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'sent')",
     )
+  })
+
+  it("DM failed (closed): no contact reachable by DM, and a last DM failed with 50007", () => {
+    expect(flat).toContain(
+      "NOT BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed') AND BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'failed' AND uc.last_dm_error_code = ?)",
+    )
+    expect(bindings[4]).toBe(50007)
+  })
+
+  it("shares a server with the bot: linked and a fresh guild presence result", () => {
+    expect(flat).toContain(
+      "SELECT 1 FROM discord_guild_presence gp WHERE gp.user_id = a.user_id AND gp.shares_server = true AND gp.checked_at > now() - make_interval(days => ?)",
+    )
+    expect(flat).toContain("BOOL_OR(uc.discord_linked AND uc.shares_server)")
+    // Not a channel of its own: any / none are unchanged.
+    expect(flat).toContain("FILTER (WHERE discord_dm OR email OR push)")
+  })
+
+  it("binds its placeholders in statement order", () => {
+    expect(bindings).toEqual([90, "admin_alert", 3, 90, 50007])
+    expect((flat.match(/\?/g) ?? []).length).toBe(bindings.length)
   })
 
   it("email: a verified primary address, not bounced, not unsubscribed from announcement emails", () => {
@@ -101,7 +125,7 @@ describe("reachabilitySql: who counts", () => {
     expect(flat).toContain(
       "ep.contractor_id IS NULL AND na.action = ? AND ep.enabled = false",
     )
-    expect(bindings).toEqual([90, "admin_alert"])
+    expect(bindings.slice(0, 2)).toEqual([90, "admin_alert"])
   })
 
   it("email confirmed: reachable by email, and SES confirmed a delivery in the window", () => {
@@ -136,7 +160,7 @@ describe("reachabilitySql: who counts", () => {
 
   it("returns aggregates only: no ids, names or addresses leave the database", () => {
     const outer = flat.slice(flat.lastIndexOf("SELECT bucket,"))
-    expect(outer).not.toMatch(
+    expect(outer.replace("(SELECT MAX(checked_at) FROM discord_guild_presence)", "")).not.toMatch(
       /user_id|contractor_id|e\.email\b|username|seller_key/,
     )
     expect(outer).toContain("GROUP BY bucket")
@@ -154,6 +178,10 @@ describe("toReport", () => {
           discord_dm_listings: 20,
           discord_dm_confirmed_sellers: 2,
           discord_dm_confirmed_listings: 5,
+          discord_dm_closed_sellers: 3,
+          discord_dm_closed_listings: 11,
+          discord_shared_server_sellers: 5,
+          discord_shared_server_listings: 18,
           email_sellers: 3,
           email_listings: 9,
           email_confirmed_sellers: 1,
@@ -197,6 +225,8 @@ describe("toReport", () => {
       sellers: 2,
       listings: 5,
     })
+    expect(report.buckets[3].discord_dm_closed).toEqual({ sellers: 3, listings: 11 })
+    expect(report.buckets[3].discord_shared_server).toEqual({ sellers: 5, listings: 18 })
     expect(report.buckets[3].email_confirmed).toEqual({
       sellers: 1,
       listings: 4,
@@ -217,11 +247,22 @@ describe("toReport", () => {
     expect(report.signals).toEqual({
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: 90,
+      discord_dm_closed_code: 50007,
+      discord_shared_server_checked_at: null,
+      discord_shared_server_fresh_days: 3,
       email_delivery_results: true,
       email_delivered_window_days: 90,
       push_delivery_results: false,
     })
     expect(report.email_category).toBe("announcements")
+  })
+
+  it("says when server membership was last checked", () => {
+    const report = service.toReport(
+      [row("today", { presence_checked_at: "2026-11-01T06:00:00Z" as never })],
+      NOW,
+    )
+    expect(report.signals.discord_shared_server_checked_at).toBe("2026-11-01T06:00:00.000Z")
   })
 
   it("ignores an unexpected bucket instead of inventing one", () => {
@@ -252,7 +293,7 @@ describe("GET /admin/seller-reachability", () => {
       user: admin,
     } as never)
     expect(h.raw).toHaveBeenCalledTimes(1)
-    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert"])
+    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert", 3, 90, 50007])
     expect(report.buckets[1]).toMatchObject({
       bucket: "this_week",
       sellers: 2,

@@ -630,6 +630,24 @@ export async function writeUserDataExport(
     ),
     ({ id: _id, ...r }) => r,
   )
+  await out.array(
+    "discord_dm_attempts",
+    paged(
+      () =>
+        knex("discord_dm_attempts")
+          .where(me)
+          .select("attempt_id", "source", "status", "error_code", "created_at"),
+      "attempt_id",
+    ),
+    ({ attempt_id: _id, ...r }) => r,
+  )
+  await out.value(
+    "discord_server_membership",
+    (await knex("discord_guild_presence")
+      .where(me)
+      .select("shares_server", "guild_count", "checked_at")
+      .first()) ?? null,
+  )
   await out.value(
     "dm_reminders",
     (await knex("dm_reminder_log")

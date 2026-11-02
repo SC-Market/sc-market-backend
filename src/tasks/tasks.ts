@@ -19,6 +19,8 @@ import {
 } from "../services/dm-reminders/dm-reminder.service.js"
 import { refresh_shop_activity_stats } from "../services/seller-activity/seller-activity.service.js"
 import { pruneDeliveries } from "../services/notify/deliveries.js"
+import { pruneDmAttempts } from "../services/discord/dm-attempts.js"
+import { refreshGuildPresence, REFRESH_INTERVAL_HOURS } from "../services/discord/guild-presence.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { snapshot_game_item_prices } from "../services/price-oracle/price-oracle.service.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
@@ -153,7 +155,16 @@ export function start_tasks() {
   setTimeout(() => {
     safe(pruneDeliveries, "pruneDeliveries")
     setInterval(() => safe(pruneDeliveries, "pruneDeliveries"), 24 * 60 * 60 * 1000)
+    safe(pruneDmAttempts, "pruneDmAttempts")
+    setInterval(() => safe(pruneDmAttempts, "pruneDmAttempts"), 24 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 100_000)
+
+  // Which linked users share a server with the bot (seller reachability),
+  // from the bot's guild member lists; no DM is sent.
+  setTimeout(() => {
+    safe(refreshGuildPresence, "refreshGuildPresence")
+    setInterval(() => safe(refreshGuildPresence, "refreshGuildPresence"), REFRESH_INTERVAL_HOURS * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 130_000)
 
   // Delete logged-out listing views older than 90 days, daily
   setTimeout(() => {

@@ -15890,6 +15890,14 @@
 						"$ref": "#/components/schemas/ReachabilityCount",
 						"description": "Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm)."
 					},
+					"discord_dm_closed": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed or no shared server); an org: every contact with Discord linked."
+					},
+					"discord_shared_server": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent). Not part of any / none."
+					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
 						"description": "A verified primary email that is not marked undeliverable (bounced or complained), not unsubscribed from announcement emails."
@@ -15919,6 +15927,8 @@
 					"listings",
 					"discord_dm",
 					"discord_dm_confirmed",
+					"discord_dm_closed",
+					"discord_shared_server",
 					"email",
 					"email_confirmed",
 					"push",
@@ -15948,6 +15958,14 @@
 						"$ref": "#/components/schemas/ReachabilityCount",
 						"description": "Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm)."
 					},
+					"discord_dm_closed": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed or no shared server); an org: every contact with Discord linked."
+					},
+					"discord_shared_server": {
+						"$ref": "#/components/schemas/ReachabilityCount",
+						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent). Not part of any / none."
+					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
 						"description": "A verified primary email that is not marked undeliverable (bounced or complained), not unsubscribed from announcement emails."
@@ -15974,6 +15992,8 @@
 					"listings",
 					"discord_dm",
 					"discord_dm_confirmed",
+					"discord_dm_closed",
+					"discord_shared_server",
 					"email",
 					"email_confirmed",
 					"push",
@@ -16013,6 +16033,21 @@
 								"type": "boolean",
 								"description": "SES bounces, complaints and deliveries are recorded (bounced addresses are not reachable)."
 							},
+							"discord_shared_server_fresh_days": {
+								"type": "number",
+								"format": "double",
+								"description": "A membership result older than this many days is not counted."
+							},
+							"discord_shared_server_checked_at": {
+								"type": "string",
+								"nullable": true,
+								"description": "When the bot's server membership was last checked (ISO time), or null if never."
+							},
+							"discord_dm_closed_code": {
+								"type": "number",
+								"format": "double",
+								"description": "The Discord error code counted as \"DM failed (closed)\" (50007)."
+							},
 							"discord_dm_result_retention_days": {
 								"type": "number",
 								"format": "double",
@@ -16020,13 +16055,16 @@
 							},
 							"discord_dm_delivery_results": {
 								"type": "boolean",
-								"description": "Discord DMs sent through notify() record sent / failed per attempt."
+								"description": "Every Discord DM attempt (backend and bot) is recorded: sent, or failed with Discord's error code."
 							}
 						},
 						"required": [
 							"push_delivery_results",
 							"email_delivered_window_days",
 							"email_delivery_results",
+							"discord_shared_server_fresh_days",
+							"discord_shared_server_checked_at",
+							"discord_dm_closed_code",
 							"discord_dm_result_retention_days",
 							"discord_dm_delivery_results"
 						],
