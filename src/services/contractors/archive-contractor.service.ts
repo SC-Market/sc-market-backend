@@ -12,6 +12,8 @@ import logger from "../../logger/logger.js"
 import { auditLogService } from "../audit-log/audit-log.service.js"
 import { cancelOrderMarketItems } from "../../api/routes/v1/orders/helpers.js"
 import { OrderLifecycleService } from "../allocation/order-lifecycle.service.js"
+import { releaseOfferHolds } from "../allocation/v2-offer-holds.service.js"
+import { withTransaction } from "../../clients/database/transaction.js"
 
 export interface ArchiveContractorOptions {
   contractor: DBContractor
@@ -217,8 +219,12 @@ export async function archiveContractor({
         .where("status", "active")
         .update({ status: "rejected" })
 
-      // Mark the offer session as rejected
-      await offerDb.updateOfferSession(sessionId, { status: "rejected" })
+      // Mark the offer session as rejected; units its offer held
+      // ('on_received' timing) go back to the lots.
+      await withTransaction(async (trx) => {
+        await offerDb.updateOfferSession(sessionId, { status: "rejected" }, trx)
+        await releaseOfferHolds(trx, sessionId, "released")
+      })
 
       // Log offer rejections
       for (const offer of activeOffers) {

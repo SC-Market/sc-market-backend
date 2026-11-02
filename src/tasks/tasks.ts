@@ -19,6 +19,8 @@ import {
 } from "../services/dm-reminders/dm-reminder.service.js"
 import { processOfferReminders } from "../services/offer-reminders/offer-reminders.service.js"
 import { refresh_shop_activity_stats } from "../services/seller-activity/seller-activity.service.js"
+import { releaseHoldsOfClosedSessions } from "../services/allocation/v2-offer-holds.service.js"
+import { getKnex } from "../clients/database/knex-db.js"
 import { pruneDeliveries } from "../services/notify/deliveries.js"
 import { pruneDmAttempts } from "../services/discord/dm-attempts.js"
 import { refreshGuildPresence, REFRESH_INTERVAL_HOURS } from "../services/discord/guild-presence.js"
@@ -158,6 +160,17 @@ export function start_tasks() {
     safe(refresh_shop_activity_stats, "refresh_shop_activity_stats")
     setInterval(() => safe(refresh_shop_activity_stats, "refresh_shop_activity_stats"), 30 * 60 * 1000)
   }, STARTUP_DELAY + 85_000)
+
+  // Offer stock holds ('on_received' timing) of offers closed by a path that
+  // didn't put them back, every 15 minutes.
+  setTimeout(() => {
+    const sweep = async () => {
+      const returned = await releaseHoldsOfClosedSessions(getKnex())
+      if (returned > 0) logger.info("Released stock held by closed offers", { units: returned })
+    }
+    safe(sweep, "releaseHoldsOfClosedSessions")
+    setInterval(() => safe(sweep, "releaseHoldsOfClosedSessions"), 15 * 60 * 1000)
+  }, STARTUP_DELAY + 90_000)
 
   // Drop notification delivery records past their retention window, daily
   setTimeout(() => {

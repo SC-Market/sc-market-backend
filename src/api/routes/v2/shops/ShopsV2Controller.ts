@@ -58,6 +58,10 @@ import {
 import { clampPagination } from "../util/pagination.js"
 import { imageUrlSql } from "../util/image-url-sql.js"
 import { sellerActivityTieBreakSql } from "../../../../services/seller-activity/seller-ranking.js"
+import {
+  STOCK_SUBTRACTION_TIMINGS,
+  isStockSubtractionTiming,
+} from "../../../../services/allocation/stock-timing.service.js"
 
 // ─── Request/Response Types ──────────────────────────────────────────────────
 
@@ -1453,6 +1457,11 @@ export class ShopsV2Controller extends BaseController {
     if (!validTypes.includes(settingType as OrderSettingType)) {
       this.throwValidationError("Invalid setting type", [
         { field: "settingType", message: `Must be one of: ${validTypes.join(", ")}` },
+      ])
+    }
+    if (settingType === "stock_subtraction_timing" && !isStockSubtractionTiming(body.message_content)) {
+      this.throwValidationError("Invalid stock subtraction timing", [
+        { field: "message_content", message: `Must be one of: ${STOCK_SUBTRACTION_TIMINGS.join(", ")}` },
       ])
     }
 

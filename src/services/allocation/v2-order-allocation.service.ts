@@ -21,6 +21,7 @@
  */
 
 import type { Knex } from "knex"
+import { activeHeldByLot } from "./v2-offer-holds.service.js"
 
 export const V2_ALLOCATIONS_TABLE = "order_stock_allocations_v2"
 
@@ -373,16 +374,27 @@ export async function markOrderAllocationsFulfilled(db: Knex | Knex.Transaction,
     .update({ status: "fulfilled", updated_at: db.fn.now() })
 }
 
-/** Units of each lot held by orders that are still open (active allocations). */
+/**
+ * Units of each lot held by orders that are still open (active allocations)
+ * and by pending offers ('on_received' holds, v2-offer-holds.service.ts).
+ * Both are already out of the lot's quantity_total.
+ */
 export async function activeAllocatedByLot(
   db: Knex | Knex.Transaction,
   lotIds: string[],
 ): Promise<Map<string, number>> {
   if (lotIds.length === 0) return new Map()
-  const rows: Array<{ lot_id: string; allocated: number }> = await db(V2_ALLOCATIONS_TABLE)
-    .whereIn("lot_id", lotIds)
-    .where("status", "active")
-    .groupBy("lot_id")
-    .select("lot_id", db.raw("SUM(quantity)::integer AS allocated"))
-  return new Map(rows.map((r) => [r.lot_id, r.allocated]))
+  const [rows, held] = await Promise.all([
+    db(V2_ALLOCATIONS_TABLE)
+      .whereIn("lot_id", lotIds)
+      .where("status", "active")
+      .groupBy("lot_id")
+      .select("lot_id", db.raw("SUM(quantity)::integer AS allocated")) as Promise<
+      Array<{ lot_id: string; allocated: number }>
+    >,
+    activeHeldByLot(db, lotIds),
+  ])
+  const out = new Map(rows.map((r) => [r.lot_id, Number(r.allocated)]))
+  for (const [lot, n] of held) out.set(lot, (out.get(lot) ?? 0) + n)
+  return out
 }

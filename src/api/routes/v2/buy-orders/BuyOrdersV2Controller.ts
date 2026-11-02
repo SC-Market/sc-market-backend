@@ -23,7 +23,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
-import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import { getShopV2StockPolicy } from "../../../../services/allocation/stock-timing.service.js"
 import {
   V2InsufficientStockError,
   autoAllocateOrder,
@@ -322,18 +322,20 @@ export class BuyOrdersV2Controller extends BaseController {
           orderItemId: orderItem.order_item_id,
         })
 
-        // Step 8: Allocate stock from the variant's lots. Strict: under the
-        // lots' row locks the full quantity must still be there, or the
-        // purchase fails (two buyers can't get the same units).
-        const allocationMode = await getShopAllocationMode(listing.shop_id)
-        const allocationResult =
-          allocationMode === "auto"
-            ? await this.allocateOrFail(trx, order.order_id)
-            : { has_partial_allocations: false, total_requested: requestBody.quantity, total_allocated: 0 }
+        // Step 8: Allocate stock from the variant's lots, per the shop's
+        // allocation mode and stock subtraction timing (a direct purchase is
+        // received and accepted at once; 'dont_subtract' never allocates).
+        // Strict: under the lots' row locks the full quantity must still be
+        // there, or the purchase fails (two buyers can't get the same units).
+        const stockPolicy = await getShopV2StockPolicy(listing.shop_id)
+        const allocationResult = stockPolicy.allocate_on_order
+          ? await this.allocateOrFail(trx, order.order_id)
+          : { has_partial_allocations: false, total_requested: requestBody.quantity, total_allocated: 0 }
 
         logger.info("Stock allocated for direct purchase", {
           orderId: order.order_id,
-          allocationMode,
+          allocationMode: stockPolicy.allocation_mode,
+          stockSubtractionTiming: stockPolicy.timing,
           ...allocationResult,
         })
 
@@ -922,8 +924,9 @@ export class BuyOrdersV2Controller extends BaseController {
         price_per_unit: price,
       }).returning('*')
 
-      // Allocate stock (strict, as Buy now: the seller offered listed stock)
-      if ((await getShopAllocationMode(listing.shop_id)) === "auto") {
+      // Allocate stock (strict, as Buy now: the seller offered listed stock),
+      // per the shop's allocation mode and stock subtraction timing.
+      if ((await getShopV2StockPolicy(listing.shop_id)).allocate_on_order) {
         await this.allocateOrFail(trx, order.order_id)
       }
 

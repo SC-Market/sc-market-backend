@@ -38,6 +38,12 @@ import { is_member, has_permission } from "../util/permissions.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { OfferMergeError } from "./errors.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { withTransaction } from "../../../../clients/database/transaction.js"
+import { getShopV2StockPolicy } from "../../../../services/allocation/stock-timing.service.js"
+import {
+  releaseOfferHolds,
+  replaceOfferHolds,
+} from "../../../../services/allocation/v2-offer-holds.service.js"
 
 /**
  * Accept an offer as `user`: close the session, accept its most recent offer
@@ -51,7 +57,6 @@ export async function acceptOfferSession(
   mostRecent: DBOffer,
   user: User,
 ): Promise<DBOrder> {
-  const { withTransaction } = await import("../../../../clients/database/transaction.js")
   const order = await withTransaction(async (trx) => {
     await offerDb.updateOfferSession(session.id, { status: "closed" }, trx)
     await offerDb.updateOrderOffer(mostRecent.id, { status: "accepted" }, trx)
@@ -96,8 +101,12 @@ export async function rejectOfferSession(
   user: User,
   withdrawn: boolean,
 ): Promise<void> {
-  await offerDb.updateOfferSession(session.id, { status: "closed" })
-  await offerDb.updateOrderOffer(mostRecent.id, { status: "rejected" })
+  await withTransaction(async (trx) => {
+    await offerDb.updateOfferSession(session.id, { status: "closed" }, trx)
+    await offerDb.updateOrderOffer(mostRecent.id, { status: "rejected" }, trx)
+    // Units the offer held ('on_received' timing) go back to the lots.
+    await releaseOfferHolds(trx, session.id, "released")
+  })
 
   try {
     await discordService.sendOfferStatusUpdate(session, "Rejected", user)
@@ -348,6 +357,19 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
         }
       }
     }
+
+    // V2 stock held for the offer ('on_received' timing) follows the most
+    // recent offer: the old units go back, the counter-offer's are held.
+    const stockPolicy = await getShopV2StockPolicy(session.shop_id)
+    await withTransaction((trx) =>
+      replaceOfferHolds(
+        trx,
+        session.id,
+        offer.id,
+        body.v2_variant_items ?? [],
+        stockPolicy.hold_on_offer,
+      ),
+    )
 
     await offerDb.updateOrderOffer(req.most_recent_offer!.id, {
       status: "counteroffered",

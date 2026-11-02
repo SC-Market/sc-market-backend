@@ -28,6 +28,7 @@ const PRIMARY_KEYS: Record<string, string> = {
   listing_item_lots: "lot_id",
   shops: "shop_id",
   audit_logs: "audit_log_id",
+  offer_stock_holds_v2: "hold_id",
 }
 
 class FakeBuilder implements PromiseLike<Row[]> {

@@ -24,6 +24,7 @@ import {
 } from "./errors.js"
 import logger from "../../../../logger/logger.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
+import { releaseOfferHolds } from "../../../../services/allocation/v2-offer-holds.service.js"
 
 export async function is_related_to_offer(
   user_id: string,
@@ -783,6 +784,9 @@ export async function mergeOfferSessions(
     await trx("order_offers")
       .whereIn("id", offerIds)
       .update({ status: "rejected" })
+
+    // Units the source offers held ('on_received' timing) go back to the lots.
+    for (const s of sessions) await releaseOfferHolds(trx, s!.id, "released")
   })
 
   return {

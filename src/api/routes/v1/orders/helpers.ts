@@ -32,7 +32,11 @@ import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { Request } from "express"
 import { withTransaction } from "../../../../clients/database/transaction.js"
-import { getShopAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
+import { getShopV2StockPolicy } from "../../../../services/allocation/stock-timing.service.js"
+import {
+  holdOfferStock,
+  releaseOfferHolds,
+} from "../../../../services/allocation/v2-offer-holds.service.js"
 import {
   autoAllocateOrder,
   markOrderAllocationsFulfilled,
@@ -286,14 +290,6 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
 
   const market_listings = await marketDb.getOfferMarketListings(most_recent.id)
 
-  // Check stock subtraction timing setting
-  // Default is "on_accepted" (when no setting exists) - subtract stock when offer is accepted
-  const stockSetting = await getRelevantOrderSetting(
-    session,
-    "stock_subtraction_timing",
-  )
-  const settingValue = stockSetting?.message_content
-
   // Wrap critical database operations in a transaction
   const orderFn = async (trx: Knex.Transaction) => {
     // Create order
@@ -400,12 +396,18 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
     // V2 orders use order_market_items_v2 only — no market_orders entries needed
     // Order list counts should use order_market_items_v2 for V2 orders
 
-    // Allocate stock based on the selling shop's allocation_mode setting
-    // (createOrder resolved shop_id if the session had none).
-    if (v2OfferItems.length > 0) {
-      const allocationMode = await getShopAllocationMode(createdOrder.shop_id)
+    // V2 stock (services/allocation/stock-timing.service.ts): whatever the
+    // offer held while pending ('on_received') goes back to its lots and is
+    // taken again by the order's allocation below, so the order owns it.
+    const releasedHolds = await releaseOfferHolds(trx, session.id, "converted")
 
-      if (allocationMode === "auto") {
+    // Allocate stock per the selling shop's allocation mode and stock
+    // subtraction timing (createOrder resolved shop_id if the session had
+    // none): only 'auto' allocates, and never with 'dont_subtract'.
+    if (v2OfferItems.length > 0) {
+      const policy = await getShopV2StockPolicy(createdOrder.shop_id)
+
+      if (policy.allocate_on_order) {
         // Not strict: the seller accepted the offer, so lines get what is
         // listed and the rest can be allocated by hand later.
         const allocation = await autoAllocateOrder(trx, createdOrder.order_id, { strict: false })
@@ -416,9 +418,11 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
           })
         }
       } else {
-        logger.info("Skipping V2 auto-allocation due to mode", {
+        logger.info("Skipping V2 auto-allocation due to shop stock settings", {
           order_id: createdOrder.order_id,
-          allocation_mode: allocationMode,
+          allocation_mode: policy.allocation_mode,
+          stock_subtraction_timing: policy.timing,
+          released_offer_holds: releasedHolds,
         })
       }
     } else if (market_listings.length > 0) {
@@ -587,22 +591,19 @@ export async function createOffer(
       }
     }
 
-    // Check stock subtraction timing setting
-    // Note: This setting controls PUBLIC visibility of stock, not physical allocation
-    // Physical allocation happens when the order is created (in initiateOrder)
-    // We keep this check here for backward compatibility and logging
-    const stockSetting = await getRelevantOrderSetting(
-      createdSession,
-      "stock_subtraction_timing",
-    )
-    const settingValue = stockSetting?.message_content
-
-    if (settingValue === "on_received") {
-      logger.info("Stock will be allocated when order is created", {
-        session_id: createdSession.id,
-        stock_subtraction_timing: settingValue,
-        note: "Public visibility controlled by stock_subtraction_timing, physical allocation happens on order creation",
-      })
+    // 'on_received' stock subtraction timing: the seller has received the
+    // offer, so its V2 units leave the listed lots now (held for the offer;
+    // services/allocation/v2-offer-holds.service.ts).
+    if (v2_variant_items?.length) {
+      const policy = await getShopV2StockPolicy(createdSession.shop_id)
+      if (policy.hold_on_offer) {
+        const held = await holdOfferStock(trx, createdSession.id, createdOffer.id, v2_variant_items)
+        logger.info("V2 stock held for received offer", {
+          session_id: createdSession.id,
+          offer_id: createdOffer.id,
+          ...held,
+        })
+      }
     }
 
     return { session: createdSession, offer: createdOffer }

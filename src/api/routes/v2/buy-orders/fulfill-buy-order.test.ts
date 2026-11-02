@@ -16,6 +16,8 @@ const h = vi.hoisted(() => ({
   tables: {} as Record<string, Row[]>,
   canManage: (_shop: Row, _userId: string) => true,
   mode: "auto" as string,
+  /** The shop's stock_subtraction_timing row; null = none (the default). */
+  timing: null as string | null,
   problem: null as null | { field: string; message: string },
 }))
 
@@ -91,6 +93,13 @@ vi.mock("../../../../services/shops/shop-permissions.service.js", () => ({
 vi.mock("../../../../services/allocation/allocation-mode.service.js", () => ({
   getShopAllocationMode: async () => h.mode,
 }))
+// The shop's stock subtraction timing (services/allocation/stock-timing.service.ts).
+vi.mock("../../v1/orders/database.js", () => ({
+  getOrderSetting: async (entityType: string, _id: string, type: string) =>
+    entityType === "shop" && type === "stock_subtraction_timing" && h.timing
+      ? { enabled: true, message_content: h.timing }
+      : null,
+}))
 // What allocating does to the lots (locks, FIFO, the allocation rows) runs on
 // real Postgres in orders/order-allocations.pg.test.ts; here only whether
 // fulfilment asks for it.
@@ -162,6 +171,7 @@ describe("POST /buy-orders/{id}/fulfill", () => {
     autoAllocateOrder.mockClear()
     h.canManage = (shop, userId) => shop.owner_user_id === userId
     h.mode = "auto"
+    h.timing = null
     h.problem = null
   })
 
@@ -209,6 +219,29 @@ describe("POST /buy-orders/{id}/fulfill", () => {
     await fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 2 })
     expect(autoAllocateOrder).not.toHaveBeenCalled()
     expect(h.tables.listing_item_lots[0].quantity_total).toBe(8)
+  })
+
+  it("'dont_subtract': never allocates, even in auto mode; the lots keep their quantity", async () => {
+    h.timing = "dont_subtract"
+    const result = await fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 4 })
+    expect(autoAllocateOrder).not.toHaveBeenCalled()
+    expect(h.tables.listing_item_lots[0].quantity_total).toBe(8)
+    expect(h.tables.orders).toHaveLength(1)
+    expect(result.total_price).toBe(800)
+  })
+
+  it("'dont_subtract' still refuses more than the listed quantity", async () => {
+    h.timing = "dont_subtract"
+    await expect(
+      fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 9 }),
+    ).rejects.toBeInstanceOf(ValidationError)
+    expect(h.tables.orders ?? []).toEqual([])
+  })
+
+  it("'on_received': a fulfilment is received and accepted at once, so it allocates like the default", async () => {
+    h.timing = "on_received"
+    await fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 2 })
+    expect(autoAllocateOrder).toHaveBeenCalledWith(expect.anything(), h.tables.orders[0].order_id, { strict: true })
   })
 
   it("rejects a listing in a shop the caller can't manage", async () => {
