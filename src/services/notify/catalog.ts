@@ -131,6 +131,15 @@ export const CATALOG = {
   // linked), email still opt-in. Only this reminder DMs about messages; the
   // order/offer/message events themselves stay DM-locked (DISCORD_DM_LOCKED).
   "reminder.unread_messages": event("reminders", "dm_reminder", ["email", "discord_dm"], { discord_dm: true }),
+  // Pending-offer reminders (services/offer-reminders), owner decision
+  // 2026-11-02: to the seller side ~24 h and ~72 h after an offer arrives
+  // with no response, then to the buyer (keep waiting, message, withdraw).
+  // Personal preferences (reminders category): one digest per user spans
+  // every org. Discord DM on by default for the seller reminders (where
+  // sellers are reachable); in-app and push on; email off (opt-in).
+  "reminder.offer_pending": event("reminders", "offer_pending_reminder", ALL, { discord_dm: true }),
+  "reminder.offer_pending_final": event("reminders", "offer_pending_final_reminder", ALL, { discord_dm: true }),
+  "reminder.offer_waiting_buyer": event("reminders", "offer_waiting_buyer", ALL),
   // "Still selling?" 3 days before a listing expires (services/listing-expiry),
   // to the shop's owner or the org members who manage its market.
   "listing.expiring": event("market", "listing_expiring", ["in_app", "discord_dm"], { discord_dm: true }),

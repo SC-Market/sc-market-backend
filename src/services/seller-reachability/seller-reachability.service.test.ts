@@ -15,6 +15,10 @@ vi.mock("../../clients/database/knex-db.js", async () =>
   (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(() => h.db),
 )
 
+vi.mock("../discord/install-clicks.js", () => ({
+  installClickCounts: vi.fn(async () => [{ install_type: "user", src: "shop_hint", clicks_7d: 2, clicks_30d: 5 }]),
+}))
+
 const service = await import("./seller-reachability.service.js")
 const { AdminSellerReachabilityController } =
   await import("../../api/routes/v2/admin/AdminSellerReachabilityController.js")
@@ -31,7 +35,7 @@ function row(bucket: string, n: Partial<Record<string, number>>) {
     "discord_dm",
     "discord_dm_confirmed",
     "discord_dm_closed",
-    "discord_shared_server",
+    "discord_server_or_app",
     "email",
     "email_confirmed",
     "push",
@@ -83,38 +87,47 @@ describe("reachabilitySql: who counts", () => {
     )
   })
 
-  it("Discord DM: linked, and the last DM attempt (any path, discord_dm_attempts, 90 days) was not a failure", () => {
+  it("Discord DM: linked, last DM (any path, discord_dm_attempts, 90 days) not refused with 50007, and shares a server or installed the app", () => {
     expect(flat).toContain("p.provider_type = 'discord'")
     expect(flat).toContain(
       "LEFT JOIN LATERAL ( SELECT d.status, d.error_code FROM discord_dm_attempts d WHERE d.user_id = a.user_id AND d.created_at > now() - make_interval(days => ?) ORDER BY d.created_at DESC, d.attempt_id DESC LIMIT 1 ) ld ON true",
     )
     expect(flat).not.toContain("notification_deliveries")
-    expect(flat).toContain(
-      "BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed')",
-    )
-    expect(flat).toContain(
-      "BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'sent')",
-    )
+    // Never DMed (no attempt) is not "closed": COALESCE keeps it false, not NULL.
+    // The shared rule (services/discord/dm-reachability.ts), per contact.
+    expect(flat).toContain("CROSS JOIN LATERAL ( SELECT s.*,")
+    expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ?, false) AS dm_closed")
+    // User installs are recorded but not counted until confirmed.
+    expect(flat).toContain("(s.discord_linked AND NOT s.dm_closed AND s.shares_server) AS dm_reachable")
+    expect(flat).toContain("COALESCE(BOOL_OR(uc.dm_reachable), false) AS discord_dm,")
+    // Delivered: a subset of reachable.
+    expect(flat).toContain("BOOL_OR(uc.dm_reachable AND uc.last_dm_status = 'sent')")
+    // The old rule (any failure = unreachable, no server check) is gone.
+    expect(flat).not.toContain("IS DISTINCT FROM 'failed'")
   })
 
-  it("DM failed (closed): no contact reachable by DM, and a last DM failed with 50007", () => {
+  it("DM failed (closed): a contact's last DM failed with 50007, and no contact is free of that", () => {
     expect(flat).toContain(
-      "NOT BOOL_OR(uc.discord_linked AND uc.last_dm_status IS DISTINCT FROM 'failed') AND BOOL_OR(uc.discord_linked AND uc.last_dm_status = 'failed' AND uc.last_dm_error_code = ?)",
+      "COALESCE(BOOL_OR(uc.discord_linked AND uc.dm_closed), false) AND NOT COALESCE(BOOL_OR(uc.discord_linked AND NOT uc.dm_closed), false) AS discord_dm_closed",
     )
-    expect(bindings[4]).toBe(50007)
+    expect(bindings[3]).toBe(50007)
   })
 
-  it("shares a server with the bot: linked and a fresh guild presence result", () => {
+  it("shares a server or installed the app: a fresh guild presence result, or a recorded user install", () => {
     expect(flat).toContain(
       "SELECT 1 FROM discord_guild_presence gp WHERE gp.user_id = a.user_id AND gp.shares_server = true AND gp.checked_at > now() - make_interval(days => ?)",
     )
-    expect(flat).toContain("BOOL_OR(uc.discord_linked AND uc.shares_server)")
+    expect(flat).toContain(
+      "EXISTS (SELECT 1 FROM discord_user_installs ui WHERE ui.user_id = a.user_id) AS user_installed",
+    )
+    expect(flat).toContain("(s.shares_server OR s.user_installed) AS server_or_app")
+    expect(flat).toContain("BOOL_OR(uc.discord_linked AND uc.server_or_app), false) AS discord_server_or_app")
     // Not a channel of its own: any / none are unchanged.
     expect(flat).toContain("FILTER (WHERE discord_dm OR email OR push)")
   })
 
   it("binds its placeholders in statement order", () => {
-    expect(bindings).toEqual([90, "admin_alert", 3, 90, 50007])
+    expect(bindings).toEqual([90, "admin_alert", 3, 50007, 90])
     expect((flat.match(/\?/g) ?? []).length).toBe(bindings.length)
   })
 
@@ -180,8 +193,8 @@ describe("toReport", () => {
           discord_dm_confirmed_listings: 5,
           discord_dm_closed_sellers: 3,
           discord_dm_closed_listings: 11,
-          discord_shared_server_sellers: 5,
-          discord_shared_server_listings: 18,
+          discord_server_or_app_sellers: 5,
+          discord_server_or_app_listings: 18,
           email_sellers: 3,
           email_listings: 9,
           email_confirmed_sellers: 1,
@@ -226,7 +239,7 @@ describe("toReport", () => {
       listings: 5,
     })
     expect(report.buckets[3].discord_dm_closed).toEqual({ sellers: 3, listings: 11 })
-    expect(report.buckets[3].discord_shared_server).toEqual({ sellers: 5, listings: 18 })
+    expect(report.buckets[3].discord_server_or_app).toEqual({ sellers: 5, listings: 18 })
     expect(report.buckets[3].email_confirmed).toEqual({
       sellers: 1,
       listings: 4,
@@ -250,6 +263,7 @@ describe("toReport", () => {
       discord_dm_closed_code: 50007,
       discord_shared_server_checked_at: null,
       discord_shared_server_fresh_days: 3,
+      discord_user_install_counts_as_dm: false,
       email_delivery_results: true,
       email_delivered_window_days: 90,
       push_delivery_results: false,
@@ -293,12 +307,14 @@ describe("GET /admin/seller-reachability", () => {
       user: admin,
     } as never)
     expect(h.raw).toHaveBeenCalledTimes(1)
-    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert", 3, 90, 50007])
+    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert", 3, 50007, 90])
     expect(report.buckets[1]).toMatchObject({
       bucket: "this_week",
       sellers: 2,
       push: { sellers: 1, listings: 1 },
     })
+    // Install link clicks per surface, counts only.
+    expect(report.install_clicks).toEqual([{ install_type: "user", src: "shop_hint", clicks_7d: 2, clicks_30d: 5 }])
     expect(JSON.stringify(report)).not.toMatch(/user_id|a1/)
   })
 

@@ -439,3 +439,30 @@ export async function formatStorefrontEnquiryDecisionEmailData(
     enquiry: { ...enquiry, target_name: name, subdomain },
   } as EmailTemplateData
 }
+
+/** A pending-offer reminder (services/offer-reminders reminderMessages). */
+export interface OfferReminderEmailData {
+  stage: "first" | "final" | "buyer"
+  title: string
+  body: string
+  offers: { session_id: string; title: string; counterparty: string; waited: string; url: string }[]
+  more: number
+  url: string
+  withdraw_url: string | null
+}
+
+/** Pending-offer reminders: to the seller side (first, final) or the buyer. */
+export async function formatOfferReminderEmailData(
+  reminder: OfferReminderEmailData,
+  notificationType: "offer_pending_reminder" | "offer_pending_final_reminder" | "offer_waiting_buyer",
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, notificationType)
+  return {
+    ...baseData,
+    notificationTitle: reminder.title,
+    notificationBody: reminder.body,
+    actionUrl: reminder.url,
+    offerReminder: reminder,
+  } as EmailTemplateData
+}

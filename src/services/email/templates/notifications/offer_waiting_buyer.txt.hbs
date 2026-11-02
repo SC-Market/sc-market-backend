@@ -1,0 +1,16 @@
+{{offerReminder.title}}
+
+Hello {{userDisplayName}}, {{offerReminder.body}}
+
+{{#each offerReminder.offers}}
+- {{this.title}} · {{this.counterparty}} · {{this.waited}}: {{this.url}}
+{{/each}}
+{{#if offerReminder.more}}…and {{offerReminder.more}} more{{/if}}
+
+Message the Seller:
+{{actionUrl}}
+{{#if offerReminder.withdraw_url}}
+Withdraw the offer:
+{{offerReminder.withdraw_url}}
+{{/if}}
+To keep waiting, you don't need to do anything.

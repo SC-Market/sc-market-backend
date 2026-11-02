@@ -4650,7 +4650,10 @@
 					"contract.public_created",
 					"contract.offer_received",
 					"storefront.enquiry_accepted",
-					"storefront.enquiry_declined"
+					"storefront.enquiry_declined",
+					"reminder.offer_pending",
+					"reminder.offer_pending_final",
+					"reminder.offer_waiting_buyer"
 				]
 			},
 			"NotificationPreferenceCell": {
@@ -4868,6 +4871,50 @@
 				"required": [
 					"contractor_id",
 					"muted"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DiscordReachabilityResponse": {
+				"description": "Can SC Market reach the current user by Discord DM, and can they add the\nSC Market app to their own Discord account (services/discord/dm-reachability.ts,\nservices/discord/app-install.ts). Their own state only.",
+				"properties": {
+					"discord_linked": {
+						"type": "boolean"
+					},
+					"dm_reachable": {
+						"type": "boolean",
+						"description": "Reachable by Discord DM by the one rule (linked, last DM not refused with 50007, shares a server with the bot)."
+					},
+					"shares_server": {
+						"type": "boolean",
+						"description": "Shares a server with the SC Market bot (checked periodically)."
+					},
+					"user_installed": {
+						"type": "boolean",
+						"description": "Seen using the bot through the app installed on their own Discord account."
+					},
+					"user_install_counts_as_dm": {
+						"type": "boolean",
+						"description": "Whether a recorded user install counts towards dm_reachable yet (false until confirmed the bot can DM such users)."
+					},
+					"user_install_available": {
+						"type": "boolean",
+						"description": "Whether the app can be installed on a personal account (User Install enabled in the Discord Developer Portal)."
+					},
+					"user_install_url": {
+						"type": "string",
+						"nullable": true,
+						"description": "The install link (integration_type=1) while user_install_available; null otherwise."
+					}
+				},
+				"required": [
+					"discord_linked",
+					"dm_reachable",
+					"shares_server",
+					"user_installed",
+					"user_install_counts_as_dm",
+					"user_install_available",
+					"user_install_url"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -13029,6 +13076,28 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DiscordInstallClickRequest": {
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"server"
+						],
+						"description": "user: install on your own Discord account; server: add the bot to a server."
+					},
+					"src": {
+						"type": "string",
+						"description": "The surface the link was on; unknown values count as \"other\"."
+					}
+				},
+				"required": [
+					"type",
+					"src"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Record_string.boolean_": {
 				"properties": {},
 				"additionalProperties": {
@@ -15884,19 +15953,19 @@
 					},
 					"discord_dm": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the last Discord DM attempt (if any, last 90 days) did not fail."
+						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) did not fail with 50007, and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
 					},
 					"discord_dm_confirmed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm)."
+						"description": "Reachable by Discord DM, and the last Discord DM attempt was delivered (a subset of discord_dm)."
 					},
 					"discord_dm_closed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed or no shared server); an org: every contact with Discord linked."
+						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed, or no shared server and no user install); an org: every contact with Discord linked."
 					},
-					"discord_shared_server": {
+					"discord_server_or_app": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent). Not part of any / none."
+						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent) or installed the SC Market app on their own Discord account (seen on their interactions with the bot; cleared by a later 50007). Not part of any / none."
 					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -15928,7 +15997,7 @@
 					"discord_dm",
 					"discord_dm_confirmed",
 					"discord_dm_closed",
-					"discord_shared_server",
+					"discord_server_or_app",
 					"email",
 					"email_confirmed",
 					"push",
@@ -15952,19 +16021,19 @@
 					},
 					"discord_dm": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the last Discord DM attempt (if any, last 90 days) did not fail."
+						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) did not fail with 50007, and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
 					},
 					"discord_dm_confirmed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the last Discord DM attempt was delivered (a subset of discord_dm)."
+						"description": "Reachable by Discord DM, and the last Discord DM attempt was delivered (a subset of discord_dm)."
 					},
 					"discord_dm_closed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed or no shared server); an org: every contact with Discord linked."
+						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed, or no shared server and no user install); an org: every contact with Discord linked."
 					},
-					"discord_shared_server": {
+					"discord_server_or_app": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent). Not part of any / none."
+						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent) or installed the SC Market app on their own Discord account (seen on their interactions with the bot; cleared by a later 50007). Not part of any / none."
 					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -15993,12 +16062,59 @@
 					"discord_dm",
 					"discord_dm_confirmed",
 					"discord_dm_closed",
-					"discord_shared_server",
+					"discord_server_or_app",
 					"email",
 					"email_confirmed",
 					"push",
 					"any",
 					"none"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DiscordInstallSource": {
+				"type": "string",
+				"enum": [
+					"settings_notifications",
+					"settings_discord",
+					"org_discord",
+					"shop_dashboard",
+					"shop_hint",
+					"guide",
+					"faq",
+					"footer",
+					"other"
+				],
+				"description": "Where an \"Add SC Market to Discord\" link was (services/discord/install-clicks.ts INSTALL_SOURCES)."
+			},
+			"DiscordInstallClickCount": {
+				"properties": {
+					"install_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"server"
+						]
+					},
+					"src": {
+						"$ref": "#/components/schemas/DiscordInstallSource"
+					},
+					"clicks_7d": {
+						"type": "number",
+						"format": "double",
+						"description": "Clicks in the last 7 days (today included)."
+					},
+					"clicks_30d": {
+						"type": "number",
+						"format": "double",
+						"description": "Clicks in the last 30 days (today included)."
+					}
+				},
+				"required": [
+					"install_type",
+					"src",
+					"clicks_7d",
+					"clicks_30d"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -16033,6 +16149,10 @@
 								"type": "boolean",
 								"description": "SES bounces, complaints and deliveries are recorded (bounced addresses are not reachable)."
 							},
+							"discord_user_install_counts_as_dm": {
+								"type": "boolean",
+								"description": "Whether installing the app on one's own Discord account counts as reachable by Discord DM (false until confirmed that the bot can DM such users without a shared server)."
+							},
 							"discord_shared_server_fresh_days": {
 								"type": "number",
 								"format": "double",
@@ -16062,6 +16182,7 @@
 							"push_delivery_results",
 							"email_delivered_window_days",
 							"email_delivery_results",
+							"discord_user_install_counts_as_dm",
 							"discord_shared_server_fresh_days",
 							"discord_shared_server_checked_at",
 							"discord_dm_closed_code",
@@ -16078,6 +16199,13 @@
 						],
 						"nullable": false,
 						"description": "The email category whose unsubscribes are checked."
+					},
+					"install_clicks": {
+						"items": {
+							"$ref": "#/components/schemas/DiscordInstallClickCount"
+						},
+						"type": "array",
+						"description": "Clicks on \"Add SC Market to Discord\" links per install type and surface (last 7 and 30 days), most clicked first."
 					}
 				},
 				"required": [
@@ -16085,7 +16213,8 @@
 					"buckets",
 					"totals",
 					"signals",
-					"email_category"
+					"email_category",
+					"install_clicks"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -19940,6 +20069,34 @@
 						}
 					}
 				}
+			}
+		},
+		"/notification-preferences/discord-reachability": {
+			"get": {
+				"operationId": "GetDiscordReachability",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DiscordReachabilityResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Whether SC Market can reach you by Discord DM (linked, your last DM was\nnot refused, you share a server with the bot), and the link to add the\nSC Market app to your own Discord account when that is possible. Your\nown state only.",
+				"summary": "Get your Discord DM reachability",
+				"tags": [
+					"Notifications"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/auth/mfa/status": {
@@ -25414,6 +25571,33 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/discord/install-clicks": {
+			"post": {
+				"operationId": "RecordDiscordInstallClick",
+				"responses": {
+					"204": {
+						"description": "Counted"
+					}
+				},
+				"description": "Count one click on an \"Add SC Market to Discord\" link. Unknown surfaces\ncount as \"other\"; an unknown install type is ignored.",
+				"summary": "Count a Discord install link click",
+				"tags": [
+					"Discord"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DiscordInstallClickRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/debug/feature-flag": {

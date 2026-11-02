@@ -27,7 +27,7 @@ export const CATEGORY_LABELS: Record<CategoryId, string> = {
   org: "organization invites",
   org_members: "organization member activity",
   announcements: "announcements",
-  reminders: "unread message reminders",
+  reminders: "reminders (unread messages, pending offers)",
   contracts: "public contract offers",
   storefront: "storefront enquiry replies",
   account: "account notices",

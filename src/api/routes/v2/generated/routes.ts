@@ -72,6 +72,8 @@ import { BlueprintsController } from './../game-data/blueprints/BlueprintsContro
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EmailDeliverabilityController } from './../email/EmailDeliverabilityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DiscordInstallV2Controller } from './../discord/DiscordInstallV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DashboardV2Controller } from './../dashboard/DashboardV2Controller.js';
@@ -1633,7 +1635,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationEventKey": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]},{"dataType":"enum","enums":["storefront.enquiry_accepted"]},{"dataType":"enum","enums":["storefront.enquiry_declined"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]},{"dataType":"enum","enums":["storefront.enquiry_accepted"]},{"dataType":"enum","enums":["storefront.enquiry_declined"]},{"dataType":"enum","enums":["reminder.offer_pending"]},{"dataType":"enum","enums":["reminder.offer_pending_final"]},{"dataType":"enum","enums":["reminder.offer_waiting_buyer"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationPreferenceCell": {
@@ -1713,6 +1715,20 @@ const models: TsoaRoute.Models = {
             "contractor_id": {"dataType":"string","required":true},
             "muted": {"dataType":"boolean","required":true},
             "until": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DiscordReachabilityResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "discord_linked": {"dataType":"boolean","required":true},
+            "dm_reachable": {"dataType":"boolean","required":true},
+            "shares_server": {"dataType":"boolean","required":true},
+            "user_installed": {"dataType":"boolean","required":true},
+            "user_install_counts_as_dm": {"dataType":"boolean","required":true},
+            "user_install_available": {"dataType":"boolean","required":true},
+            "user_install_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -4264,6 +4280,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DiscordInstallClickRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["server"]}],"required":true},
+            "src": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Record_string.boolean_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"boolean"},"validators":{}},
@@ -5248,7 +5273,7 @@ const models: TsoaRoute.Models = {
             "discord_dm": {"ref":"ReachabilityCount","required":true},
             "discord_dm_confirmed": {"ref":"ReachabilityCount","required":true},
             "discord_dm_closed": {"ref":"ReachabilityCount","required":true},
-            "discord_shared_server": {"ref":"ReachabilityCount","required":true},
+            "discord_server_or_app": {"ref":"ReachabilityCount","required":true},
             "email": {"ref":"ReachabilityCount","required":true},
             "email_confirmed": {"ref":"ReachabilityCount","required":true},
             "push": {"ref":"ReachabilityCount","required":true},
@@ -5267,12 +5292,28 @@ const models: TsoaRoute.Models = {
             "discord_dm": {"ref":"ReachabilityCount","required":true},
             "discord_dm_confirmed": {"ref":"ReachabilityCount","required":true},
             "discord_dm_closed": {"ref":"ReachabilityCount","required":true},
-            "discord_shared_server": {"ref":"ReachabilityCount","required":true},
+            "discord_server_or_app": {"ref":"ReachabilityCount","required":true},
             "email": {"ref":"ReachabilityCount","required":true},
             "email_confirmed": {"ref":"ReachabilityCount","required":true},
             "push": {"ref":"ReachabilityCount","required":true},
             "any": {"ref":"ReachabilityCount","required":true},
             "none": {"ref":"ReachabilityCount","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DiscordInstallSource": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["settings_notifications"]},{"dataType":"enum","enums":["settings_discord"]},{"dataType":"enum","enums":["org_discord"]},{"dataType":"enum","enums":["shop_dashboard"]},{"dataType":"enum","enums":["shop_hint"]},{"dataType":"enum","enums":["guide"]},{"dataType":"enum","enums":["faq"]},{"dataType":"enum","enums":["footer"]},{"dataType":"enum","enums":["other"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DiscordInstallClickCount": {
+        "dataType": "refObject",
+        "properties": {
+            "install_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["server"]}],"required":true},
+            "src": {"ref":"DiscordInstallSource","required":true},
+            "clicks_7d": {"dataType":"double","required":true},
+            "clicks_30d": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -5283,8 +5324,9 @@ const models: TsoaRoute.Models = {
             "generated_at": {"dataType":"string","required":true},
             "buckets": {"dataType":"array","array":{"dataType":"refObject","ref":"SellerReachabilityBucket"},"required":true},
             "totals": {"ref":"SellerReachabilityCounts","required":true},
-            "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivered_window_days":{"dataType":"double","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_shared_server_fresh_days":{"dataType":"double","required":true},"discord_shared_server_checked_at":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"discord_dm_closed_code":{"dataType":"double","required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
+            "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivered_window_days":{"dataType":"double","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_user_install_counts_as_dm":{"dataType":"boolean","required":true},"discord_shared_server_fresh_days":{"dataType":"double","required":true},"discord_shared_server_checked_at":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"discord_dm_closed_code":{"dataType":"double","required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
             "email_category": {"dataType":"enum","enums":["announcements"],"required":true},
+            "install_clicks": {"dataType":"array","array":{"dataType":"refObject","ref":"DiscordInstallClickCount"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -7712,6 +7754,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'updateNotificationOrgMute',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificationPreferencesV2Controller_getDiscordReachability: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/notification-preferences/discord-reachability',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(NotificationPreferencesV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(NotificationPreferencesV2Controller.prototype.getDiscordReachability)),
+
+            async function NotificationPreferencesV2Controller_getDiscordReachability(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificationPreferencesV2Controller_getDiscordReachability, request, response });
+
+                const controller = new NotificationPreferencesV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getDiscordReachability',
                 controller,
                 response,
                 next,
@@ -10959,6 +11032,36 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDiscordInstallV2Controller_recordDiscordInstallClick: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"DiscordInstallClickRequest"},
+        };
+        app.post('/discord/install-clicks',
+            ...(fetchMiddlewares<RequestHandler>(DiscordInstallV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(DiscordInstallV2Controller.prototype.recordDiscordInstallClick)),
+
+            async function DiscordInstallV2Controller_recordDiscordInstallClick(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDiscordInstallV2Controller_recordDiscordInstallClick, request, response });
+
+                const controller = new DiscordInstallV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'recordDiscordInstallClick',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 204,
               });
             } catch (err) {
                 return next(err);

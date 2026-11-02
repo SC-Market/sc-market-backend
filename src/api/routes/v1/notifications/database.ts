@@ -602,6 +602,13 @@ export async function getEntityByType(
       const { noticeEntity } = await import("../../../../services/listing-expiry/listing-expiry.service.js")
       return noticeEntity(entity_id)
     }
+    case "offer_reminders": {
+      // Pending-offer reminders (offer_pending_reminder, _final_reminder,
+      // offer_waiting_buyer): the offers in the reminder, entity id = its
+      // batch (services/offer-reminders).
+      const { offerReminderEntity } = await import("../../../../services/offer-reminders/offer-reminders.service.js")
+      return offerReminderEntity(entity_id)
+    }
     case "storefront_enquiries": {
       // A new branded storefront enquiry (storefront_enquiry_created), to site
       // admins; accepted / declined (storefront_enquiry_accepted, _declined),

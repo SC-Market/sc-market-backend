@@ -662,6 +662,23 @@ class SESEmailService implements EmailService {
           )
           break
 
+        case "offer_pending_reminder":
+        case "offer_pending_final_reminder":
+        case "offer_waiting_buyer":
+          if (!data.offerReminder) {
+            logger.warn(
+              `Missing offer reminder data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatOfferReminderEmailData(
+            data.offerReminder as payloadFormatters.OfferReminderEmailData,
+            notificationType,
+            userId,
+          )
+          break
+
         case "storefront_enquiry_accepted":
         case "storefront_enquiry_declined":
           if (!data.enquiry) {

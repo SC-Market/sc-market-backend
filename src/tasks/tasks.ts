@@ -17,6 +17,7 @@ import {
   processDmReminders,
   logReminderVolumeEstimate,
 } from "../services/dm-reminders/dm-reminder.service.js"
+import { processOfferReminders } from "../services/offer-reminders/offer-reminders.service.js"
 import { refresh_shop_activity_stats } from "../services/seller-activity/seller-activity.service.js"
 import { pruneDeliveries } from "../services/notify/deliveries.js"
 import { pruneDmAttempts } from "../services/discord/dm-attempts.js"
@@ -144,6 +145,13 @@ export function start_tasks() {
     safe(logReminderVolumeEstimate, "logReminderVolumeEstimate")
     setInterval(() => safe(logReminderVolumeEstimate, "logReminderVolumeEstimate"), 24 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 80_000)
+
+  // Pending-offer reminders (seller ~24 h and ~72 h, then the buyer), every
+  // 30 minutes. OFFER_REMINDERS_ENABLED=false turns them off.
+  setTimeout(() => {
+    safe(() => processOfferReminders(), "processOfferReminders")
+    setInterval(() => safe(() => processOfferReminders(), "processOfferReminders"), 30 * 60 * 1000)
+  }, STARTUP_DELAY + 82_000)
 
   // Seller activity (last seen, reply time) for listings and shops, every 30 minutes.
   setTimeout(() => {

@@ -12,12 +12,14 @@
  *
  * Per attempt: the user, sent or failed, and Discord's error code
  * (DM_CLOSED_CODE 50007: the bot cannot DM them, their DMs are closed or they
- * share no server with it). Attempts for Discord accounts not linked to an
+ * share no server with it; it also clears a recorded user install,
+ * user-installs.ts). Attempts for Discord accounts not linked to an
  * SC Market user are not recorded (there is no one to attribute them to).
  * Recording never throws: a DM that went out is never failed by bookkeeping.
  */
 import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
+import { clearUserInstall } from "./user-installs.js"
 
 /** Discord JSON error code: "Cannot send messages to this user". */
 export const DM_CLOSED_CODE = 50007
@@ -70,6 +72,9 @@ export async function recordDmAttempt(a: DmAttempt): Promise<boolean> {
       error_code: a.status === "failed" ? intOrNull(a.errorCode) : null,
       http_status: a.status === "failed" ? intOrNull(a.httpStatus) : null,
     })
+    // 50007 after a user install: the app was removed (or DMs closed), so the
+    // install no longer makes them reachable (user-installs.ts).
+    if (a.status === "failed" && a.errorCode === DM_CLOSED_CODE) await clearUserInstall(userId)
     return true
   } catch (err) {
     logger.warn("Failed to record Discord DM attempt", {

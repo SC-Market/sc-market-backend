@@ -9,7 +9,11 @@ import {
   setOrgMute,
   setPreferences,
 } from "../../../../services/notify/preference-matrix.js"
+import { discordDmStateSql, USER_INSTALL_COUNTS_AS_DM_REACHABLE } from "../../../../services/discord/dm-reachability.js"
+import { userInstallAvailable, userInstallUrl } from "../../../../services/discord/app-install.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 import type {
+  DiscordReachabilityResponse,
   NotificationPreferenceScope,
   NotificationPreferencesResponse,
   UpdateNotificationOrgMuteRequest,
@@ -106,6 +110,42 @@ export class NotificationPreferencesV2Controller extends BaseController {
       throw err
     }
     return this.response(userId, scope, scopes)
+  }
+
+  /**
+   * Whether SC Market can reach you by Discord DM (linked, your last DM was
+   * not refused, you share a server with the bot), and the link to add the
+   * SC Market app to your own Discord account when that is possible. Your
+   * own state only.
+   * @summary Get your Discord DM reachability
+   */
+  @Security("loggedin")
+  @Get("discord-reachability")
+  public async getDiscordReachability(
+    @Request() request: ExpressRequest,
+  ): Promise<DiscordReachabilityResponse> {
+    this.request = request
+    const userId = this.getUserId()
+    this.setHeader("Cache-Control", "private, no-store")
+    const state = discordDmStateSql("u.user_id")
+    const [result, available] = await Promise.all([
+      getKnex().raw(
+        `SELECT dm.discord_linked, dm.dm_reachable, dm.shares_server, dm.user_installed
+         FROM (SELECT ?::uuid AS user_id) u CROSS JOIN LATERAL (${state.sql}) dm`,
+        [userId, ...state.bindings],
+      ),
+      userInstallAvailable(),
+    ])
+    const row = (result?.rows?.[0] ?? {}) as Partial<Record<"discord_linked" | "dm_reachable" | "shares_server" | "user_installed", boolean>>
+    return {
+      discord_linked: !!row.discord_linked,
+      dm_reachable: !!row.dm_reachable,
+      shares_server: !!row.shares_server,
+      user_installed: !!row.user_installed,
+      user_install_counts_as_dm: USER_INSTALL_COUNTS_AS_DM_REACHABLE,
+      user_install_available: available,
+      user_install_url: available ? userInstallUrl() : null,
+    }
   }
 
   private async response(

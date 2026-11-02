@@ -1,0 +1,21 @@
+<h1 style="color: #e8e8e8;">{{offerReminder.title}}</h1>
+
+<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+
+<p style="color: #b7b7b7;">{{offerReminder.body}}</p>
+
+<div
+  style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
+>
+  {{#each offerReminder.offers}}
+  <p style="color: #b7b7b7; margin: 0 0 8px 0;"><a href="{{this.url}}" style="color: #e8e8e8;">{{this.title}}</a> · {{this.counterparty}} · {{this.waited}}</p>
+  {{/each}}
+  {{#if offerReminder.more}}<p style="color: #b7b7b7; margin: 0;">…and {{offerReminder.more}} more</p>{{/if}}
+</div>
+
+<p style="text-align: center;">
+  <a href="{{actionUrl}}" class="button">Message the Seller</a>
+</p>
+{{#if offerReminder.withdraw_url}}
+<p style="color: #b7b7b7; text-align: center;">No longer need it? <a href="{{offerReminder.withdraw_url}}" style="color: #e8e8e8;">Withdraw the offer</a>. To keep waiting, you don't need to do anything.</p>
+{{/if}}

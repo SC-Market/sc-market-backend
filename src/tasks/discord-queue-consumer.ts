@@ -12,10 +12,11 @@ import { checkDiscordSQSConfiguration } from "../clients/aws/sqs-config.js"
 import { chatServer } from "../clients/messaging/websocket.js"
 import { serializeMessage } from "../api/routes/v1/chats/serializers.js"
 import { recordBotDmResult } from "../services/discord/dm-attempts.js"
+import { recordUserInstall } from "../services/discord/user-installs.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
-  type: "status_update" | "message_received" | "thread_created" | "error" | "dm_result"
+  type: "status_update" | "message_received" | "thread_created" | "error" | "dm_result" | "user_install"
   payload: any
   metadata: {
     discord_message_id?: string
@@ -81,6 +82,12 @@ export async function processDiscordQueue() {
             // (services/discord/dm-attempts.ts). Only the bot can write to
             // this queue (AWS credentials).
             await recordBotDmResult(body.payload)
+            break
+          case "user_install":
+            // Someone used the bot through the app installed on their own
+            // account: DM-reachable without a shared server
+            // (services/discord/user-installs.ts).
+            await recordUserInstall(body.payload)
             break
           default:
             logger.warn("Unknown message type:", body.type)

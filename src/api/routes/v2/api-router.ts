@@ -132,6 +132,9 @@ apiV2Router.get(
 // Storefront settings and branded storefront enquiries: writes, rate limited
 // like the other writes (one open enquiry per org or shop on top).
 apiV2Router.post("/storefront-enquiries", tsoaWriteRateLimit)
+// "Add SC Market to Discord" link clicks (DiscordInstallV2Controller):
+// anonymous counter increments, rate limited like the other writes.
+apiV2Router.post("/discord/install-clicks", tsoaWriteRateLimit)
 apiV2Router.put(
   ["/contractors/:spectrum_id/storefront/directory", "/shops/:shopId/storefront/directory"],
   tsoaWriteRateLimit,
