@@ -16349,7 +16349,7 @@
 		"version": "2.0.0",
 		"description": "Star Citizen Market API v2 - TSOA-based with auto-generated routes and OpenAPI specification",
 		"license": {
-			"name": "MIT"
+			"name": "AGPL-3.0"
 		},
 		"contact": {}
 	},

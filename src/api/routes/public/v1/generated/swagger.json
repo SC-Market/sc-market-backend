@@ -2400,7 +2400,7 @@
 		"version": "1.0.0",
 		"description": "The SC Market public API for shop and order tooling. Every operation needs an API token (Authorization: Bearer scmp_…) with the scope it lists. Create tokens in your SC Market account settings under API tokens.",
 		"license": {
-			"name": "MIT"
+			"name": "AGPL-3.0"
 		},
 		"contact": {}
 	},

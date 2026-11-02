@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "server.js",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "private": true,
   "type": "module",
   "engines": {
