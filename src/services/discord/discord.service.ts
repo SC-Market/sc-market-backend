@@ -98,6 +98,8 @@ export interface DiscordService {
   // Utility
   fetchGuild(guildId: string): Promise<APIGuild>
   fetchChannel(channelId: string): Promise<APITextChannel>
+  /** Every channel in a server the bot is in. */
+  fetchGuildChannels(guildId: string): Promise<APIChannel[]>
   /** The member, or null when the user is not in the guild. */
   fetchGuildMember(guildId: string, userId: string): Promise<APIGuildMember | null>
   createInvite(
@@ -488,6 +490,10 @@ class RestDiscordService implements DiscordService {
 
   async fetchChannel(channelId: string): Promise<APITextChannel> {
     return (await this.rest.get(Routes.channel(channelId))) as APITextChannel
+  }
+
+  async fetchGuildChannels(guildId: string): Promise<APIChannel[]> {
+    return (await this.rest.get(Routes.guildChannels(guildId))) as APIChannel[]
   }
 
   async fetchGuildMember(

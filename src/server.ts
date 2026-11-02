@@ -105,6 +105,7 @@ import {
 } from "./api/routes/v1/util/i18n.js"
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
+import { setupDiscordInstallRoutes } from "./api/routes/discord-install-routes.js"
 import logger from "./logger/logger.js"
 import { requestContext } from "./logger/log-context.js"
 import {
@@ -387,6 +388,8 @@ app.use(trackActivity)
 
 // Setup authentication routes
 setupAuthRoutes(app, frontend_url)
+// Adding the Discord bot through SC Market's own OAuth2 flow (links it).
+setupDiscordInstallRoutes(app, frontend_url, backend_url)
 
 setupSitemapRoutes(app)
 

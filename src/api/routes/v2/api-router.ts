@@ -140,6 +140,10 @@ apiV2Router.post("/storefront-enquiries", tsoaWriteRateLimit)
 // "Add SC Market to Discord" link clicks (DiscordInstallV2Controller):
 // anonymous counter increments, rate limited like the other writes.
 apiV2Router.post("/discord/install-clicks", tsoaWriteRateLimit)
+// Threads and alerts in a Discord server linked by the install flow
+// (DiscordLinkedServersV2Controller): signed-in writes.
+apiV2Router.put("/discord/linked-servers/:guildId", tsoaWriteRateLimit)
+apiV2Router.delete("/discord/linked-servers/:guildId", tsoaWriteRateLimit)
 apiV2Router.put(
   ["/contractors/:spectrum_id/storefront/directory", "/shops/:shopId/storefront/directory"],
   tsoaWriteRateLimit,

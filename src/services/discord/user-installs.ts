@@ -15,6 +15,9 @@
  * at most once per user per 6 hours. Only linked SC Market accounts are
  * recorded.
  *
+ * The website's own install flow (install-oauth.ts) also records one when a
+ * user install's code exchange names a Discord account linked to SC Market.
+ *
  * Expiry: a later DM to the user that fails with 50007 (DM_CLOSED_CODE: the
  * app was removed, or DMs are closed) deletes the row (dm-attempts.ts). The
  * next user-install interaction records it again.
@@ -51,8 +54,26 @@ export async function recordUserInstall(payload: unknown): Promise<boolean> {
       .where({ provider_type: "discord", provider_id: parsed.discord_id })
       .first("user_id")
     if (!row?.user_id) return false
+    return await recordUserInstallFor(String(row.user_id))
+  } catch (err) {
+    logger.warn("Failed to record a Discord user install", {
+      error: err instanceof Error ? err.message : String(err),
+    })
+    return false
+  }
+}
+
+/**
+ * Record that this SC Market user installed the app on their Discord account
+ * (the bot's report above, or our own install flow, install-oauth.ts, which
+ * saw the install's code exchange). Returns whether a row was written.
+ * Never throws.
+ */
+export async function recordUserInstallFor(userId: string): Promise<boolean> {
+  try {
+    const knex = getKnex()
     await knex("discord_user_installs")
-      .insert({ user_id: row.user_id, user_installed_at: knex.fn.now(), last_seen_at: knex.fn.now() })
+      .insert({ user_id: userId, user_installed_at: knex.fn.now(), last_seen_at: knex.fn.now() })
       .onConflict("user_id")
       .merge({ last_seen_at: knex.fn.now() })
     return true

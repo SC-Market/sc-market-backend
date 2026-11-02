@@ -90,6 +90,7 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "dm_reminder_conversations.user_id": { export: "dm_reminder_conversations" },
   "dm_campaign_recipients.user_id": { export: "dm_campaigns" },
   "discord_user_installs.user_id": { export: "discord_app_install" },
+  "discord_linked_guilds.linked_by_user_id": { exclude: STAFF },
   "offer_reminders.user_id": { export: "offer_reminders" },
   "email_defaults_notices.user_id": { export: "email_defaults_notice" },
 

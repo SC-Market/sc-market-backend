@@ -74,6 +74,8 @@ import { BlueprintsController } from './../game-data/blueprints/BlueprintsContro
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EmailDeliverabilityController } from './../email/EmailDeliverabilityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { DiscordLinkedServersV2Controller } from './../discord/DiscordLinkedServersV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DiscordInstallV2Controller } from './../discord/DiscordInstallV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DebugV2Controller } from './../debug/DebugV2Controller.js';
@@ -4331,6 +4333,49 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LinkedDiscordChannel": {
+        "dataType": "refObject",
+        "properties": {
+            "channel_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "kind": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["text"]},{"dataType":"enum","enums":["forum"]},{"dataType":"enum","enums":["announcement"]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LinkedDiscordServer": {
+        "dataType": "refObject",
+        "properties": {
+            "guild_id": {"dataType":"string","required":true},
+            "name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "icon_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "bot_in_server": {"dataType":"boolean","required":true},
+            "channels": {"dataType":"array","array":{"dataType":"refObject","ref":"LinkedDiscordChannel"},"required":true},
+            "thread_channel_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "alert_channel_ids": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LinkedDiscordServersResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "servers": {"dataType":"array","array":{"dataType":"refObject","ref":"LinkedDiscordServer"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateLinkedDiscordServerRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "shop": {"dataType":"string"},
+            "org": {"dataType":"string"},
+            "thread_channel_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "alert_channel_ids": {"dataType":"array","array":{"dataType":"string"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DiscordInstallClickRequest": {
         "dataType": "refObject",
         "properties": {
@@ -5468,7 +5513,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DiscordInstallSource": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["settings_notifications"]},{"dataType":"enum","enums":["settings_discord"]},{"dataType":"enum","enums":["org_discord"]},{"dataType":"enum","enums":["shop_dashboard"]},{"dataType":"enum","enums":["shop_hint"]},{"dataType":"enum","enums":["guide"]},{"dataType":"enum","enums":["faq"]},{"dataType":"enum","enums":["footer"]},{"dataType":"enum","enums":["other"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["settings_notifications"]},{"dataType":"enum","enums":["settings_discord"]},{"dataType":"enum","enums":["org_discord"]},{"dataType":"enum","enums":["shop_dashboard"]},{"dataType":"enum","enums":["shop_settings"]},{"dataType":"enum","enums":["shop_hint"]},{"dataType":"enum","enums":["guide"]},{"dataType":"enum","enums":["faq"]},{"dataType":"enum","enums":["footer"]},{"dataType":"enum","enums":["other"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DiscordInstallClickCount": {
@@ -11261,6 +11306,106 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDiscordLinkedServersV2Controller_getLinkedDiscordServers: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shop: {"in":"query","name":"shop","dataType":"string"},
+                org: {"in":"query","name":"org","dataType":"string"},
+        };
+        app.get('/discord/linked-servers',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(DiscordLinkedServersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(DiscordLinkedServersV2Controller.prototype.getLinkedDiscordServers)),
+
+            async function DiscordLinkedServersV2Controller_getLinkedDiscordServers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDiscordLinkedServersV2Controller_getLinkedDiscordServers, request, response });
+
+                const controller = new DiscordLinkedServersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getLinkedDiscordServers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDiscordLinkedServersV2Controller_updateLinkedDiscordServer: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                guildId: {"in":"path","name":"guildId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateLinkedDiscordServerRequest"},
+        };
+        app.put('/discord/linked-servers/:guildId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(DiscordLinkedServersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(DiscordLinkedServersV2Controller.prototype.updateLinkedDiscordServer)),
+
+            async function DiscordLinkedServersV2Controller_updateLinkedDiscordServer(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDiscordLinkedServersV2Controller_updateLinkedDiscordServer, request, response });
+
+                const controller = new DiscordLinkedServersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateLinkedDiscordServer',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsDiscordLinkedServersV2Controller_unlinkDiscordServer: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                guildId: {"in":"path","name":"guildId","required":true,"dataType":"string"},
+                shop: {"in":"query","name":"shop","dataType":"string"},
+                org: {"in":"query","name":"org","dataType":"string"},
+        };
+        app.delete('/discord/linked-servers/:guildId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(DiscordLinkedServersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(DiscordLinkedServersV2Controller.prototype.unlinkDiscordServer)),
+
+            async function DiscordLinkedServersV2Controller_unlinkDiscordServer(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsDiscordLinkedServersV2Controller_unlinkDiscordServer, request, response });
+
+                const controller = new DiscordLinkedServersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'unlinkDiscordServer',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 204,
               });
             } catch (err) {
                 return next(err);

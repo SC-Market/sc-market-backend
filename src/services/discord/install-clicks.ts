@@ -20,6 +20,7 @@ export const INSTALL_SOURCES = [
   "settings_discord",
   "org_discord",
   "shop_dashboard",
+  "shop_settings",
   "shop_hint",
   "guide",
   "faq",

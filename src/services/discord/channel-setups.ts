@@ -98,7 +98,7 @@ export async function addAlertChannel(
 export async function addFeedChannel(
   owner: DiscordSetupOwner,
   channel: DiscordChannelRef,
-  created_by_discord_id: string,
+  created_by_discord_id: string | null,
   kind: "alerts" | "contracts",
 ): Promise<void> {
   await knex()(TABLE)

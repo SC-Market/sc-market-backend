@@ -53,7 +53,7 @@ export async function recordDiscordLinkSkipped(
   db: Knex,
   userId: string,
   discordId: string,
-  via: "citizenid_signup" | "citizenid_link",
+  via: "citizenid_signup" | "citizenid_link" | "discord_install",
 ): Promise<string> {
   const [row] = await db("audit_logs")
     .insert({

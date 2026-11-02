@@ -44,6 +44,17 @@ describe("userInstallAvailable", () => {
     expect(get).toHaveBeenCalledTimes(2)
   })
 
+  it("reads the app's redirect URIs from the same cached call", async () => {
+    const get = vi.spyOn(rest, "get").mockResolvedValue({
+      integration_types_config: { "0": {} },
+      redirect_uris: ["https://api.sc-market.space/auth/discord/callback"],
+    } as never)
+    expect(await install.redirectUriRegistered("https://api.sc-market.space/auth/discord-install/callback", 0)).toBe(false)
+    expect(await install.redirectUriRegistered("https://api.sc-market.space/auth/discord/callback", 0)).toBe(true)
+    expect(await install.userInstallAvailable(0)).toBe(false)
+    expect(get).toHaveBeenCalledTimes(1)
+  })
+
   it("a failed read: not available", async () => {
     vi.spyOn(rest, "get").mockRejectedValue(new Error("401"))
     expect(await install.userInstallAvailable(0)).toBe(false)

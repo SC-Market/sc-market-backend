@@ -13216,6 +13216,125 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"LinkedDiscordChannel": {
+				"description": "A channel of a linked server that can get order threads or alerts.",
+				"properties": {
+					"channel_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string",
+						"enum": [
+							"text",
+							"forum",
+							"announcement"
+						],
+						"description": "text: threads and alerts; forum: threads (as posts); announcement: alerts."
+					}
+				},
+				"required": [
+					"channel_id",
+					"name",
+					"kind"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LinkedDiscordServer": {
+				"description": "A Discord server linked to a shop or org by adding the bot from its settings.",
+				"properties": {
+					"guild_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string",
+						"nullable": true,
+						"description": "null when the bot can't read the server (it was removed)."
+					},
+					"icon_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"bot_in_server": {
+						"type": "boolean",
+						"description": "false when the bot is no longer in the server."
+					},
+					"channels": {
+						"items": {
+							"$ref": "#/components/schemas/LinkedDiscordChannel"
+						},
+						"type": "array",
+						"description": "Channels that can get threads or alerts, by position."
+					},
+					"thread_channel_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "The owner's order-thread channel, when it is in this server."
+					},
+					"alert_channel_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "The owner's order-alert channels in this server."
+					}
+				},
+				"required": [
+					"guild_id",
+					"name",
+					"icon_url",
+					"bot_in_server",
+					"channels",
+					"thread_channel_id",
+					"alert_channel_ids"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LinkedDiscordServersResponse": {
+				"properties": {
+					"servers": {
+						"items": {
+							"$ref": "#/components/schemas/LinkedDiscordServer"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"servers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateLinkedDiscordServerRequest": {
+				"properties": {
+					"shop": {
+						"type": "string",
+						"description": "The shop (shop id) the server is linked to; give this or org."
+					},
+					"org": {
+						"type": "string",
+						"description": "The org (Spectrum ID) the server is linked to; give this or shop."
+					},
+					"thread_channel_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "The order-thread channel: a channel id, null to stop threads in this server, or omit to keep."
+					},
+					"alert_channel_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Exactly the alert channels in this server; omit to keep."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"DiscordInstallClickRequest": {
 				"properties": {
 					"type": {
@@ -16539,6 +16658,7 @@
 					"settings_discord",
 					"org_discord",
 					"shop_dashboard",
+					"shop_settings",
 					"shop_hint",
 					"guide",
 					"faq",
@@ -26127,6 +26247,145 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/discord/linked-servers": {
+			"get": {
+				"operationId": "GetLinkedDiscordServers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LinkedDiscordServersResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The Discord servers linked to a shop (by shop id) or an org (by Spectrum\nID), with the channels that can get order threads and alerts.",
+				"summary": "List linked Discord servers",
+				"tags": [
+					"Discord",
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "shop",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "org",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/discord/linked-servers/{guildId}": {
+			"put": {
+				"operationId": "UpdateLinkedDiscordServer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LinkedDiscordServer"
+								}
+							}
+						}
+					}
+				},
+				"description": "Point the owner's order threads and alerts at channels of a linked server.",
+				"summary": "Set up threads and alerts in a linked Discord server",
+				"tags": [
+					"Discord",
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "guildId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateLinkedDiscordServerRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "UnlinkDiscordServer",
+				"responses": {
+					"204": {
+						"description": "Unlinked"
+					}
+				},
+				"description": "Unlink a server from the shop or org. Threads and alerts already set up\nin it keep working until they are changed.",
+				"summary": "Unlink a Discord server",
+				"tags": [
+					"Discord",
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "guildId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "shop",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "org",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/discord/install-clicks": {
