@@ -2119,6 +2119,47 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UexImportSkipReason": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["no_price"]},{"dataType":"enum","enums":["invalid_price"]},{"dataType":"enum","enums":["invalid_title"]},{"dataType":"enum","enums":["invalid_description"]},{"dataType":"enum","enums":["invalid_quantity"]},{"dataType":"enum","enums":["failed"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UexImportPreviewItem": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "quality": {"dataType":"double"},
+            "source": {"dataType":"string"},
+            "skip_reason": {"ref":"UexImportSkipReason"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UexImportItemResult": {
+        "dataType": "refObject",
+        "properties": {
+            "index": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["imported"]},{"dataType":"enum","enums":["skipped"]}],"required":true},
+            "reason": {"ref":"UexImportSkipReason"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UexImportResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "preview": {"dataType":"array","array":{"dataType":"refObject","ref":"UexImportPreviewItem"}},
+            "imported": {"dataType":"double"},
+            "skipped": {"dataType":"double"},
+            "total": {"dataType":"double"},
+            "results": {"dataType":"array","array":{"dataType":"refObject","ref":"UexImportItemResult"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "InventoryLotDetail": {
         "dataType": "refObject",
         "properties": {
@@ -2244,6 +2285,14 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "hint_keys": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ClearDismissedHintsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "cleared": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -8649,6 +8698,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getDismissedHints',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsHintsV2Controller_clearDismissedHints: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.delete('/hints/dismissed',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(HintsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(HintsV2Controller.prototype.clearDismissedHints)),
+
+            async function HintsV2Controller_clearDismissedHints(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsHintsV2Controller_clearDismissedHints, request, response });
+
+                const controller = new HintsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'clearDismissedHints',
                 controller,
                 response,
                 next,

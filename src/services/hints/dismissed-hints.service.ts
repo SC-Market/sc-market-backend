@@ -85,3 +85,14 @@ export async function dismissHint(
     .first("hint_key", "dismissed_at")
   return row!
 }
+
+/**
+ * Forget every hint the user has dismissed, so all of them show again.
+ * Returns how many dismissals were removed.
+ */
+export async function clearDismissedHints(
+  db: Knex,
+  userId: string,
+): Promise<number> {
+  return db("user_dismissed_hints").where({ user_id: userId }).del()
+}

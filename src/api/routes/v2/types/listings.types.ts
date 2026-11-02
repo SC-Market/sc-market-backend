@@ -650,3 +650,48 @@ export interface InventoryMaterial {
 export interface InventorySummaryResponse {
   materials: InventoryMaterial[];
 }
+
+/**
+ * Why one UEX listing was not imported. `no_price` means UEX has no price
+ * set for it; `failed` means saving it hit an error on our side.
+ */
+export type UexImportSkipReason =
+  | "no_price"
+  | "invalid_price"
+  | "invalid_title"
+  | "invalid_description"
+  | "invalid_quantity"
+  | "failed"
+
+/** One of the seller's UEX sell listings, as offered for import. */
+export interface UexImportPreviewItem {
+  title: string
+  price: number
+  quantity: number
+  quality?: number
+  source?: string
+  /** Set when this listing can't be imported as it is. */
+  skip_reason?: UexImportSkipReason
+}
+
+/** What happened to one listing sent for import, by its position in the request. */
+export interface UexImportItemResult {
+  /** Position of the listing in the request's `listings`. */
+  index: number
+  title: string
+  status: "imported" | "skipped"
+  /** Set when `status` is "skipped". */
+  reason?: UexImportSkipReason
+}
+
+/**
+ * Without `confirm`, the preview of importable listings. With it, the
+ * per-listing outcome: valid listings are imported, invalid ones skipped.
+ */
+export interface UexImportResponse {
+  preview?: UexImportPreviewItem[]
+  imported?: number
+  skipped?: number
+  total?: number
+  results?: UexImportItemResult[]
+}

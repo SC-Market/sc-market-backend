@@ -6268,6 +6268,114 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UexImportSkipReason": {
+				"type": "string",
+				"enum": [
+					"no_price",
+					"invalid_price",
+					"invalid_title",
+					"invalid_description",
+					"invalid_quantity",
+					"failed"
+				],
+				"description": "Why one UEX listing was not imported. `no_price` means UEX has no price\nset for it; `failed` means saving it hit an error on our side."
+			},
+			"UexImportPreviewItem": {
+				"description": "One of the seller's UEX sell listings, as offered for import.",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality": {
+						"type": "number",
+						"format": "double"
+					},
+					"source": {
+						"type": "string"
+					},
+					"skip_reason": {
+						"$ref": "#/components/schemas/UexImportSkipReason",
+						"description": "Set when this listing can't be imported as it is."
+					}
+				},
+				"required": [
+					"title",
+					"price",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UexImportItemResult": {
+				"description": "What happened to one listing sent for import, by its position in the request.",
+				"properties": {
+					"index": {
+						"type": "number",
+						"format": "double",
+						"description": "Position of the listing in the request's `listings`."
+					},
+					"title": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"imported",
+							"skipped"
+						]
+					},
+					"reason": {
+						"$ref": "#/components/schemas/UexImportSkipReason",
+						"description": "Set when `status` is \"skipped\"."
+					}
+				},
+				"required": [
+					"index",
+					"title",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UexImportResponse": {
+				"description": "Without `confirm`, the preview of importable listings. With it, the\nper-listing outcome: valid listings are imported, invalid ones skipped.",
+				"properties": {
+					"preview": {
+						"items": {
+							"$ref": "#/components/schemas/UexImportPreviewItem"
+						},
+						"type": "array"
+					},
+					"imported": {
+						"type": "number",
+						"format": "double"
+					},
+					"skipped": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/UexImportItemResult"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"InventoryLotDetail": {
 				"properties": {
 					"lot_id": {
@@ -6586,6 +6694,20 @@
 				},
 				"required": [
 					"hint_keys"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ClearDismissedHintsResponse": {
+				"properties": {
+					"cleared": {
+						"type": "number",
+						"format": "double",
+						"description": "How many dismissals were removed."
+					}
+				},
+				"required": [
+					"cleared"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -20515,48 +20637,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"total": {
-											"type": "number",
-											"format": "double"
-										},
-										"imported": {
-											"type": "number",
-											"format": "double"
-										},
-										"preview": {
-											"items": {
-												"properties": {
-													"source": {
-														"type": "string"
-													},
-													"quality": {
-														"type": "number",
-														"format": "double"
-													},
-													"quantity": {
-														"type": "number",
-														"format": "double"
-													},
-													"price": {
-														"type": "number",
-														"format": "double"
-													},
-													"title": {
-														"type": "string"
-													}
-												},
-												"required": [
-													"quantity",
-													"price",
-													"title"
-												],
-												"type": "object"
-											},
-											"type": "array"
-										}
-									},
-									"type": "object"
+									"$ref": "#/components/schemas/UexImportResponse"
 								}
 							}
 						}
@@ -21224,6 +21305,32 @@
 				},
 				"description": "Keys of every inline help hint the current user has dismissed",
 				"summary": "List my dismissed hints",
+				"tags": [
+					"Hints"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			},
+			"delete": {
+				"operationId": "ClearDismissedHints",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ClearDismissedHintsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Show every inline help hint again: forgets all of the current user's\ndismissals. Clearing an empty list is a no-op.",
+				"summary": "Show all hints again",
 				"tags": [
 					"Hints"
 				],

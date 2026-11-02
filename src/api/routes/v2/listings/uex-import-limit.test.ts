@@ -1,6 +1,7 @@
 /**
  * POST /api/v2/listings/import-uex with confirm=true created one listing per
- * client-supplied entry, unbounded and unvalidated.
+ * client-supplied entry, unbounded and unvalidated. The batch size is capped;
+ * each entry is validated on its own and an invalid one is skipped.
  *
  * Named without "Controller" so the vitest exclusion for DB-backed v2
  * controller tests does not skip it.
@@ -63,12 +64,18 @@ describe("importFromUex confirm", () => {
   })
 
   it.each([
-    [{ ...item, title: "" }],
-    [{ ...item, title: "x".repeat(501) }],
-    [{ ...item, price: -5 }],
-    [{ ...item, quantity: 0 }],
-  ])("rejects an invalid entry %#", async (bad) => {
-    await expect(run([bad])).rejects.toMatchObject({ name: "ValidationError" })
+    [{ ...item, title: "" }, "invalid_title"],
+    [{ ...item, title: "x".repeat(501) }, "invalid_title"],
+    [{ ...item, price: 0 }, "no_price"],
+    [{ ...item, price: -5 }, "invalid_price"],
+    [{ ...item, quantity: 0 }, "invalid_quantity"],
+  ])("skips an invalid entry %# without writing", async (bad, reason) => {
+    await expect(run([bad])).resolves.toEqual({
+      imported: 0,
+      skipped: 1,
+      total: 1,
+      results: [{ index: 0, title: bad.title, status: "skipped", reason }],
+    })
     expect(withTransaction).not.toHaveBeenCalled()
   })
 })

@@ -113,4 +113,32 @@ describe("dismissed hints", () => {
       hint_key: "k0",
     })
   })
+
+  it("clears only the caller's dismissals", async () => {
+    h.db.tables.user_dismissed_hints.push(
+      { user_id: "alice", hint_key: "uex.import", dismissed_at: FIRST },
+      { user_id: "alice", hint_key: "stock.lots-vs-quantity", dismissed_at: FIRST },
+    )
+    await expect(controller().clearDismissedHints(as("alice"))).resolves.toEqual({
+      cleared: 2,
+    })
+    await expect(controller().getDismissedHints(as("alice"))).resolves.toEqual({
+      hint_keys: [],
+    })
+    // Bob's dismissal is untouched.
+    await expect(controller().getDismissedHints(as("bob"))).resolves.toEqual({
+      hint_keys: ["stock.lots-vs-quantity"],
+    })
+    // Clearing again is a no-op.
+    await expect(controller().clearDismissedHints(as("alice"))).resolves.toEqual({
+      cleared: 0,
+    })
+  })
+
+  it("requires a signed-in user to clear", async () => {
+    await expect(controller().clearDismissedHints(as())).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+    })
+    expect(h.db.tables.user_dismissed_hints).toHaveLength(1)
+  })
 })

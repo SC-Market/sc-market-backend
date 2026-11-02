@@ -14,3 +14,8 @@ export interface DismissedHint {
   /** When the user first dismissed it. */
   dismissed_at: string
 }
+
+export interface ClearDismissedHintsResponse {
+  /** How many dismissals were removed. */
+  cleared: number
+}

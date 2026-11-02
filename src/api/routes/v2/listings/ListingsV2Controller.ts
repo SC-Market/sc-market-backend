@@ -31,7 +31,10 @@ import {
   GetListingDetailResponse,
   GetMyListingsResponse,
   InventorySummaryResponse,
+  UexImportItemResult,
+  UexImportResponse,
 } from "../types/listings.types.js"
+import { uexImportSkipReason } from "../../../../services/uex/uex-import-validation.js"
 import { getShopActivity, getOneShopActivity } from "../../../../services/seller-activity/seller-activity.service.js"
 import { NOTICE_DAYS_BEFORE, markRenewed, renewalColumns } from "../../../../services/listing-expiry/listing-expiry.service.js"
 import logger from "../../../../logger/logger.js"
@@ -2319,11 +2322,7 @@ export class ListingsV2Controller extends BaseController {
       confirm?: boolean
     },
     @Request() request: ExpressRequest,
-  ): Promise<{
-    preview?: Array<{ title: string; price: number; quantity: number; quality?: number; source?: string }>
-    imported?: number
-    total?: number
-  }> {
+  ): Promise<UexImportResponse> {
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -2349,51 +2348,51 @@ export class ListingsV2Controller extends BaseController {
         return { preview: [], total: 0 }
       }
       return {
-        preview: uexListings.map((l) => ({
-          title: l.title,
-          price: l.price,
-          quantity: l.quantity,
-          quality: l.quality,
-          source: l.source,
-        })),
+        preview: uexListings.map((l) => {
+          const reason = uexImportSkipReason(l)
+          return {
+            title: l.title,
+            price: l.price,
+            quantity: l.quantity,
+            quality: l.quality,
+            source: l.source,
+            ...(reason ? { skip_reason: reason } : {}),
+          }
+        }),
         total: uexListings.length,
       }
     }
 
     // Import confirmed. The listings come from the client (the preview it was
-    // shown), so bound how many and what they contain: each one is a write
-    // transaction, and the batch used to be unlimited.
+    // shown), so bound how many there are: each one is a write transaction.
     if (!Array.isArray(requestBody.listings) || requestBody.listings.length > UEX_IMPORT_MAX_LISTINGS) {
       this.throwValidationError(`At most ${UEX_IMPORT_MAX_LISTINGS} listings per import`, [
         { field: "listings", message: `At most ${UEX_IMPORT_MAX_LISTINGS} listings per import` },
       ])
     }
-    const badItem = requestBody.listings.findIndex(
-      (item) =>
-        typeof item?.title !== "string" ||
-        item.title.trim().length === 0 ||
-        item.title.length > 500 ||
-        (item.description != null &&
-          (typeof item.description !== "string" || item.description.length > 10000)) ||
-        !Number.isFinite(item.price) ||
-        item.price <= 0 ||
-        (item.quantity != null &&
-          (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 1_000_000)),
-    )
-    if (badItem !== -1) {
-      this.throwValidationError("Invalid listing in import", [
-        { field: `listings[${badItem}]`, message: "Title, description, price or quantity is invalid" },
-      ])
-    }
 
-    // Import confirmed — create listings, linked to a game item when the
-    // title names exactly one
-    const gameItemIds = await matchGameItemsByName(
-      db,
-      requestBody.listings.map((item) => item.title),
-    )
-    let imported = 0
-    for (const item of requestBody.listings) {
+    // Each listing is checked on its own: an invalid one (e.g. no price on
+    // UEX) is skipped with its reason and the rest still import.
+    const results: UexImportItemResult[] = requestBody.listings.map((item, index) => {
+      const reason = uexImportSkipReason(item)
+      return {
+        index,
+        title: typeof item?.title === "string" ? item.title : "",
+        status: reason ? "skipped" : "imported",
+        ...(reason ? { reason } : {}),
+      }
+    })
+    const valid = results.filter((r) => r.status === "imported")
+
+    // Create listings, linked to a game item when the title names exactly one
+    const gameItemIds = valid.length
+      ? await matchGameItemsByName(
+          db,
+          valid.map((r) => requestBody.listings![r.index].title),
+        )
+      : new Map<string, string>()
+    for (const result of valid) {
+      const item = requestBody.listings[result.index]
       const gameItemId = gameItemIds.get(item.title) ?? null
       try {
         await withTransaction(async (trx) => {
@@ -2452,8 +2451,9 @@ export class ListingsV2Controller extends BaseController {
             updated_at: new Date(),
           })
         })
-        imported++
       } catch (err) {
+        result.status = "skipped"
+        result.reason = "failed"
         logger.error("Error importing UEX listing", {
           title: item.title,
           error: err instanceof Error ? err.message : String(err),
@@ -2461,9 +2461,11 @@ export class ListingsV2Controller extends BaseController {
       }
     }
 
-    logger.info("UEX import completed", { userId, imported, total: requestBody.listings.length })
+    const imported = results.filter((r) => r.status === "imported").length
+    const skipped = results.length - imported
+    logger.info("UEX import completed", { userId, imported, skipped, total: results.length })
 
-    return { imported, total: requestBody.listings.length }
+    return { imported, skipped, total: results.length, results }
   }
 
   private async fetchUexListings(username: string): Promise<

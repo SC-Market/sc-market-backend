@@ -1,14 +1,16 @@
-import { Get, Path, Put, Request, Route, Security, Tags } from "tsoa"
+import { Delete, Get, Path, Put, Request, Route, Security, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import {
   DismissHintError,
+  clearDismissedHints,
   dismissHint,
   listDismissedHints,
 } from "../../../../services/hints/dismissed-hints.service.js"
 import type {
+  ClearDismissedHintsResponse,
   DismissedHint,
   DismissedHintsResponse,
 } from "../types/hints.types.js"
@@ -32,6 +34,21 @@ export class HintsV2Controller extends BaseController {
     this.request = request
     const hint_keys = await listDismissedHints(getKnex(), this.getUserId())
     return { hint_keys }
+  }
+
+  /**
+   * Show every inline help hint again: forgets all of the current user's
+   * dismissals. Clearing an empty list is a no-op.
+   * @summary Show all hints again
+   */
+  @Security("loggedin")
+  @Delete("dismissed")
+  public async clearDismissedHints(
+    @Request() request: ExpressRequest,
+  ): Promise<ClearDismissedHintsResponse> {
+    this.request = request
+    const cleared = await clearDismissedHints(getKnex(), this.getUserId())
+    return { cleared }
   }
 
   /**
