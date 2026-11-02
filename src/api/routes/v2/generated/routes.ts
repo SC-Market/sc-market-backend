@@ -38,6 +38,8 @@ import { MfaController } from './../mfa/MfaController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminMfaController } from './../mfa/MfaController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { StillSellingController } from './../listings/StillSellingController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { InventoryV2Controller } from './../inventory/InventoryV2Controller.js';
@@ -101,6 +103,8 @@ import { TestAccountsController } from './../admin/TestAccountsController.js';
 import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminStorefrontEnquiriesController } from './../admin/AdminStorefrontEnquiriesController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminStillSellingCampaignController } from './../admin/AdminStillSellingCampaignController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminSellerReachabilityController } from './../admin/AdminSellerReachabilityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1840,6 +1844,49 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "reason": {"dataType":"string","required":true,"validators":{"minLength":{"value":3},"maxLength":{"value":500}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingAction": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["keep"]},{"dataType":"enum","enums":["pause"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingActionListing": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingActionPreview": {
+        "dataType": "refObject",
+        "properties": {
+            "valid": {"dataType":"boolean","required":true},
+            "reason": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["invalid"]},{"dataType":"enum","enums":["expired"]}]},
+            "action": {"ref":"StillSellingAction"},
+            "listings_total": {"dataType":"double","required":true},
+            "listings_applicable": {"dataType":"double","required":true},
+            "listings": {"dataType":"array","array":{"dataType":"refObject","ref":"StillSellingActionListing"},"required":true},
+            "expires_at": {"dataType":"string"},
+            "manage_path": {"dataType":"string"},
+            "used_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingActionResult": {
+        "dataType": "refObject",
+        "properties": {
+            "ok": {"dataType":"boolean","required":true},
+            "reason": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["invalid"]},{"dataType":"enum","enums":["expired"]}]},
+            "action": {"ref":"StillSellingAction"},
+            "changed": {"dataType":"double","required":true},
+            "listings_total": {"dataType":"double","required":true},
+            "manage_path": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -5251,6 +5298,94 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingLocale": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["en"]},{"dataType":"enum","enums":["de"]},{"dataType":"enum","enums":["es"]},{"dataType":"enum","enums":["fr"]},{"dataType":"enum","enums":["ja"]},{"dataType":"enum","enums":["uk"]},{"dataType":"enum","enums":["zh-CN"]},{"dataType":"enum","enums":["zh-TW"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingButton": {
+        "dataType": "refObject",
+        "properties": {
+            "label": {"dataType":"string","required":true},
+            "url": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingSampleMessage": {
+        "dataType": "refObject",
+        "properties": {
+            "locale": {"ref":"StillSellingLocale","required":true},
+            "text": {"dataType":"string","required":true},
+            "buttons": {"dataType":"array","array":{"dataType":"refObject","ref":"StillSellingButton"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingProgress": {
+        "dataType": "refObject",
+        "properties": {
+            "sent": {"dataType":"double","required":true},
+            "delivered": {"dataType":"double","required":true},
+            "failed": {"dataType":"double","required":true},
+            "failed_closed": {"dataType":"double","required":true},
+            "in_flight": {"dataType":"double","required":true},
+            "clicked_keep": {"dataType":"double","required":true},
+            "clicked_pause": {"dataType":"double","required":true},
+            "kept_listings": {"dataType":"double","required":true},
+            "paused_listings": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingRunState": {
+        "dataType": "refObject",
+        "properties": {
+            "running": {"dataType":"boolean","required":true},
+            "started_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "finished_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "finish_reason": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "limit": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sent_this_run": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingDryRun": {
+        "dataType": "refObject",
+        "properties": {
+            "campaign": {"dataType":"string","required":true},
+            "kill_switch_env": {"dataType":"string","required":true},
+            "enabled": {"dataType":"boolean","required":true},
+            "recipients": {"dataType":"double","required":true},
+            "listings": {"dataType":"double","required":true},
+            "sample": {"ref":"StillSellingSampleMessage","required":true},
+            "progress": {"ref":"StillSellingProgress","required":true},
+            "run": {"ref":"StillSellingRunState","required":true},
+            "batch_size": {"dataType":"double","required":true},
+            "batch_pause_seconds": {"dataType":"double","required":true},
+            "stale_days": {"dataType":"double","required":true},
+            "inactive_days": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingSendResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "run": {"ref":"StillSellingRunState","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingSendRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "expected_recipients": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ReachabilityBucket": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["today"]},{"dataType":"enum","enums":["this_week"]},{"dataType":"enum","enums":["this_month"]},{"dataType":"enum","enums":["over_a_month"]},{"dataType":"enum","enums":["unknown"]}],"validators":{}},
@@ -8009,6 +8144,68 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'resetUserMfa',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStillSellingController_getStillSellingAction: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                token: {"in":"path","name":"token","required":true,"dataType":"string"},
+        };
+        app.get('/still-selling/:token',
+            ...(fetchMiddlewares<RequestHandler>(StillSellingController)),
+            ...(fetchMiddlewares<RequestHandler>(StillSellingController.prototype.getStillSellingAction)),
+
+            async function StillSellingController_getStillSellingAction(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStillSellingController_getStillSellingAction, request, response });
+
+                const controller = new StillSellingController();
+
+              await templateService.apiHandler({
+                methodName: 'getStillSellingAction',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStillSellingController_confirmStillSellingAction: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                token: {"in":"path","name":"token","required":true,"dataType":"string"},
+        };
+        app.post('/still-selling/:token',
+            ...(fetchMiddlewares<RequestHandler>(StillSellingController)),
+            ...(fetchMiddlewares<RequestHandler>(StillSellingController.prototype.confirmStillSellingAction)),
+
+            async function StillSellingController_confirmStillSellingAction(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStillSellingController_confirmStillSellingAction, request, response });
+
+                const controller = new StillSellingController();
+
+              await templateService.apiHandler({
+                methodName: 'confirmStillSellingAction',
                 controller,
                 response,
                 next,
@@ -12485,6 +12682,101 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'updateStorefrontEnquiry',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminStillSellingCampaignController_getStillSellingCampaign: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                locale: {"in":"query","name":"locale","ref":"StillSellingLocale"},
+        };
+        app.get('/admin/dm-campaigns/still-selling',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController.prototype.getStillSellingCampaign)),
+
+            async function AdminStillSellingCampaignController_getStillSellingCampaign(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminStillSellingCampaignController_getStillSellingCampaign, request, response });
+
+                const controller = new AdminStillSellingCampaignController();
+
+              await templateService.apiHandler({
+                methodName: 'getStillSellingCampaign',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminStillSellingCampaignController_sendStillSellingCampaign: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"StillSellingSendRequest"},
+        };
+        app.post('/admin/dm-campaigns/still-selling/send',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController.prototype.sendStillSellingCampaign)),
+
+            async function AdminStillSellingCampaignController_sendStillSellingCampaign(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminStillSellingCampaignController_sendStillSellingCampaign, request, response });
+
+                const controller = new AdminStillSellingCampaignController();
+
+              await templateService.apiHandler({
+                methodName: 'sendStillSellingCampaign',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminStillSellingCampaignController_stopStillSellingCampaign: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/admin/dm-campaigns/still-selling/stop',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminStillSellingCampaignController.prototype.stopStillSellingCampaign)),
+
+            async function AdminStillSellingCampaignController_stopStillSellingCampaign(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminStillSellingCampaignController_stopStillSellingCampaign, request, response });
+
+                const controller = new AdminStillSellingCampaignController();
+
+              await templateService.apiHandler({
+                methodName: 'stopStillSellingCampaign',
                 controller,
                 response,
                 next,

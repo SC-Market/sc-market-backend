@@ -5171,6 +5171,122 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StillSellingAction": {
+				"type": "string",
+				"enum": [
+					"keep",
+					"pause"
+				]
+			},
+			"StillSellingActionListing": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingActionPreview": {
+				"description": "GET /still-selling/{token}: what confirming would do.",
+				"properties": {
+					"valid": {
+						"type": "boolean"
+					},
+					"reason": {
+						"type": "string",
+						"enum": [
+							"invalid",
+							"expired"
+						],
+						"description": "Why the link doesn't work: invalid (bad or unknown link) or expired."
+					},
+					"action": {
+						"$ref": "#/components/schemas/StillSellingAction"
+					},
+					"listings_total": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings of the DM the user may still manage."
+					},
+					"listings_applicable": {
+						"type": "number",
+						"format": "double",
+						"description": "Of those, how many the action would change now."
+					},
+					"listings": {
+						"items": {
+							"$ref": "#/components/schemas/StillSellingActionListing"
+						},
+						"type": "array",
+						"description": "The listings it would change (titles, at most 20)."
+					},
+					"expires_at": {
+						"type": "string"
+					},
+					"manage_path": {
+						"type": "string",
+						"description": "The seller's listings page (relative)."
+					},
+					"used_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When this action was first used from the link, if it was."
+					}
+				},
+				"required": [
+					"valid",
+					"listings_total",
+					"listings_applicable",
+					"listings"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingActionResult": {
+				"description": "POST /still-selling/{token}: the result.",
+				"properties": {
+					"ok": {
+						"type": "boolean"
+					},
+					"reason": {
+						"type": "string",
+						"enum": [
+							"invalid",
+							"expired"
+						]
+					},
+					"action": {
+						"$ref": "#/components/schemas/StillSellingAction"
+					},
+					"changed": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings changed now."
+					},
+					"listings_total": {
+						"type": "number",
+						"format": "double"
+					},
+					"manage_path": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ok",
+					"changed",
+					"listings_total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateListingResponse": {
 				"description": "Response for creating a listing",
 				"properties": {
@@ -15909,6 +16025,252 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StillSellingLocale": {
+				"type": "string",
+				"enum": [
+					"en",
+					"de",
+					"es",
+					"fr",
+					"ja",
+					"uk",
+					"zh-CN",
+					"zh-TW"
+				],
+				"description": "The \"Still selling?\" DM campaign (services/dm-campaigns/still-selling.service.ts):\nthe admin dry run / send / progress, and the no-login landing page of its\n\"Keep them live\" and \"Pause them\" links."
+			},
+			"StillSellingButton": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"label",
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingSampleMessage": {
+				"description": "A rendered DM: its one line of text and its link buttons.",
+				"properties": {
+					"locale": {
+						"$ref": "#/components/schemas/StillSellingLocale"
+					},
+					"text": {
+						"type": "string"
+					},
+					"buttons": {
+						"items": {
+							"$ref": "#/components/schemas/StillSellingButton"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"locale",
+					"text",
+					"buttons"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingProgress": {
+				"description": "Per-recipient results recorded for the campaign so far.",
+				"properties": {
+					"sent": {
+						"type": "number",
+						"format": "double",
+						"description": "DMs attempted (claimed): delivered + failed + in_flight."
+					},
+					"delivered": {
+						"type": "number",
+						"format": "double"
+					},
+					"failed": {
+						"type": "number",
+						"format": "double"
+					},
+					"failed_closed": {
+						"type": "number",
+						"format": "double",
+						"description": "Of failed: Discord error 50007 (DMs closed / no shared server)."
+					},
+					"in_flight": {
+						"type": "number",
+						"format": "double",
+						"description": "Claimed but with no result (in flight, or the process stopped mid-send; never retried)."
+					},
+					"clicked_keep": {
+						"type": "number",
+						"format": "double",
+						"description": "Recipients who used \"Keep them live\"."
+					},
+					"clicked_pause": {
+						"type": "number",
+						"format": "double",
+						"description": "Recipients who used \"Pause them\"."
+					},
+					"kept_listings": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings refreshed through \"Keep them live\"."
+					},
+					"paused_listings": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings paused through \"Pause them\"."
+					}
+				},
+				"required": [
+					"sent",
+					"delivered",
+					"failed",
+					"failed_closed",
+					"in_flight",
+					"clicked_keep",
+					"clicked_pause",
+					"kept_listings",
+					"paused_listings"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingRunState": {
+				"properties": {
+					"running": {
+						"type": "boolean"
+					},
+					"started_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"finished_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"finish_reason": {
+						"type": "string",
+						"nullable": true
+					},
+					"limit": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "The most this run may send (the count the admin confirmed)."
+					},
+					"sent_this_run": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"running",
+					"started_at",
+					"finished_at",
+					"finish_reason",
+					"limit",
+					"sent_this_run"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingDryRun": {
+				"properties": {
+					"campaign": {
+						"type": "string"
+					},
+					"kill_switch_env": {
+						"type": "string",
+						"description": "The kill switch: nothing is sent unless this env var is \"true\"."
+					},
+					"enabled": {
+						"type": "boolean"
+					},
+					"recipients": {
+						"type": "number",
+						"format": "double",
+						"description": "People the campaign would DM now (not contacted yet, DM-reachable)."
+					},
+					"listings": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct stale listings their DMs would be about."
+					},
+					"sample": {
+						"$ref": "#/components/schemas/StillSellingSampleMessage",
+						"description": "A rendered DM with fake data (3 listings, 2 months) and placeholder links."
+					},
+					"progress": {
+						"$ref": "#/components/schemas/StillSellingProgress"
+					},
+					"run": {
+						"$ref": "#/components/schemas/StillSellingRunState"
+					},
+					"batch_size": {
+						"type": "number",
+						"format": "double"
+					},
+					"batch_pause_seconds": {
+						"type": "number",
+						"format": "double"
+					},
+					"stale_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"inactive_days": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"campaign",
+					"kill_switch_env",
+					"enabled",
+					"recipients",
+					"listings",
+					"sample",
+					"progress",
+					"run",
+					"batch_size",
+					"batch_pause_seconds",
+					"stale_days",
+					"inactive_days"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingSendResponse": {
+				"properties": {
+					"run": {
+						"$ref": "#/components/schemas/StillSellingRunState"
+					}
+				},
+				"required": [
+					"run"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingSendRequest": {
+				"properties": {
+					"expected_recipients": {
+						"type": "number",
+						"format": "double",
+						"description": "The recipient count the admin confirmed (from the dry run); the run sends to at most this many."
+					}
+				},
+				"required": [
+					"expected_recipients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ReachabilityBucket": {
 				"type": "string",
 				"enum": [
@@ -20369,6 +20731,72 @@
 						}
 					}
 				}
+			}
+		},
+		"/still-selling/{token}": {
+			"get": {
+				"operationId": "GetStillSellingAction",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingActionPreview"
+								}
+							}
+						}
+					}
+				},
+				"description": "What the link's action would do: which of the DM's listings it would\nrefresh (keep) or pause. Changes nothing.",
+				"summary": "Preview a \"Still selling?\" link",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The signed token from the DM's button",
+						"in": "path",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "ConfirmStillSellingAction",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingActionResult"
+								}
+							}
+						}
+					}
+				},
+				"description": "Apply the link's action: keep (refresh the listings so they rank as\nfresh again; paused ones are reactivated) or pause (hide the active ones\nfrom the market; nothing is deleted).",
+				"summary": "Confirm a \"Still selling?\" link",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The signed token from the DM's button",
+						"in": "path",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/listings": {
@@ -27549,6 +27977,110 @@
 						}
 					}
 				}
+			}
+		},
+		"/admin/dm-campaigns/still-selling": {
+			"get": {
+				"operationId": "GetStillSellingCampaign",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingDryRun"
+								}
+							}
+						}
+					}
+				},
+				"description": "Dry run: how many people the campaign would DM now and how many stale\nlistings that covers, one sample DM with fake data, whether the kill\nswitch is on, and the results so far. Sends nothing.",
+				"summary": "\"Still selling?\" campaign dry run and progress",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Language of the sample DM (default English)",
+						"in": "query",
+						"name": "locale",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/StillSellingLocale"
+						}
+					}
+				]
+			}
+		},
+		"/admin/dm-campaigns/still-selling/send": {
+			"post": {
+				"operationId": "SendStillSellingCampaign",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingSendResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Start sending, in the background, to at most `expected_recipients`\npeople (the dry run's count). Refused (409) when the kill switch is off,\na send is already running, no one is left, or more people are eligible\nnow than were confirmed (run the dry run again).",
+				"summary": "Send the \"Still selling?\" campaign",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StillSellingSendRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/dm-campaigns/still-selling/stop": {
+			"post": {
+				"operationId": "StopStillSellingCampaign",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingSendResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Stop a running send after the DM in flight. Nothing already sent is\nundone; pressing Send again continues with whoever is left.",
+				"summary": "Stop the \"Still selling?\" campaign send",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/seller-reachability": {

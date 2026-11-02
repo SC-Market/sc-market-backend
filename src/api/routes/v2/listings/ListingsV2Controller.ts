@@ -40,7 +40,8 @@ import {
   defaultListingRankSql,
   sellerActivityTieBreakSql,
 } from "../../../../services/seller-activity/seller-ranking.js"
-import { NOTICE_DAYS_BEFORE, markRenewed, renewalColumns } from "../../../../services/listing-expiry/listing-expiry.service.js"
+import { markRenewed, renewalColumns } from "../../../../services/listing-expiry/listing-expiry.service.js"
+import { REFRESHABLE_STATUSES, applyListingRefresh, isRenewal } from "../../../../services/market-v2/listing-refresh.service.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
@@ -2078,7 +2079,7 @@ export class ListingsV2Controller extends BaseController {
 
       // Active and inactive listings can be refreshed; an expired (paused)
       // one is reactivated by it (listing expiry, or the admin's wipe).
-      if (!["active", "inactive", "expired"].includes(listing.status)) {
+      if (!(REFRESHABLE_STATUSES as readonly string[]).includes(listing.status)) {
         this.throwValidationError(
           `Cannot refresh listing with status: ${listing.status}`,
           [
@@ -2098,11 +2099,7 @@ export class ListingsV2Controller extends BaseController {
       const now = new Date()
       const lastUpdate = new Date(listing.updated_at)
       const timeSinceLastUpdate = now.getTime() - lastUpdate.getTime()
-      const paused = listing.status === "expired"
-      const expiresSoon =
-        !!listing.expires_at &&
-        new Date(listing.expires_at).getTime() <= now.getTime() + NOTICE_DAYS_BEFORE * 24 * 60 * 60 * 1000
-      const renewal = paused || expiresSoon
+      const renewal = isRenewal(listing, now)
 
       if (!renewal && timeSinceLastUpdate < cooldownMs) {
         const hoursRemaining = Math.ceil((cooldownMs - timeSinceLastUpdate) / (60 * 60 * 1000))
@@ -2119,15 +2116,8 @@ export class ListingsV2Controller extends BaseController {
       }
 
       // 3. Bump updated_at (Requirement 49.2) and start a new listing month;
-      // reactivate a paused listing.
-      await db("listings")
-        .where({ listing_id: id })
-        .update({
-          updated_at: now,
-          ...renewalColumns(db),
-          ...(paused ? { status: "active" } : {}),
-        })
-      if (renewal) await markRenewed(db, [id], paused)
+      // reactivate a paused listing (Requirement 49.5: audit entry).
+      await applyListingRefresh(db, listing, userId, now)
 
       const nextRefreshAt = new Date(now.getTime() + cooldownMs)
 
@@ -2136,9 +2126,6 @@ export class ListingsV2Controller extends BaseController {
         userId,
         nextRefreshAt: nextRefreshAt.toISOString(),
       })
-
-      // TODO: Log refresh action to audit trail (Requirement 49.5)
-      auditService.log({ entity_type: "listing", entity_id: id, action: "refreshed", actor_id: userId })
 
       return {
         message: "Listing refreshed successfully",

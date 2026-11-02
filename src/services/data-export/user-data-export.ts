@@ -663,6 +663,26 @@ export async function writeUserDataExport(
         .select("entity_id", "reminded_at"),
     ),
   )
+  await out.array(
+    "dm_campaigns",
+    all(
+      knex("dm_campaign_recipients")
+        .where(me)
+        .select(
+          "campaign",
+          "listing_ids",
+          "locale",
+          "status",
+          "error_code",
+          "claimed_at",
+          "sent_at",
+          "kept_at",
+          "kept_count",
+          "paused_at",
+          "paused_count",
+        ),
+    ),
+  )
   await out.value(
     "email_defaults_notice",
     (await knex("email_defaults_notices")
