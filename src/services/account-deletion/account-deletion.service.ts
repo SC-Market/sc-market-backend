@@ -346,6 +346,8 @@ async function convertToTombstone(userId: string): Promise<void> {
       ["discord_guild_presence", (db) => db("discord_guild_presence").where("user_id", userId).delete()],
       ["dm_campaign_recipients", (db) => db("dm_campaign_recipients").where("user_id", userId).delete()],
       ["dm_reminder_conversations", (db) => db("dm_reminder_conversations").where("user_id", userId).delete()],
+      ["discord_user_installs", (db) => db("discord_user_installs").where("user_id", userId).delete()],
+      ["offer_reminders", (db) => db("offer_reminders").where("user_id", userId).delete()],
       // The org's or shop's storefront request stays, anonymized.
       ["storefront_enquiries", (db) => db("storefront_enquiries").where("submitted_by", userId).update({ submitted_by: null })],
     ]

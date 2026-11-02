@@ -649,6 +649,22 @@ export async function writeUserDataExport(
       .first()) ?? null,
   )
   await out.value(
+    "discord_app_install",
+    (await knex("discord_user_installs")
+      .where(me)
+      .select("user_installed_at", "last_seen_at")
+      .first()) ?? null,
+  )
+  await out.array(
+    "offer_reminders",
+    all(
+      knex("offer_reminders")
+        .where(me)
+        .orderBy("created_at", "asc")
+        .select("session_id", "stage", "created_at"),
+    ),
+  )
+  await out.value(
     "dm_reminders",
     (await knex("dm_reminder_log")
       .where(me)
