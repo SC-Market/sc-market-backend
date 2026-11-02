@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest"
 
-vi.mock("../../clients/database/knex-db.js", () => ({ getKnex: vi.fn() }))
+vi.mock("../../clients/database/knex-db.js", async () =>
+  (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(),
+)
 
 const { weightedByCompleted } = await import("./storefront.js")
 
@@ -28,31 +30,7 @@ describe("weightedByCompleted (org trust stats from shop metrics)", () => {
 })
 
 describe("Storefronts hub", async () => {
-  const { tagline, compareCards, storefrontCardsQuery } = await import("./storefront.js")
-  const card = (spectrum_id: string, completed_orders: number, active_listings = 1, active_services = 0) => ({
-    spectrum_id,
-    name: spectrum_id,
-    logo_url: null,
-    tagline: "",
-    fields: [],
-    active_listings,
-    active_services,
-    services_shop_slug: null,
-    completed_orders,
-    avg_rating: null,
-    rating_count: 0,
-    showcase: false,
-  })
-
-  it("lists the showcase orgs first, then by completed orders and listings", () => {
-    const sorted = [card("ZETA", 90), card("MEDRUNNER", 1), card("ALPHA", 90, 5), card("BWINCORP", 0)].sort(compareCards)
-    expect(sorted.map((c) => c.spectrum_id)).toEqual(["BWINCORP", "MEDRUNNER", "ALPHA", "ZETA"])
-  })
-
-  it("service-only orgs sort after orgs with listings, by services", () => {
-    const sorted = [card("SVC1", 0, 0, 1), card("LIST", 0, 1), card("SVC3", 0, 0, 3)].sort(compareCards)
-    expect(sorted.map((c) => c.spectrum_id)).toEqual(["LIST", "SVC3", "SVC1"])
-  })
+  const { tagline, storefrontCardsQuery } = await import("./storefront.js")
 
   it("lists orgs with a public listing or an active service in a shown shop, with services counted", async () => {
     const { default: knexFactory } = await import("knex")

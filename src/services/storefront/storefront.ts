@@ -9,6 +9,10 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import { scOrgsClient, type ScOrgsCommunity } from "../../clients/sc-orgs/sc-orgs.js"
 import { isRsiVerifiedOrg } from "./branding.js"
 import { orgMembersOnlySql, orgShownSql, shopShownSql } from "./directory.js"
+import {
+  INACTIVE_SELLER_RANK_PENALTY_DAYS,
+  sellerInactiveSql,
+} from "../seller-activity/seller-ranking.js"
 
 /** Public URL of an image_resources row joined as `alias` (a code literal). */
 function imageUrlSql(alias: string): string {
@@ -296,28 +300,79 @@ export function tagline(description: string | null | undefined): string {
   return line.length > 140 ? `${line.slice(0, 139).trimEnd()}…` : line
 }
 
-/** Hub order: showcase orgs first (in their order), then completed orders, then listings, then services. */
-export function compareCards(a: StorefrontCard, b: StorefrontCard): number {
-  const ia = SHOWCASE_STOREFRONTS.indexOf(a.spectrum_id)
-  const ib = SHOWCASE_STOREFRONTS.indexOf(b.spectrum_id)
-  if (ia !== ib) return (ia === -1 ? Infinity : ia) - (ib === -1 ? Infinity : ib)
-  return (
-    b.completed_orders - a.completed_orders ||
-    b.active_listings - a.active_listings ||
-    b.active_services - a.active_services ||
-    a.name.localeCompare(b.name, "en")
-  )
-}
-
 export const MAX_STOREFRONT_CARDS = 60
 
-/** The hub's org query, one row per listed org (see listStorefrontCards). */
-export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
-  // The org's active shops that are shown in the directory (alias s).
+/**
+ * Stale storefronts (owner decision 2026-11-02): an org whose freshest
+ * public listing or active service is older than this many days AND whose
+ * managing members are all inactive ranks below every other org in the
+ * hub's order. It is never hidden. The window is the seller-activity weight
+ * (seller-ranking.ts), so "recent" means the same thing as in the default
+ * listing order.
+ */
+export const STALE_STOREFRONT_AFTER_DAYS = INACTIVE_SELLER_RANK_PENALTY_DAYS
+
+/**
+ * The hub's SQL pieces for one org (alias c). Code literals only.
+ * - shownShop: the org's active shops shown in the directory (alias s).
+ * - listed / offered: its public, active listings (ls) / active services (sv) in those shops.
+ */
+function hubSql() {
   const shownShop = `s.owner_contractor_id = c.contractor_id AND s.status = 'active' AND ${shopShownSql("s")}`
   const listed = `ls.status = 'active' AND ls.visibility = 'public' AND ls.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
   const offered = `sv.status = 'active' AND sv.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
-  return db("contractors as c")
+  return { shownShop, listed, offered }
+}
+
+/**
+ * SQL: 1 when the org (alias c) is stale, else 0. Stale needs BOTH:
+ * - content: no public listing updated (listing_search.updated_at) and no
+ *   active service posted (services.timestamp; services have no edit
+ *   time) within STALE_STOREFRONT_AFTER_DAYS;
+ * - people: every shown shop's seller is known to be inactive
+ *   (sellerInactiveSql: the shop's managing members were last seen 30+ days
+ *   ago). A shop without activity stats, or whose members hide their
+ *   status, is neutral (not inactive), exactly as in the listing order, so
+ *   hiding your status never costs rank.
+ */
+export function storefrontStaleSql(): string {
+  const { shownShop, listed, offered } = hubSql()
+  const recent = `now() - INTERVAL '${STALE_STOREFRONT_AFTER_DAYS} days'`
+  return (
+    "(CASE WHEN" +
+    ` NOT EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed} AND ls.updated_at >= ${recent})` +
+    ` AND NOT EXISTS (SELECT 1 FROM services sv WHERE ${offered} AND sv."timestamp" >= ${recent})` +
+    ` AND NOT EXISTS (SELECT 1 FROM shops s WHERE ${shownShop} AND ${sellerInactiveSql("s.shop_id")} = 0)` +
+    " THEN 1 ELSE 0 END)"
+  )
+}
+
+/**
+ * The hub's order, in SQL so it is the same on every request (SSR,
+ * prerender and the client all get the API's order):
+ * 1. showcase orgs, in SHOWCASE_STOREFRONTS order;
+ * 2. stale orgs (storefrontStaleSql) after all others;
+ * 3. completed orders, then active listings, then active services (most first);
+ * 4. name, then contractor_id: a unique key, so ties never flip.
+ */
+export function orderStorefrontCards(qb: Knex.QueryBuilder): Knex.QueryBuilder {
+  const showcase = SHOWCASE_STOREFRONTS.map((_, i) => `WHEN ? THEN ${i}`).join(" ")
+  return qb
+    .orderByRaw(`(CASE c.spectrum_id ${showcase} ELSE ${SHOWCASE_STOREFRONTS.length} END) ASC`, [
+      ...SHOWCASE_STOREFRONTS,
+    ])
+    .orderByRaw(`${storefrontStaleSql()} ASC`)
+    .orderBy("completed_orders", "desc")
+    .orderBy("active_listings", "desc")
+    .orderBy("active_services", "desc")
+    .orderBy("c.name", "asc")
+    .orderBy("c.contractor_id", "asc")
+}
+
+/** The hub's org query, one row per listed org, in hub order, capped (see listStorefrontCards). */
+export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
+  const { shownShop, listed, offered } = hubSql()
+  const query = db("contractors as c")
     .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .where("c.archived", false)
     .whereRaw("c.is_test IS NOT TRUE")
@@ -348,6 +403,7 @@ export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
         `(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE ${shownShop}) as rating_count`,
       ),
     )
+  return orderStorefrontCards(query).limit(MAX_STOREFRONT_CARDS)
 }
 
 /**
@@ -357,6 +413,8 @@ export function storefrontCardsQuery(db: Knex): Knex.QueryBuilder {
  * listing or an active service in a shop that is itself shown (service-only
  * orgs included, owner decision 2026-11-01). Counts and stats only cover the
  * shown shops. Being verified doubles as the hub's anti-impersonation filter.
+ * Ordered by the query (orderStorefrontCards): stale orgs rank lower, never
+ * hidden.
  */
 export async function listStorefrontCards(db: Knex = getKnex()): Promise<StorefrontCard[]> {
   const rows = (await storefrontCardsQuery(db)) as CardRow[]
@@ -368,21 +426,18 @@ export async function listStorefrontCards(db: Knex = getKnex()): Promise<Storefr
   const fields = new Map<string, string[]>()
   for (const f of fieldRows) fields.set(f.contractor_id, [...(fields.get(f.contractor_id) ?? []), f.field])
 
-  return rows
-    .map((r) => ({
-      spectrum_id: r.spectrum_id,
-      name: r.name,
-      logo_url: r.logo_url,
-      tagline: tagline(r.description),
-      fields: (fields.get(r.contractor_id) ?? []).sort(),
-      active_listings: num(r.active_listings),
-      active_services: num(r.active_services),
-      services_shop_slug: r.services_shop_slug ?? null,
-      completed_orders: num(r.completed_orders),
-      avg_rating: num(r.rating_count) > 0 ? round(num(r.avg_rating), 2) : null,
-      rating_count: num(r.rating_count),
-      showcase: SHOWCASE_STOREFRONTS.includes(r.spectrum_id),
-    }))
-    .sort(compareCards)
-    .slice(0, MAX_STOREFRONT_CARDS)
+  return rows.map((r) => ({
+    spectrum_id: r.spectrum_id,
+    name: r.name,
+    logo_url: r.logo_url,
+    tagline: tagline(r.description),
+    fields: (fields.get(r.contractor_id) ?? []).sort(),
+    active_listings: num(r.active_listings),
+    active_services: num(r.active_services),
+    services_shop_slug: r.services_shop_slug ?? null,
+    completed_orders: num(r.completed_orders),
+    avg_rating: num(r.rating_count) > 0 ? round(num(r.avg_rating), 2) : null,
+    rating_count: num(r.rating_count),
+    showcase: SHOWCASE_STOREFRONTS.includes(r.spectrum_id),
+  }))
 }
