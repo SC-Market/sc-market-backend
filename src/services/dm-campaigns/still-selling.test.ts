@@ -554,14 +554,14 @@ describe("the DM", () => {
     ])
   })
 
-  it("singular, and the manage link falls back to the shop list for several shops", () => {
+  it("singular, and with several shops the manage link opens the one with the most listings", () => {
     const r = svc.messageFor(
       {
         user_id: U1,
         locale: null,
         listing_ids: [L1],
         newest_update: new Date("2026-09-25T00:00:00Z"),
-        shop_slugs: ["a", "b"],
+        shop_slugs: ["a", "b", "b"],
       },
       NOW,
     )
@@ -569,7 +569,16 @@ describe("the DM", () => {
       "You have 1 listing on SC Market that hasn't been updated in 1 month. Still selling?",
     )
     expect(r.buttons[0].label).toBe("Keep it live")
-    expect(r.buttons[2].url).toMatch(/\/dashboard\/shops$/)
+    expect(r.buttons[2].url).toMatch(/\/shop\/b\/listings$/)
+  })
+
+  it("managePath: the shop with the most listings, ties alphabetical, the shop list only with no shop", () => {
+    expect(svc.managePath(["z", "a", "z"])).toBe("/shop/z/listings")
+    expect(svc.managePath(["b", "a"])).toBe("/shop/a/listings")
+    expect(svc.managePath(["a", "b", "b", "a", "c"])).toBe("/shop/a/listings")
+    expect(svc.managePath(["only"])).toBe("/shop/only/listings")
+    expect(svc.managePath([])).toBe("/dashboard/shops")
+    expect(svc.managePath([""])).toBe("/dashboard/shops")
   })
 
   it("is translated for all 8 locales, picked from accounts.locale", () => {
@@ -747,9 +756,10 @@ describe("test links (dry run)", () => {
   })
 
   it.each(["keep", "pause"] as const)(
-    "%s: the full flow runs, but no listing or recipient row is read or written",
+    "%s: the full flow runs, but no listing is changed and no recipient row is read or written",
     async (action) => {
       tracker.on.select("dm_campaign_feedback").response(undefined)
+      tracker.on.any(/FROM listings l/).response({ rows: [] })
       const preview = await svc.lookupAction(testLink(action), {
         now: () => NOW,
       })
@@ -757,14 +767,38 @@ describe("test links (dry run)", () => {
       const r = await svc.applyAction(testLink(action), { now: () => NOW })
       expect(r).toMatchObject({ ok: true, test: true, action, changed: 3 })
       expect(applyListingRefresh).not.toHaveBeenCalled()
-      const touched = tracker.history.all.filter((q) =>
-        /listings|dm_campaign_recipients|audit_trail/.test(q.sql),
+      // The only listings query is the read of which shops the user sells in.
+      const touched = tracker.history.all.filter(
+        (q) =>
+          /listings|dm_campaign_recipients|audit_trail/.test(q.sql) &&
+          !/^\s*SELECT l\.listing_id, l\.updated_at, s\.slug/.test(q.sql),
       )
       expect(touched).toEqual([])
       expect(tracker.history.update).toHaveLength(0)
       expect(tracker.history.insert).toHaveLength(0)
     },
   )
+
+  it("Manage listings opens the user's shop with the most live listings, as in the test DM", async () => {
+    tracker.on.select("dm_campaign_feedback").response(undefined)
+    tracker.on.any(/FROM listings l/).response({
+      rows: [
+        { listing_id: L1, updated_at: new Date(0), slug: "small" },
+        { listing_id: L2, updated_at: new Date(0), slug: "big" },
+        { listing_id: L3, updated_at: new Date(0), slug: "big" },
+      ],
+    })
+    const preview = await svc.lookupAction(testLink("keep"), { now: () => NOW })
+    expect(preview).toMatchObject({
+      ok: true,
+      test: true,
+      managePath: "/shop/big/listings",
+    })
+    const r = await svc.applyAction(testLink("keep"), { now: () => NOW })
+    expect(r).toMatchObject({ ok: true, managePath: "/shop/big/listings" })
+    const q = tracker.history.all.find((x) => /FROM listings l/.test(x.sql))!
+    expect(q.bindings).toEqual([U1, U1])
+  })
 
   it("a forged test claim (any value but 1) is rejected", () => {
     const t = testLink("pause")

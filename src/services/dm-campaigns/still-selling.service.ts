@@ -115,6 +115,7 @@ export interface Candidate {
   /** The sellers ('u:<user>' / 'c:<org>') the person is contacted for. */
   seller_keys?: string[]
   newest_update: Date
+  /** The shop slug of each listing (repeats: one per listing). */
   shop_slugs: string[]
 }
 
@@ -197,7 +198,9 @@ export function candidatesSql(campaign = CAMPAIGN): {
            jsonb_object_agg(st.listing_id::text, st.updated_at) AS listing_updated,
            array_agg(DISTINCT c.seller_key) AS seller_keys,
            MAX(st.updated_at) AS newest_update,
-           array_agg(DISTINCT st.slug) AS shop_slugs
+           -- One slug per listing (not DISTINCT): managePath links the shop
+           -- with the most of them.
+           array_agg(st.slug ORDER BY st.slug) AS shop_slugs
     FROM contacts c
     JOIN inactive_sellers i ON i.seller_key = c.seller_key
     JOIN stale st ON st.seller_key = c.seller_key
@@ -293,12 +296,25 @@ export function actionPageUrl(token: string): string {
   return `${frontendUrl()}/still-selling/${token}`
 }
 
-/** "Manage listings": the shop's listings page when there is one shop, else the shop list. */
+/**
+ * "Manage listings": the Listings page of the shop the listings are in.
+ * `shopSlugs` has one entry per listing; with several shops it's the shop
+ * with the most of them (ties: the first slug alphabetically). The shop
+ * list only when there is no shop at all (no listings).
+ */
 export function managePath(shopSlugs: string[]): string {
-  const slugs = [...new Set(shopSlugs.filter(Boolean))]
-  return slugs.length === 1
-    ? `/shop/${encodeURIComponent(slugs[0])}/listings`
-    : "/dashboard/shops"
+  const counts = new Map<string, number>()
+  for (const slug of shopSlugs) {
+    if (slug) counts.set(slug, (counts.get(slug) ?? 0) + 1)
+  }
+  let best: string | null = null
+  for (const [slug, n] of counts) {
+    const top = best === null ? 0 : counts.get(best)!
+    if (n > top || (n === top && best !== null && slug < best)) best = slug
+  }
+  return best === null
+    ? "/dashboard/shops"
+    : `/shop/${encodeURIComponent(best)}/listings`
 }
 
 /** The rendered DM for one recipient, with their signed links. */
@@ -737,8 +753,12 @@ export async function lookupAction(
   if (!verified.ok) return verified
   const { campaign, userId, action, expiresAt, test } = verified.claim
   if (test) {
-    // A test link never reads or writes dm_campaign_recipients or listings.
+    // A test link never reads or writes dm_campaign_recipients, and never
+    // changes a listing: it shows sample listings. It only reads which shops
+    // the user sells in, so "Manage listings" opens the same shop as the
+    // test DM's button (sendTestDm).
     const listings = sampleListings(now)
+    const real = await testListingsFor(d.db, userId, now)
     return {
       ok: true,
       action,
@@ -748,7 +768,7 @@ export async function lookupAction(
       test: true,
       applicable: listings.filter((l) => applies(action, l, now)),
       total: listings.length,
-      managePath: "/dashboard/shops",
+      managePath: managePath(real.map((l) => l.slug)),
       keptAt: null,
       pausedAt: null,
       feedbackSubmitted: await feedbackSubmitted(d.db, token),
@@ -995,7 +1015,7 @@ export async function sendTestDm(
     months: sample ? 2 : monthsSince(new Date(newest), now),
     keepUrl: actionPageUrl(token("keep")),
     pauseUrl: actionPageUrl(token("pause")),
-    manageUrl: `${frontendUrl()}${sample ? "/dashboard/shops" : managePath(real.map((l) => l.slug))}`,
+    manageUrl: `${frontendUrl()}${managePath(real.map((l) => l.slug))}`,
   })
   const message: RenderedMessage = {
     ...rendered,
