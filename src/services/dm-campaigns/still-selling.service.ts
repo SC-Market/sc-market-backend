@@ -53,6 +53,7 @@ import { auditService } from "../audit/audit.service.js"
 import { applyListingRefresh } from "../market-v2/listing-refresh.service.js"
 import {
   createCampaignActionToken,
+  tokenId,
   verifyCampaignActionToken,
   type CampaignAction,
 } from "./campaign-action-token.js"
@@ -679,6 +680,8 @@ export type ActionLookup =
       userId: string
       campaign: string
       expiresAt: Date
+      /** A test link: nothing is changed, feedback is stored as a test. */
+      test: boolean
       /** Listings the action would change now. */
       applicable: ActionListing[]
       /** Listings of the DM (that the user may still manage). */
@@ -686,6 +689,8 @@ export type ActionLookup =
       managePath: string
       keptAt: Date | null
       pausedAt: Date | null
+      /** Feedback was already submitted from this link. */
+      feedbackSubmitted: boolean
     }
 
 function applies(action: CampaignAction, l: ActionListing, now: Date): boolean {
@@ -698,6 +703,29 @@ function applies(action: CampaignAction, l: ActionListing, now: Date): boolean {
   )
 }
 
+type SlugListing = ActionListing & { slug: string }
+
+/** Sample listings a test link shows (it never reads or changes real ones). */
+function sampleListings(now: Date): SlugListing[] {
+  const old = new Date(now.getTime() - 61 * 86_400_000)
+  return [1, 2, 3].map((i) => ({
+    listing_id: `sample-${i}`,
+    shop_id: "sample",
+    title: `Example listing ${i}`,
+    status: "active",
+    updated_at: old,
+    expires_at: null,
+    slug: "",
+  }))
+}
+
+async function feedbackSubmitted(db: Knex, token: string): Promise<boolean> {
+  const row = await db("dm_campaign_feedback")
+    .where({ token_id: tokenId(token) })
+    .first("feedback_id")
+  return !!row
+}
+
 /** What a token's action would do now (the confirmation page). */
 export async function lookupAction(
   token: string,
@@ -707,14 +735,32 @@ export async function lookupAction(
   const now = d.now()
   const verified = verifyCampaignActionToken(token, { now })
   if (!verified.ok) return verified
-  const { campaign, userId, action, expiresAt } = verified.claim
+  const { campaign, userId, action, expiresAt, test } = verified.claim
+  if (test) {
+    // A test link never reads or writes dm_campaign_recipients or listings.
+    const listings = sampleListings(now)
+    return {
+      ok: true,
+      action,
+      userId,
+      campaign,
+      expiresAt,
+      test: true,
+      applicable: listings.filter((l) => applies(action, l, now)),
+      total: listings.length,
+      managePath: "/dashboard/shops",
+      keptAt: null,
+      pausedAt: null,
+      feedbackSubmitted: await feedbackSubmitted(d.db, token),
+    }
+  }
   const row = await d
     .db("dm_campaign_recipients")
     .where({ campaign, user_id: userId })
     .first("listing_ids", "kept_at", "paused_at")
   if (!row) return { ok: false, reason: "invalid" }
   const ids: string[] = row.listing_ids ?? []
-  const listings: (ActionListing & { slug: string })[] = ids.length
+  const listings: SlugListing[] = ids.length
     ? await d
         .db("listings as l")
         .join("shops as s", "s.shop_id", "l.shop_id")
@@ -730,7 +776,7 @@ export async function lookupAction(
           "s.slug",
         )
     : []
-  const mine: (ActionListing & { slug: string })[] = []
+  const mine: SlugListing[] = []
   for (const l of listings) {
     if (await d.canModify(l, userId)) mine.push(l)
   }
@@ -740,11 +786,13 @@ export async function lookupAction(
     userId,
     campaign,
     expiresAt,
+    test: false,
     applicable: mine.filter((l) => applies(action, l, now)),
     total: mine.length,
     managePath: managePath(mine.map((l) => l.slug)),
     keptAt: row.kept_at ? new Date(row.kept_at) : null,
     pausedAt: row.paused_at ? new Date(row.paused_at) : null,
+    feedbackSubmitted: await feedbackSubmitted(d.db, token),
   }
 }
 
@@ -753,12 +801,14 @@ export type ApplyResult =
   | {
       ok: true
       action: CampaignAction
+      /** Listings changed now; for a test link, how many would have been (none were). */
       changed: number
       total: number
       managePath: string
+      test: boolean
     }
 
-/** Apply a token's action (the page's confirm button). */
+/** Apply a token's action (the page's confirm button). A test link changes nothing. */
 export async function applyAction(
   token: string,
   deps: CampaignDeps = {},
@@ -766,6 +816,16 @@ export async function applyAction(
   const d = resolve(deps)
   const found = await lookupAction(token, deps)
   if (!found.ok) return found
+  if (found.test) {
+    return {
+      ok: true,
+      action: found.action,
+      changed: found.applicable.length,
+      total: found.total,
+      managePath: found.managePath,
+      test: true,
+    }
+  }
   const now = d.now()
   let changed = 0
   if (found.action === "keep") {
@@ -810,5 +870,6 @@ export async function applyAction(
     changed,
     total: found.total,
     managePath: found.managePath,
+    test: false,
   }
 }

@@ -14,7 +14,12 @@
  * - Expires TOKEN_TTL_DAYS after it was issued (when the DM was sent).
  * Rotating SESSION_SECRET invalidates every link already sent.
  */
-import { createHmac, timingSafeEqual } from "node:crypto"
+import {
+  createHash,
+  createHmac,
+  randomBytes,
+  timingSafeEqual,
+} from "node:crypto"
 import { env } from "../../config/env.js"
 
 export const CAMPAIGN_ACTIONS = ["keep", "pause"] as const
@@ -28,6 +33,11 @@ export interface CampaignActionClaim {
   userId: string
   action: CampaignAction
   expiresAt: Date
+  /**
+   * A test link (the admin's "Send test DM to me"): the landing page runs the
+   * whole flow but changes no listing, and feedback is stored as a test.
+   */
+  test: boolean
 }
 
 const PREFIX = "ca1"
@@ -47,7 +57,12 @@ function sign(payload: string, secret: string): string {
 }
 
 export function createCampaignActionToken(
-  claim: { campaign: string; userId: string; action: CampaignAction },
+  claim: {
+    campaign: string
+    userId: string
+    action: CampaignAction
+    test?: boolean
+  },
   opts: { now?: Date; secret?: string } = {},
 ): string {
   const secret = opts.secret ?? env.SESSION_SECRET
@@ -60,7 +75,14 @@ export function createCampaignActionToken(
   const now = opts.now ?? new Date()
   const x = Math.floor(now.getTime() / 1000) + TOKEN_TTL_DAYS * 24 * 3600
   const payload = Buffer.from(
-    JSON.stringify({ c: claim.campaign, u: claim.userId, a: claim.action, x }),
+    JSON.stringify({
+      c: claim.campaign,
+      u: claim.userId,
+      a: claim.action,
+      x,
+      // A test link is unique per test DM (feedback is accepted once per link).
+      ...(claim.test ? { t: 1, n: randomBytes(6).toString("base64url") } : {}),
+    }),
   ).toString("base64url")
   return `${PREFIX}.${payload}.${sign(payload, secret)}`
 }
@@ -86,7 +108,7 @@ export function verifyCampaignActionToken(
   if (given.length !== expected.length || !timingSafeEqual(given, expected)) {
     return { ok: false, reason: "invalid" }
   }
-  let data: { c?: unknown; u?: unknown; a?: unknown; x?: unknown }
+  let data: { c?: unknown; u?: unknown; a?: unknown; x?: unknown; t?: unknown }
   try {
     data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"))
   } catch {
@@ -99,7 +121,8 @@ export function verifyCampaignActionToken(
     !UUID_RE.test(data.u) ||
     !CAMPAIGN_ACTIONS.includes(data.a as CampaignAction) ||
     typeof data.x !== "number" ||
-    !Number.isInteger(data.x)
+    !Number.isInteger(data.x) ||
+    (data.t !== undefined && data.t !== 1)
   ) {
     return { ok: false, reason: "invalid" }
   }
@@ -113,6 +136,12 @@ export function verifyCampaignActionToken(
       userId: data.u,
       action: data.a as CampaignAction,
       expiresAt,
+      test: data.t === 1,
     },
   }
+}
+
+/** A stable id of one link (feedback is accepted once per link). */
+export function tokenId(token: string): string {
+  return createHash("sha256").update(token).digest("hex")
 }

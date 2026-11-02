@@ -345,6 +345,7 @@ async function convertToTombstone(userId: string): Promise<void> {
       ["discord_dm_attempts", (db) => db("discord_dm_attempts").where("user_id", userId).delete()],
       ["discord_guild_presence", (db) => db("discord_guild_presence").where("user_id", userId).delete()],
       ["dm_campaign_recipients", (db) => db("dm_campaign_recipients").where("user_id", userId).delete()],
+      ["dm_campaign_feedback", (db) => db("dm_campaign_feedback").where("user_id", userId).delete()],
       ["dm_reminder_conversations", (db) => db("dm_reminder_conversations").where("user_id", userId).delete()],
       ["discord_user_installs", (db) => db("discord_user_installs").where("user_id", userId).delete()],
       ["offer_reminders", (db) => db("offer_reminders").where("user_id", userId).delete()],

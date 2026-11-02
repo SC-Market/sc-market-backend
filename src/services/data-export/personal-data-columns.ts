@@ -89,6 +89,7 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
   "discord_guild_presence.user_id": { export: "discord_server_membership" },
   "dm_reminder_conversations.user_id": { export: "dm_reminder_conversations" },
   "dm_campaign_recipients.user_id": { export: "dm_campaigns" },
+  "dm_campaign_feedback.user_id": { export: "dm_campaign_feedback" },
   "discord_user_installs.user_id": { export: "discord_app_install" },
   "discord_linked_guilds.linked_by_user_id": { exclude: STAFF },
   "discord_linked_guilds.owner_id": {

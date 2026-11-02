@@ -120,6 +120,7 @@ describe("campaign action token", () => {
         userId: U1,
         action: "keep",
         expiresAt: new Date(NOW.getTime() + 30 * 86_400_000),
+        test: false,
       },
     })
   })
@@ -657,6 +658,7 @@ describe("the links' actions", () => {
     })
     tracker.on.select("listings").response(listings)
     tracker.on.update("dm_campaign_recipients").response(1)
+    tracker.on.select("dm_campaign_feedback").response(undefined)
   })
 
   it("keep refreshes the stale and paused listings the user still manages", async () => {
@@ -667,6 +669,7 @@ describe("the links' actions", () => {
       changed: 2,
       total: 3,
       managePath: "/shop/my-shop/listings",
+      test: false,
     })
     expect(
       vi
@@ -723,5 +726,243 @@ describe("the links' actions", () => {
       await svc.applyAction(link("keep", U2), { canModify, now: () => NOW }),
     ).toEqual({ ok: false, reason: "invalid" })
     expect(applyListingRefresh).not.toHaveBeenCalled()
+  })
+})
+
+describe("test links (dry run)", () => {
+  function testLink(action: "keep" | "pause") {
+    return tokens.createCampaignActionToken(
+      { campaign: svc.CAMPAIGN, userId: U1, action, test: true },
+      { now: NOW },
+    )
+  }
+
+  it("carry a test claim, and each test link is unique", () => {
+    const a = testLink("keep")
+    expect(tokens.verifyCampaignActionToken(a, { now: NOW })).toMatchObject({
+      ok: true,
+      claim: { test: true, action: "keep", userId: U1 },
+    })
+    expect(testLink("keep")).not.toBe(a)
+  })
+
+  it.each(["keep", "pause"] as const)(
+    "%s: the full flow runs, but no listing or recipient row is read or written",
+    async (action) => {
+      tracker.on.select("dm_campaign_feedback").response(undefined)
+      const preview = await svc.lookupAction(testLink(action), {
+        now: () => NOW,
+      })
+      expect(preview).toMatchObject({ ok: true, test: true, action })
+      const r = await svc.applyAction(testLink(action), { now: () => NOW })
+      expect(r).toMatchObject({ ok: true, test: true, action, changed: 3 })
+      expect(applyListingRefresh).not.toHaveBeenCalled()
+      const touched = tracker.history.all.filter((q) =>
+        /listings|dm_campaign_recipients|audit_trail/.test(q.sql),
+      )
+      expect(touched).toEqual([])
+      expect(tracker.history.update).toHaveLength(0)
+      expect(tracker.history.insert).toHaveLength(0)
+    },
+  )
+
+  it("a forged test claim (any value but 1) is rejected", () => {
+    const t = testLink("pause")
+    const [p, payload, sig] = t.split(".")
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString())
+    const bad = Buffer.from(JSON.stringify({ ...data, t: true })).toString(
+      "base64url",
+    )
+    expect(
+      tokens.verifyCampaignActionToken(`${p}.${bad}.${sig}`, { now: NOW }).ok,
+    ).toBe(false)
+  })
+})
+
+describe("feedback", () => {
+  const fb = () => import("./still-selling-feedback.js")
+
+  function realLink(action: "keep" | "pause") {
+    return tokens.createCampaignActionToken(
+      { campaign: svc.CAMPAIGN, userId: U1, action },
+      { now: NOW },
+    )
+  }
+
+  function feedbackTable() {
+    const seen = new Set<string>()
+    tracker.on
+      .any(/INSERT INTO dm_campaign_feedback/)
+      .response((q: { bindings: unknown[] }) => {
+        const id = q.bindings[3] as string
+        if (seen.has(id)) return { rows: [] }
+        seen.add(id)
+        return { rows: [{ feedback_id: seen.size }] }
+      })
+  }
+
+  it("strips HTML and control characters, caps at 500", async () => {
+    const { cleanText } = await fb()
+    expect(cleanText("<b>hi</b> <script>alert(1)</script>there")).toBe(
+      "hi alert(1) there",
+    )
+    expect(cleanText("a<img src=x onerror=1")).toBe("a")
+    expect(cleanText("x\u0000y")).toBe("x y")
+    expect(cleanText("   ")).toBeNull()
+    expect(cleanText(42)).toBeNull()
+    expect(cleanText("a".repeat(900))!.length).toBe(500)
+  })
+
+  it("pause: stores the picked reasons and cleaned text, once per link", async () => {
+    const { submitFeedback } = await fb()
+    tracker.on.select("dm_campaign_recipients").response({ user_id: U1 })
+    feedbackTable()
+    const link = realLink("pause")
+    const body = {
+      reasons: ["not_playing", "about_sc_market", "not_playing"],
+      about_sc_market: "<i>fees</i> too high",
+    }
+    expect(await submitFeedback(link, body, h.db as never, NOW)).toEqual({
+      ok: true,
+      test: false,
+    })
+    const ins = tracker.history.all.find((q) =>
+      q.sql.includes("INSERT INTO dm_campaign_feedback"),
+    )!
+    expect(ins.bindings).toEqual(
+      expect.arrayContaining([
+        svc.CAMPAIGN,
+        U1,
+        "pause",
+        false,
+        ["not_playing", "about_sc_market"],
+        "fees too high",
+      ]),
+    )
+    expect(ins.bindings[3]).toBe(tokens.tokenId(link))
+    expect(await submitFeedback(link, body, h.db as never, NOW)).toEqual({
+      ok: false,
+      reason: "already",
+    })
+  })
+
+  it("keep: free text only; empty or unknown reasons are refused", async () => {
+    const { submitFeedback } = await fb()
+    tracker.on.select("dm_campaign_recipients").response({ user_id: U1 })
+    feedbackTable()
+    expect(
+      await submitFeedback(
+        realLink("keep"),
+        { easier_text: "  " },
+        h.db as never,
+        NOW,
+      ),
+    ).toEqual({
+      ok: false,
+      reason: "empty",
+    })
+    expect(
+      await submitFeedback(
+        realLink("pause"),
+        { reasons: ["<script>"] },
+        h.db as never,
+        NOW,
+      ),
+    ).toEqual({
+      ok: false,
+      reason: "bad_request",
+    })
+    expect(
+      await submitFeedback(
+        realLink("keep"),
+        { easier_text: "bulk edit" },
+        h.db as never,
+        NOW,
+      ),
+    ).toEqual({
+      ok: true,
+      test: false,
+    })
+  })
+
+  it("a real link needs its recipient row; a test link is stored as a test", async () => {
+    const { submitFeedback } = await fb()
+    tracker.on.select("dm_campaign_recipients").response(undefined)
+    feedbackTable()
+    expect(
+      await submitFeedback(
+        realLink("keep"),
+        { easier_text: "x" },
+        h.db as never,
+        NOW,
+      ),
+    ).toEqual({
+      ok: false,
+      reason: "invalid",
+    })
+    const test = tokens.createCampaignActionToken(
+      { campaign: svc.CAMPAIGN, userId: U1, action: "pause", test: true },
+      { now: NOW },
+    )
+    expect(
+      await submitFeedback(test, { reasons: ["other"] }, h.db as never, NOW),
+    ).toEqual({ ok: true, test: true })
+    const ins = tracker.history.all
+      .filter((q) => q.sql.includes("INSERT INTO dm_campaign_feedback"))
+      .pop()!
+    expect(ins.bindings[4]).toBe(true)
+  })
+
+  it("admin summary keeps test answers out of the real counts", async () => {
+    const { feedbackSummary } = await fb()
+    tracker.on.any(/SELECT is_test, COUNT/).response({
+      rows: [
+        { is_test: false, responses: 2 },
+        { is_test: true, responses: 1 },
+      ],
+    })
+    tracker.on.any(/unnest\(reasons\)/).response({
+      rows: [
+        { is_test: false, reason: "not_enough_buyers", n: 2 },
+        { is_test: true, reason: "other", n: 1 },
+      ],
+    })
+    tracker.on.any(/JOIN accounts a/).response({
+      rows: [
+        {
+          created_at: NOW,
+          is_test: false,
+          action: "keep",
+          display_name: "Trader",
+          about_sc_market: null,
+          other_text: null,
+          easier_text: "bulk edit",
+        },
+        {
+          created_at: NOW,
+          is_test: true,
+          action: "pause",
+          display_name: "Admin",
+          about_sc_market: null,
+          other_text: "testing",
+          easier_text: null,
+        },
+      ],
+    })
+    const s = await feedbackSummary(svc.CAMPAIGN, h.db as never)
+    expect(s.real.responses).toBe(2)
+    expect(s.real.reasons.not_enough_buyers).toBe(2)
+    expect(s.real.reasons.other).toBe(0)
+    expect(s.test.reasons.other).toBe(1)
+    expect(s.real.texts).toEqual([
+      {
+        created_at: NOW.toISOString(),
+        display_name: "Trader",
+        action: "keep",
+        field: "easier",
+        text: "bulk edit",
+      },
+    ])
+    expect(s.test.texts).toHaveLength(1)
   })
 })

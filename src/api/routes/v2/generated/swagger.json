@@ -5263,6 +5263,14 @@
 						"type": "string",
 						"nullable": true,
 						"description": "When this action was first used from the link, if it was."
+					},
+					"test": {
+						"type": "boolean",
+						"description": "A test link (admin's test DM): the flow runs, nothing is changed."
+					},
+					"feedback_submitted": {
+						"type": "boolean",
+						"description": "Feedback was already sent from this link."
 					}
 				},
 				"required": [
@@ -5293,7 +5301,7 @@
 					"changed": {
 						"type": "number",
 						"format": "double",
-						"description": "Listings changed now."
+						"description": "Listings changed now (a test link: how many would have been; none were)."
 					},
 					"listings_total": {
 						"type": "number",
@@ -5301,6 +5309,10 @@
 					},
 					"manage_path": {
 						"type": "string"
+					},
+					"test": {
+						"type": "boolean",
+						"description": "A test link: no listing was changed."
 					}
 				},
 				"required": [
@@ -5308,6 +5320,71 @@
 					"changed",
 					"listings_total"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingFeedbackResult": {
+				"properties": {
+					"ok": {
+						"type": "boolean"
+					},
+					"reason": {
+						"type": "string",
+						"enum": [
+							"invalid",
+							"expired",
+							"already",
+							"empty",
+							"bad_request"
+						],
+						"description": "invalid / expired link, already answered, nothing filled in, or a bad request."
+					},
+					"test": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"ok"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingPauseReason": {
+				"type": "string",
+				"enum": [
+					"not_playing",
+					"waiting_patch",
+					"not_enough_buyers",
+					"selling_elsewhere",
+					"too_much_work",
+					"about_sc_market",
+					"other"
+				],
+				"description": "Why a seller paused (any number of them)."
+			},
+			"StillSellingFeedbackRequest": {
+				"description": "POST /still-selling/{token}/feedback. All optional; text max 500 characters, HTML stripped.",
+				"properties": {
+					"reasons": {
+						"items": {
+							"$ref": "#/components/schemas/StillSellingPauseReason"
+						},
+						"type": "array",
+						"description": "After \"Pause them\"."
+					},
+					"about_sc_market": {
+						"type": "string",
+						"description": "After \"Pause them\", with the about_sc_market reason."
+					},
+					"other_text": {
+						"type": "string",
+						"description": "After \"Pause them\", with the other reason."
+					},
+					"easier_text": {
+						"type": "string",
+						"description": "After \"Keep them live\": what would make selling here easier."
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -16191,6 +16268,124 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StillSellingFeedbackReasonCounts": {
+				"properties": {
+					"not_playing": {
+						"type": "number",
+						"format": "double"
+					},
+					"waiting_patch": {
+						"type": "number",
+						"format": "double"
+					},
+					"not_enough_buyers": {
+						"type": "number",
+						"format": "double"
+					},
+					"selling_elsewhere": {
+						"type": "number",
+						"format": "double"
+					},
+					"too_much_work": {
+						"type": "number",
+						"format": "double"
+					},
+					"about_sc_market": {
+						"type": "number",
+						"format": "double"
+					},
+					"other": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"not_playing",
+					"waiting_patch",
+					"not_enough_buyers",
+					"selling_elsewhere",
+					"too_much_work",
+					"about_sc_market",
+					"other"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingFeedbackText": {
+				"properties": {
+					"created_at": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"action": {
+						"$ref": "#/components/schemas/StillSellingAction"
+					},
+					"field": {
+						"type": "string",
+						"enum": [
+							"about_sc_market",
+							"other",
+							"easier"
+						]
+					},
+					"text": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"created_at",
+					"display_name",
+					"action",
+					"field",
+					"text"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingFeedbackGroup": {
+				"properties": {
+					"responses": {
+						"type": "number",
+						"format": "double"
+					},
+					"reasons": {
+						"$ref": "#/components/schemas/StillSellingFeedbackReasonCounts"
+					},
+					"texts": {
+						"items": {
+							"$ref": "#/components/schemas/StillSellingFeedbackText"
+						},
+						"type": "array",
+						"description": "Newest first, at most 200."
+					}
+				},
+				"required": [
+					"responses",
+					"reasons",
+					"texts"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StillSellingFeedbackSummary": {
+				"description": "Admin only: real answers, and answers from test links kept apart.",
+				"properties": {
+					"real": {
+						"$ref": "#/components/schemas/StillSellingFeedbackGroup"
+					},
+					"test": {
+						"$ref": "#/components/schemas/StillSellingFeedbackGroup"
+					}
+				},
+				"required": [
+					"real",
+					"test"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"StillSellingTopRecipient": {
 				"properties": {
 					"display_name": {
@@ -16405,6 +16600,10 @@
 						"type": "boolean",
 						"description": "More people are eligible than max_recipients."
 					},
+					"feedback": {
+						"$ref": "#/components/schemas/StillSellingFeedbackSummary",
+						"description": "Optional feedback from the landing page."
+					},
 					"top_recipients": {
 						"items": {
 							"$ref": "#/components/schemas/StillSellingTopRecipient"
@@ -16450,6 +16649,7 @@
 					"max_recipients",
 					"max_recipients_env",
 					"over_cap",
+					"feedback",
 					"top_recipients",
 					"sample",
 					"progress",
@@ -21045,6 +21245,50 @@
 						}
 					}
 				]
+			}
+		},
+		"/still-selling/{token}/feedback": {
+			"post": {
+				"operationId": "SendStillSellingFeedback",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StillSellingFeedbackResult"
+								}
+							}
+						}
+					}
+				},
+				"description": "Optional feedback, once per link: after pausing, why (any of the\nreasons, optional text); after keeping, what would make selling easier.\nText is stripped of HTML and capped at 500 characters.",
+				"summary": "Send feedback from a \"Still selling?\" link",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The signed token from the DM's button",
+						"in": "path",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StillSellingFeedbackRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/listings": {

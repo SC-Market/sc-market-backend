@@ -1880,6 +1880,8 @@ const models: TsoaRoute.Models = {
             "expires_at": {"dataType":"string"},
             "manage_path": {"dataType":"string"},
             "used_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "test": {"dataType":"boolean"},
+            "feedback_submitted": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -1893,6 +1895,33 @@ const models: TsoaRoute.Models = {
             "changed": {"dataType":"double","required":true},
             "listings_total": {"dataType":"double","required":true},
             "manage_path": {"dataType":"string"},
+            "test": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingFeedbackResult": {
+        "dataType": "refObject",
+        "properties": {
+            "ok": {"dataType":"boolean","required":true},
+            "reason": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["invalid"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["already"]},{"dataType":"enum","enums":["empty"]},{"dataType":"enum","enums":["bad_request"]}]},
+            "test": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingPauseReason": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["not_playing"]},{"dataType":"enum","enums":["waiting_patch"]},{"dataType":"enum","enums":["not_enough_buyers"]},{"dataType":"enum","enums":["selling_elsewhere"]},{"dataType":"enum","enums":["too_much_work"]},{"dataType":"enum","enums":["about_sc_market"]},{"dataType":"enum","enums":["other"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingFeedbackRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "reasons": {"dataType":"array","array":{"dataType":"refAlias","ref":"StillSellingPauseReason"}},
+            "about_sc_market": {"dataType":"string"},
+            "other_text": {"dataType":"string"},
+            "easier_text": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -5357,6 +5386,51 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingFeedbackReasonCounts": {
+        "dataType": "refObject",
+        "properties": {
+            "not_playing": {"dataType":"double","required":true},
+            "waiting_patch": {"dataType":"double","required":true},
+            "not_enough_buyers": {"dataType":"double","required":true},
+            "selling_elsewhere": {"dataType":"double","required":true},
+            "too_much_work": {"dataType":"double","required":true},
+            "about_sc_market": {"dataType":"double","required":true},
+            "other": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingFeedbackText": {
+        "dataType": "refObject",
+        "properties": {
+            "created_at": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "action": {"ref":"StillSellingAction","required":true},
+            "field": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["about_sc_market"]},{"dataType":"enum","enums":["other"]},{"dataType":"enum","enums":["easier"]}],"required":true},
+            "text": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingFeedbackGroup": {
+        "dataType": "refObject",
+        "properties": {
+            "responses": {"dataType":"double","required":true},
+            "reasons": {"ref":"StillSellingFeedbackReasonCounts","required":true},
+            "texts": {"dataType":"array","array":{"dataType":"refObject","ref":"StillSellingFeedbackText"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StillSellingFeedbackSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "real": {"ref":"StillSellingFeedbackGroup","required":true},
+            "test": {"ref":"StillSellingFeedbackGroup","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "StillSellingTopRecipient": {
         "dataType": "refObject",
         "properties": {
@@ -5432,6 +5506,7 @@ const models: TsoaRoute.Models = {
             "max_recipients": {"dataType":"double","required":true},
             "max_recipients_env": {"dataType":"string","required":true},
             "over_cap": {"dataType":"boolean","required":true},
+            "feedback": {"ref":"StillSellingFeedbackSummary","required":true},
             "top_recipients": {"dataType":"array","array":{"dataType":"refObject","ref":"StillSellingTopRecipient"},"required":true},
             "sample": {"ref":"StillSellingSampleMessage","required":true},
             "progress": {"ref":"StillSellingProgress","required":true},
@@ -8283,6 +8358,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'confirmStillSellingAction',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStillSellingController_sendStillSellingFeedback: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                token: {"in":"path","name":"token","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"StillSellingFeedbackRequest"},
+        };
+        app.post('/still-selling/:token/feedback',
+            ...(fetchMiddlewares<RequestHandler>(StillSellingController)),
+            ...(fetchMiddlewares<RequestHandler>(StillSellingController.prototype.sendStillSellingFeedback)),
+
+            async function StillSellingController_sendStillSellingFeedback(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStillSellingController_sendStillSellingFeedback, request, response });
+
+                const controller = new StillSellingController();
+
+              await templateService.apiHandler({
+                methodName: 'sendStillSellingFeedback',
                 controller,
                 response,
                 next,

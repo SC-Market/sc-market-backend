@@ -699,6 +699,23 @@ export async function writeUserDataExport(
         ),
     ),
   )
+  await out.array(
+    "dm_campaign_feedback",
+    all(
+      knex("dm_campaign_feedback")
+        .where(me)
+        .select(
+          "campaign",
+          "action",
+          "is_test",
+          "reasons",
+          "about_sc_market",
+          "other_text",
+          "easier_text",
+          "created_at",
+        ),
+    ),
+  )
   await out.value(
     "email_defaults_notice",
     (await knex("email_defaults_notices")

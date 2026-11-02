@@ -5,7 +5,7 @@
  * valid 30 days. GET says what confirming would do; POST does it. Rate
  * limited per IP (api-router.ts).
  */
-import { Get, Path, Post, Request, Route, Tags } from "tsoa"
+import { Body, Get, Path, Post, Request, Route, Tags } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import {
@@ -13,9 +13,12 @@ import {
   applyAction,
   lookupAction,
 } from "../../../../services/dm-campaigns/still-selling.service.js"
+import { submitFeedback } from "../../../../services/dm-campaigns/still-selling-feedback.js"
 import type {
   StillSellingActionPreview,
   StillSellingActionResult,
+  StillSellingFeedbackRequest,
+  StillSellingFeedbackResult,
 } from "../types/still-selling.types.js"
 
 @Route("still-selling")
@@ -57,6 +60,8 @@ export class StillSellingController extends BaseController {
       expires_at: found.expiresAt.toISOString(),
       manage_path: found.managePath,
       used_at: usedAt ? usedAt.toISOString() : null,
+      test: found.test,
+      feedback_submitted: found.feedbackSubmitted,
     }
   }
 
@@ -84,6 +89,28 @@ export class StillSellingController extends BaseController {
       changed: result.changed,
       listings_total: result.total,
       manage_path: result.managePath,
+      test: result.test,
     }
+  }
+
+  /**
+   * Optional feedback, once per link: after pausing, why (any of the
+   * reasons, optional text); after keeping, what would make selling easier.
+   * Text is stripped of HTML and capped at 500 characters.
+   *
+   * @summary Send feedback from a "Still selling?" link
+   * @param token The signed token from the DM's button
+   */
+  @Post("{token}/feedback")
+  public async sendStillSellingFeedback(
+    @Request() request: ExpressRequest,
+    @Path() token: string,
+    @Body() body: StillSellingFeedbackRequest,
+  ): Promise<StillSellingFeedbackResult> {
+    this.request = request
+    this.setHeader("Cache-Control", "private, no-store")
+    const result = await submitFeedback(token, body ?? {})
+    if (!result.ok) return { ok: false, reason: result.reason }
+    return { ok: true, test: result.test }
   }
 }

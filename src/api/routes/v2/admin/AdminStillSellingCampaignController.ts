@@ -26,6 +26,7 @@ import {
   sampleMessage,
   startCampaign,
 } from "../../../../services/dm-campaigns/still-selling.service.js"
+import { feedbackSummary } from "../../../../services/dm-campaigns/still-selling-feedback.js"
 import { campaignLocale } from "../../../../services/dm-campaigns/still-selling-message.js"
 import type {
   StillSellingDryRun,
@@ -67,6 +68,7 @@ export class AdminStillSellingCampaignController extends BaseController {
       max_recipients_env: MAX_RECIPIENTS_ENV,
       over_cap: summary.over_cap,
       top_recipients: summary.top,
+      feedback: await feedbackSummary(CAMPAIGN),
       sample: sampleMessage(campaignLocale(locale)),
       progress: await campaignProgress(),
       run: runState(),
