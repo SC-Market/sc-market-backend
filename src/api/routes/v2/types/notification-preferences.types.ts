@@ -40,6 +40,7 @@ export type NotificationEventKey =
   | "admin.alert"
   | "reminder.unread_messages"
   | "watchlist.price_alert"
+  | "buy_order.match"
   | "offer.accepted"
   | "offer.rejected"
   | "contract.public_created"

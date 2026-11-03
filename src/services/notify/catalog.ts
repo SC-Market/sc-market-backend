@@ -144,6 +144,11 @@ export const CATALOG = {
   // to the shop's owner or the org members who manage its market.
   "listing.expiring": event("market", "listing_expiring", ["in_app", "discord_dm"], { discord_dm: true }),
   "watchlist.price_alert": event("watchlist", "price_alert", ALL, { discord_dm: true }),
+  // A new public listing matches one of your buy orders
+  // (services/buy-order-matching). Personal, next to price alerts. It was a
+  // push only, with no setting; push stays on by default, Discord DM is
+  // available and off (owner decision: DM on every event group).
+  "buy_order.match": event("watchlist", "buy_order_match", ["push", "discord_dm"]),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
   "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
   // Someone made an offer on your public contract (was order_contractor_applied).

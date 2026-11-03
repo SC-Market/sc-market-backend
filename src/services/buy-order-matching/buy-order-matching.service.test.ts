@@ -14,9 +14,7 @@ vi.mock("../../clients/database/knex-db.js", () => ({
   getKnex: () => h.db,
   database: { knex: () => h.db },
 }))
-vi.mock("../push-notifications/push-notification.service.js", () => ({
-  pushNotificationService: { sendPushNotification: h.send },
-}))
+vi.mock("../notify/dispatcher.js", () => ({ notify: h.send }))
 
 const { checkBuyOrderMatches } = await import("./buy-order-matching.service.js")
 
@@ -68,9 +66,36 @@ describe("buy-order match alerts", () => {
     setup({ listing_id: LISTING_ID, title: "Pembroke Helmet" })
     await checkBuyOrderMatches(MATCH)
     expect(h.send).toHaveBeenCalledTimes(1)
-    const [buyer, payload, action] = h.send.mock.calls[0]
-    expect(buyer).toBe("buyer")
-    expect(action).toBe("buy_order_match")
-    expect(payload.data.url).toMatch(/\/market\/abcdef12--pembroke-helmet$/)
+    const [event, recipients, opts] = h.send.mock.calls[0]
+    expect(event).toBe("buy_order.match")
+    expect(recipients).toEqual([{ userId: "buyer", contractorId: null }])
+    expect(opts.entityId).toBe("bo-1")
+    expect(opts.dedupeKey).toBe(`bo-1:${LISTING_ID}`)
+    expect(opts.messages.push.data.url).toMatch(/\/market\/abcdef12--pembroke-helmet$/)
+  })
+
+  // It used to push with an action that had no notification_actions row, so
+  // the push service skipped the preference check: it could not be turned off.
+  it("goes through notify(), so the buyer's settings apply", async () => {
+    setup({ listing_id: LISTING_ID, title: "Pembroke Helmet" })
+    await checkBuyOrderMatches(MATCH)
+    const { CATALOG } = await import("../notify/catalog.js")
+    const def = CATALOG["buy_order.match"]
+    expect(def.legacyAction).toBe("buy_order_match")
+    expect(def.channels).toEqual(["push", "discord_dm"])
+    expect(def.defaults).toEqual({ push: true, discord_dm: false })
+  })
+
+  it("one alert per buyer for a listing, even with several matching buy orders", async () => {
+    setup({ listing_id: LISTING_ID, title: "Pembroke Helmet" })
+    tracker.reset()
+    tracker.on.select(/from "listings"/).response({ listing_id: LISTING_ID, title: "Pembroke Helmet" })
+    tracker.on.select(/from "shops"/).response({ shop_id: "shop-1", owner_user_id: "seller" })
+    tracker.on.select(/from "buy_orders_v2"/).response([
+      { buy_order_id: "bo-1", buyer_id: "buyer", game_item_name: "Pembroke Helmet" },
+      { buy_order_id: "bo-2", buyer_id: "buyer", game_item_name: "Pembroke Helmet" },
+    ])
+    await checkBuyOrderMatches(MATCH)
+    expect(h.send).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,6 +1,6 @@
 import { getKnex } from "../../clients/database/knex-db.js"
-import { pushNotificationService } from "../push-notifications/push-notification.service.js"
 import { PushNotificationPayload } from "../push-notifications/push-notification.service.types.js"
+import { notify } from "../notify/dispatcher.js"
 import logger from "../../logger/logger.js"
 import { env } from "../../config/env.js"
 import { listingPubliclyListed } from "../../api/routes/v2/util/listing-visibility.js"
@@ -18,7 +18,9 @@ interface ListingMatchInfo {
 
 /**
  * Check active buy orders that match a newly created listing.
- * Notifies buyers via push notification when a listing matches their buy order criteria.
+ * Notifies buyers when a listing matches their buy order criteria, through
+ * notify() (event buy_order.match): push on by default, Discord DM if the
+ * buyer turned it on, both switchable in Settings -> Notifications.
  *
  * The buyer is a stranger to the seller, so only publicly listed listings
  * (active + public: the anonymous market-grid rule) may alert. An org-internal
@@ -113,15 +115,19 @@ export async function checkBuyOrderMatches(listing: ListingMatchInfo): Promise<v
         },
       }
 
-      pushNotificationService
-        .sendPushNotification(match.buyer_id, notification, "buy_order_match")
-        .catch((err) => {
-          logger.error("Failed to send buy order match notification", {
-            buyerId: match.buyer_id,
-            buyOrderId: match.buy_order_id,
-            error: err,
-          })
+      // Personal preferences; notify() never throws for a failed delivery.
+      // One alert per buy order and listing, however often this runs.
+      notify("buy_order.match", [{ userId: match.buyer_id, contractorId: null }], {
+        entityId: match.buy_order_id,
+        dedupeKey: `${match.buy_order_id}:${publiclyListed.listing_id}`,
+        messages: { push: notification },
+      }).catch((err) => {
+        logger.error("Failed to send buy order match notification", {
+          buyerId: match.buyer_id,
+          buyOrderId: match.buy_order_id,
+          error: err,
         })
+      })
     }
   } catch (error) {
     logger.error("Failed to check buy order matches", {
