@@ -20,7 +20,7 @@ const ja: Record<string, string> = {
   "common.duration_days_other": "{count} 日",
   "common.duration_hours_other": "{count} 時間",
 
-  "status.order.not-started": "未着手",
+  "status.order.not-started": "待機中",
   "status.order.in-progress": "進行中",
   "status.order.fulfilled": "完了",
   "status.order.cancelled": "キャンセル済み",
@@ -53,13 +53,13 @@ const ja: Record<string, string> = {
   "admin_alert.preheader": "新しい管理者アラートがあります：{title}",
   "admin_alert.heading": "管理者アラート",
   "admin_alert.intro": "新しい管理者アラートがあります：",
-  "admin_alert.action": "アラートを見る",
+  "admin_alert.action": "アラートを表示",
 
   "buy_order_filled.subject": "買い注文が成立しました",
-  "buy_order_filled.body": "{seller} があなたの買い注文に応じました：{item} × {quantity}（{total} aUEC）。注文が作成されました。",
+  "buy_order_filled.body": "{seller} さんがあなたの買い注文に応じました：{item} × {quantity}（{total} aUEC）。注文が作成されました。",
   "buy_order_filled.open": "残り {remaining} 個を募集中です。買い注文は引き続き有効です。",
   "buy_order_filled.complete": "買い注文はすべて成立しました。",
-  "buy_order_filled.action": "注文を見る",
+  "buy_order_filled.action": "注文を表示",
 
   "contract_offer_received.subject": "あなたの契約に新しいオファーが届きました",
   "contract_offer_received.preheader": "あなたの公開契約にオファーが届きました。",
@@ -70,7 +70,7 @@ const ja: Record<string, string> = {
   "contractor_invite.preheader": "{org} への参加に招待されました。",
   "contractor_invite.heading": "組織への招待",
   "contractor_invite.intro": "組織への参加に招待されました。",
-  "contractor_invite.action": "招待を見る",
+  "contractor_invite.action": "招待を表示",
 
   "counter_offer_create.subject": "カウンターオファーが届きました",
   "counter_offer_create.preheader": "カウンターオファーが届きました。",
@@ -83,7 +83,7 @@ const ja: Record<string, string> = {
   "dm_reminder.body.single": "SC Market の会話で、あなたの返信を待っているメッセージがあります。",
   "dm_reminder.body.multiple_other": "SC Market の {count} 件の会話で、あなたの返信を待っているメッセージがあります。",
   "dm_reminder.nudge": "取引相手を待たせないようにしましょう。すばやく返信すると取引がスムーズに進みます。",
-  "dm_reminder.action": "メッセージを見る",
+  "dm_reminder.action": "メッセージを表示",
 
   "market_item_bid.subject": "出品に新しい入札がありました",
   "market_item_bid.preheader": "「{title}」に入札がありました。",
@@ -116,9 +116,9 @@ const ja: Record<string, string> = {
   "offer_pending_reminder.subject.single": "オファーがあなたの返信を待っています",
   "offer_pending_reminder.subject.multiple_other": "{count} 件のオファーがあなたの返信を待っています",
   "offer_pending_reminder.body.single":
-    "{buyer} さんが「{title}」への返信を {waited} 待っています。承認、拒否、カウンターオファー、またはチャットで返信してください。",
+    "{buyer} さんが「{title}」への返信を {waited} 待っています。承認、却下、カウンターオファー、またはチャットで返信してください。",
   "offer_pending_reminder.body.multiple_other":
-    "{count} 人の購入者が返信を待っています。承認、拒否、カウンターオファー、またはチャットで返信してください。",
+    "{count} 人の購入者が返信を待っています。承認、却下、カウンターオファー、またはチャットで返信してください。",
   "offer_pending_reminder.action": "オファーに返信する",
 
   "offer_pending_final_reminder.subject.single": "最後のリマインダー：オファーがまだあなたの返信を待っています",
@@ -129,21 +129,21 @@ const ja: Record<string, string> = {
     "{count} 人の購入者が返信を待っています。このまま返信がない場合は、購入者にまだ返信待ちであることをお知らせします。",
   "offer_pending_final_reminder.action": "オファーに返信する",
 
-  "offer_waiting_buyer.subject.single": "あなたのオファーはまだ出品者の返信待ちです",
-  "offer_waiting_buyer.subject.multiple_other": "あなたの {count} 件のオファーがまだ出品者の返信待ちです",
+  "offer_waiting_buyer.subject.single": "あなたのオファーはまだ販売者の返信待ちです",
+  "offer_waiting_buyer.subject.multiple_other": "あなたの {count} 件のオファーがまだ販売者の返信待ちです",
   "offer_waiting_buyer.body.single":
-    "{seller} から「{title}」への返信が {waited} ありません。このまま待つか、出品者にメッセージを送るか、オファーを取り下げてください。",
+    "{seller} さんから「{title}」への返信が {waited} ありません。このまま待つか、販売者にメッセージを送るか、オファーを取り下げてください。",
   "offer_waiting_buyer.body.multiple":
-    "出品者から数日間返信がありません。このまま待つか、メッセージを送るか、オファーを取り下げてください。",
-  "offer_waiting_buyer.action": "出品者にメッセージを送る",
+    "販売者から数日間返信がありません。このまま待つか、メッセージを送るか、オファーを取り下げてください。",
+  "offer_waiting_buyer.action": "販売者にメッセージを送る",
   "offer_waiting_buyer.withdraw_prompt": "もう必要ありませんか？<link>オファーを取り下げる</link>",
   "offer_waiting_buyer.withdraw": "オファーを取り下げる",
   "offer_waiting_buyer.keep_waiting": "このまま待つ場合は、何もする必要はありません。",
 
-  "offer_rejected.subject": "オファーが拒否されました",
-  "offer_rejected.preheader": "あなたのオファーが拒否されました。",
-  "offer_rejected.heading": "オファーが拒否されました",
-  "offer_rejected.intro": "あなたのオファーが拒否されました：",
+  "offer_rejected.subject": "オファーが却下されました",
+  "offer_rejected.preheader": "あなたのオファーが却下されました。",
+  "offer_rejected.heading": "オファーが却下されました",
+  "offer_rejected.intro": "あなたのオファーが却下されました：",
 
   "order_assigned.subject": "注文が割り当てられました",
   "order_assigned.preheader": "注文「{title}」があなたに割り当てられました。",
@@ -185,8 +185,8 @@ const ja: Record<string, string> = {
   "order_status_in_progress.heading": "注文が進行中です",
   "order_status_in_progress.intro": "注文「{title}」が進行中になりました。",
   "order_status_not_started.subject": "注文のステータスが更新されました",
-  "order_status_not_started.heading": "注文：未着手",
-  "order_status_not_started.intro": "注文「{title}」のステータスが「未着手」に変更されました。",
+  "order_status_not_started.heading": "注文：待機中",
+  "order_status_not_started.intro": "注文「{title}」のステータスが「待機中」に変更されました。",
 
   "price_alert.subject": "価格アラート：{title} が {price} aUEC",
   "price_alert.preheader": "{title} が {price} aUEC で出品されています。目標価格 {target} aUEC 以下です。",
@@ -195,12 +195,12 @@ const ja: Record<string, string> = {
   "price_alert.price": "価格：",
   "price_alert.target": "目標価格：",
   "price_alert.quantity": "数量：",
-  "price_alert.seller": "出品者：",
+  "price_alert.seller": "販売者：",
 
   "staff_storefront_enquiry.subject": "ストアフロントの新しい問い合わせ：{name}",
-  "staff_storefront_enquiry.preheader": "{requester} が {subdomain} をリクエストしました",
+  "staff_storefront_enquiry.preheader": "{requester} さんが {subdomain} をリクエストしました",
   "staff_storefront_enquiry.heading": "ストアフロントの新しい問い合わせ",
-  "staff_storefront_enquiry.intro": "{requester} が SC Market スタッフにブランドストアフロントをリクエストしました。",
+  "staff_storefront_enquiry.intro": "{requester} さんが SC Market スタッフにブランドストアフロントをリクエストしました。",
   "staff_storefront_enquiry.target_org": "組織：",
   "staff_storefront_enquiry.target_shop": "ショップ：",
   "staff_storefront_enquiry.requested_by": "リクエスト者：",

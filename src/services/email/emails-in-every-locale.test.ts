@@ -498,7 +498,7 @@ describe("buy order filled email", () => {
     h.locale = "ja"
     const ja = await send("buy_order_filled")
     expect(ja.subject).toBe("買い注文が成立しました")
-    expect(ja.text).toContain("注文を見る:")
+    expect(ja.text).toContain("注文を表示:")
     expect(ja.html).toContain('<html lang="ja">')
   })
 })
