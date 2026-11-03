@@ -332,7 +332,7 @@ describe("messages", () => {
         "offer_pending_reminder",
         "u",
       )
-      expect(data.notificationTitle).toBe("Ein Angebot wartet auf deine Antwort")
+      expect(data.notificationTitle).toBe("Ein Angebot wartet auf Ihre Antwort")
       const text = await renderEmailTemplate("offer_pending_reminder", data, "txt")
       expect(text).toContain("Hallo U,")
       expect(text).toMatch(/wartet schon \d+ (Stunden?|Tage?) auf eine Antwort/)

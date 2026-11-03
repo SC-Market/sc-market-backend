@@ -99,8 +99,8 @@ describe("notifyBuyOrderFilled", () => {
   it("is in the buyer's language", async () => {
     await notifyBuyOrderFilled(fill({ buyerLocale: "de" }))
     const { push } = h.notify.mock.calls[0][2].messages
-    expect(push.title).toBe("Dein Kaufauftrag wurde erfüllt")
-    expect(push.body).toContain("Seller Shop hat deinen Kaufauftrag erfüllt: 4 × Quantanium für 12.000 aUEC.")
+    expect(push.title).toBe("Ihr Kaufauftrag wurde erfüllt")
+    expect(push.body).toContain("Seller Shop hat Ihren Kaufauftrag erfüllt: 4 × Quantanium für 12.000 aUEC.")
   })
 
   it("has its text in all 8 languages", () => {

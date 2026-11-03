@@ -382,9 +382,9 @@ describe("account identity security email", () => {
   it("is in the user's language, with their new username", async () => {
     h.locale = "de"
     const m = await identity("username_released", { old_username: "Old", new_username: "user_1a2b3c4d" })
-    expect(m.subject).toBe("Dein SC-Market-Benutzername wurde geändert")
+    expect(m.subject).toBe("Ihr SC-Market-Benutzername wurde geändert")
     expect(m.text).toContain("Hallo Alice,")
-    expect(m.text).toContain("Dein Benutzername ist jetzt user_1a2b3c4d.")
+    expect(m.text).toContain("Ihr Benutzername ist jetzt user_1a2b3c4d.")
     expect(m.text).toContain("Einstellungen öffnen:\nhttps://")
     expect(m.text).toContain("Einstellungen verwalten:")
     expect(m.html).toContain('<html lang="de">')
@@ -493,7 +493,7 @@ describe("buy order filled email", () => {
   it("is in the user's language, amounts written its way", async () => {
     h.locale = "de"
     const m = await send("buy_order_filled")
-    expect(m.subject).toBe("Dein Kaufauftrag wurde erfüllt")
+    expect(m.subject).toBe("Ihr Kaufauftrag wurde erfüllt")
     expect(m.text).toContain("für 12.000 aUEC")
     h.locale = "ja"
     const ja = await send("buy_order_filled")
