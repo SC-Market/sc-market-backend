@@ -196,3 +196,17 @@ export function buyOrderFilledText(locale: EmailLocale, f: BuyOrderFilledFacts) 
         : translate(locale, "buy_order_filled.complete"),
   }
 }
+
+/**
+ * "Your listings were paused for the wipe. Relist them in one tap."
+ * (services/listing-wipe): the push, the Discord DM and the email say the
+ * same thing.
+ */
+export function wipeRelistText(locale: EmailLocale) {
+  return {
+    title: translate(locale, "listing_paused_by_wipe.subject"),
+    body: translate(locale, "listing_paused_by_wipe.body"),
+    tap: translate(locale, "listing_paused_by_wipe.tap"),
+    action: translate(locale, "listing_paused_by_wipe.action"),
+  }
+}

@@ -444,10 +444,10 @@ describe("dry run summary", () => {
 describe("Market Discord DM opt-outs", () => {
   const { sql, bindings } = svc.candidatesSql()
 
-  it("the Market category's Discord DM events: new bids and the listing-expiry notice", () => {
-    expect(svc.MARKET_DM_ACTIONS).toEqual(["market_item_bid", "listing_expiring"])
-    expect(bindings.slice(-2)).toEqual(["market_item_bid", "listing_expiring"])
-    expect(sql).toMatch(/WHERE na\.action IN \(\?, \?\)/)
+  it("the Market category's Discord DM events: new bids, the listing-expiry notice and the wipe message", () => {
+    expect(svc.MARKET_DM_ACTIONS).toEqual(["market_item_bid", "listing_expiring", "listing_paused_by_wipe"])
+    expect(bindings.slice(-3)).toEqual(["market_item_bid", "listing_expiring", "listing_paused_by_wipe"])
+    expect(sql).toMatch(/WHERE na\.action IN \(\?, \?, \?\)/)
   })
 
   it("an explicit off (org row for an org seller, else the Personal row) leaves the person out; no row is not an opt-out", () => {

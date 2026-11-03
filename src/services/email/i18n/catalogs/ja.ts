@@ -61,6 +61,11 @@ const ja: Record<string, string> = {
   "buy_order_filled.complete": "買い注文はすべて成立しました。",
   "buy_order_filled.action": "注文を表示",
 
+  "listing_paused_by_wipe.subject": "ワイプのため出品が一時停止されました",
+  "listing_paused_by_wipe.body": "ワイプのため出品が一時停止されました。ワンタップで再出品できます。",
+  "listing_paused_by_wipe.tap": "ワンタップで再出品できます。",
+  "listing_paused_by_wipe.action": "出品を再開",
+
   "contract_offer_received.subject": "あなたの契約に新しいオファーが届きました",
   "contract_offer_received.preheader": "あなたの公開契約にオファーが届きました。",
   "contract_offer_received.heading": "あなたの契約への新しいオファー",

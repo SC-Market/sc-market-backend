@@ -16,6 +16,7 @@ import {
   renewalColumns,
 } from "../listing-expiry/listing-expiry.service.js"
 import { auditService } from "../audit/audit.service.js"
+import { markWipeRelisted } from "../listing-wipe/wipe-items.js"
 
 /** Statuses a refresh applies to (an expired one is paused and gets reactivated). */
 export const REFRESHABLE_STATUSES = ["active", "inactive", "expired"] as const
@@ -59,6 +60,8 @@ export async function applyListingRefresh(
       ...(paused ? { status: "active" } : {}),
     })
   if (renewal) await markRenewed(db, [listing.listing_id], paused)
+  // A listing the admin's wipe paused: count it as relisted.
+  if (paused) await markWipeRelisted(db, [listing.listing_id])
   auditService.log({
     entity_type: "listing",
     entity_id: listing.listing_id,

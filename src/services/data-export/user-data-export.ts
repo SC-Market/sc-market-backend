@@ -664,6 +664,15 @@ export async function writeUserDataExport(
         .select("session_id", "stage", "created_at"),
     ),
   )
+  await out.array(
+    "wipe_notices",
+    all(
+      knex("listing_wipe_notices")
+        .where(me)
+        .orderBy("created_at", "asc")
+        .select("wipe_id", "created_at", "sent_at"),
+    ),
+  )
   await out.value(
     "dm_reminders",
     (await knex("dm_reminder_log")

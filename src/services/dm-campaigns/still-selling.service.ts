@@ -256,7 +256,7 @@ export function candidatesSql(campaign = CAMPAIGN): {
 
 /**
  * The Market category's events with a Discord DM (catalog.ts: new bids, the
- * listing-expiry "Still selling?" notice). Owner decision (2026-11-02): the
+ * listing-expiry "Still selling?" notice, the wipe message). Owner decision (2026-11-02): the
  * campaign skips anyone who turned Discord DMs off for them, in the dry-run
  * count and the send (both read candidatesSql). The admin's "Send test DM to
  * me" does not read it.

@@ -69,6 +69,11 @@ const uk: Record<string, string> = {
   "buy_order_filled.complete": "Ваше замовлення на купівлю тепер виконано повністю.",
   "buy_order_filled.action": "Переглянути замовлення",
 
+  "listing_paused_by_wipe.subject": "Ваші оголошення призупинено через вайп",
+  "listing_paused_by_wipe.body": "Ваші оголошення призупинено через вайп. Відновіть їх одним дотиком.",
+  "listing_paused_by_wipe.tap": "Відновіть їх одним дотиком.",
+  "listing_paused_by_wipe.action": "Відновити оголошення",
+
   "contract_offer_received.subject": "Нова пропозиція щодо вашого контракту",
   "contract_offer_received.preheader": "Хтось зробив пропозицію щодо вашого публічного контракту.",
   "contract_offer_received.heading": "Нова пропозиція щодо вашого контракту",

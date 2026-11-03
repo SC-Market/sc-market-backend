@@ -36,6 +36,7 @@ export type NotificationEventKey =
   | "offer.message"
   | "market.bid"
   | "listing.expiring"
+  | "listing.paused_by_wipe"
   | "org.invite"
   | "org.member_joined"
   | "admin.alert"

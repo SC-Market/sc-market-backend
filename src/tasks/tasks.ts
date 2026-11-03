@@ -18,6 +18,7 @@ import {
   logReminderVolumeEstimate,
 } from "../services/dm-reminders/dm-reminder.service.js"
 import { processOfferReminders } from "../services/offer-reminders/offer-reminders.service.js"
+import { sendWipeNotices } from "../services/listing-wipe/listing-wipe.service.js"
 import { refresh_shop_activity_stats } from "../services/seller-activity/seller-activity.service.js"
 import { releaseHoldsOfClosedSessions } from "../services/allocation/v2-offer-holds.service.js"
 import { getKnex } from "../clients/database/knex-db.js"
@@ -154,6 +155,13 @@ export function start_tasks() {
     safe(() => processOfferReminders(), "processOfferReminders")
     setInterval(() => safe(() => processOfferReminders(), "processOfferReminders"), 30 * 60 * 1000)
   }, STARTUP_DELAY + 82_000)
+
+  // Wipe messages (services/listing-wipe): sent right after the admin's
+  // wipe; every 10 minutes this resumes a send a restart interrupted.
+  setTimeout(() => {
+    safe(() => sendWipeNotices(), "sendWipeNotices")
+    setInterval(() => safe(() => sendWipeNotices(), "sendWipeNotices"), 10 * 60 * 1000)
+  }, STARTUP_DELAY + 84_000)
 
   // Seller activity (last seen, reply time) for listings and shops, every 30 minutes.
   setTimeout(() => {

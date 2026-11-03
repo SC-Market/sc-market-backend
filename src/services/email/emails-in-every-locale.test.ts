@@ -10,8 +10,8 @@
  *   catalog tag left over and <html lang> set;
  * - the language never changes who may unsubscribe: the unsubscribe link and
  *   List-Unsubscribe headers are there (or not) exactly as in English;
- * - account_identity_changed stays mandatory, dm_reminder and
- *   buy_order_filled opt-in.
+ * - account_identity_changed stays mandatory, dm_reminder,
+ *   buy_order_filled and listing_paused_by_wipe opt-in.
  *
  * EMAIL_PREVIEW_DIR=/some/dir writes each rendered email there
  * (<type>.<locale>.html / .txt) for a visual check (long German strings,
@@ -57,7 +57,8 @@ vi.mock("../../api/routes/v1/email/database.js", () => ({
 }))
 vi.mock("../../api/routes/v1/notifications/database.js", () => ({
   getNotificationActionByName: async (action: string) => ({
-    action_type_id: action === "dm_reminder" ? "82" : action === "buy_order_filled" ? "95" : "90",
+    action_type_id:
+      action === "dm_reminder" ? "82" : action === "buy_order_filled" ? "95" : action === "listing_paused_by_wipe" ? "97" : "90",
   }),
 }))
 // A long display name and long titles: the layout must hold them in German.
@@ -229,6 +230,7 @@ const CASES: Record<string, Record<string, unknown>> = {
     buyOrderFill: { order_id: "order-1", seller: "Seller Shop", item: "Quantanium", quantity: 4, total: 12000, remaining: 2 },
   },
   dm_reminder: { reminder: { conversations: 3, url: "https://sc-market.space/messaging" } },
+  listing_paused_by_wipe: { wipeRelist: { wipe_id: "wipe-1", path: "/market/me" } },
 }
 
 beforeEach(() => {
@@ -500,6 +502,30 @@ describe("buy order filled email", () => {
     expect(ja.subject).toBe("買い注文が成立しました")
     expect(ja.text).toContain("注文を表示:")
     expect(ja.html).toContain('<html lang="ja">')
+  })
+})
+
+describe("wipe email", () => {
+  it("is opt-in: not sent without the user's listing_paused_by_wipe email row", async () => {
+    expect(emailDefaultFor("listing_paused_by_wipe")).toEqual({ mandatory: false, defaultOn: false })
+    h.isEmailEnabled.mockResolvedValue(false)
+    expect(
+      await emailService.sendNotificationEmail("alice", "listing_paused_by_wipe", CASES.listing_paused_by_wipe, true, null, {
+        contractorId: null,
+      }),
+    ).toBe(false)
+    expect(h.sendEmailViaSES).not.toHaveBeenCalled()
+    expect(h.isEmailEnabled).toHaveBeenCalledWith("alice", 97, null)
+  })
+
+  it("says the listings were paused, links the relist banner, with an unsubscribe link", async () => {
+    const m = await send("listing_paused_by_wipe")
+    expect(m.subject).toBe("Your listings were paused for the wipe")
+    expect(m.text).toContain("Your listings were paused for the wipe. Relist them in one tap.")
+    expect(m.text).toMatch(/Relist my listings:\n\S*\/market\/me/)
+    expect(m.html).toContain("/email/unsubscribe/")
+    h.locale = "uk"
+    expect((await send("listing_paused_by_wipe")).subject).toBe("Ваші оголошення призупинено через вайп")
   })
 })
 

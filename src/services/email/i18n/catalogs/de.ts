@@ -65,6 +65,11 @@ const de: Record<string, string> = {
   "buy_order_filled.complete": "Ihr Kaufauftrag ist jetzt vollständig erfüllt.",
   "buy_order_filled.action": "Bestellung ansehen",
 
+  "listing_paused_by_wipe.subject": "Ihre Inserate wurden für den Wipe pausiert",
+  "listing_paused_by_wipe.body": "Ihre Inserate wurden für den Wipe pausiert. Stellen Sie sie mit einem Tippen wieder ein.",
+  "listing_paused_by_wipe.tap": "Stellen Sie sie mit einem Tippen wieder ein.",
+  "listing_paused_by_wipe.action": "Inserate wieder einstellen",
+
   "contract_offer_received.subject": "Neues Angebot für Ihren Auftrag",
   "contract_offer_received.preheader": "Jemand hat ein Angebot für Ihren öffentlichen Auftrag abgegeben.",
   "contract_offer_received.heading": "Neues Angebot für Ihren Auftrag",

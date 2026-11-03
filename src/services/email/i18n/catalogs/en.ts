@@ -69,6 +69,12 @@ const en = {
   "buy_order_filled.complete": "Your buy order is now complete.",
   "buy_order_filled.action": "View order",
 
+  // listing_paused_by_wipe: the admin's wipe paused your listings (also its push and Discord DM).
+  "listing_paused_by_wipe.subject": "Your listings were paused for the wipe",
+  "listing_paused_by_wipe.body": "Your listings were paused for the wipe. Relist them in one tap.",
+  "listing_paused_by_wipe.tap": "Relist them in one tap.",
+  "listing_paused_by_wipe.action": "Relist my listings",
+
   // contract_offer_received
   "contract_offer_received.subject": "New Offer on Your Contract",
   "contract_offer_received.preheader": "Someone made an offer on your public contract.",

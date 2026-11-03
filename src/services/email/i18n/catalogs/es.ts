@@ -65,6 +65,11 @@ const es: Record<string, string> = {
   "buy_order_filled.complete": "Tu orden de compra ya está completa.",
   "buy_order_filled.action": "Ver pedido",
 
+  "listing_paused_by_wipe.subject": "Tus anuncios se han pausado por el wipe",
+  "listing_paused_by_wipe.body": "Tus anuncios se han pausado por el wipe. Vuelve a publicarlos con un toque.",
+  "listing_paused_by_wipe.tap": "Vuelve a publicarlos con un toque.",
+  "listing_paused_by_wipe.action": "Volver a publicar mis anuncios",
+
   "contract_offer_received.subject": "Nueva oferta en tu contrato",
   "contract_offer_received.preheader": "Alguien hizo una oferta en tu contrato público.",
   "contract_offer_received.heading": "Nueva oferta en tu contrato",

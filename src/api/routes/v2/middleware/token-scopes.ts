@@ -60,6 +60,8 @@ const DOMAIN_PREFIXES: Array<{ prefix: string; domain: string }> = [
   // v2 domains whose v1 precedent is clear
   { prefix: "shops", domain: "market" },
   { prefix: "buy-orders", domain: "market" },
+  // Relist the listings a game wipe paused (WipeRelistV2Controller).
+  { prefix: "wipe-relist", domain: "market" },
   { prefix: "auctions", domain: "market" },
   { prefix: "inventory", domain: "market" },
   { prefix: "images", domain: "market" },

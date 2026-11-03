@@ -38,6 +38,8 @@ import { MfaController } from './../mfa/MfaController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminMfaController } from './../mfa/MfaController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { WipeRelistV2Controller } from './../listings/WipeRelistV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { StillSellingController } from './../listings/StillSellingController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
@@ -1653,7 +1655,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationEventKey": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["buy_order.match"]},{"dataType":"enum","enums":["buy_order.filled"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]},{"dataType":"enum","enums":["storefront.enquiry_accepted"]},{"dataType":"enum","enums":["storefront.enquiry_declined"]},{"dataType":"enum","enums":["reminder.offer_pending"]},{"dataType":"enum","enums":["reminder.offer_pending_final"]},{"dataType":"enum","enums":["reminder.offer_waiting_buyer"]},{"dataType":"enum","enums":["order.thread_invite"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order.created"]},{"dataType":"enum","enums":["order.assigned"]},{"dataType":"enum","enums":["order.status.not_started"]},{"dataType":"enum","enums":["order.status.in_progress"]},{"dataType":"enum","enums":["order.status.fulfilled"]},{"dataType":"enum","enums":["order.status.cancelled"]},{"dataType":"enum","enums":["order.message"]},{"dataType":"enum","enums":["order.review"]},{"dataType":"enum","enums":["order.review_revision_requested"]},{"dataType":"enum","enums":["offer.created"]},{"dataType":"enum","enums":["offer.countered"]},{"dataType":"enum","enums":["offer.message"]},{"dataType":"enum","enums":["market.bid"]},{"dataType":"enum","enums":["listing.expiring"]},{"dataType":"enum","enums":["listing.paused_by_wipe"]},{"dataType":"enum","enums":["org.invite"]},{"dataType":"enum","enums":["org.member_joined"]},{"dataType":"enum","enums":["admin.alert"]},{"dataType":"enum","enums":["reminder.unread_messages"]},{"dataType":"enum","enums":["watchlist.price_alert"]},{"dataType":"enum","enums":["buy_order.match"]},{"dataType":"enum","enums":["buy_order.filled"]},{"dataType":"enum","enums":["offer.accepted"]},{"dataType":"enum","enums":["offer.rejected"]},{"dataType":"enum","enums":["contract.public_created"]},{"dataType":"enum","enums":["contract.offer_received"]},{"dataType":"enum","enums":["storefront.enquiry_accepted"]},{"dataType":"enum","enums":["storefront.enquiry_declined"]},{"dataType":"enum","enums":["reminder.offer_pending"]},{"dataType":"enum","enums":["reminder.offer_pending_final"]},{"dataType":"enum","enums":["reminder.offer_waiting_buyer"]},{"dataType":"enum","enums":["order.thread_invite"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationPreferenceCell": {
@@ -1858,6 +1860,33 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "reason": {"dataType":"string","required":true,"validators":{"minLength":{"value":3},"maxLength":{"value":500}}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WipeRelistSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "wipe_id": {"dataType":"string","required":true},
+            "ran_at": {"dataType":"string","required":true},
+            "count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WipeRelistResult": {
+        "dataType": "refObject",
+        "properties": {
+            "relisted": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WipeRelistRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "wipe_id": {"dataType":"string","required":true},
+            "shop_id": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -5985,6 +6014,19 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LastWipeStats": {
+        "dataType": "refObject",
+        "properties": {
+            "wipe_id": {"dataType":"string","required":true},
+            "ran_at": {"dataType":"string","required":true},
+            "paused": {"dataType":"double","required":true},
+            "relisted": {"dataType":"double","required":true},
+            "messages_queued": {"dataType":"double","required":true},
+            "messages_sent": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AdminAlertAudiencePreview": {
         "dataType": "refObject",
         "properties": {
@@ -8497,6 +8539,70 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'resetUserMfa',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWipeRelistV2Controller_getWipeRelist: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shop_id: {"in":"query","name":"shop_id","dataType":"string"},
+        };
+        app.get('/wipe-relist',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WipeRelistV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(WipeRelistV2Controller.prototype.getWipeRelist)),
+
+            async function WipeRelistV2Controller_getWipeRelist(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWipeRelistV2Controller_getWipeRelist, request, response });
+
+                const controller = new WipeRelistV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getWipeRelist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWipeRelistV2Controller_relistWipe: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"WipeRelistRequest"},
+        };
+        app.post('/wipe-relist',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WipeRelistV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(WipeRelistV2Controller.prototype.relistWipe)),
+
+            async function WipeRelistV2Controller_relistWipe(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWipeRelistV2Controller_relistWipe, request, response });
+
+                const controller = new WipeRelistV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'relistWipe',
                 controller,
                 response,
                 next,
@@ -13784,6 +13890,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'expireAllListings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminController_getLastWipe: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/last-wipe',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminController.prototype.getLastWipe)),
+
+            async function AdminController_getLastWipe(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminController_getLastWipe, request, response });
+
+                const controller = new AdminController();
+
+              await templateService.apiHandler({
+                methodName: 'getLastWipe',
                 controller,
                 response,
                 next,

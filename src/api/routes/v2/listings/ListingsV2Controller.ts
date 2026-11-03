@@ -43,6 +43,7 @@ import {
 } from "../../../../services/seller-activity/seller-ranking.js"
 import { markRenewed, renewalColumns } from "../../../../services/listing-expiry/listing-expiry.service.js"
 import { REFRESHABLE_STATUSES, applyListingRefresh, isRenewal } from "../../../../services/market-v2/listing-refresh.service.js"
+import { markWipeRelisted } from "../../../../services/listing-wipe/wipe-items.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
@@ -2003,6 +2004,7 @@ export class ListingsV2Controller extends BaseController {
         void checkWatchlistMatches(id)
       }
       await markRenewed(getKnex(), [id], reactivated)
+      if (reactivated) await markWipeRelisted(getKnex(), [id])
 
       // 8. Return updated listing with variant breakdown (Requirement 17.9)
       // TODO: Invalidate cache after updates (Requirement 17.12)

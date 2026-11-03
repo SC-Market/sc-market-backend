@@ -602,6 +602,12 @@ export async function getEntityByType(
       const { noticeEntity } = await import("../../../../services/listing-expiry/listing-expiry.service.js")
       return noticeEntity(entity_id)
     }
+    case "listing_wipes": {
+      // "Your listings were paused for the wipe" (listing_paused_by_wipe):
+      // the wipe and where to relist (services/listing-wipe).
+      const { wipeNoticeEntity } = await import("../../../../services/listing-wipe/listing-wipe.service.js")
+      return wipeNoticeEntity(entity_id)
+    }
     case "offer_reminders": {
       // Pending-offer reminders (offer_pending_reminder, _final_reminder,
       // offer_waiting_buyer): the offers in the reminder, entity id = its

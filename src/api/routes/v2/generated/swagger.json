@@ -4701,6 +4701,7 @@
 					"offer.message",
 					"market.bid",
 					"listing.expiring",
+					"listing.paused_by_wipe",
 					"org.invite",
 					"org.member_joined",
 					"admin.alert",
@@ -5231,6 +5232,59 @@
 				},
 				"required": [
 					"reason"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WipeRelistSummary": {
+				"properties": {
+					"wipe_id": {
+						"type": "string"
+					},
+					"ran_at": {
+						"type": "string"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings the user can relist with one click."
+					}
+				},
+				"required": [
+					"wipe_id",
+					"ran_at",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WipeRelistResult": {
+				"properties": {
+					"relisted": {
+						"type": "number",
+						"format": "double",
+						"description": "Listings put back on the market by this call (0 when run again)."
+					}
+				},
+				"required": [
+					"relisted"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WipeRelistRequest": {
+				"properties": {
+					"wipe_id": {
+						"type": "string",
+						"description": "The wipe from GET /wipe-relist."
+					},
+					"shop_id": {
+						"type": "string",
+						"description": "Only this shop's listings (its Listings page); all the caller manages otherwise."
+					}
+				},
+				"required": [
+					"wipe_id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -18207,6 +18261,43 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"LastWipeStats": {
+				"properties": {
+					"wipe_id": {
+						"type": "string"
+					},
+					"ran_at": {
+						"type": "string"
+					},
+					"paused": {
+						"type": "number",
+						"format": "double"
+					},
+					"relisted": {
+						"type": "number",
+						"format": "double"
+					},
+					"messages_queued": {
+						"type": "number",
+						"format": "double",
+						"description": "Users the message was queued for, and how many it has reached so far."
+					},
+					"messages_sent": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"wipe_id",
+					"ran_at",
+					"paused",
+					"relisted",
+					"messages_queued",
+					"messages_sent"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AdminAlertAudiencePreview": {
 				"properties": {
 					"recipients": {
@@ -21769,6 +21860,85 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/MfaResetRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/wipe-relist": {
+			"get": {
+				"operationId": "GetWipeRelist",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/WipeRelistSummary"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "The latest wipe with listings the caller can relist, and how many; null\nwhen there is nothing to relist.",
+				"summary": "Listings paused by the wipe",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Only this shop (it must be one the caller manages)",
+						"in": "query",
+						"name": "shop_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "RelistWipe",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WipeRelistResult"
+								}
+							}
+						}
+					}
+				},
+				"description": "Relist every listing of that wipe the caller can still relist: each is\nrenewed as POST /listings/{id}/refresh does (reactivated, ranks as fresh).\nRunning it again relists nothing.",
+				"summary": "Relist all listings paused by the wipe",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/WipeRelistRequest"
 							}
 						}
 					}
@@ -30014,12 +30184,25 @@
 							"application/json": {
 								"schema": {
 									"properties": {
+										"messages_queued": {
+											"type": "number",
+											"format": "double"
+										},
+										"ran_at": {
+											"type": "string"
+										},
+										"wipe_id": {
+											"type": "string"
+										},
 										"affected": {
 											"type": "number",
 											"format": "double"
 										}
 									},
 									"required": [
+										"messages_queued",
+										"ran_at",
+										"wipe_id",
 										"affected"
 									],
 									"type": "object"
@@ -30028,8 +30211,41 @@
 						}
 					}
 				},
-				"description": "Expire all active listings (used after game wipes).\nSets all active listings to 'expired' status, requiring sellers to manually refresh.",
-				"summary": "Expire all active listings",
+				"description": "The game-wipe action: pause every active listing (status 'expired', hidden\nfrom the market, never deleted) and record the wipe. Every listing it\npaused is tagged with the wipe id, so each seller can relist them in one\nclick (GET/POST /wipe-relist). Right after, each seller (a personal\nshop's owner; an org shop's manage_market members) gets one message\n(event listing.paused_by_wipe), sent in batches. No advance notice.",
+				"summary": "Run the game wipe: pause all active listings",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/last-wipe": {
+			"get": {
+				"operationId": "GetLastWipe",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/LastWipeStats"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "The last wipe: when it ran, how many listings it paused, how many have\nbeen relisted so far, and the messages queued and sent. null if no wipe\nhas run yet.",
+				"summary": "Last wipe and its relist progress",
 				"tags": [
 					"Admin"
 				],

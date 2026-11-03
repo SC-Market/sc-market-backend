@@ -29,6 +29,7 @@ import {
   type BuyOrderFilledFacts,
   type EmailLocale,
   type Vars,
+  wipeRelistText,
 } from "./i18n/index.js"
 import type { IdentityActionKind } from "../identity-admin/identity-admin.service.js"
 
@@ -574,5 +575,32 @@ export async function formatBuyOrderFilledEmailData(
     preheader: text.body,
     actionUrl: `${getBaseUrl()}/contract/${fill.order_id}`,
     buyOrderFill: { body: text.body, status: text.status },
+  } as EmailTemplateData
+}
+
+/**
+ * "Your listings were paused for the wipe. Relist them in one tap."
+ * (services/listing-wipe), in the user's language. Links to My Listings,
+ * where the "Relist all" banner is.
+ */
+export interface WipeRelistEmailData {
+  wipe_id: string
+  /** Site path of the relist banner (/market/me). */
+  path: string
+}
+
+export async function formatWipeRelistEmailData(
+  wipe: WipeRelistEmailData,
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, "listing_paused_by_wipe")
+  const text = wipeRelistText(baseData.locale)
+  return {
+    ...baseData,
+    notificationTitle: text.title,
+    notificationBody: text.body,
+    preheader: text.tap,
+    actionUrl: `${getBaseUrl()}${wipe.path}`,
+    wipeRelist: { body: text.body },
   } as EmailTemplateData
 }

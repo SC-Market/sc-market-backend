@@ -18,6 +18,12 @@ import {
   PagesDeployHookStatus,
   requestPagesRebuild,
 } from "../../../../services/game-data/pages-deploy-hook.js"
+import {
+  lastWipeStats,
+  runWipe,
+  startWipeNotices,
+  type LastWipeStats,
+} from "../../../../services/listing-wipe/listing-wipe.service.js"
 import AdmZip from "adm-zip"
 import * as fs from "fs"
 import * as path from "path"
@@ -258,27 +264,53 @@ export class AdminController extends BaseController {
   }
 
   /**
-   * Expire all active listings (used after game wipes).
-   * Sets all active listings to 'expired' status, requiring sellers to manually refresh.
-   * @summary Expire all active listings
+   * The game-wipe action: pause every active listing (status 'expired', hidden
+   * from the market, never deleted) and record the wipe. Every listing it
+   * paused is tagged with the wipe id, so each seller can relist them in one
+   * click (GET/POST /wipe-relist). Right after, each seller (a personal
+   * shop's owner; an org shop's manage_market members) gets one message
+   * (event listing.paused_by_wipe), sent in batches. No advance notice.
+   * @summary Run the game wipe: pause all active listings
    */
   @Post("expire-all-listings")
   @Security("loggedin")
   public async expireAllListings(
     @Request() request: ExpressRequest,
-  ): Promise<{ affected: number }> {
+  ): Promise<{ affected: number; wipe_id: string; ran_at: string; messages_queued: number }> {
     this.request = request
     this.requireAdmin()
     await this.requireStepUp()
     const knex = getKnex()
 
-    const result = await knex("listings")
-      .where("status", "active")
-      .update({ status: "expired", updated_at: new Date() })
+    const wipe = await runWipe(knex, this.getUserId())
+    let messagesQueued = 0
+    try {
+      messagesQueued = await startWipeNotices(knex, wipe.wipe_id)
+    } catch (error) {
+      // The wipe stands; the periodic task cannot queue for it, so say so.
+      logger.error("Admin wipe: queueing the messages failed", {
+        wipe_id: wipe.wipe_id,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
 
-    logger.info("Admin expired all active listings", { affected: result })
+    return { ...wipe, messages_queued: messagesQueued }
+  }
 
-    return { affected: result }
+  /**
+   * The last wipe: when it ran, how many listings it paused, how many have
+   * been relisted so far, and the messages queued and sent. null if no wipe
+   * has run yet.
+   * @summary Last wipe and its relist progress
+   */
+  @Get("last-wipe")
+  @Security("loggedin")
+  public async getLastWipe(
+    @Request() request: ExpressRequest,
+  ): Promise<LastWipeStats | null> {
+    this.request = request
+    this.requireAdmin()
+    return lastWipeStats(getKnex())
   }
 
   /**

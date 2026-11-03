@@ -96,6 +96,8 @@ export const PERSONAL_DATA_COLUMNS: Record<string, ColumnClass> = {
     exclude: "a shop or org id (owner_type shop/org), never a user",
   },
   "offer_reminders.user_id": { export: "offer_reminders" },
+  "listing_wipe_notices.user_id": { export: "wipe_notices" },
+  "listing_wipes.ran_by": { exclude: STAFF },
   "email_defaults_notices.user_id": { export: "email_defaults_notice" },
 
   "contractor_members.user_id": { export: "org_memberships" },

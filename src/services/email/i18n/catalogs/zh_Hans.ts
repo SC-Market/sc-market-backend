@@ -59,6 +59,11 @@ const zh_Hans: Record<string, string> = {
   "buy_order_filled.complete": "你的求购单已全部成交。",
   "buy_order_filled.action": "查看订单",
 
+  "listing_paused_by_wipe.subject": "你的商品已因游戏重置暂停",
+  "listing_paused_by_wipe.body": "你的商品已因游戏重置暂停。轻点一下即可重新上架。",
+  "listing_paused_by_wipe.tap": "轻点一下即可重新上架。",
+  "listing_paused_by_wipe.action": "重新上架我的商品",
+
   "contract_offer_received.subject": "你的合约收到新报价",
   "contract_offer_received.preheader": "有人对你的公开合约提交了报价。",
   "contract_offer_received.heading": "你的合约收到新报价",

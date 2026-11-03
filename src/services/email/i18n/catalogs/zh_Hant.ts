@@ -59,6 +59,11 @@ const zh_Hant: Record<string, string> = {
   "buy_order_filled.complete": "你的收購單已全部成交。",
   "buy_order_filled.action": "檢視訂單",
 
+  "listing_paused_by_wipe.subject": "你的商品已因遊戲重置暫停",
+  "listing_paused_by_wipe.body": "你的商品已因遊戲重置暫停。輕點一下即可重新刊登。",
+  "listing_paused_by_wipe.tap": "輕點一下即可重新刊登。",
+  "listing_paused_by_wipe.action": "重新刊登我的商品",
+
   "contract_offer_received.subject": "你的合約收到新報價",
   "contract_offer_received.preheader": "有人對你的公開合約提出了報價。",
   "contract_offer_received.heading": "你的合約收到新報價",

@@ -149,6 +149,12 @@ export const CATALOG = {
   // "Still selling?" 3 days before a listing expires (services/listing-expiry),
   // to the shop's owner or the org members who manage its market.
   "listing.expiring": event("market", "listing_expiring", ["in_app", "discord_dm"], { discord_dm: true }),
+  // "Your listings were paused for the wipe. Relist them in one tap."
+  // (services/listing-wipe), owner decision 2026-11-03: once per user per
+  // admin wipe, right after it runs, to a personal shop's owner and the
+  // manage_market members of an org shop's org. In-app, push and Discord DM
+  // on by default; email opt-in. Org mutes apply (market is org-scoped).
+  "listing.paused_by_wipe": event("market", "listing_paused_by_wipe", ALL, { discord_dm: true }),
   "watchlist.price_alert": event("watchlist", "price_alert", ALL, { discord_dm: true }),
   // A new public listing matches one of your buy orders
   // (services/buy-order-matching). Personal, next to price alerts. It was a

@@ -720,6 +720,20 @@ class SESEmailService implements EmailService {
           )
           break
 
+        case "listing_paused_by_wipe":
+          if (!data.wipeRelist) {
+            logger.warn(
+              `Missing wipe data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatWipeRelistEmailData(
+            data.wipeRelist as payloadFormatters.WipeRelistEmailData,
+            userId,
+          )
+          break
+
         case "dm_reminder":
           if (!data.reminder) {
             logger.warn(
