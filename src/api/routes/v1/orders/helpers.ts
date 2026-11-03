@@ -50,6 +50,12 @@ import {
   OrderSearchStatus,
 } from "./types.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import {
+  canChangeOrderStatus,
+  nextOrderFields,
+  ORDER_STATUS_VALUES,
+  type OrderStatusValue,
+} from "../../../../services/orders/order-status.rules.js"
 
 // =============================================================================
 // AVAILABILITY REQUIREMENT HELPER FUNCTIONS
@@ -795,8 +801,7 @@ export async function sendStatusUpdateMessage(order: DBOrder, status: string) {
   }
 }
 
-/** The statuses an order can be set to. */
-export const ORDER_STATUS_VALUES = ["fulfilled", "in-progress", "not-started", "cancelled"] as const
+export { ORDER_STATUS_VALUES }
 
 /**
  * A status change the actor may not make, or that isn't valid. `status` is
@@ -821,38 +826,17 @@ export class OrderStatusChangeError extends Error {
  * are failures.
  */
 export async function applyOrderStatusChange(order: DBOrder, actor: User, status: string): Promise<void> {
-  if (!(ORDER_STATUS_VALUES as readonly string[]).includes(status)) {
-    throw new OrderStatusChangeError(400, "Invalid status!", "invalid_status")
+  const decision = canChangeOrderStatus(order, {
+    userId: actor.user_id,
+    isSiteAdmin: isSiteAdmin(actor),
+    isOrgManager: order.contractor_id
+      ? await has_permission(order.contractor_id, actor.user_id, "manage_orders")
+      : false,
+  }, status)
+  if (!decision.allowed) {
+    throw new OrderStatusChangeError(decision.httpStatus, decision.message, decision.reason)
   }
-
-  if (
-    !isSiteAdmin(actor) &&
-    (order.status.includes("cancelled") || order.status.includes("fulfilled"))
-  ) {
-    throw new OrderStatusChangeError(400, "Cannot change status for closed order", "closed")
-  }
-
-  if (!order.contractor_id) {
-    if (
-      ["fulfilled", "in-progress", "not-started"].includes(status) &&
-      order.assigned_id !== actor.user_id &&
-      !isSiteAdmin(actor)
-    ) {
-      throw new OrderStatusChangeError(
-        403,
-        `Only the assigned user may set the status of this order to ${status}`,
-        "forbidden",
-      )
-    }
-  } else {
-    const orgAdmin = await has_permission(order.contractor_id, actor.user_id, "manage_orders")
-    const assigned = order.assigned_id === actor.user_id
-    const customer = order.customer_id === actor.user_id
-    const allowed = orgAdmin || assigned || (status === "cancelled" && customer)
-    if (!allowed) {
-      throw new OrderStatusChangeError(403, `You may not set the status of this order to ${status}`, "forbidden")
-    }
-  }
+  const newStatus = status as OrderStatusValue
 
   if (status === "cancelled") {
     await cancelOrderMarketItems(order)
@@ -876,10 +860,7 @@ export async function applyOrderStatusChange(order: DBOrder, actor: User, status
   }
 
   if (status === "in-progress") {
-    await orderDb.updateOrder(order.order_id, {
-      status,
-      assigned_id: actor.user_id,
-    })
+    await orderDb.updateOrder(order.order_id, nextOrderFields(newStatus, actor.user_id, new Date()))
 
     // Track order response for responsive badge
     await orderDb.trackOrderResponse(
@@ -910,7 +891,7 @@ export async function applyOrderStatusChange(order: DBOrder, actor: User, status
       })
     }
 
-    await orderDb.updateOrder(order.order_id, { status: status, fulfilled_at: new Date() })
+    await orderDb.updateOrder(order.order_id, nextOrderFields(newStatus, actor.user_id, new Date()))
 
     // Refresh shop metrics after fulfillment
     if (order.shop_id) {
@@ -920,7 +901,7 @@ export async function applyOrderStatusChange(order: DBOrder, actor: User, status
       )
     }
   } else {
-    await orderDb.updateOrder(order.order_id, { status: status })
+    await orderDb.updateOrder(order.order_id, nextOrderFields(newStatus, actor.user_id, new Date()))
   }
   await notificationService.createOrderStatusNotification(order, status, actor.user_id)
   await discordService.sendOrderStatusUpdate(order, status)
