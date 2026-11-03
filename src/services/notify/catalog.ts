@@ -35,6 +35,9 @@ export const CATEGORIES = {
   // Replies to a branded storefront enquiry you sent (services/storefront).
   // Personal: it goes to the person who sent it, whatever org or shop it was for.
   storefront: { orgScoped: false, mandatory: false, emailMandatory: false },
+  // The bot's Discord order and offer threads: the invite to the thread's
+  // server when you couldn't be added. Personal (it's about you joining).
+  threads: { orgScoped: false, mandatory: false, emailMandatory: false },
   // Security notices about your own account. Owner decision (2026-11-02):
   // their email is a mandatory security email, sent past opt-outs and
   // unsubscribes (no unsubscribe link).
@@ -173,6 +176,11 @@ export const CATALOG = {
   // Discord DM follows the usual off-by-default.
   "storefront.enquiry_accepted": event("storefront", "storefront_enquiry_accepted", ALL, { email: true }),
   "storefront.enquiry_declined": event("storefront", "storefront_enquiry_declined", ALL, { email: true }),
+  // Owner decision (2026-11-02): the invite to an order's or offer's Discord
+  // server when the bot couldn't add you to its thread (services/discord/
+  // thread-invite.ts). It used to be sent by the bot with no setting. Discord
+  // DM only, on by default.
+  "order.thread_invite": event("threads", "discord_thread_invite", ["discord_dm"], { discord_dm: true }),
   // Owner decision (ships with the cutover; shadow-only until then): the four
   // order_status_* events become one, and offer_create + counter_offer_create
   // become one. They replace the per-status / per-type entries above at cutover.

@@ -30,6 +30,8 @@ export const CATEGORY_LABELS: Record<CategoryId, string> = {
   reminders: "reminders (unread messages, pending offers)",
   contracts: "public contract offers",
   storefront: "storefront enquiry replies",
+  // No email (Discord DM only); listed for completeness.
+  threads: "Discord thread invites",
   account: "account notices",
 }
 

@@ -4670,7 +4670,8 @@
 					"announcements",
 					"reminders",
 					"contracts",
-					"storefront"
+					"storefront",
+					"threads"
 				]
 			},
 			"NotificationChannelId": {
@@ -4714,7 +4715,8 @@
 					"storefront.enquiry_declined",
 					"reminder.offer_pending",
 					"reminder.offer_pending_final",
-					"reminder.offer_waiting_buyer"
+					"reminder.offer_waiting_buyer",
+					"order.thread_invite"
 				]
 			},
 			"NotificationPreferenceCell": {

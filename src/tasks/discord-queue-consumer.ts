@@ -13,6 +13,7 @@ import { chatServer } from "../clients/messaging/websocket.js"
 import { serializeMessage } from "../api/routes/v1/chats/serializers.js"
 import { recordBotDmResult } from "../services/discord/dm-attempts.js"
 import { recordUserInstall } from "../services/discord/user-installs.js"
+import { sendThreadInvites } from "../services/discord/thread-invite.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
@@ -211,6 +212,18 @@ async function handleThreadCreated(payload: any, metadata: any) {
         id: original_order_id,
       }
       await postThreadInitializationMessages(entityInfo, thread_id)
+    }
+
+    // Parties the bot couldn't add to the thread: their invite to the server
+    // goes out through notify() (services/discord/thread-invite.ts).
+    if (original_order_id && Array.isArray(payload?.invite_members) && payload.invite_code) {
+      await sendThreadInvites({
+        entityType: entity_type,
+        entityId: original_order_id,
+        threadId: String(thread_id),
+        discordIds: payload.invite_members.map(String),
+        inviteCode: String(payload.invite_code),
+      })
     }
   } catch (error) {
     logger.error("Failed to update thread_id in database:", error)
