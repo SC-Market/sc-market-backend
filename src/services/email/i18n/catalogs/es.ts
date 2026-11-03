@@ -23,7 +23,7 @@ const es: Record<string, string> = {
   "common.duration_hours_one": "{count} hora",
   "common.duration_hours_other": "{count} horas",
 
-  "status.order.not-started": "Sin iniciar",
+  "status.order.not-started": "En cola",
   "status.order.in-progress": "En curso",
   "status.order.fulfilled": "Completado",
   "status.order.cancelled": "Cancelado",
@@ -38,11 +38,11 @@ const es: Record<string, string> = {
   "account_identity_changed.subject.discord_link_skipped": "Tu Discord no se vinculó a SC Market",
   "account_identity_changed.subject.account_reactivated": "Se reactivó tu cuenta de SC Market",
   "account_identity_changed.body.username_released":
-    "Un admin liberó tu nombre de usuario. Ahora tu nombre de usuario es {username}. Usa «Sincronizar handle» en Ajustes para recuperar tu handle actual de RSI.",
+    "Un admin liberó tu nombre de usuario. Ahora tu nombre de usuario es {username}. Usa «Sincronizar handle» en Configuración para recuperar tu handle actual de RSI.",
   "account_identity_changed.body.discord_unlinked":
-    "Un admin desvinculó Discord de tu cuenta. Puedes vincular de nuevo una cuenta de Discord en Ajustes.",
+    "Un admin desvinculó Discord de tu cuenta. Puedes vincular de nuevo una cuenta de Discord en Configuración.",
   "account_identity_changed.body.spectrum_cleared":
-    "Un admin quitó el vínculo de RSI de tu cuenta. Vuelve a verificar tu cuenta de RSI en Ajustes.",
+    "Un admin quitó el vínculo de RSI de tu cuenta. Vuelve a verificar tu cuenta de RSI en Configuración.",
   "account_identity_changed.body.spectrum_set": "Un admin actualizó el vínculo de RSI de tu cuenta.",
   "account_identity_changed.body.account_deactivated": "Un admin desactivó tu cuenta.",
   "account_identity_changed.body.discord_link_skipped":
@@ -50,7 +50,7 @@ const es: Record<string, string> = {
   "account_identity_changed.body.account_reactivated": "Un admin reactivó tu cuenta.",
   "account_identity_changed.security_note":
     "Este es un aviso de seguridad sobre tu cuenta de SC Market, por eso se envía aunque hayas desactivado las notificaciones por correo. Si no lo esperabas, contacta con el soporte de SC Market.",
-  "account_identity_changed.action": "Abrir Ajustes",
+  "account_identity_changed.action": "Abrir Configuración",
 
   "admin_alert.subject": "Alerta de administración",
   "admin_alert.preheader": "Tienes una nueva alerta de administración: {title}",
@@ -70,10 +70,10 @@ const es: Record<string, string> = {
   "contract_offer_received.heading": "Nueva oferta en tu contrato",
   "contract_offer_received.intro": "Alguien hizo una oferta en tu contrato público:",
 
-  "contractor_invite.subject": "Invitación de organización",
+  "contractor_invite.subject": "Invitación de contratista",
   "contractor_invite.preheader": "Te han invitado a unirte a {org}.",
-  "contractor_invite.heading": "Invitación de organización",
-  "contractor_invite.intro": "Te han invitado a unirte a una organización.",
+  "contractor_invite.heading": "Invitación de contratista",
+  "contractor_invite.intro": "Te han invitado a unirte a una organización contratista.",
   "contractor_invite.action": "Ver invitación",
 
   "counter_offer_create.subject": "Contraoferta recibida",
@@ -86,7 +86,7 @@ const es: Record<string, string> = {
   "dm_reminder.heading": "Mensajes sin leer",
   "dm_reminder.body.single": "Una conversación en SC Market tiene un mensaje esperando tu respuesta.",
   "dm_reminder.body.multiple_other": "{count} conversaciones en SC Market tienen mensajes esperando tu respuesta.",
-  "dm_reminder.nudge": "No dejes esperando a tus socios comerciales: una respuesta rápida mantiene el trato en marcha.",
+  "dm_reminder.nudge": "No dejes esperando a tus socios comerciales: una respuesta rápida mantiene la operación en marcha.",
   "dm_reminder.action": "Ver mensajes",
 
   "market_item_bid.subject": "Nueva puja en tu anuncio",
@@ -136,9 +136,9 @@ const es: Record<string, string> = {
   "offer_waiting_buyer.subject.single": "Tu oferta sigue esperando al vendedor",
   "offer_waiting_buyer.subject.multiple_other": "{count} de tus ofertas siguen esperando al vendedor",
   "offer_waiting_buyer.body.single":
-    "{seller} no ha respondido a «{title}» en {waited}. Sigue esperando, escribe al vendedor o retira la oferta.",
+    "{seller} lleva {waited} sin responder a «{title}». Sigue esperando, escribe al vendedor o retira la oferta.",
   "offer_waiting_buyer.body.multiple":
-    "Los vendedores no han respondido en unos días. Sigue esperando, escríbeles o retira tus ofertas.",
+    "Los vendedores llevan unos días sin responder. Sigue esperando, escríbeles o retira tus ofertas.",
   "offer_waiting_buyer.action": "Escribir al vendedor",
   "offer_waiting_buyer.withdraw_prompt": "¿Ya no lo necesitas? <link>Retira la oferta</link>.",
   "offer_waiting_buyer.withdraw": "Retirar la oferta",
@@ -151,9 +151,9 @@ const es: Record<string, string> = {
 
   "order_assigned.subject": "Pedido asignado",
   "order_assigned.preheader": "Se te ha asignado el pedido «{title}».",
-  "order_assigned.heading": "Pedido asignado a ti",
+  "order_assigned.heading": "Se te ha asignado un pedido",
   "order_assigned.intro": "Se te ha asignado un nuevo pedido:",
-  "order_assigned.outro": "Revisa los detalles del pedido y empieza cuando estés listo.",
+  "order_assigned.outro": "Revisa los detalles del pedido y empieza cuando puedas.",
 
   "order_create.subject": "Nuevo pedido",
   "order_create.preheader": "Se ha creado el nuevo pedido «{title}».",
@@ -189,15 +189,15 @@ const es: Record<string, string> = {
   "order_status_in_progress.heading": "Pedido en curso",
   "order_status_in_progress.intro": "El pedido «{title}» ya está en curso.",
   "order_status_not_started.subject": "Estado del pedido actualizado",
-  "order_status_not_started.heading": "Pedido sin iniciar",
-  "order_status_not_started.intro": "El estado del pedido «{title}» ha cambiado a Sin iniciar.",
+  "order_status_not_started.heading": "Pedido en cola",
+  "order_status_not_started.intro": "El estado del pedido «{title}» ha cambiado a En cola.",
 
   "price_alert.subject": "Alerta de precio: {title} a {price} aUEC",
   "price_alert.preheader": "{title} se anuncia a {price} aUEC, igual o por debajo de tu precio objetivo de {target} aUEC.",
   "price_alert.heading": "Alerta de precio",
   "price_alert.intro": "Un anuncio de tu lista de seguimiento alcanzó tu precio objetivo:",
   "price_alert.price": "Precio:",
-  "price_alert.target": "Tu objetivo:",
+  "price_alert.target": "Tu precio objetivo:",
   "price_alert.quantity": "Cantidad:",
   "price_alert.seller": "Vendedor:",
 
@@ -218,23 +218,23 @@ const es: Record<string, string> = {
     "El equipo de SC Market aceptó tu solicitud de escaparate con tu marca para {name} ({subdomain}).",
   "storefront_enquiry_accepted.heading": "Solicitud de escaparate aceptada",
   "storefront_enquiry_accepted.intro": "El equipo de SC Market aceptó tu solicitud de escaparate con tu marca:",
-  "storefront_enquiry_accepted.action": "Abrir ajustes del escaparate",
+  "storefront_enquiry_accepted.action": "Abrir la configuración del escaparate",
   "storefront_enquiry_declined.subject": "Solicitud de escaparate rechazada",
   "storefront_enquiry_declined.preheader":
     "El equipo de SC Market rechazó tu solicitud de escaparate con tu marca para {name} ({subdomain}).",
   "storefront_enquiry_declined.heading": "Solicitud de escaparate rechazada",
   "storefront_enquiry_declined.intro": "El equipo de SC Market rechazó tu solicitud de escaparate con tu marca:",
-  "storefront_enquiry_declined.retry": "Puedes enviar una nueva solicitud desde los ajustes de tu escaparate.",
-  "storefront_enquiry_declined.action": "Abrir ajustes del escaparate",
+  "storefront_enquiry_declined.retry": "Puedes enviar una nueva solicitud desde la configuración de tu escaparate.",
+  "storefront_enquiry_declined.action": "Abrir la configuración del escaparate",
 
-  "verification.subject": "Verifica tu dirección de correo - SC Market",
+  "verification.subject": "Verifica tu dirección de correo – SC Market",
   "verification.preheader": "Confirma esta dirección para recibir los correos de SC Market.",
   "verification.heading": "Verifica tu dirección de correo",
   "verification.intro":
     "Gracias por añadir tu dirección de correo a tu cuenta de SC Market. Verifícala con el botón de abajo:",
   "verification.intro_text":
     "Gracias por añadir tu dirección de correo a tu cuenta de SC Market. Verifícala con el enlace de abajo:",
-  "verification.action": "Verificar correo",
+  "verification.action": "Verificar dirección de correo",
   "verification.copy_link": "O copia y pega este enlace en tu navegador:",
   "verification.expires": "Este enlace de verificación caduca en 24 horas.",
   "verification.ignore": "Si no has pedido este correo, puedes ignorarlo.",
