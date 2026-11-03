@@ -7,6 +7,7 @@ import * as orderDb from "./database.js"
 import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { canActOnOrder } from "../../../../services/orders/order-access.js"
 
 /**
  * Whether the user may act on an order at all (view it, or try a change):
@@ -17,17 +18,13 @@ import { isSiteAdmin } from "../../../util/site-role.js"
  * public API OrdersController).
  */
 export async function userRelatedToOrder(order: DBOrder, user: User): Promise<boolean> {
-  const assigned = order.assigned_id === user.user_id
-  const customer = order.customer_id === user.user_id
-  let unrelated = !customer && !assigned && !isSiteAdmin(user)
-  if (order.contractor_id && unrelated) {
-    // claim_orders members need access to self-claim; finer-grained checks
-    // (status changes, assigning others) happen in the handlers.
-    unrelated =
-      !(await has_permission(order.contractor_id, user.user_id, "manage_orders")) &&
-      !(await has_permission(order.contractor_id, user.user_id, "claim_orders"))
-  }
-  return !unrelated
+  const actor = { userId: user.user_id, isSiteAdmin: isSiteAdmin(user) }
+  if (canActOnOrder(order, actor)) return true
+  if (!order.contractor_id) return false
+  // Only look the org permissions up when the parties alone don't decide.
+  const orgManager = await has_permission(order.contractor_id, user.user_id, "manage_orders")
+  const orgClaimer = !orgManager && (await has_permission(order.contractor_id, user.user_id, "claim_orders"))
+  return canActOnOrder(order, { ...actor, orgManager, orgClaimer })
 }
 
 export async function related_to_order(

@@ -56,6 +56,7 @@ import {
   ORDER_STATUS_VALUES,
   type OrderStatusValue,
 } from "../../../../services/orders/order-status.rules.js"
+import { canViewOrder } from "../../../../services/orders/order-access.js"
 
 // =============================================================================
 // AVAILABILITY REQUIREMENT HELPER FUNCTIONS
@@ -782,13 +783,11 @@ export async function is_related_to_order(order: DBOrder, user: User) {
     "contractor_members.user_id": user.user_id,
   })
 
-  return (
-    order.customer_id === user.user_id || // not the customer
-    contractors.filter((c) => c.contractor_id === order.contractor_id).length >=
-      1 || // not the contractor
-    order.assigned_id === user.user_id || // not assigned
-    isSiteAdmin(user)
-  ) // Not a site admin
+  return canViewOrder(order, {
+    userId: user.user_id,
+    isSiteAdmin: isSiteAdmin(user),
+    isOrgMember: contractors.some((c) => c.contractor_id === order.contractor_id),
+  })
 }
 
 export async function sendStatusUpdateMessage(order: DBOrder, status: string) {

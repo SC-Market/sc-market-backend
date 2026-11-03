@@ -17,6 +17,7 @@ import {
   canManageShopOrders,
   getShopIdsWithOrderAccess,
 } from "../../../../services/shops/shop-permissions.service.js"
+import { canViewOrderDetailV2 } from "../../../../services/orders/order-access.js"
 import {
   GetOrderDetailResponse,
   GetOrdersResponse,
@@ -131,10 +132,8 @@ export class OrdersV2Controller extends BaseController {
       if (!buyer) throw this.throwNotFound("Order buyer", orderId)
 
       // Auth check — buyer, the shop's order managers, or assignee
-      const isBuyer = userId === buyer.user_id
-      const isAssigned = order.assigned_id === userId
-      const isShopSeller = orderShop ? await canManageShopOrders(orderShop, userId) : false
-      if (!isBuyer && !isShopSeller && !isAssigned) {
+      const handlesShopOrders = orderShop ? await canManageShopOrders(orderShop, userId) : false
+      if (!canViewOrderDetailV2({ customer_id: buyer.user_id, assigned_id: order.assigned_id }, { userId, handlesShopOrders })) {
         throw this.throwForbidden("You do not have permission to view this order")
       }
 

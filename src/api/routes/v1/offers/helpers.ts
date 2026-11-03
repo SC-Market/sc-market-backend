@@ -4,6 +4,11 @@ import {
 } from "../../../../clients/database/db-models.js"
 import { has_permission } from "../util/permissions.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import {
+  canActOnOffer,
+  canRespondToOffer,
+  isRelatedToOffer,
+} from "../../../../services/orders/order-access.js"
 import { User } from "../api-models.js"
 import type { Request } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
@@ -30,19 +35,12 @@ export async function is_related_to_offer(
   user_id: string,
   session: DBOfferSession,
 ) {
-  if (user_id === session.customer_id) {
-    return true
-  }
-
-  if (user_id === session.assigned_id) {
-    return true
-  }
-
-  if (session.contractor_id) {
-    return has_permission(session.contractor_id, user_id, "manage_orders")
-  }
-
-  return false
+  if (isRelatedToOffer(session, { userId: user_id })) return true
+  if (!session.contractor_id) return false
+  return isRelatedToOffer(session, {
+    userId: user_id,
+    orgManager: await has_permission(session.contractor_id, user_id, "manage_orders"),
+  })
 }
 
 /**
@@ -53,18 +51,15 @@ export async function is_related_to_offer(
  * token's org grant first.
  */
 export async function userRelatedToOffer(session: DBOfferSession, user: User): Promise<boolean> {
-  const assigned = session.assigned_id === user.user_id
-  const customer = session.customer_id === user.user_id
-  let unrelated = !customer && !assigned && !isSiteAdmin(user)
-  if (session.contractor_id && unrelated) {
-    // Same rule as related_to_order and the Discord Claim button
-    // (clients/discord_api/claim.ts): claim_orders members need access to
-    // self-claim. What they may do is checked in the handlers.
-    unrelated =
-      !(await has_permission(session.contractor_id, user.user_id, "manage_orders")) &&
-      !(await has_permission(session.contractor_id, user.user_id, "claim_orders"))
-  }
-  return !unrelated
+  const actor = { userId: user.user_id, isSiteAdmin: isSiteAdmin(user) }
+  if (canActOnOffer(session, actor)) return true
+  if (!session.contractor_id) return false
+  // Same rule as related_to_order and the Discord Claim button
+  // (clients/discord_api/claim.ts): claim_orders members need access to
+  // self-claim. What they may do is checked in the handlers.
+  const orgManager = await has_permission(session.contractor_id, user.user_id, "manage_orders")
+  const orgClaimer = !orgManager && (await has_permission(session.contractor_id, user.user_id, "claim_orders"))
+  return canActOnOffer(session, { ...actor, orgManager, orgClaimer })
 }
 
 export async function can_respond_to_offer_helper(
@@ -72,43 +67,18 @@ export async function can_respond_to_offer_helper(
   mostRecent: DBOffer,
   user: User,
 ) {
-  if (session.status !== "active") {
-    return false
-  }
-
-  const last_action_by_customer = mostRecent.actor_id === session.customer_id
-  const is_customer = user.user_id === session.customer_id
-
-  if (session.contractor_id) {
-    // If contractor and last action by customer, contractor must respond
-    if (last_action_by_customer) {
-      if (
-        !(await has_permission(
-          session.contractor_id,
-          user.user_id,
-          "manage_orders",
-        ))
-      ) {
-        return false
-      }
-    } else {
-      if (!is_customer) {
-        return false
-      }
-    }
-  } else {
-    // If assigned and last action by customer, assigned must respond
-    if (last_action_by_customer) {
-      if (user.user_id !== session.assigned_id) {
-        return false
-      }
-    } else {
-      if (!is_customer) {
-        return false
-      }
-    }
-  }
-  return true
+  // Only the seller side of an org offer, after the customer's move, needs
+  // the org permission.
+  const needsOrgManager =
+    session.status === "active" &&
+    !!session.contractor_id &&
+    mostRecent.actor_id === session.customer_id
+  return canRespondToOffer(session, mostRecent.actor_id, {
+    userId: user.user_id,
+    orgManager: needsOrgManager
+      ? await has_permission(session.contractor_id!, user.user_id, "manage_orders")
+      : false,
+  })
 }
 
 export async function convert_offer_search_query(
