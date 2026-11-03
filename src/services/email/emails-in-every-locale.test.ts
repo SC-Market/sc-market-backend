@@ -434,7 +434,7 @@ describe("unread-message reminder email", () => {
   it("is in the user's language, footer included", async () => {
     h.locale = "fr"
     const m = await reminder(1)
-    expect(m.subject).toBe("Tu as un message non lu sur SC Market")
+    expect(m.subject).toBe("Vous avez un message non lu sur SC Market")
     expect(m.text).toContain("Voir les messages:\nhttps://sc-market.space/messaging")
     expect(m.text).toMatch(/Se désabonner:\n\S*\/email\/unsubscribe\//)
     expect(m.html).toContain("Gérer les préférences")
