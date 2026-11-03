@@ -154,13 +154,15 @@ describe("writes go to the legacy tables and notify() honours them", () => {
       { event: "watchlist.price_alert", channel: "in_app", enabled: false },
       { event: "watchlist.price_alert", channel: "discord_dm", enabled: false },
     ])
+    // In-app is mixed: only the price alert's bell is off; the buy-order
+    // match's (switchable) and the buy-order filled one (always on) stay on.
     const wl = (await getMatrix(u.user_id, null)).find((c) => c.category === "watchlist")!
     expect(wl.cells).toMatchInlineSnapshot(`
       [
         {
           "channel": "in_app",
           "locked": false,
-          "state": "off",
+          "state": "mixed",
         },
         {
           "channel": "push",
