@@ -8,9 +8,22 @@ import {
   type OrderStatusActor,
 } from "./order-status.rules.js"
 
-const personal = (status = "not-started") => ({ status, contractor_id: null, assigned_id: "assignee", customer_id: "customer" })
-const org = (status = "not-started") => ({ status, contractor_id: "org-1", assigned_id: "assignee", customer_id: "customer" })
-const actor = (userId: string, extra: Partial<OrderStatusActor> = {}): OrderStatusActor => ({
+const personal = (status = "not-started") => ({
+  status,
+  contractor_id: null,
+  assigned_id: "assignee",
+  customer_id: "customer",
+})
+const org = (status = "not-started") => ({
+  status,
+  contractor_id: "org-1",
+  assigned_id: "assignee",
+  customer_id: "customer",
+})
+const actor = (
+  userId: string,
+  extra: Partial<OrderStatusActor> = {},
+): OrderStatusActor => ({
   userId,
   isSiteAdmin: false,
   isOrgManager: false,
@@ -19,7 +32,11 @@ const actor = (userId: string, extra: Partial<OrderStatusActor> = {}): OrderStat
 const ADMIN = actor("admin", { isSiteAdmin: true })
 const MANAGER = actor("manager", { isOrgManager: true })
 
-function verdict(order: ReturnType<typeof org>, a: OrderStatusActor, status: string) {
+function verdict(
+  order: ReturnType<typeof org>,
+  a: OrderStatusActor,
+  status: string,
+) {
   const d = canChangeOrderStatus(order, a, status)
   return d.allowed ? "ok" : `${d.httpStatus} ${d.reason}`
 }
@@ -47,11 +64,15 @@ describe("canChangeOrderStatus", () => {
     ["org", "admin", "fulfilled", "403 forbidden"], // admins pass org orders only through has_permission (isOrgManager)
   ] as const)("%s order, %s -> %s: %s", (kind, who, status, expected) => {
     const a = who === "admin" ? ADMIN : who === "manager" ? MANAGER : actor(who)
-    expect(verdict(kind === "org" ? org() : personal(), a, status)).toBe(expected)
+    expect(verdict(kind === "org" ? org() : personal(), a, status)).toBe(
+      expected,
+    )
   })
 
   it("refuses an unknown status first, with the 400 message", () => {
-    expect(canChangeOrderStatus(org("fulfilled"), actor("stranger"), "shipped")).toEqual({
+    expect(
+      canChangeOrderStatus(org("fulfilled"), actor("stranger"), "shipped"),
+    ).toEqual({
       allowed: false,
       httpStatus: 400,
       reason: "invalid_status",
@@ -62,7 +83,9 @@ describe("canChangeOrderStatus", () => {
   it("locks closed orders for everyone but a site admin", () => {
     for (const closed of ["fulfilled", "cancelled"]) {
       expect(verdict(org(closed), MANAGER, "not-started")).toBe("400 closed")
-      expect(verdict(personal(closed), actor("assignee"), "in-progress")).toBe("400 closed")
+      expect(verdict(personal(closed), actor("assignee"), "in-progress")).toBe(
+        "400 closed",
+      )
       expect(verdict(personal(closed), ADMIN, "in-progress")).toBe("ok")
     }
   })
@@ -70,8 +93,12 @@ describe("canChangeOrderStatus", () => {
   it("keeps the messages callers answer with", () => {
     const p = canChangeOrderStatus(personal(), actor("customer"), "fulfilled")
     const o = canChangeOrderStatus(org(), actor("stranger"), "cancelled")
-    expect(p.allowed === false && p.message).toBe("Only the assigned user may set the status of this order to fulfilled")
-    expect(o.allowed === false && o.message).toBe("You may not set the status of this order to cancelled")
+    expect(p.allowed === false && p.message).toBe(
+      "Only the assigned user may set the status of this order to fulfilled",
+    )
+    expect(o.allowed === false && o.message).toBe(
+      "You may not set the status of this order to cancelled",
+    )
   })
 })
 
@@ -94,11 +121,19 @@ describe("allowedOrderActions", () => {
     })
   })
   it("org manager may do everything on an open order, nothing on a closed one", () => {
-    expect(Object.values(allowedOrderActions(org(), MANAGER)).every(Boolean)).toBe(true)
-    expect(Object.values(allowedOrderActions(org("fulfilled"), MANAGER)).some(Boolean)).toBe(false)
+    expect(
+      Object.values(allowedOrderActions(org(), MANAGER)).every(Boolean),
+    ).toBe(true)
+    expect(
+      Object.values(allowedOrderActions(org("fulfilled"), MANAGER)).some(
+        Boolean,
+      ),
+    ).toBe(false)
   })
   it("covers every status", () => {
-    expect(Object.keys(allowedOrderActions(personal(), ADMIN)).sort()).toEqual([...ORDER_STATUS_VALUES].sort())
+    expect(Object.keys(allowedOrderActions(personal(), ADMIN)).sort()).toEqual(
+      [...ORDER_STATUS_VALUES].sort(),
+    )
   })
 })
 
@@ -109,5 +144,7 @@ describe("nextOrderFields", () => {
     ["fulfilled", { status: "fulfilled", fulfilled_at: now }],
     ["cancelled", { status: "cancelled" }],
     ["not-started", { status: "not-started" }],
-  ] as const)("%s", (status, fields) => expect(nextOrderFields(status, "me", now)).toEqual(fields))
+  ] as const)("%s", (status, fields) =>
+    expect(nextOrderFields(status, "me", now)).toEqual(fields),
+  )
 })

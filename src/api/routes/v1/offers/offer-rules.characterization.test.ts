@@ -24,10 +24,24 @@ vi.mock("../util/permissions.js", () => ({
 }))
 vi.mock("../orders/helpers.js", () => ({ createOffer: vi.fn() }))
 
-const { userRelatedToOffer, is_related_to_offer, can_respond_to_offer_helper } = await import("./helpers.js")
+const { userRelatedToOffer, is_related_to_offer, can_respond_to_offer_helper } =
+  await import("./helpers.js")
 
-type Actor = "admin" | "assignee" | "customer" | "manager" | "claimer" | "stranger"
-const ACTORS: Actor[] = ["admin", "assignee", "customer", "manager", "claimer", "stranger"]
+type Actor =
+  | "admin"
+  | "assignee"
+  | "customer"
+  | "manager"
+  | "claimer"
+  | "stranger"
+const ACTORS: Actor[] = [
+  "admin",
+  "assignee",
+  "customer",
+  "manager",
+  "claimer",
+  "stranger",
+]
 const USERS: Record<Actor, { user_id: string; role: string }> = {
   admin: { user_id: "admin", role: "admin" },
   assignee: { user_id: "assignee", role: "user" },
@@ -48,14 +62,20 @@ function session(kind: "personal" | "org", status = "active") {
 }
 
 beforeEach(() => {
-  h.perms = { manager: ["org-1:manage_orders"], claimer: ["org-1:claim_orders"] }
+  h.perms = {
+    manager: ["org-1:manage_orders"],
+    claimer: ["org-1:claim_orders"],
+  }
 })
 
 describe("offer access", () => {
   it("userRelatedToOffer (offer routes, public API): customer, assignee, admin, or org manage_orders / claim_orders", async () => {
     const rows: string[] = []
     for (const kind of ["personal", "org"] as const)
-      for (const a of ACTORS) rows.push(`${kind} ${a}: ${await userRelatedToOffer(session(kind), USERS[a] as never)}`)
+      for (const a of ACTORS)
+        rows.push(
+          `${kind} ${a}: ${await userRelatedToOffer(session(kind), USERS[a] as never)}`,
+        )
     expect(rows).toMatchInlineSnapshot(`
       [
         "personal admin: true",
@@ -77,7 +97,10 @@ describe("offer access", () => {
   it("is_related_to_offer (chat access): customer, assignee, or org manage_orders; no admin bypass of its own", async () => {
     const rows: string[] = []
     for (const kind of ["personal", "org"] as const)
-      for (const a of ACTORS) rows.push(`${kind} ${a}: ${await is_related_to_offer(USERS[a].user_id, session(kind))}`)
+      for (const a of ACTORS)
+        rows.push(
+          `${kind} ${a}: ${await is_related_to_offer(USERS[a].user_id, session(kind))}`,
+        )
     expect(rows).toMatchInlineSnapshot(`
       [
         "personal admin: false",
@@ -144,7 +167,11 @@ describe("offer access", () => {
     for (const status of ["closed", "accepted", "rejected"])
       for (const a of ACTORS)
         expect(
-          await can_respond_to_offer_helper(session("personal", status), { actor_id: "customer" } as never, USERS[a] as never),
+          await can_respond_to_offer_helper(
+            session("personal", status),
+            { actor_id: "customer" } as never,
+            USERS[a] as never,
+          ),
         ).toBe(false)
   })
 })

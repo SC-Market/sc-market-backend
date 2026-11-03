@@ -8,7 +8,12 @@
  */
 
 /** The statuses an order can be set to. */
-export const ORDER_STATUS_VALUES = ["fulfilled", "in-progress", "not-started", "cancelled"] as const
+export const ORDER_STATUS_VALUES = [
+  "fulfilled",
+  "in-progress",
+  "not-started",
+  "cancelled",
+] as const
 export type OrderStatusValue = (typeof ORDER_STATUS_VALUES)[number]
 
 /** Statuses after which an order is closed. */
@@ -71,11 +76,21 @@ export function canChangeOrderStatus(
   status: string,
 ): OrderStatusDecision {
   if (!isOrderStatusValue(status)) {
-    return { allowed: false, httpStatus: 400, reason: "invalid_status", message: "Invalid status!" }
+    return {
+      allowed: false,
+      httpStatus: 400,
+      reason: "invalid_status",
+      message: "Invalid status!",
+    }
   }
 
   if (!actor.isSiteAdmin && isOrderClosed(order.status)) {
-    return { allowed: false, httpStatus: 400, reason: "closed", message: "Cannot change status for closed order" }
+    return {
+      allowed: false,
+      httpStatus: 400,
+      reason: "closed",
+      message: "Cannot change status for closed order",
+    }
   }
 
   const assigned = order.assigned_id === actor.userId

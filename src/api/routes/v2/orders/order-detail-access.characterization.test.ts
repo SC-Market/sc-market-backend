@@ -12,12 +12,20 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import type { Request as ExpressRequest } from "express"
-import { createFakeKnex, type FakeKnex } from "../../../../test-utils/fake-knex-tables.js"
+import {
+  createFakeKnex,
+  type FakeKnex,
+} from "../../../../test-utils/fake-knex-tables.js"
 
-const h = vi.hoisted(() => ({ db: null as unknown, perms: {} as Record<string, string[]> }))
+const h = vi.hoisted(() => ({
+  db: null as unknown,
+  perms: {} as Record<string, string[]>,
+}))
 
 vi.mock("../../../../clients/database/knex-db.js", async () =>
-  (await import("../../../../test-utils/mock-knex-db.js")).mockKnexDb(() => h.db),
+  (await import("../../../../test-utils/mock-knex-db.js")).mockKnexDb(
+    () => h.db,
+  ),
 )
 vi.mock("../../../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn(async () => null) },
@@ -36,13 +44,41 @@ let db: FakeKnex
 
 function seed(shop: "user" | "org") {
   db = createFakeKnex({
-    accounts: [{ user_id: "buyer", username: "buyer", display_name: "Buyer", avatar: null }],
+    accounts: [
+      {
+        user_id: "buyer",
+        username: "buyer",
+        display_name: "Buyer",
+        avatar: null,
+      },
+    ],
     shops: [
       shop === "user"
-        ? { shop_id: "shop-1", name: "S", slug: "s", owner_user_id: "owner", owner_contractor_id: null }
-        : { shop_id: "shop-1", name: "S", slug: "s", owner_user_id: null, owner_contractor_id: "org-1" },
+        ? {
+            shop_id: "shop-1",
+            name: "S",
+            slug: "s",
+            owner_user_id: "owner",
+            owner_contractor_id: null,
+          }
+        : {
+            shop_id: "shop-1",
+            name: "S",
+            slug: "s",
+            owner_user_id: null,
+            owner_contractor_id: "org-1",
+          },
     ],
-    orders: [{ order_id: "o1", customer_id: "buyer", assigned_id: "assignee", shop_id: "shop-1", status: "not-started", cost: 5 }],
+    orders: [
+      {
+        order_id: "o1",
+        customer_id: "buyer",
+        assigned_id: "assignee",
+        shop_id: "shop-1",
+        status: "not-started",
+        cost: 5,
+      },
+    ],
   })
   h.db = db
 }
@@ -70,7 +106,15 @@ describe("v2 order detail: who may open it", () => {
   it("personal shop", async () => {
     seed("user")
     const rows: string[] = []
-    for (const u of ["buyer", "assignee", "owner", "seller", "clerk", "stranger"]) rows.push(`${u}: ${await canOpen(u)}`)
+    for (const u of [
+      "buyer",
+      "assignee",
+      "owner",
+      "seller",
+      "clerk",
+      "stranger",
+    ])
+      rows.push(`${u}: ${await canOpen(u)}`)
     rows.push(`site admin: ${await canOpen("admin", "admin")}`)
     expect(rows).toMatchInlineSnapshot(`
       [
@@ -88,7 +132,16 @@ describe("v2 order detail: who may open it", () => {
   it("org shop", async () => {
     seed("org")
     const rows: string[] = []
-    for (const u of ["buyer", "assignee", "seller", "clerk", "stocker", "claimer", "stranger"]) rows.push(`${u}: ${await canOpen(u)}`)
+    for (const u of [
+      "buyer",
+      "assignee",
+      "seller",
+      "clerk",
+      "stocker",
+      "claimer",
+      "stranger",
+    ])
+      rows.push(`${u}: ${await canOpen(u)}`)
     expect(rows).toMatchInlineSnapshot(`
       [
         "buyer: ok",
