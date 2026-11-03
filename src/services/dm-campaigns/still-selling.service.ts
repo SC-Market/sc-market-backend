@@ -14,7 +14,10 @@
  * accounts, deleted, tombstoned and banned accounts are excluded, and only
  * users the bot can reach by Discord DM are kept (discordDmReachableUsers,
  * services/discord/dm-reachability.ts: Discord linked, last DM not refused
- * with 50007, shares a server with the bot or installed the app).
+ * with 50007, shares a server with the bot or installed the app). Anyone who
+ * turned Market Discord DMs off in Settings -> Notifications, or muted the
+ * org they would be contacted for, is skipped (MARKET_DM_ACTIONS; owner
+ * decision 2026-11-02).
  *
  * What: one DM in the user's language (still-selling-message.ts) with three
  * link buttons. "Keep them live" and "Pause them" open /still-selling/<token>
@@ -49,6 +52,7 @@ import { canModifyListing } from "../../api/routes/v2/util/listing-permissions.j
 import { discordService } from "../discord/discord.service.js"
 import { DM_CLOSED_CODE } from "../discord/dm-attempts.js"
 import { discordDmReachableUsers } from "../discord/dm-reachability.js"
+import { CATALOG, type EventDefinition } from "../notify/catalog.js"
 import { auditService } from "../audit/audit.service.js"
 import { applyListingRefresh } from "../market-v2/listing-refresh.service.js"
 import {
@@ -219,11 +223,47 @@ export function candidatesSql(campaign = CAMPAIGN): {
         SELECT 1 FROM dm_campaign_recipients r
         WHERE r.campaign = ? AND r.user_id = c.user_id
       )
+      -- Turned Market Discord DMs off (Settings -> Notifications), for the
+      -- scope they are contacted in: the org's row for an org seller, else
+      -- the Personal row (notify()'s rule, services/notify/preferences.ts).
+      -- Only an explicit "off" counts; no row is not an opt-out.
+      AND NOT EXISTS (
+        SELECT 1 FROM notification_actions na
+        WHERE na.action IN (${MARKET_DM_ACTIONS.map(() => "?").join(", ")})
+          AND COALESCE(
+            (SELECT o.enabled FROM notification_channel_org_preferences o
+             WHERE o.user_id = c.user_id AND o.action_type_id = na.action_type_id
+               AND o.channel = 'discord' AND c.seller_key = 'c:' || o.contractor_id::text
+             LIMIT 1),
+            (SELECT p.enabled FROM notification_channel_preferences p
+             WHERE p.user_id = c.user_id AND p.action_type_id = na.action_type_id
+               AND p.channel = 'discord'
+             LIMIT 1),
+            true
+          ) = false
+      )
+      -- Muted the org they are contacted for (a mute silences its Discord DMs).
+      AND NOT EXISTS (
+        SELECT 1 FROM notification_org_mutes m
+        WHERE m.user_id = c.user_id AND c.seller_key = 'c:' || m.contractor_id::text
+          AND (m.muted_until IS NULL OR m.muted_until > now())
+      )
     GROUP BY c.user_id, dp.provider_id, a.locale, a.display_name
     ORDER BY c.user_id
   `
-  return { sql, bindings: [STALE_DAYS, INACTIVE_DAYS, campaign] }
+  return { sql, bindings: [STALE_DAYS, INACTIVE_DAYS, campaign, ...MARKET_DM_ACTIONS] }
 }
+
+/**
+ * The Market category's events with a Discord DM (catalog.ts: new bids, the
+ * listing-expiry "Still selling?" notice). Owner decision (2026-11-02): the
+ * campaign skips anyone who turned Discord DMs off for them, in the dry-run
+ * count and the send (both read candidatesSql). The admin's "Send test DM to
+ * me" does not read it.
+ */
+export const MARKET_DM_ACTIONS: readonly string[] = (Object.values(CATALOG) as EventDefinition[])
+  .filter((def) => def.category === "market" && def.channels.includes("discord_dm"))
+  .map((def) => def.legacyAction)
 
 export interface CampaignDeps {
   db?: Knex

@@ -438,6 +438,45 @@ describe("dry run summary", () => {
   })
 })
 
+// Owner decision (2026-11-02): skip anyone who turned Market Discord DMs off
+// in Settings -> Notifications. The dry run (summary) and every send batch
+// read the same candidates query; the admin's test DM does not.
+describe("Market Discord DM opt-outs", () => {
+  const { sql, bindings } = svc.candidatesSql()
+
+  it("the Market category's Discord DM events: new bids and the listing-expiry notice", () => {
+    expect(svc.MARKET_DM_ACTIONS).toEqual(["market_item_bid", "listing_expiring"])
+    expect(bindings.slice(-2)).toEqual(["market_item_bid", "listing_expiring"])
+    expect(sql).toMatch(/WHERE na\.action IN \(\?, \?\)/)
+  })
+
+  it("an explicit off (org row for an org seller, else the Personal row) leaves the person out; no row is not an opt-out", () => {
+    expect(sql).toMatch(
+      /COALESCE\(\s*\(SELECT o\.enabled FROM notification_channel_org_preferences o[\s\S]*?o\.channel = 'discord' AND c\.seller_key = 'c:' \|\| o\.contractor_id::text/,
+    )
+    expect(sql).toMatch(
+      /\(SELECT p\.enabled FROM notification_channel_preferences p[\s\S]*?p\.channel = 'discord'[\s\S]*?true\s*\) = false/,
+    )
+  })
+
+  it("muting the org they are contacted for leaves them out for it", () => {
+    expect(sql).toMatch(
+      /NOT EXISTS \(\s*SELECT 1 FROM notification_org_mutes m\s+WHERE m\.user_id = c\.user_id AND c\.seller_key = 'c:' \|\| m\.contractor_id::text/,
+    )
+  })
+
+  it("is part of the dry run and the send: both run the candidates query", async () => {
+    const people = [candidate(1), candidate(2)]
+    simulateCampaignTable(people)
+    // The query (with its opt-out clauses) decides; whoever it returns is eligible.
+    expect((await svc.eligibleRecipients({ reachable: everyoneReachable })).map((c) => c.user_id)).toEqual([
+      uuid(1),
+      uuid(2),
+    ])
+    expect(tracker.history.all.filter((q) => /notification_channel_preferences/.test(q.sql))).toHaveLength(1)
+  })
+})
+
 describe("one DM per person", () => {
   it("the candidates query leaves out anyone already claimed for the campaign", () => {
     const { sql, bindings } = svc.candidatesSql("still_selling_2026_11")
@@ -448,6 +487,7 @@ describe("one DM per person", () => {
       svc.STALE_DAYS,
       svc.INACTIVE_DAYS,
       "still_selling_2026_11",
+      ...svc.MARKET_DM_ACTIONS,
     ])
     // One row per person (deduplicated across shops and orgs), test accounts out.
     expect(sql).toMatch(/GROUP BY c\.user_id/)
