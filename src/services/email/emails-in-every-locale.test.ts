@@ -512,6 +512,17 @@ describe("statuses, amounts and user text", () => {
     expect(m.subject).toBe("Neue Bestellung")
   })
 
+  it("a status email shows the status it announces, not the order row's (read before the update)", async () => {
+    const stale = { order: { ...ORDER, status: "not-started" } }
+    expect((await send("order_status_cancelled", stale)).text).toContain("Status: Cancelled")
+    expect((await send("order_status_in_progress", stale)).text).toContain("Status: In Progress")
+    expect((await send("order_status_not_started", { order: { ...ORDER, status: "in-progress" } })).text).toContain(
+      "Status: Not Started",
+    )
+    h.locale = "de"
+    expect((await send("order_status_cancelled", stale)).text).toContain("Status: Storniert")
+  })
+
   it("escapes user text inside a translated sentence", async () => {
     h.locale = "fr"
     const m = await send("order_message", {

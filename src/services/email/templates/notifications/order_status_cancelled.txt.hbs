@@ -7,7 +7,7 @@
 {{order.title}}
 {{#if order.description}}{{markdown order.description}}{{/if}}
 {{#if order.cost}}{{t "common.value"}} {{formatCurrency order.cost}} aUEC{{/if}}
-{{t "common.status"}} {{status "order" order.status}}
+{{t "common.status"}} {{t "status.order.cancelled"}}
 
 {{t "common.view_order"}}:
 {{actionUrl}}
