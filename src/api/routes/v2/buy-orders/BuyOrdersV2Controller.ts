@@ -52,6 +52,8 @@ import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { buyOrderVisibleTo } from "./buy-order-visibility.js"
 import { notifyNewOrder } from "../../../../services/notifications/new-order.js"
+import { notifyBuyOrderFilled, type BuyOrderFill } from "../../../../services/notifications/buy-order-filled.js"
+import { chatParticipantService } from "../../../../services/chats/chat-participant.service.js"
 import type { DBOrder } from "../../../../clients/database/db-models.js"
 import { canManageShop } from "../../../../services/shops/shop-permissions.service.js"
 import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
@@ -388,7 +390,7 @@ export class BuyOrdersV2Controller extends BaseController {
       // Owner decision (2026-11-02): a Buy now order notifies exactly like any
       // new order (bell, push, email, webhooks, Discord alert post), under
       // the seller's settings and their org's mute. After the commit.
-      if (createdOrder) await notifyNewOrder(createdOrder)
+      if (createdOrder) await this.afterDirectOrderCreated(createdOrder)
 
       return result
     } catch (error) {
@@ -823,8 +825,8 @@ export class BuyOrdersV2Controller extends BaseController {
       this.throwValidationError('Invalid fulfillment request', idErrors)
     }
 
-    const db = getKnex()
-
+    // The orders row and what was filled, for the notifications once committed.
+    let filled: BuyOrderFill | undefined
     const result = await withTransaction(async (trx) => {
       const buyOrder = await trx('buy_orders_v2').where('buy_order_id', id).first()
       if (!buyOrder) throw this.throwNotFound('Buy order', id)
@@ -909,7 +911,7 @@ export class BuyOrdersV2Controller extends BaseController {
       await assertSameRealm({ users: [buyOrder.buyer_id, sellerId], shops: [shop.shop_id] }, trx)
 
       // Create the order, linked to the selling shop
-      const buyer = await trx('accounts').where('user_id', buyOrder.buyer_id).first('user_id', 'username')
+      const buyer = await trx('accounts').where('user_id', buyOrder.buyer_id).first('user_id', 'username', 'locale')
       const [order] = await trx('orders')
         .insert(shopOrderRow(shop, buyer, price * quantity))
         .returning('*')
@@ -958,6 +960,19 @@ export class BuyOrdersV2Controller extends BaseController {
       }
       await trx('buy_orders_v2').where('buy_order_id', id).update(updatePayload)
 
+      const gameItem = await trx('game_items').where('id', buyOrder.game_item_id).first('name')
+      filled = {
+        order,
+        buyOrderId: id,
+        sellerId,
+        sellerName: shop.name,
+        itemName: gameItem?.name || variant.display_name || 'Item',
+        quantity,
+        total: price * quantity,
+        remaining: (buyOrder.quantity_desired || 1) - newFulfilled,
+        buyerLocale: buyer?.locale ?? null,
+      }
+
       return {
         order_id: order.order_id,
         buyer_id: buyOrder.buyer_id,
@@ -986,6 +1001,16 @@ export class BuyOrdersV2Controller extends BaseController {
         },
       } as CreateBuyOrderResponse
     })
+
+    // After the commit. The seller's side: what every new order sends (the
+    // shop's order managers or a personal shop's owner, under their settings
+    // and org mutes; webhooks; the Discord alert post) and the order chat.
+    // The buyer didn't place this order, so they are told their buy order
+    // was filled and an order exists (buy_order.filled).
+    if (filled) {
+      await this.afterDirectOrderCreated(filled.order)
+      await notifyBuyOrderFilled(filled)
+    }
 
     return result
   }
@@ -1082,6 +1107,19 @@ private formatBuyOrderRow(r: BuyOrderJoinedRow): StandingBuyOrder {
    * First checks buy_order_photos for user-uploaded images,
    * then falls back to resolveGameItemImages for items without user photos.
    */
+  /**
+   * An order created directly (Buy now, filling a buy order), after its
+   * transaction committed: what an accepted offer or cart checkout does for
+   * a new order (orders/helpers.ts runOrderCreatedSideEffects) minus the
+   * offer's chat and Discord thread, which a direct order doesn't have. The
+   * order chat is opened with the buyer and the assignee, then the new-order
+   * notifications go out. Neither throws.
+   */
+  private async afterDirectOrderCreated(order: DBOrder): Promise<void> {
+    await chatParticipantService.ensureOrderChatParticipants(order)
+    await notifyNewOrder(order)
+  }
+
   /**
    * Allocates the whole order from its lots or fails the request (and so the
    * transaction): the availability checked earlier was read without locks.

@@ -39,6 +39,9 @@ vi.mock("../../../../clients/cdn/cdn.js", () => ({
 vi.mock("../../../../services/notifications/new-order.js", () => ({
   notifyNewOrder: vi.fn(async () => undefined),
 }))
+vi.mock("../../../../services/notifications/buy-order-filled.js", () => ({
+  notifyBuyOrderFilled: vi.fn(async () => undefined),
+}))
 vi.mock("../../../../services/allocation/allocation-mode.service.js", () => ({
   getShopAllocationMode: vi.fn(async () => "manual"),
 }))

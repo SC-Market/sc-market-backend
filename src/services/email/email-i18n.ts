@@ -1,8 +1,9 @@
 /**
  * Translated email copy, in the site's 8 languages (accounts.locale; English
  * otherwise). Used by the emails that are translated so far: the
- * account-identity security notice (account_identity_changed) and the
- * unread-message reminder (dm_reminder). The other templates are English.
+ * account-identity security notice (account_identity_changed), the
+ * unread-message reminder (dm_reminder) and "Your buy order was filled"
+ * (buy_order_filled, also its push). The other templates are English.
  *
  * A translated email passes `t` (its own strings) and `layout` (the base
  * layout's footer and one-time defaults notice) to its template; the layout
@@ -476,6 +477,112 @@ export function reminderEmailText(locale: EmailLocale, conversations: number): R
     subject: s.subject(conversations),
     body: s.body(conversations),
     nudge: s.nudge,
+    action: s.action,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// buy_order_filled: a seller filled one of your buy orders and an order now
+// exists (services/notifications/buy-order-filled.ts). The push and the
+// email say the same thing. Amounts are formatted by the caller.
+// ---------------------------------------------------------------------------
+
+export interface BuyOrderFilledFacts {
+  /** The selling shop's name. */
+  seller: string
+  item: string
+  quantity: number
+  /** Order total, already formatted (e.g. "12,000"). */
+  total: string
+  /** Units the buy order still wants after this fill (0 = complete). */
+  remaining: number
+}
+
+interface BuyOrderFilledStrings {
+  title: string
+  body: (f: BuyOrderFilledFacts) => string
+  open: (remaining: number) => string
+  complete: string
+  action: string
+}
+
+const BUY_ORDER_FILLED: Record<EmailLocale, BuyOrderFilledStrings> = {
+  en: {
+    title: "Your buy order was filled",
+    body: (f) => `${f.seller} filled your buy order: ${f.quantity} × ${f.item} for ${f.total} aUEC. An order has been created for it.`,
+    open: (n) => `${n} more still wanted: your buy order stays open.`,
+    complete: "Your buy order is now complete.",
+    action: "View order",
+  },
+  de: {
+    title: "Dein Kaufauftrag wurde erfüllt",
+    body: (f) =>
+      `${f.seller} hat deinen Kaufauftrag erfüllt: ${f.quantity} × ${f.item} für ${f.total} aUEC. Dafür wurde eine Bestellung erstellt.`,
+    open: (n) => `Noch ${n} gesucht: Dein Kaufauftrag bleibt offen.`,
+    complete: "Dein Kaufauftrag ist jetzt vollständig erfüllt.",
+    action: "Bestellung ansehen",
+  },
+  es: {
+    title: "Tu orden de compra se ha completado",
+    body: (f) =>
+      `${f.seller} completó tu orden de compra: ${f.quantity} × ${f.item} por ${f.total} aUEC. Se ha creado un pedido.`,
+    open: (n) => `Aún buscas ${n} más: tu orden de compra sigue abierta.`,
+    complete: "Tu orden de compra ya está completa.",
+    action: "Ver pedido",
+  },
+  fr: {
+    title: "Ton ordre d'achat a été rempli",
+    body: (f) =>
+      `${f.seller} a rempli ton ordre d'achat : ${f.quantity} × ${f.item} pour ${f.total} aUEC. Une commande a été créée.`,
+    open: (n) => `Il en manque encore ${n} : ton ordre d'achat reste ouvert.`,
+    complete: "Ton ordre d'achat est maintenant complet.",
+    action: "Voir la commande",
+  },
+  ja: {
+    title: "買い注文が成立しました",
+    body: (f) => `${f.seller} があなたの買い注文に応じました：${f.item} × ${f.quantity}（${f.total} aUEC）。注文が作成されました。`,
+    open: (n) => `残り ${n} 個を募集中です。買い注文は引き続き有効です。`,
+    complete: "買い注文はすべて成立しました。",
+    action: "注文を見る",
+  },
+  uk: {
+    title: "Ваше замовлення на купівлю виконано",
+    body: (f) =>
+      `Продавець ${f.seller} виконав ваше замовлення на купівлю: ${f.quantity} × ${f.item} за ${f.total} aUEC. Для нього створено замовлення.`,
+    open: (n) => `Потрібно ще ${n}: ваше замовлення на купівлю залишається відкритим.`,
+    complete: "Ваше замовлення на купівлю тепер виконано повністю.",
+    action: "Переглянути замовлення",
+  },
+  "zh-CN": {
+    title: "你的求购订单已成交",
+    body: (f) => `${f.seller} 响应了你的求购订单：${f.item} × ${f.quantity}，共 ${f.total} aUEC。已为此创建订单。`,
+    open: (n) => `还需要 ${n} 个：你的求购订单仍然有效。`,
+    complete: "你的求购订单已全部成交。",
+    action: "查看订单",
+  },
+  "zh-TW": {
+    title: "你的收購訂單已成交",
+    body: (f) => `${f.seller} 回應了你的收購訂單：${f.item} × ${f.quantity}，共 ${f.total} aUEC。已為此建立訂單。`,
+    open: (n) => `還需要 ${n} 個：你的收購訂單仍然有效。`,
+    complete: "你的收購訂單已全部成交。",
+    action: "查看訂單",
+  },
+}
+
+export interface BuyOrderFilledText {
+  title: string
+  body: string
+  /** Whether the buy order stays open, or is complete. */
+  status: string
+  action: string
+}
+
+export function buyOrderFilledText(locale: EmailLocale, facts: BuyOrderFilledFacts): BuyOrderFilledText {
+  const s = BUY_ORDER_FILLED[locale]
+  return {
+    title: s.title,
+    body: s.body(facts),
+    status: facts.remaining > 0 ? s.open(facts.remaining) : s.complete,
     action: s.action,
   }
 }

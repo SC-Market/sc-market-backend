@@ -48,6 +48,9 @@ vi.mock("../../../../services/discord/order-alerts.js", () => ({
   postOrderAlert: vi.fn(async () => undefined),
 }))
 vi.mock("../../../../services/chats/chat-participant.service.js", () => ({ chatParticipantService: noopService() }))
+vi.mock("../../../../services/notifications/buy-order-filled.js", () => ({
+  notifyBuyOrderFilled: vi.fn(async () => undefined),
+}))
 vi.mock("../../../../services/checkout/checkout-guards.js", () => ({
   assertBuyerMayCheckout: vi.fn(async () => undefined),
   CheckoutRejectedError: class extends Error {},

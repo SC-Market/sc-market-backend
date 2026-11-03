@@ -7,6 +7,7 @@
  *   2026-11-02): sent whatever the email preferences, no unsubscribe link.
  * - dm_reminder: the unread-message reminder, now on the email queue. Opt-in
  *   as before, with the one-click unsubscribe link and headers.
+ * - buy_order_filled: a seller filled your buy order. Opt-in, unsubscribable.
  *
  * Both in the user's language (accounts.locale), the 8 site languages.
  */
@@ -43,7 +44,7 @@ vi.mock("../../api/routes/v1/email/database.js", () => ({
 }))
 vi.mock("../../api/routes/v1/notifications/database.js", () => ({
   getNotificationActionByName: async (action: string) => ({
-    action_type_id: action === "dm_reminder" ? "82" : "90",
+    action_type_id: action === "dm_reminder" ? "82" : action === "buy_order_filled" ? "95" : "90",
   }),
 }))
 vi.mock("../../api/routes/v1/profiles/database.js", () => ({
@@ -202,5 +203,55 @@ describe("unread-message reminder email", () => {
     expect(emailLocale("zh-CN")).toBe("zh-CN")
     expect(emailLocale("pt-BR")).toBe("en")
     expect(emailLocale(null)).toBe("en")
+  })
+})
+
+const filled = () =>
+  emailService.sendNotificationEmail(
+    "alice",
+    "buy_order_filled",
+    {
+      buyOrderFill: {
+        order_id: "order-1",
+        seller: "Seller Shop",
+        item: "Quantanium",
+        quantity: 4,
+        total: "12,000",
+        remaining: 0,
+      },
+    },
+    true,
+    null,
+    { contractorId: null },
+  )
+
+describe("buy order filled email", () => {
+  it("is opt-in: not sent without the user's buy_order_filled email row", async () => {
+    expect(emailDefaultFor("buy_order_filled")).toEqual({ mandatory: false, defaultOn: false })
+    h.isEmailEnabled.mockResolvedValue(false)
+    expect(await filled()).toBe(false)
+    expect(h.sendEmailViaSES).not.toHaveBeenCalled()
+    expect(h.isEmailEnabled).toHaveBeenCalledWith("alice", 95, null)
+  })
+
+  it("says who filled it and links the order, with an unsubscribe link", async () => {
+    h.isEmailEnabled.mockResolvedValue(true)
+    expect(await filled()).toBe(true)
+    const m = sent()
+    expect(m.subject).toBe("Your buy order was filled")
+    expect(m.text).toContain("Seller Shop filled your buy order: 4 × Quantanium for 12,000 aUEC.")
+    expect(m.text).toContain("Your buy order is now complete.")
+    expect(m.text).toMatch(/View order:\n\S*\/contract\/order-1/)
+    expect(m.html).toContain("/email/unsubscribe/")
+  })
+
+  it("is in the user's language", async () => {
+    h.isEmailEnabled.mockResolvedValue(true)
+    h.locale = "ja"
+    expect(await filled()).toBe(true)
+    const m = sent()
+    expect(m.subject).toBe("買い注文が成立しました")
+    expect(m.text).toContain("注文を見る:")
+    expect(m.html).toContain('<html lang="ja">')
   })
 })

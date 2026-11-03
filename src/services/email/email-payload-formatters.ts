@@ -21,11 +21,13 @@ import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as marketDb from "../../api/routes/v1/market/database.js"
 import { unsubscribeLinksFor } from "./unsubscribe-token.js"
 import {
+  buyOrderFilledText,
   emailLocale,
   greeting,
   identityEmailText,
   layoutStrings,
   reminderEmailText,
+  type BuyOrderFilledFacts,
   type IdentityKind,
 } from "./email-i18n.js"
 
@@ -526,6 +528,33 @@ export async function formatUnreadReminderEmailData(
     notificationBody: text.body,
     actionUrl: reminder.url,
     unreadCount: reminder.conversations,
+    t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
+    layout: layoutStrings(locale),
+  } as EmailTemplateData
+}
+
+/**
+ * "Your buy order was filled" (services/notifications/buy-order-filled.ts),
+ * to the buyer, in their language: who filled it, what and for how much, and
+ * whether the buy order stays open. Links to the new order.
+ */
+export interface BuyOrderFilledEmailData extends BuyOrderFilledFacts {
+  order_id: string
+}
+
+export async function formatBuyOrderFilledEmailData(
+  fill: BuyOrderFilledEmailData,
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, "buy_order_filled")
+  const locale = emailLocale(baseData.locale)
+  const text = buyOrderFilledText(locale, fill)
+  return {
+    ...baseData,
+    locale,
+    notificationTitle: text.title,
+    notificationBody: text.body,
+    actionUrl: `${getBaseUrl()}/contract/${fill.order_id}`,
     t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
     layout: layoutStrings(locale),
   } as EmailTemplateData

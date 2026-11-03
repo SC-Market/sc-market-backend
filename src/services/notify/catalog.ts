@@ -157,6 +157,13 @@ export const CATALOG = {
   // decision (2026-11-02): a bell entry too, on by default and switchable
   // like a price alert's; it points at the listing.
   "buy_order.match": event("watchlist", "buy_order_match", ["in_app", "push", "discord_dm"]),
+  // A seller filled one of your buy orders (POST /buy-orders/{id}/fulfill),
+  // which created an order for you. To the buyer, Personal, next to the
+  // matches. Mirrors the buyer-side order notices: bell always on, push on,
+  // email opt-in (off by default); Discord DM available and off, like the
+  // match. The bell entry points at the order. The seller side of that order
+  // is notified as any new order is (services/notifications/new-order.ts).
+  "buy_order.filled": event("watchlist", "buy_order_filled", ALL),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
   "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
   // Someone made an offer on your public contract (was order_contractor_applied).

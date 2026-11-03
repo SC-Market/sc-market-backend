@@ -709,6 +709,20 @@ class SESEmailService implements EmailService {
           )
           break
 
+        case "buy_order_filled":
+          if (!data.buyOrderFill) {
+            logger.warn(
+              `Missing buy order fill data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatBuyOrderFilledEmailData(
+            data.buyOrderFill as payloadFormatters.BuyOrderFilledEmailData,
+            userId,
+          )
+          break
+
         case "dm_reminder":
           if (!data.reminder) {
             logger.warn(

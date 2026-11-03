@@ -96,12 +96,11 @@ vi.mock(
 vi.mock("../../../../clients/database/transaction.js", () => ({
   withTransaction: (fn: (trx: unknown) => unknown) => fn(makeTrx()),
 }))
-// Every query must go through the transaction: the bare knex is a dead end.
-vi.mock("../../../../clients/database/knex-db.js", () => ({
-  getKnex: () => () => {
-    throw new Error("fulfill must use the transaction")
-  },
-}))
+// Every query must go through the transaction: the bare knex is a dead end
+// (mock-knex-db without a database throws on first use).
+vi.mock("../../../../clients/database/knex-db.js", async () =>
+  (await import("../../../../test-utils/mock-knex-db.js")).mockKnexDb(),
+)
 vi.mock("../../../../services/shops/shop-permissions.service.js", () => ({
   canManageShop: async (shop: Row, userId: string) => h.canManage(shop, userId),
   getShopsForUser: async () => [],
@@ -140,6 +139,11 @@ vi.mock("./fulfillment-rules.js", () => ({
 const notifyNewOrder = vi.hoisted(() => vi.fn(async (_order: Row) => undefined))
 vi.mock("../../../../services/notifications/new-order.js", () => ({
   notifyNewOrder,
+}))
+// The order chat (services/chats/chat-participant.service.ts, tested there).
+const ensureOrderChatParticipants = vi.hoisted(() => vi.fn(async (_order: Row) => undefined))
+vi.mock("../../../../services/chats/chat-participant.service.js", () => ({
+  chatParticipantService: { ensureOrderChatParticipants },
 }))
 // Self-purchase, blocklists, availability requirement, order limits: checkout-guards tests.
 vi.mock("../../../../services/checkout/checkout-guards.js", () => ({
@@ -275,6 +279,7 @@ describe("Buy now notifies like a normal new order", () => {
   beforeEach(() => {
     seed()
     notifyNewOrder.mockClear()
+    ensureOrderChatParticipants.mockClear()
     h.mode = "auto"
     h.timing = null
   })
@@ -295,6 +300,15 @@ describe("Buy now notifies like a normal new order", () => {
     })
   })
 
+  it("opens the order chat (buyer and assignee) before notifying, as a checkout order does", async () => {
+    await buyNow(2)
+    expect(ensureOrderChatParticipants).toHaveBeenCalledTimes(1)
+    expect(ensureOrderChatParticipants.mock.calls[0][0]).toBe(h.tables.orders[0])
+    expect(ensureOrderChatParticipants.mock.invocationCallOrder[0]).toBeLessThan(
+      notifyNewOrder.mock.invocationCallOrder[0],
+    )
+  })
+
   it("an org shop: the org's order, unassigned (order managers and the alert post)", async () => {
     h.tables.shops[0] = { shop_id: "shop-1", owner_user_id: null, owner_contractor_id: "org-1", status: "active" }
     await buyNow(1)
@@ -305,5 +319,6 @@ describe("Buy now notifies like a normal new order", () => {
   it("a refused purchase notifies no one", async () => {
     await expect(buyNow(6)).rejects.toBeInstanceOf(ValidationError)
     expect(notifyNewOrder).not.toHaveBeenCalled()
+    expect(ensureOrderChatParticipants).not.toHaveBeenCalled()
   })
 })

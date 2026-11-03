@@ -1,6 +1,8 @@
 /**
  * POST /buy-orders/{id}/fulfill contract: the seller names one of their
  * listings + variants, and the order created is linked to that listing's shop.
+ * Once committed, the seller's side is notified as any new order is and the
+ * buyer is told their buy order was filled.
  *
  * Runs the real handler against a small in-memory transaction. Named without
  * "Controller" so it is not swept up by the vitest exclusion for DB-backed v2
@@ -80,12 +82,11 @@ vi.mock("../../../../services/test-accounts/isolation.js", async (importOriginal
 vi.mock("../../../../clients/database/transaction.js", () => ({
   withTransaction: (fn: (trx: unknown) => unknown) => fn(makeTrx()),
 }))
-// Every query must go through the transaction: the bare knex is a dead end.
-vi.mock("../../../../clients/database/knex-db.js", () => ({
-  getKnex: () => () => {
-    throw new Error("fulfill must use the transaction")
-  },
-}))
+// Every query must go through the transaction: the bare knex is a dead end
+// (mock-knex-db without a database throws on first use).
+vi.mock("../../../../clients/database/knex-db.js", async () =>
+  (await import("../../../../test-utils/mock-knex-db.js")).mockKnexDb(),
+)
 vi.mock("../../../../services/shops/shop-permissions.service.js", () => ({
   canManageShop: async (shop: Row, userId: string) => h.canManage(shop, userId),
   getShopsForUser: async () => [],
@@ -117,6 +118,16 @@ vi.mock("./fulfillment-rules.js", () => ({
 vi.mock("../../../../services/notifications/notification.service.js", () => ({
   notificationService: {},
 }))
+// What a new order sends (new-order.test.ts) and the buyer's "filled" notice
+// (buy-order-filled.test.ts); here only that fulfil sends them, with what.
+const notifyNewOrder = vi.hoisted(() => vi.fn(async (_order: Row) => undefined))
+vi.mock("../../../../services/notifications/new-order.js", () => ({ notifyNewOrder }))
+const notifyBuyOrderFilled = vi.hoisted(() => vi.fn(async (_fill: Row) => undefined))
+vi.mock("../../../../services/notifications/buy-order-filled.js", () => ({ notifyBuyOrderFilled }))
+const ensureOrderChatParticipants = vi.hoisted(() => vi.fn(async (_order: Row) => undefined))
+vi.mock("../../../../services/chats/chat-participant.service.js", () => ({
+  chatParticipantService: { ensureOrderChatParticipants },
+}))
 vi.mock("../../../../clients/cdn/cdn.js", () => ({ cdn: {} }))
 
 import { BuyOrdersV2Controller } from "./BuyOrdersV2Controller.js"
@@ -143,9 +154,10 @@ function seed() {
         quality_value_max: null,
       },
     ],
-    accounts: [{ user_id: "buyer", username: "buyer" }],
+    accounts: [{ user_id: "buyer", username: "buyer", locale: "de" }],
+    game_items: [{ id: "gi-1", name: "Quantanium" }],
     listings: [{ listing_id: LISTING, shop_id: "shop-1", status: "active" }],
-    shops: [{ shop_id: "shop-1", owner_user_id: "seller", owner_contractor_id: null, status: "active" }],
+    shops: [{ shop_id: "shop-1", name: "Seller Shop", owner_user_id: "seller", owner_contractor_id: null, status: "active" }],
     listing_items: [
       { item_id: "item-1", listing_id: LISTING, game_item_id: "gi-1", pricing_mode: "unified", base_price: 200 },
     ],
@@ -169,6 +181,9 @@ describe("POST /buy-orders/{id}/fulfill", () => {
   beforeEach(() => {
     seed()
     autoAllocateOrder.mockClear()
+    notifyNewOrder.mockClear()
+    notifyBuyOrderFilled.mockClear()
+    ensureOrderChatParticipants.mockClear()
     h.canManage = (shop, userId) => shop.owner_user_id === userId
     h.mode = "auto"
     h.timing = null
@@ -263,5 +278,68 @@ describe("POST /buy-orders/{id}/fulfill", () => {
     await expect(
       fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 9 }),
     ).rejects.toBeInstanceOf(ValidationError)
+  })
+})
+
+// A filled buy order is a new order like any other for the seller's side,
+// and the buyer, who didn't place it, hears that it exists.
+describe("POST /buy-orders/{id}/fulfill notifications", () => {
+  beforeEach(() => {
+    seed()
+    notifyNewOrder.mockClear()
+    notifyBuyOrderFilled.mockClear()
+    ensureOrderChatParticipants.mockClear()
+    h.canManage = (shop, userId) => shop.owner_user_id === userId
+    h.mode = "auto"
+    h.timing = null
+    h.problem = null
+  })
+
+  it("a personal shop: the normal new-order notifications and chat, with the committed orders row", async () => {
+    const result = await fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 4 })
+    const [order] = h.tables.orders
+    expect(notifyNewOrder).toHaveBeenCalledTimes(1)
+    expect(notifyNewOrder.mock.calls[0][0]).toBe(order)
+    expect(order).toMatchObject({ order_id: result.order_id, customer_id: "buyer", assigned_id: "seller", contractor_id: null })
+    expect(ensureOrderChatParticipants).toHaveBeenCalledTimes(1)
+    expect(ensureOrderChatParticipants.mock.calls[0][0]).toBe(order)
+    expect(ensureOrderChatParticipants.mock.invocationCallOrder[0]).toBeLessThan(
+      notifyNewOrder.mock.invocationCallOrder[0],
+    )
+  })
+
+  it("tells the buyer once: who filled it, what, for how much, what is still wanted, in their language", async () => {
+    await fulfill("seller", { listing_id: LISTING, variant_id: VARIANT, quantity: 4 })
+    expect(notifyBuyOrderFilled).toHaveBeenCalledTimes(1)
+    const fill = notifyBuyOrderFilled.mock.calls[0][0]
+    expect(fill.order).toBe(h.tables.orders[0])
+    expect(fill).toMatchObject({
+      buyOrderId: BUY_ORDER,
+      sellerId: "seller",
+      sellerName: "Seller Shop",
+      itemName: "Quantanium",
+      quantity: 4,
+      total: 800,
+      remaining: 6,
+      buyerLocale: "de",
+    })
+  })
+
+  it("an org shop's fill: the org's unassigned order; a complete fill leaves nothing wanted", async () => {
+    h.tables.shops[0] = { shop_id: "shop-1", name: "Acme", owner_user_id: null, owner_contractor_id: "org-1", status: "active" }
+    h.canManage = () => true
+    h.tables.listing_item_lots[0].quantity_total = 10
+    await fulfill("member", { listing_id: LISTING, variant_id: VARIANT })
+    expect(notifyNewOrder.mock.calls[0][0]).toMatchObject({ contractor_id: "org-1", assigned_id: null })
+    expect(notifyBuyOrderFilled.mock.calls[0][0]).toMatchObject({ sellerId: "member", sellerName: "Acme", quantity: 10, remaining: 0 })
+  })
+
+  it("a refused fill notifies no one", async () => {
+    h.problem = { field: "listing_id", message: "Listing price 200 is above the buyer's maximum of 150" }
+    await expect(fulfill("seller", { listing_id: LISTING, variant_id: VARIANT })).rejects.toBeInstanceOf(ValidationError)
+    await expect(fulfill("stranger", { listing_id: LISTING, variant_id: VARIANT })).rejects.toBeInstanceOf(NotFoundError)
+    expect(notifyNewOrder).not.toHaveBeenCalled()
+    expect(notifyBuyOrderFilled).not.toHaveBeenCalled()
+    expect(ensureOrderChatParticipants).not.toHaveBeenCalled()
   })
 })
