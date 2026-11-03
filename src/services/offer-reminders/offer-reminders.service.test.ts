@@ -12,16 +12,23 @@ const h = vi.hoisted(() => ({
   db: null as unknown,
   notify: vi.fn(),
   managers: vi.fn(),
+  locale: "en",
 }))
 vi.mock("../../clients/database/knex-db.js", async () =>
   (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(() => h.db),
 )
 vi.mock("../notify/dispatcher.js", () => ({ notify: h.notify }))
 vi.mock("../notify/recipients.js", () => ({ orgMembersWithPermission: h.managers }))
+vi.mock("../../clients/cdn/cdn.js", () => ({ cdn: {} }))
+vi.mock("../../api/routes/v1/profiles/database.js", () => ({
+  getUser: async ({ user_id }: { user_id: string }) => ({ user_id, username: "u", display_name: "U", locale: h.locale }),
+}))
 
 const svc = await import("./offer-reminders.service.js")
 const { CATALOG } = await import("../notify/catalog.js")
 const { renderEmailTemplate } = await import("../email/template-engine.js")
+const { formatOfferReminderEmailData } = await import("../email/email-payload-formatters.js")
+const { env } = await import("../../config/env.js")
 
 const SELLER = "aaaaaaaa-0000-4000-8000-000000000001"
 const MANAGER = "aaaaaaaa-0000-4000-8000-000000000002"
@@ -301,21 +308,12 @@ describe("messages", () => {
         { ...digest("buyer"), offers: [due({ title: "<script>alert(1)</script>" })] },
         now,
       )
-      const data = {
-        userName: "u",
-        userDisplayName: "U",
-        locale: "en",
-        notificationType: template,
-        notificationTitle: "t",
-        notificationBody: "b",
-        actionUrl: "https://sc-market.space/offer/s0",
-        siteName: "SC Market",
-        siteUrl: "https://sc-market.space",
-        logoUrl: "https://sc-market.space/scmarket-logo.png",
-        unsubscribeUrl: "https://sc-market.space/email/unsubscribe/t",
-        preferencesUrl: "https://sc-market.space/settings",
-        offerReminder: m.email!.data.offerReminder,
-      }
+      env.SESSION_SECRET ||= "s".repeat(40)
+      const data = await formatOfferReminderEmailData(
+        m.email!.data.offerReminder as never,
+        template as "offer_pending_reminder",
+        "u",
+      )
       const html = await renderEmailTemplate(template, data as never, "html")
       expect(html).not.toContain("<script>")
       expect(html).toContain("&lt;script&gt;")
@@ -323,4 +321,24 @@ describe("messages", () => {
       expect(text).toContain("https://sc-market.space/offer/")
     },
   )
+
+  it("the email is worded in the recipient's language", async () => {
+    env.SESSION_SECRET ||= "s".repeat(40)
+    h.locale = "de"
+    try {
+      const m = svc.reminderMessages(digest("first"), now)
+      const data = await formatOfferReminderEmailData(
+        m.email!.data.offerReminder as never,
+        "offer_pending_reminder",
+        "u",
+      )
+      expect(data.notificationTitle).toBe("Ein Angebot wartet auf deine Antwort")
+      const text = await renderEmailTemplate("offer_pending_reminder", data, "txt")
+      expect(text).toContain("Hallo U,")
+      expect(text).toMatch(/wartet schon \d+ (Stunden?|Tage?) auf eine Antwort/)
+      expect(text).toContain("Auf das Angebot antworten:")
+    } finally {
+      h.locale = "en"
+    }
+  })
 })

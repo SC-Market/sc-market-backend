@@ -1,12 +1,14 @@
-New Order Review Hello
-{{userDisplayName}}, A new review has been submitted for your order:
+{{t "order_review.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_review.intro"}}
 
 {{order.title}}
 
-Rating:
-{{review.rating}}/5
+{{t "common.rating"}} {{review.rating}}/5
 {{#if review.content}}{{plainText review.content}}{{/if}}
-{{#if review.author}}By: {{review.author}}{{/if}}
+{{#if review.author}}{{t "order_review.by"}} {{review.author}}{{/if}}
 
-View Order:
+{{t "common.view_order"}}:
 {{actionUrl}}

@@ -1,10 +1,10 @@
-New Message on Order Hello
-{{userDisplayName}},
+{{t "order_message.heading"}}
 
-{{message.author}}
-sent a message on order "{{order.title}}":
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_message.intro" author=message.author title=order.title}}
 
 {{markdown message.content}}
 
-View Order & Reply:
+{{t "order_message.action"}}:
 {{actionUrl}}

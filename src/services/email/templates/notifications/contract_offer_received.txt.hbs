@@ -1,7 +1,11 @@
-New Offer on Your Contract Hello
-{{userDisplayName}}, Someone made an offer on your public contract: Offer #{{offer.id}}
-Status:
-{{offer.status}}
+{{t "contract_offer_received.heading"}}
 
-View Offer:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "contract_offer_received.intro"}}
+
+{{t "common.offer_number" id=offer.id}}
+{{t "common.status"}} {{status "offer" offer.status}}
+
+{{t "common.view_offer"}}:
 {{actionUrl}}

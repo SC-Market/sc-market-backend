@@ -23,13 +23,14 @@ import { unsubscribeLinksFor } from "./unsubscribe-token.js"
 import {
   buyOrderFilledText,
   emailLocale,
-  greeting,
-  identityEmailText,
-  layoutStrings,
-  reminderEmailText,
+  formatNumber,
+  translate,
+  waitedFor,
   type BuyOrderFilledFacts,
-  type IdentityKind,
-} from "./email-i18n.js"
+  type EmailLocale,
+  type Vars,
+} from "./i18n/index.js"
+import type { IdentityActionKind } from "../identity-admin/identity-admin.service.js"
 
 /**
  * Base URL for the application
@@ -51,7 +52,7 @@ const getSiteName = (): string => {
 async function getBaseTemplateData(
   userId: string,
   notificationType: string,
-): Promise<Partial<EmailTemplateData>> {
+): Promise<Partial<EmailTemplateData> & { locale: EmailLocale }> {
   const user = await profileDb.getUser({ user_id: userId })
   if (!user) {
     throw new Error(`User not found: ${userId}`)
@@ -63,13 +64,33 @@ async function getBaseTemplateData(
   return {
     userName: user.username,
     userDisplayName: user.display_name,
-    locale: user.locale || "en",
+    // The recipient's language setting (English otherwise): templates,
+    // subject and preheader are in it (i18n/index.ts).
+    locale: emailLocale(user.locale),
     notificationType: notificationType,
     siteName: getSiteName(),
     siteUrl: getBaseUrl(),
     logoUrl: `${getBaseUrl()}/scmarket-logo.png`,
     unsubscribeUrl: links.unsubscribeUrl,
     preferencesUrl: links.preferencesUrl,
+  }
+}
+
+/**
+ * Subject (notificationTitle) and preheader of a template, in `locale`:
+ * "<template>.subject" and "<template>.<preheaderKey>" (preheader by default).
+ */
+function heading(
+  locale: EmailLocale,
+  template: string,
+  vars: Vars = {},
+  preheaderKey = "preheader",
+): { notificationTitle: string; notificationBody: string; preheader: string } {
+  const preheader = translate(locale, `${template}.${preheaderKey}`, vars)
+  return {
+    notificationTitle: translate(locale, `${template}.subject`, vars),
+    notificationBody: preheader,
+    preheader,
   }
 }
 
@@ -84,40 +105,11 @@ export async function formatOrderNotificationEmailData(
   const baseData = await getBaseTemplateData(userId, action)
   const url = `${getBaseUrl()}/contract/${order.order_id}`
 
-  let title = "New Order"
-  let body = `Order: ${order.title || "Untitled Order"}`
-
-  switch (action) {
-    case "order_create":
-      title = "New Order Created"
-      body = `A new order "${order.title || "Untitled"}" has been created`
-      break
-    case "order_assigned":
-      title = "Order Assigned"
-      body = `You have been assigned to order "${order.title || "Untitled"}"`
-      break
-    case "order_status_fulfilled":
-      title = "Order Fulfilled"
-      body = `Order "${order.title || "Untitled"}" has been fulfilled`
-      break
-    case "order_status_in_progress":
-      title = "Order In Progress"
-      body = `Order "${order.title || "Untitled"}" is now in progress`
-      break
-    case "order_status_not_started":
-      title = "Order Status Updated"
-      body = `Order "${order.title || "Untitled"}" status updated to not started`
-      break
-    case "order_status_cancelled":
-      title = "Order Cancelled"
-      body = `Order "${order.title || "Untitled"}" has been cancelled`
-      break
-  }
-
+  const title = order.title || translate(baseData.locale, "common.untitled")
+  const status = action.startsWith("order_status_")
   return {
     ...baseData,
-    notificationTitle: title,
-    notificationBody: body,
+    ...heading(baseData.locale, action, { title }, status ? "intro" : "preheader"),
     actionUrl: url,
     order: {
       order_id: order.order_id,
@@ -146,8 +138,10 @@ export async function formatOrderMessageEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "New Message on Order",
-    notificationBody: `${authorName} sent a message on order "${order.title || "Untitled"}"`,
+    ...heading(baseData.locale, "order_message", {
+      author: authorName,
+      title: order.title || translate(baseData.locale, "common.untitled"),
+    }),
     actionUrl: url,
     order: {
       order_id: order.order_id,
@@ -167,8 +161,9 @@ export async function formatOrderMessageEmailData(
 export async function formatOrderReviewEmailData(
   review: DBReview,
   userId: string,
+  action: "order_review" | "order_review_revision_requested" = "order_review",
 ): Promise<EmailTemplateData> {
-  const baseData = await getBaseTemplateData(userId, "order_review")
+  const baseData = await getBaseTemplateData(userId, action)
   const url = `${getBaseUrl()}/contract/${review.order_id}`
 
   const author = review.user_author
@@ -182,8 +177,10 @@ export async function formatOrderReviewEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "New Review on Order",
-    notificationBody: `${authorName} left a review on your order`,
+    ...heading(baseData.locale, action, {
+      author: authorName,
+      title: order.title || translate(baseData.locale, "common.untitled"),
+    }),
     actionUrl: url,
     order: {
       order_id: order.order_id,
@@ -205,23 +202,20 @@ export async function formatOrderReviewEmailData(
  */
 export async function formatOfferNotificationEmailData(
   offer: DBOfferSession,
-  action: "offer_create" | "counter_offer_create",
+  action:
+    | "offer_create"
+    | "counter_offer_create"
+    | "contract_offer_received"
+    | "offer_accepted"
+    | "offer_rejected",
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, action)
   const url = `${getBaseUrl()}/offer/${offer.id}`
 
-  const title =
-    action === "offer_create" ? "New Offer Created" : "Counter Offer Received"
-  const body =
-    action === "offer_create"
-      ? `A new offer has been created`
-      : `You received a counter offer`
-
   return {
     ...baseData,
-    notificationTitle: title,
-    notificationBody: body,
+    ...heading(baseData.locale, action),
     actionUrl: url,
     offer: {
       id: offer.id,
@@ -246,8 +240,7 @@ export async function formatOfferMessageEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "New Message on Offer",
-    notificationBody: `${authorName} sent a message on your offer`,
+    ...heading(baseData.locale, "offer_message", { author: authorName }),
     actionUrl: url,
     offer: {
       id: offer.id,
@@ -274,8 +267,7 @@ export async function formatMarketBidEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "New Bid on Market Listing",
-    notificationBody: `Someone placed a bid on "${listing.details.title}"`,
+    ...heading(baseData.locale, "market_item_bid", { title: listing.details.title }),
     actionUrl: url,
     listing: {
       listing_id: listing.listing.listing_id,
@@ -306,8 +298,7 @@ export async function formatMarketOfferEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "New Offer on Market Listing",
-    notificationBody: `Someone made an offer on "${completeListing.details.title}"`,
+    ...heading(baseData.locale, "market_item_offer", { title: completeListing.details.title }),
     actionUrl: url,
     listing: {
       listing_id: listing.listing_id,
@@ -340,8 +331,7 @@ export async function formatContractorInviteEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "Contractor Invitation",
-    notificationBody: `You have been invited to join "${contractor.name}"`,
+    ...heading(baseData.locale, "contractor_invite", { org: contractor.name }),
     actionUrl: url,
     contractor: {
       contractor_id: contractor.contractor_id,
@@ -367,8 +357,7 @@ export async function formatAdminAlertEmailData(
 
   return {
     ...baseData,
-    notificationTitle: "Admin Alert",
-    notificationBody: alert.content || "You have a new admin alert",
+    ...heading(baseData.locale, "admin_alert", { title: alert.title }),
     actionUrl: url,
     alert: {
       alert_id: alert.alert_id,
@@ -403,12 +392,15 @@ export async function formatPriceAlertEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "price_alert")
-  const price = listing.price.toLocaleString("en-US")
+  const { locale } = baseData
 
   return {
     ...baseData,
-    notificationTitle: `Price Alert: ${listing.title} is ${price} aUEC`,
-    notificationBody: `${listing.title} is listed at ${price} aUEC, at or below your target of ${watch.max_price.toLocaleString("en-US")} aUEC.`,
+    ...heading(locale, "price_alert", {
+      title: listing.title,
+      price: formatNumber(locale, listing.price),
+      target: formatNumber(locale, watch.max_price),
+    }),
     actionUrl: `${getBaseUrl()}/market/${listing.listing_id}`,
     listing,
     watch,
@@ -432,16 +424,12 @@ export async function formatStorefrontEnquiryDecisionEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, notificationType)
-  const accepted = notificationType === "storefront_enquiry_accepted"
   const subdomain = `${enquiry.requested_subdomain}.sc-market.space`
   const name = enquiry.target_name || enquiry.target
   const handle = encodeURIComponent(enquiry.target)
   return {
     ...baseData,
-    notificationTitle: accepted ? "Storefront enquiry accepted" : "Storefront enquiry declined",
-    notificationBody: accepted
-      ? `SC Market staff accepted your branded storefront enquiry for ${name} (${subdomain}).`
-      : `SC Market staff declined your branded storefront enquiry for ${name} (${subdomain}).`,
+    ...heading(baseData.locale, notificationType, { name, subdomain }),
     actionUrl:
       enquiry.target_type === "org"
         ? `${getBaseUrl()}/org/${handle}/manage/storefront`
@@ -450,16 +438,26 @@ export async function formatStorefrontEnquiryDecisionEmailData(
   } as EmailTemplateData
 }
 
-/** A pending-offer reminder (services/offer-reminders reminderMessages). */
+/**
+ * A pending-offer reminder digest (services/offer-reminders reminderMessages):
+ * the facts only, the words are the recipient's language.
+ */
 export interface OfferReminderEmailData {
   stage: "first" | "final" | "buyer"
-  title: string
-  body: string
-  offers: { session_id: string; title: string; counterparty: string; waited: string; url: string }[]
+  /** Offers in the digest (more than are listed). */
+  count: number
+  /** The other side of each listed offer, and how long it has waited. */
+  offers: { session_id: string; title: string; counterparty: string; waited_hours: number; url: string }[]
   more: number
   url: string
   withdraw_url: string | null
 }
+
+const REMINDER_TEMPLATE = {
+  first: "offer_pending_reminder",
+  final: "offer_pending_final_reminder",
+  buyer: "offer_waiting_buyer",
+} as const
 
 /** Pending-offer reminders: to the seller side (first, final) or the buyer. */
 export async function formatOfferReminderEmailData(
@@ -468,22 +466,41 @@ export async function formatOfferReminderEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, notificationType)
+  const { locale } = baseData
+  const template = REMINDER_TEMPLATE[reminder.stage]
+  const first = reminder.offers[0]
+  const vars = {
+    count: reminder.count,
+    title: first?.title ?? "",
+    waited: first ? waitedFor(locale, first.waited_hours) : "",
+    buyer: first?.counterparty ?? "",
+    seller: first?.counterparty ?? "",
+  }
+  const size = reminder.count === 1 ? "single" : "multiple"
+  const title = translate(locale, `${template}.subject.${size}`, vars)
+  const body = translate(locale, `${template}.body.${size}`, vars)
   return {
     ...baseData,
-    notificationTitle: reminder.title,
-    notificationBody: reminder.body,
+    notificationTitle: title,
+    notificationBody: body,
+    preheader: body,
     actionUrl: reminder.url,
-    offerReminder: reminder,
+    offerReminder: {
+      ...reminder,
+      title,
+      body,
+      offers: reminder.offers.map((o) => ({ ...o, waited: waitedFor(locale, o.waited_hours) })),
+    },
   } as EmailTemplateData
 }
 
 /**
  * An admin changed your account's identity (services/identity-admin): the
- * security email, in the user's language. Mandatory (catalog emailMandatory),
- * so it carries no unsubscribe link.
+ * security email. Mandatory (catalog emailMandatory), so it carries no
+ * unsubscribe link.
  */
 export interface IdentityChangedEmailData {
-  kind: IdentityKind
+  kind: IdentityActionKind
   notice: { old_username?: string; new_username?: string }
 }
 
@@ -492,22 +509,24 @@ export async function formatIdentityChangedEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "account_identity_changed")
-  const locale = emailLocale(baseData.locale)
-  const text = identityEmailText(locale, identity.kind, identity.notice)
+  const { locale } = baseData
+  const body = translate(locale, `account_identity_changed.body.${identity.kind}`, {
+    username: identity.notice.new_username ?? "",
+  })
   return {
     ...baseData,
-    locale,
-    notificationTitle: text.title,
-    notificationBody: text.body,
+    notificationTitle: translate(locale, `account_identity_changed.subject.${identity.kind}`),
+    notificationBody: body,
+    preheader: body,
     actionUrl: `${getBaseUrl()}/settings`,
-    t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
-    layout: layoutStrings(locale),
+    // A deactivated account can't log in: nothing to open.
+    identity: { body, hasAction: identity.kind !== "account_deactivated" },
   } as EmailTemplateData
 }
 
 /**
- * The unread-message reminder (services/dm-reminders), in the user's
- * language: how many conversations wait, and where to answer them.
+ * The unread-message reminder (services/dm-reminders): how many
+ * conversations wait, and where to answer them.
  */
 export interface UnreadReminderEmailData {
   conversations: number
@@ -519,24 +538,24 @@ export async function formatUnreadReminderEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "dm_reminder")
-  const locale = emailLocale(baseData.locale)
-  const text = reminderEmailText(locale, reminder.conversations)
+  const { locale } = baseData
+  const count = reminder.conversations
+  const size = count === 1 ? "single" : "multiple"
+  const body = translate(locale, `dm_reminder.body.${size}`, { count })
   return {
     ...baseData,
-    locale,
-    notificationTitle: text.subject,
-    notificationBody: text.body,
+    notificationTitle: translate(locale, `dm_reminder.subject.${size}`, { count }),
+    notificationBody: body,
+    preheader: body,
     actionUrl: reminder.url,
     unreadCount: reminder.conversations,
-    t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
-    layout: layoutStrings(locale),
   } as EmailTemplateData
 }
 
 /**
  * "Your buy order was filled" (services/notifications/buy-order-filled.ts),
- * to the buyer, in their language: who filled it, what and for how much, and
- * whether the buy order stays open. Links to the new order.
+ * to the buyer: who filled it, what and for how much, and whether the buy
+ * order stays open. Links to the new order.
  */
 export interface BuyOrderFilledEmailData extends BuyOrderFilledFacts {
   order_id: string
@@ -547,15 +566,13 @@ export async function formatBuyOrderFilledEmailData(
   userId: string,
 ): Promise<EmailTemplateData> {
   const baseData = await getBaseTemplateData(userId, "buy_order_filled")
-  const locale = emailLocale(baseData.locale)
-  const text = buyOrderFilledText(locale, fill)
+  const text = buyOrderFilledText(baseData.locale, fill)
   return {
     ...baseData,
-    locale,
     notificationTitle: text.title,
     notificationBody: text.body,
+    preheader: text.body,
     actionUrl: `${getBaseUrl()}/contract/${fill.order_id}`,
-    t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
-    layout: layoutStrings(locale),
+    buyOrderFill: { body: text.body, status: text.status },
   } as EmailTemplateData
 }

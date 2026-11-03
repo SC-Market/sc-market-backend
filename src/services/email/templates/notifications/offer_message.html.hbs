@@ -1,22 +1,21 @@
-<h1 style="color: #e8e8e8;">New Message on Offer</h1>
+<h1 style="color: #e8e8e8;">{{t "offer_message.heading"}}</h1>
 
-<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+<p style="color: #b7b7b7;">{{t "common.greeting" name=userDisplayName}}</p>
 
-<p style="color: #b7b7b7;">A new message has been sent on your offer:</p>
+<p style="color: #b7b7b7;">{{t "offer_message.intro"}}</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
 >
-  <h2 style="margin-top: 0; color: #e8e8e8;">Offer #{{offer.id}}</h2>
+  <h2 style="margin-top: 0; color: #e8e8e8;">{{t "common.offer_number" id=offer.id}}</h2>
   <div
     style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgb(45, 55, 72);"
   >
-    <p style="color: #b7b7b7; margin: 0;"><strong>{{message.author}}</strong>
-      sent a message:</p>
+    <p style="color: #b7b7b7; margin: 0;">{{t "offer_message.sent" author=message.author}}</p>
     <div style="margin: 10px 0 0 0;">{{markdown message.content}}</div>
   </div>
 </div>
 
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">View Offer</a>
+  <a href="{{actionUrl}}" class="button">{{t "common.view_offer"}}</a>
 </p>

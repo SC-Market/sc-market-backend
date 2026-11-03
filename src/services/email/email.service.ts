@@ -31,6 +31,7 @@ import {
   type EmailPreferenceScope,
 } from "./email.service.types.js"
 import { renderEmailTemplate } from "./template-engine.js"
+import { emailLocale, translate } from "./i18n/index.js"
 import * as payloadFormatters from "./email-payload-formatters.js"
 import {
   DBOrder,
@@ -223,15 +224,18 @@ class SESEmailService implements EmailService {
         env.FRONTEND_URL || env.CDN_URL || "https://sc-market.space"
       const verificationUrl = `${baseUrl}/email/verify/${tokenRecord.token}`
 
-      // Render verification email template
+      // Render verification email template, in the user's language
+      const locale = emailLocale(userProfile.locale)
+      const subject = translate(locale, "verification.subject")
+      const preheader = translate(locale, "verification.preheader")
       const templateData = {
         userName: userProfile.username,
         userDisplayName: userProfile.display_name,
-        locale: userProfile.locale || "en",
+        locale,
         notificationType: "email_verification",
-        notificationTitle: "Verify Your Email Address",
-        notificationBody:
-          "Please click the link below to verify your email address.",
+        notificationTitle: subject,
+        notificationBody: preheader,
+        preheader,
         actionUrl: verificationUrl,
         siteName: "SC Market",
         siteUrl: baseUrl,
@@ -255,7 +259,7 @@ class SESEmailService implements EmailService {
       // Send email
       await this.sendEmail({
         to: email,
-        subject: "Verify Your Email Address - SC Market",
+        subject,
         html,
         text,
         // Re-verifying is how a bounced address is cleared.
@@ -617,20 +621,12 @@ class SESEmailService implements EmailService {
             )
             return false
           }
-          templateData = {
-            ...(await payloadFormatters.formatOfferNotificationEmailData(
+          templateData =
+            await payloadFormatters.formatOfferNotificationEmailData(
               data.offer as DBOfferSession,
-              "offer_create",
+              notificationType,
               userId,
-            )),
-            notificationType,
-            notificationTitle:
-              notificationType === "contract_offer_received"
-                ? "New Offer on Your Contract"
-                : notificationType === "offer_accepted"
-                  ? "Offer Accepted"
-                  : "Offer Rejected",
-          }
+            )
           break
 
         case "order_review_revision_requested":
@@ -644,6 +640,7 @@ class SESEmailService implements EmailService {
           templateData = await payloadFormatters.formatOrderReviewEmailData(
             data.review as DBReview,
             userId,
+            "order_review_revision_requested",
           )
           break
 

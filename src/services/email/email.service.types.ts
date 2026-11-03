@@ -43,6 +43,7 @@ export interface EmailTemplateData {
   // User data
   userName: string
   userDisplayName: string
+  /** The email's language (i18n EmailLocale); templates and subject use it. */
   locale: string
 
   // Notification data
@@ -50,6 +51,8 @@ export interface EmailTemplateData {
   notificationTitle: string
   notificationBody: string
   actionUrl: string // Link to relevant page
+  /** Hidden preview text shown after the subject in the inbox (base layout). */
+  preheader?: string
 
   // Branding
   siteName: string

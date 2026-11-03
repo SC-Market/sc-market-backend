@@ -1,9 +1,13 @@
-Order Not Started Hello
-{{userDisplayName}}, Order "{{order.title}}" status has been updated to Not
-Started.
+{{t "order_status_not_started.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_status_not_started.intro" title=order.title}}
 
 {{order.title}}
 {{#if order.description}}{{markdown order.description}}{{/if}}
-{{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
-Status: Not Started View Order:
+{{#if order.cost}}{{t "common.value"}} {{formatCurrency order.cost}} aUEC{{/if}}
+{{t "common.status"}} {{status "order" order.status}}
+
+{{t "common.view_order"}}:
 {{actionUrl}}

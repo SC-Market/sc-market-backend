@@ -6,7 +6,7 @@
  *
  * To the buyer only, Personal preferences (watchlist category, next to the
  * buy-order matches): bell entry pointing at the order, push, email (opt-in)
- * and Discord DM (off by default), in the buyer's language (email-i18n.ts).
+ * and Discord DM (off by default), in the buyer's language (email/i18n).
  * The seller is the actor and is never a recipient; their side of the order
  * is notified as any new order is (new-order.ts notifyNewOrder).
  *
@@ -17,7 +17,7 @@ import { env } from "../../config/env.js"
 import type { DBOrder } from "../../clients/database/db-models.js"
 import logger from "../../logger/logger.js"
 import { notify } from "../notify/dispatcher.js"
-import { buyOrderFilledText, emailLocale, type BuyOrderFilledFacts } from "../email/email-i18n.js"
+import { buyOrderFilledText, emailLocale, type BuyOrderFilledFacts } from "../email/i18n/index.js"
 import type { BuyOrderFilledEmailData } from "../email/email-payload-formatters.js"
 
 export const BUY_ORDER_FILLED_ACTION = "buy_order_filled"
@@ -47,7 +47,7 @@ export async function notifyBuyOrderFilled(fill: BuyOrderFill): Promise<void> {
       seller: fill.sellerName,
       item: fill.itemName,
       quantity: fill.quantity,
-      total: Number(fill.total).toLocaleString("en-US"),
+      total: Number(fill.total),
       remaining: Math.max(0, fill.remaining),
     }
     const text = buyOrderFilledText(emailLocale(fill.buyerLocale), facts)

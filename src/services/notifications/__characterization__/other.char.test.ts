@@ -162,7 +162,7 @@ describe("dm_reminder (82): unread order/offer message reminder", () => {
   }
 
   // The email goes through notify() and the email queue (owner decision
-  // 2026-11-02): the subject is the translated one (email-i18n.ts).
+  // 2026-11-02): the subject is the translated one (email/i18n).
   it("unread for 6 h and less than a day old: email (opted in) and Discord DM (default on)", async () => {
     const author = await w.user("author")
     const emailOnly = await w.user("emailonly", { discord: false })

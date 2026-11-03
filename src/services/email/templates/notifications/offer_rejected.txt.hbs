@@ -1,7 +1,11 @@
-Offer Rejected Hello
-{{userDisplayName}}, Your offer was rejected: Offer #{{offer.id}}
-Status:
-{{offer.status}}
+{{t "offer_rejected.heading"}}
 
-View Offer:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "offer_rejected.intro"}}
+
+{{t "common.offer_number" id=offer.id}}
+{{t "common.status"}} {{status "offer" offer.status}}
+
+{{t "common.view_offer"}}:
 {{actionUrl}}

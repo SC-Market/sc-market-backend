@@ -21,6 +21,7 @@ import logger from "../../logger/logger.js"
 import { emailService } from "../email/email.service.js"
 import { renderEmailTemplate } from "../email/template-engine.js"
 import type { EmailTemplateData } from "../email/email.service.types.js"
+import { translate } from "../email/i18n/index.js"
 import type { EnquiryTarget, StorefrontEnquiry } from "./enquiries.js"
 
 const require = createRequire(import.meta.url)
@@ -118,16 +119,26 @@ function contentFor(enquiry: StorefrontEnquiry, target: EnquiryTarget): AlertCon
   }
 }
 
-async function sendEmailAlert(to: string, c: AlertContent): Promise<void> {
+/**
+ * Staff mail goes to one shared address (STAFF_ALERT_EMAIL), not to a user
+ * with a language setting: it is in English, through the same catalog.
+ */
+const STAFF_LOCALE = "en"
+
+async function sendEmailAlert(to: string, c: AlertContent, enquiry: StorefrontEnquiry, target: EnquiryTarget): Promise<void> {
   const base = frontendUrl()
-  const subject = `New storefront enquiry: ${c.targetName}`
+  const t = (key: string, vars?: Record<string, unknown>) =>
+    translate(STAFF_LOCALE, `${STAFF_ALERT_EMAIL_TEMPLATE}.${key}`, vars)
+  const subject = t("subject", { name: c.targetName })
+  const preheader = t("preheader", { requester: c.requester, subdomain: c.subdomain })
   const data: EmailTemplateData = {
     userName: "staff",
     userDisplayName: "SC Market staff",
-    locale: "en",
+    locale: STAFF_LOCALE,
     notificationType: STAFF_ALERT_EMAIL_TEMPLATE,
     notificationTitle: subject,
-    notificationBody: `${c.requester} asked for ${c.subdomain}`,
+    notificationBody: preheader,
+    preheader,
     actionUrl: c.link,
     siteName: "SC Market",
     siteUrl: base,
@@ -135,12 +146,12 @@ async function sendEmailAlert(to: string, c: AlertContent): Promise<void> {
     // Staff mail, not a user notification: nothing to unsubscribe from.
     preferencesUrl: c.link,
     enquiry: {
-      target_label: c.targetLabel,
+      target_label: t(target.type === "org" ? "target_org" : "target_shop"),
       target_name: c.targetName,
       target_handle: c.targetHandle,
       requester: c.requester,
       subdomain: c.subdomain,
-      contact: c.contact,
+      contact: t(enquiry.contact_method === "discord" ? "contact_discord" : "contact_message"),
       message: c.excerpt,
     },
   }
@@ -211,7 +222,7 @@ export async function sendStaffEnquiryAlerts(
   const hook = webhookUrl()
   await Promise.all([
     to
-      ? sendEmailAlert(to, c).then(
+      ? sendEmailAlert(to, c, enquiry, target).then(
           () => void (out.email = "sent"),
           (err) => {
             out.email = "failed"

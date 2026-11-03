@@ -15,6 +15,12 @@ exports[`contractor_invite email > renders the org description as Markdown (HTML
           "Segoe UI",
           Helvetica,
           Arial,
+          "Hiragino Sans",
+          "PingFang SC",
+          "PingFang TC",
+          "Microsoft YaHei",
+          "Microsoft JhengHei",
+          "Noto Sans CJK JP",
           sans-serif;
         line-height: 1.6;
         color: #b7b7b7;
@@ -50,6 +56,7 @@ exports[`contractor_invite email > renders the org description as Markdown (HTML
       .email-body {
         padding: 40px 30px;
         color: #b7b7b7;
+        overflow-wrap: break-word;
       }
       .email-body h1,
       .email-body h2,
@@ -66,6 +73,8 @@ exports[`contractor_invite email > renders the org description as Markdown (HTML
       }
       .button {
         display: inline-block;
+        max-width: 100%;
+        box-sizing: border-box;
         padding: 12px 24px;
         background-color: #10b881;
         color: #ffffff !important;
@@ -108,8 +117,7 @@ exports[`contractor_invite email > renders the org description as Markdown (HTML
 
 <p style="color: #b7b7b7;">Hello Owner,</p>
 
-<p style="color: #b7b7b7;">You have been invited to join a contractor
-  organization.</p>
+<p style="color: #b7b7b7;">You have been invited to join a contractor organization.</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
@@ -123,6 +131,7 @@ exports[`contractor_invite email > renders the org description as Markdown (HTML
 <p style="text-align: center;">
   <a href="https://sc-market.space/contractor/TESTORG" class="button">View Invitation</a>
 </p>
+
       </div>
       <div class="email-footer">
         <p style="margin: 0 0 10px 0;">
@@ -131,8 +140,7 @@ exports[`contractor_invite email > renders the org description as Markdown (HTML
         <p style="margin: 0;">
           <a href="https://sc-market.space/email/unsubscribe/token123" class="unsubscribe-link">Unsubscribe</a>
           |
-          <a href="https://sc-market.space/settings?tab&#x3D;email" class="unsubscribe-link">Manage
-            Preferences</a>
+          <a href="https://sc-market.space/settings?tab&#x3D;email" class="unsubscribe-link">Manage Preferences</a>
         </p>
       </div>
     </div>

@@ -1,8 +1,8 @@
-<h1 style="color: #e8e8e8;">New Offer on Market Listing</h1>
+<h1 style="color: #e8e8e8;">{{t "market_item_offer.heading"}}</h1>
 
-<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+<p style="color: #b7b7b7;">{{t "common.greeting" name=userDisplayName}}</p>
 
-<p style="color: #b7b7b7;">Someone made an offer on your market listing:</p>
+<p style="color: #b7b7b7;">{{t "market_item_offer.intro"}}</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
@@ -14,12 +14,12 @@
   <div
     style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgb(45, 55, 72);"
   >
-    <p style="color: #b7b7b7; margin: 0;"><strong>Offer Amount:</strong>
+    <p style="color: #b7b7b7; margin: 0;"><strong>{{t "market_item_offer.amount"}}</strong>
       {{formatCurrency offer.offer}}
       aUEC</p>
   </div>
 </div>
 
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">View Listing</a>
+  <a href="{{actionUrl}}" class="button">{{t "common.view_listing"}}</a>
 </p>

@@ -1,6 +1,6 @@
 <h1 style="color: #e8e8e8;">{{offerReminder.title}}</h1>
 
-<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+<p style="color: #b7b7b7;">{{t "common.greeting" name=userDisplayName}}</p>
 
 <p style="color: #b7b7b7;">{{offerReminder.body}}</p>
 
@@ -10,9 +10,9 @@
   {{#each offerReminder.offers}}
   <p style="color: #b7b7b7; margin: 0 0 8px 0;"><a href="{{this.url}}" style="color: #e8e8e8;">{{this.title}}</a> · {{this.counterparty}} · {{this.waited}}</p>
   {{/each}}
-  {{#if offerReminder.more}}<p style="color: #b7b7b7; margin: 0;">…and {{offerReminder.more}} more</p>{{/if}}
+  {{#if offerReminder.more}}<p style="color: #b7b7b7; margin: 0;">{{t "common.and_more" count=offerReminder.more}}</p>{{/if}}
 </div>
 
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">Reply to the Offer</a>
+  <a href="{{actionUrl}}" class="button">{{t "offer_pending_reminder.action"}}</a>
 </p>

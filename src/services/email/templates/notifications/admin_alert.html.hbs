@@ -1,8 +1,8 @@
-<h1 style="color: #e8e8e8;">Admin Alert</h1>
+<h1 style="color: #e8e8e8;">{{t "admin_alert.heading"}}</h1>
 
-<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+<p style="color: #b7b7b7;">{{t "common.greeting" name=userDisplayName}}</p>
 
-<p style="color: #b7b7b7;">You have a new admin alert:</p>
+<p style="color: #b7b7b7;">{{t "admin_alert.intro"}}</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
@@ -14,5 +14,5 @@
 </div>
 
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">View Alert</a>
+  <a href="{{actionUrl}}" class="button">{{t "admin_alert.action"}}</a>
 </p>

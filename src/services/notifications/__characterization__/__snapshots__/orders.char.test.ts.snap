@@ -83,24 +83,27 @@ exports[`order_assigned (2) > org manager assigns an order: assignee in-app/push
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order Assigned",
       "text": "SC Market
 https://sc-market.space
 
-Order Assigned to You Hello
-Clerk, You have been assigned to a new order:
+Order Assigned to You
+
+Hello Clerk,
+
+You have been assigned to a new order:
 
 Order o5
 Description of o5
 Value: 25,000 aUEC
-Status:
-not-started
+Status: Not Started
 
 View Order:
 https://sc-market.space/contract/order:o5
 
 Please review the order details and begin work when ready.
+
 
 ---
 SC Market
@@ -353,22 +356,25 @@ exports[`order_create (1) > org order from an offer: org managers, org-scoped pu
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "New Order Created",
       "text": "SC Market
 https://sc-market.space
 
-New Order Created Hello
-Boss, A new order has been created:
+New Order Created
+
+Hello Boss,
+
+A new order has been created:
 
 Offer s1
 Description of s1
 Value: 25,000 aUEC
-Status:
-not-started
+Status: Not Started
 
 View Order:
 https://sc-market.space/contract/order:o1
+
 
 ---
 SC Market
@@ -518,24 +524,27 @@ exports[`order_create (1) > personal order with an assignee: assignee gets order
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order Assigned",
       "text": "SC Market
 https://sc-market.space
 
-Order Assigned to You Hello
-Seller, You have been assigned to a new order:
+Order Assigned to You
+
+Hello Seller,
+
+You have been assigned to a new order:
 
 Offer s2
 Description of s2
 Value: 25,000 aUEC
-Status:
-not-started
+Status: Not Started
 
 View Order:
 https://sc-market.space/contract/order:o2
 
 Please review the order details and begin work when ready.
+
 
 ---
 SC Market
@@ -801,21 +810,22 @@ exports[`order_message (81) > chat messages: coalesced in-app row; the second un
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "New Message on Order",
       "text": "SC Market
 https://sc-market.space
 
-New Message on Order Hello
-Seller,
+New Message on Order
 
-Customer
-sent a message on order "Order chat":
+Hello Seller,
+
+Customer sent a message on order "Order chat":
 
 first message
 
 View Order & Reply:
 https://sc-market.space/contract/order:chat
+
 
 ---
 SC Market
@@ -937,23 +947,26 @@ exports[`order_review (3) > customer reviews: assignee notified, shop order_revi
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "New Review on Order",
       "text": "SC Market
 https://sc-market.space
 
-New Order Review Hello
-Seller, A new review has been submitted for your order:
+New Order Review
+
+Hello Seller,
+
+A new review has been submitted for your order:
 
 Order rev
 
-Rating:
-4.0/5
+Rating: 4.0/5
 Great
 By: Customer
 
 View Order:
 https://sc-market.space/contract/order:rev
+
 
 ---
 SC Market
@@ -1150,19 +1163,25 @@ exports[`order_status_* (4-7) > assignee sets cancelled: thread archived 2`] = `
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order Cancelled",
       "text": "SC Market
 https://sc-market.space
 
-Order Cancelled Hello
-Customer, Order "Order st-cancelled" has been cancelled.
+Order Cancelled
+
+Hello Customer,
+
+Order "Order st-cancelled" has been cancelled.
 
 Order st-cancelled
 Description of st-cancelled
 Value: 25,000 aUEC
-Status: Cancelled View Order:
+Status: Cancelled
+
+View Order:
 https://sc-market.space/contract/order:st-cancelled
+
 
 ---
 SC Market
@@ -1328,19 +1347,23 @@ exports[`order_status_* (4-7) > assignee sets fulfilled: thread archived 2`] = `
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order Fulfilled",
       "text": "SC Market
 https://sc-market.space
 
-Order Fulfilled Hello
-Customer, Order "Order st-fulfilled" has been fulfilled.
+Order Fulfilled
+
+Hello Customer,
+
+Order "Order st-fulfilled" has been fulfilled.
 
 Order st-fulfilled
 Value: 25,000 aUEC
 
 View Order:
 https://sc-market.space/contract/order:st-fulfilled
+
 
 ---
 SC Market
@@ -1504,19 +1527,25 @@ exports[`order_status_* (4-7) > assignee sets in-progress: customer notified, th
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order In Progress",
       "text": "SC Market
 https://sc-market.space
 
-Order In Progress Hello
-Customer, Order "Order st-in-progress" is now in progress.
+Order In Progress
+
+Hello Customer,
+
+Order "Order st-in-progress" is now in progress.
 
 Order st-in-progress
 Description of st-in-progress
 Value: 25,000 aUEC
-Status: In Progress View Order:
+Status: In Progress
+
+View Order:
 https://sc-market.space/contract/order:st-in-progress
+
 
 ---
 SC Market
@@ -1675,20 +1704,25 @@ exports[`order_status_* (4-7) > assignee sets not-started 2`] = `
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order Status Updated",
       "text": "SC Market
 https://sc-market.space
 
-Order Not Started Hello
-Customer, Order "Order st-not-started" status has been updated to Not
-Started.
+Order Not Started
+
+Hello Customer,
+
+Order "Order st-not-started" status has been updated to Not Started.
 
 Order st-not-started
 Description of st-not-started
 Value: 25,000 aUEC
-Status: Not Started View Order:
+Status: Not Started
+
+View Order:
 https://sc-market.space/contract/order:st-not-started
+
 
 ---
 SC Market
@@ -1825,19 +1859,25 @@ exports[`order_status_* (4-7) > customer cancels an org order: assignee notified
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Order Cancelled",
       "text": "SC Market
 https://sc-market.space
 
-Order Cancelled Hello
-Clerk, Order "Order cx" has been cancelled.
+Order Cancelled
+
+Hello Clerk,
+
+Order "Order cx" has been cancelled.
 
 Order cx
 Description of cx
 Value: 25,000 aUEC
-Status: Cancelled View Order:
+Status: Cancelled
+
+View Order:
 https://sc-market.space/contract/order:cx
+
 
 ---
 SC Market

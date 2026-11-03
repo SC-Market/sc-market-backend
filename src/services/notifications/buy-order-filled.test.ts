@@ -19,7 +19,7 @@ vi.mock("../../logger/logger.js", () => ({ default: { error: vi.fn(), info: vi.f
 const { notifyBuyOrderFilled } = await import("./buy-order-filled.js")
 const { CATALOG } = await import("../notify/catalog.js")
 const { editableChannels } = await import("../notify/preference-matrix.js")
-const { EMAIL_LOCALES, buyOrderFilledText } = await import("../email/email-i18n.js")
+const { EMAIL_LOCALES, buyOrderFilledText } = await import("../email/i18n/index.js")
 
 const ORDER = {
   order_id: "order-1",
@@ -84,7 +84,7 @@ describe("notifyBuyOrderFilled", () => {
           seller: "Seller Shop",
           item: "Quantanium",
           quantity: 4,
-          total: "12,000",
+          total: 12000,
           remaining: 6,
         },
       },
@@ -100,18 +100,18 @@ describe("notifyBuyOrderFilled", () => {
     await notifyBuyOrderFilled(fill({ buyerLocale: "de" }))
     const { push } = h.notify.mock.calls[0][2].messages
     expect(push.title).toBe("Dein Kaufauftrag wurde erfüllt")
-    expect(push.body).toContain("Seller Shop hat deinen Kaufauftrag erfüllt: 4 × Quantanium für 12,000 aUEC.")
+    expect(push.body).toContain("Seller Shop hat deinen Kaufauftrag erfüllt: 4 × Quantanium für 12.000 aUEC.")
   })
 
   it("has its text in all 8 languages", () => {
-    const facts = { seller: "S", item: "I", quantity: 2, total: "10", remaining: 3 }
+    const facts = { seller: "S", item: "I", quantity: 2, total: 10, remaining: 3 }
     expect(EMAIL_LOCALES).toHaveLength(8)
     const titles = new Set<string>()
     for (const locale of EMAIL_LOCALES) {
       const open = buyOrderFilledText(locale, facts)
       const done = buyOrderFilledText(locale, { ...facts, remaining: 0 })
       titles.add(open.title)
-      for (const v of [open.body, open.status, open.action]) expect(v, locale).toBeTruthy()
+      for (const v of [open.body, open.status]) expect(v, locale).toBeTruthy()
       expect(open.body, locale).toContain("S")
       expect(open.status, locale).toContain("3")
       expect(done.status, locale).not.toBe(open.status)

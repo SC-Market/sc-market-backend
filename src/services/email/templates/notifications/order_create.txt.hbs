@@ -1,11 +1,13 @@
-New Order Created Hello
-{{userDisplayName}}, A new order has been created:
+{{t "order_create.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_create.intro"}}
 
 {{order.title}}
 {{#if order.description}}{{markdown order.description}}{{/if}}
-{{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
-Status:
-{{order.status}}
+{{#if order.cost}}{{t "common.value"}} {{formatCurrency order.cost}} aUEC{{/if}}
+{{t "common.status"}} {{status "order" order.status}}
 
-View Order:
+{{t "common.view_order"}}:
 {{actionUrl}}

@@ -1,15 +1,19 @@
-Review Revision Requested Hello
-{{userDisplayName}}, A revision has been requested for your review on order "{{order.title}}":
+{{t "order_review_revision_requested.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_review_revision_requested.intro" title=order.title}}
 
 {{order.title}}
 
-Your Review: Rating:
-{{review.rating}}/5
+{{t "order_review_revision_requested.your_review"}}
+{{t "common.rating"}} {{review.rating}}/5
 {{#if review.content}}{{plainText review.content}}{{/if}}
 {{#if review.revision_message}}
-  Revision Request:
+
+{{t "order_review_revision_requested.request"}}
 {{plainText review.revision_message}}
 {{/if}}
 
-View Order:
+{{t "common.view_order"}}:
 {{actionUrl}}

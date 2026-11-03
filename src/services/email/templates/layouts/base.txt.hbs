@@ -2,9 +2,9 @@
 {{#if siteUrl}}{{siteUrl}}{{/if}}
 
 {{#if defaultsNotice}}
-{{#if layout}}{{layout.defaultsNotice}}{{else}}We turned on email for order updates, offers and unread messages. Turn off with one click:{{/if}}
+{{t "layout.defaults_notice"}}
 {{defaultsNotice.unsubscribeUrl}}
-{{#if layout}}{{layout.managePreferences}}{{else}}Manage preferences{{/if}}:
+{{t "layout.manage_preferences"}}:
 {{defaultsNotice.preferencesUrl}}
 
 {{/if}}
@@ -15,8 +15,8 @@
 {{#if siteUrl}}{{siteUrl}}{{/if}}
 
 {{#if unsubscribeUrl}}
-{{#if layout}}{{layout.unsubscribe}}{{else}}Unsubscribe{{/if}}:
+{{t "layout.unsubscribe"}}:
 {{unsubscribeUrl}}
 {{/if}}
-{{#if layout}}{{layout.managePreferences}}{{else}}Manage Preferences{{/if}}:
+{{t "layout.manage_preferences"}}:
 {{preferencesUrl}}

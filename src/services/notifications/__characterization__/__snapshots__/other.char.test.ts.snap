@@ -6,19 +6,23 @@ exports[`admin_alert (21) > all_users: everyone not banned except the admin who 
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 3500,
+      "html_length_bucket": 4000,
       "subject": "Admin Alert",
       "text": "SC Market
 https://sc-market.space
 
-Admin Alert Hello
-Alice, You have a new admin alert:
+Admin Alert
+
+Hello Alice,
+
+You have a new admin alert:
 
 Maintenance
 Down at 10:00
 
 View Alert:
 https://sc-market.space/news
+
 
 ---
 SC Market
@@ -135,7 +139,7 @@ exports[`contractor_invite (9) > invitee gets in-app, push and email (owner deci
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Contractor Invitation",
       "text": "SC Market
 https://sc-market.space
@@ -153,6 +157,7 @@ Join us
 
 View Invitation:
 https://sc-market.space/contractor/ACME
+
 
 ---
 SC Market
@@ -233,19 +238,22 @@ exports[`email verification (transactional) > queued, then sent by the consumer 
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Verify Your Email Address - SC Market",
       "text": "SC Market
 https://sc-market.space
 
-Verify Your Email Address Hello
-Newbie, Thank you for adding your email address to your SC Market
-account. Please verify your email address by visiting the link below:
+Verify Your Email Address
+
+Hello Newbie,
+
+Thank you for adding your email address to your SC Market account. Please verify your email address by visiting the link below:
 
 https://sc-market.space/email/verify/<token>
 
-This verification link will expire in 24 hours. If you didn't request this
-email, you can safely ignore it.
+This verification link will expire in 24 hours.
+If you didn't request this email, you can safely ignore it.
+
 
 ---
 SC Market
@@ -342,14 +350,16 @@ Seller: Shop seller-shop
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "Price Alert: Laranite Ore 50 SCU is 4,200 aUEC",
       "text": "SC Market
 https://sc-market.space
 
 Price Alert
 
-Hello Other, a listing on your watchlist hit your target price:
+Hello Other,
+
+A listing on your watchlist hit your target price:
 
 Laranite Ore 50 SCU
 Price: 4,200 aUEC

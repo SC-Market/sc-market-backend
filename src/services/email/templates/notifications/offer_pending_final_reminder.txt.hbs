@@ -1,11 +1,13 @@
 {{offerReminder.title}}
 
-Hello {{userDisplayName}}, {{offerReminder.body}}
+{{t "common.greeting" name=userDisplayName}}
+
+{{offerReminder.body}}
 
 {{#each offerReminder.offers}}
 - {{this.title}} · {{this.counterparty}} · {{this.waited}}: {{this.url}}
 {{/each}}
-{{#if offerReminder.more}}…and {{offerReminder.more}} more{{/if}}
+{{#if offerReminder.more}}{{t "common.and_more" count=offerReminder.more}}{{/if}}
 
-Reply to the Offer:
+{{t "offer_pending_final_reminder.action"}}:
 {{actionUrl}}

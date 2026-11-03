@@ -1,20 +1,20 @@
-<h1 style="color: #e8e8e8;">Order Fulfilled</h1>
+<h1 style="color: #e8e8e8;">{{t "order_status_fulfilled.heading"}}</h1>
 
-<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+<p style="color: #b7b7b7;">{{t "common.greeting" name=userDisplayName}}</p>
 
-<p style="color: #b7b7b7;">Order "{{order.title}}" has been fulfilled.</p>
+<p style="color: #b7b7b7;">{{t "order_status_fulfilled.intro" title=order.title}}</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{order.title}}</h2>
   {{#if order.cost}}
-    <p style="color: #b7b7b7;"><strong>Value:</strong>
+    <p style="color: #b7b7b7;"><strong>{{t "common.value"}}</strong>
       {{formatCurrency order.cost}}
       aUEC</p>
   {{/if}}
 </div>
 
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">View Order</a>
+  <a href="{{actionUrl}}" class="button">{{t "common.view_order"}}</a>
 </p>

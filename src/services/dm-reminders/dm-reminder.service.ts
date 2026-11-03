@@ -31,7 +31,7 @@ import { discordDmDisabled } from "../notify/kill-switch.js"
  * Channels, both through notify() (owner decision 2026-11-02 for email):
  * - email: opt-in (the Personal dm_reminder row), sent on the email queue
  *   like every other notification email, so it is retried, in the user's
- *   language (email-i18n.ts), and re-checked at send time (verified primary
+ *   language (email/i18n), and re-checked at send time (verified primary
  *   address, not bounced, still opted in), with the one-click unsubscribe
  *   link and List-Unsubscribe headers;
  * - Discord DM: on by default for users with Discord linked; the user's

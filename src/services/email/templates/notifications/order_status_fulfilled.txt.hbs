@@ -1,8 +1,11 @@
-Order Fulfilled Hello
-{{userDisplayName}}, Order "{{order.title}}" has been fulfilled.
+{{t "order_status_fulfilled.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_status_fulfilled.intro" title=order.title}}
 
 {{order.title}}
-{{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
+{{#if order.cost}}{{t "common.value"}} {{formatCurrency order.cost}} aUEC{{/if}}
 
-View Order:
+{{t "common.view_order"}}:
 {{actionUrl}}

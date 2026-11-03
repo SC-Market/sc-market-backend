@@ -39,13 +39,18 @@ exports[`counter_offer_create (20) > counter-offer: same recipients as offer_cre
       "text": "SC Market
 https://sc-market.space
 
-Counter Offer Received Hello
-Seller, A counter offer has been created: Offer #session:c1
-Status:
-active
+Counter Offer Received
+
+Hello Seller,
+
+A counter offer has been created:
+
+Offer #session:c1
+Status: Active
 
 View Offer:
 https://sc-market.space/offer/session:c1
+
 
 ---
 SC Market
@@ -251,13 +256,18 @@ exports[`offer_create (19) > offer to a personal shop: the assignee gets in-app,
       "text": "SC Market
 https://sc-market.space
 
-New Offer Created Hello
-Seller, A new offer has been created: Offer #session:o2
-Status:
-active
+New Offer Created
+
+Hello Seller,
+
+A new offer has been created:
+
+Offer #session:o2
+Status: Active
 
 View Offer:
 https://sc-market.space/offer/session:o2
+
 
 ---
 SC Market
@@ -475,18 +485,23 @@ exports[`offer_create (19) > offer to an org shop: managers get in-app, email an
   ],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "New Offer Created",
       "text": "SC Market
 https://sc-market.space
 
-New Offer Created Hello
-Boss, A new offer has been created: Offer #session:o1
-Status:
-active
+New Offer Created
+
+Hello Boss,
+
+A new offer has been created:
+
+Offer #session:o1
+Status: Active
 
 View Offer:
 https://sc-market.space/offer/session:o1
+
 
 ---
 SC Market
@@ -655,21 +670,26 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "New Message on Offer",
       "text": "SC Market
 https://sc-market.space
 
-New Message on Offer Hello
-Customer, A new message has been sent on your offer: Offer #session:m1
+New Message on Offer
 
-Seller
-sent a message:
+Hello Customer,
+
+A new message has been sent on your offer:
+
+Offer #session:m1
+
+Seller sent a message:
 
 hello
 
 View Offer:
 https://sc-market.space/offer/session:m1
+
 
 ---
 SC Market

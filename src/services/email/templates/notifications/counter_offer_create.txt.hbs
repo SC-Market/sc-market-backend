@@ -1,7 +1,11 @@
-Counter Offer Received Hello
-{{userDisplayName}}, A counter offer has been created: Offer #{{offer.id}}
-Status:
-{{offer.status}}
+{{t "counter_offer_create.heading"}}
 
-View Offer:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "counter_offer_create.intro"}}
+
+{{t "common.offer_number" id=offer.id}}
+{{t "common.status"}} {{status "offer" offer.status}}
+
+{{t "common.view_offer"}}:
 {{actionUrl}}

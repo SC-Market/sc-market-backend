@@ -1,9 +1,13 @@
-Storefront Enquiry Declined
+{{t "storefront_enquiry_declined.heading"}}
 
-Hello {{userDisplayName}}, SC Market staff declined your branded storefront enquiry:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "storefront_enquiry_declined.intro"}}
 
 {{enquiry.target_name}}
-Subdomain: {{enquiry.subdomain}}
+{{t "common.subdomain"}} {{enquiry.subdomain}}
 
-You can send a new enquiry from your storefront settings:
+{{t "storefront_enquiry_declined.retry"}}
+
+{{t "storefront_enquiry_declined.action"}}:
 {{actionUrl}}

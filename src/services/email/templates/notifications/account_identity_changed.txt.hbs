@@ -1,12 +1,12 @@
-{{t.title}}
+{{notificationTitle}}
 
-{{t.greeting}}
+{{t "common.greeting" name=userDisplayName}}
 
-{{t.body}}
-{{#if t.action}}
+{{identity.body}}
+{{#if identity.hasAction}}
 
-{{t.action}}:
+{{t "account_identity_changed.action"}}:
 {{actionUrl}}
 {{/if}}
 
-{{t.securityNote}}
+{{t "account_identity_changed.security_note"}}

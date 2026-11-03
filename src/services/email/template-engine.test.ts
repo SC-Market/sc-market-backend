@@ -142,7 +142,7 @@ it("never interpolates user text without the markdown / plainText helper", () =>
     .filter((f) =>
       bare.test(readFileSync(path.join(notificationsDir, f), "utf-8")),
     )
-  expect(templates.length).toBe(16)
+  expect(templates.length).toBe(14)
   expect(offenders).toEqual([])
 })
 

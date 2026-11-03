@@ -1,8 +1,13 @@
-Order Cancelled Hello
-{{userDisplayName}}, Order "{{order.title}}" has been cancelled.
+{{t "order_status_cancelled.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "order_status_cancelled.intro" title=order.title}}
 
 {{order.title}}
 {{#if order.description}}{{markdown order.description}}{{/if}}
-{{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
-Status: Cancelled View Order:
+{{#if order.cost}}{{t "common.value"}} {{formatCurrency order.cost}} aUEC{{/if}}
+{{t "common.status"}} {{status "order" order.status}}
+
+{{t "common.view_order"}}:
 {{actionUrl}}

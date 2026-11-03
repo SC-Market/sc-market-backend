@@ -1,10 +1,14 @@
-New Message on Offer Hello
-{{userDisplayName}}, A new message has been sent on your offer: Offer #{{offer.id}}
+{{t "offer_message.heading"}}
 
-{{message.author}}
-sent a message:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "offer_message.intro"}}
+
+{{t "common.offer_number" id=offer.id}}
+
+{{t "offer_message.sent" author=message.author}}
 
 {{markdown message.content}}
 
-View Offer:
+{{t "common.view_offer"}}:
 {{actionUrl}}

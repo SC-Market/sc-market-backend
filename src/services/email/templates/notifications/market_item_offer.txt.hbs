@@ -1,10 +1,13 @@
-New Offer on Market Listing Hello
-{{userDisplayName}}, Someone made an offer on your market listing:
+{{t "market_item_offer.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "market_item_offer.intro"}}
 
 {{listing.title}}
 {{#if listing.description}}{{markdown listing.description}}{{/if}}
 
-Offer Amount:
-{{formatCurrency offer.offer}}
-aUEC View Listing:
+{{t "market_item_offer.amount"}} {{formatCurrency offer.offer}} aUEC
+
+{{t "common.view_listing"}}:
 {{actionUrl}}

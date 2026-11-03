@@ -1,8 +1,8 @@
-Contractor Invitation
+{{t "contractor_invite.heading"}}
 
-Hello {{userDisplayName}},
+{{t "common.greeting" name=userDisplayName}}
 
-You have been invited to join a contractor organization.
+{{t "contractor_invite.intro"}}
 
 {{contractor.name}}
 {{#if contractor.description}}
@@ -11,9 +11,9 @@ You have been invited to join a contractor organization.
 {{/if}}
 {{#if invite.message}}
 
-Message:
+{{t "common.message"}}
 {{plainText invite.message}}
 {{/if}}
 
-View Invitation:
+{{t "contractor_invite.action"}}:
 {{actionUrl}}

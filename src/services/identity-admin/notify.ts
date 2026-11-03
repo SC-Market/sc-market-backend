@@ -1,7 +1,7 @@
 /**
  * Tell a user an admin changed their account's identity (event
  * account.identity_changed: mandatory "account" category, in-app + push, and
- * a mandatory security email in the user's language, email-i18n.ts).
+ * a mandatory security email in the user's language, email/i18n).
  * The in-app row points at the audit_logs row; what the user sees is built
  * by identityNoticeEntity() (notice-entity.ts) and never includes the admin's reason.
  *

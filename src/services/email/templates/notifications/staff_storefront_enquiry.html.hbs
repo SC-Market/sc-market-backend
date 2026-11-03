@@ -1,22 +1,21 @@
-<h1 style="color: #e8e8e8;">New storefront enquiry</h1>
+<h1 style="color: #e8e8e8;">{{t "staff_storefront_enquiry.heading"}}</h1>
 
-<p style="color: #b7b7b7;">{{enquiry.requester}} asked SC Market staff for a
-  branded storefront.</p>
+<p style="color: #b7b7b7;">{{t "staff_storefront_enquiry.intro" requester=enquiry.requester}}</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{enquiry.target_name}}</h2>
-  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>{{enquiry.target_label}}:</strong> {{enquiry.target_handle}}</p>
-  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>Requested by:</strong> {{enquiry.requester}}</p>
-  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>Subdomain:</strong> {{enquiry.subdomain}}</p>
-  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>Contact:</strong> {{enquiry.contact}}</p>
+  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>{{enquiry.target_label}}</strong> {{enquiry.target_handle}}</p>
+  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>{{t "staff_storefront_enquiry.requested_by"}}</strong> {{enquiry.requester}}</p>
+  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>{{t "common.subdomain"}}</strong> {{enquiry.subdomain}}</p>
+  <p style="color: #b7b7b7; margin: 0 0 6px 0;"><strong>{{t "staff_storefront_enquiry.contact"}}</strong> {{enquiry.contact}}</p>
   {{#if enquiry.message}}
-    <p style="color: #b7b7b7; margin: 16px 0 6px 0;"><strong>Message:</strong></p>
+    <p style="color: #b7b7b7; margin: 16px 0 6px 0;"><strong>{{t "common.message"}}</strong></p>
     {{plainText enquiry.message}}
   {{/if}}
 </div>
 
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">Open in Admin</a>
+  <a href="{{actionUrl}}" class="button">{{t "staff_storefront_enquiry.action"}}</a>
 </p>

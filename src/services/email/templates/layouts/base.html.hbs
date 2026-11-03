@@ -1,4 +1,4 @@
-<html lang="{{locale}}">
+<html lang="{{lang}}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,12 @@
           "Segoe UI",
           Helvetica,
           Arial,
+          "Hiragino Sans",
+          "PingFang SC",
+          "PingFang TC",
+          "Microsoft YaHei",
+          "Microsoft JhengHei",
+          "Noto Sans CJK JP",
           sans-serif;
         line-height: 1.6;
         color: #b7b7b7;
@@ -47,6 +53,7 @@
       .email-body {
         padding: 40px 30px;
         color: #b7b7b7;
+        overflow-wrap: break-word;
       }
       .email-body h1,
       .email-body h2,
@@ -63,6 +70,8 @@
       }
       .button {
         display: inline-block;
+        max-width: 100%;
+        box-sizing: border-box;
         padding: 12px 24px;
         background-color: #10b881;
         color: #ffffff !important;
@@ -95,6 +104,9 @@
     </style>
   </head>
   <body>
+    {{#if preheader}}
+    <div style="display: none; max-height: 0; overflow: hidden; mso-hide: all; font-size: 1px; line-height: 1px; color: #0b0f1a; opacity: 0;">{{preheader}}</div>
+    {{/if}}
     <div class="email-container">
       <div class="email-header">
         {{#if logoUrl}}
@@ -104,11 +116,10 @@
       </div>
       {{#if defaultsNotice}}
       <div style="background-color: #1f2a30; border-left: 4px solid #10b981; padding: 14px 20px; color: #e0e0e0; font-size: 14px;">
-        {{#if layout}}{{layout.defaultsNotice}}{{else}}We turned on email for order updates, offers and unread messages.
-        Turn off with one click:{{/if}}
-        <a href="{{defaultsNotice.unsubscribeUrl}}" style="color: #10b981;">{{#if layout}}{{layout.turnOff}}{{else}}Turn these emails off{{/if}}</a>
+        {{t "layout.defaults_notice"}}
+        <a href="{{defaultsNotice.unsubscribeUrl}}" style="color: #10b981;">{{t "layout.turn_off"}}</a>
         |
-        <a href="{{defaultsNotice.preferencesUrl}}" style="color: #10b981;">{{#if layout}}{{layout.managePreferences}}{{else}}Manage preferences{{/if}}</a>
+        <a href="{{defaultsNotice.preferencesUrl}}" style="color: #10b981;">{{t "layout.manage_preferences"}}</a>
       </div>
       {{/if}}
       <div class="email-body">
@@ -120,11 +131,10 @@
         </p>
         <p style="margin: 0;">
           {{#if unsubscribeUrl}}
-          <a href="{{unsubscribeUrl}}" class="unsubscribe-link">{{#if layout}}{{layout.unsubscribe}}{{else}}Unsubscribe{{/if}}</a>
+          <a href="{{unsubscribeUrl}}" class="unsubscribe-link">{{t "layout.unsubscribe"}}</a>
           |
           {{/if}}
-          <a href="{{preferencesUrl}}" class="unsubscribe-link">{{#if layout}}{{layout.managePreferences}}{{else}}Manage
-            Preferences{{/if}}</a>
+          <a href="{{preferencesUrl}}" class="unsubscribe-link">{{t "layout.manage_preferences"}}</a>
         </p>
       </div>
     </div>

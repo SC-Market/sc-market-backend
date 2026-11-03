@@ -14,6 +14,14 @@ import {
   type EmailMarkdownResult,
 } from "./email-markdown.js"
 import logger from "../../logger/logger.js"
+import {
+  emailLocale,
+  formatNumber,
+  languageTag,
+  statusLabel,
+  translate,
+  translateHtml,
+} from "./i18n/index.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -85,12 +93,13 @@ function registerHelpers(hb: typeof Handlebars): void {
     })
   })
 
-  // Format currency helper (for aUEC)
-  hb.registerHelper("formatCurrency", (amount: number | string) => {
-    if (amount === null || amount === undefined) return "0"
-    const num = typeof amount === "string" ? parseFloat(amount) : amount
-    return num.toLocaleString("en-US")
-  })
+  // A number as the email's locale writes it (aUEC amounts).
+  hb.registerHelper(
+    "formatCurrency",
+    function (amount: number | string, options: Handlebars.HelperOptions) {
+      return formatNumber(rootLocale(options), amount)
+    },
+  )
 
   // Numeric comparison, for subexpressions such as {{#if (gt count 1)}}
   // (dm-reminder pluralises with it).
@@ -126,10 +135,58 @@ function registerHelpers(hb: typeof Handlebars): void {
   )
 }
 
+/** The email's language: the template data's `locale`. */
+function rootLocale(options: Handlebars.HelperOptions | undefined) {
+  return emailLocale(
+    (options?.data?.root as { locale?: string } | undefined)?.locale,
+  )
+}
+
+/**
+ * `{{t "key" name=value}}`: the catalog string (i18n/index.ts) in the
+ * email's language. HTML: values escaped, `<b>` / `<link>` turned into
+ * markup; text: plain.
+ * `{{status "order" order.status}}`: a status as the site names it.
+ * `{{lang}}`: the <html lang> tag.
+ */
+function registerTranslationHelpers(
+  hb: typeof Handlebars,
+  type: "html" | "txt",
+): void {
+  hb.registerHelper(
+    "t",
+    function (key: string, options: Handlebars.HelperOptions) {
+      const locale = rootLocale(options)
+      const vars = options.hash ?? {}
+      return type === "html"
+        ? new Handlebars.SafeString(
+            translateHtml(locale, key, vars, (v) =>
+              Handlebars.escapeExpression(v as string),
+            ),
+          )
+        : translate(locale, key, vars)
+    },
+  )
+  hb.registerHelper(
+    "status",
+    function (
+      kind: "order" | "offer",
+      value: unknown,
+      options: Handlebars.HelperOptions,
+    ) {
+      return statusLabel(rootLocale(options), kind, value)
+    },
+  )
+  hb.registerHelper("lang", function (options: Handlebars.HelperOptions) {
+    return languageTag(rootLocale(options))
+  })
+}
+
 // Register helpers on first import
 for (const type of ["html", "txt"] as const) {
   const env = environments[type]
   registerHelpers(env)
+  registerTranslationHelpers(env, type)
   env.registerHelper("markdown", userTextHelper(renderEmailMarkdown, type))
   env.registerHelper("plainText", userTextHelper(renderEmailPlainText, type))
 }

@@ -1,8 +1,11 @@
-Admin Alert Hello
-{{userDisplayName}}, You have a new admin alert:
+{{t "admin_alert.heading"}}
+
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "admin_alert.intro"}}
 
 {{alert.title}}
 {{#if alert.content}}{{markdown alert.content}}{{/if}}
 
-View Alert:
+{{t "admin_alert.action"}}:
 {{actionUrl}}

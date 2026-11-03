@@ -1,7 +1,11 @@
-New Offer Created Hello
-{{userDisplayName}}, A new offer has been created: Offer #{{offer.id}}
-Status:
-{{offer.status}}
+{{t "offer_create.heading"}}
 
-View Offer:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "offer_create.intro"}}
+
+{{t "common.offer_number" id=offer.id}}
+{{t "common.status"}} {{status "offer" offer.status}}
+
+{{t "common.view_offer"}}:
 {{actionUrl}}

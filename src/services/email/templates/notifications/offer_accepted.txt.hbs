@@ -1,7 +1,11 @@
-Offer Accepted Hello
-{{userDisplayName}}, Your offer was accepted: Offer #{{offer.id}}
-Status:
-{{offer.status}}
+{{t "offer_accepted.heading"}}
 
-View Offer:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "offer_accepted.intro"}}
+
+{{t "common.offer_number" id=offer.id}}
+{{t "common.status"}} {{status "offer" offer.status}}
+
+{{t "common.view_offer"}}:
 {{actionUrl}}

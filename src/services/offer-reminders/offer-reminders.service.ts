@@ -271,8 +271,12 @@ function plain(s: string, max = 80): string {
   return s.replace(/[[\]()*_`~|>#]/g, "").replace(/\s+/g, " ").trim().slice(0, max) || "Offer"
 }
 
+function waitedHours(offerAt: Date, now: Date): number {
+  return Math.max(0, Math.floor((now.getTime() - offerAt.getTime()) / 3_600_000))
+}
+
 function waited(offerAt: Date, now: Date): string {
-  const hours = Math.max(0, Math.floor((now.getTime() - offerAt.getTime()) / 3_600_000))
+  const hours = waitedHours(offerAt, now)
   const days = Math.floor(hours / 24)
   return days >= 1 ? `${days} day${days === 1 ? "" : "s"}` : `${hours} hour${hours === 1 ? "" : "s"}`
 }
@@ -358,15 +362,16 @@ export function reminderMessages(d: Digest, now = new Date()): RenderedMessages 
     },
     email: {
       data: {
+        // Facts only: the email is worded in the recipient's language
+        // (email-payload-formatters formatOfferReminderEmailData).
         offerReminder: {
           stage: d.stage,
-          title: titleFor(d),
-          body: bodyFor(d, now),
+          count: d.offers.length,
           offers: d.offers.slice(0, MAX_LISTED).map((o) => ({
             session_id: o.session_id,
             title: o.title,
             counterparty: d.stage === "buyer" ? o.seller_name : o.customer_name,
-            waited: waited(o.offer_at, now),
+            waited_hours: waitedHours(o.offer_at, now),
             url: offerUrl(o.session_id),
           })),
           more: Math.max(0, d.offers.length - MAX_LISTED),

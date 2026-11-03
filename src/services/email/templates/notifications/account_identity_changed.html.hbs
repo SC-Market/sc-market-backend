@@ -1,13 +1,13 @@
-<h1 style="color: #e8e8e8;">{{t.title}}</h1>
+<h1 style="color: #e8e8e8;">{{notificationTitle}}</h1>
 
-<p style="color: #b7b7b7;">{{t.greeting}}</p>
+<p style="color: #b7b7b7;">{{t "common.greeting" name=userDisplayName}}</p>
 
-<p style="color: #b7b7b7;">{{t.body}}</p>
+<p style="color: #b7b7b7;">{{identity.body}}</p>
 
-{{#if t.action}}
+{{#if identity.hasAction}}
 <p style="text-align: center;">
-  <a href="{{actionUrl}}" class="button">{{t.action}}</a>
+  <a href="{{actionUrl}}" class="button">{{t "account_identity_changed.action"}}</a>
 </p>
 {{/if}}
 
-<p style="color: #8a8a8a; font-size: 13px;">{{t.securityNote}}</p>
+<p style="color: #8a8a8a; font-size: 13px;">{{t "account_identity_changed.security_note"}}</p>

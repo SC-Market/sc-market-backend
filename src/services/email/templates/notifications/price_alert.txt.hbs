@@ -1,12 +1,14 @@
-Price Alert
+{{t "price_alert.heading"}}
 
-Hello {{userDisplayName}}, a listing on your watchlist hit your target price:
+{{t "common.greeting" name=userDisplayName}}
+
+{{t "price_alert.intro"}}
 
 {{listing.title}}
-Price: {{formatCurrency listing.price}} aUEC
-Your target: {{formatCurrency watch.max_price}} aUEC ({{watch.query}})
-Quantity: {{listing.quantity}}
-{{#if listing.seller_name}}Seller: {{listing.seller_name}}{{/if}}
+{{t "price_alert.price"}} {{formatCurrency listing.price}} aUEC
+{{t "price_alert.target"}} {{formatCurrency watch.max_price}} aUEC ({{watch.query}})
+{{t "price_alert.quantity"}} {{formatCurrency listing.quantity}}
+{{#if listing.seller_name}}{{t "price_alert.seller"}} {{listing.seller_name}}{{/if}}
 
-View Listing:
+{{t "common.view_listing"}}:
 {{actionUrl}}
