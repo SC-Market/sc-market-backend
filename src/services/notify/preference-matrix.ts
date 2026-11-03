@@ -16,13 +16,20 @@ import { CATALOG, CATEGORIES, isMandatoryOn, type CategoryId, type EventDefiniti
 import type { UserChannel } from "./channels.js"
 import { actionTypeId, recipientKey, resolvePreferences } from "./preferences.js"
 
-/** Channels a user can switch for an event (in-app is always on except for price alerts, as today). */
+/**
+ * Events whose bell entry can be turned off: the watchlist alerts (price
+ * alerts, as before, and buy-order matches). Every other in-app notification
+ * is always on.
+ */
+const SWITCHABLE_IN_APP: ReadonlySet<EventKey> = new Set<EventKey>(["watchlist.price_alert", "buy_order.match"])
+
+/** Channels a user can switch for an event (in-app only for SWITCHABLE_IN_APP). */
 export function editableChannels(event: EventKey): UserChannel[] {
   const def: EventDefinition = CATALOG[event]
   return def.channels.filter(
     (c) =>
       !isMandatoryOn(def, c) &&
-      (c !== "in_app" || event === "watchlist.price_alert") &&
+      (c !== "in_app" || SWITCHABLE_IN_APP.has(event)) &&
       !(c === "discord_dm" && def.discordDmLocked),
   )
 }

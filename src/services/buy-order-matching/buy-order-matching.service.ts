@@ -19,8 +19,9 @@ interface ListingMatchInfo {
 /**
  * Check active buy orders that match a newly created listing.
  * Notifies buyers when a listing matches their buy order criteria, through
- * notify() (event buy_order.match): push on by default, Discord DM if the
- * buyer turned it on, both switchable in Settings -> Notifications.
+ * notify() (event buy_order.match): a bell entry and push on by default,
+ * Discord DM if the buyer turned it on, all switchable in Settings ->
+ * Notifications.
  *
  * The buyer is a stranger to the seller, so only publicly listed listings
  * (active + public: the anonymous market-grid rule) may alert. An org-internal
@@ -116,9 +117,10 @@ export async function checkBuyOrderMatches(listing: ListingMatchInfo): Promise<v
       }
 
       // Personal preferences; notify() never throws for a failed delivery.
-      // One alert per buy order and listing, however often this runs.
+      // One alert per buy order and listing, however often this runs. The
+      // bell entry points at the listing (as a price alert's does).
       notify("buy_order.match", [{ userId: match.buyer_id, contractorId: null }], {
-        entityId: match.buy_order_id,
+        entityId: publiclyListed.listing_id,
         dedupeKey: `${match.buy_order_id}:${publiclyListed.listing_id}`,
         messages: { push: notification },
       }).catch((err) => {

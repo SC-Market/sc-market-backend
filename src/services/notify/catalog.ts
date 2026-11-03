@@ -150,8 +150,10 @@ export const CATALOG = {
   // A new public listing matches one of your buy orders
   // (services/buy-order-matching). Personal, next to price alerts. It was a
   // push only, with no setting; push stays on by default, Discord DM is
-  // available and off (owner decision: DM on every event group).
-  "buy_order.match": event("watchlist", "buy_order_match", ["push", "discord_dm"]),
+  // available and off (owner decision: DM on every event group). Owner
+  // decision (2026-11-02): a bell entry too, on by default and switchable
+  // like a price alert's; it points at the listing.
+  "buy_order.match": event("watchlist", "buy_order_match", ["in_app", "push", "discord_dm"]),
   // Opt-in: only users subscribed in contract_alert_subscriptions are recipients.
   "contract.public_created": event("contracts", "public_contract_create", NO_EMAIL),
   // Someone made an offer on your public contract (was order_contractor_applied).

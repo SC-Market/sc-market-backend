@@ -69,7 +69,8 @@ describe("buy-order match alerts", () => {
     const [event, recipients, opts] = h.send.mock.calls[0]
     expect(event).toBe("buy_order.match")
     expect(recipients).toEqual([{ userId: "buyer", contractorId: null }])
-    expect(opts.entityId).toBe("bo-1")
+    // The bell entry points at the listing; one alert per buy order and listing.
+    expect(opts.entityId).toBe(LISTING_ID)
     expect(opts.dedupeKey).toBe(`bo-1:${LISTING_ID}`)
     expect(opts.messages.push.data.url).toMatch(/\/market\/abcdef12--pembroke-helmet$/)
   })
@@ -82,8 +83,17 @@ describe("buy-order match alerts", () => {
     const { CATALOG } = await import("../notify/catalog.js")
     const def = CATALOG["buy_order.match"]
     expect(def.legacyAction).toBe("buy_order_match")
-    expect(def.channels).toEqual(["push", "discord_dm"])
-    expect(def.defaults).toEqual({ push: true, discord_dm: false })
+    expect(def.channels).toEqual(["in_app", "push", "discord_dm"])
+    expect(def.defaults).toEqual({ in_app: true, push: true, discord_dm: false })
+  })
+
+  // Owner decision (2026-11-02): a bell entry, on by default and switchable
+  // like a price alert's (every other in-app notification is always on).
+  it("the bell entry can be turned off in Settings -> Notifications", async () => {
+    const { editableChannels } = await import("../notify/preference-matrix.js")
+    expect(editableChannels("buy_order.match")).toEqual(["in_app", "push", "discord_dm"])
+    expect(editableChannels("watchlist.price_alert")).toContain("in_app")
+    expect(editableChannels("order.created")).not.toContain("in_app")
   })
 
   it("one alert per buyer for a listing, even with several matching buy orders", async () => {
