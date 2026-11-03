@@ -8,6 +8,7 @@
 import { Controller, Post, Get, Put, Delete, Route, Tags, Body, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { shopSeller } from "../../../../services/shops/shop-seller.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
   DiscordChannelRef,
@@ -722,9 +723,10 @@ export class ShopsV2Controller extends BaseController {
 
     // Resolve owner info
     let owner: ShopOwnerInfo
-    if (shop.owner_contractor_id) {
+    const seller = shopSeller(shop)
+    if (seller.type === "contractor") {
       const contractor = await db("contractors")
-        .where("contractor_id", shop.owner_contractor_id)
+        .where("contractor_id", seller.id)
         .first("name", "spectrum_id", "avatar")
       owner = {
         type: "contractor",
@@ -734,7 +736,7 @@ export class ShopsV2Controller extends BaseController {
       }
     } else {
       const user = await db("accounts")
-        .where("user_id", shop.owner_user_id)
+        .where("user_id", seller.id)
         .first("display_name", "username", "avatar")
       owner = {
         type: "user",
@@ -1618,9 +1620,10 @@ async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_ord
 
   // Resolve contractor spectrum_id for V1 API compatibility
   let ownerContractorSpectrumId: string | null = null
-  if (shop.owner_contractor_id) {
+  const seller = shopSeller(shop)
+  if (seller.type === "contractor") {
     const contractor = await db("contractors")
-      .where("contractor_id", shop.owner_contractor_id)
+      .where("contractor_id", seller.id)
       .first("spectrum_id")
     ownerContractorSpectrumId = contractor?.spectrum_id || null
   }

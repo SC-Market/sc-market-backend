@@ -38,6 +38,7 @@ import { is_member, has_permission } from "../util/permissions.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { OfferMergeError } from "./errors.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { shopSeller } from "../../../../services/shops/shop-seller.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getShopV2StockPolicy } from "../../../../services/allocation/stock-timing.service.js"
 import {
@@ -474,12 +475,13 @@ export const get_search: RequestHandler = async (req, res) => {
       res.status(404).json(createErrorResponse("Shop not found."))
       return
     }
-    if (shop.owner_contractor_id) {
-      if (!(await is_member(shop.owner_contractor_id, user.user_id))) {
+    const seller = shopSeller(shop)
+    if (seller.type === "contractor") {
+      if (!(await is_member(seller.id, user.user_id))) {
         res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
         return
       }
-    } else if (shop.owner_user_id !== user.user_id && !isSiteAdmin(user)) {
+    } else if (seller.id !== user.user_id && !isSiteAdmin(user)) {
       res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }

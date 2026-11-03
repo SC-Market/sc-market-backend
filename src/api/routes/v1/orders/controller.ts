@@ -30,6 +30,7 @@ import logger from "../../../../logger/logger.js"
 import { serializeOrderDetails } from "./serializers.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { shopSeller } from "../../../../services/shops/shop-seller.js"
 import { isBlockedFromShop } from "../../../../services/shops/shop-permissions.service.js"
 
 export const search_orders: RequestHandler = async (req, res) => {
@@ -58,12 +59,13 @@ export const search_orders: RequestHandler = async (req, res) => {
       res.status(404).json(createErrorResponse("Shop not found."))
       return
     }
-    if (shop.owner_contractor_id) {
-      if (!(await is_member(shop.owner_contractor_id, user.user_id))) {
+    const seller = shopSeller(shop)
+    if (seller.type === "contractor") {
+      if (!(await is_member(seller.id, user.user_id))) {
         res.status(400).json(createErrorResponse("Missing permissions."))
         return
       }
-    } else if (shop.owner_user_id !== user.user_id && !isSiteAdmin(user)) {
+    } else if (seller.id !== user.user_id && !isSiteAdmin(user)) {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
     }

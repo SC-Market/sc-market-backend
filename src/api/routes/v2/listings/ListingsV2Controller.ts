@@ -10,6 +10,7 @@
 import { Controller, Delete, Post, Get, Put, Route, Tags, Body, Request, Query, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { shopSeller } from "../../../../services/shops/shop-seller.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import { matchGameItemsByName } from "../../../../services/market-v2/game-item-match.service.js"
@@ -144,15 +145,7 @@ export class ListingsV2Controller extends BaseController {
       }
 
       const shopId = shop.shop_id
-      let sellerId: string
-      let sellerType: "user" | "contractor"
-      if (shop.owner_contractor_id) {
-        sellerId = shop.owner_contractor_id
-        sellerType = "contractor"
-      } else {
-        sellerId = shop.owner_user_id!
-        sellerType = "user"
-      }
+      const { id: sellerId, type: sellerType } = shopSeller(shop)
 
       // Use database transaction for atomicity (Requirement 14.7)
       const result = await withTransaction(async (trx) => {
@@ -2338,8 +2331,7 @@ export class ListingsV2Controller extends BaseController {
       this.throwForbidden("You do not have permission to create listings in this shop")
     }
 
-    const sellerId = shop.owner_contractor_id || shop.owner_user_id!
-    const sellerType: "user" | "contractor" = shop.owner_contractor_id ? "contractor" : "user"
+    const { id: sellerId, type: sellerType } = shopSeller(shop)
     const shopId = shop.shop_id
 
     // If no listings provided, fetch from UEX and return preview
