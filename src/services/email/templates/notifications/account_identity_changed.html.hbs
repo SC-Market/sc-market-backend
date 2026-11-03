@@ -1,0 +1,13 @@
+<h1 style="color: #e8e8e8;">{{t.title}}</h1>
+
+<p style="color: #b7b7b7;">{{t.greeting}}</p>
+
+<p style="color: #b7b7b7;">{{t.body}}</p>
+
+{{#if t.action}}
+<p style="text-align: center;">
+  <a href="{{actionUrl}}" class="button">{{t.action}}</a>
+</p>
+{{/if}}
+
+<p style="color: #8a8a8a; font-size: 13px;">{{t.securityNote}}</p>

@@ -695,6 +695,34 @@ class SESEmailService implements EmailService {
           )
           break
 
+        case "account_identity_changed":
+          if (!data.identity) {
+            logger.warn(
+              `Missing identity data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatIdentityChangedEmailData(
+            data.identity as payloadFormatters.IdentityChangedEmailData,
+            userId,
+          )
+          break
+
+        case "dm_reminder":
+          if (!data.reminder) {
+            logger.warn(
+              `Missing reminder data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return false
+          }
+          templateData = await payloadFormatters.formatUnreadReminderEmailData(
+            data.reminder as payloadFormatters.UnreadReminderEmailData,
+            userId,
+          )
+          break
+
         default:
           logger.warn(
             `Unknown notification type for email: ${notificationType}`,

@@ -161,6 +161,8 @@ describe("dm_reminder (82): unread order/offer message reminder", () => {
     await db("notification_object").update({ timestamp: back("timestamp") })
   }
 
+  // The email goes through notify() and the email queue (owner decision
+  // 2026-11-02): the subject is the translated one (email-i18n.ts).
   it("unread for 6 h and less than a day old: email (opted in) and Discord DM (default on)", async () => {
     const author = await w.user("author")
     const emailOnly = await w.user("emailonly", { discord: false })
@@ -185,7 +187,7 @@ describe("dm_reminder (82): unread order/offer message reminder", () => {
       {
         "dms": 1,
         "emails": [
-          "emailonly@example.test You have unread messages in 1 conversation on SC Market",
+          "emailonly@example.test You have an unread message on SC Market",
         ],
         "errors": [],
         "stats": {

@@ -3,14 +3,17 @@
  * end-to-end behaviour against Postgres (dedupe, quiet when read, cutover,
  * failures) is in services/notifications/__characterization__/other.char.test.ts.
  */
-import { describe, expect, it, vi } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import knexFactory from "knex"
+import { MockClient, createTracker } from "knex-mock-client"
 
-vi.mock("../../clients/database/knex-db.js", () => ({ getKnex: vi.fn() }))
-vi.mock("../email/email.service.js", () => ({ emailService: { sendEmail: vi.fn() } }))
-vi.mock("../email/template-engine.js", () => ({ renderEmailTemplate: vi.fn() }))
+const h = vi.hoisted(() => ({ db: null as unknown }))
+vi.mock("../../clients/database/knex-db.js", async () =>
+  (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(() => h.db),
+)
 vi.mock("../notify/dispatcher.js", () => ({ notify: vi.fn() }))
 
+import { notify } from "../notify/dispatcher.js"
 import {
   MAX_MESSAGE_AGE_HOURS,
   REMINDER_CUTOVER,
@@ -18,6 +21,7 @@ import {
   UNREAD_THRESHOLD_HOURS,
   buildDigests,
   candidatesQuery,
+  processDmReminders,
   reminderDm,
   type ReminderCandidate,
 } from "./dm-reminder.service.js"
@@ -98,5 +102,65 @@ describe("candidatesQuery", () => {
     expect(sql).toContain('"a"."deleted_at" is null')
     expect(sql).toContain('from "account_providers" as "ap"')
     expect(sql).toContain('from "email_notification_preferences" as "enp"')
+  })
+})
+
+// Owner decision (2026-11-02): the email goes through notify() onto the email
+// queue (translated, retried, re-checked at send time: services/email,
+// translated-emails.test.ts), like every other notification email.
+describe("processDmReminders", () => {
+  function setup() {
+    const db = knexFactory({ client: MockClient, dialect: "pg" })
+    const tracker = createTracker(db)
+    tracker.on.select(/from "notification" as "n"/).response([c("u1", "o1"), c("u1", "s1", "offer_message"), c("u2", "o2")])
+    tracker.on.select(/from "orders"/).response([{ order_id: "o1", title: "Laranite" }])
+    tracker.on.select(/from "offers"/).response([])
+    tracker.on.insert(/dm_reminder_log|dm_reminder_conversations/).response([])
+    h.db = db
+    vi.mocked(notify).mockReset()
+    vi.mocked(notify).mockImplementation(async (_e, recipients) => ({
+      planned: [],
+      delivered: [
+        { userId: recipients[0].userId, contractorId: null, channel: "email" },
+        { userId: recipients[0].userId, contractorId: null, channel: "discord_dm" },
+      ],
+      failed: [],
+      duplicate: [],
+    }))
+    return tracker
+  }
+
+  afterEach(() => {
+    delete process.env.DISCORD_DM_DISABLED_EVENTS
+  })
+
+  it("one notify() per user: email (for the queue) and Discord DM, Personal scope", async () => {
+    const tracker = setup()
+    const stats = await processDmReminders()
+    expect(notify).toHaveBeenCalledTimes(2)
+    const [event, recipients, opts] = vi.mocked(notify).mock.calls[0]
+    expect(event).toBe("reminder.unread_messages")
+    expect(recipients).toEqual([{ userId: "u1", contractorId: null }])
+    expect(opts.channels).toEqual(["email", "discord_dm"])
+    const messages = opts.messages as { email: unknown; discord_dm: { embeds: { title: string }[] } }
+    expect(messages.email).toEqual({
+      data: { reminder: { conversations: 2, url: "https://sc-market.space/messaging" } },
+    })
+    expect(messages.discord_dm.embeds[0].title).toBe("You have unread messages in 2 conversations on SC Market")
+    // A single conversation: the button opens it.
+    const second = vi.mocked(notify).mock.calls[1][2].messages as { email: unknown }
+    expect(second.email).toEqual({
+      data: { reminder: { conversations: 1, url: "https://sc-market.space/contract/o2" } },
+    })
+    expect(stats).toMatchObject({ users: 2, email_sent: 2, discord_sent: 2, errors: 0 })
+    // Recorded before sending (no retry spam), as before.
+    expect(tracker.history.insert.length).toBe(4)
+  })
+
+  it("the Discord DM kill switch leaves the email", async () => {
+    setup()
+    process.env.DISCORD_DM_DISABLED_EVENTS = "reminder.unread_messages"
+    await processDmReminders()
+    expect(vi.mocked(notify).mock.calls.map((call) => call[2].channels)).toEqual([["email"], ["email"]])
   })
 })

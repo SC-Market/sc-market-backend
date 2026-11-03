@@ -35,7 +35,10 @@ export const CATEGORIES = {
   // Replies to a branded storefront enquiry you sent (services/storefront).
   // Personal: it goes to the person who sent it, whatever org or shop it was for.
   storefront: { orgScoped: false, mandatory: false, emailMandatory: false },
-  account: { orgScoped: false, mandatory: true, emailMandatory: false },
+  // Security notices about your own account. Owner decision (2026-11-02):
+  // their email is a mandatory security email, sent past opt-outs and
+  // unsubscribes (no unsubscribe link).
+  account: { orgScoped: false, mandatory: true, emailMandatory: true },
 } as const
 export type CategoryId = keyof typeof CATEGORIES
 
@@ -154,8 +157,9 @@ export const CATALOG = {
   // Someone made an offer on your public contract (was order_contractor_applied).
   "contract.offer_received": event("contracts", "contract_offer_received", ALL),
   // An admin changed your account's identity (services/identity-admin).
-  // Mandatory (account category); in-app and push only, no email template yet.
-  "account.identity_changed": event("account", "account_identity_changed", ["in_app", "push"]),
+  // Mandatory (account category): in-app, push and, as a security email
+  // (emailMandatory), email in the user's language.
+  "account.identity_changed": event("account", "account_identity_changed", ["in_app", "push", "email"]),
   // To site admins: an org or shop asked for a branded storefront
   // (services/storefront/enquiries.ts). In-app only; the account category
   // makes it mandatory and keeps it out of the settings matrix.
@@ -205,7 +209,8 @@ export function isMandatory(def: EventDefinition): boolean {
  * Whether this channel of the event ignores the user's preferences. Email is
  * forced only for categories marked emailMandatory: owner decision
  * (2026-11-01), only legal, security and dispute emails may ignore the
- * user's email opt-outs and unsubscribes. No category sends one today.
+ * user's email opt-outs and unsubscribes. Today: the account category
+ * (security notices). Disputes must set it when they are built.
  */
 export function isMandatoryOn(def: EventDefinition, channel: UserChannel): boolean {
   const category = CATEGORIES[def.category]

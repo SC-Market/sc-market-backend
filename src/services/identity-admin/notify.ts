@@ -1,6 +1,7 @@
 /**
  * Tell a user an admin changed their account's identity (event
- * account.identity_changed: mandatory "account" category, in-app + push).
+ * account.identity_changed: mandatory "account" category, in-app + push, and
+ * a mandatory security email in the user's language, email-i18n.ts).
  * The in-app row points at the audit_logs row; what the user sees is built
  * by identityNoticeEntity() (notice-entity.ts) and never includes the admin's reason.
  *
@@ -75,6 +76,9 @@ export async function notifyIdentityChanged(
           },
           tag: `identity-${result.audit_log_id}`,
         },
+        // Rendered by the email queue (email-payload-formatters.ts
+        // formatIdentityChangedEmailData); never the admin's reason.
+        email: { data: { identity: { kind: result.kind, notice: result.notice } } },
       },
     })
   } catch (error) {

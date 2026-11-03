@@ -45,6 +45,7 @@ const OTHER = id(3)
 const LONE = id(4)
 const REASON = "stale holder, see ticket 42"
 const pushes: unknown[] = []
+const emails: unknown[] = []
 
 async function code(p: Promise<unknown>) {
   try {
@@ -100,6 +101,13 @@ describe.skipIf(!PG_TEST_URL)("admin identity tool (Postgres)", () => {
         id: "push",
         send: async (msg: unknown) => {
           pushes.push(msg)
+          return { status: "sent" }
+        },
+      } as never,
+      email: {
+        id: "email",
+        send: async (msg: unknown, ctx: { mandatory: boolean }) => {
+          emails.push({ msg, mandatory: ctx.mandatory })
           return { status: "sent" }
         },
       } as never,
@@ -173,6 +181,14 @@ describe.skipIf(!PG_TEST_URL)("admin identity tool (Postgres)", () => {
     })
     expect(JSON.stringify(entity)).not.toContain(REASON)
     expect(pushes).toHaveLength(1)
+    // The security email (mandatory, past opt-outs; owner decision 2026-11-02).
+    expect(emails).toEqual([
+      {
+        msg: { data: { identity: { kind: "username_released", notice: result.notice } } },
+        mandatory: true,
+      },
+    ])
+    expect(JSON.stringify(emails)).not.toContain(REASON)
 
     // The detail view lists the change with its reason (admins only).
     const d = await svc.getIdentityDetail(HOLDER)

@@ -104,11 +104,11 @@
       </div>
       {{#if defaultsNotice}}
       <div style="background-color: #1f2a30; border-left: 4px solid #10b981; padding: 14px 20px; color: #e0e0e0; font-size: 14px;">
-        We turned on email for order updates, offers and unread messages.
-        Turn off with one click:
-        <a href="{{defaultsNotice.unsubscribeUrl}}" style="color: #10b981;">Turn these emails off</a>
+        {{#if layout}}{{layout.defaultsNotice}}{{else}}We turned on email for order updates, offers and unread messages.
+        Turn off with one click:{{/if}}
+        <a href="{{defaultsNotice.unsubscribeUrl}}" style="color: #10b981;">{{#if layout}}{{layout.turnOff}}{{else}}Turn these emails off{{/if}}</a>
         |
-        <a href="{{defaultsNotice.preferencesUrl}}" style="color: #10b981;">Manage preferences</a>
+        <a href="{{defaultsNotice.preferencesUrl}}" style="color: #10b981;">{{#if layout}}{{layout.managePreferences}}{{else}}Manage preferences{{/if}}</a>
       </div>
       {{/if}}
       <div class="email-body">
@@ -120,11 +120,11 @@
         </p>
         <p style="margin: 0;">
           {{#if unsubscribeUrl}}
-          <a href="{{unsubscribeUrl}}" class="unsubscribe-link">Unsubscribe</a>
+          <a href="{{unsubscribeUrl}}" class="unsubscribe-link">{{#if layout}}{{layout.unsubscribe}}{{else}}Unsubscribe{{/if}}</a>
           |
           {{/if}}
-          <a href="{{preferencesUrl}}" class="unsubscribe-link">Manage
-            Preferences</a>
+          <a href="{{preferencesUrl}}" class="unsubscribe-link">{{#if layout}}{{layout.managePreferences}}{{else}}Manage
+            Preferences{{/if}}</a>
         </p>
       </div>
     </div>

@@ -20,6 +20,14 @@ import { env } from "../../config/env.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as marketDb from "../../api/routes/v1/market/database.js"
 import { unsubscribeLinksFor } from "./unsubscribe-token.js"
+import {
+  emailLocale,
+  greeting,
+  identityEmailText,
+  layoutStrings,
+  reminderEmailText,
+  type IdentityKind,
+} from "./email-i18n.js"
 
 /**
  * Base URL for the application
@@ -464,5 +472,61 @@ export async function formatOfferReminderEmailData(
     notificationBody: reminder.body,
     actionUrl: reminder.url,
     offerReminder: reminder,
+  } as EmailTemplateData
+}
+
+/**
+ * An admin changed your account's identity (services/identity-admin): the
+ * security email, in the user's language. Mandatory (catalog emailMandatory),
+ * so it carries no unsubscribe link.
+ */
+export interface IdentityChangedEmailData {
+  kind: IdentityKind
+  notice: { old_username?: string; new_username?: string }
+}
+
+export async function formatIdentityChangedEmailData(
+  identity: IdentityChangedEmailData,
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, "account_identity_changed")
+  const locale = emailLocale(baseData.locale)
+  const text = identityEmailText(locale, identity.kind, identity.notice)
+  return {
+    ...baseData,
+    locale,
+    notificationTitle: text.title,
+    notificationBody: text.body,
+    actionUrl: `${getBaseUrl()}/settings`,
+    t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
+    layout: layoutStrings(locale),
+  } as EmailTemplateData
+}
+
+/**
+ * The unread-message reminder (services/dm-reminders), in the user's
+ * language: how many conversations wait, and where to answer them.
+ */
+export interface UnreadReminderEmailData {
+  conversations: number
+  url: string
+}
+
+export async function formatUnreadReminderEmailData(
+  reminder: UnreadReminderEmailData,
+  userId: string,
+): Promise<EmailTemplateData> {
+  const baseData = await getBaseTemplateData(userId, "dm_reminder")
+  const locale = emailLocale(baseData.locale)
+  const text = reminderEmailText(locale, reminder.conversations)
+  return {
+    ...baseData,
+    locale,
+    notificationTitle: text.subject,
+    notificationBody: text.body,
+    actionUrl: reminder.url,
+    unreadCount: reminder.conversations,
+    t: { ...text, greeting: greeting(locale, String(baseData.userDisplayName || baseData.userName || "")) },
+    layout: layoutStrings(locale),
   } as EmailTemplateData
 }

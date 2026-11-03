@@ -1,12 +1,9 @@
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
-import { emailService } from "../email/email.service.js"
-import { renderEmailTemplate } from "../email/template-engine.js"
 import { env } from "../../config/env.js"
 import logger from "../../logger/logger.js"
-import { unsubscribeLinksFor } from "../email/unsubscribe-token.js"
-import { markDefaultsNoticeShown, pendingDefaultsNotice } from "../email/defaults-notice.js"
 import { notify } from "../notify/dispatcher.js"
+import type { UserChannel } from "../notify/channels.js"
 import { discordDmDisabled } from "../notify/kill-switch.js"
 
 /**
@@ -31,10 +28,15 @@ import { discordDmDisabled } from "../notify/kill-switch.js"
  *
  * Quiet when read: only unread notifications are considered at send time.
  *
- * Channels: email (opt-in, verified primary address, as before) and Discord
- * DM through notify() (on by default for users with Discord linked; the user's
- * preference applies; DISCORD_DM_DISABLED_EVENTS=reminder.unread_messages
- * turns it off).
+ * Channels, both through notify() (owner decision 2026-11-02 for email):
+ * - email: opt-in (the Personal dm_reminder row), sent on the email queue
+ *   like every other notification email, so it is retried, in the user's
+ *   language (email-i18n.ts), and re-checked at send time (verified primary
+ *   address, not bounced, still opted in), with the one-click unsubscribe
+ *   link and List-Unsubscribe headers;
+ * - Discord DM: on by default for users with Discord linked; the user's
+ *   preference applies; DISCORD_DM_DISABLED_EVENTS=reminder.unread_messages
+ *   turns it off.
  */
 
 export const EVENT_KEY = "reminder.unread_messages" as const
@@ -224,56 +226,9 @@ export function reminderDm(digest: ReminderDigest, titles: Map<string, string>) 
   }
 }
 
-async function emailEligible(knex: Knex, userIds: string[]): Promise<Map<string, string>> {
-  if (!userIds.length) return new Map()
-  const rows: { user_id: string; email: string }[] = await knex("user_emails as ue")
-    .join("email_notification_preferences as enp", function () {
-      this.on("enp.user_id", "=", "ue.user_id")
-        .andOn("enp.action_type_id", "=", knex.raw("?", [DM_REMINDER_ACTION_TYPE_ID]))
-        .andOn("enp.enabled", "=", knex.raw("true"))
-        // Personal: what the unsubscribe link and the settings write.
-        .andOnNull("enp.contractor_id")
-    })
-    .whereIn("ue.user_id", userIds)
-    .where("ue.email_verified", true)
-    .where("ue.is_primary", true)
-    .select("ue.user_id", "ue.email")
-  return new Map(rows.map((r) => [r.user_id, r.email]))
-}
-
-async function sendEmail(digest: ReminderDigest, email: string): Promise<boolean> {
-  const base = baseUrl()
-  const n = digest.conversations.length
-  // One-click unsubscribe (no login) and the one-time defaults notice.
-  const links = unsubscribeLinksFor(digest.user_id, "dm_reminder", null)
-  const notice = await pendingDefaultsNotice(digest.user_id)
-  const templateData = {
-    userName: digest.username,
-    userDisplayName: digest.display_name || digest.username,
-    locale: "en",
-    notificationType: "dm_reminder",
-    notificationTitle: "You have unread messages",
-    notificationBody: `You have unread messages in ${n} conversation${n > 1 ? "s" : ""} on SC Market.`,
-    actionUrl: n === 1 ? conversationUrl(digest.conversations[0]) : `${base}/messaging`,
-    siteName: "SC Market",
-    siteUrl: base,
-    logoUrl: `${base}/scmarket-logo.png`,
-    unsubscribeUrl: links.unsubscribeUrl,
-    preferencesUrl: links.preferencesUrl,
-    unreadCount: n,
-    ...(notice ? { defaultsNotice: notice } : {}),
-  }
-  const html = await renderEmailTemplate("dm-reminder", templateData, "html")
-  const text = await renderEmailTemplate("dm-reminder", templateData, "txt")
-  const result = await emailService.sendEmail({
-    to: email,
-    subject: `You have unread messages in ${n} conversation${n > 1 ? "s" : ""} on SC Market`,
-    html,
-    text,
-    headers: links.headers,
-  })
-  if (notice && result.status === "sent") await markDefaultsNoticeShown(digest.user_id)
-  return result.status === "sent"
+/** Where the reminder email's button goes: the one conversation, or Messages. */
+export function reminderEmailUrl(digest: ReminderDigest): string {
+  return digest.conversations.length === 1 ? conversationUrl(digest.conversations[0]) : `${baseUrl()}/messaging`
 }
 
 async function recordReminder(knex: Knex, digest: ReminderDigest): Promise<void> {
@@ -333,9 +288,9 @@ export async function processDmReminders(opts: ReminderOptions = {}): Promise<Re
     })
   }
 
-  const emails = await emailEligible(knex, digests.map((d) => d.user_id))
   const titles = await conversationTitles(knex, digests)
   const dmOff = discordDmDisabled(EVENT_KEY)
+  const channels: UserChannel[] = dmOff ? ["email"] : ["email", "discord_dm"]
 
   for (const digest of digests) {
     try {
@@ -343,32 +298,27 @@ export async function processDmReminders(opts: ReminderOptions = {}): Promise<Re
       // conversations are not reminded again (no retry spam).
       await recordReminder(knex, digest)
 
-      const email = emails.get(digest.user_id)
-      if (email) {
-        try {
-          if (await sendEmail(digest, email)) stats.email_sent++
-        } catch (error) {
-          stats.errors++
-          logger.warn("DM reminder: email failed", {
-            user_id: digest.user_id,
-            error: error instanceof Error ? error.message : String(error),
-          })
-        }
-      }
-
-      if (!dmOff) {
-        const result = await notify(EVENT_KEY, [{ userId: digest.user_id }], {
-          entityId: digest.conversations[0].entity_id,
-          dedupeKey: digest.conversations
-            .map((c) => `${c.entity_id}@${c.message_at.toISOString()}`)
-            .sort()
-            .join(","),
-          channels: ["discord_dm"],
-          messages: { discord_dm: reminderDm(digest, titles) },
-        })
-        stats.discord_sent += result.delivered.length
-        stats.discord_failed += result.failed.length
-      }
+      const result = await notify(EVENT_KEY, [{ userId: digest.user_id, contractorId: null }], {
+        entityId: digest.conversations[0].entity_id,
+        dedupeKey: digest.conversations
+          .map((c) => `${c.entity_id}@${c.message_at.toISOString()}`)
+          .sort()
+          .join(","),
+        channels,
+        messages: {
+          // Rendered by the email queue (formatUnreadReminderEmailData).
+          email: {
+            data: { reminder: { conversations: digest.conversations.length, url: reminderEmailUrl(digest) } },
+          },
+          discord_dm: reminderDm(digest, titles),
+        },
+      })
+      const count = (list: { channel: UserChannel }[], channel: UserChannel) =>
+        list.filter((d) => d.channel === channel).length
+      stats.email_sent += count(result.delivered, "email")
+      stats.errors += count(result.failed, "email")
+      stats.discord_sent += count(result.delivered, "discord_dm")
+      stats.discord_failed += count(result.failed, "discord_dm")
     } catch (error) {
       stats.errors++
       logger.error("DM reminder: failed for user", {

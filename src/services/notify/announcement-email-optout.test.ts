@@ -1,7 +1,8 @@
 /**
  * Owner decision (2026-11-01): site-wide announcement emails (admin alerts)
  * respect the user's email opt-outs and unsubscribes. Only legal, security
- * and dispute emails may ignore them (catalog emailMandatory; none today).
+ * and dispute emails may ignore them (catalog emailMandatory; the account
+ * category's security notices today).
  * In-app, push and Discord DM announcements stay mandatory.
  *
  * Covers the policy (catalog, settings matrix, unsubscribe scope), the
@@ -134,8 +135,8 @@ describe("policy", () => {
     expect(actionsForScope({ kind: "all" })).toContain("admin_alert")
   })
 
-  it("no category's email ignores opt-outs today (reserved for legal, security and dispute emails)", () => {
-    expect(Object.entries(CATEGORIES).filter(([, c]) => c.emailMandatory)).toEqual([])
+  it("only security notices (the account category) ignore email opt-outs (reserved for legal, security and dispute emails)", () => {
+    expect(Object.entries(CATEGORIES).filter(([, c]) => c.emailMandatory).map(([k]) => k)).toEqual(["account"])
   })
 })
 
