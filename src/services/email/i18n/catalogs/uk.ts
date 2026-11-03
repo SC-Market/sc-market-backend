@@ -27,7 +27,7 @@ const uk: Record<string, string> = {
   "common.duration_hours_many": "{count} годин",
   "common.duration_hours_other": "{count} години",
 
-  "status.order.not-started": "Не розпочато",
+  "status.order.not-started": "У черзі",
   "status.order.in-progress": "Виконується",
   "status.order.fulfilled": "Виконано",
   "status.order.cancelled": "Скасовано",
@@ -42,7 +42,7 @@ const uk: Record<string, string> = {
   "account_identity_changed.subject.discord_link_skipped": "Ваш Discord не прив'язано до SC Market",
   "account_identity_changed.subject.account_reactivated": "Ваш обліковий запис SC Market знову активовано",
   "account_identity_changed.body.username_released":
-    "Адміністратор звільнив ваше ім'я користувача. Тепер ваше ім'я користувача — {username}. Скористайтеся «Синхронізувати хендл» у налаштуваннях, щоб повернути свій поточний хендл RSI.",
+    "Адміністратор звільнив ваше ім'я користувача. Тепер ваше ім'я користувача — {username}. Скористайтеся «Синхронізувати нікнейм» у налаштуваннях, щоб повернути свій поточний нікнейм RSI.",
   "account_identity_changed.body.discord_unlinked":
     "Адміністратор від'єднав Discord від вашого облікового запису. Ви можете знову прив'язати обліковий запис Discord у налаштуваннях.",
   "account_identity_changed.body.spectrum_cleared":
@@ -122,7 +122,7 @@ const uk: Record<string, string> = {
   "offer_create.intro": "Створено нову пропозицію:",
 
   "offer_message.subject": "Нове повідомлення в пропозиції",
-  "offer_message.preheader": "{author} надіслав повідомлення у вашій пропозиції.",
+  "offer_message.preheader": "Нове повідомлення від {author} у вашій пропозиції.",
   "offer_message.heading": "Нове повідомлення в пропозиції",
   "offer_message.intro": "У вашій пропозиції нове повідомлення:",
   "offer_message.sent": "<b>{author}</b> пише:",
@@ -192,13 +192,13 @@ const uk: Record<string, string> = {
   "order_create.intro": "Створено нове замовлення:",
 
   "order_message.subject": "Нове повідомлення в замовленні",
-  "order_message.preheader": "{author} надіслав повідомлення в замовленні «{title}».",
+  "order_message.preheader": "Нове повідомлення від {author} у замовленні «{title}».",
   "order_message.heading": "Нове повідомлення в замовленні",
-  "order_message.intro": "<b>{author}</b> надіслав повідомлення в замовленні «{title}»:",
+  "order_message.intro": "Нове повідомлення від <b>{author}</b> у замовленні «{title}»:",
   "order_message.action": "Переглянути замовлення й відповісти",
 
   "order_review.subject": "Новий відгук про замовлення",
-  "order_review.preheader": "{author} залишив відгук про ваше замовлення.",
+  "order_review.preheader": "{author}: новий відгук про ваше замовлення.",
   "order_review.heading": "Новий відгук",
   "order_review.intro": "Про ваше замовлення залишили новий відгук:",
   "order_review.by": "Автор:",
@@ -220,8 +220,8 @@ const uk: Record<string, string> = {
   "order_status_in_progress.heading": "Замовлення виконується",
   "order_status_in_progress.intro": "Замовлення «{title}» тепер виконується.",
   "order_status_not_started.subject": "Статус замовлення оновлено",
-  "order_status_not_started.heading": "Замовлення не розпочато",
-  "order_status_not_started.intro": "Статус замовлення «{title}» змінено на «Не розпочато».",
+  "order_status_not_started.heading": "Замовлення в черзі",
+  "order_status_not_started.intro": "Статус замовлення «{title}» змінено на «У черзі».",
 
   "price_alert.subject": "Цінове сповіщення: {title} за {price} aUEC",
   "price_alert.preheader": "{title} виставлено за {price} aUEC — за вашою цільовою ціною {target} aUEC або нижче.",
@@ -242,7 +242,7 @@ const uk: Record<string, string> = {
   "staff_storefront_enquiry.contact": "Контакт:",
   "staff_storefront_enquiry.contact_discord": "Discord",
   "staff_storefront_enquiry.contact_message": "Повідомлення на SC Market",
-  "staff_storefront_enquiry.action": "Відкрити в адмінці",
+  "staff_storefront_enquiry.action": "Відкрити в адмін-панелі",
 
   "storefront_enquiry_accepted.subject": "Запит на вітрину прийнято",
   "storefront_enquiry_accepted.preheader":
@@ -258,7 +258,7 @@ const uk: Record<string, string> = {
   "storefront_enquiry_declined.retry": "Ви можете надіслати новий запит у налаштуваннях вітрини.",
   "storefront_enquiry_declined.action": "Відкрити налаштування вітрини",
 
-  "verification.subject": "Підтвердьте адресу електронної пошти - SC Market",
+  "verification.subject": "Підтвердьте адресу електронної пошти — SC Market",
   "verification.preheader": "Підтвердьте цю адресу, щоб отримувати листи від SC Market.",
   "verification.heading": "Підтвердьте адресу електронної пошти",
   "verification.intro":
