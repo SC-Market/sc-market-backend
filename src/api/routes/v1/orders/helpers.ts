@@ -18,7 +18,8 @@ import * as offerDb from "../offers/database.js"
 import * as marketDb from "../market/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
-import { postOfferAlert, postOrderAlert } from "../../../../services/discord/order-alerts.js"
+import { postOfferAlert } from "../../../../services/discord/order-alerts.js"
+import { notifyNewOrder } from "../../../../services/notifications/new-order.js"
 import { chatParticipantService } from "../../../../services/chats/chat-participant.service.js"
 import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import { User } from "../api-models.js"
@@ -485,15 +486,8 @@ export async function runOrderCreatedSideEffects(
     logger.error(`Failed to ensure order chat participants: ${e}`)
   }
 
-  try {
-    await notificationService.createOrderNotification(order)
-  } catch (e) {}
-
-  try {
-    await postOrderAlert(order)
-  } catch (e) {
-    logger.error(`Failed to post order alert: ${e}`)
-  }
+  // Bell, push, email, webhooks and the Discord alert post (also Buy now's).
+  await notifyNewOrder(order)
 
   try {
     await discordService.renameThread(

@@ -1,44 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`V2 order push (order_create_v2, no action row) > createNewOrderNotificationV2 (direct buy-order purchase): push only, ungated, org manage_orders 2`] = `
-[
-  {
-    "payload": {
-      "badge": "https://sc-market.space/android-chrome-192x192.png",
-      "body": "New order for 30000 aUEC -  (Platinum)",
-      "data": {
-        "action": "order_create_v2",
-        "entityId": "order:v2",
-        "type": "order_v2",
-        "url": "https://sc-market.space/contract/order:v2",
-      },
-      "icon": "https://sc-market.space/android-chrome-192x192.png",
-      "requireInteraction": false,
-      "tag": "order-v2-order:v2",
-      "title": "New Order",
-    },
-    "to": "push:boss",
-  },
-  {
-    "payload": {
-      "badge": "https://sc-market.space/android-chrome-192x192.png",
-      "body": "New order for 30000 aUEC -  (Platinum)",
-      "data": {
-        "action": "order_create_v2",
-        "entityId": "order:v2",
-        "type": "order_v2",
-        "url": "https://sc-market.space/contract/order:v2",
-      },
-      "icon": "https://sc-market.space/android-chrome-192x192.png",
-      "requireInteraction": false,
-      "tag": "order-v2-order:v2",
-      "title": "New Order",
-    },
-    "to": "push:clerk",
-  },
-]
-`;
-
 exports[`market_item_bid (10), V1 route > org seller: manage_market members get in-app + push; push ignores org-scoped prefs; no email; webhook 2`] = `
 {
   "discord": [],

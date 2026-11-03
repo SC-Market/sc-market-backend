@@ -191,52 +191,10 @@ describe("market_item_offer (11)", () => {
 })
 
 describe("V2 order push (order_create_v2, no action row)", () => {
-  it("createNewOrderNotificationV2 (direct buy-order purchase): push only, ungated, org manage_orders", async () => {
-    const buyer = await w.user("buyer")
-    const boss = await w.user("boss")
-    const clerk = await w.user("clerk")
-    const acme = await w.org("acme", [
-      { user: boss, perms: "owner" },
-      { user: clerk, perms: ["manage_orders"] },
-    ])
-    const shop = await w.shop("acme-shop", { org: acme })
-    // There is no order_create_v2 action, so these preferences cannot apply.
-    await w.pushPref(boss, "order_create", false, acme)
-    await w.pushPref(boss, "order_create", false)
-
-    await notificationService.createNewOrderNotificationV2(
-      {
-        order_id: "00000000-0000-4000-8999-0000000000c1",
-        buyer_id: buyer.user_id,
-        shop_id: shop.shop_id,
-        total_price: 30000,
-        status: "not-started",
-        created_at: "2026-10-20T00:00:00.000Z",
-        items: [
-          {
-            order_item_id: "00000000-0000-4000-8999-0000000000d1",
-            listing_id: "00000000-0000-4000-8999-0000000000e1",
-            item_id: "00000000-0000-4000-8999-0000000000f1",
-            listing_title: "Quantanium",
-            variant: { variant_id: "v", attributes: { quality_tier: 4 }, display_name: "Tier 4", short_name: "T4" },
-            quantity: 3,
-            price_per_unit: 10000,
-            subtotal: 30000,
-          },
-        ],
-      } as never,
-      shop.shop_id,
-    )
-    w.nameId("00000000-0000-4000-8999-0000000000c1", "order:v2")
-
-    const obs = await w.observe()
-    expect(w.summary(obs)).toMatchInlineSnapshot(`
-      [
-        "push    push:boss [order_v2] New Order",
-        "push    push:clerk [order_v2] New Order",
-      ]
-    `)
-    expect(obs.push).toMatchSnapshot()
+  // Owner decision (2026-11-02): Buy now notifies like a normal new order
+  // (services/notifications/new-order.ts); its push-only V2 sender is gone.
+  it("createNewOrderNotificationV2 (Buy now's push-only sender) was deleted", () => {
+    expect("createNewOrderNotificationV2" in notificationService).toBe(false)
   })
 
   it("createOrderStatusNotificationV2 (no caller) was deleted", () => {
@@ -293,16 +251,16 @@ describe("order created through Buy now (BuyOrdersV2Controller.createPurchase)",
       {
         "outcome": "created",
         "summary": [
-          "push    push:seller [order_v2] New Order",
-          "shadow  order.assigned ok expected buy_now_normal_path=1",
+          "in_app  user:seller order_assigned (order:v2)",
+          "push    push:seller [order] Order Assigned",
         ],
       }
     `)
   })
 })
 
-describe("Buy now from an org shop (shadow: normal order path)", () => {
-  it("V2 push to managers today; the plan is the normal org order notification", async () => {
+describe("Buy now from an org shop (the normal order path)", () => {
+  it("the normal org order notification: managers in-app and push, email where opted in", async () => {
     const { BuyOrdersV2Controller } = await import("../../../api/routes/v2/buy-orders/BuyOrdersV2Controller.js")
     const { getKnex } = await import("../../../clients/database/knex-db.js")
     const profileDb = await import("../../../api/routes/v1/profiles/database.js")
@@ -341,9 +299,11 @@ describe("Buy now from an org shop (shadow: normal order path)", () => {
       {
         "outcome": "created",
         "summary": [
-          "push    push:boss [order_v2] New Order",
-          "push    push:clerk [order_v2] New Order",
-          "shadow  order.created ok expected buy_now_normal_path=7",
+          "in_app  user:boss order_create (order:v2org)",
+          "in_app  user:clerk order_create (order:v2org)",
+          "push    push:boss [order] New Order Created",
+          "push    push:clerk [order] New Order Created",
+          "email   boss@example.test New Order Created",
         ],
       }
     `)

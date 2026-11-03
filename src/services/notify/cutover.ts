@@ -38,9 +38,9 @@ export type CutoverEvent = (typeof CUTOVER_EVENTS)[number]
  * offers (the shadow lines from before the merge named them
  * order.status.* and offer.created).
  *
- * Not live: buy-now orders (createNewOrderNotificationV2), which have not
- * appeared in the shadow logs yet; they stay on the legacy V2 push with
- * notify() in shadow mode whatever this list says.
+ * Buy now orders (owner decision 2026-11-02) are ordinary new orders
+ * (services/notifications/new-order.ts), so they follow order.created and
+ * order.assigned here; they have no shadow path of their own any more.
  */
 export const LIVE_EVENTS_DEFAULT: readonly CutoverEvent[] = [
   "order.created",

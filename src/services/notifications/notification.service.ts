@@ -50,10 +50,6 @@ async function shadowPlans(build: () => Promise<ShadowPlan[]>): Promise<ShadowPl
 import type {
   GetListingDetailResponse,
 } from "../../api/routes/v2/types/listings.types.js"
-import type {
-  CreateOrderResponse,
-  GetOrderDetailResponse,
-} from "../../api/routes/v2/types/orders.types.js"
 
 /**
  * Service interface for notification creation and management.
@@ -100,10 +96,6 @@ export interface NotificationService {
     bidderId: string,
     bidId: string,
     variantId?: string,
-  ): Promise<void>
-  createNewOrderNotificationV2(
-    order: CreateOrderResponse | GetOrderDetailResponse,
-    sellerId: string,
   ): Promise<void>
 
   // Other notifications
@@ -1337,69 +1329,6 @@ class DatabaseNotificationService implements NotificationService {
       )
     } catch (error) {
       logger.error("Failed to create V2 market bid notification:", error)
-      throw error
-    }
-  }
-
-  /**
-   * Create new order notification for V2 order
-   * Requirement 43.8: Notify sellers of new orders with variant information
-   */
-  async createNewOrderNotificationV2(
-    order: CreateOrderResponse | GetOrderDetailResponse,
-    shopId: string,
-  ): Promise<void> {
-    // Buy now: shadow-plans the normal order notification (owner decision).
-    return withShadow(
-      await shadowPlans(async () =>
-        plans.buyNowOrderPlans(await orderDb.getOrder({ order_id: order.order_id })),
-      ),
-      () => this.legacyNewOrderNotificationV2(order, shopId),
-    )
-  }
-
-  private async legacyNewOrderNotificationV2(
-    order: CreateOrderResponse | GetOrderDetailResponse,
-    shopId: string,
-  ): Promise<void> {
-    try {
-      // Resolve recipients from shop owner
-      const shop = await getKnex()("shops").where("shop_id", shopId).first()
-      if (!shop) return
-
-      const recipients: string[] = []
-      if (shop.owner_contractor_id) {
-        const admins = await contractorDb.getMembersWithMatchingRole(
-          shop.owner_contractor_id,
-          { manage_orders: true },
-        )
-        recipients.push(...admins.map((u: { user_id: string }) => u.user_id))
-      } else if (shop.owner_user_id) {
-        recipients.push(shop.owner_user_id)
-      }
-
-      if (recipients.length === 0) return
-
-      // Format and send push notification to seller(s)
-      const payload = payloadFormattersV2.formatNewOrderNotificationPayloadV2(
-        order,
-      )
-
-      await pushNotificationService.sendPushNotifications(
-        recipients,
-        payload,
-        "order_create_v2",
-      )
-
-      logger.info("Created V2 new order notification", {
-        order_id: order.order_id,
-        shop_id: shopId,
-        total_price: order.total_price,
-        item_count: order.items.length,
-        recipient_count: recipients.length,
-      })
-    } catch (error) {
-      logger.error("Failed to create V2 new order notification:", error)
       throw error
     }
   }

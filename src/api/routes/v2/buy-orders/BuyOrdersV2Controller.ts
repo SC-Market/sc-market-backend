@@ -51,7 +51,8 @@ import { resolveGameItemImages } from "../util/resolve-game-item-images.js"
 import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { buyOrderVisibleTo } from "./buy-order-visibility.js"
-import { notificationService } from "../../../../services/notifications/notification.service.js"
+import { notifyNewOrder } from "../../../../services/notifications/new-order.js"
+import type { DBOrder } from "../../../../clients/database/db-models.js"
 import { canManageShop } from "../../../../services/shops/shop-permissions.service.js"
 import { assertSameRealm } from "../../../../services/test-accounts/isolation.js"
 import { shopOrderRow } from "../../../../services/checkout/shop-order-row.js"
@@ -179,6 +180,8 @@ export class BuyOrdersV2Controller extends BaseController {
     // Validate request
     this.validateCreateBuyOrderRequest(requestBody)
 
+    // The orders row, for the new-order notifications once committed.
+    let createdOrder: DBOrder | undefined
     try {
       // Use database transaction for atomicity
       const result = await withTransaction(async (trx) => {
@@ -295,6 +298,7 @@ export class BuyOrdersV2Controller extends BaseController {
         const [order] = await trx("orders")
           .insert(shopOrderRow(purchaseShop, this.getUser(), totalPrice))
           .returning("*")
+        createdOrder = order
 
         logger.info("Created order record for direct purchase", {
           orderId: order.order_id,
@@ -381,14 +385,10 @@ export class BuyOrdersV2Controller extends BaseController {
         totalPrice: result.total_price,
       })
 
-      // Notify seller of new order
-      try {
-        // Adapt buy order response to CreateOrderResponse shape for notification
-        const orderForNotification = { ...result, items: [result.item] } as any
-        await notificationService.createNewOrderNotificationV2(orderForNotification, result.shop_id)
-      } catch (e) {
-        logger.error("Failed to send V2 buy order notification", { error: e })
-      }
+      // Owner decision (2026-11-02): a Buy now order notifies exactly like any
+      // new order (bell, push, email, webhooks, Discord alert post), under
+      // the seller's settings and their org's mute. After the commit.
+      if (createdOrder) await notifyNewOrder(createdOrder)
 
       return result
     } catch (error) {

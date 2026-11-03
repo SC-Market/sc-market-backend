@@ -136,10 +136,10 @@ vi.mock(
 vi.mock("./fulfillment-rules.js", () => ({
   buyOrderFulfillmentProblem: async () => h.problem,
 }))
-vi.mock("../../../../services/notifications/notification.service.js", () => ({
-  notificationService: {
-    createNewOrderNotificationV2: vi.fn(async () => undefined),
-  },
+// The new-order notifications (services/notifications/new-order.ts, tested there).
+const notifyNewOrder = vi.hoisted(() => vi.fn(async (_order: Row) => undefined))
+vi.mock("../../../../services/notifications/new-order.js", () => ({
+  notifyNewOrder,
 }))
 // Self-purchase, blocklists, availability requirement, order limits: checkout-guards tests.
 vi.mock("../../../../services/checkout/checkout-guards.js", () => ({
@@ -208,6 +208,7 @@ describe("Buy now and stock subtraction timing", () => {
   beforeEach(() => {
     seed()
     autoAllocateOrder.mockClear()
+    notifyNewOrder.mockClear()
     h.mode = "auto"
     h.timing = null
   })
@@ -264,5 +265,45 @@ describe("Buy now and stock subtraction timing", () => {
     h.timing = "on_received"
     await buyNow(2)
     expect(autoAllocateOrder).not.toHaveBeenCalled()
+  })
+})
+
+// Owner decision (2026-11-02): Buy now notifies exactly like any new order.
+// notifyNewOrder is what an accepted offer or cart checkout calls
+// (orders/helpers.ts runOrderCreatedSideEffects), with the orders row.
+describe("Buy now notifies like a normal new order", () => {
+  beforeEach(() => {
+    seed()
+    notifyNewOrder.mockClear()
+    h.mode = "auto"
+    h.timing = null
+  })
+
+  it("a personal shop: notifyNewOrder once, with the committed orders row (owner assigned)", async () => {
+    const result = await buyNow(2)
+    expect(notifyNewOrder).toHaveBeenCalledTimes(1)
+    const [order] = notifyNewOrder.mock.calls[0]
+    expect(order).toBe(h.tables.orders[0])
+    expect(order).toMatchObject({
+      order_id: result.order_id,
+      customer_id: "buyer",
+      shop_id: "shop-1",
+      contractor_id: null,
+      assigned_id: "seller",
+      cost: 100,
+      status: "not-started",
+    })
+  })
+
+  it("an org shop: the org's order, unassigned (order managers and the alert post)", async () => {
+    h.tables.shops[0] = { shop_id: "shop-1", owner_user_id: null, owner_contractor_id: "org-1", status: "active" }
+    await buyNow(1)
+    expect(notifyNewOrder).toHaveBeenCalledTimes(1)
+    expect(notifyNewOrder.mock.calls[0][0]).toMatchObject({ contractor_id: "org-1", assigned_id: null })
+  })
+
+  it("a refused purchase notifies no one", async () => {
+    await expect(buyNow(6)).rejects.toBeInstanceOf(ValidationError)
+    expect(notifyNewOrder).not.toHaveBeenCalled()
   })
 })

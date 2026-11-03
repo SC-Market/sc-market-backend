@@ -7,17 +7,12 @@
 import { describe, it, expect } from 'vitest'
 import {
   formatMarketBidNotificationPayloadV2,
-  formatNewOrderNotificationPayloadV2,
   formatBuyOrderMatchNotificationPayloadV2,
 } from './notification-payload-formatters-v2.js'
 import type {
   GetListingDetailResponse,
   VariantDetail,
 } from '../../api/routes/v2/types/listings.types.js'
-import type {
-  CreateOrderResponse,
-  GetOrderDetailResponse,
-} from '../../api/routes/v2/types/orders.types.js'
 import type { PushNotificationPayload } from '../push-notifications/push-notification.service.types.js'
 
 /**
@@ -99,63 +94,6 @@ describe('notification-payload-formatters-v2', () => {
     ],
   }
 
-  // Mock order data
-  const mockOrder: CreateOrderResponse = {
-    order_id: 'order-123',
-    buyer_id: 'buyer-456',
-    shop_id: 'shop-789',
-    total_price: 100000,
-    status: 'pending',
-    created_at: '2024-01-01T00:00:00Z',
-    items: [
-      {
-        order_item_id: 'order-item-001',
-        listing_id: 'listing-123',
-        item_id: 'item-789',
-        listing_title: 'Test Listing',
-        variant: {
-          variant_id: 'variant-001',
-          attributes: {
-            quality_tier: 5,
-            quality_value: 95.5,
-            crafted_source: 'crafted',
-          },
-          display_name: 'Tier 5 (95.5%) - Crafted',
-          short_name: 'T5 Crafted',
-        },
-        quantity: 2,
-        price_per_unit: 50000,
-        subtotal: 100000,
-      },
-    ],
-  }
-
-  const mockOrderDetail: GetOrderDetailResponse = {
-    order_id: 'order-123',
-    buyer: {
-      user_id: 'buyer-456',
-      username: 'TestBuyer',
-      display_name: 'Test Buyer',
-      avatar: null,
-    },
-    seller: {
-      shop_id: 'shop-789',
-      name: 'TestSeller',
-      slug: 'test-seller',
-    },
-    total_price: 100000,
-    status: 'pending',
-    kind: 'Delivery',
-    title: 'Test Order',
-    description: 'Test order description',
-    payment_type: 'one-time',
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z',
-    market_listings: [],
-    market_listings_v2: [],
-    items: mockOrder.items,
-  }
-
   describe('formatMarketBidNotificationPayloadV2', () => {
     it('should format bid notification without variant', () => {
       const payload = formatMarketBidNotificationPayloadV2(mockListing, 45000)
@@ -191,41 +129,6 @@ describe('notification-payload-formatters-v2', () => {
       )
 
       expect(payload.body).toContain('Crafted')
-    })
-  })
-
-  describe('formatNewOrderNotificationPayloadV2', () => {
-    it('should format new order notification with variant information', () => {
-      const payload = formatNewOrderNotificationPayloadV2(mockOrder)
-
-      expect(payload.title).toBe('New Order')
-      expect(payload.body).toContain('100000 aUEC')
-      expect(payload.body).toContain('Diamond') // Quality tier 5
-      expect(payload.body).toContain('Crafted')
-      expect(payloadData(payload).type).toBe('order_v2')
-      expect(payloadData(payload).action).toBe('order_create_v2')
-      expect(payloadData(payload).entityId).toBe('order-123')
-    })
-
-    it('should handle multiple items in order', () => {
-      const multiItemOrder: CreateOrderResponse = {
-        ...mockOrder,
-        items: [
-          mockOrder.items[0],
-          {
-            ...mockOrder.items[0],
-            order_item_id: 'order-item-002',
-          },
-          {
-            ...mockOrder.items[0],
-            order_item_id: 'order-item-003',
-          },
-        ],
-      }
-
-      const payload = formatNewOrderNotificationPayloadV2(multiItemOrder)
-
-      expect(payload.body).toContain('and 2 more items')
     })
   })
 
@@ -353,12 +256,6 @@ describe('notification-payload-formatters-v2', () => {
       expect(payloadData(payload).variantId).toBe('variant-001')
     })
 
-    it('includes crafted source in notification body', () => {
-      const payload = formatNewOrderNotificationPayloadV2(mockOrder)
-
-      expect(payload.body).toContain('Crafted')
-    })
-
     it('includes quality value in detailed notifications', () => {
       const payload = formatMarketBidNotificationPayloadV2(
         mockListing,
@@ -380,49 +277,5 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.body).not.toContain('Crafted')
     })
 
-    it('handles multiple variants in order notifications', () => {
-      const multiVariantOrder: CreateOrderResponse = {
-        ...mockOrder,
-        items: [
-          {
-            ...mockOrder.items[0],
-            variant: {
-              variant_id: 'variant-001',
-              attributes: {
-                quality_tier: 5,
-                crafted_source: 'crafted',
-              },
-              display_name: 'Tier 5 - Crafted',
-              short_name: 'T5 C',
-            },
-          },
-          {
-            order_item_id: 'order-item-002',
-            listing_id: 'listing-124',
-            item_id: 'item-790',
-            listing_title: 'Second Listing',
-            variant: {
-              variant_id: 'variant-002',
-              attributes: {
-                quality_tier: 3,
-                crafted_source: 'store',
-              },
-              display_name: 'Tier 3 - Store',
-              short_name: 'T3 S',
-            },
-            quantity: 1,
-            price_per_unit: 20000,
-            subtotal: 20000,
-          },
-        ],
-      }
-
-      const payload = formatNewOrderNotificationPayloadV2(multiVariantOrder)
-
-      // Should show first item's quality tier
-      expect(payload.body).toContain('Diamond')
-      // Should indicate multiple items
-      expect(payload.body).toContain('and 1 more item')
-    })
   })
 })

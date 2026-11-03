@@ -18,8 +18,9 @@
  * - order.status_changed replaces the four order.status.* events, and
  *   offer.received replaces offer.created / offer.countered; the occurrence's
  *   own action (legacyAction) keeps the message saying which, and its own
- *   per-status preference applies;
- * - buy-now orders use the normal order notification (buyNowOrderPlans).
+ *   per-status preference applies.
+ *
+ * Buy now orders are ordinary new orders (services/notifications/new-order.ts).
  */
 import { randomUUID } from "node:crypto"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
@@ -105,28 +106,6 @@ export function orderAssignedPlans(order: DBOrder, actorId?: string | null): Sha
       },
     },
   ]
-}
-
-/**
- * Buy now (V2 direct purchase): owner decision, the normal order
- * notification instead of the V2 push to the shop's managers. Compared with
- * that V2 push (action order_create_v2): in-app and email are new, and push
- * follows the normal order preferences, org-scoped.
- */
-export async function buyNowOrderPlans(order: DBOrder): Promise<ShadowPlan[]> {
-  const normal = await orderCreatedPlans(order)
-  return normal.map((p) => {
-    const ids = new Set(p.recipients.map((r) => r.userId))
-    const buyNow: Explain = (d) =>
-      (d.kind === "extra" && d.channel !== "push") || (d.channel === "push" && ids.has(d.userId))
-        ? "buy_now_normal_path"
-        : undefined
-    return {
-      ...p,
-      legacyActions: [p.event === "order.created" ? "order_create" : "order_assigned", "order_create_v2"],
-      explain: firstOf(p.explain, buyNow),
-    }
-  })
 }
 
 export function orderStatusPlans(order: DBOrder, newStatus: string, actorId: string): ShadowPlan[] {

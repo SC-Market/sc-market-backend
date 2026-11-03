@@ -16,9 +16,6 @@
  * - duplicate_role: legacy delivered more than once to the same place (a
  *   member holding two roles with the permission); notify() delivers once.
  * - actor_excluded: legacy notified the user who acted; notify() never does.
- * - buy_now_normal_path: buy-now orders go through the normal order
- *   notification (in-app, email, org-scoped push preferences) instead of the
- *   V2 push-only one.
  * - permission_scope: legacy reached an org member the permission helper
  *   excludes (no longer a member, or banned).
  * - customer_scope: the customer's push/email follow their Personal
@@ -31,7 +28,9 @@
  * legacy does, so they add no difference.)
  *
  * Parity is proven when real traffic shows no unexpected difference; then the
- * event is switched to notify() (cutover.ts) and no longer shadowed.
+ * event is switched to notify() (cutover.ts) and no longer shadowed. Every
+ * event is live now, so this only runs for an event reverted with
+ * NOTIFY_LIVE_EVENTS; it goes with the legacy senders.
  *
  * The legacy side is captured by trace.ts at the legacy write points:
  * - in_app: notification rows inserted for the event's action;
@@ -56,7 +55,6 @@ import { currentTrace, outsideTrace, traceLegacy, type LegacyTrace } from "./tra
 export type ExpectedReason =
   | "duplicate_role"
   | "actor_excluded"
-  | "buy_now_normal_path"
   | "permission_scope"
   | "customer_scope"
   | "unassigned_to_managers"
@@ -156,7 +154,7 @@ async function compare(plans: ShadowPlan[], planned: Map<EventKey, Set<Key>>, tr
       try {
         actionIds.set(await actionTypeId(a), a)
       } catch {
-        // An action with no notification_actions row (order_create_v2): push-only, never in-app.
+        // An action with no notification_actions row: push-only, never in-app.
       }
     }
 

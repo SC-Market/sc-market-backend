@@ -22,7 +22,6 @@ type Legacy =
   | "legacyOrderMessageNotification"
   | "legacyOfferNotification"
   | "legacyOfferMessageNotification"
-  | "legacyNewOrderNotificationV2"
 
 const LEGACY: Legacy[] = [
   "createOrderContractorNotification",
@@ -31,7 +30,6 @@ const LEGACY: Legacy[] = [
   "legacyOrderMessageNotification",
   "legacyOfferNotification",
   "legacyOfferMessageNotification",
-  "legacyNewOrderNotificationV2",
 ]
 
 function spyLegacy() {
@@ -426,28 +424,36 @@ describe("no double sends", () => {
   })
 })
 
-describe("events not cut over keep legacy + shadow", () => {
-  it("buy now (createNewOrderNotificationV2) stays on the legacy V2 push, shadowed", async () => {
-    const { customer, acme, shop } = await orgShop()
+// Owner decision (2026-11-02): Buy now notifies exactly like a normal new
+// order (services/notifications/new-order.ts). It had its own push-only V2
+// sender (action order_create_v2, no settings, no org mute) in shadow mode.
+describe("Buy now is an ordinary new order", () => {
+  it("notifyNewOrder sends the live order.created deliveries: no V2 push, no shadow, no legacy sender", async () => {
+    const { notifyNewOrder } = await import("../new-order.js")
+    const { customer, boss, acme, shop } = await orgShop()
+    await w.emailOptIn(boss, ["order_create"], acme)
     const order = await w.order("bn", { customer, org: acme, shop })
     const spies = spyLegacy()
 
-    await notificationService.createNewOrderNotificationV2(
-      { order_id: order.order_id, buyer_id: customer.user_id, shop_id: shop.shop_id, total_price: 25000, items: [] } as never,
-      shop.shop_id,
-    )
+    await notifyNewOrder(order)
 
-    expect(spies.legacyNewOrderNotificationV2).toHaveBeenCalledTimes(1)
+    expect("createNewOrderNotificationV2" in notificationService).toBe(false)
+    expect(LEGACY.filter((m) => spies[m].mock.calls.length > 0)).toEqual([])
     const obs = await w.observe()
-    expect(w.summary(obs)).toMatchInlineSnapshot(`
+    expect(deliveries(obs)).toMatchInlineSnapshot(`
       [
-        "push    push:boss [order_v2] New Order",
-        "push    push:clerk [order_v2] New Order",
-        "shadow  order.created ok expected buy_now_normal_path=6",
+        "email   boss@example.test New Order Created",
+        "in_app  user:boss order_create (order:bn)",
+        "in_app  user:clerk order_create (order:bn)",
+        "push    push:boss [order] New Order Created",
+        "push    push:clerk [order] New Order Created",
       ]
     `)
+    expect(obs.shadow).toEqual([])
   })
+})
 
+describe("a reverted event keeps legacy + shadow", () => {
   it("one event reverted with NOTIFY_LIVE_EVENTS: it is legacy + shadow again; the others stay live", async () => {
     process.env.NOTIFY_LIVE_EVENTS = LIVE_EVENTS_DEFAULT.filter((e) => e !== "order.message").join(",")
     const customer = await w.user("customer")

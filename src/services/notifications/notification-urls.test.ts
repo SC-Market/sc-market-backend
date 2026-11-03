@@ -20,7 +20,6 @@ vi.mock("../../clients/cdn/cdn.js", () => ({
 }))
 
 import * as f from "./notification-payload-formatters.js"
-import * as v2 from "./notification-payload-formatters-v2.js"
 
 const BASE = "https://sc-market.space"
 const path = (url?: string) => (url ?? "").replace(BASE, "")
@@ -120,14 +119,5 @@ describe("push notification destinations", () => {
         } as never).data?.url,
       ),
     ).toBe("/notifications")
-  })
-
-  it("V2: a new order opens the order page (/contract, not /orders/:id)", () => {
-    const p = v2.formatNewOrderNotificationPayloadV2({
-      order_id: "o9",
-      total_price: 1,
-      items: [],
-    } as never)
-    expect(path(p.data?.url)).toBe("/contract/o9")
   })
 })

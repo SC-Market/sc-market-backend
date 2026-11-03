@@ -12,8 +12,6 @@ import {
   VariantDetail,
 } from "../../api/routes/v2/types/listings.types.js"
 import {
-  CreateOrderResponse,
-  GetOrderDetailResponse,
   OrderItemDetail,
 } from "../../api/routes/v2/types/orders.types.js"
 
@@ -135,49 +133,6 @@ export function formatMarketBidNotificationPayloadV2(
       variantId: variantId || undefined,
     },
     tag: `market-bid-v2-${listing.listing.listing_id}`,
-    requireInteraction: false,
-  }
-}
-
-/**
- * Format new order notification payload for V2 orders
- * Requirement 43.8: Notify sellers of new orders with variant information
- */
-export function formatNewOrderNotificationPayloadV2(
-  order: CreateOrderResponse | GetOrderDetailResponse,
-): PushNotificationPayload {
-  const url = `${getBaseUrl()}/contract/${order.order_id}`
-  
-  // Build notification body with variant information
-  let body = `New order for ${order.total_price} aUEC`
-  
-  // Add variant information from first item
-  if (order.items.length > 0) {
-    const firstItem = order.items[0]
-    const variantInfo = formatVariantInfo(firstItem.variant)
-    
-    if (variantInfo) {
-      body += ` - ${variantInfo}`
-    }
-    
-    // Add item count if multiple items
-    if (order.items.length > 1) {
-      body += ` and ${order.items.length - 1} more item${order.items.length > 2 ? 's' : ''}`
-    }
-  }
-  
-  return {
-    title: "New Order",
-    body,
-    icon: getNotificationIcon(),
-    badge: getNotificationBadge(),
-    data: {
-      url,
-      type: "order_v2",
-      entityId: order.order_id,
-      action: "order_create_v2",
-    },
-    tag: `order-v2-${order.order_id}`,
     requireInteraction: false,
   }
 }

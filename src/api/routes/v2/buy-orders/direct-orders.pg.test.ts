@@ -36,8 +36,8 @@ vi.mock("../../../../clients/database/transaction.js", () => ({
 vi.mock("../../../../clients/cdn/cdn.js", () => ({
   cdn: { getFileLinkResource: vi.fn(async (id: string) => `https://cdn.test/${id}`) },
 }))
-vi.mock("../../../../services/notifications/notification.service.js", () => ({
-  notificationService: { createNewOrderNotificationV2: vi.fn(), createBuyOrderFulfilledNotification: vi.fn() },
+vi.mock("../../../../services/notifications/new-order.js", () => ({
+  notifyNewOrder: vi.fn(async () => undefined),
 }))
 vi.mock("../../../../services/allocation/allocation-mode.service.js", () => ({
   getShopAllocationMode: vi.fn(async () => "manual"),
