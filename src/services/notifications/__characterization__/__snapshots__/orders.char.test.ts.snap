@@ -97,7 +97,7 @@ You have been assigned to a new order:
 Order o5
 Description of o5
 Value: 25,000 aUEC
-Status: Not Started
+Status: Queued
 
 View Order:
 https://sc-market.space/contract/order:o5
@@ -370,7 +370,7 @@ A new order has been created:
 Offer s1
 Description of s1
 Value: 25,000 aUEC
-Status: Not Started
+Status: Queued
 
 View Order:
 https://sc-market.space/contract/order:o1
@@ -538,7 +538,7 @@ You have been assigned to a new order:
 Offer s2
 Description of s2
 Value: 25,000 aUEC
-Status: Not Started
+Status: Queued
 
 View Order:
 https://sc-market.space/contract/order:o2
@@ -1528,20 +1528,20 @@ exports[`order_status_* (4-7) > assignee sets in-progress: customer notified, th
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order In Progress",
+      "subject": "Order Being Fulfilled",
       "text": "SC Market
 https://sc-market.space
 
-Order In Progress
+Order Being Fulfilled
 
 Hello Customer,
 
-Order "Order st-in-progress" is now in progress.
+Order "Order st-in-progress" is now being fulfilled.
 
 Order st-in-progress
 Description of st-in-progress
 Value: 25,000 aUEC
-Status: In Progress
+Status: Being fulfilled
 
 View Order:
 https://sc-market.space/contract/order:st-in-progress
@@ -1615,7 +1615,7 @@ https://sc-market.space/settings?tab=email",
     {
       "payload": {
         "badge": "https://sc-market.space/android-chrome-192x192.png",
-        "body": "Order "Order st-in-progress" is now in progress",
+        "body": "Order "Order st-in-progress" is now being fulfilled",
         "data": {
           "action": "order_status_in_progress",
           "entityId": "order:st-in-progress",
@@ -1625,7 +1625,7 @@ https://sc-market.space/settings?tab=email",
         "icon": "https://sc-market.space/android-chrome-192x192.png",
         "requireInteraction": false,
         "tag": "order-order:st-in-progress",
-        "title": "Order In Progress",
+        "title": "Order Being Fulfilled",
       },
       "to": "push:customer",
     },
@@ -1709,16 +1709,16 @@ exports[`order_status_* (4-7) > assignee sets not-started 2`] = `
       "text": "SC Market
 https://sc-market.space
 
-Order Not Started
+Order Queued
 
 Hello Customer,
 
-Order "Order st-not-started" status has been updated to Not Started.
+Order "Order st-not-started" status has been updated to Queued.
 
 Order st-not-started
 Description of st-not-started
 Value: 25,000 aUEC
-Status: Not Started
+Status: Queued
 
 View Order:
 https://sc-market.space/contract/order:st-not-started
@@ -1792,7 +1792,7 @@ https://sc-market.space/settings?tab=email",
     {
       "payload": {
         "badge": "https://sc-market.space/android-chrome-192x192.png",
-        "body": "Order "Order st-not-started" status updated to not started",
+        "body": "Order "Order st-not-started" status updated to Queued",
         "data": {
           "action": "order_status_not_started",
           "entityId": "order:st-not-started",

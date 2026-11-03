@@ -239,8 +239,8 @@ describe("order_status_* (4-7)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:customer order_status_in_progress (order:st-in-progress)",
-        "push    push:customer [order] Order In Progress",
-        "email   customer@example.test Order In Progress",
+        "push    push:customer [order] Order Being Fulfilled",
+        "email   customer@example.test Order Being Fulfilled",
         "discord PUT /channels/thread:st-in-progress/thread-members/discord:seller",
         "discord POST /channels/thread:st-in-progress/messages",
         "webhook shop-hook SC Market - Order Status Updated",

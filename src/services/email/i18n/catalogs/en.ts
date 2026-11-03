@@ -25,8 +25,8 @@ const en = {
   "common.duration_hours_other": "{count} hours",
 
   // Order and offer statuses, as the site names them.
-  "status.order.not-started": "Not Started",
-  "status.order.in-progress": "In Progress",
+  "status.order.not-started": "Queued",
+  "status.order.in-progress": "Being fulfilled",
   "status.order.fulfilled": "Fulfilled",
   "status.order.cancelled": "Cancelled",
   "status.offer.active": "Active",
@@ -212,12 +212,12 @@ const en = {
   "order_status_fulfilled.subject": "Order Fulfilled",
   "order_status_fulfilled.heading": "Order Fulfilled",
   "order_status_fulfilled.intro": "Order \"{title}\" has been fulfilled.",
-  "order_status_in_progress.subject": "Order In Progress",
-  "order_status_in_progress.heading": "Order In Progress",
-  "order_status_in_progress.intro": "Order \"{title}\" is now in progress.",
+  "order_status_in_progress.subject": "Order Being Fulfilled",
+  "order_status_in_progress.heading": "Order Being Fulfilled",
+  "order_status_in_progress.intro": "Order \"{title}\" is now being fulfilled.",
   "order_status_not_started.subject": "Order Status Updated",
-  "order_status_not_started.heading": "Order Not Started",
-  "order_status_not_started.intro": "Order \"{title}\" status has been updated to Not Started.",
+  "order_status_not_started.heading": "Order Queued",
+  "order_status_not_started.intro": "Order \"{title}\" status has been updated to Queued.",
 
   // price_alert: a watchlist item hit its target price.
   "price_alert.subject": "Price Alert: {title} is {price} aUEC",

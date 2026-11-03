@@ -472,7 +472,7 @@ describe("a reverted event keeps legacy + shadow", () => {
       [
         "in_app  user:seller order_message (order:rv)",
         "in_app  user:customer order_status_in_progress (order:rv)",
-        "push    push:customer [order] Order In Progress",
+        "push    push:customer [order] Order Being Fulfilled",
         "push    push:seller [order] customer: hello",
         "shadow  order.message ok",
       ]

@@ -384,9 +384,9 @@ describe("account identity security email", () => {
   it("is in the user's language, with their new username", async () => {
     h.locale = "de"
     const m = await identity("username_released", { old_username: "Old", new_username: "user_1a2b3c4d" })
-    expect(m.subject).toBe("Ihr SC-Market-Benutzername wurde geändert")
+    expect(m.subject).toBe("Dein SC-Market-Benutzername wurde geändert")
     expect(m.text).toContain("Hallo Alice,")
-    expect(m.text).toContain("Ihr Benutzername ist jetzt user_1a2b3c4d.")
+    expect(m.text).toContain("Dein Benutzername ist jetzt user_1a2b3c4d.")
     expect(m.text).toContain("Einstellungen öffnen:\nhttps://")
     expect(m.text).toContain("Einstellungen verwalten:")
     expect(m.html).toContain('<html lang="de">')
@@ -495,7 +495,7 @@ describe("buy order filled email", () => {
   it("is in the user's language, amounts written its way", async () => {
     h.locale = "de"
     const m = await send("buy_order_filled")
-    expect(m.subject).toBe("Ihr Kaufauftrag wurde erfüllt")
+    expect(m.subject).toBe("Dein Kaufauftrag wurde erfüllt")
     expect(m.text).toContain("für 12.000 aUEC")
     h.locale = "ja"
     const ja = await send("buy_order_filled")
@@ -541,9 +541,9 @@ describe("statuses, amounts and user text", () => {
   it("a status email shows the status it announces, not the order row's (read before the update)", async () => {
     const stale = { order: { ...ORDER, status: "not-started" } }
     expect((await send("order_status_cancelled", stale)).text).toContain("Status: Cancelled")
-    expect((await send("order_status_in_progress", stale)).text).toContain("Status: In Progress")
+    expect((await send("order_status_in_progress", stale)).text).toContain("Status: Being fulfilled")
     expect((await send("order_status_not_started", { order: { ...ORDER, status: "in-progress" } })).text).toContain(
-      "Status: Not Started",
+      "Status: Queued",
     )
     h.locale = "de"
     expect((await send("order_status_cancelled", stale)).text).toContain("Status: Storniert")

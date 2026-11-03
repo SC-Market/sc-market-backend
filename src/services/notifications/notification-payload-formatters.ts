@@ -76,12 +76,12 @@ export function formatOrderNotificationPayload(
       body = `Order "${order.title || "Untitled"}" has been fulfilled`
       break
     case "order_status_in_progress":
-      title = "Order In Progress"
-      body = `Order "${order.title || "Untitled"}" is now in progress`
+      title = "Order Being Fulfilled"
+      body = `Order "${order.title || "Untitled"}" is now being fulfilled`
       break
     case "order_status_not_started":
       title = "Order Status Updated"
-      body = `Order "${order.title || "Untitled"}" status updated to not started`
+      body = `Order "${order.title || "Untitled"}" status updated to Queued`
       break
     case "order_status_cancelled":
       title = "Order Cancelled"
