@@ -19,6 +19,7 @@ import {
   addWatchlistItem,
   listWatchlistItems,
   removeWatchlistItem,
+  updateWatchlistItem,
   updateWatchlistItemPrice,
   validateMaxPrice,
   WATCHLIST_MAX_ITEMS,
@@ -225,6 +226,100 @@ describe("updateWatchlistItemPrice", () => {
       updateWatchlistItemPrice(knex(), "alice", "nope", 10),
     )
     expect(err.code).toBe("not_found")
+  })
+})
+
+describe("updateWatchlistItem", () => {
+  it("pauses and resumes the owner's watch", async () => {
+    const paused = await updateWatchlistItem(knex(), "alice", ALICE_WATCH, {
+      paused: true,
+    })
+    expect(paused.paused_at).toBeInstanceOf(Date)
+    const pausedAt = paused.paused_at
+
+    // Pausing again keeps when it was first paused.
+    const again = await updateWatchlistItem(knex(), "alice", ALICE_WATCH, {
+      paused: true,
+    })
+    expect(again.paused_at).toBe(pausedAt)
+
+    const resumed = await updateWatchlistItem(knex(), "alice", ALICE_WATCH, {
+      paused: false,
+    })
+    expect(resumed.paused_at).toBeNull()
+  })
+
+  it("sets and clears a minimum quality on an item watch", async () => {
+    const set = await updateWatchlistItem(knex(), "alice", ALICE_WATCH, {
+      min_quality_tier: 3,
+      max_price: 30000,
+    })
+    expect(set).toMatchObject({ min_quality_tier: 3, max_price: 30000 })
+    const cleared = await updateWatchlistItem(knex(), "alice", ALICE_WATCH, {
+      min_quality_tier: null,
+    })
+    expect(cleared.min_quality_tier).toBeNull()
+    expect(cleared.max_price).toBe(30000)
+  })
+
+  it("rejects a quality outside 1-5", async () => {
+    for (const tier of [0, 6, 2.5]) {
+      const err = await rejection(
+        updateWatchlistItem(knex(), "alice", ALICE_WATCH, {
+          min_quality_tier: tier,
+        }),
+      )
+      expect(err).toMatchObject({ code: "invalid", field: "min_quality_tier" })
+    }
+  })
+
+  it("rejects a quality on a text watch", async () => {
+    const TEXT_WATCH = "cccccccc-0000-4000-8000-000000000003"
+    db.tables.watchlist_items.push({
+      id: TEXT_WATCH,
+      user_id: "alice",
+      query: "hammer pistol",
+      game_item_id: null,
+      max_price: 500,
+      created_at: new Date(),
+      last_notified_at: null,
+    })
+    const err = await rejection(
+      updateWatchlistItem(knex(), "alice", TEXT_WATCH, { min_quality_tier: 2 }),
+    )
+    expect(err.field).toBe("min_quality_tier")
+  })
+
+  it("cannot pause another user's watch", async () => {
+    const err = await rejection(
+      updateWatchlistItem(knex(), "alice", BOB_WATCH, { paused: true }),
+    )
+    expect(err.code).toBe("not_found")
+    expect(
+      db.tables.watchlist_items.find((r) => r.id === BOB_WATCH)?.paused_at,
+    ).toBeUndefined()
+  })
+})
+
+describe("addWatchlistItem quality", () => {
+  it("stores a minimum quality for an item watch", async () => {
+    const row = await addWatchlistItem(knex(), "carol", {
+      game_item_id: ITEM,
+      max_price: 40000,
+      min_quality_tier: 4,
+    })
+    expect(row).toMatchObject({ min_quality_tier: 4, paused_at: null })
+  })
+
+  it("rejects a minimum quality for a text watch", async () => {
+    const err = await rejection(
+      addWatchlistItem(knex(), "carol", {
+        query: "Hammer Pistol",
+        max_price: 500,
+        min_quality_tier: 4,
+      }),
+    )
+    expect(err.field).toBe("min_quality_tier")
   })
 })
 

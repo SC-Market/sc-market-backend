@@ -38,6 +38,7 @@ vi.mock("../../clients/database/knex-db.js", () => {
     )
     return builder
   }
+  db.raw = (...args: unknown[]) => ({ raw: args })
   return { getKnex: () => db }
 })
 
@@ -65,6 +66,7 @@ import {
   PRICE_ALERT_ACTION,
   alertableListingQuery,
   checkWatchlistMatches,
+  lowestAtOrAbove,
   matchingWatchesQuery,
   type AlertableListing,
 } from "./watchlist.service.js"
@@ -159,6 +161,61 @@ describe("which watchlist items match", () => {
   })
 })
 
+describe("paused and quality watches", () => {
+  const now = new Date("2026-10-25T12:00:00Z")
+
+  it("never matches a paused watch", () => {
+    const q = matchingWatchesQuery(pg, LISTING, now).toSQL()
+    expect(q.sql).toContain('"w"."paused_at" is null')
+  })
+
+  it("without quality lots, only watches with no minimum quality match", () => {
+    const q = matchingWatchesQuery(pg, LISTING, now).toSQL()
+    expect(q.sql).toContain('("w"."min_quality_tier" is null and "w"."max_price" >= ?)')
+    expect(q.sql).not.toContain('"w"."min_quality_tier" = ?')
+  })
+
+  it("matches a quality watch at the price of the lots at or above its tier", () => {
+    // Tier 2 lots at 18,000, tier 4 lots at 30,000.
+    const tiers = new Map([
+      [2, 18000],
+      [4, 30000],
+    ])
+    const q = matchingWatchesQuery(pg, LISTING, now, tiers).toSQL()
+    const clause =
+      '("w"."min_quality_tier" = ? and "w"."game_item_id" = ? and "w"."max_price" >= ?)'
+    expect(q.sql.split(clause).length - 1).toBe(4) // tiers 1-4; nothing is tier 5
+    const b = q.bindings
+    const at = (tier: number) => b[b.indexOf(tier, 1) + 2]
+    expect(at(1)).toBe(18000)
+    expect(at(2)).toBe(18000)
+    expect(at(3)).toBe(30000)
+    expect(at(4)).toBe(30000)
+  })
+
+  it("quality watches never match a listing without a game item", () => {
+    const q = matchingWatchesQuery(
+      pg,
+      { ...LISTING, game_item_id: null },
+      now,
+      new Map([[3, 100]]),
+    ).toSQL()
+    expect(q.sql).not.toContain('"w"."min_quality_tier" = ?')
+  })
+
+  it("lowestAtOrAbove picks the cheapest good-enough tier", () => {
+    const tiers = new Map([
+      [1, 5000],
+      [3, 9000],
+      [5, 7000],
+    ])
+    expect(lowestAtOrAbove(tiers, 1)).toBe(5000)
+    expect(lowestAtOrAbove(tiers, 2)).toBe(7000)
+    expect(lowestAtOrAbove(tiers, 5)).toBe(7000)
+    expect(lowestAtOrAbove(new Map(), 1)).toBeUndefined()
+  })
+})
+
 describe("checkWatchlistMatches", () => {
   const match = { watchlist_id: "w-1", user_id: "u-1", query: "Medical Supplies", max_price: 25000 }
 
@@ -233,6 +290,27 @@ describe("checkWatchlistMatches", () => {
     expect(messages.push?.data?.type).toBe(PRICE_ALERT_ACTION)
     expect(messages.discord_dm?.embeds?.[0].title).toBe("Price Alert: Medical Supplies x100")
     expect(opts.entityId).toBe("l-1")
+  })
+
+  it("alerts a quality watch at the price of its tier's lots", async () => {
+    fake.results.listing_search = [
+      [{ ...LISTING, item_id: "li-1", price: 12000 }],
+      // Lot tiers of this listing row: tier 1 at 12,000, tier 4 at 30,000.
+      [
+        { tier: 1, price: "12000" },
+        { tier: 4, price: "30000" },
+      ],
+    ]
+    fake.results.watchlist_items = [[{ ...match, max_price: 35000, min_quality_tier: 3 }], []]
+
+    await checkWatchlistMatches("l-1")
+
+    expect(notify).toHaveBeenCalledTimes(1)
+    const opts = vi.mocked(notify).mock.calls[0][2]
+    const messages = opts.messages as Exclude<typeof opts.messages, (...a: never) => unknown>
+    expect(messages.push?.body).toBe(
+      "Medical Supplies x100 is listed at 30,000 aUEC (your target: 35,000 aUEC, quality 3+)",
+    )
   })
 
   it("does not start the cooldown when no channel delivered", async () => {

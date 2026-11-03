@@ -891,6 +891,9 @@ threadRouter.get("/watchlist/:discord_id", async (req, res) => {
         query: item.query,
         game_item_id: item.game_item_id,
         max_price: item.max_price,
+        // Set on the site (Settings -> Price Alerts); shown by /watchlist list.
+        min_quality_tier: item.min_quality_tier,
+        paused: item.paused_at != null,
         created_at: item.created_at,
         current_lowest: item.current_lowest,
       })),

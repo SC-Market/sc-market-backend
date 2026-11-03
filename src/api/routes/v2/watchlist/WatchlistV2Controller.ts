@@ -19,7 +19,7 @@ import {
   describeWatchlistItems,
   listWatchlistItems,
   removeWatchlistItem,
-  updateWatchlistItemPrice,
+  updateWatchlistItem,
   WATCHLIST_MAX_ITEMS,
   WatchlistError,
   type WatchlistItemView,
@@ -46,6 +46,9 @@ function serialize(item: WatchlistItemView): WatchlistItem {
     item_name: item.item_name,
     item_image_url: item.item_image_url,
     max_price: item.max_price,
+    min_quality_tier: item.min_quality_tier,
+    paused: item.paused_at != null,
+    paused_at: toIso(item.paused_at),
     current_lowest: item.current_lowest,
     last_notified_at: toIso(item.last_notified_at),
     created_at: toIso(item.created_at) ?? "",
@@ -93,7 +96,7 @@ export class WatchlistV2Controller extends BaseController {
   }
 
   /**
-   * Change the target price of a watched item
+   * Change a watched item: target price, minimum quality, or pause/resume it
    * @summary Update a watchlist item
    */
   @Security("loggedin")
@@ -106,12 +109,7 @@ export class WatchlistV2Controller extends BaseController {
     this.request = request
     const db = getKnex()
     const row = await this.run(() =>
-      updateWatchlistItemPrice(
-        db,
-        this.getUserId(),
-        watchlist_id,
-        body.max_price,
-      ),
+      updateWatchlistItem(db, this.getUserId(), watchlist_id, body),
     )
     const [view] = await describeWatchlistItems(db, [row])
     return serialize(view)

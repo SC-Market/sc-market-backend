@@ -8,9 +8,12 @@
  * A listing only alerts when it is publicly listed (active, public, same rule
  * as the anonymous market grid) and priced above the "WTB" placeholder price.
  *
- * A watchlist item matches when the listing is at or below its max_price and:
+ * A watchlist item matches when it is not paused, the listing is at or below
+ * its max_price and:
  * - it has a game_item_id: the listing is for exactly that game item;
  * - otherwise: the listing title contains the query as a phrase.
+ * A watch with a min_quality_tier only counts the listing's listed lots of at
+ * least that tier, at their price (per-variant pricing can differ by tier).
  */
 
 import type { Knex } from "knex"
@@ -30,6 +33,8 @@ export const NOTIFICATION_COOLDOWN_MS = 60 * 60 * 1000
 /** A listing_search row that may be broadcast to watchers. */
 export interface AlertableListing {
   listing_id: string
+  /** The listing_items row (one per listed item; bundles have several). */
+  item_id?: string
   title: string
   price: number
   quantity: number
@@ -43,6 +48,8 @@ export interface WatchlistMatch {
   user_id: string
   query: string
   max_price: number
+  /** Lowest quality tier that alerts; null for any quality. */
+  min_quality_tier?: number | null
   /** When this watch last alerted; identifies the alert cycle for idempotency. */
   last_notified_at?: Date | string | null
 }
@@ -80,6 +87,7 @@ export function alertableListingQuery(db: Knex, listingId: string): Knex.QueryBu
     .where(alertableListingFilter(db))
     .select(
       "ls.listing_id",
+      "ls.item_id",
       "ls.title",
       "ls.price_min as price",
       "ls.quantity_available as quantity",
@@ -87,6 +95,63 @@ export function alertableListingQuery(db: Knex, listingId: string): Knex.QueryBu
       "ls.shop_name as seller_name",
       "ls.photo",
     )
+}
+
+/** Price of a listed lot: the unified price, or its variant's price. */
+const LOT_PRICE_SQL =
+  "CASE WHEN ls.pricing_mode = 'unified' THEN ls.base_price ELSE vp.price END"
+const LOT_TIER_SQL = "(iv.attributes->>'quality_tier')::integer"
+
+/**
+ * Listed, in-stock lots with a quality tier on alertable listings, priced as
+ * a real offer. Callers narrow it (one listing item, or game items) and group
+ * by tier: `tier` and `price` (the lowest lot price in the group).
+ */
+export function alertableLotTiersQuery(db: Knex): Knex.QueryBuilder {
+  return db("listing_search as ls")
+    .where(alertableListingFilter(db))
+    .join("listing_item_lots as lil", "lil.item_id", "ls.item_id")
+    .join("item_variants as iv", "iv.variant_id", "lil.variant_id")
+    .leftJoin("variant_pricing as vp", function () {
+      this.on("vp.item_id", "=", "lil.item_id").andOn(
+        "vp.variant_id",
+        "=",
+        "lil.variant_id",
+      )
+    })
+    .where("lil.listed", true)
+    .where("lil.quantity_total", ">", 0)
+    .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
+    .whereRaw(`${LOT_PRICE_SQL} > ?`, [PLACEHOLDER_PRICE_MAX])
+    .groupByRaw(LOT_TIER_SQL)
+    .select(db.raw(`${LOT_TIER_SQL} as tier`), db.raw(`MIN(${LOT_PRICE_SQL}) as price`))
+}
+
+/** Lowest price among tiers at or above `minTier`; undefined if none. */
+export function lowestAtOrAbove(
+  tierPrices: Map<number, number>,
+  minTier: number,
+): number | undefined {
+  let lowest: number | undefined
+  for (const [tier, price] of tierPrices) {
+    if (tier >= minTier && (lowest === undefined || price < lowest)) lowest = price
+  }
+  return lowest
+}
+
+/** Rows of alertableLotTiersQuery as tier -> lowest price. */
+export function toTierPrices(
+  rows: Array<{ tier: number | string; price: number | string }>,
+): Map<number, number> {
+  const result = new Map<number, number>()
+  for (const r of rows) {
+    const tier = Number(r.tier)
+    const price = Number(r.price)
+    if (!Number.isFinite(tier) || !Number.isFinite(price)) continue
+    const prev = result.get(tier)
+    if (prev === undefined || price < prev) result.set(tier, price)
+  }
+  return result
 }
 
 /**
@@ -112,14 +177,41 @@ export function watchMatchesListing(
   }
 }
 
-/** Watchlist items an alertable listing row satisfies, outside their cooldown. */
+/**
+ * Watchlist items an alertable listing row satisfies: not paused, outside
+ * their cooldown, at or below the target price. `tierPrices` (tier -> lowest
+ * lot price of this listing row) lets watches with a minimum quality match at
+ * the price of the lots good enough for them; without it they never match.
+ */
 export function matchingWatchesQuery(
   db: Knex,
   listing: AlertableListing,
   now: Date,
+  tierPrices: Map<number, number> = new Map(),
 ): Knex.QueryBuilder {
+  const qualityPrices: Array<[number, number]> = []
+  for (let tier = 1; tier <= 5; tier++) {
+    const price = lowestAtOrAbove(tierPrices, tier)
+    if (price !== undefined) qualityPrices.push([tier, price])
+  }
   return db("watchlist_items as w")
-    .where("w.max_price", ">=", listing.price)
+    .whereNull("w.paused_at")
+    .where(function () {
+      this.where(function () {
+        this.whereNull("w.min_quality_tier").where("w.max_price", ">=", listing.price)
+      })
+      // Quality watches are item watches: only a listing of that item has lots
+      // to compare, and its title match is not enough.
+      if (listing.game_item_id) {
+        for (const [tier, price] of qualityPrices) {
+          this.orWhere(function () {
+            this.where("w.min_quality_tier", tier)
+              .where("w.game_item_id", listing.game_item_id)
+              .where("w.max_price", ">=", price)
+          })
+        }
+      }
+    })
     .where(watchMatchesListing(listing.game_item_id, listing.title))
     .where(function () {
       this.whereNull("w.last_notified_at").orWhere(
@@ -128,7 +220,24 @@ export function matchingWatchesQuery(
         new Date(now.getTime() - NOTIFICATION_COOLDOWN_MS),
       )
     })
-    .select("w.id as watchlist_id", "w.user_id", "w.query", "w.max_price", "w.last_notified_at")
+    .select(
+      "w.id as watchlist_id",
+      "w.user_id",
+      "w.query",
+      "w.max_price",
+      "w.min_quality_tier",
+      "w.last_notified_at",
+    )
+}
+
+/** Tier -> lowest lot price of one listing row; empty without quality lots. */
+async function listingTierPrices(
+  db: Knex,
+  listing: AlertableListing,
+): Promise<Map<number, number>> {
+  if (!listing.game_item_id || !listing.item_id) return new Map()
+  const rows = await alertableLotTiersQuery(db).where("ls.item_id", listing.item_id)
+  return toTierPrices(rows)
 }
 
 /**
@@ -147,9 +256,15 @@ export async function checkWatchlistMatches(listingId: string): Promise<void> {
     // One alert per watchlist item, for the cheapest listing row it matches.
     const alerts = new Map<string, { match: WatchlistMatch; listing: AlertableListing }>()
     for (const raw of rows) {
-      const listing = { ...raw, price: Number(raw.price), quantity: Number(raw.quantity) }
-      const matches: WatchlistMatch[] = await matchingWatchesQuery(db, listing, now)
+      const base = { ...raw, price: Number(raw.price), quantity: Number(raw.quantity) }
+      const tierPrices = await listingTierPrices(db, base)
+      const matches: WatchlistMatch[] = await matchingWatchesQuery(db, base, now, tierPrices)
       for (const match of matches) {
+        // A quality watch is alerted at the price of the lots it accepts.
+        const tier = match.min_quality_tier == null ? null : Number(match.min_quality_tier)
+        const price = tier == null ? base.price : lowestAtOrAbove(tierPrices, tier)
+        if (price === undefined) continue
+        const listing = { ...base, price }
         const prev = alerts.get(match.watchlist_id)
         if (!prev || listing.price < prev.listing.price) {
           alerts.set(match.watchlist_id, { match, listing })
@@ -212,7 +327,9 @@ export async function sendPriceAlert(
   const baseUrl = env.FRONTEND_URL || "https://sc-market.space"
   const listingUrl = `${baseUrl}/market/${listing.listing_id}`
   const price = listing.price.toLocaleString("en-US")
-  const target = match.max_price.toLocaleString("en-US")
+  const tier = match.min_quality_tier == null ? null : Number(match.min_quality_tier)
+  const target =
+    match.max_price.toLocaleString("en-US") + " aUEC" + (tier ? `, quality ${tier}+` : "")
   const title = `Price Alert: ${listing.title}`
   const cycle = match.last_notified_at ? new Date(match.last_notified_at).toISOString() : "never"
 
@@ -225,7 +342,7 @@ export async function sendPriceAlert(
     messages: {
       push: {
         title,
-        body: `${listing.title} is listed at ${price} aUEC (your target: ${target} aUEC)`,
+        body: `${listing.title} is listed at ${price} aUEC (your target: ${target})`,
         icon: listing.photo || `${baseUrl}/android-chrome-192x192.png`,
         badge: `${baseUrl}/android-chrome-192x192.png`,
         data: {
@@ -254,7 +371,7 @@ export async function sendPriceAlert(
             title,
             description:
               `**${listing.title}** is listed at **${price} aUEC**\n` +
-              `Your target price: ${target} aUEC\n` +
+              `Your target price: ${target}\n` +
               `Quantity: ${listing.quantity}\n` +
               (listing.seller_name ? `Seller: ${listing.seller_name}\n` : "") +
               `\n[View Listing](${listingUrl})`,

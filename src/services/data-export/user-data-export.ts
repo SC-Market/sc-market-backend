@@ -1288,6 +1288,8 @@ export async function writeUserDataExport(
           "query",
           "game_item_id",
           "max_price",
+          "min_quality_tier",
+          "paused_at",
           "created_at",
           "last_notified_at",
         ),

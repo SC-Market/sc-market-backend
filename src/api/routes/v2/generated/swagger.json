@@ -38,6 +38,21 @@
 						"format": "double",
 						"description": "Alert when a public listing is at or below this price (aUEC)."
 					},
+					"min_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Item watches only: alerts only for listed lots of at least this quality\ntier (1-5), at their price. null: any quality."
+					},
+					"paused": {
+						"type": "boolean",
+						"description": "Paused watches never alert, until resumed."
+					},
+					"paused_at": {
+						"type": "string",
+						"nullable": true,
+						"description": "When the watch was paused; null while it is active."
+					},
 					"current_lowest": {
 						"type": "number",
 						"format": "double",
@@ -60,6 +75,9 @@
 					"item_name",
 					"item_image_url",
 					"max_price",
+					"min_quality_tier",
+					"paused",
+					"paused_at",
 					"current_lowest",
 					"last_notified_at",
 					"created_at"
@@ -105,6 +123,14 @@
 						"description": "Target price in aUEC: a whole number above 1 (1 aUEC listings are\nplaceholders and never alert).",
 						"minimum": 2,
 						"maximum": 2147483647
+					},
+					"min_quality_tier": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"description": "Item watches only: lowest quality tier that alerts; omit or null for any.",
+						"minimum": 1,
+						"maximum": 5
 					}
 				},
 				"required": [
@@ -114,6 +140,7 @@
 				"additionalProperties": false
 			},
 			"UpdateWatchlistItemRequest": {
+				"description": "Changes to a watch; omitted fields keep their current value.",
 				"properties": {
 					"max_price": {
 						"type": "integer",
@@ -121,11 +148,20 @@
 						"description": "New target price in aUEC.",
 						"minimum": 2,
 						"maximum": 2147483647
+					},
+					"min_quality_tier": {
+						"type": "integer",
+						"format": "int32",
+						"nullable": true,
+						"description": "Item watches only: lowest quality tier that alerts; null for any quality.",
+						"minimum": 1,
+						"maximum": 5
+					},
+					"paused": {
+						"type": "boolean",
+						"description": "true pauses the watch (no alerts), false resumes it."
 					}
 				},
-				"required": [
-					"max_price"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -18395,7 +18431,7 @@
 						}
 					}
 				},
-				"description": "Change the target price of a watched item",
+				"description": "Change a watched item: target price, minimum quality, or pause/resume it",
 				"summary": "Update a watchlist item",
 				"tags": [
 					"Watchlist"

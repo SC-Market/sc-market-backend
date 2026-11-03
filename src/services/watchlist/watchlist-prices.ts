@@ -5,12 +5,19 @@
  */
 
 import type { Knex } from "knex"
-import { alertableListingFilter } from "./watchlist.service.js"
+import {
+  alertableListingFilter,
+  alertableLotTiersQuery,
+  lowestAtOrAbove,
+  toTierPrices,
+} from "./watchlist.service.js"
 
 interface PricedWatch {
   id: string
   query: string
   game_item_id: string | null
+  /** Only lots of at least this tier count; null/absent for any quality. */
+  min_quality_tier?: number | null
 }
 
 /** Lowest current price per watch id; watches with no matching listing are absent. */
@@ -26,10 +33,46 @@ export async function currentLowestPrices(
       .where(alertableListingFilter(db))
       .where("ls.quantity_available", ">", 0)
 
-  // Item watches: one grouped query for all of them.
+  const hasTier = (w: PricedWatch) => w.min_quality_tier != null
+
+  // Item watches with a minimum quality: lot prices per item and tier.
+  const qualityItemIds = [
+    ...new Set(
+      watches.flatMap((w) =>
+        w.game_item_id && hasTier(w) ? [w.game_item_id] : [],
+      ),
+    ),
+  ]
+  if (qualityItemIds.length > 0) {
+    const rows: Array<{
+      game_item_id: string
+      tier: number | string
+      price: number | string
+    }> = await alertableLotTiersQuery(db)
+      .whereIn("ls.game_item_id", qualityItemIds)
+      .groupBy("ls.game_item_id")
+      .select("ls.game_item_id")
+    const byItem = new Map<string, Array<{ tier: number | string; price: number | string }>>()
+    for (const r of rows) {
+      const key = String(r.game_item_id)
+      byItem.set(key, [...(byItem.get(key) ?? []), r])
+    }
+    for (const w of watches) {
+      if (!w.game_item_id || !hasTier(w)) continue
+      const lowest = lowestAtOrAbove(
+        toTierPrices(byItem.get(w.game_item_id) ?? []),
+        Number(w.min_quality_tier),
+      )
+      if (lowest !== undefined) result.set(w.id, lowest)
+    }
+  }
+
+  // Other item watches: one grouped query for all of them.
   const itemIds = [
     ...new Set(
-      watches.flatMap((w) => (w.game_item_id ? [w.game_item_id] : [])),
+      watches.flatMap((w) =>
+        w.game_item_id && !hasTier(w) ? [w.game_item_id] : [],
+      ),
     ),
   ]
   if (itemIds.length > 0) {
@@ -42,6 +85,7 @@ export async function currentLowestPrices(
       rows.map((r) => [String(r.game_item_id), Number(r.lowest)]),
     )
     for (const w of watches) {
+      if (hasTier(w)) continue
       const lowest = w.game_item_id ? byItem.get(w.game_item_id) : undefined
       if (lowest !== undefined && Number.isFinite(lowest))
         result.set(w.id, lowest)

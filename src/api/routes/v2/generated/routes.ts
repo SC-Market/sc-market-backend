@@ -140,6 +140,9 @@ const models: TsoaRoute.Models = {
             "item_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "item_image_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "max_price": {"dataType":"double","required":true},
+            "min_quality_tier": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "paused": {"dataType":"boolean","required":true},
+            "paused_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "current_lowest": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
             "last_notified_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "created_at": {"dataType":"string","required":true},
@@ -162,6 +165,7 @@ const models: TsoaRoute.Models = {
             "game_item_id": {"dataType":"string"},
             "query": {"dataType":"string"},
             "max_price": {"dataType":"integer","required":true,"validators":{"minimum":{"value":2},"maximum":{"value":2147483647}}},
+            "min_quality_tier": {"dataType":"union","subSchemas":[{"dataType":"integer"},{"dataType":"enum","enums":[null]}],"validators":{"minimum":{"value":1},"maximum":{"value":5}}},
         },
         "additionalProperties": false,
     },
@@ -169,7 +173,9 @@ const models: TsoaRoute.Models = {
     "UpdateWatchlistItemRequest": {
         "dataType": "refObject",
         "properties": {
-            "max_price": {"dataType":"integer","required":true,"validators":{"minimum":{"value":2},"maximum":{"value":2147483647}}},
+            "max_price": {"dataType":"integer","validators":{"minimum":{"value":2},"maximum":{"value":2147483647}}},
+            "min_quality_tier": {"dataType":"union","subSchemas":[{"dataType":"integer"},{"dataType":"enum","enums":[null]}],"validators":{"minimum":{"value":1},"maximum":{"value":5}}},
+            "paused": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
