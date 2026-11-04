@@ -83,7 +83,7 @@ describe("event", () => {
       path: "/market/me",
     })
     expect(svc.wipeMessages("de", WIPE).push.title).toBe(
-      "Ihre Inserate wurden für den Wipe pausiert",
+      "Deine Inserate wurden für den Wipe pausiert",
     )
   })
 })
