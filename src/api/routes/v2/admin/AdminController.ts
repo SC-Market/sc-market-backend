@@ -18,12 +18,9 @@ import {
   PagesDeployHookStatus,
   requestPagesRebuild,
 } from "../../../../services/game-data/pages-deploy-hook.js"
-import {
-  lastWipeStats,
-  runWipe,
-  startWipeNotices,
-  type LastWipeStats,
-} from "../../../../services/listing-wipe/listing-wipe.service.js"
+// Type only: the service is loaded on use. It pulls in notify() and, through
+// it, the CDN client, which needs B2 keys at import (CI has none).
+import type { LastWipeStats } from "../../../../services/listing-wipe/listing-wipe.service.js"
 import AdmZip from "adm-zip"
 import * as fs from "fs"
 import * as path from "path"
@@ -281,6 +278,9 @@ export class AdminController extends BaseController {
     this.requireAdmin()
     await this.requireStepUp()
     const knex = getKnex()
+    const { runWipe, startWipeNotices } = await import(
+      "../../../../services/listing-wipe/listing-wipe.service.js"
+    )
 
     const wipe = await runWipe(knex, this.getUserId())
     let messagesQueued = 0
@@ -310,6 +310,9 @@ export class AdminController extends BaseController {
   ): Promise<LastWipeStats | null> {
     this.request = request
     this.requireAdmin()
+    const { lastWipeStats } = await import(
+      "../../../../services/listing-wipe/listing-wipe.service.js"
+    )
     return lastWipeStats(getKnex())
   }
 
