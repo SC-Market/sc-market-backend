@@ -9,6 +9,7 @@ import * as offerDb from "../../api/routes/v1/offers/database.js"
 import express from "express"
 import { serializeMessage } from "../../api/routes/v1/chats/serializers.js"
 import { handleStatusUpdate } from "../../api/routes/v1/orders/helpers.js"
+import { userRelatedToOrder } from "../../api/routes/v1/orders/middleware.js"
 import { serializeAssignedOrder } from "../../api/routes/v1/orders/serializers.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { User } from "../../api/routes/v1/api-models.js"
@@ -227,6 +228,15 @@ threadRouter.post("/order/status", async (req, res) => {
   const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.status(404).json({ error: "User not found" })
+    return
+  }
+  // The same access check as v1 PUT /orders/:id and the public API: the
+  // order's customer, assignee, a site admin, or (an org's order) a member
+  // with manage_orders or claim_orders.
+  if (!(await userRelatedToOrder(order, user))) {
+    res
+      .status(403)
+      .json({ error: "You are not authorized to change this order" })
     return
   }
   req.order = order
