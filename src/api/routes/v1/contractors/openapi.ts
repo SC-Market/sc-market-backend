@@ -671,16 +671,13 @@ export const post_auth_link_spec = oapi.validPath({
     },
   },
   responses: {
-    "201": {
-      description: "Created - Resource successfully created",
+    "200": {
+      description: "OK - The org is verified; its details",
       content: {
         "application/json": {
           schema: {
             properties: {
-              data: {
-                type: "object",
-                properties: {},
-              },
+              data: oapi.schema("Contractor"),
             },
             required: ["data"],
             type: "object",

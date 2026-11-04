@@ -86,7 +86,7 @@ export const post_auth_link: RequestHandler = async (req, res) => {
 
   if (await authorizeContractor(spectrum_id, user)) {
     const contractor = await contractorDb.getContractor({ spectrum_id })
-    res.json(createResponse(contractorDetails(contractor, user)))
+    res.json(createResponse(await contractorDetails(contractor, user)))
   } else {
     res
       .status(403)
