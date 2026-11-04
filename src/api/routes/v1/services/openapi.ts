@@ -415,12 +415,21 @@ export const services_put_service_id_spec = oapi.validPath({
     },
   },
   responses: {
-    "204": {
-      description: "Updated - Resource successfully updated",
+    "200": {
+      description: "OK - Resource successfully updated",
       content: {
         "application/json": {
           schema: {
-            properties: {},
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  result: { type: "string", example: "Success" },
+                },
+                required: ["result"],
+              },
+            },
+            required: ["data"],
             type: "object",
             title: "UpdateServiceUpdated",
           },
