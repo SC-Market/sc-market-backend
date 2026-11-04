@@ -188,8 +188,9 @@ describe("applyOrderStatusChange: who may set which status", () => {
           `${actor} -> ${s}: ${(await outcome(order("personal", "in-progress"), actor, s)).replace(/"fulfilled_at":"[^"]+"/, '"fulfilled_at":<date>')}`,
         )
       }
-    // Note: on a personal order ANYONE reaching this function may cancel
-    // (the route's related_to_order middleware limits who reaches it).
+    // On a personal order only its customer, assignee or a site admin may
+    // cancel. This used to be left to the callers' access check, which the
+    // Discord bot's /threads/order/status doesn't have.
     expect(rows).toMatchInlineSnapshot(`
       [
         "admin -> not-started: ok [{"status":"not-started"}]",
@@ -207,19 +208,19 @@ describe("applyOrderStatusChange: who may set which status", () => {
         "manager -> not-started: 403 forbidden: Only the assigned user may set the status of this order to not-started",
         "manager -> in-progress: 403 forbidden: Only the assigned user may set the status of this order to in-progress",
         "manager -> fulfilled: 403 forbidden: Only the assigned user may set the status of this order to fulfilled",
-        "manager -> cancelled: ok [{"status":"cancelled"}]",
+        "manager -> cancelled: 403 forbidden: Only the customer or the assigned user may cancel this order",
         "claimer -> not-started: 403 forbidden: Only the assigned user may set the status of this order to not-started",
         "claimer -> in-progress: 403 forbidden: Only the assigned user may set the status of this order to in-progress",
         "claimer -> fulfilled: 403 forbidden: Only the assigned user may set the status of this order to fulfilled",
-        "claimer -> cancelled: ok [{"status":"cancelled"}]",
+        "claimer -> cancelled: 403 forbidden: Only the customer or the assigned user may cancel this order",
         "member -> not-started: 403 forbidden: Only the assigned user may set the status of this order to not-started",
         "member -> in-progress: 403 forbidden: Only the assigned user may set the status of this order to in-progress",
         "member -> fulfilled: 403 forbidden: Only the assigned user may set the status of this order to fulfilled",
-        "member -> cancelled: ok [{"status":"cancelled"}]",
+        "member -> cancelled: 403 forbidden: Only the customer or the assigned user may cancel this order",
         "stranger -> not-started: 403 forbidden: Only the assigned user may set the status of this order to not-started",
         "stranger -> in-progress: 403 forbidden: Only the assigned user may set the status of this order to in-progress",
         "stranger -> fulfilled: 403 forbidden: Only the assigned user may set the status of this order to fulfilled",
-        "stranger -> cancelled: ok [{"status":"cancelled"}]",
+        "stranger -> cancelled: 403 forbidden: Only the customer or the assigned user may cancel this order",
       ]
     `)
   })

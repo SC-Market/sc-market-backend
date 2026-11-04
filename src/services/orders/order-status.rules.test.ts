@@ -51,7 +51,9 @@ describe("canChangeOrderStatus", () => {
     ["personal", "customer", "in-progress", "403 forbidden"],
     ["personal", "customer", "fulfilled", "403 forbidden"],
     ["personal", "customer", "cancelled", "ok"],
-    ["personal", "stranger", "cancelled", "ok"], // the route's access check limits who gets here
+    ["personal", "stranger", "cancelled", "403 forbidden"], // not left to the caller (the Discord bot path has no access check)
+    ["personal", "manager", "cancelled", "403 forbidden"],
+    ["personal", "admin", "cancelled", "ok"],
     ["personal", "stranger", "fulfilled", "403 forbidden"],
     ["personal", "manager", "fulfilled", "403 forbidden"], // org permission means nothing without an org
     ["personal", "admin", "fulfilled", "ok"],
@@ -90,7 +92,18 @@ describe("canChangeOrderStatus", () => {
     }
   })
 
+  it("an unassigned order without an org: only its customer or a site admin may cancel", () => {
+    const open = { ...personal(), assigned_id: null }
+    expect(verdict(open, actor("customer"), "cancelled")).toBe("ok")
+    expect(verdict(open, ADMIN, "cancelled")).toBe("ok")
+    expect(verdict(open, actor("stranger"), "cancelled")).toBe("403 forbidden")
+  })
+
   it("keeps the messages callers answer with", () => {
+    const c = canChangeOrderStatus(personal(), actor("stranger"), "cancelled")
+    expect(c.allowed === false && c.message).toBe(
+      "Only the customer or the assigned user may cancel this order",
+    )
     const p = canChangeOrderStatus(personal(), actor("customer"), "fulfilled")
     const o = canChangeOrderStatus(org(), actor("stranger"), "cancelled")
     expect(p.allowed === false && p.message).toBe(

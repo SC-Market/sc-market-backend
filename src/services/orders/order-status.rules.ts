@@ -61,9 +61,10 @@ export type OrderStatusDecision =
  * Whether `actor` may set `order` to `status`. Checked in this order:
  * 1. the status must be one of ORDER_STATUS_VALUES (400 invalid_status);
  * 2. a closed order can only be changed by a site admin (400 closed);
- * 3. an order without an org: only the assignee or a site admin may set
- *    not-started / in-progress / fulfilled; cancelling is not limited here
- *    (the route's access check decides who reaches it);
+ * 3. an order without an org: the assignee or a site admin may set any
+ *    status, the customer may only cancel (403 forbidden). Not left to the
+ *    callers' access checks: the Discord bot's /threads/order/status has
+ *    none, so any linked Discord user could cancel a personal order;
  * 4. an org's order: an org manager (manage_orders) or the assignee may set
  *    any status, the customer may only cancel (403 forbidden).
  */
@@ -91,19 +92,26 @@ export function canChangeOrderStatus(
   }
 
   const assigned = order.assigned_id === actor.userId
+  const customer = order.customer_id === actor.userId
   if (!order.contractor_id) {
-    if (status !== "cancelled" && !assigned && !actor.isSiteAdmin) {
+    if (assigned || actor.isSiteAdmin) return { allowed: true }
+    if (status === "cancelled") {
+      if (customer) return { allowed: true }
       return {
         allowed: false,
         httpStatus: 403,
         reason: "forbidden",
-        message: `Only the assigned user may set the status of this order to ${status}`,
+        message: "Only the customer or the assigned user may cancel this order",
       }
     }
-    return { allowed: true }
+    return {
+      allowed: false,
+      httpStatus: 403,
+      reason: "forbidden",
+      message: `Only the assigned user may set the status of this order to ${status}`,
+    }
   }
 
-  const customer = order.customer_id === actor.userId
   if (actor.isOrgManager || assigned || (status === "cancelled" && customer)) {
     return { allowed: true }
   }
