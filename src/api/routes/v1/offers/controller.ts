@@ -398,7 +398,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       logger.error("Error in offers operation", { error: e })
     }
 
-    res.json(createResponse({ status: "Success" }))
+    res.json(createResponse({ result: "Success" }))
     return
   }
 }
