@@ -38,7 +38,7 @@ export const search_orders: RequestHandler = async (req, res) => {
   const args = await convert_order_search_query(req)
   if (!(args.contractor_id || args.assigned_id || args.customer_id || args.shop_id)) {
     if (!isSiteAdmin(user)) {
-      res.status(400).json(createErrorResponse("Missing permissions."))
+      res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }
   }
@@ -62,25 +62,25 @@ export const search_orders: RequestHandler = async (req, res) => {
     const seller = shopSeller(shop)
     if (seller.type === "contractor") {
       if (!(await is_member(seller.id, user.user_id))) {
-        res.status(400).json(createErrorResponse("Missing permissions."))
+        res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
         return
       }
     } else if (seller.id !== user.user_id && !isSiteAdmin(user)) {
-      res.status(400).json(createErrorResponse("Missing permissions."))
+      res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }
   }
 
   if (args.contractor_id && !args.shop_id) {
     if (!(await is_member(args.contractor_id, user.user_id))) {
-      res.status(400).json(createErrorResponse("Missing permissions."))
+      res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }
   }
 
   if (args.assigned_id && args.assigned_id !== user.user_id) {
     if (!args.contractor_id && !args.shop_id) {
-      res.status(400).json(createErrorResponse("Missing permissions."))
+      res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }
   }
@@ -95,7 +95,7 @@ export const search_orders: RequestHandler = async (req, res) => {
     !args.shop_id &&
     !isSiteAdmin(user)
   ) {
-    res.status(403).json(createErrorResponse("Missing permissions."))
+    res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
     return
   }
 

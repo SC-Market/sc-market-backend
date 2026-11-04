@@ -502,7 +502,7 @@ export const get_search: RequestHandler = async (req, res) => {
     !args.contractor_id &&
     !args.shop_id
   ) {
-    res.status(400).json(createErrorResponse("Missing permissions."))
+    res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
     return
   }
 
