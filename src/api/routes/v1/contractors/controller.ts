@@ -2436,7 +2436,7 @@ export const post_spectrum_id_decline: RequestHandler = async (
     contractor.contractor_id,
   )
 
-  res.json({ result: "Success" })
+  res.json(createResponse({ result: "Success" }))
 }
 
 export const post_admin_express_verify: RequestHandler = async (

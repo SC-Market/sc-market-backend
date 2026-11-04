@@ -2461,15 +2461,18 @@ export const post_spectrum_id_decline_spec = oapi.validPath({
     },
   ],
   responses: {
-    "201": {
-      description: "Created - Resource successfully created",
+    "200": {
+      description: "OK - The invite is declined",
       content: {
         "application/json": {
           schema: {
             properties: {
               data: {
                 type: "object",
-                properties: {},
+                properties: {
+                  result: { type: "string", example: "Success" },
+                },
+                required: ["result"],
               },
             },
             required: ["data"],
