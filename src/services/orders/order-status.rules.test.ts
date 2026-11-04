@@ -108,6 +108,11 @@ describe("isOrderClosed", () => {
     ["cancelled", true],
     ["not-started", false],
     ["in-progress", false],
+    // Exact statuses only: a status that merely contains a closed one is not
+    // closed (the check used to be a substring match).
+    ["not-fulfilled", false],
+    ["cancelled-pending-review", false],
+    ["", false],
   ])("%s -> %s", (status, closed) => expect(isOrderClosed(status)).toBe(closed))
 })
 

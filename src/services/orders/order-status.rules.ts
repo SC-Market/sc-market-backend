@@ -23,12 +23,9 @@ export function isOrderStatusValue(status: string): status is OrderStatusValue {
   return (ORDER_STATUS_VALUES as readonly string[]).includes(status)
 }
 
-/**
- * Whether an order is closed (fulfilled or cancelled). Substring match, as
- * the status check has always been.
- */
+/** Whether an order is closed (fulfilled or cancelled). */
 export function isOrderClosed(status: string): boolean {
-  return CLOSED_ORDER_STATUSES.some((closed) => status.includes(closed))
+  return (CLOSED_ORDER_STATUSES as readonly string[]).includes(status)
 }
 
 export interface OrderStatusRuleOrder {
