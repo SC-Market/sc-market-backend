@@ -172,13 +172,11 @@ export class OrdersV2Controller extends BaseController {
         }
         for (const [listing_id, litems] of grouped) {
           let title = "Unknown"
-          let price = 0
           const v2Listing = await knex("listings").where({ listing_id }).first()
-          if (v2Listing) {
-            title = v2Listing.title
-            const li = await knex("listing_items").where({ listing_id }).first()
-            price = li?.base_price ? parseInt(li.base_price) : 0
-          }
+          if (v2Listing) title = v2Listing.title
+          // The unit price this order was placed at (its lines), not the
+          // listing's current price; the lowest when its variants differ.
+          const price = Math.min(...litems.map((i) => parseInt(i.price_per_unit) || 0))
           const photoRow = await knex("listing_photos_v2 as lp")
             .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
             .where("lp.listing_id", listing_id)

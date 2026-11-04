@@ -163,6 +163,11 @@ export interface OrderMarketListingV2 {
   listing_id: string;
   quantity: number;
   title: string;
+  /**
+   * Unit price on this order's lines for the listing (what the buyer pays),
+   * not the listing's current price. The lowest when its variants were
+   * priced differently; each variant's own is in v2_variants.
+   */
   price: number;
   /** First photo URL */
   photo?: string;
