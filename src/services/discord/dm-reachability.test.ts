@@ -27,7 +27,7 @@ describe("discordDmStateSql", () => {
   it("linked, not refused (50007 / 50278), and shares a fresh server with the bot", () => {
     expect(flat).toContain("p.user_id = a.user_id AND p.provider_type = 'discord'")
     expect(flat).toContain("gp.shares_server = true AND gp.checked_at > now() - make_interval(days => ?)")
-    expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ANY(?::int[]), false) AS dm_closed")
+    expect(flat).toContain("SELECT d.status, d.error_code, d.created_at FROM discord_dm_attempts d")
     expect(flat).toContain("ORDER BY d.created_at DESC, d.attempt_id DESC LIMIT 1")
     expect(flat).toContain(
       "(s.discord_linked AND NOT s.dm_closed AND (s.shares_server OR s.user_installed)) AS dm_reachable",
@@ -54,8 +54,81 @@ describe("discordDmStateSql", () => {
     expect(dmReachable({ ...linked, user_installed: true })).toBe(true)
   })
 
+  it("a 50278 is lifted only by an install or a shared-server check after the attempt", () => {
+    expect(flat).toContain(
+      "EXISTS (SELECT 1 FROM discord_user_installs ui2 WHERE ui2.user_id = a.user_id AND ui2.last_seen_at > ld.created_at)",
+    )
+    expect(flat).toContain(
+      "WHERE gp2.user_id = a.user_id AND gp2.shares_server = true AND gp2.checked_at > ld.created_at",
+    )
+  })
+
+  // Evaluate the SQL's own dm_closed expression: each EXISTS becomes a flag,
+  // each code list its binding (closed codes first, then no-mutual-server codes).
+  const closedExpr = /(COALESCE\(ld\.status = 'failed' AND \(.*?\), false\)) AS dm_closed/.exec(flat)?.[1] ?? ""
+  type Attempt = { status: "sent" | "failed"; error_code: number | null; created_at: number } | null
+  type Later = { install_seen_at?: number; server_checked_at?: number }
+  const dmClosed = (ld: Attempt, later: Later = {}): boolean => {
+    if (!ld) return false // no attempt: the LATERAL row is NULLs, COALESCE gives false
+    let i = 0
+    const js = closedExpr
+      .replace(/EXISTS \(SELECT 1 FROM discord_user_installs ui2 [^)]*\)/, "x.laterInstall")
+      .replace(/EXISTS \( SELECT 1 FROM discord_guild_presence gp2 [^)]*\)/, "x.laterServer")
+      .replace(/ld\.error_code = ANY\(\?::int\[\]\)/g, () => `x.codes[${i++}].includes(x.code)`)
+      .replace("ld.status = 'failed'", "x.failed")
+      .replace(/^COALESCE\((.*), false\)$/, "($1)")
+      .replace(/\bAND\b/g, "&&")
+      .replace(/\bOR\b/g, "||")
+      .replace(/\bNOT\b/g, "!")
+    expect(js).toMatch(/^[\s()!&|a-zA-Z_.\[\]0-9]+$/)
+    return new Function("x", `return ${js}`)({
+      failed: ld.status === "failed",
+      code: ld.error_code,
+      codes: [bindings[1], bindings[2]],
+      laterInstall: (later.install_seen_at ?? -Infinity) > ld.created_at,
+      laterServer: (later.server_checked_at ?? -Infinity) > ld.created_at,
+    }) as boolean
+  }
+  const T = 1_000
+
+  it("50278, then a later install: reachable", () => {
+    const ld = { status: "failed" as const, error_code: 50278, created_at: T }
+    const closed = dmClosed(ld, { install_seen_at: T + 1 })
+    expect(closed).toBe(false)
+    expect(dmReachable({ ...linked, user_installed: true, dm_closed: closed })).toBe(true)
+  })
+
+  it("50278, then a later shared-server check that found one: reachable", () => {
+    const ld = { status: "failed" as const, error_code: 50278, created_at: T }
+    const closed = dmClosed(ld, { server_checked_at: T + 1 })
+    expect(closed).toBe(false)
+    expect(dmReachable({ ...linked, shares_server: true, dm_closed: closed })).toBe(true)
+  })
+
+  it("50278 with no later install or server: not reachable (an older install does not lift it)", () => {
+    const ld = { status: "failed" as const, error_code: 50278, created_at: T }
+    expect(dmClosed(ld)).toBe(true)
+    const closed = dmClosed(ld, { install_seen_at: T - 1, server_checked_at: T - 1 })
+    expect(closed).toBe(true)
+    expect(dmReachable({ ...linked, user_installed: true, shares_server: true, dm_closed: closed })).toBe(false)
+  })
+
+  it("50007, then an install or a shared server: still not reachable", () => {
+    const ld = { status: "failed" as const, error_code: 50007, created_at: T }
+    const closed = dmClosed(ld, { install_seen_at: T + 1, server_checked_at: T + 1 })
+    expect(closed).toBe(true)
+    expect(dmReachable({ ...linked, user_installed: true, shares_server: true, dm_closed: closed })).toBe(false)
+  })
+
+  it("never DMed, delivered, or another failure: not closed", () => {
+    expect(dmClosed(null)).toBe(false)
+    expect(dmClosed({ status: "sent", error_code: null, created_at: T })).toBe(false)
+    expect(dmClosed({ status: "failed", error_code: 50013, created_at: T })).toBe(false)
+    expect(dmClosed({ status: "failed", error_code: null, created_at: T })).toBe(false)
+  })
+
   it("user install, then a refused DM (50278): not reachable", () => {
-    // dm_closed: the last DM failed with a DM_REFUSAL_CODES code (50007 / 50278).
+    // dm_closed: the last DM failed with 50007, or with 50278 and nothing fixed it since.
     expect(dmReachable({ ...linked, user_installed: true, dm_closed: true })).toBe(false)
     // The refusal also deletes the install record (dm-attempts.ts -> clearUserInstall).
     expect(dmReachable({ ...linked, user_installed: false, dm_closed: true })).toBe(false)
@@ -67,8 +140,8 @@ describe("discordDmStateSql", () => {
     expect(dmReachable({ ...linked, discord_linked: false, user_installed: true, shares_server: true })).toBe(false)
   })
 
-  it("binds presence days, the refusal codes and retention days in statement order", () => {
-    expect(bindings).toEqual([3, [50007, 50278], 90])
+  it("binds presence days, closed codes, no-mutual-server codes and retention days in statement order", () => {
+    expect(bindings).toEqual([3, [50007], [50278], 90])
     expect((flat.match(/\?/g) ?? []).length).toBe(bindings.length)
   })
 
@@ -87,7 +160,7 @@ describe("discordDmReachableUsers / isDiscordDmReachable", () => {
     const [sql, bindings] = h.raw.mock.calls[0]
     expect(sql.replace(/\s+/g, " ")).toContain("FROM unnest(?::uuid[]) AS u(user_id) CROSS JOIN LATERAL (")
     expect(sql).toContain("WHERE dm.dm_reachable")
-    expect(bindings).toEqual([[A, B], 3, [50007, 50278], 90])
+    expect(bindings).toEqual([[A, B], 3, [50007], [50278], 90])
   })
 
   it("no ids: no query", async () => {

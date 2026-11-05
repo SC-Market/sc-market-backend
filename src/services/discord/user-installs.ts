@@ -21,7 +21,10 @@
  * Expiry: a later DM to the user that is refused (DM_REFUSAL_CODES, 50007 /
  * 50278: the app was removed, DMs are closed, or no mutual server) deletes the
  * row (dm-attempts.ts). The
- * next user-install interaction records it again.
+ * next user-install interaction records it again, as a new row with fresh
+ * timestamps; after a 50278 (no mutual server) that later install makes the
+ * user reachable again (dm-reachability.ts compares last_seen_at with the
+ * refused attempt's time). After a 50007 (DMs closed) it does not.
  *
  * Recording never throws.
  */

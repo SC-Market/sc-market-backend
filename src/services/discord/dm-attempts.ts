@@ -12,7 +12,8 @@
  *
  * Per attempt: the user, sent or failed, and Discord's error code (a DM
  * refusal, DM_REFUSAL_CODES / isDmRefusalCode: the bot cannot DM them, their
- * DMs are closed or they share no server with it; it also clears a recorded
+ * DMs are closed (DM_CLOSED_CODES) or they share no server with it
+ * (NO_MUTUAL_GUILD_CODES); it also clears a recorded
  * user install, user-installs.ts). Attempts for Discord accounts not linked to an
  * SC Market user are not recorded (there is no one to attribute them to).
  * Recording never throws: a DM that went out is never failed by bookkeeping.
@@ -25,15 +26,23 @@ import { clearUserInstall } from "./user-installs.js"
  * Discord JSON error codes that mean the bot cannot DM this user (a DM
  * refusal), the one list every path uses (notify()'s Discord DM adapter, DM
  * reachability, the "Still selling?" campaign, the seller reachability report,
- * clearing a user install):
- * - 50007 "Cannot send messages to this user" (DMs closed);
- * - 50278 "Cannot send messages to this user due to having no mutual guilds"
- *   (2026-11-04: opening the DM channel worked, the send got 403 / 50278).
- * Other failures (rate limits, Discord errors) say nothing about reachability.
+ * clearing a user install). Two kinds:
+ * - DM_CLOSED_CODES: 50007 "Cannot send messages to this user" (DMs closed).
+ *   Always blocks DM reachability (within DM_ATTEMPT_RETENTION_DAYS): an
+ *   install or a shared server does not reopen DMs.
+ * - NO_MUTUAL_GUILD_CODES: 50278 "Cannot send messages to this user due to
+ *   having no mutual guilds" (2026-11-04: opening the DM channel worked, the
+ *   send got 403 / 50278). Blocks only until a later signal fixes it: an app
+ *   install recorded after the attempt, or a shared-server check after it that
+ *   found a shared server (dm-reachability.ts).
+ * DM_REFUSAL_CODES is both. Other failures (rate limits, Discord errors) say
+ * nothing about reachability.
  */
-export const DM_REFUSAL_CODES: readonly number[] = Object.freeze([50007, 50278])
+export const DM_CLOSED_CODES: readonly number[] = Object.freeze([50007])
+export const NO_MUTUAL_GUILD_CODES: readonly number[] = Object.freeze([50278])
+export const DM_REFUSAL_CODES: readonly number[] = Object.freeze([...DM_CLOSED_CODES, ...NO_MUTUAL_GUILD_CODES])
 
-/** Whether a Discord error code is a DM refusal (DM_REFUSAL_CODES). */
+/** Whether a Discord error code is a DM refusal (DM_REFUSAL_CODES: either kind). */
 export function isDmRefusalCode(code: unknown): boolean {
   return typeof code === "number" && DM_REFUSAL_CODES.includes(code)
 }

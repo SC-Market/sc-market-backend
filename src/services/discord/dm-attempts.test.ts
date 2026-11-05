@@ -155,6 +155,12 @@ describe("DM refusal codes", () => {
     expect(attempts.DM_REFUSAL_CODES).toEqual([50007, 50278])
   })
 
+  it("split: 50007 always blocks, 50278 until a later install or shared server", () => {
+    expect(attempts.DM_CLOSED_CODES).toEqual([50007])
+    expect(attempts.NO_MUTUAL_GUILD_CODES).toEqual([50278])
+    expect(attempts.DM_REFUSAL_CODES).toEqual([...attempts.DM_CLOSED_CODES, ...attempts.NO_MUTUAL_GUILD_CODES])
+  })
+
   it("isDmRefusalCode: only those codes", () => {
     expect(attempts.isDmRefusalCode(50007)).toBe(true)
     expect(attempts.isDmRefusalCode(50278)).toBe(true)

@@ -9,21 +9,30 @@
  * when all of:
  * - their Discord account is linked (account_providers);
  * - their last recorded DM attempt (discord_dm_attempts, DM_ATTEMPT_RETENTION_DAYS)
- *   was not refused (DM_REFUSAL_CODES: 50007 DMs closed, 50278 no mutual
- *   server).
+ *   is not a standing refusal (dm_closed):
+ *   - 50007 (DM_CLOSED_CODES, DMs closed) always stands: an install or a
+ *     shared server does not reopen DMs;
+ *   - 50278 (NO_MUTUAL_GUILD_CODES, no mutual server) stands only until a
+ *     later signal fixes it: an app install recorded after the attempt
+ *     (discord_user_installs.last_seen_at > the attempt's created_at; counted
+ *     only while USER_INSTALL_COUNTS_AS_DM_REACHABLE), or a shared-server
+ *     check after it that found a shared server
+ *     (discord_guild_presence.shares_server with checked_at > created_at).
  *   Never DMed counts as not refused; other failures (rate limits, Discord
  *   errors) say nothing about reachability;
  * - they share a server with the bot (discord_guild_presence, checked within
  *   PRESENCE_FRESH_DAYS), or installed the app on their own account
  *   (discord_user_installs, user-installs.ts; USER_INSTALL_COUNTS_AS_DM_REACHABLE).
  *
- * A refusal always wins: a user whose last DM was refused is not reachable
- * even with a recorded install, and the refusal also deletes the install
- * record (dm-attempts.ts recordDmAttempt -> clearUserInstall).
+ * Either refusal also deletes the install record (dm-attempts.ts
+ * recordDmAttempt -> clearUserInstall), so an install row that exists after a
+ * 50278 was (re)written later: a new row gets fresh user_installed_at and
+ * last_seen_at; the timestamp comparison above states that explicitly rather
+ * than relying on the delete having succeeded.
  */
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
-import { DM_ATTEMPT_RETENTION_DAYS, DM_REFUSAL_CODES } from "./dm-attempts.js"
+import { DM_ATTEMPT_RETENTION_DAYS, DM_CLOSED_CODES, NO_MUTUAL_GUILD_CODES } from "./dm-attempts.js"
 import { PRESENCE_FRESH_DAYS } from "./guild-presence.js"
 
 /**
@@ -36,11 +45,12 @@ export const USER_INSTALL_COUNTS_AS_DM_REACHABLE = true
  * A LATERAL subquery with one row of Discord DM state for the user in
  * `userIdColumn` (a code-side, table-qualified column, never user input):
  * discord_linked, last_dm_status, last_dm_error_code, shares_server,
- * user_installed, dm_closed (last DM refused: DM_REFUSAL_CODES), server_or_app
+ * user_installed, dm_closed (last DM is a standing refusal, the rule above), server_or_app
  * (shares a server or installed the app, whatever the last DM did) and
  * dm_reachable (the rule above). Every flag is non-null.
  *
- * Bindings, in order: PRESENCE_FRESH_DAYS, DM_REFUSAL_CODES (one int[] binding), DM_ATTEMPT_RETENTION_DAYS.
+ * Bindings, in order: PRESENCE_FRESH_DAYS, DM_CLOSED_CODES (int[]),
+ * NO_MUTUAL_GUILD_CODES (int[]), DM_ATTEMPT_RETENTION_DAYS.
  */
 export function discordDmStateSql(userIdColumn: string): { sql: string; bindings: Knex.RawBinding[] } {
   if (!/^[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*$/i.test(userIdColumn)) {
@@ -48,6 +58,10 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
   }
   const u = userIdColumn
   const reachableVia = USER_INSTALL_COUNTS_AS_DM_REACHABLE ? "(s.shares_server OR s.user_installed)" : "s.shares_server"
+  // A no-mutual-server refusal is lifted by a later install (when installs count) or a later shared-server check.
+  const laterInstall = USER_INSTALL_COUNTS_AS_DM_REACHABLE
+    ? `EXISTS (SELECT 1 FROM discord_user_installs ui2 WHERE ui2.user_id = ${u} AND ui2.last_seen_at > ld.created_at) OR `
+    : ""
   const sql = `
     SELECT s.*,
            (s.shares_server OR s.user_installed) AS server_or_app,
@@ -66,10 +80,18 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
         EXISTS (SELECT 1 FROM discord_user_installs ui WHERE ui.user_id = ${u}) AS user_installed,
         ld.status AS last_dm_status,
         ld.error_code AS last_dm_error_code,
-        COALESCE(ld.status = 'failed' AND ld.error_code = ANY(?::int[]), false) AS dm_closed
+        COALESCE(ld.status = 'failed' AND (
+          ld.error_code = ANY(?::int[])
+          OR (ld.error_code = ANY(?::int[]) AND NOT (
+            ${laterInstall}EXISTS (
+              SELECT 1 FROM discord_guild_presence gp2
+              WHERE gp2.user_id = ${u} AND gp2.shares_server = true AND gp2.checked_at > ld.created_at
+            )
+          ))
+        ), false) AS dm_closed
       FROM (SELECT 1) one
       LEFT JOIN LATERAL (
-        SELECT d.status, d.error_code FROM discord_dm_attempts d
+        SELECT d.status, d.error_code, d.created_at FROM discord_dm_attempts d
         WHERE d.user_id = ${u}
           AND d.created_at > now() - make_interval(days => ?)
         ORDER BY d.created_at DESC, d.attempt_id DESC
@@ -77,8 +99,11 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
       ) ld ON true
     ) s
   `
-  // Placeholders in statement order: presence days, refusal codes, retention days.
-  return { sql, bindings: [PRESENCE_FRESH_DAYS, [...DM_REFUSAL_CODES], DM_ATTEMPT_RETENTION_DAYS] }
+  // Placeholders in statement order: presence days, closed codes, no-mutual-server codes, retention days.
+  return {
+    sql,
+    bindings: [PRESENCE_FRESH_DAYS, [...DM_CLOSED_CODES], [...NO_MUTUAL_GUILD_CODES], DM_ATTEMPT_RETENTION_DAYS],
+  }
 }
 
 /** Of these users, the ones the bot can reach by Discord DM (the rule above). */

@@ -20,8 +20,9 @@
  * - Discord DM (owner decision 2026-11-02: "you have to share a server with
  *   the bot or perhaps install the bot to your personal account"): the one
  *   rule in services/discord/dm-reachability.ts (discordDmStateSql): a linked
- *   Discord account, the user's last Discord DM attempt was not refused
- *   (DM_REFUSAL_CODES: 50007 DMs closed, 50278 no mutual server), and they share a server with the bot (discord_guild_presence,
+ *   Discord account, the user's last Discord DM attempt is not a standing
+ *   refusal (50007 DMs closed always stands; 50278 no mutual server stands
+ *   until a later app install or shared-server check), and they share a server with the bot (discord_guild_presence,
  *   checked within PRESENCE_FRESH_DAYS) or installed the app on their own
  *   account (discord_user_installs; USER_INSTALL_COUNTS_AS_DM_REACHABLE,
  *   confirmed 2026-11-05, reported in signals.discord_user_install_counts_as_dm).
@@ -33,7 +34,8 @@
  *   `discord_dm_confirmed` counts the reachable ones whose last DM was
  *   delivered.
  *   `discord_dm_closed`: not reachable by DM because the last DM was refused
- *   (50007 / 50278: DMs closed, or no shared server); for an org,
+ *   (50007 DMs closed; or 50278 no shared server, with no install or shared
+ *   server recorded since); for an org,
  *   that holds for every contact with Discord linked. Other failures (rate
  *   limits, Discord errors) say nothing about reachability.
  * - Shares a server or installed the app (`discord_server_or_app`, passive

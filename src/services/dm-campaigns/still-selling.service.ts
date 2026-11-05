@@ -13,8 +13,8 @@
  * all the stale listings of every inactive seller they speak for. Test
  * accounts, deleted, tombstoned and banned accounts are excluded, and only
  * users the bot can reach by Discord DM are kept (discordDmReachableUsers,
- * services/discord/dm-reachability.ts: Discord linked, last DM not refused
- * (DM_REFUSAL_CODES: 50007 / 50278), shares a server with the bot or
+ * services/discord/dm-reachability.ts: Discord linked, last DM not a standing
+ * refusal (50007; or 50278 with no later install or shared server), shares a server with the bot or
  * installed the app). Anyone who turned Market Discord DMs off in Settings -> Notifications, or muted the
  * org they would be contacted for, is skipped (MARKET_DM_ACTIONS; owner
  * decision 2026-11-02).
