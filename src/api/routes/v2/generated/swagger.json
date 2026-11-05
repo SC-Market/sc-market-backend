@@ -4949,7 +4949,7 @@
 					},
 					"dm_reachable": {
 						"type": "boolean",
-						"description": "Reachable by Discord DM by the one rule (linked, last DM not refused with 50007 / 50278, shares a server with the bot)."
+						"description": "Reachable by Discord DM by the one rule (linked, last DM not refused with 50007 / 50278, shares a server with the bot or installed the app on their own account while user_install_counts_as_dm)."
 					},
 					"shares_server": {
 						"type": "boolean",
@@ -4961,7 +4961,7 @@
 					},
 					"user_install_counts_as_dm": {
 						"type": "boolean",
-						"description": "Whether a recorded user install counts towards dm_reachable yet (false until confirmed the bot can DM such users)."
+						"description": "Whether a recorded user install counts towards dm_reachable yet (true since 2026-11-05: confirmed the bot can DM such users without a shared server)."
 					},
 					"user_install_available": {
 						"type": "boolean",
@@ -16863,7 +16863,7 @@
 					},
 					"discord_dm": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
+						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot or installed the app on their own Discord account (while signals.discord_user_install_counts_as_dm)."
 					},
 					"discord_dm_confirmed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -16931,7 +16931,7 @@
 					},
 					"discord_dm": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
+						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot or installed the app on their own Discord account (while signals.discord_user_install_counts_as_dm)."
 					},
 					"discord_dm_confirmed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -17063,7 +17063,7 @@
 							},
 							"discord_user_install_counts_as_dm": {
 								"type": "boolean",
-								"description": "Whether installing the app on one's own Discord account counts as reachable by Discord DM (false until confirmed that the bot can DM such users without a shared server)."
+								"description": "Whether installing the app on one's own Discord account counts as reachable by Discord DM (true since 2026-11-05: confirmed the bot can DM such users without a shared server)."
 							},
 							"discord_shared_server_fresh_days": {
 								"type": "number",

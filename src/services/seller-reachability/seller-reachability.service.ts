@@ -22,10 +22,9 @@
  *   rule in services/discord/dm-reachability.ts (discordDmStateSql): a linked
  *   Discord account, the user's last Discord DM attempt was not refused
  *   (DM_REFUSAL_CODES: 50007 DMs closed, 50278 no mutual server), and they share a server with the bot (discord_guild_presence,
- *   checked within PRESENCE_FRESH_DAYS). Installing the app on their own
- *   account (discord_user_installs) counts too once confirmed
- *   (USER_INSTALL_COUNTS_AS_DM_REACHABLE, false for now; the report says so
- *   in signals.discord_user_install_counts_as_dm).
+ *   checked within PRESENCE_FRESH_DAYS) or installed the app on their own
+ *   account (discord_user_installs; USER_INSTALL_COUNTS_AS_DM_REACHABLE,
+ *   confirmed 2026-11-05, reported in signals.discord_user_install_counts_as_dm).
  *   discord_dm_attempts (services/discord/dm-attempts.ts)
  *   records every DM SC Market tries, from the backend (notify() and direct
  *   sends) and from the bot (reported over the backend SQS queue): sent, or

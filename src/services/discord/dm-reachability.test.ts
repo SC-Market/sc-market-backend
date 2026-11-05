@@ -29,14 +29,42 @@ describe("discordDmStateSql", () => {
     expect(flat).toContain("gp.shares_server = true AND gp.checked_at > now() - make_interval(days => ?)")
     expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ANY(?::int[]), false) AS dm_closed")
     expect(flat).toContain("ORDER BY d.created_at DESC, d.attempt_id DESC LIMIT 1")
-    expect(flat).toContain("(s.discord_linked AND NOT s.dm_closed AND s.shares_server) AS dm_reachable")
+    expect(flat).toContain(
+      "(s.discord_linked AND NOT s.dm_closed AND (s.shares_server OR s.user_installed)) AS dm_reachable",
+    )
   })
 
-  it("records user installs but does not count them until confirmed", () => {
-    expect(reach.USER_INSTALL_COUNTS_AS_DM_REACHABLE).toBe(false)
+  it("counts a recorded user install (confirmed live 2026-11-05)", () => {
+    expect(reach.USER_INSTALL_COUNTS_AS_DM_REACHABLE).toBe(true)
     expect(flat).toContain("EXISTS (SELECT 1 FROM discord_user_installs ui WHERE ui.user_id = a.user_id) AS user_installed")
     expect(flat).toContain("(s.shares_server OR s.user_installed) AS server_or_app")
-    expect(flat).not.toContain("(s.shares_server OR s.user_installed) AS dm_reachable")
+  })
+
+  // Evaluate the SQL's own dm_reachable expression over the subquery's flags.
+  const expr = /SELECT s\.\*, .*? AS server_or_app, (\(.*?\)) AS dm_reachable/.exec(flat)?.[1] ?? ""
+  type Flags = { discord_linked: boolean; dm_closed: boolean; shares_server: boolean; user_installed: boolean }
+  const dmReachable = (s: Flags): boolean => {
+    const js = expr.replace(/\bAND\b/g, "&&").replace(/\bOR\b/g, "||").replace(/\bNOT\b/g, "!")
+    expect(js).toMatch(/^[\s()!&|a-z_.]+$/)
+    return new Function("s", `return ${js}`)(s) as boolean
+  }
+  const linked = { discord_linked: true, dm_closed: false, shares_server: false, user_installed: false }
+
+  it("user install and no shared server: reachable", () => {
+    expect(dmReachable({ ...linked, user_installed: true })).toBe(true)
+  })
+
+  it("user install, then a refused DM (50278): not reachable", () => {
+    // dm_closed: the last DM failed with a DM_REFUSAL_CODES code (50007 / 50278).
+    expect(dmReachable({ ...linked, user_installed: true, dm_closed: true })).toBe(false)
+    // The refusal also deletes the install record (dm-attempts.ts -> clearUserInstall).
+    expect(dmReachable({ ...linked, user_installed: false, dm_closed: true })).toBe(false)
+  })
+
+  it("shared server: reachable; neither server nor install, or not linked: not reachable", () => {
+    expect(dmReachable({ ...linked, shares_server: true })).toBe(true)
+    expect(dmReachable(linked)).toBe(false)
+    expect(dmReachable({ ...linked, discord_linked: false, user_installed: true, shares_server: true })).toBe(false)
   })
 
   it("binds presence days, the refusal codes and retention days in statement order", () => {

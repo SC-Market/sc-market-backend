@@ -75,21 +75,23 @@ describe("GET /notification-preferences/discord-reachability", () => {
   it("the caller's own state, with the shared rule", async () => {
     vi.spyOn(rest, "get").mockResolvedValue({ integration_types_config: { "0": {} } } as never)
     h.raw.mockResolvedValue({
-      rows: [{ discord_linked: true, dm_reachable: false, shares_server: false, user_installed: true }],
+      // Installed on their account, no shared server: reachable (confirmed 2026-11-05).
+      rows: [{ discord_linked: true, dm_reachable: true, shares_server: false, user_installed: true }],
     })
     const controller = new NotificationPreferencesV2Controller()
     const res = await controller.getDiscordReachability({ user: { user_id: USER } } as never)
     expect(res).toEqual({
       discord_linked: true,
-      dm_reachable: false,
+      dm_reachable: true,
       shares_server: false,
       user_installed: true,
-      user_install_counts_as_dm: false,
+      user_install_counts_as_dm: true,
       user_install_available: false,
       user_install_url: null,
     })
     const [sql, bindings] = h.raw.mock.calls[0]
     expect(sql).toContain("dm.dm_reachable")
+    expect(sql.replace(/\s+/g, " ")).toContain("NOT s.dm_closed AND (s.shares_server OR s.user_installed)) AS dm_reachable")
     expect(bindings[0]).toBe(USER)
   })
 })

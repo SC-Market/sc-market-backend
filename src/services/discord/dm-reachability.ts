@@ -14,20 +14,12 @@
  *   Never DMed counts as not refused; other failures (rate limits, Discord
  *   errors) say nothing about reachability;
  * - they share a server with the bot (discord_guild_presence, checked within
- *   PRESENCE_FRESH_DAYS), or, once confirmed (USER_INSTALL_COUNTS_AS_DM_REACHABLE),
- *   installed the app on their own account (discord_user_installs,
- *   user-installs.ts).
+ *   PRESENCE_FRESH_DAYS), or installed the app on their own account
+ *   (discord_user_installs, user-installs.ts; USER_INSTALL_COUNTS_AS_DM_REACHABLE).
  *
- * User installs are recorded but NOT counted yet. Discord's docs say a
- * user-installed app is usable "across all of a user's servers, within their
- * (G)DMs, and in DMs with the app's bot user" (changelog, 2024-03-15), and
- * "Once it's installed you can open a DM with it" (user-installable app
- * tutorial); nothing says the bot may open a DM to an installer who shares no
- * server with it. And as of 2026-11-02 the SC Market app's
- * integration_types_config has only GUILD_INSTALL ("0"): User Install is not
- * enabled in the Developer Portal, so no one can user-install it yet. Flip
- * USER_INSTALL_COUNTS_AS_DM_REACHABLE once the manual test (an account with
- * the app installed and no shared server receives a DM) passes.
+ * A refusal always wins: a user whose last DM was refused is not reachable
+ * even with a recorded install, and the refusal also deletes the install
+ * record (dm-attempts.ts recordDmAttempt -> clearUserInstall).
  */
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
@@ -35,11 +27,10 @@ import { DM_ATTEMPT_RETENTION_DAYS, DM_REFUSAL_CODES } from "./dm-attempts.js"
 import { PRESENCE_FRESH_DAYS } from "./guild-presence.js"
 
 /**
- * Whether a recorded user install makes a user DM-reachable. False until confirmed (see above).
- * 2026-11-04: a DM to a user with no mutual server returned 403 / 50278 (no mutual guilds).
- * Whether a user install changes this is still being retested.
+ * Whether a recorded user install makes a user DM-reachable.
+ * 2026-11-05: confirmed live. No mutual server + no install → 403/50278; no mutual server + user install → DM delivered.
  */
-export const USER_INSTALL_COUNTS_AS_DM_REACHABLE = false
+export const USER_INSTALL_COUNTS_AS_DM_REACHABLE = true
 
 /**
  * A LATERAL subquery with one row of Discord DM state for the user in
