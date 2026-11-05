@@ -919,6 +919,7 @@ export class BlueprintsController extends BaseController {
         crafting_time_seconds: blueprintRow.crafting_time_seconds || undefined,
         required_skill_level: blueprintRow.required_skill_level || undefined,
         icon_url: blueprintRow.icon_url || undefined,
+        source: blueprintRow.source || undefined,
         is_active: blueprintRow.is_active || false,
         created_at: blueprintRow.created_at.toISOString(),
         updated_at: blueprintRow.updated_at.toISOString(),
@@ -1131,6 +1132,7 @@ export class BlueprintsController extends BaseController {
       return {
         blueprint,
         output_item,
+        manufacturer: outputItemRow.manufacturer || undefined,
         ingredients,
         missions_rewarding,
         crafting_recipe,

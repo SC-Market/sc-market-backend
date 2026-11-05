@@ -4251,6 +4251,7 @@ const models: TsoaRoute.Models = {
             "crafting_time_seconds": {"dataType":"double"},
             "required_skill_level": {"dataType":"double"},
             "icon_url": {"dataType":"string"},
+            "source": {"dataType":"string"},
             "is_active": {"dataType":"boolean","required":true},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
@@ -4343,6 +4344,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "blueprint": {"ref":"Blueprint","required":true},
             "output_item": {"ref":"GameItem","required":true},
+            "manufacturer": {"dataType":"string"},
             "ingredients": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintIngredient"},"required":true},
             "missions_rewarding": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardingBlueprint"},"required":true},
             "crafting_recipe": {"dataType":"nestedObjectLiteral","nestedProperties":{"max_output_quality_tier":{"dataType":"double","required":true},"min_output_quality_tier":{"dataType":"double","required":true},"quality_calculation_type":{"dataType":"string","required":true}}},

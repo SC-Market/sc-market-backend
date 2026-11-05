@@ -150,6 +150,8 @@ export interface Blueprint {
   crafting_time_seconds?: number
   required_skill_level?: number
   icon_url?: string
+  /** Blueprint source (default, mission_reward) */
+  source?: string
   is_active: boolean
   created_at: string
   updated_at: string
@@ -259,6 +261,9 @@ export interface BlueprintDetailResponse {
 
   /** Output item reference */
   output_item: GameItem
+
+  /** Output item manufacturer name (same value as the search result's `manufacturer`) */
+  manufacturer?: string
 
   /** Ingredients required */
   ingredients: BlueprintIngredient[]

@@ -12876,6 +12876,10 @@
 					"icon_url": {
 						"type": "string"
 					},
+					"source": {
+						"type": "string",
+						"description": "Blueprint source (default, mission_reward)"
+					},
 					"is_active": {
 						"type": "boolean"
 					},
@@ -13163,6 +13167,10 @@
 					"output_item": {
 						"$ref": "#/components/schemas/GameItem",
 						"description": "Output item reference"
+					},
+					"manufacturer": {
+						"type": "string",
+						"description": "Output item manufacturer name (same value as the search result's `manufacturer`)"
 					},
 					"ingredients": {
 						"items": {
