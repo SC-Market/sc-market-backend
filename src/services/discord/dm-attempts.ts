@@ -10,10 +10,10 @@
  *   SQS queue as a "dm_result" message (tasks/discord-queue-consumer.ts),
  *   source "bot:<kind>".
  *
- * Per attempt: the user, sent or failed, and Discord's error code
- * (DM_CLOSED_CODE 50007: the bot cannot DM them, their DMs are closed or they
- * share no server with it; it also clears a recorded user install,
- * user-installs.ts). Attempts for Discord accounts not linked to an
+ * Per attempt: the user, sent or failed, and Discord's error code (a DM
+ * refusal, DM_REFUSAL_CODES / isDmRefusalCode: the bot cannot DM them, their
+ * DMs are closed or they share no server with it; it also clears a recorded
+ * user install, user-installs.ts). Attempts for Discord accounts not linked to an
  * SC Market user are not recorded (there is no one to attribute them to).
  * Recording never throws: a DM that went out is never failed by bookkeeping.
  */
@@ -21,8 +21,22 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
 import { clearUserInstall } from "./user-installs.js"
 
-/** Discord JSON error code: "Cannot send messages to this user". */
-export const DM_CLOSED_CODE = 50007
+/**
+ * Discord JSON error codes that mean the bot cannot DM this user (a DM
+ * refusal), the one list every path uses (notify()'s Discord DM adapter, DM
+ * reachability, the "Still selling?" campaign, the seller reachability report,
+ * clearing a user install):
+ * - 50007 "Cannot send messages to this user" (DMs closed);
+ * - 50278 "Cannot send messages to this user due to having no mutual guilds"
+ *   (2026-11-04: opening the DM channel worked, the send got 403 / 50278).
+ * Other failures (rate limits, Discord errors) say nothing about reachability.
+ */
+export const DM_REFUSAL_CODES: readonly number[] = Object.freeze([50007, 50278])
+
+/** Whether a Discord error code is a DM refusal (DM_REFUSAL_CODES). */
+export function isDmRefusalCode(code: unknown): boolean {
+  return typeof code === "number" && DM_REFUSAL_CODES.includes(code)
+}
 
 /** Attempts are kept this many days (as notification_deliveries). */
 export const DM_ATTEMPT_RETENTION_DAYS = 90
@@ -72,9 +86,10 @@ export async function recordDmAttempt(a: DmAttempt): Promise<boolean> {
       error_code: a.status === "failed" ? intOrNull(a.errorCode) : null,
       http_status: a.status === "failed" ? intOrNull(a.httpStatus) : null,
     })
-    // 50007 after a user install: the app was removed (or DMs closed), so the
-    // install no longer makes them reachable (user-installs.ts).
-    if (a.status === "failed" && a.errorCode === DM_CLOSED_CODE) await clearUserInstall(userId)
+    // A refusal after a user install: the app was removed (or DMs closed, or
+    // no mutual server), so the install no longer makes them reachable
+    // (user-installs.ts).
+    if (a.status === "failed" && isDmRefusalCode(a.errorCode)) await clearUserInstall(userId)
     return true
   } catch (err) {
     logger.warn("Failed to record Discord DM attempt", {

@@ -32,7 +32,7 @@ export interface StillSellingProgress {
   sent: number
   delivered: number
   failed: number
-  /** Of failed: Discord error 50007 (DMs closed / no shared server). */
+  /** Of failed: refused by Discord, error 50007 (DMs closed) or 50278 (no mutual server). */
   failed_closed: number
   /** Claimed but with no result (in flight, or the process stopped mid-send; never retried). */
   in_flight: number

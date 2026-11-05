@@ -186,6 +186,17 @@ describe("campaign action token", () => {
   })
 })
 
+describe("campaign progress", () => {
+  it("failed_closed counts every DM refusal code (50007, 50278)", async () => {
+    tracker.on.any(/FROM dm_campaign_recipients/).response({ rows: [{ sent: 3, failed: 2, failed_closed: 2 }] })
+    const p = await svc.campaignProgress()
+    expect(p.failed_closed).toBe(2)
+    const q = tracker.history.all.find((x) => x.sql.includes("failed_closed"))!
+    expect(q.sql).toContain("status = 'failed' AND error_code = ANY($1::int[])")
+    expect(q.bindings[0]).toEqual([50007, 50278])
+  })
+})
+
 describe("kill switch", () => {
   it(`${svc.KILL_SWITCH_ENV}=true only; unset is off`, () => {
     expect(svc.campaignEnabled({})).toBe(false)

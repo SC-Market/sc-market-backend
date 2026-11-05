@@ -66,7 +66,7 @@ describe("recordUserInstall", () => {
   })
 })
 
-describe("a 50007 DM failure clears the install", () => {
+describe("a refused DM (50007 / 50278) clears the install", () => {
   beforeEach(() => {
     tracker.on.insert("discord_dm_attempts").response([])
     tracker.on.delete("discord_user_installs").response(1)
@@ -76,6 +76,11 @@ describe("a 50007 DM failure clears the install", () => {
     await attempts.recordDmAttempt({ userId: USER, source: "notify:reminder.offer_pending", status: "failed", errorCode: 50007, httpStatus: 403 })
     expect(clears()).toHaveLength(1)
     expect(clears()[0].bindings).toContain(USER)
+  })
+
+  it("50278 (no mutual guilds): cleared", async () => {
+    await attempts.recordDmAttempt({ userId: USER, source: "notify:reminder.offer_pending", status: "failed", errorCode: 50278, httpStatus: 403 })
+    expect(clears()).toHaveLength(1)
   })
 
   it("from a bot-sent DM too (resolved from the Discord id)", async () => {

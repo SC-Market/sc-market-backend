@@ -20,8 +20,8 @@
  * - Discord DM (owner decision 2026-11-02: "you have to share a server with
  *   the bot or perhaps install the bot to your personal account"): the one
  *   rule in services/discord/dm-reachability.ts (discordDmStateSql): a linked
- *   Discord account, the user's last Discord DM attempt did not fail with
- *   50007, and they share a server with the bot (discord_guild_presence,
+ *   Discord account, the user's last Discord DM attempt was not refused
+ *   (DM_REFUSAL_CODES: 50007 DMs closed, 50278 no mutual server), and they share a server with the bot (discord_guild_presence,
  *   checked within PRESENCE_FRESH_DAYS). Installing the app on their own
  *   account (discord_user_installs) counts too once confirmed
  *   (USER_INSTALL_COUNTS_AS_DM_REACHABLE, false for now; the report says so
@@ -33,8 +33,8 @@
  *   Users never DMed in that window count as reachable but unconfirmed;
  *   `discord_dm_confirmed` counts the reachable ones whose last DM was
  *   delivered.
- *   `discord_dm_closed`: not reachable by DM because the last DM failed with
- *   50007 (DMs closed, or no shared server and no user install); for an org,
+ *   `discord_dm_closed`: not reachable by DM because the last DM was refused
+ *   (50007 / 50278: DMs closed, or no shared server); for an org,
  *   that holds for every contact with Discord linked. Other failures (rate
  *   limits, Discord errors) say nothing about reachability.
  * - Shares a server or installed the app (`discord_server_or_app`, passive
@@ -62,7 +62,7 @@
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { publiclyListedSql } from "../../api/routes/v2/util/listing-visibility.js"
-import { DM_ATTEMPT_RETENTION_DAYS, DM_CLOSED_CODE } from "../discord/dm-attempts.js"
+import { DM_ATTEMPT_RETENTION_DAYS, DM_REFUSAL_CODES } from "../discord/dm-attempts.js"
 import { PRESENCE_FRESH_DAYS } from "../discord/guild-presence.js"
 import { installClickCounts, type InstallClickCount } from "../discord/install-clicks.js"
 import { discordDmStateSql, USER_INSTALL_COUNTS_AS_DM_REACHABLE } from "../discord/dm-reachability.js"
@@ -305,7 +305,8 @@ export function toReport(
     signals: {
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: DM_ATTEMPT_RETENTION_DAYS,
-      discord_dm_closed_code: DM_CLOSED_CODE,
+      discord_dm_refusal_codes: [...DM_REFUSAL_CODES],
+      discord_dm_closed_code: DM_REFUSAL_CODES[0],
       discord_shared_server_checked_at:
         checkedAt && !Number.isNaN(checkedAt.getTime()) ? checkedAt.toISOString() : null,
       discord_shared_server_fresh_days: PRESENCE_FRESH_DAYS,

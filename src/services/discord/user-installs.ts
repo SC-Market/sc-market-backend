@@ -18,8 +18,9 @@
  * The website's own install flow (install-oauth.ts) also records one when a
  * user install's code exchange names a Discord account linked to SC Market.
  *
- * Expiry: a later DM to the user that fails with 50007 (DM_CLOSED_CODE: the
- * app was removed, or DMs are closed) deletes the row (dm-attempts.ts). The
+ * Expiry: a later DM to the user that is refused (DM_REFUSAL_CODES, 50007 /
+ * 50278: the app was removed, DMs are closed, or no mutual server) deletes the
+ * row (dm-attempts.ts). The
  * next user-install interaction records it again.
  *
  * Recording never throws.
@@ -85,7 +86,7 @@ export async function recordUserInstallFor(userId: string): Promise<boolean> {
   }
 }
 
-/** A DM to the user failed with 50007: the app is no longer installed for them (or their DMs are closed). Never throws. */
+/** A DM to the user was refused (DM_REFUSAL_CODES): the app is no longer installed for them (or their DMs are closed). Never throws. */
 export async function clearUserInstall(userId: string): Promise<void> {
   try {
     await getKnex()("discord_user_installs").where({ user_id: userId }).delete()

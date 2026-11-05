@@ -14,8 +14,8 @@
  * accounts, deleted, tombstoned and banned accounts are excluded, and only
  * users the bot can reach by Discord DM are kept (discordDmReachableUsers,
  * services/discord/dm-reachability.ts: Discord linked, last DM not refused
- * with 50007, shares a server with the bot or installed the app). Anyone who
- * turned Market Discord DMs off in Settings -> Notifications, or muted the
+ * (DM_REFUSAL_CODES: 50007 / 50278), shares a server with the bot or
+ * installed the app). Anyone who turned Market Discord DMs off in Settings -> Notifications, or muted the
  * org they would be contacted for, is skipped (MARKET_DM_ACTIONS; owner
  * decision 2026-11-02).
  *
@@ -50,7 +50,7 @@ import logger from "../../logger/logger.js"
 import { publiclyListedSql } from "../../api/routes/v2/util/listing-visibility.js"
 import { canModifyListing } from "../../api/routes/v2/util/listing-permissions.js"
 import { discordService } from "../discord/discord.service.js"
-import { DM_CLOSED_CODE } from "../discord/dm-attempts.js"
+import { DM_REFUSAL_CODES } from "../discord/dm-attempts.js"
 import { discordDmReachableUsers } from "../discord/dm-reachability.js"
 import { CATALOG, type EventDefinition } from "../notify/catalog.js"
 import { auditService } from "../audit/audit.service.js"
@@ -411,7 +411,7 @@ export async function campaignProgress(
     SELECT COUNT(*)::integer AS sent,
            COUNT(*) FILTER (WHERE status = 'delivered')::integer AS delivered,
            COUNT(*) FILTER (WHERE status = 'failed')::integer AS failed,
-           COUNT(*) FILTER (WHERE status = 'failed' AND error_code = ?)::integer AS failed_closed,
+           COUNT(*) FILTER (WHERE status = 'failed' AND error_code = ANY(?::int[]))::integer AS failed_closed,
            COUNT(*) FILTER (WHERE status = 'sending')::integer AS in_flight,
            COUNT(*) FILTER (WHERE kept_at IS NOT NULL)::integer AS clicked_keep,
            COUNT(*) FILTER (WHERE paused_at IS NOT NULL)::integer AS clicked_pause,
@@ -420,7 +420,7 @@ export async function campaignProgress(
     FROM dm_campaign_recipients
     WHERE campaign = ?
     `,
-    [DM_CLOSED_CODE, campaign],
+    [[...DM_REFUSAL_CODES], campaign],
   )
   const row = (result?.rows?.[0] ?? {}) as Record<string, unknown>
   const n = (k: string) => Number(row[k]) || 0

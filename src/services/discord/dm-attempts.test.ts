@@ -114,6 +114,54 @@ describe("trySendDirectMessage records every attempt", () => {
     expect(outcome.status).toBe("permanent")
     expect(inserted()[0].bindings).toEqual(expect.arrayContaining([USER, "notify:watchlist.price_alert", "failed", 50007, 403]))
   })
+
+  it("a 50278 failure (no mutual guilds) is permanent too, and recorded with its code", async () => {
+    vi.spyOn(rest, "post")
+      .mockResolvedValueOnce({ id: "dm-channel" } as never)
+      .mockRejectedValueOnce(
+        Object.assign(new Error("Cannot send messages to this user due to having no mutual guilds"), { code: 50278, status: 403 }),
+      )
+    tracker.on.insert("discord_dm_attempts").response([])
+    tracker.on.delete("discord_user_installs").response(0)
+    const outcome = await discordDmAdapter.send({ content: "x" }, {
+      eventKey: "watchlist.price_alert",
+      legacyAction: "price_alert",
+      recipient: { userId: USER, contractorId: null },
+      idempotencyKey: "k",
+      mandatory: false,
+    } as never)
+    expect(outcome.status).toBe("permanent")
+    expect(inserted()[0].bindings).toEqual(expect.arrayContaining([USER, "notify:watchlist.price_alert", "failed", 50278, 403]))
+  })
+
+  it("another failure (rate limited) stays retryable", async () => {
+    vi.spyOn(rest, "post")
+      .mockResolvedValueOnce({ id: "dm-channel" } as never)
+      .mockRejectedValueOnce(Object.assign(new Error("You are being rate limited"), { code: 40003, status: 429 }))
+    tracker.on.insert("discord_dm_attempts").response([])
+    const outcome = await discordDmAdapter.send({ content: "x" }, {
+      eventKey: "watchlist.price_alert",
+      legacyAction: "price_alert",
+      recipient: { userId: USER, contractorId: null },
+      idempotencyKey: "k",
+      mandatory: false,
+    } as never)
+    expect(outcome.status).toBe("retryable")
+  })
+})
+
+describe("DM refusal codes", () => {
+  it("are 50007 (DMs closed) and 50278 (no mutual guilds)", () => {
+    expect(attempts.DM_REFUSAL_CODES).toEqual([50007, 50278])
+  })
+
+  it("isDmRefusalCode: only those codes", () => {
+    expect(attempts.isDmRefusalCode(50007)).toBe(true)
+    expect(attempts.isDmRefusalCode(50278)).toBe(true)
+    for (const c of [40003, 50001, 50013, 0, null, undefined, "50007", NaN]) {
+      expect(attempts.isDmRefusalCode(c)).toBe(false)
+    }
+  })
 })
 
 describe("bot dm_result over the backend queue", () => {

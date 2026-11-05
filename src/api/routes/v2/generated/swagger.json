@@ -4949,7 +4949,7 @@
 					},
 					"dm_reachable": {
 						"type": "boolean",
-						"description": "Reachable by Discord DM by the one rule (linked, last DM not refused with 50007, shares a server with the bot)."
+						"description": "Reachable by Discord DM by the one rule (linked, last DM not refused with 50007 / 50278, shares a server with the bot)."
 					},
 					"shares_server": {
 						"type": "boolean",
@@ -16571,7 +16571,7 @@
 					"failed_closed": {
 						"type": "number",
 						"format": "double",
-						"description": "Of failed: Discord error 50007 (DMs closed / no shared server)."
+						"description": "Of failed: refused by Discord, error 50007 (DMs closed) or 50278 (no mutual server)."
 					},
 					"in_flight": {
 						"type": "number",
@@ -16855,7 +16855,7 @@
 					},
 					"discord_dm": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) did not fail with 50007, and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
+						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
 					},
 					"discord_dm_confirmed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -16863,11 +16863,11 @@
 					},
 					"discord_dm_closed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed, or no shared server and no user install); an org: every contact with Discord linked."
+						"description": "Not reachable by Discord DM: the last DM was refused with Discord error 50007 or 50278 (DMs closed, or no shared server); an org: every contact with Discord linked."
 					},
 					"discord_server_or_app": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent) or installed the SC Market app on their own Discord account (seen on their interactions with the bot; cleared by a later 50007). Not part of any / none."
+						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent) or installed the SC Market app on their own Discord account (seen on their interactions with the bot; cleared by a later refused DM). Not part of any / none."
 					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -16923,7 +16923,7 @@
 					},
 					"discord_dm": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) did not fail with 50007, and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
+						"description": "Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot (or installed the app on their account, once signals.discord_user_install_counts_as_dm)."
 					},
 					"discord_dm_confirmed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -16931,11 +16931,11 @@
 					},
 					"discord_dm_closed": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Not reachable by Discord DM: the last DM failed with Discord error 50007 (DMs closed, or no shared server and no user install); an org: every contact with Discord linked."
+						"description": "Not reachable by Discord DM: the last DM was refused with Discord error 50007 or 50278 (DMs closed, or no shared server); an org: every contact with Discord linked."
 					},
 					"discord_server_or_app": {
 						"$ref": "#/components/schemas/ReachabilityCount",
-						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent) or installed the SC Market app on their own Discord account (seen on their interactions with the bot; cleared by a later 50007). Not part of any / none."
+						"description": "Discord linked, and the account shares at least one server with the SC Market bot (checked periodically, no DM sent) or installed the SC Market app on their own Discord account (seen on their interactions with the bot; cleared by a later refused DM). Not part of any / none."
 					},
 					"email": {
 						"$ref": "#/components/schemas/ReachabilityCount",
@@ -17070,7 +17070,15 @@
 							"discord_dm_closed_code": {
 								"type": "number",
 								"format": "double",
-								"description": "The Discord error code counted as \"DM failed (closed)\" (50007)."
+								"deprecated": true
+							},
+							"discord_dm_refusal_codes": {
+								"items": {
+									"type": "number",
+									"format": "double"
+								},
+								"type": "array",
+								"description": "The Discord error codes counted as \"DM failed (closed)\": 50007 (DMs closed), 50278 (no mutual server)."
 							},
 							"discord_dm_result_retention_days": {
 								"type": "number",
@@ -17090,6 +17098,7 @@
 							"discord_shared_server_fresh_days",
 							"discord_shared_server_checked_at",
 							"discord_dm_closed_code",
+							"discord_dm_refusal_codes",
 							"discord_dm_result_retention_days",
 							"discord_dm_delivery_results"
 						],

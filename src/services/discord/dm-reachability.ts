@@ -9,7 +9,8 @@
  * when all of:
  * - their Discord account is linked (account_providers);
  * - their last recorded DM attempt (discord_dm_attempts, DM_ATTEMPT_RETENTION_DAYS)
- *   did not fail with 50007 (DM_CLOSED_CODE: DMs closed / no way to reach).
+ *   was not refused (DM_REFUSAL_CODES: 50007 DMs closed, 50278 no mutual
+ *   server).
  *   Never DMed counts as not refused; other failures (rate limits, Discord
  *   errors) say nothing about reachability;
  * - they share a server with the bot (discord_guild_presence, checked within
@@ -30,21 +31,25 @@
  */
 import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
-import { DM_ATTEMPT_RETENTION_DAYS, DM_CLOSED_CODE } from "./dm-attempts.js"
+import { DM_ATTEMPT_RETENTION_DAYS, DM_REFUSAL_CODES } from "./dm-attempts.js"
 import { PRESENCE_FRESH_DAYS } from "./guild-presence.js"
 
-/** Whether a recorded user install makes a user DM-reachable. False until confirmed (see above). */
+/**
+ * Whether a recorded user install makes a user DM-reachable. False until confirmed (see above).
+ * 2026-11-04: a DM to a user with no mutual server returned 403 / 50278 (no mutual guilds).
+ * Whether a user install changes this is still being retested.
+ */
 export const USER_INSTALL_COUNTS_AS_DM_REACHABLE = false
 
 /**
  * A LATERAL subquery with one row of Discord DM state for the user in
  * `userIdColumn` (a code-side, table-qualified column, never user input):
  * discord_linked, last_dm_status, last_dm_error_code, shares_server,
- * user_installed, dm_closed (last DM refused with 50007), server_or_app
+ * user_installed, dm_closed (last DM refused: DM_REFUSAL_CODES), server_or_app
  * (shares a server or installed the app, whatever the last DM did) and
  * dm_reachable (the rule above). Every flag is non-null.
  *
- * Bindings, in order: PRESENCE_FRESH_DAYS, DM_ATTEMPT_RETENTION_DAYS, DM_CLOSED_CODE.
+ * Bindings, in order: PRESENCE_FRESH_DAYS, DM_REFUSAL_CODES (one int[] binding), DM_ATTEMPT_RETENTION_DAYS.
  */
 export function discordDmStateSql(userIdColumn: string): { sql: string; bindings: Knex.RawBinding[] } {
   if (!/^[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*$/i.test(userIdColumn)) {
@@ -70,7 +75,7 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
         EXISTS (SELECT 1 FROM discord_user_installs ui WHERE ui.user_id = ${u}) AS user_installed,
         ld.status AS last_dm_status,
         ld.error_code AS last_dm_error_code,
-        COALESCE(ld.status = 'failed' AND ld.error_code = ?, false) AS dm_closed
+        COALESCE(ld.status = 'failed' AND ld.error_code = ANY(?::int[]), false) AS dm_closed
       FROM (SELECT 1) one
       LEFT JOIN LATERAL (
         SELECT d.status, d.error_code FROM discord_dm_attempts d
@@ -81,8 +86,8 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
       ) ld ON true
     ) s
   `
-  // Placeholders in statement order: presence days, closed code, retention days.
-  return { sql, bindings: [PRESENCE_FRESH_DAYS, DM_CLOSED_CODE, DM_ATTEMPT_RETENTION_DAYS] }
+  // Placeholders in statement order: presence days, refusal codes, retention days.
+  return { sql, bindings: [PRESENCE_FRESH_DAYS, [...DM_REFUSAL_CODES], DM_ATTEMPT_RETENTION_DAYS] }
 }
 
 /** Of these users, the ones the bot can reach by Discord DM (the rule above). */

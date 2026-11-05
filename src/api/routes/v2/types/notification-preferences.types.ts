@@ -130,7 +130,7 @@ export interface UpdateNotificationPreferencesRequest {
  */
 export interface DiscordReachabilityResponse {
   discord_linked: boolean
-  /** Reachable by Discord DM by the one rule (linked, last DM not refused with 50007, shares a server with the bot). */
+  /** Reachable by Discord DM by the one rule (linked, last DM not refused with 50007 / 50278, shares a server with the bot). */
   dm_reachable: boolean
   /** Shares a server with the SC Market bot (checked periodically). */
   shares_server: boolean

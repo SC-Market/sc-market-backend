@@ -24,10 +24,10 @@ describe("discordDmStateSql", () => {
   const { sql, bindings } = reach.discordDmStateSql("a.user_id")
   const flat = sql.replace(/\s+/g, " ")
 
-  it("linked, not refused with 50007, and shares a fresh server with the bot", () => {
+  it("linked, not refused (50007 / 50278), and shares a fresh server with the bot", () => {
     expect(flat).toContain("p.user_id = a.user_id AND p.provider_type = 'discord'")
     expect(flat).toContain("gp.shares_server = true AND gp.checked_at > now() - make_interval(days => ?)")
-    expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ?, false) AS dm_closed")
+    expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ANY(?::int[]), false) AS dm_closed")
     expect(flat).toContain("ORDER BY d.created_at DESC, d.attempt_id DESC LIMIT 1")
     expect(flat).toContain("(s.discord_linked AND NOT s.dm_closed AND s.shares_server) AS dm_reachable")
   })
@@ -39,8 +39,8 @@ describe("discordDmStateSql", () => {
     expect(flat).not.toContain("(s.shares_server OR s.user_installed) AS dm_reachable")
   })
 
-  it("binds presence days, the closed code and retention days in statement order", () => {
-    expect(bindings).toEqual([3, 50007, 90])
+  it("binds presence days, the refusal codes and retention days in statement order", () => {
+    expect(bindings).toEqual([3, [50007, 50278], 90])
     expect((flat.match(/\?/g) ?? []).length).toBe(bindings.length)
   })
 
@@ -59,7 +59,7 @@ describe("discordDmReachableUsers / isDiscordDmReachable", () => {
     const [sql, bindings] = h.raw.mock.calls[0]
     expect(sql.replace(/\s+/g, " ")).toContain("FROM unnest(?::uuid[]) AS u(user_id) CROSS JOIN LATERAL (")
     expect(sql).toContain("WHERE dm.dm_reachable")
-    expect(bindings).toEqual([[A, B], 3, 50007, 90])
+    expect(bindings).toEqual([[A, B], 3, [50007, 50278], 90])
   })
 
   it("no ids: no query", async () => {

@@ -87,7 +87,7 @@ describe("reachabilitySql: who counts", () => {
     )
   })
 
-  it("Discord DM: linked, last DM (any path, discord_dm_attempts, 90 days) not refused with 50007, and shares a server or installed the app", () => {
+  it("Discord DM: linked, last DM (any path, discord_dm_attempts, 90 days) not refused (50007 / 50278), and shares a server or installed the app", () => {
     expect(flat).toContain("p.provider_type = 'discord'")
     expect(flat).toContain(
       "LEFT JOIN LATERAL ( SELECT d.status, d.error_code FROM discord_dm_attempts d WHERE d.user_id = a.user_id AND d.created_at > now() - make_interval(days => ?) ORDER BY d.created_at DESC, d.attempt_id DESC LIMIT 1 ) ld ON true",
@@ -96,7 +96,7 @@ describe("reachabilitySql: who counts", () => {
     // Never DMed (no attempt) is not "closed": COALESCE keeps it false, not NULL.
     // The shared rule (services/discord/dm-reachability.ts), per contact.
     expect(flat).toContain("CROSS JOIN LATERAL ( SELECT s.*,")
-    expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ?, false) AS dm_closed")
+    expect(flat).toContain("COALESCE(ld.status = 'failed' AND ld.error_code = ANY(?::int[]), false) AS dm_closed")
     // User installs are recorded but not counted until confirmed.
     expect(flat).toContain("(s.discord_linked AND NOT s.dm_closed AND s.shares_server) AS dm_reachable")
     expect(flat).toContain("COALESCE(BOOL_OR(uc.dm_reachable), false) AS discord_dm,")
@@ -106,11 +106,11 @@ describe("reachabilitySql: who counts", () => {
     expect(flat).not.toContain("IS DISTINCT FROM 'failed'")
   })
 
-  it("DM failed (closed): a contact's last DM failed with 50007, and no contact is free of that", () => {
+  it("DM failed (closed): a contact's last DM was refused (50007 / 50278), and no contact is free of that", () => {
     expect(flat).toContain(
       "COALESCE(BOOL_OR(uc.discord_linked AND uc.dm_closed), false) AND NOT COALESCE(BOOL_OR(uc.discord_linked AND NOT uc.dm_closed), false) AS discord_dm_closed",
     )
-    expect(bindings[3]).toBe(50007)
+    expect(bindings[3]).toEqual([50007, 50278])
   })
 
   it("shares a server or installed the app: a fresh guild presence result, or a recorded user install", () => {
@@ -127,7 +127,7 @@ describe("reachabilitySql: who counts", () => {
   })
 
   it("binds its placeholders in statement order", () => {
-    expect(bindings).toEqual([90, "admin_alert", 3, 50007, 90])
+    expect(bindings).toEqual([90, "admin_alert", 3, [50007, 50278], 90])
     expect((flat.match(/\?/g) ?? []).length).toBe(bindings.length)
   })
 
@@ -260,6 +260,7 @@ describe("toReport", () => {
     expect(report.signals).toEqual({
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: 90,
+      discord_dm_refusal_codes: [50007, 50278],
       discord_dm_closed_code: 50007,
       discord_shared_server_checked_at: null,
       discord_shared_server_fresh_days: 3,
@@ -307,7 +308,7 @@ describe("GET /admin/seller-reachability", () => {
       user: admin,
     } as never)
     expect(h.raw).toHaveBeenCalledTimes(1)
-    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert", 3, 50007, 90])
+    expect(h.raw.mock.calls[0][1]).toEqual([90, "admin_alert", 3, [50007, 50278], 90])
     expect(report.buckets[1]).toMatchObject({
       bucket: "this_week",
       sellers: 2,

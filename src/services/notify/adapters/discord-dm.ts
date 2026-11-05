@@ -2,6 +2,7 @@
 import type { RESTPostAPIChannelMessageJSONBody } from "discord-api-types/v10"
 import * as profileDb from "../../../api/routes/v1/profiles/database.js"
 import { discordService } from "../../discord/discord.service.js"
+import { isDmRefusalCode } from "../../discord/dm-attempts.js"
 import type { UserChannelAdapter } from "../channels.js"
 
 export const discordDmAdapter: UserChannelAdapter<RESTPostAPIChannelMessageJSONBody> = {
@@ -15,8 +16,8 @@ export const discordDmAdapter: UserChannelAdapter<RESTPostAPIChannelMessageJSONB
       source: `notify:${ctx.eventKey}`,
     })
     if (result.ok) return { status: "sent" }
-    // 50007: the user does not accept DMs from the bot (or shares no server).
-    if (result.code === 50007) return { status: "permanent", error: result.error }
+    // A DM refusal (50007 DMs closed, 50278 no mutual server): retrying won't help.
+    if (isDmRefusalCode(result.code)) return { status: "permanent", error: result.error }
     return { status: "retryable", error: result.error }
   },
 }

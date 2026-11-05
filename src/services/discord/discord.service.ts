@@ -53,8 +53,9 @@ export interface DiscordService {
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void>
   /**
-   * Like sendDirectMessage, but reports the failure (Discord error code
-   * 50007 = DMs closed). Every attempt is recorded in discord_dm_attempts
+   * Like sendDirectMessage, but reports the failure with Discord's error code
+   * (a DM refusal is isDmRefusalCode: 50007 DMs closed, 50278 no mutual
+   * server). Every attempt is recorded in discord_dm_attempts
    * (services/discord/dm-attempts.ts); `attempt` names the SC Market user
    * (looked up from the Discord id when absent) and the sending path.
    */
