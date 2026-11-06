@@ -21,7 +21,7 @@ describe("offer.accepted / offer.rejected", () => {
       [
         "in_app  user:customer offer_accepted (session:a)",
         "push    push:customer [offer] Offer accepted",
-        "email   customer@example.test Offer Accepted",
+        "email   customer@example.test Your offer was accepted",
       ]
     `)
   })
@@ -125,8 +125,8 @@ describe("Discord DM on every event group", () => {
           "in_app  user:unlinked contractor_invite (invite:unlinked)",
           "push    push:invitee [contractor_invite] Contractor Invitation",
           "push    push:unlinked [contractor_invite] Contractor Invitation",
-          "email   invitee@example.test Contractor Invitation",
-          "email   unlinked@example.test Contractor Invitation",
+          "email   invitee@example.test Org acme invited you to join",
+          "email   unlinked@example.test Org acme invited you to join",
           "discord POST /users/@me/channels",
           "discord POST /channels/dm-discord:invitee/messages",
         ],

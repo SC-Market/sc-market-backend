@@ -105,7 +105,7 @@ describe("admin alert channels", () => {
     await notificationService.createAdminAlertNotification(await alert(admin.user_id, ["in_app", "email"]))
 
     const lines = w.summary(await w.observe()).filter((l) => l.startsWith("email"))
-    expect(lines).toEqual(["email   alice@example.test Admin Alert"])
+    expect(lines).toEqual(["email   alice@example.test New admin alert: Maintenance"])
   })
 
   it("isolation: delivered while acting as a test account, it reaches no real user on any channel", async () => {
@@ -127,7 +127,7 @@ describe("admin alert channels", () => {
       [
         "in_app  user:~tester admin_alert (alert:in_app+push+email+discord_dm)",
         "push    push:~tester [admin_alert] Maintenance",
-        "email   ~tester@example.test Admin Alert",
+        "email   ~tester@example.test New admin alert: Maintenance",
       ]
     `)
   })

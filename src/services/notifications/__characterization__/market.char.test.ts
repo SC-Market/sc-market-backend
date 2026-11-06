@@ -303,7 +303,7 @@ describe("Buy now from an org shop (the normal order path)", () => {
           "in_app  user:clerk order_create (order:v2org)",
           "push    push:boss [order] New Order Created",
           "push    push:clerk [order] New Order Created",
-          "email   boss@example.test New Order Created",
+          "email   boss@example.test New order: Items Sold to buyer",
         ],
       }
     `)

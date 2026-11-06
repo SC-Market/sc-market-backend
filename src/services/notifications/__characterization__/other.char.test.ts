@@ -28,7 +28,7 @@ describe("contractor_invite (9)", () => {
       [
         "in_app  user:invitee contractor_invite (invite:1)",
         "push    push:invitee [contractor_invite] Contractor Invitation",
-        "email   invitee@example.test Contractor Invitation",
+        "email   invitee@example.test Org acme invited you to join",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -67,7 +67,7 @@ describe("contractor_invite (9)", () => {
     expect(w.summary(await w.observe())).toMatchInlineSnapshot(`
       [
         "in_app  user:invitee contractor_invite (invite:2)",
-        "email   invitee@example.test Contractor Invitation",
+        "email   invitee@example.test Org acme invited you to join",
       ]
     `)
   })
@@ -100,7 +100,7 @@ describe("admin_alert (21)", () => {
         "in_app  user:bob admin_alert (alert:all_users)",
         "push    push:alice [admin_alert] Maintenance",
         "push    push:bob [admin_alert] Maintenance",
-        "email   alice@example.test Admin Alert",
+        "email   alice@example.test New admin alert: Maintenance",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -125,8 +125,8 @@ describe("admin_alert (21)", () => {
         "in_app  user:member admin_alert (alert:specific_org)",
         "push    push:boss [admin_alert] Maintenance",
         "push    push:member [admin_alert] Maintenance",
-        "email   boss@example.test Admin Alert",
-        "email   member@example.test Admin Alert",
+        "email   boss@example.test New admin alert: Maintenance",
+        "email   member@example.test New admin alert: Maintenance",
       ]
     `)
   })
@@ -323,7 +323,7 @@ describe("email verification (transactional)", () => {
     const obs = await w.observe()
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
-        "email   newbie@example.test Verify Your Email Address - SC Market",
+        "email   newbie@example.test Verify your email address for SC Market",
       ]
     `)
     expect(obs).toMatchSnapshot()
@@ -363,7 +363,7 @@ describe("price_alert (83, watchlist)", () => {
         "in_app  user:other price_alert (listing:lara)",
         "push    push:other [price_alert] Price Alert: Laranite Ore 50 SCU",
         "push    push:watcher [price_alert] Price Alert: Laranite Ore 50 SCU",
-        "email   other@example.test Price Alert: Laranite Ore 50 SCU is 4,200 aUEC",
+        "email   other@example.test Price alert: Laranite Ore 50 SCU is 4,200 aUEC",
         "discord POST /users/@me/channels",
         "discord POST /channels/dm-discord:watcher/messages",
         "discord POST /users/@me/channels",
@@ -386,7 +386,7 @@ describe("price_alert (83, watchlist)", () => {
     await checkWatchlistMatches(listing_id)
     expect(w.summary(await w.observe())).toMatchInlineSnapshot(`
       [
-        "email   watcher@example.test Price Alert: Laranite is 4,000 aUEC",
+        "email   watcher@example.test Price alert: Laranite is 4,000 aUEC",
       ]
     `)
   })
@@ -448,7 +448,7 @@ describe("transport failures", () => {
         "summary": [
           "in_app  user:invitee contractor_invite (invite:3)",
           "push    push:invitee#1 [contractor_invite] Contractor Invitation",
-          "email   invitee@example.test Contractor Invitation",
+          "email   invitee@example.test Org acme invited you to join",
         ],
       }
     `)
@@ -503,7 +503,7 @@ describe("transport failures", () => {
           "Failed to queue notification email, falling back to direct send",
         ],
         "sent": [
-          "Order Assigned",
+          "Order assigned to you: Order fb",
         ],
       }
     `)

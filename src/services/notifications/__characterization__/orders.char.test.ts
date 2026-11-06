@@ -76,7 +76,7 @@ describe("order_create (1)", () => {
         "in_app  user:boss order_create (order:o1)",
         "in_app  user:clerk order_create (order:o1)",
         "push    push:clerk [order] New Order Created",
-        "email   boss@example.test New Order Created",
+        "email   boss@example.test New order: Offer s1",
         "discord POST /channels/900000000000000001/messages",
         "webhook shop-hook SC Market - Order Placed",
       ]
@@ -101,7 +101,7 @@ describe("order_create (1)", () => {
       [
         "in_app  user:seller order_assigned (order:o2)",
         "push    push:seller [order] Order Assigned",
-        "email   seller@example.test Order Assigned",
+        "email   seller@example.test Order assigned to you: Offer s2",
         "webhook seller-shop-hook SC Market - Order Assigned",
         "webhook seller-hook SC Market - Order Assigned",
         "webhook seller-shop-hook SC Market - Order Placed",
@@ -176,7 +176,7 @@ describe("order_assigned (2)", () => {
       [
         "in_app  user:clerk order_assigned (order:o5)",
         "push    push:clerk [order] Order Assigned",
-        "email   clerk@example.test Order Assigned",
+        "email   clerk@example.test Order assigned to you: Order o5",
         "discord POST /channels/thread:o5/messages",
         "discord PUT /channels/thread:o5/thread-members/discord:clerk",
         "webhook shop-hook SC Market - Order Assigned",
@@ -240,7 +240,7 @@ describe("order_status_* (4-7)", () => {
       [
         "in_app  user:customer order_status_in_progress (order:st-in-progress)",
         "push    push:customer [order] Order Being Fulfilled",
-        "email   customer@example.test Order Being Fulfilled",
+        "email   customer@example.test Order being fulfilled: Order st-in-progress",
         "discord PUT /channels/thread:st-in-progress/thread-members/discord:seller",
         "discord POST /channels/thread:st-in-progress/messages",
         "webhook shop-hook SC Market - Order Status Updated",
@@ -256,7 +256,7 @@ describe("order_status_* (4-7)", () => {
       [
         "in_app  user:customer order_status_fulfilled (order:st-fulfilled)",
         "push    push:customer [order] Order Fulfilled",
-        "email   customer@example.test Order Fulfilled",
+        "email   customer@example.test Order fulfilled: Order st-fulfilled",
         "discord POST /channels/thread:st-fulfilled/messages",
         "discord PATCH /channels/thread:st-fulfilled",
         "webhook shop-hook SC Market - Order Status Updated",
@@ -272,7 +272,7 @@ describe("order_status_* (4-7)", () => {
       [
         "in_app  user:customer order_status_cancelled (order:st-cancelled)",
         "push    push:customer [order] Order Cancelled",
-        "email   customer@example.test Order Cancelled",
+        "email   customer@example.test Order cancelled: Order st-cancelled",
         "discord POST /channels/thread:st-cancelled/messages",
         "discord PATCH /channels/thread:st-cancelled",
         "webhook shop-hook SC Market - Order Status Updated",
@@ -288,7 +288,7 @@ describe("order_status_* (4-7)", () => {
       [
         "in_app  user:customer order_status_not_started (order:st-not-started)",
         "push    push:customer [order] Order Status Updated",
-        "email   customer@example.test Order Status Updated",
+        "email   customer@example.test Order queued: Order st-not-started",
         "discord POST /channels/thread:st-not-started/messages",
         "webhook shop-hook SC Market - Order Status Updated",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
@@ -314,7 +314,7 @@ describe("order_status_* (4-7)", () => {
       [
         "in_app  user:clerk order_status_cancelled (order:cx)",
         "push    push:clerk [order] Order Cancelled",
-        "email   clerk@example.test Order Cancelled",
+        "email   clerk@example.test Order cancelled: Order cx",
         "ws      {"message_id":"uuid#1","content":"Order status has been upda",
       ]
     `)
@@ -346,7 +346,7 @@ describe("order_message (81)", () => {
       [
         "in_app  user:seller order_message (order:chat)",
         "push    push:seller [order] customer: first message",
-        "email   seller@example.test New Message on Order",
+        "email   seller@example.test Customer sent a message on "Order chat"",
         "discord POST /channels/thread:chat/messages",
         "discord POST /channels/thread:chat/messages",
         "ws      {"message_id":"uuid#1","content":"first message","author":"c",
@@ -403,7 +403,7 @@ describe("order_review (3)", () => {
       [
         "in_app  user:seller order_review (review:rev)",
         "push    push:seller [order_review] New Review",
-        "email   seller@example.test New Review on Order",
+        "email   seller@example.test Customer reviewed your order",
         "webhook shop-hook SC Market - Order Review",
       ]
     `)
@@ -429,7 +429,7 @@ describe("order_review (3)", () => {
       [
         "in_app  user:customer order_review (review:rev2)",
         "push    push:customer [order_review] New Review",
-        "email   customer@example.test New Review on Order",
+        "email   customer@example.test Seller reviewed your order",
       ]
     `)
     expect(obs.in_app.map((n: { to: string; actors: string[] }) => [n.to, n.actors])).toMatchInlineSnapshot(`

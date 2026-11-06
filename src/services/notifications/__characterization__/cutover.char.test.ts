@@ -163,7 +163,7 @@ describe("parity: each cut-over event sends once through notify(), as legacy did
     const r = await bothPaths(() => notificationService.createOrderNotification(order))
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   boss@example.test New Order Created",
+        "email   boss@example.test New order: Order oc",
         "in_app  user:boss order_create (order:oc)",
         "in_app  user:clerk order_create (order:oc)",
         "push    push:clerk [order] New Order Created",
@@ -181,7 +181,7 @@ describe("parity: each cut-over event sends once through notify(), as legacy did
     const r = await bothPaths(() => notificationService.createOrderAssignedNotification(order))
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   clerk@example.test Order Assigned",
+        "email   clerk@example.test Order assigned to you: Order oa",
         "in_app  user:clerk order_assigned (order:oa)",
         "push    push:clerk [order] Order Assigned",
       ]
@@ -229,7 +229,7 @@ describe("parity: each cut-over event sends once through notify(), as legacy did
     )
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   clerk@example.test Order Cancelled",
+        "email   clerk@example.test Order cancelled: Order cc",
         "in_app  user:clerk order_status_cancelled (order:cc)",
         "push    push:clerk [order] Order Cancelled",
       ]
@@ -254,7 +254,7 @@ describe("parity: each cut-over event sends once through notify(), as legacy did
     })
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   seller@example.test New Message on Order",
+        "email   seller@example.test Customer sent a message on "Order om"",
         "in_app  user:customer order_message (order:om)",
         "in_app  user:seller order_message (order:om)",
         "push    push:customer [order] seller: reply",
@@ -287,8 +287,8 @@ describe("parity: each cut-over event sends once through notify(), as legacy did
     })
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   seller@example.test Counter Offer Received",
-        "email   seller@example.test New Offer Created",
+        "email   seller@example.test You got a counter offer",
+        "email   seller@example.test You have a new offer",
         "in_app  user:seller counter_offer_create (session:or)",
         "in_app  user:seller offer_create (session:or)",
         "push    push:seller [offer] Counter-Offer",
@@ -315,7 +315,7 @@ describe("parity: each cut-over event sends once through notify(), as legacy did
     })
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   customer@example.test New Message on Offer",
+        "email   customer@example.test Seller sent a message on your offer",
         "in_app  user:customer offer_message (session:ofm)",
         "in_app  user:seller offer_message (session:ofm)",
         "push    push:customer [offer] seller: hello",
@@ -367,7 +367,7 @@ describe("live: owner-approved differences that ship with the cutover", () => {
     // The send-time email check uses the same (Personal) scope as notify().
     expect(deliveries(r.live)).toMatchInlineSnapshot(`
       [
-        "email   customer@example.test Order Fulfilled",
+        "email   customer@example.test Order fulfilled: Order cs",
         "in_app  user:customer order_status_fulfilled (order:cs)",
       ]
     `)
@@ -442,7 +442,7 @@ describe("Buy now is an ordinary new order", () => {
     const obs = await w.observe()
     expect(deliveries(obs)).toMatchInlineSnapshot(`
       [
-        "email   boss@example.test New Order Created",
+        "email   boss@example.test New order: Order bn",
         "in_app  user:boss order_create (order:bn)",
         "in_app  user:clerk order_create (order:bn)",
         "push    push:boss [order] New Order Created",

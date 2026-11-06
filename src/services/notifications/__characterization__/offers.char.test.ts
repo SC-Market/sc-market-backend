@@ -58,7 +58,7 @@ describe("offer_create (19)", () => {
         "in_app  user:clerk offer_create (session:o1)",
         "push    push:boss [offer] New Offer",
         "push    push:clerk [offer] New Offer",
-        "email   boss@example.test New Offer Created",
+        "email   boss@example.test You have a new offer",
         "discord POST /channels/900000000000000101/messages",
         "discord POST /channels/900000000000000101/invites",
         "dqueue  create_thread",
@@ -87,7 +87,7 @@ describe("offer_create (19)", () => {
       [
         "in_app  user:seller offer_create (session:o2)",
         "push    push:seller [offer] New Offer",
-        "email   seller@example.test New Offer Created",
+        "email   seller@example.test You have a new offer",
         "discord POST /channels/900000000000000102/messages",
         "webhook shop-hook SC Market - Offer Received",
       ]
@@ -142,7 +142,7 @@ describe("counter_offer_create (20)", () => {
       [
         "in_app  user:seller counter_offer_create (session:c1)",
         "push    push:seller [offer] Counter-Offer",
-        "email   seller@example.test Counter Offer Received",
+        "email   seller@example.test You got a counter offer",
         "discord POST /channels/thread:c1/messages",
         "webhook shop-hook SC Market - Counter Offer Received",
       ]
@@ -211,7 +211,7 @@ describe("offer_message (18)", () => {
     expect(w.summary(obs)).toMatchInlineSnapshot(`
       [
         "in_app  user:customer offer_message (session:m1)",
-        "email   customer@example.test New Message on Offer",
+        "email   customer@example.test Seller sent a message on your offer",
         "discord POST /channels/thread:m1/messages",
         "discord POST /channels/thread:m1/messages",
         "ws      {"message_id":"uuid#1","content":"hello","author":"seller","",
