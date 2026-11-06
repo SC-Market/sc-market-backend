@@ -35,15 +35,15 @@ exports[`counter_offer_create (20) > counter-offer: same recipients as offer_cre
   "email": [
     {
       "html_length_bucket": 4000,
-      "subject": "Counter Offer Received",
+      "subject": "You got a counter offer",
       "text": "SC Market
 https://sc-market.space
 
-Counter Offer Received
+Counter offer
 
 Hello Seller,
 
-A counter offer has been created:
+The other side sent you a counter offer:
 
 Offer #session:c1
 Status: Active
@@ -252,15 +252,15 @@ exports[`offer_create (19) > offer to a personal shop: the assignee gets in-app,
   "email": [
     {
       "html_length_bucket": 4000,
-      "subject": "New Offer Created",
+      "subject": "You have a new offer",
       "text": "SC Market
 https://sc-market.space
 
-New Offer Created
+New offer
 
 Hello Seller,
 
-A new offer has been created:
+A buyer sent you an offer:
 
 Offer #session:o2
 Status: Active
@@ -486,15 +486,15 @@ exports[`offer_create (19) > offer to an org shop: managers get in-app, email an
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "New Offer Created",
+      "subject": "You have a new offer",
       "text": "SC Market
 https://sc-market.space
 
-New Offer Created
+New offer
 
 Hello Boss,
 
-A new offer has been created:
+A buyer sent you an offer:
 
 Offer #session:o1
 Status: Active
@@ -671,15 +671,15 @@ exports[`offer_message (18) > seller replies: customer gets one coalesced notifi
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "New Message on Offer",
+      "subject": "Seller sent a message on your offer",
       "text": "SC Market
 https://sc-market.space
 
-New Message on Offer
+New message on your offer
 
 Hello Customer,
 
-A new message has been sent on your offer:
+There's a new message on your offer:
 
 Offer #session:m1
 

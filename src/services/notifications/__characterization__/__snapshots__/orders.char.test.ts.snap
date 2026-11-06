@@ -84,15 +84,15 @@ exports[`order_assigned (2) > org manager assigns an order: assignee in-app/push
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Assigned",
+      "subject": "Order assigned to you: Order o5",
       "text": "SC Market
 https://sc-market.space
 
-Order Assigned to You
+Order assigned to you
 
 Hello Clerk,
 
-You have been assigned to a new order:
+This order is now assigned to you:
 
 Order o5
 Description of o5
@@ -102,7 +102,7 @@ Status: Queued
 View Order:
 https://sc-market.space/contract/order:o5
 
-Please review the order details and begin work when ready.
+Review the order details and start when you're ready.
 
 
 ---
@@ -357,15 +357,15 @@ exports[`order_create (1) > org order from an offer: org managers, org-scoped pu
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "New Order Created",
+      "subject": "New order: Offer s1",
       "text": "SC Market
 https://sc-market.space
 
-New Order Created
+You have a new order
 
 Hello Boss,
 
-A new order has been created:
+A customer placed an order:
 
 Offer s1
 Description of s1
@@ -525,15 +525,15 @@ exports[`order_create (1) > personal order with an assignee: assignee gets order
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Assigned",
+      "subject": "Order assigned to you: Offer s2",
       "text": "SC Market
 https://sc-market.space
 
-Order Assigned to You
+Order assigned to you
 
 Hello Seller,
 
-You have been assigned to a new order:
+This order is now assigned to you:
 
 Offer s2
 Description of s2
@@ -543,7 +543,7 @@ Status: Queued
 View Order:
 https://sc-market.space/contract/order:o2
 
-Please review the order details and begin work when ready.
+Review the order details and start when you're ready.
 
 
 ---
@@ -811,11 +811,11 @@ exports[`order_message (81) > chat messages: coalesced in-app row; the second un
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "New Message on Order",
+      "subject": "Customer sent a message on "Order chat"",
       "text": "SC Market
 https://sc-market.space
 
-New Message on Order
+New message on your order
 
 Hello Seller,
 
@@ -948,15 +948,15 @@ exports[`order_review (3) > customer reviews: assignee notified, shop order_revi
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "New Review on Order",
+      "subject": "Customer reviewed your order",
       "text": "SC Market
 https://sc-market.space
 
-New Order Review
+New review on your order
 
 Hello Seller,
 
-A new review has been submitted for your order:
+Customer left a review on your order:
 
 Order rev
 
@@ -1164,15 +1164,15 @@ exports[`order_status_* (4-7) > assignee sets cancelled: thread archived 2`] = `
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Cancelled",
+      "subject": "Order cancelled: Order st-cancelled",
       "text": "SC Market
 https://sc-market.space
 
-Order Cancelled
+Order cancelled
 
 Hello Customer,
 
-Order "Order st-cancelled" has been cancelled.
+Order "Order st-cancelled" was cancelled.
 
 Order st-cancelled
 Description of st-cancelled
@@ -1348,15 +1348,15 @@ exports[`order_status_* (4-7) > assignee sets fulfilled: thread archived 2`] = `
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Fulfilled",
+      "subject": "Order fulfilled: Order st-fulfilled",
       "text": "SC Market
 https://sc-market.space
 
-Order Fulfilled
+Order fulfilled
 
 Hello Customer,
 
-Order "Order st-fulfilled" has been fulfilled.
+Order "Order st-fulfilled" is fulfilled.
 
 Order st-fulfilled
 Value: 25,000 aUEC
@@ -1528,11 +1528,11 @@ exports[`order_status_* (4-7) > assignee sets in-progress: customer notified, th
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Being Fulfilled",
+      "subject": "Order being fulfilled: Order st-in-progress",
       "text": "SC Market
 https://sc-market.space
 
-Order Being Fulfilled
+Order being fulfilled
 
 Hello Customer,
 
@@ -1705,15 +1705,15 @@ exports[`order_status_* (4-7) > assignee sets not-started 2`] = `
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Status Updated",
+      "subject": "Order queued: Order st-not-started",
       "text": "SC Market
 https://sc-market.space
 
-Order Queued
+Order queued
 
 Hello Customer,
 
-Order "Order st-not-started" status has been updated to Queued.
+Order "Order st-not-started" is queued.
 
 Order st-not-started
 Description of st-not-started
@@ -1860,15 +1860,15 @@ exports[`order_status_* (4-7) > customer cancels an org order: assignee notified
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Order Cancelled",
+      "subject": "Order cancelled: Order cx",
       "text": "SC Market
 https://sc-market.space
 
-Order Cancelled
+Order cancelled
 
 Hello Clerk,
 
-Order "Order cx" has been cancelled.
+Order "Order cx" was cancelled.
 
 Order cx
 Description of cx

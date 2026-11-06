@@ -56,10 +56,10 @@ const en = {
   "account_identity_changed.action": "Open Settings",
 
   // admin_alert
-  "admin_alert.subject": "Admin Alert",
-  "admin_alert.preheader": "You have a new admin alert: {title}",
-  "admin_alert.heading": "Admin Alert",
-  "admin_alert.intro": "You have a new admin alert:",
+  "admin_alert.subject": "New admin alert: {title}",
+  "admin_alert.preheader": "SC Market staff sent an alert: {title}",
+  "admin_alert.heading": "Admin alert",
+  "admin_alert.intro": "SC Market staff sent an alert:",
   "admin_alert.action": "View Alert",
 
   // buy_order_filled: a seller filled your buy order (also its push).
@@ -76,23 +76,23 @@ const en = {
   "listing_paused_by_wipe.action": "Relist my listings",
 
   // contract_offer_received
-  "contract_offer_received.subject": "New Offer on Your Contract",
+  "contract_offer_received.subject": "Someone made an offer on your contract",
   "contract_offer_received.preheader": "Someone made an offer on your public contract.",
-  "contract_offer_received.heading": "New Offer on Your Contract",
+  "contract_offer_received.heading": "New offer on your contract",
   "contract_offer_received.intro": "Someone made an offer on your public contract:",
 
   // contractor_invite: an org invited you.
-  "contractor_invite.subject": "Contractor Invitation",
-  "contractor_invite.preheader": "You have been invited to join {org}.",
-  "contractor_invite.heading": "Contractor Invitation",
-  "contractor_invite.intro": "You have been invited to join a contractor organization.",
+  "contractor_invite.subject": "{org} invited you to join",
+  "contractor_invite.preheader": "{org} invited you to join.",
+  "contractor_invite.heading": "Org invitation",
+  "contractor_invite.intro": "An org invited you to join:",
   "contractor_invite.action": "View Invitation",
 
   // counter_offer_create
-  "counter_offer_create.subject": "Counter Offer Received",
-  "counter_offer_create.preheader": "You received a counter offer.",
-  "counter_offer_create.heading": "Counter Offer Received",
-  "counter_offer_create.intro": "A counter offer has been created:",
+  "counter_offer_create.subject": "You got a counter offer",
+  "counter_offer_create.preheader": "The other side sent you a counter offer.",
+  "counter_offer_create.heading": "Counter offer",
+  "counter_offer_create.intro": "The other side sent you a counter offer:",
 
   // dm_reminder: messages unread for a few hours.
   "dm_reminder.subject.single": "You have an unread message on SC Market",
@@ -104,36 +104,36 @@ const en = {
   "dm_reminder.action": "View messages",
 
   // market_item_bid
-  "market_item_bid.subject": "New Bid on Market Listing",
+  "market_item_bid.subject": "New bid on {title}",
   "market_item_bid.preheader": "Someone placed a bid on \"{title}\".",
-  "market_item_bid.heading": "New Bid on Market Listing",
+  "market_item_bid.heading": "New bid on your listing",
   "market_item_bid.intro": "Someone placed a bid on your market listing:",
   "market_item_bid.amount": "Bid Amount:",
 
   // market_item_offer
-  "market_item_offer.subject": "New Offer on Market Listing",
+  "market_item_offer.subject": "New offer on {title}",
   "market_item_offer.preheader": "Someone made an offer on \"{title}\".",
-  "market_item_offer.heading": "New Offer on Market Listing",
+  "market_item_offer.heading": "New offer on your listing",
   "market_item_offer.intro": "Someone made an offer on your market listing:",
   "market_item_offer.amount": "Offer Amount:",
 
   // offer_accepted
-  "offer_accepted.subject": "Offer Accepted",
+  "offer_accepted.subject": "Your offer was accepted",
   "offer_accepted.preheader": "Your offer was accepted.",
-  "offer_accepted.heading": "Offer Accepted",
+  "offer_accepted.heading": "Offer accepted",
   "offer_accepted.intro": "Your offer was accepted:",
 
   // offer_create
-  "offer_create.subject": "New Offer Created",
-  "offer_create.preheader": "A new offer has been created.",
-  "offer_create.heading": "New Offer Created",
-  "offer_create.intro": "A new offer has been created:",
+  "offer_create.subject": "You have a new offer",
+  "offer_create.preheader": "A buyer sent you an offer.",
+  "offer_create.heading": "New offer",
+  "offer_create.intro": "A buyer sent you an offer:",
 
   // offer_message
-  "offer_message.subject": "New Message on Offer",
+  "offer_message.subject": "{author} sent a message on your offer",
   "offer_message.preheader": "{author} sent a message on your offer.",
-  "offer_message.heading": "New Message on Offer",
-  "offer_message.intro": "A new message has been sent on your offer:",
+  "offer_message.heading": "New message on your offer",
+  "offer_message.intro": "There's a new message on your offer:",
   "offer_message.sent": "<b>{author}</b> sent a message:",
 
   // offer_pending_reminder: offers waiting for the seller side's reply (first nudge).
@@ -165,64 +165,64 @@ const en = {
   "offer_waiting_buyer.keep_waiting": "To keep waiting, you don't need to do anything.",
 
   // offer_rejected
-  "offer_rejected.subject": "Offer Rejected",
+  "offer_rejected.subject": "Your offer was rejected",
   "offer_rejected.preheader": "Your offer was rejected.",
-  "offer_rejected.heading": "Offer Rejected",
+  "offer_rejected.heading": "Offer rejected",
   "offer_rejected.intro": "Your offer was rejected:",
 
   // order_assigned
-  "order_assigned.subject": "Order Assigned",
+  "order_assigned.subject": "Order assigned to you: {title}",
   "order_assigned.preheader": "You have been assigned to order \"{title}\".",
-  "order_assigned.heading": "Order Assigned to You",
-  "order_assigned.intro": "You have been assigned to a new order:",
-  "order_assigned.outro": "Please review the order details and begin work when ready.",
+  "order_assigned.heading": "Order assigned to you",
+  "order_assigned.intro": "This order is now assigned to you:",
+  "order_assigned.outro": "Review the order details and start when you're ready.",
 
   // order_create
-  "order_create.subject": "New Order Created",
-  "order_create.preheader": "A new order \"{title}\" has been created.",
-  "order_create.heading": "New Order Created",
-  "order_create.intro": "A new order has been created:",
+  "order_create.subject": "New order: {title}",
+  "order_create.preheader": "A customer placed the order \"{title}\".",
+  "order_create.heading": "You have a new order",
+  "order_create.intro": "A customer placed an order:",
 
   // order_message
-  "order_message.subject": "New Message on Order",
+  "order_message.subject": "{author} sent a message on \"{title}\"",
   "order_message.preheader": "{author} sent a message on order \"{title}\".",
-  "order_message.heading": "New Message on Order",
+  "order_message.heading": "New message on your order",
   "order_message.intro": "<b>{author}</b> sent a message on order \"{title}\":",
   "order_message.action": "View Order & Reply",
 
   // order_review
-  "order_review.subject": "New Review on Order",
+  "order_review.subject": "{author} reviewed your order",
   "order_review.preheader": "{author} left a review on your order.",
-  "order_review.heading": "New Order Review",
-  "order_review.intro": "A new review has been submitted for your order:",
+  "order_review.heading": "New review on your order",
+  "order_review.intro": "{author} left a review on your order:",
   "order_review.by": "By:",
 
   // order_review_revision_requested
-  "order_review_revision_requested.subject": "Review Revision Requested",
-  "order_review_revision_requested.preheader": "A revision has been requested for your review on order \"{title}\".",
-  "order_review_revision_requested.heading": "Review Revision Requested",
-  "order_review_revision_requested.intro": "A revision has been requested for your review on order \"{title}\":",
+  "order_review_revision_requested.subject": "Revision requested for your review",
+  "order_review_revision_requested.preheader": "The other side asked you to revise your review on order \"{title}\".",
+  "order_review_revision_requested.heading": "Revision requested",
+  "order_review_revision_requested.intro": "The other side asked you to revise your review on order \"{title}\":",
   "order_review_revision_requested.your_review": "Your Review:",
   "order_review_revision_requested.request": "Revision Request:",
 
   // order_status_*
-  "order_status_cancelled.subject": "Order Cancelled",
-  "order_status_cancelled.heading": "Order Cancelled",
-  "order_status_cancelled.intro": "Order \"{title}\" has been cancelled.",
-  "order_status_fulfilled.subject": "Order Fulfilled",
-  "order_status_fulfilled.heading": "Order Fulfilled",
-  "order_status_fulfilled.intro": "Order \"{title}\" has been fulfilled.",
-  "order_status_in_progress.subject": "Order Being Fulfilled",
-  "order_status_in_progress.heading": "Order Being Fulfilled",
+  "order_status_cancelled.subject": "Order cancelled: {title}",
+  "order_status_cancelled.heading": "Order cancelled",
+  "order_status_cancelled.intro": "Order \"{title}\" was cancelled.",
+  "order_status_fulfilled.subject": "Order fulfilled: {title}",
+  "order_status_fulfilled.heading": "Order fulfilled",
+  "order_status_fulfilled.intro": "Order \"{title}\" is fulfilled.",
+  "order_status_in_progress.subject": "Order being fulfilled: {title}",
+  "order_status_in_progress.heading": "Order being fulfilled",
   "order_status_in_progress.intro": "Order \"{title}\" is now being fulfilled.",
-  "order_status_not_started.subject": "Order Status Updated",
-  "order_status_not_started.heading": "Order Queued",
-  "order_status_not_started.intro": "Order \"{title}\" status has been updated to Queued.",
+  "order_status_not_started.subject": "Order queued: {title}",
+  "order_status_not_started.heading": "Order queued",
+  "order_status_not_started.intro": "Order \"{title}\" is queued.",
 
   // price_alert: a watchlist item hit its target price.
-  "price_alert.subject": "Price Alert: {title} is {price} aUEC",
+  "price_alert.subject": "Price alert: {title} is {price} aUEC",
   "price_alert.preheader": "{title} is listed at {price} aUEC, at or below your target of {target} aUEC.",
-  "price_alert.heading": "Price Alert",
+  "price_alert.heading": "Price alert",
   "price_alert.intro": "A listing on your watchlist hit your target price:",
   "price_alert.price": "Price:",
   "price_alert.target": "Your target:",
@@ -245,24 +245,24 @@ const en = {
   // storefront_enquiry_accepted / _declined: to whoever sent the enquiry.
   "storefront_enquiry_accepted.subject": "Storefront enquiry accepted",
   "storefront_enquiry_accepted.preheader": "SC Market staff accepted your branded storefront enquiry for {name} ({subdomain}).",
-  "storefront_enquiry_accepted.heading": "Storefront Enquiry Accepted",
+  "storefront_enquiry_accepted.heading": "Storefront enquiry accepted",
   "storefront_enquiry_accepted.intro": "SC Market staff accepted your branded storefront enquiry:",
   "storefront_enquiry_accepted.action": "Open Storefront Settings",
   "storefront_enquiry_declined.subject": "Storefront enquiry declined",
   "storefront_enquiry_declined.preheader": "SC Market staff declined your branded storefront enquiry for {name} ({subdomain}).",
-  "storefront_enquiry_declined.heading": "Storefront Enquiry Declined",
+  "storefront_enquiry_declined.heading": "Storefront enquiry declined",
   "storefront_enquiry_declined.intro": "SC Market staff declined your branded storefront enquiry:",
   "storefront_enquiry_declined.retry": "You can send a new enquiry from your storefront settings.",
   "storefront_enquiry_declined.action": "Open Storefront Settings",
 
   // verification: confirm the email address (transactional).
-  "verification.subject": "Verify Your Email Address - SC Market",
+  "verification.subject": "Verify your email address for SC Market",
   "verification.preheader": "Confirm this address to get SC Market emails.",
-  "verification.heading": "Verify Your Email Address",
+  "verification.heading": "Verify your email address",
   "verification.intro":
-    "Thank you for adding your email address to your SC Market account. Please verify your email address by clicking the button below:",
+    "Thanks for adding your email address to your SC Market account. Verify it with the button below:",
   "verification.intro_text":
-    "Thank you for adding your email address to your SC Market account. Please verify your email address by visiting the link below:",
+    "Thanks for adding your email address to your SC Market account. Verify it with the link below:",
   "verification.action": "Verify Email Address",
   "verification.copy_link": "Or copy and paste this link into your browser:",
   "verification.expires": "This verification link will expire in 24 hours.",

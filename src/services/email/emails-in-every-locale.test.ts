@@ -330,7 +330,7 @@ describe("every email in every language", () => {
     expect(m.html).toContain(`<html lang="${languageTag(locale)}">`)
     expect(m.text).toContain(`/email/verify/${"a".repeat(64)}`)
     expect(m.html).not.toContain("/email/unsubscribe/")
-    if (locale !== "en") expect(m.subject).not.toBe("Verify Your Email Address - SC Market")
+    if (locale !== "en") expect(m.subject).not.toBe("Verify your email address for SC Market")
   })
 
   it("staff storefront enquiry email (to the staff address, in English)", async () => {
@@ -535,7 +535,7 @@ describe("statuses, amounts and user text", () => {
     const m = await send("order_create")
     expect(m.text).toContain("Status: In Bearbeitung")
     expect(m.text).toContain("Wert: 1.250.000 aUEC")
-    expect(m.subject).toBe("Neue Bestellung")
+    expect(m.subject).toBe("Neue Bestellung: Lieferung von 2.400 SCU Quantanium nach Area18 (Expressversand)")
   })
 
   it("a status email shows the status it announces, not the order row's (read before the update)", async () => {

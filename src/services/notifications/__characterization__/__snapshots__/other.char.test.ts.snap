@@ -7,15 +7,15 @@ exports[`admin_alert (21) > all_users: everyone not banned except the admin who 
   "email": [
     {
       "html_length_bucket": 4000,
-      "subject": "Admin Alert",
+      "subject": "New admin alert: Maintenance",
       "text": "SC Market
 https://sc-market.space
 
-Admin Alert
+Admin alert
 
 Hello Alice,
 
-You have a new admin alert:
+SC Market staff sent an alert:
 
 Maintenance
 Down at 10:00
@@ -140,15 +140,15 @@ exports[`contractor_invite (9) > invitee gets in-app, push and email (owner deci
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Contractor Invitation",
+      "subject": "Org acme invited you to join",
       "text": "SC Market
 https://sc-market.space
 
-Contractor Invitation
+Org invitation
 
 Hello Invitee,
 
-You have been invited to join a contractor organization.
+An org invited you to join:
 
 Org acme
 
@@ -239,15 +239,15 @@ exports[`email verification (transactional) > queued, then sent by the consumer 
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Verify Your Email Address - SC Market",
+      "subject": "Verify your email address for SC Market",
       "text": "SC Market
 https://sc-market.space
 
-Verify Your Email Address
+Verify your email address
 
 Hello Newbie,
 
-Thank you for adding your email address to your SC Market account. Please verify your email address by visiting the link below:
+Thanks for adding your email address to your SC Market account. Verify it with the link below:
 
 https://sc-market.space/email/verify/<token>
 
@@ -351,11 +351,11 @@ Seller: Shop seller-shop
   "email": [
     {
       "html_length_bucket": 4500,
-      "subject": "Price Alert: Laranite Ore 50 SCU is 4,200 aUEC",
+      "subject": "Price alert: Laranite Ore 50 SCU is 4,200 aUEC",
       "text": "SC Market
 https://sc-market.space
 
-Price Alert
+Price alert
 
 Hello Other,
 
