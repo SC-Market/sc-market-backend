@@ -32,6 +32,7 @@ import {
 } from "./discord.service.types.js"
 import { DiscordChannelRef, getThreadChannel } from "./channel-setups.js"
 import { recordDmAttempt } from "./dm-attempts.js"
+import { recordLegacyDestination } from "../notify/destination-trace.js"
 
 /** Who a DM is for and which path sends it (discord_dm_attempts.source). */
 export interface DmAttemptContext {
@@ -113,7 +114,20 @@ export interface DiscordService {
     channelId: string,
     body: RESTPostAPIChannelMessageJSONBody,
   ): Promise<unknown>
+  /**
+   * The same post, reporting the outcome (notify()'s Discord channel
+   * adapter): Discord's JSON error code and HTTP status on failure.
+   */
+  tryPostChannelMessage(
+    channelId: string,
+    body: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<ChannelPostResult>
 }
+
+export type ChannelPostResult =
+  | { ok: true; result: unknown }
+  | { ok: false; skipped: true; error: string }
+  | { ok: false; skipped?: false; error: string; code?: number; status?: number }
 
 /**
  * REST API-backed implementation of DiscordService.
@@ -541,15 +555,33 @@ class RestDiscordService implements DiscordService {
     channelId: string,
     body: RESTPostAPIChannelMessageJSONBody,
   ): Promise<unknown> {
-    if (actingAsTestAccount()) return undefined // services/test-accounts
+    // Shadow mode compares what the legacy path addressed with notify()'s plan.
+    recordLegacyDestination(`discord_channel:${channelId}`, body)
+    const r = await this.tryPostChannelMessage(channelId, body)
+    if (r.ok) return r.result
+    return r.skipped ? undefined : null
+  }
+
+  async tryPostChannelMessage(
+    channelId: string,
+    body: RESTPostAPIChannelMessageJSONBody,
+  ): Promise<ChannelPostResult> {
+    // services/test-accounts
+    if (actingAsTestAccount()) return { ok: false, skipped: true, error: "suppressed for a test account" }
     try {
       const result = await this.rest.post(Routes.channelMessages(channelId), {
         body,
       })
-      return result
+      return { ok: true, result }
     } catch (error) {
       logger.error(`Failed to post message to channel ${channelId}`, { error })
-      return null
+      const e = error as { code?: unknown; status?: unknown }
+      return {
+        ok: false,
+        error: String(error),
+        code: typeof e?.code === "number" ? e.code : undefined,
+        status: typeof e?.status === "number" ? e.status : undefined,
+      }
     }
   }
 }

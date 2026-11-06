@@ -11,6 +11,9 @@ import * as offerDb from "../../api/routes/v1/offers/database.js"
 import * as marketDb from "../../api/routes/v1/market/database.js"
 import { cdn } from "../../clients/cdn/cdn.js"
 import logger from "../../logger/logger.js"
+import type { RESTPostAPIChannelMessageJSONBody } from "discord-api-types/v10"
+import type { Destination } from "../notify/channels.js"
+import type { DestinationPlan } from "../notify/destinations.js"
 
 const knex = () => getKnex()
 
@@ -32,57 +35,73 @@ async function buildMarketListingFields(offerId: string): Promise<{ name: string
   }
 }
 
-/**
- * Post alert to subscribed channels when a new offer is received.
+/*
+ * Each alert has a resolver (which channels) and a message builder (what is
+ * posted). The legacy senders below and notify()'s Discord channel adapter
+ * (services/notify/destinations) both use them, so both paths post the same
+ * message to the same channels.
  */
-export async function postOfferAlert(session: DBOfferSession): Promise<void> {
-  if (await involvesTestParty(orderParties(session))) return
-  const channels = await getAlertChannels({
+
+/** Alert channels for a new offer: the shop's, and the org's (or the assignee's). */
+export async function offerAlertChannels(session: DBOfferSession): Promise<string[]> {
+  if (await involvesTestParty(orderParties(session))) return []
+  return getAlertChannels({
     shop_id: session.shop_id,
     contractor_id: session.contractor_id,
     user_id: session.assigned_id,
   })
+}
+
+export async function offerAlertMessage(session: DBOfferSession): Promise<RESTPostAPIChannelMessageJSONBody> {
+  const customer = await profileDb.getUser({ user_id: session.customer_id })
+  const lastOffer = await offerDb.getMostRecentOrderOffer(session.id)
+  const avatar = await cdn.getFileLinkResource(customer.avatar)
+  const itemFields = await buildMarketListingFields(lastOffer.id)
+
+  return {
+    embeds: [{
+      color: 0x10b881,
+      author: {
+        name: customer.display_name,
+        url: `https://sc-market.space/user/${customer.username}`,
+        icon_url: avatar || undefined,
+      },
+      title: `New Offer: ${lastOffer.title}`,
+      url: `https://sc-market.space/offer/${session.id}`,
+      description: lastOffer.description?.substring(0, 200) || "",
+      fields: [
+        { name: "Offer", value: `${(+lastOffer.cost).toLocaleString("en-US")} aUEC`, inline: true },
+        { name: "Kind", value: lastOffer.kind, inline: true },
+        ...(lastOffer.collateral ? [{ name: "Collateral", value: `${(+lastOffer.collateral).toLocaleString("en-US")} aUEC`, inline: true }] : []),
+        ...itemFields,
+      ],
+      timestamp: new Date().toISOString(),
+    }],
+    // Only org offers can be claimed (claim_orders is an org permission); on a
+    // personal alert channel the button could only ever fail.
+    components: session.contractor_id
+      ? [{
+          type: 1, // ACTION_ROW
+          components: [{
+            type: 2, // BUTTON
+            style: 1, // PRIMARY
+            label: "Claim Offer",
+            custom_id: `claim_offer:${session.id}`,
+          }],
+        }]
+      : [],
+  } as RESTPostAPIChannelMessageJSONBody
+}
+
+/**
+ * Post alert to subscribed channels when a new offer is received.
+ */
+export async function postOfferAlert(session: DBOfferSession): Promise<void> {
+  const channels = await offerAlertChannels(session)
   if (!channels.length) return
 
   try {
-    const customer = await profileDb.getUser({ user_id: session.customer_id })
-    const lastOffer = await offerDb.getMostRecentOrderOffer(session.id)
-    const avatar = await cdn.getFileLinkResource(customer.avatar)
-    const itemFields = await buildMarketListingFields(lastOffer.id)
-
-    const message = {
-      embeds: [{
-        color: 0x10b881,
-        author: {
-          name: customer.display_name,
-          url: `https://sc-market.space/user/${customer.username}`,
-          icon_url: avatar || undefined,
-        },
-        title: `New Offer: ${lastOffer.title}`,
-        url: `https://sc-market.space/offer/${session.id}`,
-        description: lastOffer.description?.substring(0, 200) || "",
-        fields: [
-          { name: "Offer", value: `${(+lastOffer.cost).toLocaleString("en-US")} aUEC`, inline: true },
-          { name: "Kind", value: lastOffer.kind, inline: true },
-          ...(lastOffer.collateral ? [{ name: "Collateral", value: `${(+lastOffer.collateral).toLocaleString("en-US")} aUEC`, inline: true }] : []),
-          ...itemFields,
-        ],
-        timestamp: new Date().toISOString(),
-      }],
-      // Only org offers can be claimed (claim_orders is an org permission); on a
-      // personal alert channel the button could only ever fail.
-      components: session.contractor_id
-        ? [{
-            type: 1, // ACTION_ROW
-            components: [{
-              type: 2, // BUTTON
-              style: 1, // PRIMARY
-              label: "Claim Offer",
-              custom_id: `claim_offer:${session.id}`,
-            }],
-          }]
-        : [],
-    }
+    const message = await offerAlertMessage(session)
 
     for (const channelId of channels) {
       try {
@@ -96,90 +115,99 @@ export async function postOfferAlert(session: DBOfferSession): Promise<void> {
   }
 }
 
-/**
- * Post alert to subscribed channels when an order is created with no assignee.
- */
-export async function postOrderAlert(order: DBOrder): Promise<void> {
-  if (order.assigned_id) return // Already assigned, no need for claim button
-  if (await involvesTestParty(orderParties(order))) return
+/** Alert channels for a new order: only unassigned shop and org orders (they can be claimed). */
+export async function orderAlertChannels(order: DBOrder): Promise<string[]> {
+  if (order.assigned_id) return [] // Already assigned, no need for claim button
+  if (await involvesTestParty(orderParties(order))) return []
 
   // Personal orders always have an assignee, so only shop and org channels apply.
-  const channels = await getAlertChannels({
+  return getAlertChannels({
     shop_id: order.shop_id,
     contractor_id: order.contractor_id,
   })
-  if (!channels.length) return
+}
 
-  try {
-    const customer = await profileDb.getUser({ user_id: order.customer_id })
-    const avatar = await cdn.getFileLinkResource(customer.avatar)
+export async function orderAlertMessage(order: DBOrder): Promise<RESTPostAPIChannelMessageJSONBody> {
+  const customer = await profileDb.getUser({ user_id: order.customer_id })
+  const avatar = await cdn.getFileLinkResource(customer.avatar)
 
-    // Get market listing details from V1 or V2
-    const orderListings = await knex()("market_orders")
+  // Get market listing details from V1 or V2
+  const orderListings = await knex()("market_orders")
+    .where({ order_id: order.order_id })
+    .select()
+    .catch(() => [] as { listing_id: string; quantity: number }[])
+
+  const itemFields: { name: string; value: string; inline: boolean }[] = []
+  if (orderListings.length) {
+    const items: string[] = []
+    for (const ol of orderListings) {
+      try {
+        const complete = await marketDb.getMarketListingComplete(ol.listing_id)
+        const name = (complete as { details?: { title?: string; item_name?: string } })?.details?.title || (complete as { details?: { item_name?: string } })?.details?.item_name || "Item"
+        items.push(`${name} ×${ol.quantity}`)
+      } catch { /* skip */ }
+    }
+    if (items.length) {
+      itemFields.push({ name: "Items", value: items.join("\n"), inline: false })
+    }
+  } else {
+    // V2 order items
+    const v2Items = await knex()("order_market_items_v2")
       .where({ order_id: order.order_id })
-      .select()
+      .select("listing_id", "quantity")
       .catch(() => [] as { listing_id: string; quantity: number }[])
-
-    const itemFields: { name: string; value: string; inline: boolean }[] = []
-    if (orderListings.length) {
+    if (v2Items.length) {
       const items: string[] = []
-      for (const ol of orderListings) {
-        try {
-          const complete = await marketDb.getMarketListingComplete(ol.listing_id)
-          const name = (complete as { details?: { title?: string; item_name?: string } })?.details?.title || (complete as { details?: { item_name?: string } })?.details?.item_name || "Item"
-          items.push(`${name} ×${ol.quantity}`)
-        } catch { /* skip */ }
+      for (const oi of v2Items) {
+        const listing = await knex()("listings").where({ listing_id: oi.listing_id }).first("title")
+        items.push(`${listing?.title || "Item"} ×${oi.quantity}`)
       }
       if (items.length) {
         itemFields.push({ name: "Items", value: items.join("\n"), inline: false })
       }
-    } else {
-      // V2 order items
-      const v2Items = await knex()("order_market_items_v2")
-        .where({ order_id: order.order_id })
-        .select("listing_id", "quantity")
-        .catch(() => [] as { listing_id: string; quantity: number }[])
-      if (v2Items.length) {
-        const items: string[] = []
-        for (const oi of v2Items) {
-          const listing = await knex()("listings").where({ listing_id: oi.listing_id }).first("title")
-          items.push(`${listing?.title || "Item"} ×${oi.quantity}`)
-        }
-        if (items.length) {
-          itemFields.push({ name: "Items", value: items.join("\n"), inline: false })
-        }
-      }
     }
+  }
 
-    const message = {
-      embeds: [{
-        color: 0x10b881,
-        author: {
-          name: customer.display_name,
-          url: `https://sc-market.space/user/${customer.username}`,
-          icon_url: avatar || undefined,
-        },
-        title: `New Order: ${order.title}`,
-        url: `https://sc-market.space/contract/${order.order_id}`,
-        description: order.description?.substring(0, 200) || "",
-        fields: [
-          { name: "Cost", value: `${(+order.cost).toLocaleString("en-US")} aUEC`, inline: true },
-          { name: "Kind", value: order.kind, inline: true },
-          ...(order.collateral ? [{ name: "Collateral", value: `${(+order.collateral).toLocaleString("en-US")} aUEC`, inline: true }] : []),
-          ...itemFields,
-        ],
-        timestamp: new Date().toISOString(),
-      }],
+  return {
+    embeds: [{
+      color: 0x10b881,
+      author: {
+        name: customer.display_name,
+        url: `https://sc-market.space/user/${customer.username}`,
+        icon_url: avatar || undefined,
+      },
+      title: `New Order: ${order.title}`,
+      url: `https://sc-market.space/contract/${order.order_id}`,
+      description: order.description?.substring(0, 200) || "",
+      fields: [
+        { name: "Cost", value: `${(+order.cost).toLocaleString("en-US")} aUEC`, inline: true },
+        { name: "Kind", value: order.kind, inline: true },
+        ...(order.collateral ? [{ name: "Collateral", value: `${(+order.collateral).toLocaleString("en-US")} aUEC`, inline: true }] : []),
+        ...itemFields,
+      ],
+      timestamp: new Date().toISOString(),
+    }],
+    components: [{
+      type: 1,
       components: [{
-        type: 1,
-        components: [{
-          type: 2,
-          style: 1,
-          label: "Claim Order",
-          custom_id: `claim_order:${order.order_id}`,
-        }],
+        type: 2,
+        style: 1,
+        label: "Claim Order",
+        custom_id: `claim_order:${order.order_id}`,
       }],
-    }
+    }],
+  } as RESTPostAPIChannelMessageJSONBody
+}
+
+/**
+ * Post alert to subscribed channels when an order is created with no assignee.
+ */
+export async function postOrderAlert(order: DBOrder): Promise<void> {
+  const channels = await orderAlertChannels(order)
+  if (!channels.length) return
+
+  try {
+    const message = await orderAlertMessage(order)
 
     for (const channelId of channels) {
       try {
@@ -190,5 +218,33 @@ export async function postOrderAlert(order: DBOrder): Promise<void> {
     }
   } catch (err) {
     logger.error("Failed to build order alert", { error: err, orderId: order.order_id })
+  }
+}
+
+export function alertChannelDestination(channelId: string): Destination {
+  return { channel: "discord_channel", ref: `discord_channel:${channelId}`, channelId }
+}
+
+/** notify()'s plan for the order alert post: one per order (it is posted once, at creation). */
+export async function orderAlertPlan(order: DBOrder): Promise<DestinationPlan> {
+  return {
+    channel: "discord_channel",
+    event: "order.created",
+    entityId: order.order_id,
+    dedupeKey: order.order_id,
+    destinations: (await orderAlertChannels(order)).map(alertChannelDestination),
+    render: () => orderAlertMessage(order),
+  }
+}
+
+/** notify()'s plan for the offer alert post: one per offer session (posted when it is opened). */
+export async function offerAlertPlan(session: DBOfferSession): Promise<DestinationPlan> {
+  return {
+    channel: "discord_channel",
+    event: "offer.received",
+    entityId: session.id,
+    dedupeKey: session.id,
+    destinations: (await offerAlertChannels(session)).map(alertChannelDestination),
+    render: () => offerAlertMessage(session),
   }
 }

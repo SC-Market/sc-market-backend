@@ -10,12 +10,16 @@
  */
 import { getKnex } from "../../clients/database/knex-db.js"
 import type { DBPublicContract } from "../../api/routes/v1/contracts/types.js"
+import type { DBNotificationWebhook } from "../../clients/database/db-models.js"
 import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import { discordService } from "../discord/discord.service.js"
 import { actingAsTestAccount, isTestUserId } from "../test-accounts/isolation.js"
 import { notify } from "../notify/dispatcher.js"
 import { sendWebhookBody } from "../../api/routes/v1/util/webhooks.js"
 import logger from "../../logger/logger.js"
+import type { DestinationPlan } from "../notify/destinations.js"
+import { webhookDestination } from "../webhooks/webhook-plans.js"
+import { alertChannelDestination } from "../discord/order-alerts.js"
 import { env } from "../../config/env.js"
 
 export const PUBLIC_CONTRACT_ACTION = "public_contract_create"
@@ -43,6 +47,53 @@ export function publicContractEmbed(contract: DBPublicContract) {
     ],
     timestamp: new Date(contract.timestamp ?? Date.now()).toISOString(),
   }
+}
+
+/** The site-wide contract feed's webhooks (subscribed to public_contract_create). */
+export async function publicContractWebhooks(): Promise<DBNotificationWebhook[]> {
+  return notificationDb.getNotificationWebhooksByAction({}, PUBLIC_CONTRACT_ACTION)
+}
+
+export function publicContractWebhookBody(contract: DBPublicContract) {
+  return {
+    username: "SC Market - New Public Contract",
+    allowed_mentions: { parse: [] },
+    embeds: [publicContractEmbed(contract)],
+  }
+}
+
+/** Every Discord channel with the contract feed on (/setup contracts). */
+export async function publicContractChannels(): Promise<string[]> {
+  return getKnex()("discord_channel_setups")
+    .where({ contracts: true })
+    .distinct("channel_id")
+    .pluck("channel_id")
+}
+
+export function publicContractChannelMessage(contract: DBPublicContract) {
+  return { embeds: [publicContractEmbed(contract)], allowed_mentions: { parse: [] } }
+}
+
+/** notify()'s plans for the contract feed (webhooks, then Discord channels): one post per contract each. */
+export async function publicContractPlans(contract: DBPublicContract): Promise<DestinationPlan[]> {
+  return [
+    {
+      channel: "webhook",
+      event: "contract.public_created",
+      entityId: contract.id,
+      dedupeKey: contract.id,
+      destinations: (await publicContractWebhooks()).map(webhookDestination),
+      render: () => publicContractWebhookBody(contract),
+    },
+    {
+      channel: "discord_channel",
+      event: "contract.public_created",
+      entityId: contract.id,
+      dedupeKey: contract.id,
+      destinations: (await publicContractChannels()).map(alertChannelDestination),
+      render: () => publicContractChannelMessage(contract),
+    },
+  ]
 }
 
 /** Users to alert for this contract, with the scope whose preferences apply. */
@@ -94,32 +145,21 @@ export async function notifyPublicContractCreated(contract: DBPublicContract): P
   try {
     // Contracts opened by a test account reach nobody.
     if (actingAsTestAccount() || (await isTestUserId(contract.customer_id))) return
-    const embed = publicContractEmbed(contract)
 
     // Webhooks (site-wide feed).
-    const webhooks = await notificationDb.getNotificationWebhooksByAction({}, PUBLIC_CONTRACT_ACTION)
+    const webhooks = await publicContractWebhooks()
     for (const webhook of webhooks) {
       try {
-        await sendWebhookBody(
-          {
-            username: "SC Market - New Public Contract",
-            allowed_mentions: { parse: [] },
-            embeds: [embed],
-          },
-          webhook,
-        )
+        await sendWebhookBody(publicContractWebhookBody(contract), webhook)
       } catch (e) {
         logger.error(`Failed to send public contract webhook ${webhook.webhook_id}: ${e}`)
       }
     }
 
     // Discord channel feed.
-    const channels: string[] = await getKnex()("discord_channel_setups")
-      .where({ contracts: true })
-      .distinct("channel_id")
-      .pluck("channel_id")
+    const channels = await publicContractChannels()
     for (const channelId of channels) {
-      await discordService.postChannelMessage(channelId, { embeds: [embed], allowed_mentions: { parse: [] } })
+      await discordService.postChannelMessage(channelId, publicContractChannelMessage(contract))
     }
 
     // Opt-in alert.

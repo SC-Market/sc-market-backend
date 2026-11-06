@@ -23,6 +23,9 @@ import { renderEmailTemplate } from "../email/template-engine.js"
 import type { EmailTemplateData } from "../email/email.service.types.js"
 import { translate } from "../email/i18n/index.js"
 import type { EnquiryTarget, StorefrontEnquiry } from "./enquiries.js"
+import { recordLegacyDestination } from "../notify/destination-trace.js"
+import { postStaffDiscordWebhook, redactStaffWebhookUrl, staffWebhookUrl } from "./staff-webhook.js"
+import type { DestinationPlan } from "../notify/destinations.js"
 
 const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js") as {
@@ -35,7 +38,6 @@ const Bugsnag = require("@bugsnag/js") as {
 export const STAFF_ALERT_EMAIL_TEMPLATE = "staff_storefront_enquiry"
 /** Characters of the enquiry's message shown in the alerts. */
 export const EXCERPT_MAX = 200
-const WEBHOOK_TIMEOUT_MS = 10_000
 /** Discord's embed colour for SC Market (the site's primary green). */
 const EMBED_COLOR = 0x10b981
 
@@ -59,9 +61,7 @@ export function excerpt(message: string, max = EXCERPT_MAX): string {
 function staffEmail(): string | undefined {
   return env.STAFF_ALERT_EMAIL?.trim() || undefined
 }
-function webhookUrl(): string | undefined {
-  return env.STAFF_DISCORD_WEBHOOK_URL?.trim() || undefined
-}
+const webhookUrl = staffWebhookUrl
 
 /** Startup: one warning per unset variable (its channel is skipped). */
 export function logStaffAlertConfig(): void {
@@ -76,8 +76,7 @@ export function logStaffAlertConfig(): void {
 /** Log and report a failed alert. Never includes the webhook URL. */
 function reportFailure(channel: Channel, enquiry: StorefrontEnquiry, error: unknown): void {
   const err = error instanceof Error ? error : new Error(String(error))
-  const url = webhookUrl()
-  const message = url ? err.message.split(url).join("[webhook url]") : err.message
+  const message = redactStaffWebhookUrl(err.message)
   logger.error("storefront enquiry: staff alert failed", {
     channel,
     enquiry_id: enquiry.enquiry_id,
@@ -193,15 +192,29 @@ export function discordPayload(c: AlertContent) {
   }
 }
 
+/** The staff channel's post for an enquiry (legacy sender and notify()'s webhook channel). */
+export function staffEnquiryDiscordPayload(enquiry: StorefrontEnquiry, target: EnquiryTarget) {
+  return discordPayload(contentFor(enquiry, target))
+}
+
+/** notify()'s plan for the staff channel's post: one per enquiry; none for a test org or shop or with no URL set. */
+export function staffEnquiryPlan(enquiry: StorefrontEnquiry, target: EnquiryTarget): DestinationPlan {
+  return {
+    channel: "webhook",
+    event: "admin.storefront_enquiry",
+    entityId: enquiry.enquiry_id,
+    dedupeKey: enquiry.enquiry_id,
+    destinations: target.is_test || !staffWebhookUrl() ? [] : [{ channel: "webhook", ref: "webhook:staff", staff: true }],
+    render: () => staffEnquiryDiscordPayload(enquiry, target),
+  }
+}
+
 async function sendDiscordAlert(url: string, c: AlertContent): Promise<void> {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(discordPayload(c)),
-    redirect: "error",
-    signal: AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),
-  })
-  if (!res.ok) throw new Error(`Discord webhook answered HTTP ${res.status}`)
+  const body = discordPayload(c)
+  // Shadow mode compares what the legacy path addressed with notify()'s plan.
+  recordLegacyDestination("webhook:staff", body)
+  const status = await postStaffDiscordWebhook(url, body)
+  if (status < 200 || status >= 300) throw new Error(`Discord webhook answered HTTP ${status}`)
 }
 
 /**

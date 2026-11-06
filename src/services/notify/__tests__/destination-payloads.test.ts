@@ -4,8 +4,14 @@
  * (the pinned webhook fetch, the Discord REST client, the staff webhook's
  * fetch). The file snapshot is the byte-level contract with third parties.
  *
- * Mocked DB (no Postgres); the Postgres-backed parity (legacy vs notify())
- * is destinations.char.test.ts in the CI characterization suite.
+ * Each scenario runs twice: through the legacy sender (the snapshot was
+ * written against the code before Phase 5 and must not change), then through
+ * notify()'s destination plans and adapters, which must post exactly the
+ * same JSON to the same destinations in the same order.
+ *
+ * Mocked DB (no Postgres); the Postgres-backed parity (legacy vs notify(),
+ * through the real call sites) is destinations.char.test.ts in the CI
+ * characterization suite.
  */
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -135,6 +141,26 @@ vi.mock("../../../clients/cdn/cdn.js", () => ({
 vi.mock("../../../logger/logger.js", () => ({
   default: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }))
+// notification_deliveries: claims and outcomes, in memory.
+const deliveries = vi.hoisted(() => ({
+  claimed: new Map<string, Record<string, unknown>>(),
+  finished: [] as { key: string; status: string; error?: string }[],
+}))
+vi.mock("../deliveries.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  claimDeliveries: vi.fn(async (claims: { idempotencyKey: string }[]) => {
+    const won = new Set<string>()
+    for (const c of claims) {
+      if (deliveries.claimed.has(c.idempotencyKey)) continue
+      deliveries.claimed.set(c.idempotencyKey, c as never)
+      won.add(c.idempotencyKey)
+    }
+    return won
+  }),
+  finishDelivery: vi.fn(async (key: string, status: string, error?: string) => {
+    deliveries.finished.push({ key, status, ...(error ? { error } : {}) })
+  }),
+}))
 // The public-contract user alert (not a destination) is notify()'s, tested elsewhere.
 vi.mock("../dispatcher.js", () => ({ notify: vi.fn(async () => ({ planned: [], delivered: [], failed: [], duplicate: [] })) }))
 
@@ -142,6 +168,13 @@ const webhookUtil = await import("../../../api/routes/v1/util/webhooks.js")
 const { postOrderAlert, postOfferAlert } = await import("../../discord/order-alerts.js")
 const { notifyPublicContractCreated } = await import("../../contracts/public-contract-alerts.js")
 const { sendStaffEnquiryAlerts } = await import("../../storefront/staff-alerts.js")
+
+const { notifyDestinations } = await import("../destinations.js")
+const webhookPlans = await import("../../webhooks/webhook-plans.js")
+const { orderAlertPlan, offerAlertPlan } = await import("../../discord/order-alerts.js")
+const { publicContractPlans } = await import("../../contracts/public-contract-alerts.js")
+const { staffEnquiryPlan } = await import("../../storefront/staff-alerts.js")
+type Plan = Awaited<ReturnType<typeof webhookPlans.orderCreatedWebhookPlan>>
 
 const NOW = new Date("2026-11-06T12:00:00Z")
 
@@ -178,82 +211,130 @@ function staffFetch() {
  * Every destination post, as the call sites make it. Each returns nothing;
  * what matters is what reached the transports.
  */
-export const SCENARIOS: Record<string, () => Promise<unknown>> = {
-  "webhook order.created": () => webhookUtil.sendOrderWebhooks(order({ collateral: "1000" })),
-  "webhook order.assigned": () => webhookUtil.sendOrderAssignedWebhooks(order({ assigned_id: "seller" })),
-  "webhook order.status_changed in-progress": () =>
-    webhookUtil.sendOrderStatusWebhooks(order({ assigned_id: "seller" }), "in-progress", "actor"),
-  "webhook order.status_changed fulfilled": () =>
-    webhookUtil.sendOrderStatusWebhooks(order({ assigned_id: "seller" }), "fulfilled", "actor"),
-  "webhook order.status_changed cancelled": () =>
-    webhookUtil.sendOrderStatusWebhooks(order({ assigned_id: "seller" }), "cancelled", "actor"),
-  "webhook order.status_changed not-started": () =>
-    webhookUtil.sendOrderStatusWebhooks(order({ assigned_id: "seller" }), "not-started", "actor"),
-  "webhook offer.received create": () => webhookUtil.sendOfferWebhooks(session(), "offer_create"),
-  "webhook offer.received counter": () => webhookUtil.sendOfferWebhooks(session(), "counter_offer_create"),
-  "webhook order.review": () =>
-    webhookUtil.sendOrderReviewWebhooks(order({ assigned_id: "seller" }), {
-      review_id: "rev-1",
-      order_id: "order-1",
-      user_author: "reviewer",
-      contractor_author: null,
-      content: "Fast and *careful*",
-      rating: 4,
-      role: "customer",
-      timestamp: new Date("2026-11-02T08:00:00Z"),
-    } as never),
-  "webhook market.bid v1": () =>
-    webhookUtil.sendBidWebhooks(
-      {
-        listing: { listing_id: "l-1", contractor_seller_id: "org-1", user_seller_id: null, sale_type: "auction" },
-        details: { title: "Polaris" },
-        unique: { listing_id: "l-1" },
-      } as never,
-      { bid_id: "bid-1", user_bidder_id: "bidder", bid: 1500000, timestamp: new Date("2026-11-03T08:00:00Z") } as never,
-    ),
-  "webhook market.bid v2": () =>
-    webhookUtil.sendBidWebhooksV2({ listing_id: "l-2", title: "Idris", shop_id: "shop-1" }, 2500000, "bidder"),
-  "discord_channel order.created (v1 items)": () => postOrderAlert(order({ order_id: "order-items", collateral: "1000" })),
-  "discord_channel order.created (v2 items)": () => postOrderAlert(order({ order_id: "order-v2" })),
-  "discord_channel offer.received org": () => postOfferAlert(session({ id: "sess-items" })),
-  "discord_channel offer.received personal": () =>
-    postOfferAlert(session({ id: "sess-collat", contractor_id: null, assigned_id: "seller" })),
-  "webhook+discord_channel contract.public_created": () =>
-    notifyPublicContractCreated({
-      id: "contract-1",
-      title: "Escort to Pyro",
-      description: "Two fighters needed",
-      kind: "Escort",
-      cost: "300000",
-      collateral: "20000",
-      payment_type: "one-time",
-      customer_id: "customer",
-      timestamp: new Date("2026-11-04T08:00:00Z"),
-    } as never),
-  "webhook admin.storefront_enquiry (staff)": () =>
-    sendStaffEnquiryAlerts(
-      {
-        enquiry_id: "enq-1",
-        target_type: "org",
-        target: "ACME",
-        requested_subdomain: "acme",
-        message: "We'd like a *branded* storefront [please](https://x)",
-        contact_method: "discord",
-        status: "open",
-        submitted_by_username: "boss_name",
-        created_at: "2026-11-05T08:00:00Z",
-        updated_at: "2026-11-05T08:00:00Z",
-      } as never,
-      { type: "org", id: "org-1", handle: "ACME", name: "Acme Corp", is_test: false },
-    ),
+const REVIEW = {
+  review_id: "rev-1",
+  order_id: "order-1",
+  user_author: "reviewer",
+  contractor_author: null,
+  content: "Fast and *careful*",
+  rating: 4,
+  role: "customer",
+  timestamp: new Date("2026-11-02T08:00:00Z"),
+} as never
+const LISTING_V1 = {
+  listing: { listing_id: "l-1", contractor_seller_id: "org-1", user_seller_id: null, sale_type: "auction" },
+  details: { title: "Polaris" },
+  unique: { listing_id: "l-1" },
+} as never
+const BID_V1 = { bid_id: "bid-1", user_bidder_id: "bidder", bid: 1500000, timestamp: new Date("2026-11-03T08:00:00Z") } as never
+const LISTING_V2 = { listing_id: "l-2", title: "Idris", shop_id: "shop-1" }
+const CONTRACT = {
+  id: "contract-1",
+  title: "Escort to Pyro",
+  description: "Two fighters needed",
+  kind: "Escort",
+  cost: "300000",
+  collateral: "20000",
+  payment_type: "one-time",
+  customer_id: "customer",
+  timestamp: new Date("2026-11-04T08:00:00Z"),
+} as never
+const ENQUIRY = {
+  enquiry_id: "enq-1",
+  target_type: "org",
+  target: "ACME",
+  requested_subdomain: "acme",
+  message: "We'd like a *branded* storefront [please](https://x)",
+  contact_method: "discord",
+  status: "open",
+  submitted_by_username: "boss_name",
+  created_at: "2026-11-05T08:00:00Z",
+  updated_at: "2026-11-05T08:00:00Z",
+} as never
+const ENQUIRY_TARGET = { type: "org", id: "org-1", handle: "ACME", name: "Acme Corp", is_test: false } as const
+
+interface Scenario {
+  /** The legacy sender, as the call site invokes it. */
+  legacy: () => Promise<unknown>
+  /** notify()'s plans for the same occurrence. */
+  plans: () => Promise<Plan[]>
 }
 
-export function resetWorld() {
+const one = (p: Promise<Plan>) => p.then((x) => [x])
+const assigned = () => order({ assigned_id: "seller" })
+const status = (s: string): Scenario => ({
+  legacy: () => webhookUtil.sendOrderStatusWebhooks(assigned(), s, "actor"),
+  plans: () => one(webhookPlans.orderStatusWebhookPlan(assigned(), s, "actor")),
+})
+
+/** Every destination post. What matters is what reached the transports. */
+const SCENARIOS: Record<string, Scenario> = {
+  "webhook order.created": {
+    legacy: () => webhookUtil.sendOrderWebhooks(order({ collateral: "1000" })),
+    plans: () => one(webhookPlans.orderCreatedWebhookPlan(order({ collateral: "1000" }))),
+  },
+  "webhook order.assigned": {
+    legacy: () => webhookUtil.sendOrderAssignedWebhooks(assigned()),
+    plans: () => one(webhookPlans.orderAssignedWebhookPlan(assigned())),
+  },
+  "webhook order.status_changed in-progress": status("in-progress"),
+  "webhook order.status_changed fulfilled": status("fulfilled"),
+  "webhook order.status_changed cancelled": status("cancelled"),
+  "webhook order.status_changed not-started": status("not-started"),
+  "webhook offer.received create": {
+    legacy: () => webhookUtil.sendOfferWebhooks(session(), "offer_create"),
+    plans: () => one(webhookPlans.offerWebhookPlan(session(), "offer_create")),
+  },
+  "webhook offer.received counter": {
+    legacy: () => webhookUtil.sendOfferWebhooks(session(), "counter_offer_create"),
+    plans: () => one(webhookPlans.offerWebhookPlan(session(), "counter_offer_create")),
+  },
+  "webhook order.review": {
+    legacy: () => webhookUtil.sendOrderReviewWebhooks(assigned(), REVIEW),
+    plans: () => one(webhookPlans.orderReviewWebhookPlan(assigned(), REVIEW)),
+  },
+  "webhook market.bid v1": {
+    legacy: () => webhookUtil.sendBidWebhooks(LISTING_V1, BID_V1),
+    plans: () => one(webhookPlans.bidWebhookPlan(LISTING_V1, BID_V1)),
+  },
+  "webhook market.bid v2": {
+    legacy: () => webhookUtil.sendBidWebhooksV2(LISTING_V2, 2500000, "bidder"),
+    plans: () => one(webhookPlans.bidWebhookPlanV2(LISTING_V2, 2500000, "bidder", "bid-2")),
+  },
+  "discord_channel order.created (v1 items)": {
+    legacy: () => postOrderAlert(order({ order_id: "order-items", collateral: "1000" })),
+    plans: () => one(orderAlertPlan(order({ order_id: "order-items", collateral: "1000" }))),
+  },
+  "discord_channel order.created (v2 items)": {
+    legacy: () => postOrderAlert(order({ order_id: "order-v2" })),
+    plans: () => one(orderAlertPlan(order({ order_id: "order-v2" }))),
+  },
+  "discord_channel offer.received org": {
+    legacy: () => postOfferAlert(session({ id: "sess-items" })),
+    plans: () => one(offerAlertPlan(session({ id: "sess-items" }))),
+  },
+  "discord_channel offer.received personal": {
+    legacy: () => postOfferAlert(session({ id: "sess-collat", contractor_id: null, assigned_id: "seller" })),
+    plans: () => one(offerAlertPlan(session({ id: "sess-collat", contractor_id: null, assigned_id: "seller" }))),
+  },
+  "webhook+discord_channel contract.public_created": {
+    legacy: () => notifyPublicContractCreated(CONTRACT),
+    plans: () => publicContractPlans(CONTRACT),
+  },
+  "webhook admin.storefront_enquiry (staff)": {
+    legacy: () => sendStaffEnquiryAlerts(ENQUIRY, ENQUIRY_TARGET),
+    plans: async () => [staffEnquiryPlan(ENQUIRY, ENQUIRY_TARGET)],
+  },
+}
+
+function resetWorld() {
   sent.webhook.length = 0
   sent.discord.length = 0
   sent.staff.length = 0
   sent.status.clear()
   sent.discordError.clear()
+  deliveries.claimed.clear()
+  deliveries.finished.length = 0
   for (const k of Object.keys(WEBHOOKS)) delete WEBHOOKS[k]
   WEBHOOKS["shop-1:order_create"] = [hook("shop-created")]
   WEBHOOKS["shop-1:order_assigned"] = [hook("shop-assigned")]
@@ -287,7 +368,7 @@ vi.mock("../../discord/channel-setups.js", () => ({
   }),
 }))
 
-export function captured() {
+function captured() {
   return {
     webhooks: sent.webhook.map((w) => ({ to: w.url.replace("https://discord.com/api/webhooks/", ""), body: w.body })),
     discord: sent.discord.map((d) => ({ route: d.route, body: d.body })),
@@ -309,11 +390,26 @@ afterAll(() => {
 })
 beforeEach(() => resetWorld())
 
+// Test names (the snapshot keys) are the ones the pre-Phase-5 snapshot was written under.
 describe("destination payloads (legacy senders)", () => {
-  for (const [name, run] of Object.entries(SCENARIOS)) {
+  for (const [name, scenario] of Object.entries(SCENARIOS)) {
     it(name, async () => {
-      await run()
-      expect(captured()).toMatchSnapshot()
+      await scenario.legacy()
+      const legacy = captured()
+      expect(legacy).toMatchSnapshot()
+      expect(legacy.webhooks.length + legacy.discord.length + legacy.staff.length).toBeGreaterThan(0)
+
+      resetWorld()
+      for (const plan of await scenario.plans()) {
+        const r = await notifyDestinations(plan)
+        expect(r.failed).toEqual([])
+        expect(r.delivered).toEqual(r.planned)
+      }
+      expect(captured()).toEqual(legacy)
+      // One delivery row per post, each sent.
+      expect(deliveries.finished.map((f) => f.status)).toEqual(
+        Array(legacy.webhooks.length + legacy.discord.length + legacy.staff.length).fill("sent"),
+      )
     })
   }
 })

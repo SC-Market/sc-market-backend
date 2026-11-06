@@ -25,6 +25,7 @@ import { env } from "../../../../config/env.js"
 import { validateWebhookUrl } from "../../../util/validate-webhook-url.js"
 import { fetchPublicDestination } from "../../../util/webhook-ip-guard.js"
 import type { Response as UndiciResponse } from "undici"
+import { recordLegacyDestination } from "../../../../services/notify/destination-trace.js"
 
 /**
  * Get the SC Market logo URL based on environment
@@ -103,10 +104,17 @@ export async function createNotificationWebhook(
   return webhook
 }
 
-export async function sendOrderWebhooks(order: DBOrder) {
-  if (await involvesTestParty(orderParties(order))) return
-  const webhooks: DBNotificationWebhook[] = []
+/*
+ * Destinations and payloads. Each webhook event has a resolver (which
+ * webhooks it goes to) and a body builder (the JSON they receive). The legacy
+ * senders below and notify()'s webhook channel (services/notify/destinations)
+ * both use them, so the two paths post the same JSON to the same webhooks.
+ */
 
+/** "Order Placed": the order's shop webhooks subscribed to order_create. */
+export async function orderCreatedWebhooks(order: DBOrder): Promise<DBNotificationWebhook[]> {
+  if (await involvesTestParty(orderParties(order))) return []
+  const webhooks: DBNotificationWebhook[] = []
   if (order.shop_id) {
     webhooks.push(
       ...(await notificationDb.getNotificationWebhooksByAction(
@@ -115,7 +123,11 @@ export async function sendOrderWebhooks(order: DBOrder) {
       )),
     )
   }
+  return webhooks
+}
 
+export async function sendOrderWebhooks(order: DBOrder) {
+  const webhooks = await orderCreatedWebhooks(order)
   for (const webhook of webhooks) {
     try {
       await sendOrderWebhook(order, webhook)
@@ -125,14 +137,10 @@ export async function sendOrderWebhooks(order: DBOrder) {
   }
 }
 
-export async function sendOfferWebhooks(
-  offer: DBOfferSession,
-  type: "offer_create" | "counter_offer_create" = "offer_create",
-) {
-  if (await involvesTestParty(orderParties(offer))) return
-  logger.debug("Sending offer webhooks!")
+/** "Offer Received" / "Counter Offer Received": the session's shop webhooks subscribed to order_create. */
+export async function offerWebhooks(offer: DBOfferSession): Promise<DBNotificationWebhook[]> {
+  if (await involvesTestParty(orderParties(offer))) return []
   const webhooks: DBNotificationWebhook[] = []
-
   if (offer.shop_id) {
     webhooks.push(
       ...(await notificationDb.getNotificationWebhooksByAction(
@@ -141,6 +149,15 @@ export async function sendOfferWebhooks(
       )),
     )
   }
+  return webhooks
+}
+
+export async function sendOfferWebhooks(
+  offer: DBOfferSession,
+  type: "offer_create" | "counter_offer_create" = "offer_create",
+) {
+  const webhooks = await offerWebhooks(offer)
+  if (webhooks.length) logger.debug("Sending offer webhooks!")
 
   for (const webhook of webhooks) {
     try {
@@ -445,8 +462,8 @@ export async function sendOfferDM(offer: DBOfferSession) {
  * "Order Assigned": an order is assigned to (or claimed by) a member. Goes to
  * the order's shop webhooks and to the assignee's own webhooks.
  */
-export async function sendOrderAssignedWebhooks(order: DBOrder) {
-  if (await involvesTestParty(orderParties(order))) return
+export async function orderAssignedWebhooks(order: DBOrder): Promise<DBNotificationWebhook[]> {
+  if (await involvesTestParty(orderParties(order))) return []
   if (!order.assigned_id) {
     throw Error("Invalid order, no assignee")
   }
@@ -466,33 +483,40 @@ export async function sendOrderAssignedWebhooks(order: DBOrder) {
       "order_assigned",
     )),
   )
+  return webhooks
+}
+
+export async function orderAssignedWebhookBody(order: DBOrder) {
+  const assignee = await profileDb.getMinimalUser({ user_id: order.assigned_id! })
+  return {
+    username: "SC Market - Order Assigned",
+    avatar_url: getLogoUrl(),
+    allowed_mentions: { parse: [] },
+    embeds: [
+      {
+        color: 0x111828,
+        author: {
+          name: assignee.display_name,
+          url: `https://sc-market.space/user/${assignee.username}`,
+          icon_url: assignee.avatar,
+        },
+        title: order.title,
+        url: `https://sc-market.space/contract/${order.order_id}`,
+        fields: [{ name: "Assigned to", value: assignee.display_name }],
+        timestamp: new Date().toISOString(),
+      },
+    ],
+  }
+}
+
+export async function sendOrderAssignedWebhooks(order: DBOrder) {
+  const webhooks = await orderAssignedWebhooks(order)
   if (!webhooks.length) return
 
-  const assignee = await profileDb.getMinimalUser({ user_id: order.assigned_id })
+  const body = await orderAssignedWebhookBody(order)
   for (const webhook of webhooks) {
     try {
-      await sendWebhook(
-        {
-          username: "SC Market - Order Assigned",
-          avatar_url: getLogoUrl(),
-          allowed_mentions: { parse: [] },
-          embeds: [
-            {
-              color: 0x111828,
-              author: {
-                name: assignee.display_name,
-                url: `https://sc-market.space/user/${assignee.username}`,
-                icon_url: assignee.avatar,
-              },
-              title: order.title,
-              url: `https://sc-market.space/contract/${order.order_id}`,
-              fields: [{ name: "Assigned to", value: assignee.display_name }],
-              timestamp: new Date().toISOString(),
-            },
-          ],
-        },
-        webhook,
-      )
+      await sendWebhook(body, webhook)
     } catch (e) {
       logger.error(
         `Failed to send assigned webhook ${webhook.webhook_id}: ${e}`,
@@ -504,54 +528,60 @@ export async function sendOrderAssignedWebhooks(order: DBOrder) {
 /**
  * "Order Review": someone leaves a review on one of the shop's orders.
  */
-export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) {
-  if (await involvesTestParty(orderParties(order))) return
-  if (!order.shop_id) return
-  const webhooks = await notificationDb.getNotificationWebhooksByAction(
+export async function orderReviewWebhooks(order: DBOrder): Promise<DBNotificationWebhook[]> {
+  if (await involvesTestParty(orderParties(order))) return []
+  if (!order.shop_id) return []
+  return notificationDb.getNotificationWebhooksByAction(
     { "notification_webhooks.shop_id": order.shop_id },
     "order_review",
   )
-  if (!webhooks.length) return
+}
 
+export async function orderReviewWebhookBody(order: DBOrder, review: DBReview) {
   const author = review.user_author
     ? await profileDb.getMinimalUser({ user_id: review.user_author })
     : null
   const stars = Math.max(0, Math.min(5, Math.round(+review.rating)))
+  return {
+    username: "SC Market - Order Review",
+    avatar_url: getLogoUrl(),
+    allowed_mentions: { parse: [] },
+    embeds: [
+      {
+        color: 0x111828,
+        ...(author && {
+          author: {
+            name: author.display_name,
+            url: `https://sc-market.space/user/${author.username}`,
+            icon_url: author.avatar,
+          },
+        }),
+        title: order.title,
+        url: `https://sc-market.space/contract/${order.order_id}`,
+        fields: [
+          {
+            name: "Rating",
+            value: `${"★".repeat(stars)}${"☆".repeat(5 - stars)} (${review.rating}/5)`,
+          },
+          {
+            name: review.role === "customer" ? "Buyer's review" : "Seller's review",
+            value: (review.content || "(no text)").slice(0, 1024),
+          },
+        ],
+        timestamp: new Date(review.timestamp).toISOString(),
+      },
+    ],
+  }
+}
+
+export async function sendOrderReviewWebhooks(order: DBOrder, review: DBReview) {
+  const webhooks = await orderReviewWebhooks(order)
+  if (!webhooks.length) return
+
+  const body = await orderReviewWebhookBody(order, review)
   for (const webhook of webhooks) {
     try {
-      await sendWebhook(
-        {
-          username: "SC Market - Order Review",
-          avatar_url: getLogoUrl(),
-          allowed_mentions: { parse: [] },
-          embeds: [
-            {
-              color: 0x111828,
-              ...(author && {
-                author: {
-                  name: author.display_name,
-                  url: `https://sc-market.space/user/${author.username}`,
-                  icon_url: author.avatar,
-                },
-              }),
-              title: order.title,
-              url: `https://sc-market.space/contract/${order.order_id}`,
-              fields: [
-                {
-                  name: "Rating",
-                  value: `${"★".repeat(stars)}${"☆".repeat(5 - stars)} (${review.rating}/5)`,
-                },
-                {
-                  name: review.role === "customer" ? "Buyer's review" : "Seller's review",
-                  value: (review.content || "(no text)").slice(0, 1024),
-                },
-              ],
-              timestamp: new Date(review.timestamp).toISOString(),
-            },
-          ],
-        },
-        webhook,
-      )
+      await sendWebhook(body, webhook)
     } catch (e) {
       logger.error(`Failed to send review webhook ${webhook.webhook_id}: ${e}`)
     }
@@ -563,20 +593,50 @@ export async function sendWebhookBody(body: unknown, webhook: DBNotificationWebh
   return sendWebhook(body, webhook)
 }
 
-async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
+/**
+ * What one webhook POST did, for notify()'s webhook channel:
+ * - sent: a 2xx;
+ * - skipped: nothing was sent (a test account's action);
+ * - permanent: retrying won't help (a disallowed URL, a redirect, a 4xx
+ *   other than 408/429: the webhook was deleted, its token revoked, or
+ *   Discord rejected the body);
+ * - retryable: a 408, 429 or 5xx, a timeout or a network/DNS failure.
+ * `error` is the same Error the legacy sender throws.
+ */
+export type WebhookOutcome =
+  | { status: "sent"; httpStatus: number }
+  | { status: "skipped"; reason: string }
+  | {
+      status: "permanent" | "retryable"
+      error: Error
+      httpStatus?: number
+      /** Set when the URL failed the allowlist (validateWebhookUrl's reason). */
+      disallowed?: string
+    }
+
+/** Whether a webhook's HTTP status is worth retrying (rate limit, timeout, server error). */
+export function isRetryableWebhookStatus(status: number): boolean {
+  return status === 408 || status === 429 || status >= 500
+}
+
+/**
+ * POST a body to one webhook and classify the result. Never throws. The
+ * legacy sender (sendWebhook) and notify()'s webhook adapter both send
+ * through here: same allowlist, IP pinning, no redirects, 10 s timeout.
+ */
+export async function postWebhook(body: unknown, webhook: DBNotificationWebhook): Promise<WebhookOutcome> {
   // Test accounts own no webhooks, so any webhook a test account's action
   // would fire belongs to a real user (services/test-accounts).
-  if (actingAsTestAccount()) return
+  if (actingAsTestAccount()) return { status: "skipped", reason: "suppressed for a test account" }
   // SSRF defense: only send to allowlisted Discord webhook hosts. This guards
-  // pre-existing bad rows created before creation-time validation existed. On
-  // failure we skip sending and log rather than throwing, so a single bad row
-  // never breaks the surrounding event flow.
+  // pre-existing bad rows created before creation-time validation existed.
   const validation = validateWebhookUrl(webhook.webhook_url)
   if (!validation.valid) {
-    logger.warn(
-      `Skipping webhook ${webhook.webhook_id}: disallowed webhook URL (${validation.reason})`,
-    )
-    return
+    return {
+      status: "permanent",
+      error: new Error(`disallowed webhook URL (${validation.reason})`),
+      disallowed: validation.reason,
+    }
   }
 
   // Create AbortController for timeout
@@ -607,30 +667,53 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
     clearTimeout(timeoutId)
 
     if (response.type === "opaqueredirect" || (response.status >= 300 && response.status < 400)) {
-      throw new Error(`Webhook request was redirected (status ${response.status}); redirects are not followed`)
+      return {
+        status: "permanent",
+        httpStatus: response.status,
+        error: new Error(`Webhook request was redirected (status ${response.status}); redirects are not followed`),
+      }
     }
 
     // Check response status
     if (!response.ok) {
       const statusText = await readCapped(response, 1024).catch(() => response.statusText)
-      throw new Error(
-        `Webhook request failed with status ${response.status}: ${statusText}`,
-      )
+      return {
+        status: isRetryableWebhookStatus(response.status) ? "retryable" : "permanent",
+        httpStatus: response.status,
+        error: new Error(`Webhook request failed with status ${response.status}: ${statusText}`),
+      }
     }
 
     // Nothing reads a successful response's body.
     await response.body?.cancel().catch(() => undefined)
-    return { ok: response.ok, status: response.status }
+    return { status: "sent", httpStatus: response.status }
   } catch (error) {
     clearTimeout(timeoutId)
     // Check if it's an AbortError (timeout)
     if (error instanceof Error && error.name === "AbortError") {
-      throw new Error(`Webhook request timed out after 10 seconds`)
+      return { status: "retryable", error: new Error(`Webhook request timed out after 10 seconds`) }
     }
-    throw error
+    return { status: "retryable", error: error instanceof Error ? error : new Error(String(error)) }
   } finally {
     await release?.()
   }
+}
+
+async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
+  // Shadow mode compares what the legacy path addressed with notify()'s plan.
+  recordLegacyDestination(`webhook:${webhook.webhook_id}`, body)
+  const outcome = await postWebhook(body, webhook)
+  if (outcome.status === "sent") return { ok: true, status: outcome.httpStatus }
+  if (outcome.status === "skipped") return
+  // On failure we skip sending and log rather than throwing, so a single bad
+  // row never breaks the surrounding event flow.
+  if (outcome.disallowed !== undefined) {
+    logger.warn(
+      `Skipping webhook ${webhook.webhook_id}: disallowed webhook URL (${outcome.disallowed})`,
+    )
+    return
+  }
+  throw outcome.error
 }
 
 /** Reads at most `limit` bytes of a response body as text, then cancels the rest. */
@@ -656,10 +739,14 @@ async function sendOrderWebhook(
   order: DBOrder,
   webhook: DBNotificationWebhook,
 ) {
+  return await sendWebhook(await orderCreatedWebhookBody(order), webhook)
+}
+
+export async function orderCreatedWebhookBody(order: DBOrder) {
   const customer = await profileDb.getMinimalUser({
     user_id: order.customer_id,
   })
-  return await sendWebhook(
+  return (
     {
       // the username to be displayed
       username: "SC Market - Order Placed",
@@ -716,8 +803,7 @@ async function sendOrderWebhook(
           timestamp: order.timestamp.toISOString(),
         },
       ],
-    },
-    webhook,
+    }
   )
 }
 
@@ -726,11 +812,18 @@ async function sendOfferWebhook(
   webhook: DBNotificationWebhook,
   type: "offer_create" | "counter_offer_create" = "offer_create",
 ) {
+  return await sendWebhook(await offerWebhookBody(session, type), webhook)
+}
+
+export async function offerWebhookBody(
+  session: DBOfferSession,
+  type: "offer_create" | "counter_offer_create" = "offer_create",
+) {
   const customer = await profileDb.getMinimalUser({
     user_id: session.customer_id,
   })
   const most_recent = await offerDb.getMostRecentOrderOffer(session.id)
-  return await sendWebhook(
+  return (
     {
       // the username to be displayed
       username: `SC Market - ${
@@ -777,15 +870,12 @@ async function sendOfferWebhook(
           timestamp: most_recent.timestamp.toISOString(),
         },
       ],
-    },
-    webhook,
+    }
   )
 }
 
-export async function sendBidWebhooks(
-  listing: DBMarketListingComplete,
-  bid: DBMarketBid,
-) {
+/** "Bid Received" (V1): the seller's (org or user) webhooks subscribed to market_item_bid. */
+export async function bidWebhooks(listing: DBMarketListingComplete): Promise<DBNotificationWebhook[]> {
   let webhooks
   if (listing.listing.contractor_seller_id) {
     webhooks = await notificationDb.getNotificationWebhooksByAction(
@@ -803,7 +893,14 @@ export async function sendBidWebhooks(
   } else {
     throw Error("Corrupt listing")
   }
+  return webhooks
+}
 
+export async function sendBidWebhooks(
+  listing: DBMarketListingComplete,
+  bid: DBMarketBid,
+) {
+  const webhooks = await bidWebhooks(listing)
   for (const webhook of webhooks) {
     try {
       await marketBidWebhook(listing, bid, webhook)
@@ -818,8 +915,12 @@ async function marketBidWebhook(
   bid: DBMarketBid,
   webhook: DBNotificationWebhook,
 ) {
+  return await sendWebhook(await bidWebhookBody(listing, bid), webhook)
+}
+
+export async function bidWebhookBody(listing: DBMarketListingComplete, bid: DBMarketBid) {
   const bidder = await profileDb.getMinimalUser({ user_id: bid.user_bidder_id })
-  return await sendWebhook(
+  return (
     {
       username: "SC Market - Bid Received",
       // the avatar to be displayed
@@ -857,21 +958,20 @@ async function marketBidWebhook(
           timestamp: bid.timestamp.toISOString(),
         },
       ],
-    },
-    webhook,
+    }
   )
 }
 
-export async function sendBidWebhooksV2(
+/** "Bid Received" (V2): the shop's webhooks and its owner's (org or user), each once. */
+export async function bidWebhooksV2(
   listing: { listing_id: string; title: string; shop_id: string },
-  bidAmount: number,
   bidderId: string,
-) {
-  if (await involvesTestParty({ users: [bidderId], shops: [listing.shop_id] })) return
+): Promise<DBNotificationWebhook[]> {
+  if (await involvesTestParty({ users: [bidderId], shops: [listing.shop_id] })) return []
   // Resolve shop owner to find webhooks
   const { getKnex } = await import("../../../../clients/database/knex-db.js")
   const shop = await getKnex()("shops").where("shop_id", listing.shop_id).first()
-  if (!shop) return
+  if (!shop) return []
 
   // Collect webhooks from both shop-level and owner-level (org or user)
   const webhookSets = await Promise.all([
@@ -903,38 +1003,53 @@ export async function sendBidWebhooksV2(
       }
     }
   }
+  return webhooks
+}
 
+export async function bidWebhookBodyV2(
+  listing: { listing_id: string; title: string; shop_id: string },
+  bidAmount: number,
+  bidderId: string,
+) {
   const bidder = await profileDb.getMinimalUser({ user_id: bidderId })
+  return {
+    username: "SC Market - Bid Received",
+    avatar_url: getLogoUrl(),
+    allowed_mentions: { parse: [] },
+    embeds: [
+      {
+        color: 0x111828,
+        author: {
+          name: bidder.display_name,
+          url: `https://sc-market.space/user/${bidder.username}`,
+          icon_url: bidder.avatar,
+        },
+        title: listing.title,
+        url: `https://sc-market.space/market/${listing.listing_id}`,
+        fields: [
+          {
+            name: "Bid Amount",
+            value: `${bidAmount.toLocaleString("en-US")} aUEC`,
+          },
+        ],
+        timestamp: new Date().toISOString(),
+      },
+    ],
+  }
+}
 
+export async function sendBidWebhooksV2(
+  listing: { listing_id: string; title: string; shop_id: string },
+  bidAmount: number,
+  bidderId: string,
+) {
+  const webhooks = await bidWebhooksV2(listing, bidderId)
+  if (!webhooks.length) return
+
+  const body = await bidWebhookBodyV2(listing, bidAmount, bidderId)
   for (const webhook of webhooks) {
     try {
-      await sendWebhook(
-        {
-          username: "SC Market - Bid Received",
-          avatar_url: getLogoUrl(),
-          allowed_mentions: { parse: [] },
-          embeds: [
-            {
-              color: 0x111828,
-              author: {
-                name: bidder.display_name,
-                url: `https://sc-market.space/user/${bidder.username}`,
-                icon_url: bidder.avatar,
-              },
-              title: listing.title,
-              url: `https://sc-market.space/market/${listing.listing_id}`,
-              fields: [
-                {
-                  name: "Bid Amount",
-                  value: `${bidAmount.toLocaleString("en-US")} aUEC`,
-                },
-              ],
-              timestamp: new Date().toISOString(),
-            },
-          ],
-        },
-        webhook,
-      )
+      await sendWebhook(body, webhook)
     } catch (e) {
       logger.error(`Failed to send V2 bid webhook ${webhook.webhook_id}: ${e}`)
     }
@@ -947,12 +1062,9 @@ const status_actions = new Map([
   ["in-progress", "order_status_in_progress"],
 ])
 
-export async function sendOrderStatusWebhooks(
-  order: DBOrder,
-  new_status: string,
-  actor_id: string,
-) {
-  if (await involvesTestParty(orderParties(order))) return
+/** "Order Status Updated": the shop's, the assignee's and the customer's webhooks for that status. */
+export async function orderStatusWebhooks(order: DBOrder, new_status: string): Promise<DBNotificationWebhook[]> {
+  if (await involvesTestParty(orderParties(order))) return []
   const webhooks: DBNotificationWebhook[] = []
   const action = status_actions.get(new_status) || "order_status_not_started"
 
@@ -983,6 +1095,15 @@ export async function sendOrderStatusWebhooks(
     )
   }
 
+  return webhooks
+}
+
+export async function sendOrderStatusWebhooks(
+  order: DBOrder,
+  new_status: string,
+  actor_id: string,
+) {
+  const webhooks = await orderStatusWebhooks(order, new_status)
   for (const webhook of webhooks) {
     try {
       await orderStatusWebhook(order, new_status, actor_id, webhook)
@@ -1007,8 +1128,12 @@ async function orderStatusWebhook(
   actor_id: string,
   webhook: DBNotificationWebhook,
 ) {
+  return await sendWebhook(await orderStatusWebhookBody(order, new_status, actor_id), webhook)
+}
+
+export async function orderStatusWebhookBody(order: DBOrder, new_status: string, actor_id: string) {
   const actor = await profileDb.getMinimalUser({ user_id: actor_id })
-  return await sendWebhook(
+  return (
     {
       username: "SC Market - Order Status Updated",
       // the avatar to be displayed
@@ -1046,7 +1171,6 @@ async function orderStatusWebhook(
           timestamp: new Date().toISOString(),
         },
       ],
-    },
-    webhook,
+    }
   )
 }
