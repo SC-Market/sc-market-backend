@@ -27,8 +27,6 @@
 import logger from "../../logger/logger.js"
 import type { DeliveryResult, Destination, DestinationAdapter, DestinationChannel } from "./channels.js"
 import { claimDeliveries, finishDelivery, idempotencyKey } from "./deliveries.js"
-import { webhookAdapter } from "./adapters/webhook.js"
-import { discordChannelAdapter } from "./adapters/discord-channel.js"
 
 /**
  * The destination events, per channel. Event keys follow the user catalog's
@@ -91,15 +89,23 @@ export interface DestinationDeliveryResult {
   duplicate: string[]
 }
 
-const DEFAULT_ADAPTERS: Record<DestinationChannel, DestinationAdapter> = {
-  webhook: webhookAdapter,
-  discord_channel: discordChannelAdapter,
-}
-let adapters = DEFAULT_ADAPTERS
+let overrides: Partial<Record<DestinationChannel, DestinationAdapter>> | null = null
 
 /** Tests: replace destination adapters (e.g. with recording fakes). */
 export function setDestinationAdaptersForTesting(next: Partial<Record<DestinationChannel, DestinationAdapter>> | null) {
-  adapters = next ? { ...DEFAULT_ADAPTERS, ...next } : DEFAULT_ADAPTERS
+  overrides = next
+}
+
+/**
+ * Loaded on first use, so the call sites that import the destination
+ * dispatcher (alerts, the staff alert) don't load every transport with it.
+ */
+async function adapterFor(channel: DestinationChannel): Promise<DestinationAdapter> {
+  const override = overrides?.[channel]
+  if (override) return override
+  return channel === "webhook"
+    ? (await import("./adapters/webhook.js")).webhookAdapter
+    : (await import("./adapters/discord-channel.js")).discordChannelAdapter
 }
 
 /** One destination once, in plan order (the legacy senders' order). */
@@ -154,11 +160,12 @@ export async function notifyDestinations(plan: DestinationPlan): Promise<Destina
       return result
     }
 
+    const adapter = await adapterFor(plan.channel)
     for (const d of toSend) {
       const key = destinationKey(plan, d.ref)
       let outcome: DeliveryResult
       try {
-        outcome = await adapters[plan.channel].send(body, d, { eventKey: plan.event, idempotencyKey: key })
+        outcome = await adapter.send(body, d, { eventKey: plan.event, idempotencyKey: key })
       } catch (err) {
         outcome = { status: "retryable", error: err instanceof Error ? err.message : String(err) }
       }

@@ -119,7 +119,8 @@ class DatabaseNotificationService implements NotificationService {
   // Orders, offers and chat messages: per event, notify() delivers live or
   // the legacy code below delivers with notify() in shadow mode
   // (services/notify/cutover.ts, shadow.ts). Webhooks and Discord threads are
-  // not user notifications and are sent the same way on both paths.
+  // not user notifications and are sent the same way on both paths; webhooks
+  // have their own legacy/live switch (webhookService, deliverDestinations).
 
   /**
    * Live: notify() sends each plan (plans.ts) and the legacy sender is not
@@ -1326,6 +1327,7 @@ class DatabaseNotificationService implements NotificationService {
         { listing_id: listing.listing.listing_id, title: listing.listing.title, shop_id: shopId! },
         bidAmount,
         bidderId,
+        bidId,
       )
     } catch (error) {
       logger.error("Failed to create V2 market bid notification:", error)

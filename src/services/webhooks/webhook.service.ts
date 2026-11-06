@@ -6,6 +6,12 @@
  * - Sending webhooks for offer events (create, counter-offer)
  * - Sending webhooks for market events (bids)
  * - Error handling and timeout management
+ *
+ * Every send goes through deliverDestinations (services/notify, Phase 5):
+ * the legacy sender in util/webhooks.ts posts, with notify()'s plan compared
+ * in shadow mode, unless the route is live (NOTIFY_DESTINATIONS_LIVE), in
+ * which case notify() posts (delivery log, idempotency, failure state) and
+ * the legacy sender is not called.
  */
 
 import {
@@ -17,6 +23,8 @@ import {
 } from "../../clients/database/db-models.js"
 import * as webhookUtil from "../../api/routes/v1/util/webhooks.js"
 import logger from "../../logger/logger.js"
+import { deliverDestinations } from "../notify/destination-delivery.js"
+import * as plans from "./webhook-plans.js"
 
 /**
  * Interface for WebhookService
@@ -47,6 +55,8 @@ export interface WebhookService {
     listing: { listing_id: string; title: string; shop_id: string },
     bidAmount: number,
     bidderId: string,
+    /** Identifies the bid (idempotency); without it each call is its own occurrence. */
+    bidId?: string,
   ): Promise<void>
 }
 
@@ -57,7 +67,11 @@ export interface WebhookService {
 class DatabaseWebhookService implements WebhookService {
   async sendOrderWebhooks(order: DBOrder): Promise<void> {
     try {
-      await webhookUtil.sendOrderWebhooks(order)
+      await deliverDestinations(
+        "webhook:order.created",
+        () => plans.orderCreatedWebhookPlan(order),
+        () => webhookUtil.sendOrderWebhooks(order),
+      )
     } catch (error) {
       logger.error(
         `Failed to send order webhooks for order ${order.order_id}:`,
@@ -75,7 +89,11 @@ class DatabaseWebhookService implements WebhookService {
     actorId: string,
   ): Promise<void> {
     try {
-      await webhookUtil.sendOrderStatusWebhooks(order, newStatus, actorId)
+      await deliverDestinations(
+        "webhook:order.status_changed",
+        () => plans.orderStatusWebhookPlan(order, newStatus, actorId),
+        () => webhookUtil.sendOrderStatusWebhooks(order, newStatus, actorId),
+      )
     } catch (error) {
       logger.error(
         `Failed to send order status webhooks for order ${order.order_id}:`,
@@ -87,7 +105,11 @@ class DatabaseWebhookService implements WebhookService {
 
   async sendOrderAssignedWebhooks(order: DBOrder): Promise<void> {
     try {
-      await webhookUtil.sendOrderAssignedWebhooks(order)
+      await deliverDestinations(
+        "webhook:order.assigned",
+        () => plans.orderAssignedWebhookPlan(order),
+        () => webhookUtil.sendOrderAssignedWebhooks(order),
+      )
     } catch (error) {
       logger.error(
         `Failed to send order assigned webhooks for order ${order.order_id}:`,
@@ -98,7 +120,11 @@ class DatabaseWebhookService implements WebhookService {
 
   async sendOrderReviewWebhooks(order: DBOrder, review: DBReview): Promise<void> {
     try {
-      await webhookUtil.sendOrderReviewWebhooks(order, review)
+      await deliverDestinations(
+        "webhook:order.review",
+        () => plans.orderReviewWebhookPlan(order, review),
+        () => webhookUtil.sendOrderReviewWebhooks(order, review),
+      )
     } catch (error) {
       logger.error(
         `Failed to send order review webhooks for order ${order.order_id}:`,
@@ -112,7 +138,11 @@ class DatabaseWebhookService implements WebhookService {
     type: "offer_create" | "counter_offer_create" = "offer_create",
   ): Promise<void> {
     try {
-      await webhookUtil.sendOfferWebhooks(offer, type)
+      await deliverDestinations(
+        "webhook:offer.received",
+        () => plans.offerWebhookPlan(offer, type),
+        () => webhookUtil.sendOfferWebhooks(offer, type),
+      )
     } catch (error) {
       logger.error(`Failed to send offer webhooks for offer ${offer.id}:`, {
         error,
@@ -126,7 +156,11 @@ class DatabaseWebhookService implements WebhookService {
     bid: DBMarketBid,
   ): Promise<void> {
     try {
-      await webhookUtil.sendBidWebhooks(listing, bid)
+      await deliverDestinations(
+        "webhook:market.bid",
+        () => plans.bidWebhookPlan(listing, bid),
+        () => webhookUtil.sendBidWebhooks(listing, bid),
+      )
     } catch (error) {
       logger.error(
         `Failed to send bid webhooks for listing ${listing.listing.listing_id}:`,
@@ -140,9 +174,14 @@ class DatabaseWebhookService implements WebhookService {
     listing: { listing_id: string; title: string; shop_id: string },
     bidAmount: number,
     bidderId: string,
+    bidId?: string,
   ): Promise<void> {
     try {
-      await webhookUtil.sendBidWebhooksV2(listing, bidAmount, bidderId)
+      await deliverDestinations(
+        "webhook:market.bid",
+        () => plans.bidWebhookPlanV2(listing, bidAmount, bidderId, bidId),
+        () => webhookUtil.sendBidWebhooksV2(listing, bidAmount, bidderId),
+      )
     } catch (error) {
       logger.error(
         `Failed to send V2 bid webhooks for listing ${listing.listing_id}:`,

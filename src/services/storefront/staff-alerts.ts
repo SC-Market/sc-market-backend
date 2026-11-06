@@ -26,6 +26,7 @@ import type { EnquiryTarget, StorefrontEnquiry } from "./enquiries.js"
 import { recordLegacyDestination } from "../notify/destination-trace.js"
 import { postStaffDiscordWebhook, redactStaffWebhookUrl, staffWebhookUrl } from "./staff-webhook.js"
 import type { DestinationPlan } from "../notify/destinations.js"
+import { deliverDestinations } from "../notify/destination-delivery.js"
 
 const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js") as {
@@ -243,17 +244,45 @@ export async function sendStaffEnquiryAlerts(
           },
         )
       : undefined,
-    hook
-      ? sendDiscordAlert(hook, c).then(
-          () => void (out.discord = "sent"),
-          (err) => {
-            out.discord = "failed"
-            reportFailure("discord", enquiry, err)
-          },
-        )
-      : undefined,
+    sendStaffDiscord(enquiry, target, c, hook).then((status) => void (out.discord = status)),
   ])
   return out
+}
+
+/**
+ * The staff channel's post: the legacy sender, or notify() for a live route
+ * (deliverDestinations; webhook:admin.storefront_enquiry). Both report a
+ * failure the same way (log + Bugsnag) and never throw.
+ */
+async function sendStaffDiscord(
+  enquiry: StorefrontEnquiry,
+  target: EnquiryTarget,
+  c: AlertContent,
+  hook: string | undefined,
+): Promise<"sent" | "skipped" | "failed"> {
+  const legacy = async (): Promise<"sent" | "skipped" | "failed"> => {
+    if (!hook) return "skipped"
+    return sendDiscordAlert(hook, c).then(
+      () => "sent" as const,
+      (err) => {
+        reportFailure("discord", enquiry, err)
+        return "failed" as const
+      },
+    )
+  }
+  const outcome = await deliverDestinations(
+    "webhook:admin.storefront_enquiry",
+    () => staffEnquiryPlan(enquiry, target),
+    legacy,
+  )
+  if (outcome.path === "legacy") return outcome.result
+  const r = outcome.result
+  if (!r) return "failed"
+  if (r.failed.length) {
+    reportFailure("discord", enquiry, new Error(r.failed[0].error))
+    return "failed"
+  }
+  return r.delivered.length ? "sent" : "skipped"
 }
 
 /**

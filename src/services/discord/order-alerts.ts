@@ -14,6 +14,7 @@ import logger from "../../logger/logger.js"
 import type { RESTPostAPIChannelMessageJSONBody } from "discord-api-types/v10"
 import type { Destination } from "../notify/channels.js"
 import type { DestinationPlan } from "../notify/destinations.js"
+import { deliverDestinations } from "../notify/destination-delivery.js"
 
 const knex = () => getKnex()
 
@@ -94,9 +95,19 @@ export async function offerAlertMessage(session: DBOfferSession): Promise<RESTPo
 }
 
 /**
- * Post alert to subscribed channels when a new offer is received.
+ * Post alert to subscribed channels when a new offer is received: the legacy
+ * sender, or notify() for a live route (deliverDestinations).
  */
 export async function postOfferAlert(session: DBOfferSession): Promise<void> {
+  await deliverDestinations(
+    "discord_channel:offer.received",
+    () => offerAlertPlan(session),
+    () => legacyPostOfferAlert(session),
+  )
+}
+
+/** The legacy offer alert post (shadow mode compares notify()'s plan with it). */
+export async function legacyPostOfferAlert(session: DBOfferSession): Promise<void> {
   const channels = await offerAlertChannels(session)
   if (!channels.length) return
 
@@ -200,9 +211,20 @@ export async function orderAlertMessage(order: DBOrder): Promise<RESTPostAPIChan
 }
 
 /**
- * Post alert to subscribed channels when an order is created with no assignee.
+ * Post alert to subscribed channels when an order is created with no
+ * assignee: the legacy sender, or notify() for a live route
+ * (deliverDestinations).
  */
 export async function postOrderAlert(order: DBOrder): Promise<void> {
+  await deliverDestinations(
+    "discord_channel:order.created",
+    () => orderAlertPlan(order),
+    () => legacyPostOrderAlert(order),
+  )
+}
+
+/** The legacy order alert post (shadow mode compares notify()'s plan with it). */
+export async function legacyPostOrderAlert(order: DBOrder): Promise<void> {
   const channels = await orderAlertChannels(order)
   if (!channels.length) return
 

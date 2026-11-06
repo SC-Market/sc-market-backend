@@ -18,6 +18,7 @@ import { notify } from "../notify/dispatcher.js"
 import { sendWebhookBody } from "../../api/routes/v1/util/webhooks.js"
 import logger from "../../logger/logger.js"
 import type { DestinationPlan } from "../notify/destinations.js"
+import { deliverDestinations } from "../notify/destination-delivery.js"
 import { webhookDestination } from "../webhooks/webhook-plans.js"
 import { alertChannelDestination } from "../discord/order-alerts.js"
 import { env } from "../../config/env.js"
@@ -74,26 +75,53 @@ export function publicContractChannelMessage(contract: DBPublicContract) {
   return { embeds: [publicContractEmbed(contract)], allowed_mentions: { parse: [] } }
 }
 
-/** notify()'s plans for the contract feed (webhooks, then Discord channels): one post per contract each. */
+/** notify()'s plan for the contract feed's webhooks: one post per contract. */
+export async function publicContractWebhookPlan(contract: DBPublicContract): Promise<DestinationPlan> {
+  return {
+    channel: "webhook",
+    event: "contract.public_created",
+    entityId: contract.id,
+    dedupeKey: contract.id,
+    destinations: (await publicContractWebhooks()).map(webhookDestination),
+    render: () => publicContractWebhookBody(contract),
+  }
+}
+
+/** notify()'s plan for the contract feed's Discord channels: one post per contract. */
+export async function publicContractChannelPlan(contract: DBPublicContract): Promise<DestinationPlan> {
+  return {
+    channel: "discord_channel",
+    event: "contract.public_created",
+    entityId: contract.id,
+    dedupeKey: contract.id,
+    destinations: (await publicContractChannels()).map(alertChannelDestination),
+    render: () => publicContractChannelMessage(contract),
+  }
+}
+
+/** Both feed plans, in the order they are posted (webhooks, then Discord channels). */
 export async function publicContractPlans(contract: DBPublicContract): Promise<DestinationPlan[]> {
-  return [
-    {
-      channel: "webhook",
-      event: "contract.public_created",
-      entityId: contract.id,
-      dedupeKey: contract.id,
-      destinations: (await publicContractWebhooks()).map(webhookDestination),
-      render: () => publicContractWebhookBody(contract),
-    },
-    {
-      channel: "discord_channel",
-      event: "contract.public_created",
-      entityId: contract.id,
-      dedupeKey: contract.id,
-      destinations: (await publicContractChannels()).map(alertChannelDestination),
-      render: () => publicContractChannelMessage(contract),
-    },
-  ]
+  return [await publicContractWebhookPlan(contract), await publicContractChannelPlan(contract)]
+}
+
+/** The legacy webhook feed post (shadow mode compares notify()'s plan with it). */
+async function legacyPublicContractWebhooks(contract: DBPublicContract): Promise<void> {
+  const webhooks = await publicContractWebhooks()
+  for (const webhook of webhooks) {
+    try {
+      await sendWebhookBody(publicContractWebhookBody(contract), webhook)
+    } catch (e) {
+      logger.error(`Failed to send public contract webhook ${webhook.webhook_id}: ${e}`)
+    }
+  }
+}
+
+/** The legacy Discord channel feed post. */
+async function legacyPublicContractChannels(contract: DBPublicContract): Promise<void> {
+  const channels = await publicContractChannels()
+  for (const channelId of channels) {
+    await discordService.postChannelMessage(channelId, publicContractChannelMessage(contract))
+  }
 }
 
 /** Users to alert for this contract, with the scope whose preferences apply. */
@@ -146,21 +174,18 @@ export async function notifyPublicContractCreated(contract: DBPublicContract): P
     // Contracts opened by a test account reach nobody.
     if (actingAsTestAccount() || (await isTestUserId(contract.customer_id))) return
 
-    // Webhooks (site-wide feed).
-    const webhooks = await publicContractWebhooks()
-    for (const webhook of webhooks) {
-      try {
-        await sendWebhookBody(publicContractWebhookBody(contract), webhook)
-      } catch (e) {
-        logger.error(`Failed to send public contract webhook ${webhook.webhook_id}: ${e}`)
-      }
-    }
-
-    // Discord channel feed.
-    const channels = await publicContractChannels()
-    for (const channelId of channels) {
-      await discordService.postChannelMessage(channelId, publicContractChannelMessage(contract))
-    }
+    // Webhooks (site-wide feed), then the Discord channel feed: the legacy
+    // senders, or notify() for a live route (deliverDestinations).
+    await deliverDestinations(
+      "webhook:contract.public_created",
+      () => publicContractWebhookPlan(contract),
+      () => legacyPublicContractWebhooks(contract),
+    )
+    await deliverDestinations(
+      "discord_channel:contract.public_created",
+      () => publicContractChannelPlan(contract),
+      () => legacyPublicContractChannels(contract),
+    )
 
     // Opt-in alert.
     const recipients = await contractAlertRecipients(contract)

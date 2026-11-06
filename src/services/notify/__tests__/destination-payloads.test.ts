@@ -4,16 +4,20 @@
  * (the pinned webhook fetch, the Discord REST client, the staff webhook's
  * fetch). The file snapshot is the byte-level contract with third parties.
  *
- * Each scenario runs twice: through the legacy sender (the snapshot was
- * written against the code before Phase 5 and must not change), then through
- * notify()'s destination plans and adapters, which must post exactly the
- * same JSON to the same destinations in the same order.
+ * Each scenario runs through its real call site three ways:
+ * - default (shadow): the legacy sender posts; the snapshot was written
+ *   against the code before Phase 5 and must not change, and notify()'s
+ *   shadow comparison must report a match;
+ * - live (NOTIFY_DESTINATIONS_LIVE=all): notify() posts exactly the same JSON
+ *   to the same destinations in the same order, the legacy sender is not
+ *   called, and one delivery row per post is recorded as sent;
+ * - the plans alone through notifyDestinations().
  *
  * Mocked DB (no Postgres); the Postgres-backed parity (legacy vs notify(),
  * through the real call sites) is destinations.char.test.ts in the CI
  * characterization suite.
  */
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
 
 const sent = vi.hoisted(() => ({
   webhook: [] as { url: string; body: unknown }[],
@@ -165,6 +169,11 @@ vi.mock("../deliveries.js", async (importOriginal) => ({
 vi.mock("../dispatcher.js", () => ({ notify: vi.fn(async () => ({ planned: [], delivered: [], failed: [], duplicate: [] })) }))
 
 const webhookUtil = await import("../../../api/routes/v1/util/webhooks.js")
+const { webhookService } = await import("../../webhooks/webhook.service.js")
+const logger = (await import("../../../logger/logger.js")).default as unknown as Record<
+  "info" | "warn" | "error",
+  { mock: { calls: unknown[][] }; mockClear: () => void }
+>
 const { postOrderAlert, postOfferAlert } = await import("../../discord/order-alerts.js")
 const { notifyPublicContractCreated } = await import("../../contracts/public-contract-alerts.js")
 const { sendStaffEnquiryAlerts } = await import("../../storefront/staff-alerts.js")
@@ -254,7 +263,7 @@ const ENQUIRY = {
 const ENQUIRY_TARGET = { type: "org", id: "org-1", handle: "ACME", name: "Acme Corp", is_test: false } as const
 
 interface Scenario {
-  /** The legacy sender, as the call site invokes it. */
+  /** The call site (webhookService, the alert posts, the contract feed, the staff alert). */
   legacy: () => Promise<unknown>
   /** notify()'s plans for the same occurrence. */
   plans: () => Promise<Plan[]>
@@ -263,18 +272,18 @@ interface Scenario {
 const one = (p: Promise<Plan>) => p.then((x) => [x])
 const assigned = () => order({ assigned_id: "seller" })
 const status = (s: string): Scenario => ({
-  legacy: () => webhookUtil.sendOrderStatusWebhooks(assigned(), s, "actor"),
+  legacy: () => webhookService.sendOrderStatusWebhooks(assigned(), s, "actor"),
   plans: () => one(webhookPlans.orderStatusWebhookPlan(assigned(), s, "actor")),
 })
 
 /** Every destination post. What matters is what reached the transports. */
 const SCENARIOS: Record<string, Scenario> = {
   "webhook order.created": {
-    legacy: () => webhookUtil.sendOrderWebhooks(order({ collateral: "1000" })),
+    legacy: () => webhookService.sendOrderWebhooks(order({ collateral: "1000" })),
     plans: () => one(webhookPlans.orderCreatedWebhookPlan(order({ collateral: "1000" }))),
   },
   "webhook order.assigned": {
-    legacy: () => webhookUtil.sendOrderAssignedWebhooks(assigned()),
+    legacy: () => webhookService.sendOrderAssignedWebhooks(assigned()),
     plans: () => one(webhookPlans.orderAssignedWebhookPlan(assigned())),
   },
   "webhook order.status_changed in-progress": status("in-progress"),
@@ -282,23 +291,23 @@ const SCENARIOS: Record<string, Scenario> = {
   "webhook order.status_changed cancelled": status("cancelled"),
   "webhook order.status_changed not-started": status("not-started"),
   "webhook offer.received create": {
-    legacy: () => webhookUtil.sendOfferWebhooks(session(), "offer_create"),
+    legacy: () => webhookService.sendOfferWebhooks(session(), "offer_create"),
     plans: () => one(webhookPlans.offerWebhookPlan(session(), "offer_create")),
   },
   "webhook offer.received counter": {
-    legacy: () => webhookUtil.sendOfferWebhooks(session(), "counter_offer_create"),
+    legacy: () => webhookService.sendOfferWebhooks(session(), "counter_offer_create"),
     plans: () => one(webhookPlans.offerWebhookPlan(session(), "counter_offer_create")),
   },
   "webhook order.review": {
-    legacy: () => webhookUtil.sendOrderReviewWebhooks(assigned(), REVIEW),
+    legacy: () => webhookService.sendOrderReviewWebhooks(assigned(), REVIEW),
     plans: () => one(webhookPlans.orderReviewWebhookPlan(assigned(), REVIEW)),
   },
   "webhook market.bid v1": {
-    legacy: () => webhookUtil.sendBidWebhooks(LISTING_V1, BID_V1),
+    legacy: () => webhookService.sendBidWebhooks(LISTING_V1, BID_V1),
     plans: () => one(webhookPlans.bidWebhookPlan(LISTING_V1, BID_V1)),
   },
   "webhook market.bid v2": {
-    legacy: () => webhookUtil.sendBidWebhooksV2(LISTING_V2, 2500000, "bidder"),
+    legacy: () => webhookService.sendBidWebhooksV2(LISTING_V2, 2500000, "bidder", "bid-2"),
     plans: () => one(webhookPlans.bidWebhookPlanV2(LISTING_V2, 2500000, "bidder", "bid-2")),
   },
   "discord_channel order.created (v1 items)": {
@@ -390,15 +399,57 @@ afterAll(() => {
 })
 beforeEach(() => resetWorld())
 
+const LEGACY_SENDERS = [
+  "sendOrderWebhooks",
+  "sendOrderAssignedWebhooks",
+  "sendOrderStatusWebhooks",
+  "sendOfferWebhooks",
+  "sendOrderReviewWebhooks",
+  "sendBidWebhooks",
+  "sendBidWebhooksV2",
+  "sendWebhookBody",
+] as const
+const posts = (c: ReturnType<typeof captured>) => c.webhooks.length + c.discord.length + c.staff.length
+const shadowLines = (level: "info" | "warn") =>
+  logger[level].mock.calls.filter((c) => c[0] === "notify.destinations.shadow").map((c) => c[1])
+
+afterEach(() => {
+  delete process.env.NOTIFY_DESTINATIONS_LIVE
+  vi.restoreAllMocks()
+})
+
 // Test names (the snapshot keys) are the ones the pre-Phase-5 snapshot was written under.
 describe("destination payloads (legacy senders)", () => {
   for (const [name, scenario] of Object.entries(SCENARIOS)) {
     it(name, async () => {
+      // Default: legacy posts (unchanged), and notify()'s shadow plan matches it.
+      logger.info.mockClear()
+      logger.warn.mockClear()
       await scenario.legacy()
       const legacy = captured()
       expect(legacy).toMatchSnapshot()
-      expect(legacy.webhooks.length + legacy.discord.length + legacy.staff.length).toBeGreaterThan(0)
+      expect(posts(legacy)).toBeGreaterThan(0)
+      expect(shadowLines("warn")).toEqual([])
+      const matched = shadowLines("info") as { match: boolean; legacy: number }[]
+      expect(matched.length).toBeGreaterThan(0)
+      expect(matched.every((l) => l.match)).toBe(true)
+      expect(matched.reduce((n, l) => n + l.legacy, 0)).toBe(posts(legacy))
+      expect(deliveries.claimed.size).toBe(0)
 
+      // Live: notify() alone posts the same.
+      resetWorld()
+      process.env.NOTIFY_DESTINATIONS_LIVE = "all"
+      const spies = LEGACY_SENDERS.map((m) => vi.spyOn(webhookUtil, m))
+      logger.info.mockClear()
+      await scenario.legacy()
+      expect(captured()).toEqual(legacy)
+      for (const spy of spies) expect(spy).not.toHaveBeenCalled()
+      expect(shadowLines("info")).toEqual([])
+      expect(deliveries.finished.map((f) => f.status)).toEqual(Array(posts(legacy)).fill("sent"))
+      delete process.env.NOTIFY_DESTINATIONS_LIVE
+      vi.restoreAllMocks()
+
+      // The plans alone.
       resetWorld()
       for (const plan of await scenario.plans()) {
         const r = await notifyDestinations(plan)
@@ -407,9 +458,7 @@ describe("destination payloads (legacy senders)", () => {
       }
       expect(captured()).toEqual(legacy)
       // One delivery row per post, each sent.
-      expect(deliveries.finished.map((f) => f.status)).toEqual(
-        Array(legacy.webhooks.length + legacy.discord.length + legacy.staff.length).fill("sent"),
-      )
+      expect(deliveries.finished.map((f) => f.status)).toEqual(Array(posts(legacy)).fill("sent"))
     })
   }
 })

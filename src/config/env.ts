@@ -73,6 +73,13 @@ interface Environment {
   // Unset: that channel is skipped (a warning is logged once at startup).
   STAFF_ALERT_EMAIL?: string // Staff inbox for the alert email (sent through SES)
   STAFF_DISCORD_WEBHOOK_URL?: string // Discord webhook for the staff channel (secret: never logged)
+  // Webhook and Discord alert-channel posts through notify() (Phase 5,
+  // services/notify/destination-cutover.ts): "all", or a comma-separated
+  // list of "<channel>:<event>" routes / "<channel>:*". Unset: none live, the
+  // legacy senders post and notify() runs in shadow mode.
+  NOTIFY_DESTINATIONS_LIVE?: string
+  // "off" disables the destination shadow comparison.
+  NOTIFY_DESTINATIONS_SHADOW?: string
 
   // Cloudflare Pages deploy hook of the frontend's production branch, POSTed
   // after a successful game-data import so the prerendered game-data pages

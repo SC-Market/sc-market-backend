@@ -20,6 +20,23 @@ vi.mock("../../logger/logger.js", () => ({
   default: { warn: h.warn, error: h.error, info: vi.fn(), debug: vi.fn() },
 }))
 
+// notify()'s live path (NOTIFY_DESTINATIONS_LIVE): delivery claims in memory; no CDN.
+const claimed = vi.hoisted(() => new Set<string>())
+vi.mock("../notify/deliveries.js", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  claimDeliveries: vi.fn(async (claims: { idempotencyKey: string }[]) => {
+    const won = new Set<string>()
+    for (const c of claims) {
+      if (claimed.has(c.idempotencyKey)) continue
+      claimed.add(c.idempotencyKey)
+      won.add(c.idempotencyKey)
+    }
+    return won
+  }),
+  finishDelivery: vi.fn(async () => undefined),
+}))
+vi.mock("../../clients/cdn/cdn.js", () => ({ cdn: { getFileLinkResource: vi.fn() }, external_resource_regex: /^$/ }))
+
 const { env } = await import("../../config/env.js")
 const alerts = await import("./staff-alerts.js")
 const Bugsnag = createRequire(import.meta.url)("@bugsnag/js") as { notify: (...args: unknown[]) => void }
@@ -166,6 +183,54 @@ describe("sendStaffEnquiryAlerts", () => {
     await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)
     expect(h.error).toHaveBeenCalledTimes(1)
     expect(notify).not.toHaveBeenCalled()
+  })
+})
+
+describe("sendStaffEnquiryAlerts through notify() (route webhook:admin.storefront_enquiry live)", () => {
+  beforeEach(() => {
+    claimed.clear()
+    env.NOTIFY_DESTINATIONS_LIVE = "webhook:admin.storefront_enquiry"
+  })
+  afterEach(() => {
+    delete (env as Record<string, string | undefined>).NOTIFY_DESTINATIONS_LIVE
+  })
+
+  it("posts the same embed to the same URL, once per enquiry", async () => {
+    const live = await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)
+    delete (env as Record<string, string | undefined>).NOTIFY_DESTINATIONS_LIVE
+    claimed.clear()
+    const legacy = await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)
+    expect(live).toEqual(legacy)
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    const [[liveUrl, liveInit], [legacyUrl, legacyInit]] = fetchMock.mock.calls
+    expect(liveUrl).toBe(legacyUrl)
+    expect(liveInit.redirect).toBe("error")
+    expect(liveInit.body).toBe(legacyInit.body)
+
+    env.NOTIFY_DESTINATIONS_LIVE = "webhook:admin.storefront_enquiry"
+    claimed.clear()
+    await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)
+    expect(await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)).toEqual({ email: "sent", discord: "skipped" })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+  })
+
+  it("a failure is reported as before (log + Bugsnag), without the URL", async () => {
+    fetchMock.mockResolvedValue(new Response("nope", { status: 500 }))
+    expect(await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)).toEqual({ email: "sent", discord: "failed" })
+    expect(h.error).toHaveBeenCalledWith(
+      "storefront enquiry: staff alert failed",
+      expect.objectContaining({ channel: "discord", enquiry_id: "e1", error: "Discord webhook answered HTTP 500" }),
+    )
+    expect(notify).toHaveBeenCalledTimes(1)
+    expect(logged()).not.toContain("super-secret-token")
+  })
+
+  it("unset URL or a test org: nothing posted", async () => {
+    delete env.STAFF_DISCORD_WEBHOOK_URL
+    expect((await alerts.sendStaffEnquiryAlerts(ENQUIRY, TARGET)).discord).toBe("skipped")
+    env.STAFF_DISCORD_WEBHOOK_URL = WEBHOOK
+    expect((await alerts.sendStaffEnquiryAlerts(ENQUIRY, { ...TARGET, is_test: true })).discord).toBe("skipped")
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })
 
