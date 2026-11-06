@@ -1,0 +1,1233 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`destination payloads (legacy senders) > discord_channel offer.received org 1`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_offer:sess-items",
+                "label": "Claim Offer",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "x5 please",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Offer",
+                "value": "125,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": false,
+                "name": "Items",
+                "value": "Quantainium ×3",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Offer: Medical Supplies",
+            "url": "https://sc-market.space/offer/sess-items",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000001/messages",
+    },
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_offer:sess-items",
+                "label": "Claim Offer",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "x5 please",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Offer",
+                "value": "125,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": false,
+                "name": "Items",
+                "value": "Quantainium ×3",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Offer: Medical Supplies",
+            "url": "https://sc-market.space/offer/sess-items",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000002/messages",
+    },
+  ],
+  "staff": [],
+  "webhooks": [],
+}
+`;
+
+exports[`destination payloads (legacy senders) > discord_channel offer.received personal 1`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "x5 please",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Offer",
+                "value": "125,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "50,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Offer: Medical Supplies",
+            "url": "https://sc-market.space/offer/sess-collat",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000001/messages",
+    },
+    {
+      "body": {
+        "components": [],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "x5 please",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Offer",
+                "value": "125,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Delivery",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "50,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Offer: Medical Supplies",
+            "url": "https://sc-market.space/offer/sess-collat",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000003/messages",
+    },
+  ],
+  "staff": [],
+  "webhooks": [],
+}
+`;
+
+exports[`destination payloads (legacy senders) > discord_channel order.created (v1 items) 1`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_order:order-items",
+                "label": "Claim Order",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "Pick up at Area18",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "250,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Hauling",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "1,000 aUEC",
+              },
+              {
+                "inline": false,
+                "name": "Items",
+                "value": "Quantainium ×2",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Order: Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-items",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000001/messages",
+    },
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_order:order-items",
+                "label": "Claim Order",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "Pick up at Area18",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "250,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Hauling",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "1,000 aUEC",
+              },
+              {
+                "inline": false,
+                "name": "Items",
+                "value": "Quantainium ×2",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Order: Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-items",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000002/messages",
+    },
+  ],
+  "staff": [],
+  "webhooks": [],
+}
+`;
+
+exports[`destination payloads (legacy senders) > discord_channel order.created (v2 items) 1`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_order:order-v2",
+                "label": "Claim Order",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "Pick up at Area18",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "250,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Hauling",
+              },
+              {
+                "inline": false,
+                "name": "Items",
+                "value": "Laranite ×4",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Order: Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-v2",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000001/messages",
+    },
+    {
+      "body": {
+        "components": [
+          {
+            "components": [
+              {
+                "custom_id": "claim_order:order-v2",
+                "label": "Claim Order",
+                "style": 1,
+                "type": 2,
+              },
+            ],
+            "type": 1,
+          },
+        ],
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png?resolved",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1095809,
+            "description": "Pick up at Area18",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "250,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Hauling",
+              },
+              {
+                "inline": false,
+                "name": "Items",
+                "value": "Laranite ×4",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "New Order: Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-v2",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000002/messages",
+    },
+  ],
+  "staff": [],
+  "webhooks": [],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook admin.storefront_enquiry (staff) 1`] = `
+{
+  "discord": [],
+  "staff": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "color": 1096065,
+            "description": "We'd like a \\*branded\\* storefront \\[please\\](https://x)",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Org",
+                "value": "Acme Corp (ACME)",
+              },
+              {
+                "inline": true,
+                "name": "Requested by",
+                "value": "boss\\_name",
+              },
+              {
+                "inline": true,
+                "name": "Subdomain",
+                "value": "acme.sc-market.space",
+              },
+              {
+                "inline": true,
+                "name": "Contact",
+                "value": "Discord",
+              },
+            ],
+            "footer": {
+              "text": "Admin › Premium",
+            },
+            "title": "New storefront enquiry",
+            "url": "https://sc-market.space/admin/premium#storefront-enquiries",
+          },
+        ],
+        "username": "SC Market",
+      },
+      "redirect": "error",
+      "url": "[staff webhook]",
+    },
+  ],
+  "webhooks": [],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook market.bid v1 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/bidder.png",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "1,500,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-03T08:00:00.000Z",
+            "title": "Polaris",
+            "url": "https://sc-market.space/market/l-1/#/polaris",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "to": "org-bid/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/bidder.png",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "1,500,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-03T08:00:00.000Z",
+            "title": "Polaris",
+            "url": "https://sc-market.space/market/l-1/#/polaris",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "to": "shared-bid/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook market.bid v2 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/bidder.png",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "2,500,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Idris",
+            "url": "https://sc-market.space/market/l-2",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "to": "shop-bid/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/bidder.png",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "2,500,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Idris",
+            "url": "https://sc-market.space/market/l-2",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "to": "shared-bid/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/bidder.png",
+              "name": "Bidder",
+              "url": "https://sc-market.space/user/bidder_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Bid Amount",
+                "value": "2,500,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Idris",
+            "url": "https://sc-market.space/market/l-2",
+          },
+        ],
+        "username": "SC Market - Bid Received",
+      },
+      "to": "org-bid/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook offer.received counter 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1120296,
+            "description": "x5 please",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "125,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+            ],
+            "timestamp": "2026-11-01T10:00:00.000Z",
+            "title": "Medical Supplies",
+            "url": "https://sc-market.space/offer/sess-1",
+          },
+        ],
+        "username": "SC Market - Counter Offer Received",
+      },
+      "to": "shop-created/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook offer.received create 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1120296,
+            "description": "x5 please",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "125,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Delivery",
+              },
+            ],
+            "timestamp": "2026-11-01T10:00:00.000Z",
+            "title": "Medical Supplies",
+            "url": "https://sc-market.space/offer/sess-1",
+          },
+        ],
+        "username": "SC Market - Offer Received",
+      },
+      "to": "shop-created/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.assigned 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/seller.png",
+              "name": "Seller",
+              "url": "https://sc-market.space/user/seller_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Assigned to",
+                "value": "Seller",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Assigned",
+      },
+      "to": "shop-assigned/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/seller.png",
+              "name": "Seller",
+              "url": "https://sc-market.space/user/seller_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Assigned to",
+                "value": "Seller",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Assigned",
+      },
+      "to": "seller-assigned/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.created 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/customer.png",
+              "name": "Customer",
+              "url": "https://sc-market.space/user/customer_name",
+            },
+            "color": 1120296,
+            "description": "Pick up at Area18",
+            "fields": [
+              {
+                "name": "Offer",
+                "value": "250,000 aUEC",
+              },
+              {
+                "name": "Kind",
+                "value": "Hauling",
+              },
+              {
+                "name": "Rush",
+                "value": "False",
+              },
+              {
+                "name": "Collateral",
+                "value": "250,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-01T09:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Placed",
+      },
+      "to": "shop-created/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.review 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/reviewer.png",
+              "name": "Reviewer",
+              "url": "https://sc-market.space/user/reviewer_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "Rating",
+                "value": "★★★★☆ (4/5)",
+              },
+              {
+                "name": "Buyer's review",
+                "value": "Fast and *careful*",
+              },
+            ],
+            "timestamp": "2026-11-02T08:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Review",
+      },
+      "to": "shop-review/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.status_changed cancelled 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 11141120,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "cancelled",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "shop-order_status_cancelled/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 11141120,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "cancelled",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "customer-order_status_cancelled/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.status_changed fulfilled 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 43520,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "fulfilled",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "shop-order_status_fulfilled/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 43520,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "fulfilled",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "customer-order_status_fulfilled/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.status_changed in-progress 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 166097,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "in-progress",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "shop-order_status_in_progress/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 166097,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "in-progress",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "customer-order_status_in_progress/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook order.status_changed not-started 1`] = `
+{
+  "discord": [],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "not-started",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "shop-order_status_not_started/token",
+    },
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "avatar_url": "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+        "embeds": [
+          {
+            "author": {
+              "icon_url": "https://cdn.example/actor.png",
+              "name": "Actor",
+              "url": "https://sc-market.space/user/actor_name",
+            },
+            "color": 1120296,
+            "fields": [
+              {
+                "name": "New Status",
+                "value": "not-started",
+              },
+            ],
+            "timestamp": "2026-11-06T12:00:00.000Z",
+            "title": "Haul 500 SCU",
+            "url": "https://sc-market.space/contract/order-1",
+          },
+        ],
+        "username": "SC Market - Order Status Updated",
+      },
+      "to": "customer-order_status_not_started/token",
+    },
+  ],
+}
+`;
+
+exports[`destination payloads (legacy senders) > webhook+discord_channel contract.public_created 1`] = `
+{
+  "discord": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "color": 1095809,
+            "description": "Two fighters needed",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Escort",
+              },
+              {
+                "inline": true,
+                "name": "Payment",
+                "value": "one-time",
+              },
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "300,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "20,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-04T08:00:00.000Z",
+            "title": "New public contract: Escort to Pyro",
+            "url": "https://sc-market.space/contracts/public/contract-1",
+          },
+        ],
+      },
+      "route": "/channels/800000000000000001/messages",
+    },
+  ],
+  "staff": [],
+  "webhooks": [
+    {
+      "body": {
+        "allowed_mentions": {
+          "parse": [],
+        },
+        "embeds": [
+          {
+            "color": 1095809,
+            "description": "Two fighters needed",
+            "fields": [
+              {
+                "inline": true,
+                "name": "Kind",
+                "value": "Escort",
+              },
+              {
+                "inline": true,
+                "name": "Payment",
+                "value": "one-time",
+              },
+              {
+                "inline": true,
+                "name": "Cost",
+                "value": "300,000 aUEC",
+              },
+              {
+                "inline": true,
+                "name": "Collateral",
+                "value": "20,000 aUEC",
+              },
+            ],
+            "timestamp": "2026-11-04T08:00:00.000Z",
+            "title": "New public contract: Escort to Pyro",
+            "url": "https://sc-market.space/contracts/public/contract-1",
+          },
+        ],
+        "username": "SC Market - New Public Contract",
+      },
+      "to": "contract-feed/token",
+    },
+  ],
+}
+`;
