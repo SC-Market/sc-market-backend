@@ -15,20 +15,56 @@ import logger from "../../logger/logger.js"
 export const CONTENT_MANIFEST_PATH = "/content/manifest.json"
 export const CONTENT_MANIFEST_TIMEOUT_MS = 5_000
 
-/** The manifest format the frontend emits (scripts/content/lib.ts there). */
+/**
+ * The manifest format the frontend emits (SitemapManifest in
+ * src/features/help/domain/types.ts there).
+ */
 export interface ContentManifest {
   version: 1
-  pages: { path: string; updated: string }[]
+  pages: {
+    /** Site-relative; a translated guide is its path plus `?lng=<locale>`. */
+    path: string
+    updated: string
+    /** The page's language, on translated guides only. */
+    lang?: string
+    /** Every language version of the page (itself included) plus "x-default". */
+    alternates?: { hreflang: string; path: string }[]
+  }[]
 }
+
+/** The languages a content page may be translated into (`?lng=`). */
+export const CONTENT_LOCALES = ["de", "es", "fr", "ja", "uk", "zh-CN", "zh-TW"] as const
+/** hreflang values an alternate may carry: English, the translations, x-default. */
+const ALTERNATE_HREFLANGS = new Set<string>(["en", ...CONTENT_LOCALES, "x-default"])
 
 /**
  * Only content paths: never an arbitrary URL a bad manifest could inject.
  * /changelog/<YYYY-MM-DD> pages are listed once published (the frontend
- * never puts a draft in the manifest).
+ * never puts a draft in the manifest). The only query string allowed is
+ * exactly `?lng=<one of CONTENT_LOCALES>` (a translated page).
  */
-const CONTENT_PATH =
-  /^\/(?:guides|about|blog|changelog)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*){0,2}$/
+const CONTENT_PATH = new RegExp(
+  "^/(?:guides|about|blog|changelog)(?:/[a-z0-9]+(?:-[a-z0-9]+)*){0,2}" +
+    `(?:\\?lng=(?:${CONTENT_LOCALES.join("|")}))?$`,
+)
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
+
+/**
+ * A page's hreflang alternates as sitemap links (xhtml:link), or undefined
+ * when it has none. Alternates with an unknown hreflang or a non-content path
+ * are dropped.
+ */
+function alternateLinks(alternates: unknown): { lang: string; url: string }[] | undefined {
+  if (!Array.isArray(alternates)) return undefined
+  const links: { lang: string; url: string }[] = []
+  for (const alternate of alternates) {
+    const { hreflang, path } = (alternate ?? {}) as { hreflang?: unknown; path?: unknown }
+    if (typeof hreflang !== "string" || !ALTERNATE_HREFLANGS.has(hreflang)) continue
+    if (typeof path !== "string" || !CONTENT_PATH.test(path)) continue
+    links.push({ lang: hreflang, url: path })
+  }
+  return links.length > 0 ? links : undefined
+}
 
 function isManifest(value: unknown): value is ContentManifest {
   if (typeof value !== "object" || value === null) return false
@@ -46,6 +82,7 @@ export function manifestToSitemapPages(
       continue
     if (seen.has(page.path)) continue
     seen.add(page.path)
+    const links = alternateLinks(page.alternates)
     pages.push({
       url: page.path,
       changefreq: EnumChangefreq.MONTHLY,
@@ -53,6 +90,7 @@ export function manifestToSitemapPages(
       ...(typeof page.updated === "string" && ISO_DATE.test(page.updated)
         ? { lastmod: page.updated }
         : {}),
+      ...(links ? { links } : {}),
     })
   }
   return pages

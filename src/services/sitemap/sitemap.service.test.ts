@@ -184,9 +184,20 @@ describe("content (Help & Guides) section", () => {
           { path: "/about", updated: "2026-10-25" },
           { path: "/changelog", updated: "2026-11-02" },
           { path: "/changelog/2026-11-02", updated: "2026-11-02" },
+          {
+            path: "/guides/buying/sell-an-item?lng=fr",
+            updated: "2026-11-03",
+            lang: "fr",
+            alternates: [
+              { hreflang: "en", path: "/guides/buying/sell-an-item" },
+              { hreflang: "fr", path: "/guides/buying/sell-an-item?lng=fr" },
+              { hreflang: "x-default", path: "/guides/buying/sell-an-item" },
+            ],
+          },
           // Anything outside the content routes is ignored.
           { path: "https://evil.example/x", updated: "2026-10-25" },
           { path: "/market/x", updated: "2026-10-25" },
+          { path: "/guides/buying/buy-an-item?lng=pt", updated: "2026-10-25" },
         ],
       }),
     )
@@ -201,8 +212,14 @@ describe("content (Help & Guides) section", () => {
     expect(xml).toContain("<loc>https://sc-market.space/about</loc>")
     expect(xml).toContain("<loc>https://sc-market.space/changelog</loc>")
     expect(xml).toContain("<loc>https://sc-market.space/changelog/2026-11-02</loc>")
+    expect(xml).toContain("<loc>https://sc-market.space/guides/buying/sell-an-item?lng=fr</loc>")
+    expect(xml).toContain(
+      '<xhtml:link rel="alternate" hreflang="fr" href="https://sc-market.space/guides/buying/sell-an-item?lng=fr"/>',
+    )
+    expect(xml).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"')
     expect(xml).not.toContain("evil.example")
     expect(xml).not.toContain("/market/x")
+    expect(xml).not.toContain("lng=pt")
     expect(unavailable.has("content-0")).toBe(false)
   })
 
