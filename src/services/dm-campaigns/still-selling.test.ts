@@ -1185,3 +1185,245 @@ describe("Send test DM to me", () => {
     expect(svc.runState().running).toBe(false)
   })
 })
+
+describe("daily trickle (scheduled run)", () => {
+  const DAY1 = new Date("2026-11-07T10:05:00Z")
+  const DAY2 = new Date("2026-11-08T10:05:00Z")
+
+  /**
+   * dm_campaign_recipients in memory with claim times: `eligible()` is who
+   * the candidates query finds today (before its NOT EXISTS on claimed
+   * rows); the daily count reads claimed_at >= its bound.
+   */
+  function simulateDays(eligible: () => ReturnType<typeof candidate>[], now: () => Date) {
+    const claimed = new Map<string, Date>()
+    tracker.on
+      .any(/WITH stale AS/)
+      .response(() => ({ rows: eligible().filter((p) => !claimed.has(p.user_id)) }))
+    tracker.on.any(/pg_advisory_xact_lock/).response({ rows: [{}] })
+    tracker.on
+      .any(/claimed_today/)
+      .response((q: { bindings: unknown[] }) => {
+        const since = new Date(q.bindings[1] as string | Date)
+        const n = [...claimed.values()].filter((t) => t >= since).length
+        return { rows: [{ claimed_today: n }] }
+      })
+    tracker.on
+      .any(/INSERT INTO dm_campaign_recipients/)
+      .response((q: { bindings: unknown[] }) => {
+        const user = q.bindings[1] as string
+        if (claimed.has(user)) return { rows: [] }
+        claimed.set(user, now())
+        return { rows: [{ user_id: user }] }
+      })
+    tracker.on.update("dm_campaign_recipients").response(1)
+    return claimed
+  }
+
+  function deps(now: () => Date, send: ReturnType<typeof vi.fn>, over: Partial<Parameters<typeof svc.runScheduledCampaign>[0]> = {}) {
+    return {
+      reachable: everyoneReachable,
+      send: send as never,
+      sleep: async () => {},
+      enabled: () => true,
+      now,
+      ...over,
+    }
+  }
+
+  /** The user ids DMed, in order (from the attempt passed to send). */
+  const dmed = (send: ReturnType<typeof vi.fn>) =>
+    send.mock.calls.map((c) => ((c as unknown[])[2] as { userId: string }).userId)
+
+  it(`${"STILL_SELLING_DAILY_MAX"}: default 25, a non-negative integer otherwise`, () => {
+    expect(svc.dailyMax({})).toBe(25)
+    expect(svc.dailyMax({ STILL_SELLING_DAILY_MAX: "5" })).toBe(5)
+    expect(svc.dailyMax({ STILL_SELLING_DAILY_MAX: "0" })).toBe(0)
+    expect(svc.dailyMax({ STILL_SELLING_DAILY_MAX: "lots" })).toBe(25)
+    expect(svc.dailyMax({ STILL_SELLING_DAILY_MAX: "-3" })).toBe(25)
+    expect(svc.utcDayStart(new Date("2026-11-07T23:59:00Z"))).toEqual(
+      new Date("2026-11-07T00:00:00Z"),
+    )
+  })
+
+  it("the next day sends only to sellers who became eligible since, and nobody gets a second DM", async () => {
+    let now = DAY1
+    let pool = [1, 2, 3].map(candidate)
+    simulateDays(() => pool, () => now)
+    const send = vi.fn(async () => ({ ok: true as const }))
+    const first = await svc.runScheduledCampaign(deps(() => now, send))
+    expect(first).toMatchObject({ reason: "limit", eligible: 3, sent: 3, delivered: 3, failed: 0 })
+    expect(dmed(send)).toEqual([1, 2, 3].map(uuid))
+
+    // Day 2: the same three still qualify, two more became eligible.
+    now = DAY2
+    pool = [1, 2, 3, 4, 5].map(candidate)
+    send.mockClear()
+    const second = await svc.runScheduledCampaign(deps(() => now, send))
+    expect(second).toMatchObject({ reason: "limit", eligible: 2, sent: 2 })
+    expect(dmed(send)).toEqual([4, 5].map(uuid))
+
+    // A third run finds no one: everyone was DMed once.
+    send.mockClear()
+    const third = await svc.runScheduledCampaign(deps(() => now, send))
+    expect(third).toMatchObject({ reason: "nothing_to_send", eligible: 0, sent: 0 })
+    expect(send).not.toHaveBeenCalled()
+  })
+
+  it("a failed DM counts as failed and is not retried the next day", async () => {
+    let now = DAY1
+    simulateDays(() => [candidate(1)], () => now)
+    const send = vi.fn(async () => ({ ok: false as const, error: "closed", code: 50007, status: 403 }))
+    expect(await svc.runScheduledCampaign(deps(() => now, send))).toMatchObject({
+      sent: 1,
+      delivered: 0,
+      failed: 1,
+    })
+    now = DAY2
+    expect(await svc.runScheduledCampaign(deps(() => now, send))).toMatchObject({
+      reason: "nothing_to_send",
+    })
+    expect(send).toHaveBeenCalledTimes(1)
+  })
+
+  it("respects the daily cap, including runs repeated the same day (restart, second instance)", async () => {
+    let now = DAY1
+    simulateDays(() => Array.from({ length: 40 }, (_, i) => candidate(i + 1)), () => now)
+    const send = vi.fn(async () => ({ ok: true as const }))
+    const d = () => deps(() => now, send, { dailyMax: () => 25 })
+    const first = await svc.runScheduledCampaign(d())
+    expect(first).toMatchObject({ eligible: 40, limit: 25, sent: 25, reason: "limit" })
+    // Same day again: the day's count is already 25.
+    const again = await svc.runScheduledCampaign(d())
+    expect(again).toMatchObject({ sent: 0, reason: "daily_cap" })
+    expect(send).toHaveBeenCalledTimes(25)
+    // Next day: 15 left, all under the cap.
+    now = DAY2
+    const next = await svc.runScheduledCampaign(d())
+    expect(next).toMatchObject({ eligible: 15, sent: 15, reason: "limit" })
+    expect(send).toHaveBeenCalledTimes(40)
+    // One DM per person: 40 different recipients.
+    expect(new Set(dmed(send)).size).toBe(40)
+  })
+
+  it("counts the day's claims under an advisory lock, in one transaction with the claim", async () => {
+    simulateDays(() => [candidate(1)], () => DAY1)
+    const send = vi.fn(async () => ({ ok: true as const }))
+    await svc.runScheduledCampaign(deps(() => DAY1, send))
+    const sqls = tracker.history.all.map((q) => q.sql)
+    const lock = sqls.findIndex((s) => s.includes("pg_advisory_xact_lock"))
+    const count = sqls.findIndex((s) => s.includes("claimed_today"))
+    const insert = sqls.findIndex((s) => s.includes("INSERT INTO dm_campaign_recipients"))
+    expect(lock).toBeGreaterThanOrEqual(0)
+    expect(lock).toBeLessThan(count)
+    expect(count).toBeLessThan(insert)
+    const q = tracker.history.all[count]
+    expect(q.sql).toMatch(/campaign = \$1 AND claimed_at >= \$2/)
+    expect(q.bindings).toEqual([svc.CAMPAIGN, new Date("2026-11-07T00:00:00Z")])
+  })
+
+  it("keeps the batches of 10, 60 s apart", async () => {
+    simulateDays(() => Array.from({ length: 23 }, (_, i) => candidate(i + 1)), () => DAY1)
+    const events: string[] = []
+    const send = vi.fn(async () => {
+      events.push("dm")
+      return { ok: true as const }
+    })
+    const sleep = async (ms: number) => {
+      events.push(`sleep:${ms}`)
+    }
+    const r = await svc.runScheduledCampaign(deps(() => DAY1, send, { sleep }))
+    expect(r.sent).toBe(23)
+    const batches = events
+      .join(",")
+      .split(`sleep:${svc.BATCH_PAUSE_MS}`)
+      .map((b) => b.split(",").filter((e) => e === "dm").length)
+      .filter((n) => n > 0)
+    expect(batches).toEqual([10, 10, 3])
+  })
+
+  it("kill switch off: nothing is queried or sent", async () => {
+    const send = vi.fn()
+    delete process.env[svc.KILL_SWITCH_ENV]
+    const r = await svc.runScheduledCampaign({ reachable: everyoneReachable, send, now: () => DAY1 })
+    expect(r).toMatchObject({ reason: "disabled", eligible: null, sent: 0 })
+    expect(tracker.history.all).toHaveLength(0)
+    expect(send).not.toHaveBeenCalled()
+    expect(discordService.trySendDirectMessage).not.toHaveBeenCalled()
+  })
+
+  it("kill switch turned off mid-run: stops before the next DM", async () => {
+    simulateDays(() => [1, 2, 3, 4, 5].map(candidate), () => DAY1)
+    let on = true
+    const send = vi.fn(async () => {
+      if (send.mock.calls.length === 2) on = false
+      return { ok: true as const }
+    })
+    const r = await svc.runScheduledCampaign(deps(() => DAY1, send, { enabled: () => on }))
+    expect(r).toMatchObject({ reason: "disabled", sent: 2 })
+    expect(send).toHaveBeenCalledTimes(2)
+  })
+
+  it("more eligible than STILL_SELLING_MAX_RECIPIENTS: refused, nothing sent", async () => {
+    simulateDays(() => [1, 2, 3, 4].map(candidate), () => DAY1)
+    const send = vi.fn()
+    const r = await svc.runScheduledCampaign(deps(() => DAY1, send, { maxRecipients: () => 3 }))
+    expect(r).toMatchObject({ reason: "over_cap", eligible: 4, sent: 0 })
+    expect(send).not.toHaveBeenCalled()
+  })
+
+  it("does not start while a staff run is going", async () => {
+    simulateDays(() => [1, 2].map(candidate), () => DAY1)
+    let release!: () => void
+    const gate = new Promise<void>((r) => (release = r))
+    const adminSend = vi.fn(async () => {
+      await gate
+      return { ok: true as const }
+    })
+    const started = await svc.startCampaign(2, deps(() => DAY1, adminSend))
+    expect(started.ok).toBe(true)
+    const send = vi.fn()
+    expect(await svc.runScheduledCampaign(deps(() => DAY1, send))).toMatchObject({ reason: "running" })
+    expect(send).not.toHaveBeenCalled()
+    release()
+    await vi.waitFor(() => expect(svc.runState().running).toBe(false))
+  })
+
+  it("the run shows on the admin page's run state", async () => {
+    simulateDays(() => [1, 2].map(candidate), () => DAY1)
+    const send = vi.fn(async () => ({ ok: true as const }))
+    await svc.runScheduledCampaign(deps(() => DAY1, send))
+    expect(svc.runState()).toMatchObject({ running: false, limit: 2, sent_this_run: 2, finish_reason: "limit" })
+  })
+
+  it(`the hourly tick runs only in hour ${svc.SCHEDULE_HOUR_UTC} UTC`, async () => {
+    simulateDays(() => [candidate(1)], () => DAY1)
+    const send = vi.fn(async () => ({ ok: true as const }))
+    const off = new Date("2026-11-07T09:59:00Z")
+    expect(await svc.scheduledCampaignTick(deps(() => off, send))).toBeNull()
+    expect(tracker.history.all).toHaveLength(0)
+    expect(await svc.scheduledCampaignTick(deps(() => DAY1, send))).toMatchObject({ sent: 1 })
+  })
+
+  it("logs a summary with counts only, no user data", async () => {
+    const logger = (await import("../../logger/logger.js")).default
+    const info = vi.spyOn(logger, "info")
+    simulateDays(() => [1, 2].map(candidate), () => DAY1)
+    const send = vi.fn(async () => ({ ok: true as const }))
+    await svc.runScheduledCampaign(deps(() => DAY1, send))
+    const call = info.mock.calls.find((c) => c[0] === "still selling campaign: scheduled run")!
+    expect(call[1]).toEqual({
+      campaign: svc.CAMPAIGN,
+      reason: "limit",
+      eligible: 2,
+      limit: 2,
+      sent: 2,
+      delivered: 2,
+      failed: 0,
+    })
+    const logged = JSON.stringify(info.mock.calls)
+    expect(logged).not.toContain(candidate(1).user_id)
+    expect(logged).not.toContain(candidate(1).discord_id)
+    info.mockRestore()
+  })
+})

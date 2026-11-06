@@ -1,7 +1,9 @@
 /**
  * "Still selling?" — a one-time Discord DM campaign to inactive sellers with
  * stale listings (owner-approved 2026-11-02). Sent by staff from Admin ›
- * Market, never by a timer.
+ * Market, and since 2026-11-06 (owner decision) also as a daily trickle:
+ * once a day at SCHEDULE_HOUR_UTC (tasks.ts), runScheduledCampaign DMs
+ * whoever has become eligible since, at most DAILY_MAX_ENV a day.
  *
  * Who: everyone who sells through a shop with publicly listed listings
  * (active, public, not a test shop) that weren't updated in STALE_DAYS, when
@@ -39,6 +41,11 @@
  *   is never retried, whatever happened.
  * - Throttled: BATCH_SIZE DMs (DM_SPACING_MS apart), then BATCH_PAUSE_MS.
  * - A run sends to at most the count the admin confirmed.
+ * - The daily run sends to at most STILL_SELLING_DAILY_MAX (default 25)
+ *   people a UTC day, counted from dm_campaign_recipients.claimed_at (staff
+ *   sends that day count too) under an advisory lock, so a second instance
+ *   or a restart within the hour cannot go over it. It is refused, like
+ *   Send, when more than STILL_SELLING_MAX_RECIPIENTS are eligible.
  * - Each DM goes through discordService.trySendDirectMessage, so it is
  *   recorded in discord_dm_attempts (source "campaign:<campaign>").
  */
@@ -86,6 +93,29 @@ export const MAX_LISTED = 20
 
 export const MAX_RECIPIENTS_ENV = "STILL_SELLING_MAX_RECIPIENTS"
 export const DEFAULT_MAX_RECIPIENTS = 150
+
+export const DAILY_MAX_ENV = "STILL_SELLING_DAILY_MAX"
+export const DEFAULT_DAILY_MAX = 25
+/** The daily run's hour (UTC): a quiet hour, US night and EU morning. */
+export const SCHEDULE_HOUR_UTC = 10
+
+/**
+ * The daily run's cap (STILL_SELLING_DAILY_MAX, default 25): the most people
+ * DMed in one UTC day while the daily run sends.
+ */
+export function dailyMax(e: NodeJS.ProcessEnv = process.env): number {
+  const raw = e[DAILY_MAX_ENV]
+  if (raw === undefined || raw.trim() === "") return DEFAULT_DAILY_MAX
+  const n = Number(raw)
+  return Number.isInteger(n) && n >= 0 ? n : DEFAULT_DAILY_MAX
+}
+
+/** Midnight UTC of the day `now` is in: the start of the daily cap's window. */
+export function utcDayStart(now: Date): Date {
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  )
+}
 
 /**
  * Hard cap on the number of people (STILL_SELLING_MAX_RECIPIENTS, default
@@ -280,6 +310,7 @@ export interface CampaignDeps {
   enabled?: () => boolean
   canModify?: (listing: { shop_id: string }, userId: string) => Promise<boolean>
   maxRecipients?: () => number
+  dailyMax?: () => number
 }
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
@@ -302,6 +333,7 @@ function resolve(deps: CampaignDeps) {
     enabled: deps.enabled ?? (() => campaignEnabled()),
     canModify: deps.canModify ?? canModifyListing,
     maxRecipients: deps.maxRecipients ?? (() => maxRecipients()),
+    dailyMax: deps.dailyMax ?? (() => dailyMax()),
   }
 }
 
@@ -478,26 +510,65 @@ export function resetRunStateForTests(): void {
   })
 }
 
+/** The daily run's cap: at most `max` rows claimed since `since`. */
+export interface DailyCap {
+  max: number
+  since: Date
+}
+
+/**
+ * Claim the recipient row. With a daily cap, the day's count and the claim
+ * run in one transaction holding an advisory lock on the campaign, so
+ * concurrent runs (another instance, a restart) cannot go over the cap.
+ */
+async function claimRecipient(
+  db: Knex,
+  c: Candidate,
+  campaign: string,
+  daily?: DailyCap,
+): Promise<"claimed" | "skipped" | "capped"> {
+  const insert = async (q: Knex | Knex.Transaction) => {
+    const claimed = await q.raw(
+      `
+      INSERT INTO dm_campaign_recipients (campaign, user_id, listing_ids, locale, status)
+      VALUES (?, ?, ?::uuid[], ?, 'sending')
+      ON CONFLICT (campaign, user_id) DO NOTHING
+      RETURNING user_id
+      `,
+      [campaign, c.user_id, c.listing_ids, campaignLocale(c.locale)],
+    )
+    return claimed?.rows?.length ? "claimed" : "skipped"
+  }
+  if (!daily) return insert(db)
+  return db.transaction(async (trx) => {
+    await trx.raw("SELECT pg_advisory_xact_lock(hashtext(?))", [
+      `dm_campaign:${campaign}`,
+    ])
+    const counted = await trx.raw(
+      `SELECT COUNT(*)::integer AS claimed_today FROM dm_campaign_recipients
+       WHERE campaign = ? AND claimed_at >= ?`,
+      [campaign, daily.since],
+    )
+    const today = Number(counted?.rows?.[0]?.claimed_today) || 0
+    if (today >= daily.max) return "capped"
+    return insert(trx)
+  })
+}
+
 /**
  * DM one recipient: claim the row (one DM per person per campaign, ever),
- * then send. "skipped" when the row was already claimed (by this or another run).
+ * then send. "skipped" when the row was already claimed (by this or another
+ * run); "capped" when `daily` is given and the day's cap is reached.
  */
 export async function sendOne(
   c: Candidate,
   deps: CampaignDeps = {},
   campaign = CAMPAIGN,
-): Promise<"delivered" | "failed" | "skipped"> {
+  daily?: DailyCap,
+): Promise<"delivered" | "failed" | "skipped" | "capped"> {
   const d = resolve(deps)
-  const claimed = await d.db.raw(
-    `
-    INSERT INTO dm_campaign_recipients (campaign, user_id, listing_ids, locale, status)
-    VALUES (?, ?, ?::uuid[], ?, 'sending')
-    ON CONFLICT (campaign, user_id) DO NOTHING
-    RETURNING user_id
-    `,
-    [campaign, c.user_id, c.listing_ids, campaignLocale(c.locale)],
-  )
-  if (!claimed?.rows?.length) return "skipped"
+  const claim = await claimRecipient(d.db, c, campaign, daily)
+  if (claim !== "claimed") return claim
   const now = d.now()
   let result: Awaited<ReturnType<ReturnType<typeof resolve>["send"]>>
   try {
@@ -540,9 +611,12 @@ export async function runCampaign(
   limit: number,
   deps: CampaignDeps = {},
   campaign = CAMPAIGN,
-): Promise<RunState> {
+  opts: { daily?: DailyCap; trigger?: "admin" | "schedule" } = {},
+): Promise<RunState & { delivered: number; failed: number }> {
   const d = resolve(deps)
   let reason = "done"
+  let delivered = 0
+  let failed = 0
   try {
     for (;;) {
       if (!d.enabled()) {
@@ -573,7 +647,13 @@ export async function runCampaign(
           reason = "stopped"
           break
         }
-        const outcome = await sendOne(c, deps, campaign)
+        const outcome = await sendOne(c, deps, campaign, opts.daily)
+        if (outcome === "capped") {
+          reason = "daily_cap"
+          break
+        }
+        if (outcome === "delivered") delivered++
+        if (outcome === "failed") failed++
         if (outcome !== "skipped") state.sent_this_run++
         if (i < batch.length - 1) await d.sleep(DM_SPACING_MS)
       }
@@ -597,9 +677,12 @@ export async function runCampaign(
   logger.info("still selling campaign: run ended", {
     reason,
     sent_this_run: state.sent_this_run,
+    delivered,
+    failed,
+    trigger: opts.trigger ?? "admin",
     campaign,
   })
-  return runState()
+  return { ...runState(), delivered, failed }
 }
 
 export type StartResult =
@@ -649,6 +732,87 @@ export async function startCampaign(
   })
   void runCampaign(expectedRecipients, deps, campaign)
   return { ok: true, state: runState() }
+}
+
+/** What the daily run did; logged, counts only (no user data). */
+export interface ScheduledRunSummary {
+  campaign: string
+  /** done, limit, daily_cap, disabled, stopped, error, running, over_cap, nothing_to_send. */
+  reason: string
+  /** Eligible when the run started; null when it did not look. */
+  eligible: number | null
+  limit: number
+  sent: number
+  delivered: number
+  failed: number
+}
+
+/**
+ * The daily trickle: DM whoever is eligible now (new since the last run:
+ * everyone already DMed is out of the candidates), at most dailyMax() a UTC
+ * day, through the same send loop as Send (batches, kill switch, one DM per
+ * person). Refused when the switch is off, a run is going in this process,
+ * or more than maxRecipients() are eligible.
+ */
+export async function runScheduledCampaign(
+  deps: CampaignDeps = {},
+  campaign = CAMPAIGN,
+): Promise<ScheduledRunSummary> {
+  const d = resolve(deps)
+  const summary: ScheduledRunSummary = {
+    campaign,
+    reason: "done",
+    eligible: null,
+    limit: 0,
+    sent: 0,
+    delivered: 0,
+    failed: 0,
+  }
+  const finish = (reason?: string) => {
+    if (reason) summary.reason = reason
+    logger.info("still selling campaign: scheduled run", { ...summary })
+    return summary
+  }
+  if (!d.enabled()) return finish("disabled")
+  if (state.running) return finish("running")
+  summary.eligible = (await eligibleRecipients(deps, campaign)).length
+  if (summary.eligible > d.maxRecipients()) summary.reason = "over_cap"
+  else if (summary.eligible === 0) summary.reason = "nothing_to_send"
+  if (summary.reason !== "done") return finish()
+  // Re-checked after the query: an admin run may have started meanwhile.
+  if (state.running) return finish("running")
+  const max = d.dailyMax()
+  summary.limit = Math.min(summary.eligible, max)
+  if (summary.limit <= 0) return finish("daily_cap")
+  Object.assign(state, {
+    running: true,
+    started_at: d.now().toISOString(),
+    finished_at: null,
+    finish_reason: null,
+    limit: summary.limit,
+    sent_this_run: 0,
+    stopRequested: false,
+  })
+  const out = await runCampaign(summary.limit, deps, campaign, {
+    daily: { max, since: utcDayStart(d.now()) },
+    trigger: "schedule",
+  })
+  Object.assign(summary, {
+    reason: out.finish_reason ?? "done",
+    sent: out.sent_this_run,
+    delivered: out.delivered,
+    failed: out.failed,
+  })
+  return finish()
+}
+
+/** The hourly tick (tasks.ts): runs the daily run in SCHEDULE_HOUR_UTC only. */
+export async function scheduledCampaignTick(
+  deps: CampaignDeps = {},
+): Promise<ScheduledRunSummary | null> {
+  const now = (deps.now ?? (() => new Date()))()
+  if (now.getUTCHours() !== SCHEDULE_HOUR_UTC) return null
+  return runScheduledCampaign(deps)
 }
 
 /** Ask the running send to stop after the DM in flight. */

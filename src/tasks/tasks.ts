@@ -19,6 +19,7 @@ import {
 } from "../services/dm-reminders/dm-reminder.service.js"
 import { processOfferReminders } from "../services/offer-reminders/offer-reminders.service.js"
 import { sendWipeNotices } from "../services/listing-wipe/listing-wipe.service.js"
+import { scheduledCampaignTick } from "../services/dm-campaigns/still-selling.service.js"
 import { refresh_shop_activity_stats } from "../services/seller-activity/seller-activity.service.js"
 import { releaseHoldsOfClosedSessions } from "../services/allocation/v2-offer-holds.service.js"
 import { getKnex } from "../clients/database/knex-db.js"
@@ -162,6 +163,15 @@ export function start_tasks() {
     safe(() => sendWipeNotices(), "sendWipeNotices")
     setInterval(() => safe(() => sendWipeNotices(), "sendWipeNotices"), 10 * 60 * 1000)
   }, STARTUP_DELAY + 84_000)
+
+  // "Still selling?" daily trickle (services/dm-campaigns): an hourly tick
+  // that runs once in SCHEDULE_HOUR_UTC, DMing sellers who became eligible
+  // since, at most STILL_SELLING_DAILY_MAX a day. STILL_SELLING_CAMPAIGN_ENABLED
+  // must be "true", else it sends nothing.
+  setTimeout(() => {
+    safe(() => scheduledCampaignTick(), "scheduledCampaignTick")
+    setInterval(() => safe(() => scheduledCampaignTick(), "scheduledCampaignTick"), 60 * 60 * 1000)
+  }, STARTUP_DELAY + 86_000)
 
   // Seller activity (last seen, reply time) for listings and shops, every 30 minutes.
   setTimeout(() => {
