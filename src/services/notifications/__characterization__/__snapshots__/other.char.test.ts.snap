@@ -238,7 +238,7 @@ exports[`email verification (transactional) > queued, then sent by the consumer 
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4500,
+      "html_length_bucket": 4000,
       "subject": "Verify your email address for SC Market",
       "text": "SC Market
 https://sc-market.space

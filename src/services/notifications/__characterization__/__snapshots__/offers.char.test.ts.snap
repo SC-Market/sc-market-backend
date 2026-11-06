@@ -34,7 +34,7 @@ exports[`counter_offer_create (20) > counter-offer: same recipients as offer_cre
   "discord_queue": [],
   "email": [
     {
-      "html_length_bucket": 4000,
+      "html_length_bucket": 4500,
       "subject": "You got a counter offer",
       "text": "SC Market
 https://sc-market.space
