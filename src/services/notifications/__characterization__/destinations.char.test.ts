@@ -201,7 +201,8 @@ describe("parity: destination posts through notify(), as legacy posted them", ()
     const acme = await w.org("acme", [{ user: boss, perms: "owner" }])
     const shop = await w.shop("acme-shop", { org: acme })
     await w.webhook("contract-feed", shop, ["public_contract_create"])
-    await w.discordSetup({ owner: { org: acme }, channel: "900000000000000505", alerts: false })
+    // A setup needs a kind (check constraint): alerts on too, as the contracts char test does.
+    await w.discordSetup({ owner: { org: acme }, channel: "900000000000000505", alerts: true })
     await getKnex()("discord_channel_setups").where({ channel_id: "900000000000000505" }).update({ contracts: true })
     const [contract] = await contractDb.insertPublicContract({
       title: "Escort a Hull C to Pyro",
