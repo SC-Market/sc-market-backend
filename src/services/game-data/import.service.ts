@@ -20,6 +20,7 @@ import {
   type CanonicalManufacturer,
   canonicalizeManufacturers,
   canonicalManufacturerCode,
+  manufacturerRecode,
   MANUFACTURER_CODE_MAX,
   MANUFACTURER_NAME_MAX,
 } from "./manufacturers.js"
@@ -437,6 +438,7 @@ interface DBItem {
   uex_uuid: string | null
   type: string | null
   p4k_id: string | null
+  manufacturer: string | null
 }
 
 interface MatchResult {
@@ -456,6 +458,8 @@ export interface ImportStats {
   inserted: number
   updated: number
   nameChanges: number
+  /** Already-imported items whose manufacturer was rewritten to the canonical code */
+  manufacturersRecoded: number
   fullSetsCreated: number
   missionsProcessed: number
   missionsInserted: number
@@ -646,6 +650,7 @@ export class GameDataImportService {
       inserted: 0,
       updated: 0,
       nameChanges: 0,
+      manufacturersRecoded: 0,
       fullSetsCreated: 0,
       missionsProcessed: 0,
       missionsInserted: 0,
@@ -760,6 +765,7 @@ export class GameDataImportService {
         "uex_uuid",
         "type",
         "p4k_id",
+        "manufacturer",
       )
       stats.existingDBItems = dbItems.length
       logger.info(`${dbItems.length} existing items in database`)
@@ -792,13 +798,18 @@ export class GameDataImportService {
       const matches: MatchResult[] = []
       const inserts: P4KItem[] = []
       const nameChanges: { dbId: string; oldName: string; newName: string }[] = []
+      const manufacturerRecodes: { dbId: string; manufacturer: string }[] = []
 
       for (const p4k of validItems) {
         let dbItem: DBItem | undefined
         let matchType: "exact" | "cstone_uuid" | "fuzzy" | "normalized" | undefined
 
-        // Skip if already imported
-        if (dbByP4kId.has(p4k.id)) {
+        // Skip if already imported, except for its manufacturer: canonical
+        // codes can change between imports (an alias record joins its brand).
+        const imported = dbByP4kId.get(p4k.id)
+        if (imported) {
+          const recode = manufacturerRecode(imported.manufacturer, truncate(p4k.manufacturer, 100))
+          if (recode) manufacturerRecodes.push({ dbId: imported.id, manufacturer: recode })
           continue
         }
 
@@ -869,6 +880,11 @@ export class GameDataImportService {
 
       // Update matched items (no transaction - each batch is independent)
       const trx = knex
+
+      stats.manufacturersRecoded = await this.recodeItemManufacturers(trx, manufacturerRecodes)
+      if (stats.manufacturersRecoded > 0) {
+        logger.info(`Recoded manufacturer on ${stats.manufacturersRecoded} already-imported items`)
+      }
 
       if (matches.length > 0) {
           logger.info(`Updating ${matches.length} matched items`)
@@ -1514,6 +1530,34 @@ export class GameDataImportService {
       logger.error("Shop inventory import failed", { error: message })
       stats.errors.push(`Shop inventories not refreshed: ${message}`)
     }
+  }
+
+  /**
+   * Write canonical manufacturer codes onto already-imported game_items rows,
+   * one UPDATE per code (per 1000 ids).
+   *
+   * @returns number of rows recoded
+   */
+  async recodeItemManufacturers(
+    knex: Knex,
+    recodes: { dbId: string; manufacturer: string }[],
+  ): Promise<number> {
+    const idsByCode = new Map<string, string[]>()
+    for (const { dbId, manufacturer } of recodes) {
+      const ids = idsByCode.get(manufacturer)
+      if (ids) ids.push(dbId)
+      else idsByCode.set(manufacturer, [dbId])
+    }
+    let recoded = 0
+    const CHUNK = 1000
+    for (const [manufacturer, ids] of idsByCode) {
+      for (let i = 0; i < ids.length; i += CHUNK) {
+        recoded += await knex("game_items")
+          .whereIn("id", ids.slice(i, i + CHUNK))
+          .update({ manufacturer })
+      }
+    }
+    return recoded
   }
 
   /**

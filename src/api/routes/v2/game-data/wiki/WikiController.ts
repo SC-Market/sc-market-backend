@@ -313,6 +313,7 @@ export class WikiController extends BaseController {
         grade: row.grade || undefined,
         manufacturer: row.manufacturer_name || row.manufacturer || undefined,
         manufacturer_name: lookupManufacturerName(mfrLookup, row.manufacturer),
+        manufacturer_code: row.manufacturer || null,
         image_url: row.image_url || row.listing_photo || undefined,
         thumbnail_path: row.thumbnail_path || undefined,
         display_type: row.display_type || undefined,

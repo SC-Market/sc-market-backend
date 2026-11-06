@@ -13,6 +13,8 @@ import {
   brandKeyOf,
   canonicalizeManufacturers,
   canonicalManufacturerCode,
+  manufacturerRecode,
+  stripPlaceholderMarker,
 } from "./manufacturers.js"
 import { GameDataImportService } from "./import.service.js"
 
@@ -283,5 +285,118 @@ describe("GameDataImportService.importManufacturers", () => {
     expect(imported).toBe(0)
     expect(pruneCalls).toEqual([])
     expect(rows.size).toBe(3)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// "PH" placeholder marker — strings copied from the 2026-09-08 export.
+// ---------------------------------------------------------------------------
+
+describe("stripPlaceholderMarker", () => {
+  it("removes CIG's PH marker in both spellings", () => {
+    expect(stripPlaceholderMarker("PH Associated Science and Development")).toBe(
+      "Associated Science and Development",
+    )
+    expect(stripPlaceholderMarker("PH - Tehachapi")).toBe("Tehachapi")
+  })
+
+  it("leaves unmarked names alone, including ones starting with PH letters", () => {
+    expect(stripPlaceholderMarker("987")).toBe("987")
+    expect(stripPlaceholderMarker("Phoenix Industries")).toBe("Phoenix Industries")
+    expect(stripPlaceholderMarker(null)).toBeNull()
+  })
+})
+
+describe("canonicalizeManufacturers placeholder text", () => {
+  const { brands } = canonicalizeManufacturers([
+    mfr(
+      "asd",
+      "@manufacturer_NameASAD",
+      "PH Associated Science and Development",
+      "PH Associated Science and Development Description",
+    ),
+    mfr(
+      "asd_lo",
+      "@manufacturer_NameASAD",
+      "PH Associated Science and Development",
+      "PH Associated Science and Development Description",
+    ),
+    mfr("hdtc", "@manufacturer_NameHDTC", "Hardin Tactical", "PH Hardin Tactical Desc"),
+    mfr("tehachapi", "@manufacturer_NameTehachapi", "Tehachapi", "PH - Tehachapi Description"),
+    mfr("behr", "@manufacturer_NameBEHR", "Behring", "Behring lore"),
+    mfr("987", "@manufacturer_Name987", "987", "Known for their more aggressive urban styling."),
+  ])
+  const byCode = new Map(brands.map((b) => [b.code, b]))
+
+  it("strips the PH marker from brand names", () => {
+    expect(byCode.get("asd")?.name).toBe("Associated Science and Development")
+  })
+
+  it("drops PH-marked descriptions as placeholders", () => {
+    expect(byCode.get("asd")?.description).toBeNull()
+    expect(byCode.get("hdtc")?.description).toBeNull()
+    expect(byCode.get("tehachapi")?.description).toBeNull()
+  })
+
+  it("keeps real names and descriptions as exported", () => {
+    expect(byCode.get("behr")).toMatchObject({ name: "Behring", description: "Behring lore" })
+    expect(byCode.get("987")?.name).toBe("987")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Re-import of already-imported items
+// ---------------------------------------------------------------------------
+
+describe("manufacturerRecode", () => {
+  it("rewrites a stored alias code to the canonical brand code", () => {
+    const { aliasToCanonical } = canonicalizeManufacturers(EXPORT_SAMPLE)
+    expect(manufacturerRecode("mxox", canonicalManufacturerCode(aliasToCanonical, "mxox"))).toBe(
+      "aegs",
+    )
+    expect(manufacturerRecode("xian", canonicalManufacturerCode(aliasToCanonical, "xian"))).toBe(
+      "xnaa",
+    )
+  })
+
+  it("is a no-op when the code is already canonical or the export has none", () => {
+    expect(manufacturerRecode("aegs", "aegs")).toBeNull()
+    expect(manufacturerRecode("volt", "volt")).toBeNull()
+    expect(manufacturerRecode("behr", null)).toBeNull()
+  })
+})
+
+describe("GameDataImportService.recodeItemManufacturers", () => {
+  it("issues one UPDATE per canonical code and returns the rows changed", async () => {
+    const updates: { ids: string[]; manufacturer: unknown }[] = []
+    const knex = vi.fn((table: string) => {
+      expect(table).toBe("game_items")
+      return {
+        whereIn: (_col: string, ids: string[]) => ({
+          update: async (row: { manufacturer: unknown }) => {
+            updates.push({ ids, manufacturer: row.manufacturer })
+            return ids.length
+          },
+        }),
+      }
+    }) as unknown as Knex
+
+    const recoded = await new GameDataImportService().recodeItemManufacturers(knex, [
+      { dbId: "a", manufacturer: "aegs" },
+      { dbId: "b", manufacturer: "xnaa" },
+      { dbId: "c", manufacturer: "aegs" },
+    ])
+
+    expect(recoded).toBe(3)
+    expect(updates).toEqual([
+      { ids: ["a", "c"], manufacturer: "aegs" },
+      { ids: ["b"], manufacturer: "xnaa" },
+    ])
+  })
+
+  it("does nothing without recodes", async () => {
+    const knex = vi.fn() as unknown as Knex
+    expect(await new GameDataImportService().recodeItemManufacturers(knex, [])).toBe(0)
+    expect(knex).not.toHaveBeenCalled()
   })
 })

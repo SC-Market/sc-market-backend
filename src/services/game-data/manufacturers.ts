@@ -21,6 +21,12 @@
  * the shortest code in the group when no record matches (`@..._NameASAD` →
  * `asd`, `@..._NameOrigin` → `orig`). Records without a manufacturer key
  * (shop kiosks, UI styles, placeholders) are not brands and are left alone.
+ *
+ * CIG also marks unfinished localization strings with a "PH" (placeholder)
+ * prefix: `asd` is localized as "PH Associated Science and Development" with
+ * the description "PH Associated Science and Development Description". The
+ * marker is stripped from brand names, and a marked description is
+ * placeholder text, dropped like `@LOC_PLACEHOLDER` values are.
  */
 
 import type { P4KManufacturer } from "./import.service.js"
@@ -41,6 +47,26 @@ export function brandKeyOf(nameKey: string | null | undefined): string | null {
   if (!nameKey) return null
   const match = /^@manufacturer_(?:Name|Desc)(.+)$/i.exec(nameKey.trim())
   return match ? match[1].toLowerCase() : null
+}
+
+/** "PH Foo", "PH - Foo": CIG's marker for placeholder localization text. */
+const PLACEHOLDER_MARKER = /^PH(?:\s+-\s*|\s+)/
+
+/**
+ * Localized text with CIG's "PH" placeholder marker removed:
+ * "PH Associated Science and Development" → "Associated Science and
+ * Development". Unmarked text is returned unchanged; null when nothing is left.
+ */
+export function stripPlaceholderMarker(text: string | null | undefined): string | null {
+  if (!text) return null
+  const stripped = text.replace(PLACEHOLDER_MARKER, "").trim()
+  return stripped || null
+}
+
+/** A description, or null when it is placeholder text ("PH - Rambler Description"). */
+function realDescription(text: string | null | undefined): string | null {
+  if (!text || PLACEHOLDER_MARKER.test(text)) return null
+  return text
 }
 
 export interface CanonicalManufacturer {
@@ -86,11 +112,11 @@ export function canonicalizeManufacturers(
       code,
       // Siblings share the Name key, so they share the localized name; the
       // export already falls back to the record code when the key is unlocalized.
-      name: canonical.name || canonical.code,
+      name: stripPlaceholderMarker(canonical.name) || canonical.code,
       nameKey: canonical.nameKey,
       description:
-        canonical.description ??
-        records.find((r) => r.description)?.description ??
+        realDescription(canonical.description) ??
+        records.map((r) => realDescription(r.description)).find(Boolean) ??
         null,
     })
     for (const record of records) {
@@ -113,4 +139,20 @@ export function canonicalManufacturerCode(
 ): string | null {
   if (!code) return null
   return aliasToCanonical.get(code.toLowerCase()) ?? code
+}
+
+/**
+ * The manufacturer code to write over an already-imported game_items row, or
+ * null when it needs no change. The import skips rows it has seen before
+ * (matched by p4k_id), so without this a row imported before its code was
+ * recognized as a brand alias (`mxox` → `aegs`, `xian` → `xnaa`) keeps the
+ * alias forever. An export with no manufacturer for the item never clears a
+ * stored one.
+ */
+export function manufacturerRecode(
+  stored: string | null | undefined,
+  canonical: string | null | undefined,
+): string | null {
+  if (!canonical || stored === canonical) return null
+  return canonical
 }

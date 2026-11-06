@@ -46,6 +46,12 @@ export interface WikiItemSearchResult {
    * `display_name`. Null when the manufacturer is unknown or unset.
    */
   manufacturer_name: string | null
+  /**
+   * Raw `game_items.manufacturer` code (e.g. "behr"), the value the
+   * `manufacturer` search filter takes and the key manufacturer logos are
+   * looked up by. Null when the item has no manufacturer.
+   */
+  manufacturer_code: string | null
   image_url?: string
   thumbnail_path?: string
   display_type?: string

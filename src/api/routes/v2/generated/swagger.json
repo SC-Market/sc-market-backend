@@ -9005,6 +9005,11 @@
 						"nullable": true,
 						"description": "Manufacturer display name (e.g. \"Aegis Dynamics\") resolved from\nwiki_manufacturers the same way GET /game-data/wiki/manufacturers resolves\n`display_name`. Null when the manufacturer is unknown or unset."
 					},
+					"manufacturer_code": {
+						"type": "string",
+						"nullable": true,
+						"description": "Raw `game_items.manufacturer` code (e.g. \"behr\"), the value the\n`manufacturer` search filter takes and the key manufacturer logos are\nlooked up by. Null when the item has no manufacturer."
+					},
 					"image_url": {
 						"type": "string"
 					},
@@ -9018,7 +9023,8 @@
 				"required": [
 					"id",
 					"name",
-					"manufacturer_name"
+					"manufacturer_name",
+					"manufacturer_code"
 				],
 				"type": "object",
 				"additionalProperties": false

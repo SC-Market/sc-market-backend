@@ -1,7 +1,8 @@
 /**
  * Tests for the wiki item/ship detail endpoints:
  * - `manufacturer_name` carries the display name while `manufacturer` keeps
- *   its existing value (raw code for items).
+ *   its existing value (raw code for items); item search also returns the raw
+ *   `manufacturer_code`.
  * - A non-UUID, non-short-slug item id is a 404, not a Postgres uuid-cast 500.
  *
  * Named without "Controller" so it is not swept up by the vitest exclusion for
@@ -116,6 +117,25 @@ describe("WikiController.searchItems", () => {
     expect(result.items[0].manufacturer).toBe("behr")
     expect(result.items[0].manufacturer_name).toBe("Behring Applied Technology")
     expect(result.items[1].manufacturer_name).toBeNull()
+  })
+
+  it("returns manufacturer_code as the raw code even when the name resolves", async () => {
+    fixtures.tables = {
+      game_items: {
+        rows: [
+          // wm join hit, so `manufacturer` is the display name
+          { id: ITEM_ID, name: "P4-AR Rifle", manufacturer: "behr", manufacturer_name: "Behring" },
+          { id: "x", name: "Unbranded", manufacturer: null, manufacturer_name: null },
+        ],
+      },
+      wiki_manufacturers: { rows: [{ code: "behr", name: "Behring" }] },
+    }
+
+    const result = await new WikiController().searchItems()
+
+    expect(result.items[0].manufacturer).toBe("Behring")
+    expect(result.items[0].manufacturer_code).toBe("behr")
+    expect(result.items[1].manufacturer_code).toBeNull()
   })
 })
 

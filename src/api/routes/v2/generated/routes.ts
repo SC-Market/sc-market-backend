@@ -3043,6 +3043,7 @@ const models: TsoaRoute.Models = {
             "grade": {"dataType":"string"},
             "manufacturer": {"dataType":"string"},
             "manufacturer_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "manufacturer_code": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "image_url": {"dataType":"string"},
             "thumbnail_path": {"dataType":"string"},
             "display_type": {"dataType":"string"},
