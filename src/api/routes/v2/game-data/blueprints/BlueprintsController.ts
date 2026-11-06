@@ -31,6 +31,10 @@ import {
 import logger from "../../../../../logger/logger.js"
 import { resolveGameItemImages } from "../../util/resolve-game-item-images.js"
 import { clampPagination } from "../../util/pagination.js"
+import {
+  loadManufacturerNameLookup,
+  lookupManufacturerName,
+} from "../wiki/manufacturer-names.js"
 
 /** Row shape returned by the blueprint search query */
 interface BlueprintSearchRow {
@@ -194,7 +198,7 @@ export class BlueprintsController extends BaseController {
     @Query() user_owned_only?: boolean,
     /** Filter by blueprint source (default, mission_reward) */
     @Query() source?: string,
-    /** Filter by manufacturer name */
+    /** Filter by manufacturer code (e.g. "behr") */
     @Query() manufacturer?: string,
     /** Filter by ingredient material name */
     @Query() ingredient_name?: string,
@@ -457,6 +461,12 @@ export class BlueprintsController extends BaseController {
         })
       }
 
+      // Manufacturer display names for this page's codes, in one query
+      const mfrLookup = await loadManufacturerNameLookup(
+        knex,
+        blueprintsResults.map((row) => row.manufacturer),
+      )
+
       const blueprints: BlueprintSearchResult[] = blueprintsResults.map((row) => ({
         blueprint_id: row.blueprint_id,
         blueprint_code: row.blueprint_code,
@@ -464,6 +474,7 @@ export class BlueprintsController extends BaseController {
         output_item_name: row.output_item_name,
         output_item_icon: row.output_item_icon || undefined,
         manufacturer: row.manufacturer || undefined,
+        manufacturer_name: lookupManufacturerName(mfrLookup, row.manufacturer),
         item_category: row.item_category || undefined,
         item_subcategory: row.item_subcategory || undefined,
         rarity: row.rarity || undefined,
@@ -1129,10 +1140,13 @@ export class BlueprintsController extends BaseController {
         }
       }
 
+      const mfrLookup = await loadManufacturerNameLookup(knex, [outputItemRow.manufacturer])
+
       return {
         blueprint,
         output_item,
         manufacturer: outputItemRow.manufacturer || undefined,
+        manufacturer_name: lookupManufacturerName(mfrLookup, outputItemRow.manufacturer),
         ingredients,
         missions_rewarding,
         crafting_recipe,

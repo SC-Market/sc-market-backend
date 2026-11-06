@@ -12685,7 +12685,12 @@
 					},
 					"manufacturer": {
 						"type": "string",
-						"description": "Manufacturer name"
+						"description": "Output item manufacturer code (e.g. \"behr\"), the value the `manufacturer`\nsearch filter takes"
+					},
+					"manufacturer_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name (e.g. \"Behring\") resolved from\nwiki_manufacturers, like the wiki item/ship `manufacturer_name`. Null when\nthe code has no name or the item has no manufacturer."
 					},
 					"source": {
 						"type": "string",
@@ -12758,6 +12763,7 @@
 					"blueprint_code",
 					"blueprint_name",
 					"output_item_name",
+					"manufacturer_name",
 					"ingredient_count",
 					"ingredients",
 					"mission_count"
@@ -13170,7 +13176,12 @@
 					},
 					"manufacturer": {
 						"type": "string",
-						"description": "Output item manufacturer name (same value as the search result's `manufacturer`)"
+						"description": "Output item manufacturer code (same value as the search result's `manufacturer`)"
+					},
+					"manufacturer_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name (same value as the search result's\n`manufacturer_name`). Null when the code has no name."
 					},
 					"ingredients": {
 						"items": {
@@ -13238,6 +13249,7 @@
 				"required": [
 					"blueprint",
 					"output_item",
+					"manufacturer_name",
 					"ingredients",
 					"missions_rewarding",
 					"slot_modifiers",
@@ -26526,7 +26538,7 @@
 						}
 					},
 					{
-						"description": "Filter by manufacturer name",
+						"description": "Filter by manufacturer code (e.g. \"behr\")",
 						"in": "query",
 						"name": "manufacturer",
 						"required": false,

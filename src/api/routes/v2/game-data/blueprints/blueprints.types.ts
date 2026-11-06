@@ -74,8 +74,18 @@ export interface BlueprintSearchResult {
   /** Item subcategory */
   item_subcategory?: string
 
-  /** Manufacturer name */
+  /**
+   * Output item manufacturer code (e.g. "behr"), the value the `manufacturer`
+   * search filter takes
+   */
   manufacturer?: string
+
+  /**
+   * Manufacturer display name (e.g. "Behring") resolved from
+   * wiki_manufacturers, like the wiki item/ship `manufacturer_name`. Null when
+   * the code has no name or the item has no manufacturer.
+   */
+  manufacturer_name: string | null
 
   /** Blueprint source (default, mission_reward) */
   source?: string
@@ -262,8 +272,14 @@ export interface BlueprintDetailResponse {
   /** Output item reference */
   output_item: GameItem
 
-  /** Output item manufacturer name (same value as the search result's `manufacturer`) */
+  /** Output item manufacturer code (same value as the search result's `manufacturer`) */
   manufacturer?: string
+
+  /**
+   * Manufacturer display name (same value as the search result's
+   * `manufacturer_name`). Null when the code has no name.
+   */
+  manufacturer_name: string | null
 
   /** Ingredients required */
   ingredients: BlueprintIngredient[]
