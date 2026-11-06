@@ -3,7 +3,6 @@ import { apiReference } from "@scalar/express-api-reference"
 import { starmapRouter } from "./starmap/routes.js"
 import { chatsRouter } from "./chats/routes.js"
 import { profileRouter } from "./profiles/routes.js"
-import { commodityRouter } from "./commodities/routes.js"
 import { contractorsRouter } from "./contractors/routes.js"
 import { ordersRouter } from "./orders/routes.js"
 import { deliveriesRouter, deliveryRouter } from "./deliveries/routes.js"
@@ -42,7 +41,6 @@ export const apiV1Router = express.Router()
 // Mount all existing route modules on v1 router
 apiV1Router.use("/admin", adminRouter)
 apiV1Router.use("/starmap", starmapRouter)
-apiV1Router.use("/commodities", commodityRouter)
 apiV1Router.use("/profile", profileRouter)
 apiV1Router.use("/notification", notificationRouter)
 apiV1Router.use("/push", pushRouter)

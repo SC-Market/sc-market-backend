@@ -2,7 +2,6 @@ import express from "express"
 import { starmapRouter } from "./starmap/routes.js"
 import { chatsRouter } from "./chats/routes.js"
 import { profileRouter } from "./profiles/routes.js"
-import { commodityRouter } from "./commodities/routes.js"
 import { contractorsRouter } from "./contractors/routes.js"
 import { ordersRouter } from "./orders/routes.js"
 import { deliveriesRouter, deliveryRouter } from "./deliveries/routes.js"
@@ -26,7 +25,6 @@ export const apiRouter = express.Router()
 
 apiRouter.use("/admin", adminRouter)
 apiRouter.use("/starmap", starmapRouter)
-apiRouter.use("/commodities", commodityRouter)
 apiRouter.use("/profile", profileRouter)
 apiRouter.use("/notification", notificationRouter)
 apiRouter.use("/push", pushRouter)
