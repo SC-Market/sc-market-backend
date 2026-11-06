@@ -307,7 +307,6 @@ export function toReport(
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: DM_ATTEMPT_RETENTION_DAYS,
       discord_dm_refusal_codes: [...DM_REFUSAL_CODES],
-      discord_dm_closed_code: DM_REFUSAL_CODES[0],
       discord_shared_server_checked_at:
         checkedAt && !Number.isNaN(checkedAt.getTime()) ? checkedAt.toISOString() : null,
       discord_shared_server_fresh_days: PRESENCE_FRESH_DAYS,

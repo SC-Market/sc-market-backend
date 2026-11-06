@@ -17075,11 +17075,6 @@
 								"nullable": true,
 								"description": "When the bot's server membership was last checked (ISO time), or null if never."
 							},
-							"discord_dm_closed_code": {
-								"type": "number",
-								"format": "double",
-								"deprecated": true
-							},
 							"discord_dm_refusal_codes": {
 								"items": {
 									"type": "number",
@@ -17105,7 +17100,6 @@
 							"discord_user_install_counts_as_dm",
 							"discord_shared_server_fresh_days",
 							"discord_shared_server_checked_at",
-							"discord_dm_closed_code",
 							"discord_dm_refusal_codes",
 							"discord_dm_result_retention_days",
 							"discord_dm_delivery_results"

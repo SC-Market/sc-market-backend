@@ -264,7 +264,6 @@ describe("toReport", () => {
       discord_dm_delivery_results: true,
       discord_dm_result_retention_days: 90,
       discord_dm_refusal_codes: [50007, 50278],
-      discord_dm_closed_code: 50007,
       discord_shared_server_checked_at: null,
       discord_shared_server_fresh_days: 3,
       discord_user_install_counts_as_dm: true,

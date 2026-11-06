@@ -61,11 +61,6 @@ export interface SellerReachabilityReport {
     discord_dm_result_retention_days: number
     /** The Discord error codes counted as "DM failed (closed)": 50007 (DMs closed), 50278 (no mutual server). */
     discord_dm_refusal_codes: number[]
-    /**
-     * @deprecated The first of discord_dm_refusal_codes (50007), for the admin
-     * card until it reads discord_dm_refusal_codes; remove then.
-     */
-    discord_dm_closed_code: number
     /** When the bot's server membership was last checked (ISO time), or null if never. */
     discord_shared_server_checked_at: string | null
     /** A membership result older than this many days is not counted. */
