@@ -541,17 +541,21 @@ export class OrdersV2Controller extends BaseController {
       .orderBy("o.timestamp", "desc")
       .limit(20)
 
-    // Get offers via offer_market_items_v2
+    // Get pending offers via offer_market_items_v2. Its offer_id is an
+    // order_offers.id (one revision of an offer session). The open revision of
+    // an open session is the one with status 'active': older revisions are
+    // 'counteroffered', and accepting/rejecting closes the session.
     interface OfferRow { session_id: string; status: string; created_at: Date; buyer_name: string; quantity: number; price_per_unit: string }
     let v2Offers: OfferRow[] = []
     const hasTable = await knex.schema.hasTable("offer_market_items_v2")
     if (hasTable) {
       v2Offers = await knex("offer_market_items_v2 as omi")
-        .join("offers as off", "omi.offer_id", "off.id")
-        .join("offer_sessions as os", "off.offer_session_id", "os.id")
+        .join("order_offers as off", "omi.offer_id", "off.id")
+        .join("offer_sessions as os", "off.session_id", "os.id")
         .join("accounts as buyer", "os.customer_id", "buyer.user_id")
         .where("omi.listing_id", listingId)
-        .whereNotIn("os.status", ["accepted", "rejected"])
+        .where("os.status", "active")
+        .where("off.status", "active")
         .select<OfferRow[]>(
           "os.id as session_id", "os.status",
           "os.timestamp as created_at",
