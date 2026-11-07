@@ -85,7 +85,6 @@ describe("GET /notification-preferences/discord-reachability", () => {
       dm_reachable: true,
       shares_server: false,
       user_installed: true,
-      user_install_counts_as_dm: true,
       user_install_available: false,
       user_install_url: null,
     })

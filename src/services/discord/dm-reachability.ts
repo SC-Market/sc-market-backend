@@ -14,15 +14,15 @@
  *     shared server does not reopen DMs;
  *   - 50278 (NO_MUTUAL_GUILD_CODES, no mutual server) stands only until a
  *     later signal fixes it: an app install recorded after the attempt
- *     (discord_user_installs.last_seen_at > the attempt's created_at; counted
- *     only while USER_INSTALL_COUNTS_AS_DM_REACHABLE), or a shared-server
+ *     (discord_user_installs.last_seen_at > the attempt's created_at), or a shared-server
  *     check after it that found a shared server
  *     (discord_guild_presence.shares_server with checked_at > created_at).
  *   Never DMed counts as not refused; other failures (rate limits, Discord
  *   errors) say nothing about reachability;
  * - they share a server with the bot (discord_guild_presence, checked within
  *   PRESENCE_FRESH_DAYS), or installed the app on their own account
- *   (discord_user_installs, user-installs.ts; USER_INSTALL_COUNTS_AS_DM_REACHABLE).
+ *   (discord_user_installs, user-installs.ts; confirmed live 2026-11-05: no mutual
+ *   server + user install -> DM delivered).
  *
  * Either refusal also deletes the install record (dm-attempts.ts
  * recordDmAttempt -> clearUserInstall), so an install row that exists after a
@@ -34,12 +34,6 @@ import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { DM_ATTEMPT_RETENTION_DAYS, DM_CLOSED_CODES, NO_MUTUAL_GUILD_CODES } from "./dm-attempts.js"
 import { PRESENCE_FRESH_DAYS } from "./guild-presence.js"
-
-/**
- * Whether a recorded user install makes a user DM-reachable.
- * 2026-11-05: confirmed live. No mutual server + no install → 403/50278; no mutual server + user install → DM delivered.
- */
-export const USER_INSTALL_COUNTS_AS_DM_REACHABLE = true
 
 /**
  * A LATERAL subquery with one row of Discord DM state for the user in
@@ -57,15 +51,10 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
     throw new Error(`Invalid column reference: ${userIdColumn}`)
   }
   const u = userIdColumn
-  const reachableVia = USER_INSTALL_COUNTS_AS_DM_REACHABLE ? "(s.shares_server OR s.user_installed)" : "s.shares_server"
-  // A no-mutual-server refusal is lifted by a later install (when installs count) or a later shared-server check.
-  const laterInstall = USER_INSTALL_COUNTS_AS_DM_REACHABLE
-    ? `EXISTS (SELECT 1 FROM discord_user_installs ui2 WHERE ui2.user_id = ${u} AND ui2.last_seen_at > ld.created_at) OR `
-    : ""
   const sql = `
     SELECT s.*,
            (s.shares_server OR s.user_installed) AS server_or_app,
-           (s.discord_linked AND NOT s.dm_closed AND ${reachableVia}) AS dm_reachable
+           (s.discord_linked AND NOT s.dm_closed AND (s.shares_server OR s.user_installed)) AS dm_reachable
     FROM (
       SELECT
         EXISTS (
@@ -83,7 +72,7 @@ export function discordDmStateSql(userIdColumn: string): { sql: string; bindings
         COALESCE(ld.status = 'failed' AND (
           ld.error_code = ANY(?::int[])
           OR (ld.error_code = ANY(?::int[]) AND NOT (
-            ${laterInstall}EXISTS (
+            EXISTS (SELECT 1 FROM discord_user_installs ui2 WHERE ui2.user_id = ${u} AND ui2.last_seen_at > ld.created_at) OR EXISTS (
               SELECT 1 FROM discord_guild_presence gp2
               WHERE gp2.user_id = ${u} AND gp2.shares_server = true AND gp2.checked_at > ld.created_at
             )

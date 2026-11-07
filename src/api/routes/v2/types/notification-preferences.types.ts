@@ -130,14 +130,12 @@ export interface UpdateNotificationPreferencesRequest {
  */
 export interface DiscordReachabilityResponse {
   discord_linked: boolean
-  /** Reachable by Discord DM by the one rule (linked, last DM not refused with 50007 / 50278, shares a server with the bot or installed the app on their own account while user_install_counts_as_dm). */
+  /** Reachable by Discord DM by the one rule (linked, last DM not refused with 50007 / 50278, shares a server with the bot or installed the app on their own account). */
   dm_reachable: boolean
   /** Shares a server with the SC Market bot (checked periodically). */
   shares_server: boolean
   /** Seen using the bot through the app installed on their own Discord account. */
   user_installed: boolean
-  /** Whether a recorded user install counts towards dm_reachable yet (true since 2026-11-05: confirmed the bot can DM such users without a shared server). */
-  user_install_counts_as_dm: boolean
   /** Whether the app can be installed on a personal account (User Install enabled in the Discord Developer Portal). */
   user_install_available: boolean
   /** The install link (integration_type=1) while user_install_available; null otherwise. */

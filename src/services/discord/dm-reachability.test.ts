@@ -35,7 +35,6 @@ describe("discordDmStateSql", () => {
   })
 
   it("counts a recorded user install (confirmed live 2026-11-05)", () => {
-    expect(reach.USER_INSTALL_COUNTS_AS_DM_REACHABLE).toBe(true)
     expect(flat).toContain("EXISTS (SELECT 1 FROM discord_user_installs ui WHERE ui.user_id = a.user_id) AS user_installed")
     expect(flat).toContain("(s.shares_server OR s.user_installed) AS server_or_app")
   })

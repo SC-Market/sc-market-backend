@@ -24,8 +24,7 @@
  *   refusal (50007 DMs closed always stands; 50278 no mutual server stands
  *   until a later app install or shared-server check), and they share a server with the bot (discord_guild_presence,
  *   checked within PRESENCE_FRESH_DAYS) or installed the app on their own
- *   account (discord_user_installs; USER_INSTALL_COUNTS_AS_DM_REACHABLE,
- *   confirmed 2026-11-05, reported in signals.discord_user_install_counts_as_dm).
+ *   account (discord_user_installs; confirmed 2026-11-05).
  *   discord_dm_attempts (services/discord/dm-attempts.ts)
  *   records every DM SC Market tries, from the backend (notify() and direct
  *   sends) and from the bot (reported over the backend SQS queue): sent, or
@@ -66,7 +65,7 @@ import { publiclyListedSql } from "../../api/routes/v2/util/listing-visibility.j
 import { DM_ATTEMPT_RETENTION_DAYS, DM_REFUSAL_CODES } from "../discord/dm-attempts.js"
 import { PRESENCE_FRESH_DAYS } from "../discord/guild-presence.js"
 import { installClickCounts, type InstallClickCount } from "../discord/install-clicks.js"
-import { discordDmStateSql, USER_INSTALL_COUNTS_AS_DM_REACHABLE } from "../discord/dm-reachability.js"
+import { discordDmStateSql } from "../discord/dm-reachability.js"
 import type {
   ReachabilityBucket,
   ReachabilityCount,
@@ -310,7 +309,6 @@ export function toReport(
       discord_shared_server_checked_at:
         checkedAt && !Number.isNaN(checkedAt.getTime()) ? checkedAt.toISOString() : null,
       discord_shared_server_fresh_days: PRESENCE_FRESH_DAYS,
-      discord_user_install_counts_as_dm: USER_INSTALL_COUNTS_AS_DM_REACHABLE,
       email_delivery_results: true,
       email_delivered_window_days: EMAIL_DELIVERED_WINDOW_DAYS,
       push_delivery_results: false,

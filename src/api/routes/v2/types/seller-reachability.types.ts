@@ -24,7 +24,7 @@ export interface SellerReachabilityCounts {
   /** Sellers with at least one publicly listed listing. */
   sellers: number
   listings: number
-  /** Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot or installed the app on their own Discord account (while signals.discord_user_install_counts_as_dm). */
+  /** Discord linked, the last Discord DM attempt (if any, last 90 days) was not refused (Discord error 50007 or 50278), and they share a server with the bot or installed the app on their own Discord account. */
   discord_dm: ReachabilityCount
   /** Reachable by Discord DM, and the last Discord DM attempt was delivered (a subset of discord_dm). */
   discord_dm_confirmed: ReachabilityCount
@@ -65,8 +65,6 @@ export interface SellerReachabilityReport {
     discord_shared_server_checked_at: string | null
     /** A membership result older than this many days is not counted. */
     discord_shared_server_fresh_days: number
-    /** Whether installing the app on one's own Discord account counts as reachable by Discord DM (true since 2026-11-05: confirmed the bot can DM such users without a shared server). */
-    discord_user_install_counts_as_dm: boolean
     /** SES bounces, complaints and deliveries are recorded (bounced addresses are not reachable). */
     email_delivery_results: boolean
     /** How recent an email delivery counts for email_confirmed. */

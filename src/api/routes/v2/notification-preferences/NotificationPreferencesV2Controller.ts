@@ -9,7 +9,7 @@ import {
   setOrgMute,
   setPreferences,
 } from "../../../../services/notify/preference-matrix.js"
-import { discordDmStateSql, USER_INSTALL_COUNTS_AS_DM_REACHABLE } from "../../../../services/discord/dm-reachability.js"
+import { discordDmStateSql } from "../../../../services/discord/dm-reachability.js"
 import { userInstallAvailable, userInstallUrl } from "../../../../services/discord/app-install.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import type {
@@ -142,7 +142,6 @@ export class NotificationPreferencesV2Controller extends BaseController {
       dm_reachable: !!row.dm_reachable,
       shares_server: !!row.shares_server,
       user_installed: !!row.user_installed,
-      user_install_counts_as_dm: USER_INSTALL_COUNTS_AS_DM_REACHABLE,
       user_install_available: available,
       user_install_url: available ? userInstallUrl() : null,
     }
