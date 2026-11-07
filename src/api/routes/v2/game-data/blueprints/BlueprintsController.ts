@@ -367,7 +367,7 @@ export class BlueprintsController extends BaseController {
       if (ingredient_name) {
         blueprintsQuery = blueprintsQuery.whereExists(
           knex("blueprint_ingredients as bi_filter")
-            .join("game_items as gi_filter", "bi_filter.game_item_id", "gi_filter.id")
+            .join("game_items as gi_filter", "bi_filter.ingredient_game_item_id", "gi_filter.id")
             .whereRaw("bi_filter.blueprint_id = b.blueprint_id")
             .where("gi_filter.name", "ilike", `%${ingredient_name}%`),
         )
@@ -1589,17 +1589,28 @@ export class BlueprintsController extends BaseController {
       .select("b.blueprint_id", "b.blueprint_code", "b.blueprint_name", "b.crafting_time_seconds",
         "gi.name as output_item_name", "gi.image_url as output_item_icon", "b.item_category")
 
+    // Ingredients of those same blueprints, in one query.
+    const ingredientRows: Array<{ blueprint_id: string; game_item_id: string; name: string; quantity_required: string }> =
+      await knex("blueprint_ingredients as bi")
+        .join("blueprints as b", "bi.blueprint_id", "b.blueprint_id")
+        .join("game_items as ig", "bi.ingredient_game_item_id", "ig.id")
+        .where("b.version_id", version.version_id)
+        .where("b.is_active", true)
+        .select("bi.blueprint_id", "bi.ingredient_game_item_id as game_item_id", "ig.name", "bi.quantity_required")
+    const ingredientsByBlueprint = new Map<string, typeof ingredientRows>()
+    for (const row of ingredientRows) {
+      const list = ingredientsByBlueprint.get(row.blueprint_id)
+      if (list) list.push(row)
+      else ingredientsByBlueprint.set(row.blueprint_id, [row])
+    }
+
     const results: CraftableBlueprintResult[] = []
 
     for (const bp of blueprints) {
       // Skip if owned_only and user doesn't own this blueprint
       if (ownedNames && !ownedNames.has(bp.blueprint_name)) continue
 
-      const ingredients = await knex("blueprint_ingredients as bi")
-        .join("game_items as ig", "bi.game_item_id", "ig.id")
-        .where("bi.blueprint_id", bp.blueprint_id)
-        .select("bi.game_item_id", "ig.name", "bi.quantity_required")
-
+      const ingredients = ingredientsByBlueprint.get(bp.blueprint_id) ?? []
       if (!ingredients.length) continue
 
       // Check if all ingredients are available and compute max craftable
