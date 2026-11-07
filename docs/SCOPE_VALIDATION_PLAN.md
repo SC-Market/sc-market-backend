@@ -89,7 +89,6 @@ Based on our existing scope definitions:
 - `GET /api/services` → Public service listings
 - `GET /api/recruiting` → Public recruitment posts
 - `GET /api/starmap` → Public star map data
-- `GET /api/commodities` → Public commodity data
 
 #### Private Endpoints (Require scope validation)
 

@@ -87,7 +87,7 @@ middleware in route definitions, e.g.:
   `commonWriteRateLimit`)
 - `src/api/routes/v1/admin/routes.ts:4-5,49-105` (`criticalRateLimit`, `readRateLimit`)
 - `src/api/routes/v1/admin/premium.ts`, `comments/routes.ts`, `ships/routes.ts`,
-  `contracts/routes.ts`, `commodities/routes.ts`, `wiki/routes.ts`, `starmap/routes.ts`.
+  `contracts/routes.ts`, `wiki/routes.ts`, `starmap/routes.ts`.
 - Pattern: `router.get("/path", authMiddleware, readRateLimit, handler)`.
 
 **Compiled-only TSOA adapter (the one the audit flagged as missing from source).**
