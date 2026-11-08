@@ -6775,6 +6775,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["rating"]},{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["total_sales"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                featured: {"in":"query","name":"featured","dataType":"boolean"},
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/shops',
@@ -7298,6 +7299,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
                 field: {"in":"query","name":"field","dataType":"string"},
+                featured: {"in":"query","name":"featured","dataType":"boolean"},
         };
         app.get('/contractors/storefronts',
             ...(fetchMiddlewares<RequestHandler>(OrgStorefrontV2Controller)),

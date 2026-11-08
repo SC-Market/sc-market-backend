@@ -19363,6 +19363,15 @@
 								"desc"
 							]
 						}
+					},
+					{
+						"description": "Only shops that trade: an order fulfilled in the last 90 days (the homepage's \"Top rated shops\").",
+						"in": "query",
+						"name": "featured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				]
 			}
@@ -20283,6 +20292,15 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"description": "Only orgs that trade: a shown shop with an order fulfilled in the last 90 days (the homepage row).",
+						"in": "query",
+						"name": "featured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

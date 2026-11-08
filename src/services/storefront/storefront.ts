@@ -8,6 +8,7 @@ import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { scOrgsClient, type ScOrgsCommunity } from "../../clients/sc-orgs/sc-orgs.js"
 import { isRsiVerifiedOrg } from "./branding.js"
+import { recentlyTradedSql } from "../seller-activity/featured-sellers.js"
 import { orgMembersOnlySql, orgShownSql, shopShownSql } from "./directory.js"
 import {
   INACTIVE_SELLER_RANK_PENALTY_DAYS,
@@ -377,10 +378,12 @@ export function orderStorefrontCards(qb: Knex.QueryBuilder): Knex.QueryBuilder {
 /**
  * The orgs the hub lists (alias c), one row each, unordered and without
  * columns: the filter shared by a page of cards, the total and the focus
- * chips. `field`: only orgs with that field (contractor_fields).
+ * chips. `field`: only orgs with that field (contractor_fields). `featured`:
+ * only orgs that trade, i.e. a shown shop with a recently fulfilled order
+ * (featured-sellers.ts), for the homepage row.
  */
-function listedOrgsQuery(db: Knex, field?: string): Knex.QueryBuilder {
-  const { listed, offered } = hubSql()
+function listedOrgsQuery(db: Knex, field?: string, featured = false): Knex.QueryBuilder {
+  const { shownShop, listed, offered } = hubSql()
   const query = db("contractors as c")
     .where("c.archived", false)
     .whereRaw("c.is_test IS NOT TRUE")
@@ -390,6 +393,9 @@ function listedOrgsQuery(db: Knex, field?: string): Knex.QueryBuilder {
     .whereRaw(
       `(EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed}) OR EXISTS (SELECT 1 FROM services sv WHERE ${offered}))`,
     )
+  if (featured) {
+    query.whereRaw(`EXISTS (SELECT 1 FROM shops s WHERE ${shownShop} AND ${recentlyTradedSql("s.shop_id")})`)
+  }
   if (field) {
     query.whereExists((q) =>
       q.select(db.raw("1")).from("contractor_fields as cf").whereRaw("cf.contractor_id = c.contractor_id").where("cf.field", field),
@@ -404,6 +410,8 @@ export interface StorefrontPageQuery {
   offset: number
   /** Only orgs with this field. */
   field?: string
+  /** Only orgs that trade (featured-sellers.ts): the homepage row. */
+  featured?: boolean
 }
 
 /**
@@ -413,7 +421,7 @@ export interface StorefrontPageQuery {
  */
 export function storefrontCardsQuery(db: Knex, page: StorefrontPageQuery): Knex.QueryBuilder {
   const { shownShop, listed, offered } = hubSql()
-  const query = listedOrgsQuery(db, page.field)
+  const query = listedOrgsQuery(db, page.field, page.featured)
     .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .select(
       "c.contractor_id",
@@ -440,8 +448,8 @@ export function storefrontCardsQuery(db: Knex, page: StorefrontPageQuery): Knex.
 }
 
 /** How many orgs the hub lists (with `field`: how many have it). */
-export function storefrontCountQuery(db: Knex, field?: string): Knex.QueryBuilder {
-  return listedOrgsQuery(db, field).count({ count: "*" }).first()
+export function storefrontCountQuery(db: Knex, field?: string, featured = false): Knex.QueryBuilder {
+  return listedOrgsQuery(db, field, featured).count({ count: "*" }).first()
 }
 
 /**
@@ -484,7 +492,7 @@ export async function listStorefrontCards(
 ): Promise<StorefrontCardsPage> {
   // One after another: an anonymous read, kept to one pool connection.
   const rows = (await storefrontCardsQuery(db, page)) as CardRow[]
-  const counted = (await storefrontCountQuery(db, page.field)) as { count: number | string } | undefined
+  const counted = (await storefrontCountQuery(db, page.field, page.featured)) as { count: number | string } | undefined
   const fieldList = (await storefrontFieldsQuery(db)) as { field: string }[]
 
   const ids = rows.map((r) => r.contractor_id)

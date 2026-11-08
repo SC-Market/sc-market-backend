@@ -59,6 +59,7 @@ import {
 import { clampPagination } from "../util/pagination.js"
 import { imageUrlSql } from "../util/image-url-sql.js"
 import { sellerActivityTieBreakSql } from "../../../../services/seller-activity/seller-ranking.js"
+import { recentlyTradedSql } from "../../../../services/seller-activity/featured-sellers.js"
 import {
   STOCK_SUBTRACTION_TIMINGS,
   isStockSubtractionTiming,
@@ -566,6 +567,7 @@ export class ShopsV2Controller extends BaseController {
    * Browse all active shops. Supports search, pagination, and sorting.
    *
    * @summary Browse shops
+   * @param featured Only shops that trade: an order fulfilled in the last 90 days (the homepage's "Top rated shops").
    */
   @Get("")
   public async browseShops(
@@ -575,6 +577,7 @@ export class ShopsV2Controller extends BaseController {
     @Query() page_size?: number,
     @Query() sort_by?: "name" | "rating" | "created_at" | "total_sales",
     @Query() sort_order?: "asc" | "desc",
+    @Query() featured?: boolean,
     @Request() request?: ExpressRequest,
   ): Promise<{ shops: ShopPublicResponse[]; total: number; page: number; page_size: number }> {
     if (request) this.request = request
@@ -620,6 +623,10 @@ export class ShopsV2Controller extends BaseController {
     if (tag) {
       query = query.whereRaw("? = ANY(s.tags)", [tag])
     }
+    // Featured (the homepage's "Top rated shops"): only shops that trade.
+    if (featured === true) {
+      query = query.whereRaw(recentlyTradedSql("s.shop_id"))
+    }
 
     if (search && search.trim()) {
       query = query.where(function () {
@@ -632,6 +639,7 @@ export class ShopsV2Controller extends BaseController {
       .where("s.status", "active")
       .whereRaw(hiddenFromRealViewers(db, "NOT s.is_test", viewerUserId))
     if (tag) countQuery.whereRaw("? = ANY(s.tags)", [tag])
+    if (featured === true) countQuery.whereRaw(recentlyTradedSql("s.shop_id"))
     if (search && search.trim()) {
       countQuery.where(function () {
         this.where("s.name", "ilike", `%${search.trim()}%`)
