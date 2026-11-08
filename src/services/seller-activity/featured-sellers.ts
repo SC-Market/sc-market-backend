@@ -23,19 +23,35 @@
 export const FEATURED_TRADE_WINDOW_DAYS = 365
 
 const COLUMN = /^[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*$/i
+const ALIAS = /^[a-z_][a-z0-9_]*$/i
 
 /**
- * SQL: the shop has an order fulfilled within FEATURED_TRADE_WINDOW_DAYS.
- * Orders fulfilled before orders.fulfilled_at existed have none; their
- * placement time stands in (it is never later than the fulfilment).
- * `shopIdColumn` is a code literal such as "s.shop_id".
+ * SQL: the order (alias `orderAlias`, a code literal) was fulfilled within
+ * `days` days. Orders fulfilled before orders.fulfilled_at existed have
+ * none; their placement time stands in (it is never later than the
+ * fulfilment). The one definition of "a recent trade": featuring here and
+ * the storefront ranking (storefront.ts) both use it.
+ */
+export function fulfilledWithinSql(orderAlias: string, days: number): string {
+  if (!ALIAS.test(orderAlias))
+    throw new Error(`featured-sellers: invalid alias ${orderAlias}`)
+  if (!Number.isInteger(days) || days <= 0)
+    throw new Error(`featured-sellers: invalid window ${days}`)
+  return (
+    `${orderAlias}.status = 'fulfilled'` +
+    ` AND COALESCE(${orderAlias}.fulfilled_at, ${orderAlias}."timestamp") >= now() - INTERVAL '${days} days'`
+  )
+}
+
+/**
+ * SQL: the shop has an order fulfilled within FEATURED_TRADE_WINDOW_DAYS
+ * (fulfilledWithinSql). `shopIdColumn` is a code literal such as "s.shop_id".
  */
 export function recentlyTradedSql(shopIdColumn: string): string {
   if (!COLUMN.test(shopIdColumn))
     throw new Error(`featured-sellers: invalid column reference ${shopIdColumn}`)
   return (
     `EXISTS (SELECT 1 FROM orders _fo WHERE _fo.shop_id = ${shopIdColumn}` +
-    ` AND _fo.status = 'fulfilled'` +
-    ` AND COALESCE(_fo.fulfilled_at, _fo."timestamp") >= now() - INTERVAL '${FEATURED_TRADE_WINDOW_DAYS} days')`
+    ` AND ${fulfilledWithinSql("_fo", FEATURED_TRADE_WINDOW_DAYS)})`
   )
 }

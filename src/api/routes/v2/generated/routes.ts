@@ -737,6 +737,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StorefrontActivity": {
+        "dataType": "refObject",
+        "properties": {
+            "orders_90d": {"dataType":"double","required":true},
+            "orders_365d": {"dataType":"double","required":true},
+            "reviews_90d": {"dataType":"double","required":true},
+            "listings_updated_90d": {"dataType":"double","required":true},
+            "services_posted_90d": {"dataType":"double","required":true},
+            "score": {"dataType":"double","required":true},
+            "stale": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "StorefrontCard": {
         "dataType": "refObject",
         "properties": {
@@ -752,6 +766,7 @@ const models: TsoaRoute.Models = {
             "avg_rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
             "rating_count": {"dataType":"double","required":true},
             "showcase": {"dataType":"boolean","required":true},
+            "activity": {"ref":"StorefrontActivity","required":true},
         },
         "additionalProperties": false,
     },

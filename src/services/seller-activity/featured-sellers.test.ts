@@ -10,7 +10,7 @@ vi.mock("../../clients/database/knex-db.js", async () =>
   (await import("../../test-utils/mock-knex-db.js")).mockKnexDb(),
 )
 
-const { FEATURED_TRADE_WINDOW_DAYS, recentlyTradedSql } = await import("./featured-sellers.js")
+const { FEATURED_TRADE_WINDOW_DAYS, fulfilledWithinSql, recentlyTradedSql } = await import("./featured-sellers.js")
 const storefront = await import("../storefront/storefront.js")
 
 const pg = knexFactory({ client: "pg" })
@@ -29,6 +29,20 @@ describe("recentlyTradedSql", () => {
   it("rejects anything but a column reference", () => {
     expect(() => recentlyTradedSql("s.shop_id; DROP TABLE orders")).toThrow()
     expect(() => recentlyTradedSql("shop_id")).toThrow()
+  })
+})
+
+describe("fulfilledWithinSql", () => {
+  it("is a fulfilled order whose fulfilment (or, before fulfilled_at, placement) is in the window", () => {
+    expect(fulfilledWithinSql("o", 90)).toBe(
+      `o.status = 'fulfilled' AND COALESCE(o.fulfilled_at, o."timestamp") >= now() - INTERVAL '90 days'`,
+    )
+  })
+
+  it("rejects anything but an alias and a positive whole number of days", () => {
+    expect(() => fulfilledWithinSql("o; DROP TABLE orders", 90)).toThrow()
+    expect(() => fulfilledWithinSql("o", 0)).toThrow()
+    expect(() => fulfilledWithinSql("o", 1.5)).toThrow()
   })
 })
 

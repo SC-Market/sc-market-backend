@@ -1828,6 +1828,56 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StorefrontActivity": {
+				"description": "An org's recent trading in its shown shops: what the hub and the homepage\nrank on. Counts, never lifetime totals or member logins.",
+				"properties": {
+					"orders_90d": {
+						"type": "number",
+						"format": "double",
+						"description": "Orders fulfilled in the last 90 days (RECENT_ACTIVITY_DAYS)."
+					},
+					"orders_365d": {
+						"type": "number",
+						"format": "double",
+						"description": "Orders fulfilled in the last 365 days (FEATURED_TRADE_WINDOW_DAYS), orders_90d included."
+					},
+					"reviews_90d": {
+						"type": "number",
+						"format": "double",
+						"description": "Reviews left in the last 90 days."
+					},
+					"listings_updated_90d": {
+						"type": "number",
+						"format": "double",
+						"description": "Public, active listings updated in the last 90 days."
+					},
+					"services_posted_90d": {
+						"type": "number",
+						"format": "double",
+						"description": "Active services posted in the last 90 days."
+					},
+					"score": {
+						"type": "number",
+						"format": "double",
+						"description": "The ranking score: 3 per order fulfilled in 90 days, 1 per order in 365 days, 1 per review in 90 days, 1 per listing updated in 90 days (at most 5)."
+					},
+					"stale": {
+						"type": "boolean",
+						"description": "No order fulfilled, listing updated or service posted in 90 days: ranks after every other org (never hidden)."
+					}
+				},
+				"required": [
+					"orders_90d",
+					"orders_365d",
+					"reviews_90d",
+					"listings_updated_90d",
+					"services_posted_90d",
+					"score",
+					"stale"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"StorefrontCard": {
 				"properties": {
 					"spectrum_id": {
@@ -1880,7 +1930,11 @@
 					},
 					"showcase": {
 						"type": "boolean",
-						"description": "A showcase org, listed first."
+						"description": "A showcase org (SHOWCASE_STOREFRONTS), pinned first in the hub (not on the homepage)."
+					},
+					"activity": {
+						"$ref": "#/components/schemas/StorefrontActivity",
+						"description": "The recent activity the order ranks on (storefrontActivityScore)."
 					}
 				},
 				"required": [
@@ -1895,7 +1949,8 @@
 					"completed_orders",
 					"avg_rating",
 					"rating_count",
-					"showcase"
+					"showcase",
+					"activity"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -20258,7 +20313,7 @@
 						}
 					}
 				},
-				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting or active service (service-only orgs included), showcase orgs\nfirst, then by completed orders, a page at a time (the order ends on a\nunique key, so pages never overlap). Read-only and anonymous (rate\nlimited in api-router.ts); the frontend prerenders page 1 at build time.",
+				"description": "The Storefronts hub: RSI-verified orgs with at least one public, active\nlisting or active service (service-only orgs included), a page at a\ntime. Order (storefront.ts orderStorefrontCards): showcase orgs first\n(hub only, not with `featured`), stale orgs (no order fulfilled, listing\nupdated or service posted in 90 days) last, then by recent-activity\nscore (`activity.score`: 3 per order fulfilled in 90 days, 1 per order in\n365 days, 1 per review in 90 days, 1 per listing updated in 90 days up\nto 5), then lifetime completed orders; it ends on a unique key, so pages\nnever overlap. Read-only and anonymous (rate\nlimited in api-router.ts); the frontend prerenders page 1 at build time.",
 				"summary": "List org storefronts",
 				"tags": [
 					"Contractors"
@@ -20295,7 +20350,7 @@
 						}
 					},
 					{
-						"description": "Only orgs that trade: a shown shop with an order fulfilled in the last 365 days (the homepage row).",
+						"description": "Only orgs that trade: a shown shop with an order fulfilled in the last 365 days (the homepage row). Showcase orgs aren't pinned.",
 						"in": "query",
 						"name": "featured",
 						"required": false,

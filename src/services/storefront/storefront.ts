@@ -8,12 +8,12 @@ import type { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
 import { scOrgsClient, type ScOrgsCommunity } from "../../clients/sc-orgs/sc-orgs.js"
 import { isRsiVerifiedOrg } from "./branding.js"
-import { recentlyTradedSql } from "../seller-activity/featured-sellers.js"
-import { orgMembersOnlySql, orgShownSql, shopShownSql } from "./directory.js"
 import {
-  INACTIVE_SELLER_RANK_PENALTY_DAYS,
-  sellerInactiveSql,
-} from "../seller-activity/seller-ranking.js"
+  FEATURED_TRADE_WINDOW_DAYS,
+  fulfilledWithinSql,
+  recentlyTradedSql,
+} from "../seller-activity/featured-sellers.js"
+import { orgMembersOnlySql, orgShownSql, shopShownSql } from "./directory.js"
 
 /** Public URL of an image_resources row joined as `alias` (a code literal). */
 function imageUrlSql(alias: string): string {
@@ -249,8 +249,10 @@ export async function loadOrgStorefront(
 }
 
 /**
- * The orgs the Storefronts hub features first: the owner's org and a close
- * partner (drafts/whitelabel-overhaul-plan.md §A10), in this order.
+ * The orgs the Storefronts hub pins first: the owner's org and a close
+ * partner (drafts/whitelabel-overhaul-plan.md §A10), in this order. Hub
+ * only: the homepage row (featured) is earned by trading, so they appear
+ * there only when their activity ranks them there.
  */
 export const SHOWCASE_STOREFRONTS: readonly string[] = ["BWINCORP", "MEDRUNNER"]
 
@@ -273,8 +275,31 @@ export interface StorefrontCard {
   completed_orders: number
   avg_rating: number | null
   rating_count: number
-  /** A showcase org, listed first. */
+  /** A showcase org (SHOWCASE_STOREFRONTS), pinned first in the hub (not on the homepage). */
   showcase: boolean
+  /** The recent activity the order ranks on (storefrontActivityScore). */
+  activity: StorefrontActivity
+}
+
+/**
+ * An org's recent trading in its shown shops: what the hub and the homepage
+ * rank on. Counts, never lifetime totals or member logins.
+ */
+export interface StorefrontActivity {
+  /** Orders fulfilled in the last 90 days (RECENT_ACTIVITY_DAYS). */
+  orders_90d: number
+  /** Orders fulfilled in the last 365 days (FEATURED_TRADE_WINDOW_DAYS), orders_90d included. */
+  orders_365d: number
+  /** Reviews left in the last 90 days. */
+  reviews_90d: number
+  /** Public, active listings updated in the last 90 days. */
+  listings_updated_90d: number
+  /** Active services posted in the last 90 days. */
+  services_posted_90d: number
+  /** The ranking score: 3 per order fulfilled in 90 days, 1 per order in 365 days, 1 per review in 90 days, 1 per listing updated in 90 days (at most 5). */
+  score: number
+  /** No order fulfilled, listing updated or service posted in 90 days: ranks after every other org (never hidden). */
+  stale: boolean
 }
 
 interface CardRow {
@@ -289,6 +314,13 @@ interface CardRow {
   completed_orders: number | string
   avg_rating: string | number | null
   rating_count: number | string
+  orders_90d: number | string
+  orders_365d: number | string
+  reviews_90d: number | string
+  listings_updated_90d: number | string
+  services_posted_90d: number | string
+  activity_score: number | string
+  stale: number | string
 }
 
 /** First line of an org description, plain and short. */
@@ -309,70 +341,145 @@ export const STOREFRONTS_MAX_PAGE_SIZE = 60
 export const STOREFRONT_HUB_FIELDS = 10
 
 /**
- * Stale storefronts (owner decision 2026-11-02): an org whose freshest
- * public listing or active service is older than this many days AND whose
- * managing members are all inactive ranks below every other org in the
- * hub's order. It is never hidden. The window is the seller-activity weight
- * (seller-ranking.ts), so "recent" means the same thing as in the default
- * listing order.
+ * Storefront ranking (owner decision 2026-11-08): the hub and the homepage
+ * row rank orgs on their own recent trading, not on lifetime totals or on
+ * when their members last logged in. An org whose owner is online every day
+ * but that trades nothing ranks below orgs that trade now; a long-quiet org
+ * with a big lifetime count no longer outranks them either.
+ *
+ * Every count covers the org's shown shops only (the directory's shops).
  */
-export const STALE_STOREFRONT_AFTER_DAYS = INACTIVE_SELLER_RANK_PENALTY_DAYS
+
+/** "Recent": the window for the score's fresh signals and for staleness. */
+export const RECENT_ACTIVITY_DAYS = 90
 
 /**
- * The hub's SQL pieces for one org (alias c). Code literals only.
- * - shownShop: the org's active shops shown in the directory (alias s).
- * - listed / offered: its public, active listings (ls) / active services (sv) in those shops.
+ * The score's weights. An org's score is
+ *
+ *   3 x orders fulfilled in the last 90 days
+ * + 1 x orders fulfilled in the last 365 days (the 90-day ones again, so a
+ *       fresh order is worth 4 and an older one in the year is worth 1)
+ * + 1 x reviews left in the last 90 days
+ * + 1 x public listings updated in the last 90 days, at most
+ *       LISTING_UPDATES_SCORE_CAP (so re-saving listings can't outweigh
+ *       two real trades)
+ *
+ * The year term is the fallback for a quiet market: with few orders in 90
+ * days, the last year still separates real traders from dormant orgs.
  */
-function hubSql() {
-  const shownShop = `s.owner_contractor_id = c.contractor_id AND s.status = 'active' AND ${shopShownSql("s")}`
-  const listed = `ls.status = 'active' AND ls.visibility = 'public' AND ls.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
-  const offered = `sv.status = 'active' AND sv.shop_id IN (SELECT s.shop_id FROM shops s WHERE ${shownShop})`
-  return { shownShop, listed, offered }
-}
+export const STOREFRONT_SCORE_WEIGHTS = {
+  orders_90d: 3,
+  orders_365d: 1,
+  reviews_90d: 1,
+  listings_updated_90d: 1,
+} as const
+export const LISTING_UPDATES_SCORE_CAP = 5
 
-/**
- * SQL: 1 when the org (alias c) is stale, else 0. Stale needs BOTH:
- * - content: no public listing updated (listing_search.updated_at) and no
- *   active service posted (services.timestamp; services have no edit
- *   time) within STALE_STOREFRONT_AFTER_DAYS;
- * - people: every shown shop's seller is known to be inactive
- *   (sellerInactiveSql: the shop's managing members were last seen 30+ days
- *   ago). A shop without activity stats, or whose members hide their
- *   status, is neutral (not inactive), exactly as in the listing order, so
- *   hiding your status never costs rank.
- */
-export function storefrontStaleSql(): string {
-  const { shownShop, listed, offered } = hubSql()
-  const recent = `now() - INTERVAL '${STALE_STOREFRONT_AFTER_DAYS} days'`
+type ActivityCounts = Pick<
+  StorefrontActivity,
+  "orders_90d" | "orders_365d" | "reviews_90d" | "listings_updated_90d" | "services_posted_90d"
+>
+
+/** The score (STOREFRONT_SCORE_WEIGHTS). storefrontScoreSql is the same formula in SQL. */
+export function storefrontActivityScore(a: ActivityCounts): number {
+  const w = STOREFRONT_SCORE_WEIGHTS
   return (
-    "(CASE WHEN" +
-    ` NOT EXISTS (SELECT 1 FROM listing_search ls WHERE ${listed} AND ls.updated_at >= ${recent})` +
-    ` AND NOT EXISTS (SELECT 1 FROM services sv WHERE ${offered} AND sv."timestamp" >= ${recent})` +
-    ` AND NOT EXISTS (SELECT 1 FROM shops s WHERE ${shownShop} AND ${sellerInactiveSql("s.shop_id")} = 0)` +
-    " THEN 1 ELSE 0 END)"
+    w.orders_90d * a.orders_90d +
+    w.orders_365d * a.orders_365d +
+    w.reviews_90d * a.reviews_90d +
+    w.listings_updated_90d * Math.min(a.listings_updated_90d, LISTING_UPDATES_SCORE_CAP)
   )
 }
 
 /**
- * The hub's order, in SQL so it is the same on every request (SSR,
- * prerender and the client all get the API's order):
- * 1. showcase orgs, in SHOWCASE_STOREFRONTS order;
- * 2. stale orgs (storefrontStaleSql) after all others;
- * 3. completed orders, then active listings, then active services (most first);
- * 4. name, then contractor_id: a unique key, so ties never flip.
+ * Stale: in the last RECENT_ACTIVITY_DAYS the org fulfilled no order,
+ * updated no public listing and posted no service. Its own trading only:
+ * member logins don't count. Stale orgs rank after every fresh org in the
+ * hub; they are never hidden. storefrontStaleSql is the same rule in SQL.
  */
-export function orderStorefrontCards(qb: Knex.QueryBuilder): Knex.QueryBuilder {
-  const showcase = SHOWCASE_STOREFRONTS.map((_, i) => `WHEN ? THEN ${i}`).join(" ")
+export function storefrontIsStale(a: ActivityCounts): boolean {
+  return a.orders_90d === 0 && a.listings_updated_90d === 0 && a.services_posted_90d === 0
+}
+
+/**
+ * The hub's SQL pieces for one org (alias c). Code literals only.
+ * - shownShop: the org's active shops shown in the directory (alias s).
+ * - shownShopIds: their ids, as a subquery.
+ * - listed / offered: its public, active listings (ls) / active services (sv) in those shops.
+ */
+function hubSql() {
+  const shownShop = `s.owner_contractor_id = c.contractor_id AND s.status = 'active' AND ${shopShownSql("s")}`
+  const shownShopIds = `(SELECT s.shop_id FROM shops s WHERE ${shownShop})`
+  const listed = `ls.status = 'active' AND ls.visibility = 'public' AND ls.shop_id IN ${shownShopIds}`
+  const offered = `sv.status = 'active' AND sv.shop_id IN ${shownShopIds}`
+  return { shownShop, shownShopIds, listed, offered }
+}
+
+/** The activity counts of one org (alias c), as select columns (StorefrontActivity). */
+export function storefrontActivityColumns(): Record<keyof ActivityCounts, string> {
+  const { shownShopIds, listed, offered } = hubSql()
+  const recent = `now() - INTERVAL '${RECENT_ACTIVITY_DAYS} days'`
+  const orders = (days: number) =>
+    `(SELECT COUNT(*)::integer FROM orders _ro WHERE _ro.shop_id IN ${shownShopIds} AND ${fulfilledWithinSql("_ro", days)})`
+  return {
+    orders_90d: orders(RECENT_ACTIVITY_DAYS),
+    orders_365d: orders(FEATURED_TRADE_WINDOW_DAYS),
+    reviews_90d: `(SELECT COUNT(*)::integer FROM shop_ratings _rr WHERE _rr.shop_id IN ${shownShopIds} AND _rr.created_at >= ${recent})`,
+    listings_updated_90d: `(SELECT COUNT(DISTINCT ls.listing_id)::integer FROM listing_search ls WHERE ${listed} AND ls.updated_at >= ${recent})`,
+    services_posted_90d: `(SELECT COUNT(*)::integer FROM services sv WHERE ${offered} AND sv."timestamp" >= ${recent})`,
+  }
+}
+
+/** The page query's row alias (storefrontCardsQuery wraps the per-org columns in it). */
+const CARDS = "cards"
+
+/** SQL: storefrontActivityScore over the wrapped row's counts. */
+export function storefrontScoreSql(): string {
+  const w = STOREFRONT_SCORE_WEIGHTS
+  return (
+    `(${w.orders_90d} * ${CARDS}.orders_90d` +
+    ` + ${w.orders_365d} * ${CARDS}.orders_365d` +
+    ` + ${w.reviews_90d} * ${CARDS}.reviews_90d` +
+    ` + ${w.listings_updated_90d} * LEAST(${CARDS}.listings_updated_90d, ${LISTING_UPDATES_SCORE_CAP}))`
+  )
+}
+
+/** SQL: 1 when the wrapped row is stale (storefrontIsStale), else 0. */
+export function storefrontStaleSql(): string {
+  return (
+    `(CASE WHEN ${CARDS}.orders_90d = 0 AND ${CARDS}.listings_updated_90d = 0` +
+    ` AND ${CARDS}.services_posted_90d = 0 THEN 1 ELSE 0 END)`
+  )
+}
+
+/**
+ * The order, in SQL so it is the same on every request (SSR, prerender and
+ * the client all get the API's order). On the wrapped page rows:
+ * 1. hub only (pinShowcase): showcase orgs, in SHOWCASE_STOREFRONTS order;
+ * 2. stale orgs after all others;
+ * 3. activity score (most first);
+ * 4. ties: lifetime completed orders, active listings, active services;
+ * 5. name, then contractor_id: a unique key, so ties never flip.
+ */
+export function orderStorefrontCards(
+  qb: Knex.QueryBuilder,
+  opts: { pinShowcase: boolean },
+): Knex.QueryBuilder {
+  if (opts.pinShowcase) {
+    const showcase = SHOWCASE_STOREFRONTS.map((_, i) => `WHEN ? THEN ${i}`).join(" ")
+    qb.orderByRaw(
+      `(CASE ${CARDS}.spectrum_id ${showcase} ELSE ${SHOWCASE_STOREFRONTS.length} END) ASC`,
+      [...SHOWCASE_STOREFRONTS],
+    )
+  }
   return qb
-    .orderByRaw(`(CASE c.spectrum_id ${showcase} ELSE ${SHOWCASE_STOREFRONTS.length} END) ASC`, [
-      ...SHOWCASE_STOREFRONTS,
-    ])
-    .orderByRaw(`${storefrontStaleSql()} ASC`)
-    .orderBy("completed_orders", "desc")
-    .orderBy("active_listings", "desc")
-    .orderBy("active_services", "desc")
-    .orderBy("c.name", "asc")
-    .orderBy("c.contractor_id", "asc")
+    .orderBy("stale", "asc")
+    .orderBy("activity_score", "desc")
+    .orderBy(`${CARDS}.completed_orders`, "desc")
+    .orderBy(`${CARDS}.active_listings`, "desc")
+    .orderBy(`${CARDS}.active_services`, "desc")
+    .orderBy(`${CARDS}.name`, "asc")
+    .orderBy(`${CARDS}.contractor_id`, "asc")
 }
 
 /**
@@ -417,11 +524,16 @@ export interface StorefrontPageQuery {
 /**
  * One page of the hub's orgs, one row per org, in hub order
  * (orderStorefrontCards, which ends on contractor_id, so pages never
- * overlap or skip an org).
+ * overlap or skip an org). The per-org columns are computed once in an
+ * inner query (alias cards); the score and the stale flag are computed on
+ * them and ordered by. The homepage row (featured) doesn't pin showcase orgs.
  */
 export function storefrontCardsQuery(db: Knex, page: StorefrontPageQuery): Knex.QueryBuilder {
   const { shownShop, listed, offered } = hubSql()
-  const query = listedOrgsQuery(db, page.field, page.featured)
+  const activity = Object.entries(storefrontActivityColumns()).map(([name, sql]) =>
+    db.raw(`${sql} as ${name}`),
+  )
+  const perOrg = listedOrgsQuery(db, page.field, page.featured)
     .leftJoin("image_resources as logo_img", "logo_img.resource_id", "c.avatar")
     .select(
       "c.contractor_id",
@@ -443,8 +555,18 @@ export function storefrontCardsQuery(db: Knex, page: StorefrontPageQuery): Knex.
       db.raw(
         `(SELECT COUNT(*)::integer FROM shop_ratings sr JOIN shops s ON s.shop_id = sr.shop_id WHERE ${shownShop}) as rating_count`,
       ),
+      ...activity,
     )
-  return orderStorefrontCards(query).limit(page.limit).offset(page.offset)
+  const query = db
+    .from(perOrg.as(CARDS))
+    .select(
+      `${CARDS}.*`,
+      db.raw(`${storefrontScoreSql()} as activity_score`),
+      db.raw(`${storefrontStaleSql()} as stale`),
+    )
+  return orderStorefrontCards(query, { pinShowcase: !page.featured })
+    .limit(page.limit)
+    .offset(page.offset)
 }
 
 /** How many orgs the hub lists (with `field`: how many have it). */
@@ -482,8 +604,8 @@ export interface StorefrontCardsPage {
  * listing or an active service in a shop that is itself shown (service-only
  * orgs included, owner decision 2026-11-01). Counts and stats only cover the
  * shown shops. Being verified doubles as the hub's anti-impersonation filter.
- * Ordered by the query (orderStorefrontCards): stale orgs rank lower, never
- * hidden. Paginated (page.limit / page.offset), with the total and the
+ * Ordered by the query (orderStorefrontCards): recent trading first, stale
+ * orgs lower, never hidden. Paginated (page.limit / page.offset), with the total and the
  * focus chips; `page.field` keeps only orgs with that field.
  */
 export async function listStorefrontCards(
@@ -515,6 +637,15 @@ export async function listStorefrontCards(
     avg_rating: num(r.rating_count) > 0 ? round(num(r.avg_rating), 2) : null,
     rating_count: num(r.rating_count),
     showcase: SHOWCASE_STOREFRONTS.includes(r.spectrum_id),
+    activity: {
+      orders_90d: num(r.orders_90d),
+      orders_365d: num(r.orders_365d),
+      reviews_90d: num(r.reviews_90d),
+      listings_updated_90d: num(r.listings_updated_90d),
+      services_posted_90d: num(r.services_posted_90d),
+      score: num(r.activity_score),
+      stale: num(r.stale) === 1,
+    },
   }))
   return { storefronts, total: num(counted?.count), fields: fieldList.map((f) => f.field) }
 }

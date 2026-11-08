@@ -50,7 +50,7 @@ function limitOffset(q: RawQuery): { limit: number; offset: number } {
   return { limit: at(m[1]), offset: m[2] ? at(m[2]) : 0 }
 }
 
-const isCardQuery = (q: RawQuery) => q.sql.startsWith('select "c"."contractor_id"')
+const isCardQuery = (q: RawQuery) => q.sql.startsWith('select "cards".*')
 const isCountQuery = (q: RawQuery) => q.sql.startsWith("select count(*)")
 const isChipsQuery = (q: RawQuery) => q.sql.startsWith('select "cf"."field"')
 
