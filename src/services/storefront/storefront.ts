@@ -298,7 +298,7 @@ export interface StorefrontActivity {
   services_posted_90d: number
   /** The ranking score: 3 per order fulfilled in 90 days, 1 per order in 365 days, 1 per review in 90 days, 1 per listing updated in 90 days (at most 5). */
   score: number
-  /** No order fulfilled, listing updated or service posted in 90 days: ranks after every other org (never hidden). */
+  /** No order fulfilled in 365 days and no listing updated or service posted in 90 days: ranks after every other org (never hidden). */
   stale: boolean
 }
 
@@ -350,7 +350,7 @@ export const STOREFRONT_HUB_FIELDS = 10
  * Every count covers the org's shown shops only (the directory's shops).
  */
 
-/** "Recent": the window for the score's fresh signals and for staleness. */
+/** "Recent": the window for the score's fresh signals and for listing / service freshness. */
 export const RECENT_ACTIVITY_DAYS = 90
 
 /**
@@ -392,13 +392,18 @@ export function storefrontActivityScore(a: ActivityCounts): number {
 }
 
 /**
- * Stale: in the last RECENT_ACTIVITY_DAYS the org fulfilled no order,
- * updated no public listing and posted no service. Its own trading only:
- * member logins don't count. Stale orgs rank after every fresh org in the
- * hub; they are never hidden. storefrontStaleSql is the same rule in SQL.
+ * Stale: the org fulfilled no order in FEATURED_TRADE_WINDOW_DAYS (365)
+ * days, and updated no public listing and posted no service in
+ * RECENT_ACTIVITY_DAYS (90) days. Its own trading only: member logins don't
+ * count. Trades use the year, like featuring: in a quiet market (2026-11)
+ * the busiest org had hundreds of orders in the year but none in 90 days,
+ * and a 90-day line put it below orgs whose only activity was re-saving two
+ * listings. Stale orgs rank after every other org in the hub; they are
+ * never hidden. Every featured org traded in the year, so none is stale.
+ * storefrontStaleSql is the same rule in SQL.
  */
 export function storefrontIsStale(a: ActivityCounts): boolean {
-  return a.orders_90d === 0 && a.listings_updated_90d === 0 && a.services_posted_90d === 0
+  return a.orders_365d === 0 && a.listings_updated_90d === 0 && a.services_posted_90d === 0
 }
 
 /**
@@ -447,7 +452,7 @@ export function storefrontScoreSql(): string {
 /** SQL: 1 when the wrapped row is stale (storefrontIsStale), else 0. */
 export function storefrontStaleSql(): string {
   return (
-    `(CASE WHEN ${CARDS}.orders_90d = 0 AND ${CARDS}.listings_updated_90d = 0` +
+    `(CASE WHEN ${CARDS}.orders_365d = 0 AND ${CARDS}.listings_updated_90d = 0` +
     ` AND ${CARDS}.services_posted_90d = 0 THEN 1 ELSE 0 END)`
   )
 }

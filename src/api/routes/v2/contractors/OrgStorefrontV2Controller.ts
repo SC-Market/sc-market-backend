@@ -93,8 +93,8 @@ export class OrgStorefrontV2Controller extends BaseController {
    * The Storefronts hub: RSI-verified orgs with at least one public, active
    * listing or active service (service-only orgs included), a page at a
    * time. Order (storefront.ts orderStorefrontCards): showcase orgs first
-   * (hub only, not with `featured`), stale orgs (no order fulfilled, listing
-   * updated or service posted in 90 days) last, then by recent-activity
+   * (hub only, not with `featured`), stale orgs (no order fulfilled in 365
+   * days, no listing updated or service posted in 90 days) last, then by recent-activity
    * score (`activity.score`: 3 per order fulfilled in 90 days, 1 per order in
    * 365 days, 1 per review in 90 days, 1 per listing updated in 90 days up
    * to 5), then lifetime completed orders; it ends on a unique key, so pages

@@ -1,8 +1,8 @@
 /**
  * The storefront order (storefront.ts orderStorefrontCards), shared by the
  * Storefronts hub and the homepage row: orgs rank on their own recent
- * trading (storefrontActivityScore), stale orgs (nothing traded, updated or
- * posted in 90 days) rank lower but are never hidden, member logins play no
+ * trading (storefrontActivityScore), stale orgs (no trade in 365 days,
+ * nothing updated or posted in 90) rank lower but are never hidden, member logins play no
  * part, showcase orgs are pinned first in the hub only, and the order is in
  * SQL and ends on a unique key, so SSR, prerender and the client agree. The
  * database is knex-mock-client: these check the SQL built, that the SQL and
@@ -202,9 +202,10 @@ describe("the score", () => {
 })
 
 describe("what counts as stale", () => {
-  it("nothing fulfilled, no listing updated and no service posted in 90 days", () => {
+  it("no order fulfilled in 365 days, no listing updated and no service posted in 90 days", () => {
     expect(storefront.storefrontIsStale(counts())).toBe(true)
-    expect(storefront.storefrontIsStale(counts({ orders_365d: 50, reviews_90d: 0 }))).toBe(true)
+    expect(storefront.storefrontIsStale(counts({ reviews_90d: 2 }))).toBe(true)
+    expect(storefront.storefrontIsStale(counts({ orders_365d: 50 }))).toBe(false)
     expect(storefront.storefrontIsStale(counts({ orders_90d: 1, orders_365d: 1 }))).toBe(false)
     expect(storefront.storefrontIsStale(counts({ listings_updated_90d: 1 }))).toBe(false)
     expect(storefront.storefrontIsStale(counts({ services_posted_90d: 1 }))).toBe(false)
@@ -237,8 +238,6 @@ describe("ranking outcomes", () => {
   it("an org whose owner is active every day but that doesn't trade ranks below orgs that trade", () => {
     const house = org("HOUSE", {
       completed_orders: 11,
-      orders_365d: 1,
-      services_posted_90d: 0,
       owner_last_login_days_ago: 0,
     })
     const traderA = org("TRADER_A", { orders_90d: 2, orders_365d: 6, completed_orders: 8, reviews_90d: 2 })
@@ -259,10 +258,24 @@ describe("ranking outcomes", () => {
     expect(rank([a, b])).toEqual(["B", "A"])
   })
 
-  it("among stale orgs, the year's trading still decides", () => {
-    const yearTrader = org("YEAR", { orders_365d: 5, completed_orders: 5 })
+  it("an org with an active owner and a few trades in the year still ranks below busier traders", () => {
+    const house = org("HOUSE", { completed_orders: 11, orders_365d: 3, owner_last_login_days_ago: 0 })
+    const busy = org("BUSY", { orders_365d: 31, completed_orders: 31 })
+    const fresh = org("FRESH", { orders_90d: 1, orders_365d: 4, listings_updated_90d: 2, completed_orders: 17 })
+    expect(rank([house, fresh, busy])).toEqual(["BUSY", "FRESH", "HOUSE"])
+  })
+
+  it("a year of trading keeps an org out of stale: a quiet 90 days doesn't sink a big trader below a relister", () => {
+    const quietTrader = org("QUIET", { orders_365d: 482, completed_orders: 1320 })
+    const relister = org("RELISTER", { listings_updated_90d: 2, completed_orders: 17 })
+    expect(storefront.storefrontIsStale(quietTrader)).toBe(false)
+    expect(rank([relister, quietTrader])).toEqual(["QUIET", "RELISTER"])
+  })
+
+  it("stale orgs come after every other org, whatever their lifetime count", () => {
     const dormant = org("DORMANT", { completed_orders: 500 })
-    expect(rank([dormant, yearTrader])).toEqual(["YEAR", "DORMANT"])
+    const small = org("SMALL", { orders_365d: 1, completed_orders: 1 })
+    expect(rank([dormant, small])).toEqual(["SMALL", "DORMANT"])
   })
 })
 
