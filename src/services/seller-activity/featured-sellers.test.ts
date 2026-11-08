@@ -1,6 +1,6 @@
 /**
  * Featuring (featured-sellers.ts): the homepage's org row and top shops only
- * take orgs/shops with an order fulfilled in the last 90 days; the
+ * take orgs/shops with an order fulfilled in the last 365 days; the
  * Storefronts hub (no `featured`) is unchanged. Checks the SQL built.
  */
 import { describe, expect, it, vi } from "vitest"
@@ -23,7 +23,7 @@ describe("recentlyTradedSql", () => {
     expect(sql).toContain(
       `COALESCE(_fo.fulfilled_at, _fo."timestamp") >= now() - INTERVAL '${FEATURED_TRADE_WINDOW_DAYS} days'`,
     )
-    expect(FEATURED_TRADE_WINDOW_DAYS).toBe(90)
+    expect(FEATURED_TRADE_WINDOW_DAYS).toBe(365)
   })
 
   it("rejects anything but a column reference", () => {

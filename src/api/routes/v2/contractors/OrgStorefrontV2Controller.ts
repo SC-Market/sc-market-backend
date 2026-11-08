@@ -100,7 +100,7 @@ export class OrgStorefrontV2Controller extends BaseController {
    * @param page Page number, from 1.
    * @param page_size Cards per page (default 24, at most 60).
    * @param field Only orgs with this field (one of `fields`).
-   * @param featured Only orgs that trade: a shown shop with an order fulfilled in the last 90 days (the homepage row).
+   * @param featured Only orgs that trade: a shown shop with an order fulfilled in the last 365 days (the homepage row).
    */
   @Get("storefronts")
   public async getStorefronts(

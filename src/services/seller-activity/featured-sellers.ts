@@ -14,8 +14,13 @@
  * miss the next such account, so the rule is about trading, for everyone.
  */
 
-/** A shop must have an order fulfilled within this many days to be featured. */
-export const FEATURED_TRADE_WINDOW_DAYS = 90
+/**
+ * A shop must have an order fulfilled within this many days to be featured.
+ * A year, not a season: the market is quiet enough (2026-11) that 90 days
+ * left one featured org, while SC Market's own org last completed an order
+ * over a year ago.
+ */
+export const FEATURED_TRADE_WINDOW_DAYS = 365
 
 const COLUMN = /^[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*$/i
 

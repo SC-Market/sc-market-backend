@@ -567,7 +567,7 @@ export class ShopsV2Controller extends BaseController {
    * Browse all active shops. Supports search, pagination, and sorting.
    *
    * @summary Browse shops
-   * @param featured Only shops that trade: an order fulfilled in the last 90 days (the homepage's "Top rated shops").
+   * @param featured Only shops that trade: an order fulfilled in the last 365 days (the homepage's "Top rated shops").
    */
   @Get("")
   public async browseShops(
