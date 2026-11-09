@@ -7183,6 +7183,56 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GameItemMarketPrice": {
+				"description": "What SC Market sells a game item for right now: active public listings\nwith stock (the market search's rules for an anonymous visitor).",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"lowest_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Lowest per-unit fixed-price ask in aUEC, above the 1 aUEC placeholder;\nnull when every listing is an auction or a placeholder price"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct sellers: one per shop, however many listings it has"
+					},
+					"listing_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Live listings of the item"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"lowest_price",
+					"seller_count",
+					"listing_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetGameItemMarketPricesResponse": {
+				"description": "GET /api/v2/game-items/market-prices",
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/GameItemMarketPrice"
+						},
+						"type": "array",
+						"description": "Only the items somebody sells (an item with no seller has no entry), in the order asked"
+					}
+				},
+				"required": [
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PublicFeedLicense": {
 				"description": "Licence of the public data feeds: CC BY 4.0.",
 				"properties": {
@@ -9327,6 +9377,211 @@
 				},
 				"required": [
 					"shops"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiCompareCategory": {
+				"type": "string",
+				"enum": [
+					"quantum-drive",
+					"shield",
+					"power-plant",
+					"cooler",
+					"radar",
+					"jump-drive",
+					"ship-weapon",
+					"missile",
+					"countermeasure",
+					"mining-head",
+					"fps-weapon",
+					"helmet",
+					"torso",
+					"arms",
+					"legs",
+					"undersuit",
+					"backpack"
+				],
+				"description": "A comparison table: ship components, FPS weapons or one armour slot."
+			},
+			"WikiCompareColumn": {
+				"description": "One stat column of a comparison table.",
+				"properties": {
+					"key": {
+						"type": "string",
+						"description": "Stat key; also the key into each row's `stats`"
+					},
+					"kind": {
+						"type": "string",
+						"enum": [
+							"number",
+							"text"
+						],
+						"description": "\"text\" stats (fire modes, laser power ranges) are not ranked"
+					},
+					"better": {
+						"type": "string",
+						"enum": [
+							"higher",
+							"lower",
+							null
+						],
+						"nullable": true,
+						"description": "Which way is better, for highlighting the best value; null when neither"
+					},
+					"unit": {
+						"type": "string",
+						"enum": [
+							"s",
+							"m",
+							"m/s",
+							"rpm",
+							"°C",
+							"%",
+							"µSCU",
+							null
+						],
+						"nullable": true,
+						"description": "Display unit (a symbol, never translated); null when unitless"
+					}
+				},
+				"required": [
+					"key",
+					"kind",
+					"better",
+					"unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiCompareRow": {
+				"description": "One game item of a comparison table.",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"grade": {
+						"type": "string",
+						"nullable": true,
+						"description": "Component grade A-D; null for categories without grades"
+					},
+					"class": {
+						"type": "string",
+						"nullable": true,
+						"description": "Class (Military, Ballistic Cannon, Heavy, ...), as the game data names it"
+					},
+					"sub_type": {
+						"type": "string",
+						"nullable": true,
+						"description": "The game's sub-type (Small, Torpedo, ...), null when the data has none"
+					},
+					"manufacturer": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer display name"
+					},
+					"manufacturer_code": {
+						"type": "string",
+						"nullable": true,
+						"description": "Manufacturer code (game_items.manufacturer), e.g. \"behr\""
+					},
+					"image_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"thumbnail_path": {
+						"type": "string",
+						"nullable": true
+					},
+					"stats": {
+						"properties": {},
+						"additionalProperties": {
+							"anyOf": [
+								{
+									"type": "number",
+									"format": "double"
+								},
+								{
+									"type": "string"
+								}
+							]
+						},
+						"type": "object",
+						"description": "Stat key → value; a stat the item lacks is absent. Text when the data isn't a plain number."
+					},
+					"market": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/GameItemMarketPrice"
+							}
+						],
+						"nullable": true,
+						"description": "null when nobody sells the item on SC Market"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"size",
+					"grade",
+					"class",
+					"sub_type",
+					"manufacturer",
+					"manufacturer_code",
+					"image_url",
+					"thumbnail_path",
+					"stats",
+					"market"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiCompareResponse": {
+				"description": "GET /game-data/wiki/compare/{category}",
+				"properties": {
+					"category": {
+						"$ref": "#/components/schemas/WikiCompareCategory"
+					},
+					"group": {
+						"type": "string",
+						"enum": [
+							"ship",
+							"fps"
+						]
+					},
+					"columns": {
+						"items": {
+							"$ref": "#/components/schemas/WikiCompareColumn"
+						},
+						"type": "array",
+						"description": "Only stats some items have and that differ between items"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/WikiCompareRow"
+						},
+						"type": "array",
+						"description": "Every item of the category, by name"
+					},
+					"as_of": {
+						"type": "string",
+						"description": "When the document was computed (ISO 8601); market prices are as of then"
+					}
+				},
+				"required": [
+					"category",
+					"group",
+					"columns",
+					"items",
+					"as_of"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -23715,6 +23970,40 @@
 				]
 			}
 		},
+		"/game-items/market-prices": {
+			"get": {
+				"operationId": "GetMarketPrices",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetGameItemMarketPricesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Market prices of up to 120 game items in one call (\"Lowest on SC\nMarket: X aUEC · N sellers\" on wiki and game-data list and detail\npages): the lowest fixed-price ask and the number of sellers (distinct\nshops) over active public listings with stock. Items nobody sells are\nleft out. Viewer-independent and cached for 5 minutes.",
+				"summary": "Get market prices for game items",
+				"tags": [
+					"Game Items V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Comma-separated game item UUIDs (at most 120)",
+						"in": "query",
+						"name": "ids",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/game-items/{id}/price-stats": {
 			"get": {
 				"operationId": "GetPriceStats",
@@ -24598,6 +24887,40 @@
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/wiki/compare/{category}": {
+			"get": {
+				"operationId": "GetCompareTable",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WikiCompareResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "A comparison table: every game item of one category (quantum drives,\nshields, ship weapons, FPS weapons, helmets, ...) with the stats the\ngame data has for it, its class, grade and size, and its SC Market\nprice (lowest fixed-price ask, distinct sellers; null when nobody sells\nit). Columns no item has, or that every item shares, are left out.\nCached for 5 minutes.",
+				"summary": "Get a comparison table",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Comparison category",
+						"in": "path",
+						"name": "category",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/WikiCompareCategory"
 						}
 					}
 				]

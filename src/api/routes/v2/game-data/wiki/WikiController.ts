@@ -7,7 +7,7 @@
  * Requirements: 8.9 - Game Database Wiki backend
  */
 
-import { Controller, Get, Route, Tags, Query, Path } from "tsoa"
+import { Controller, Get, Route, Tags, Query, Path, Middlewares } from "tsoa"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -21,6 +21,8 @@ import {
   WikiLocationNode,
   WikiManufacturerSearchResult,
   WikiManufacturerDetail,
+  WikiCompareCategory,
+  WikiCompareResponse,
 } from "./wiki.types.js"
 import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../util/short-slug.js"
 import { listingPubliclyListed, publiclyListedSql } from "../../util/listing-visibility.js"
@@ -30,6 +32,14 @@ import {
 } from "./manufacturer-names.js"
 import logger from "../../../../../logger/logger.js"
 import { clampPagination } from "../../util/pagination.js"
+import { getCompareDocument } from "../../../../../services/item-compare/item-compare.service.js"
+import { isCompareCategory } from "../../../../../services/item-compare/compare-categories.js"
+import {
+  PRICE_FEED_CACHE_CONTROL,
+  createPriceFeedRateLimit,
+} from "../../../public-prices/router.js"
+
+const compareRateLimit = createPriceFeedRateLimit("wiki_compare_v2_ip")
 
 /** Row shape of the `game_item_attributes` projection used here */
 interface GameItemAttributeRow {
@@ -556,6 +566,28 @@ export class WikiController extends BaseController {
         sell_price: price(row.sell_price),
       })),
     }
+  }
+
+  /**
+   * A comparison table: every game item of one category (quantum drives,
+   * shields, ship weapons, FPS weapons, helmets, ...) with the stats the
+   * game data has for it, its class, grade and size, and its SC Market
+   * price (lowest fixed-price ask, distinct sellers; null when nobody sells
+   * it). Columns no item has, or that every item shares, are left out.
+   * Cached for 5 minutes.
+   *
+   * @summary Get a comparison table
+   * @param category Comparison category
+   */
+  @Get("compare/{category}")
+  @Middlewares(compareRateLimit)
+  public async getCompareTable(
+    @Path() category: WikiCompareCategory,
+  ): Promise<WikiCompareResponse> {
+    if (!isCompareCategory(category)) this.throwNotFound("Comparison category", category)
+    const doc = await getCompareDocument(category)
+    this.setHeader("Cache-Control", PRICE_FEED_CACHE_CONTROL)
+    return doc
   }
 
   /**

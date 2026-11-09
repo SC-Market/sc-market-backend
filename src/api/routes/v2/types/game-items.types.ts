@@ -203,3 +203,31 @@ export interface SearchGameItemAggregatesResponse {
   /** Page size */
   page_size: number
 }
+
+// ============================================================================
+// Market Prices (batched)
+// ============================================================================
+
+/**
+ * What SC Market sells a game item for right now: active public listings
+ * with stock (the market search's rules for an anonymous visitor).
+ */
+export interface GameItemMarketPrice {
+  /** Game item UUID */
+  game_item_id: string
+  /**
+   * Lowest per-unit fixed-price ask in aUEC, above the 1 aUEC placeholder;
+   * null when every listing is an auction or a placeholder price
+   */
+  lowest_price: number | null
+  /** Distinct sellers: one per shop, however many listings it has */
+  seller_count: number
+  /** Live listings of the item */
+  listing_count: number
+}
+
+/** GET /api/v2/game-items/market-prices */
+export interface GetGameItemMarketPricesResponse {
+  /** Only the items somebody sells (an item with no seller has no entry), in the order asked */
+  items: GameItemMarketPrice[]
+}

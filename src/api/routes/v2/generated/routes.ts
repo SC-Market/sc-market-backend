@@ -2479,6 +2479,25 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GameItemMarketPrice": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "lowest_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "seller_count": {"dataType":"double","required":true},
+            "listing_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetGameItemMarketPricesResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"GameItemMarketPrice"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PublicFeedLicense": {
         "dataType": "refObject",
         "properties": {
@@ -3158,6 +3177,53 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "shops": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiItemShop"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiCompareCategory": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["quantum-drive"]},{"dataType":"enum","enums":["shield"]},{"dataType":"enum","enums":["power-plant"]},{"dataType":"enum","enums":["cooler"]},{"dataType":"enum","enums":["radar"]},{"dataType":"enum","enums":["jump-drive"]},{"dataType":"enum","enums":["ship-weapon"]},{"dataType":"enum","enums":["missile"]},{"dataType":"enum","enums":["countermeasure"]},{"dataType":"enum","enums":["mining-head"]},{"dataType":"enum","enums":["fps-weapon"]},{"dataType":"enum","enums":["helmet"]},{"dataType":"enum","enums":["torso"]},{"dataType":"enum","enums":["arms"]},{"dataType":"enum","enums":["legs"]},{"dataType":"enum","enums":["undersuit"]},{"dataType":"enum","enums":["backpack"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiCompareColumn": {
+        "dataType": "refObject",
+        "properties": {
+            "key": {"dataType":"string","required":true},
+            "kind": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["number"]},{"dataType":"enum","enums":["text"]}],"required":true},
+            "better": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["higher"]},{"dataType":"enum","enums":["lower"]},{"dataType":"enum","enums":[null]}],"required":true},
+            "unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["s"]},{"dataType":"enum","enums":["m"]},{"dataType":"enum","enums":["m/s"]},{"dataType":"enum","enums":["rpm"]},{"dataType":"enum","enums":["°C"]},{"dataType":"enum","enums":["%"]},{"dataType":"enum","enums":["µSCU"]},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiCompareRow": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "size": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "grade": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "class": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sub_type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "manufacturer": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "manufacturer_code": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "image_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "thumbnail_path": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "stats": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}]},"required":true},
+            "market": {"dataType":"union","subSchemas":[{"ref":"GameItemMarketPrice"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiCompareResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "category": {"ref":"WikiCompareCategory","required":true},
+            "group": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ship"]},{"dataType":"enum","enums":["fps"]}],"required":true},
+            "columns": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiCompareColumn"},"required":true},
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiCompareRow"},"required":true},
+            "as_of": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -9709,6 +9775,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameItemsV2Controller_getMarketPrices: Record<string, TsoaRoute.ParameterSchema> = {
+                ids: {"in":"query","name":"ids","required":true,"dataType":"string"},
+        };
+        app.get('/game-items/market-prices',
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller.prototype.getMarketPrices)),
+
+            async function GameItemsV2Controller_getMarketPrices(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameItemsV2Controller_getMarketPrices, request, response });
+
+                const controller = new GameItemsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getMarketPrices',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsGameItemsV2Controller_getPriceStats: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
@@ -10254,6 +10350,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getItemShops',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getCompareTable: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"path","name":"category","required":true,"ref":"WikiCompareCategory"},
+        };
+        app.get('/game-data/wiki/compare/:category',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getCompareTable)),
+
+            async function WikiController_getCompareTable(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getCompareTable, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getCompareTable',
                 controller,
                 response,
                 next,

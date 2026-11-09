@@ -4,6 +4,8 @@
  * Type definitions for the Game Database Wiki endpoints.
  */
 
+import type { GameItemMarketPrice } from "../../types/game-items.types.js"
+
 // ============================================================================
 // Request Types
 // ============================================================================
@@ -240,4 +242,75 @@ export interface ManufacturerItem {
   size?: string
   grade?: string
   image_url?: string
+}
+
+// ============================================================================
+// Comparison tables
+// ============================================================================
+
+/** A comparison table: ship components, FPS weapons or one armour slot. */
+export type WikiCompareCategory =
+  | "quantum-drive"
+  | "shield"
+  | "power-plant"
+  | "cooler"
+  | "radar"
+  | "jump-drive"
+  | "ship-weapon"
+  | "missile"
+  | "countermeasure"
+  | "mining-head"
+  | "fps-weapon"
+  | "helmet"
+  | "torso"
+  | "arms"
+  | "legs"
+  | "undersuit"
+  | "backpack"
+
+/** One stat column of a comparison table. */
+export interface WikiCompareColumn {
+  /** Stat key; also the key into each row's `stats` */
+  key: string
+  /** "text" stats (fire modes, laser power ranges) are not ranked */
+  kind: "number" | "text"
+  /** Which way is better, for highlighting the best value; null when neither */
+  better: "higher" | "lower" | null
+  /** Display unit (a symbol, never translated); null when unitless */
+  unit: "s" | "m" | "m/s" | "rpm" | "°C" | "%" | "µSCU" | null
+}
+
+/** One game item of a comparison table. */
+export interface WikiCompareRow {
+  id: string
+  name: string
+  size: number | null
+  /** Component grade A-D; null for categories without grades */
+  grade: string | null
+  /** Class (Military, Ballistic Cannon, Heavy, ...), as the game data names it */
+  class: string | null
+  /** The game's sub-type (Small, Torpedo, ...), null when the data has none */
+  sub_type: string | null
+  /** Manufacturer display name */
+  manufacturer: string | null
+  /** Manufacturer code (game_items.manufacturer), e.g. "behr" */
+  manufacturer_code: string | null
+  image_url: string | null
+  thumbnail_path: string | null
+  /** Stat key → value; a stat the item lacks is absent. Text when the data isn't a plain number. */
+  stats: { [key: string]: number | string }
+  /** null when nobody sells the item on SC Market */
+  market: GameItemMarketPrice | null
+}
+
+/** GET /game-data/wiki/compare/{category} */
+export interface WikiCompareResponse {
+  category: WikiCompareCategory
+  group: "ship" | "fps"
+  /** Only stats some items have and that differ between items */
+  columns: WikiCompareColumn[]
+  /** Every item of the category, by name */
+  items: WikiCompareRow[]
+  /** When the document was computed (ISO 8601); market prices are as of then */
+  as_of: string
 }

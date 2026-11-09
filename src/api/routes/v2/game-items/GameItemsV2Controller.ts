@@ -20,6 +20,7 @@ import {
   GameItemMetadata,
   SearchGameItemAggregatesResponse,
   GameItemAggregate,
+  GetGameItemMarketPricesResponse,
 } from "../types/game-items.types.js"
 import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
@@ -38,7 +39,13 @@ import {
   createPriceFeedRateLimit,
 } from "../../public-prices/router.js"
 
+import {
+  MARKET_PRICES_MAX_IDS,
+  getMarketPrices,
+} from "../../../../services/market-prices/market-prices.service.js"
+
 const priceStatsRateLimit = createPriceFeedRateLimit("price_stats_v2_ip")
+const marketPricesRateLimit = createPriceFeedRateLimit("market_prices_v2_ip")
 const acquisitionRateLimit = createPriceFeedRateLimit("item_acquisition_v2_ip")
 
 /**
@@ -142,6 +149,44 @@ export class GameItemsV2Controller extends BaseController {
       .orderBy("name")
       .limit(effectiveLimit)
       .select("name", "type", "id")
+  }
+
+  /**
+   * Market prices of up to 120 game items in one call ("Lowest on SC
+   * Market: X aUEC · N sellers" on wiki and game-data list and detail
+   * pages): the lowest fixed-price ask and the number of sellers (distinct
+   * shops) over active public listings with stock. Items nobody sells are
+   * left out. Viewer-independent and cached for 5 minutes.
+   *
+   * @summary Get market prices for game items
+   * @param ids Comma-separated game item UUIDs (at most 120)
+   */
+  @Get("market-prices")
+  @Middlewares(marketPricesRateLimit)
+  public async getMarketPrices(
+    @Query() ids: string,
+  ): Promise<GetGameItemMarketPricesResponse> {
+    const list = ids
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean)
+    if (list.length === 0 || list.length > MARKET_PRICES_MAX_IDS) {
+      this.throwValidationError("Invalid ids", [
+        {
+          field: "ids",
+          message: `Between 1 and ${MARKET_PRICES_MAX_IDS} game item UUIDs, comma-separated`,
+        },
+      ])
+    }
+    const bad = list.find((id) => !isUuid(id))
+    if (bad !== undefined) {
+      this.throwValidationError("Invalid ids", [
+        { field: "ids", message: `Not a game item UUID: ${bad.slice(0, 64)}` },
+      ])
+    }
+    const items = await getMarketPrices(getKnex(), list)
+    this.setHeader("Cache-Control", PRICE_FEED_CACHE_CONTROL)
+    return { items }
   }
 
   /**
