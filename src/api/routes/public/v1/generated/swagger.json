@@ -1991,6 +1991,11 @@
 						"type": "string",
 						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
+					"owner_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Spectrum ID of the org that owns the shop; null for a user's own shop"
+					},
 					"rating": {
 						"type": "number",
 						"format": "double",
@@ -2016,6 +2021,7 @@
 					"shop_id",
 					"name",
 					"slug",
+					"owner_spectrum_id",
 					"rating",
 					"languages"
 				],

@@ -1312,7 +1312,9 @@ export class ListingsV2Controller extends BaseController {
           "s.logo as shop_logo_resource_id",
           "s.supported_languages as shop_languages",
           "s.owner_contractor_id as shop_owner_contractor_id",
+          "oc.spectrum_id as shop_owner_spectrum_id",
         )
+        .leftJoin("contractors as oc", "oc.contractor_id", "s.owner_contractor_id")
         .where("l.listing_id", id)
         // Test shops' listings exist only for test accounts: anyone else
         // (anonymous, real users, site admins) gets the same 404 as for a
@@ -1520,6 +1522,7 @@ export class ListingsV2Controller extends BaseController {
           shop_id: listing.shop_id,
           name: listing.shop_name,
           slug: listing.shop_slug,
+          owner_spectrum_id: listing.shop_owner_spectrum_id ?? null,
           rating: shopRating,
           logo_url: shopLogoUrl,
           languages: listing.shop_languages || ["en"],

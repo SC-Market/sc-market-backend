@@ -201,6 +201,8 @@ export interface ShopPublicResponse {
   rating_count: number
   /** Seller reputation badges, computed server-side from shop metrics + owner data */
   badge_ids: string[]
+  /** Spectrum ID of the org that owns the shop; null for a user's own shop */
+  owner_spectrum_id: string | null
   /** Owner information — link to user profile or org page (included in detail view) */
   owner?: ShopOwnerInfo
   /** Number of active listings in this shop */
@@ -466,10 +468,12 @@ export class ShopsV2Controller extends BaseController {
     const db = getKnex()
 
     let query = db("shops as s").where("s.status", "active")
+    let ownerSpectrumId: string | null = null
 
     if (spectrum_id) {
-      const contractor = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
+      const contractor = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id", "spectrum_id")
       if (!contractor) return []
+      ownerSpectrumId = contractor.spectrum_id
       query = query.where("s.owner_contractor_id", contractor.contractor_id)
     } else if (username) {
       const user = await db("accounts").where("username", username).first("user_id")
@@ -513,6 +517,7 @@ export class ShopsV2Controller extends BaseController {
         rating: shop.rating ? parseFloat(shop.rating) : null,
         rating_count: shop.rating_count || 0,
         badge_ids: shop.badge_ids || [],
+        owner_spectrum_id: ownerSpectrumId,
       }),
     )
   }
@@ -690,6 +695,7 @@ export class ShopsV2Controller extends BaseController {
         rating: row.avg_rating ? parseFloat(row.avg_rating as string) : null,
         rating_count: (row.rating_count as number) || 0,
         badge_ids: (row.badge_ids as string[]) || [],
+        owner_spectrum_id: row.owner_type === "contractor" ? ((row.owner_slug as string | null) ?? null) : null,
         listing_count: (row.listing_count as number) || 0,
         service_count: (row.service_count as number) || 0,
         total_sales: (row.total_sales as number) || 0,
@@ -777,6 +783,7 @@ export class ShopsV2Controller extends BaseController {
       rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
       rating_count: ratingResult?.rating_count || 0,
       badge_ids: shop.badge_ids || [],
+      owner_spectrum_id: owner.type === "contractor" ? owner.slug || null : null,
       owner,
       listing_count: parseInt(String(listingCount?.count || 0), 10),
       total_sales: metrics.total_completed,

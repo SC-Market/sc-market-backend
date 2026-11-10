@@ -419,6 +419,9 @@ export interface SellerInfo {
   /** Shop slug — use for profile links: /shops/:slug */
   slug: string;
 
+  /** Spectrum ID of the org that owns the shop; null for a user's own shop */
+  owner_spectrum_id: string | null;
+
   /** Shop rating (0-5) */
   rating: number;
 

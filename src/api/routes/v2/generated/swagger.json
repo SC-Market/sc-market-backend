@@ -1294,6 +1294,11 @@
 						"type": "array",
 						"description": "Seller reputation badges, computed server-side from shop metrics + owner data"
 					},
+					"owner_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Spectrum ID of the org that owns the shop; null for a user's own shop"
+					},
 					"owner": {
 						"$ref": "#/components/schemas/ShopOwnerInfo",
 						"description": "Owner information — link to user profile or org page (included in detail view)"
@@ -1336,7 +1341,8 @@
 					"created_at",
 					"rating",
 					"rating_count",
-					"badge_ids"
+					"badge_ids",
+					"owner_spectrum_id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -6328,6 +6334,11 @@
 						"type": "string",
 						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
+					"owner_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Spectrum ID of the org that owns the shop; null for a user's own shop"
+					},
 					"rating": {
 						"type": "number",
 						"format": "double",
@@ -6353,6 +6364,7 @@
 					"shop_id",
 					"name",
 					"slug",
+					"owner_spectrum_id",
 					"rating",
 					"languages"
 				],
@@ -14526,6 +14538,11 @@
 						"type": "string",
 						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
+					"shop_owner_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Spectrum ID of the org that owns the shop; null for a user's own shop"
+					},
 					"shop_rating": {
 						"type": "number",
 						"format": "double",
@@ -14547,6 +14564,7 @@
 					"shop_id",
 					"shop_name",
 					"shop_slug",
+					"shop_owner_spectrum_id",
 					"shop_rating",
 					"status"
 				],

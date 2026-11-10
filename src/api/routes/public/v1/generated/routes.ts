@@ -655,6 +655,7 @@ const models: TsoaRoute.Models = {
             "shop_id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
+            "owner_spectrum_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "rating": {"dataType":"double","required":true},
             "logo_url": {"dataType":"string"},
             "languages": {"dataType":"array","array":{"dataType":"string"},"required":true},

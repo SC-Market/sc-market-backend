@@ -88,6 +88,7 @@ export class CartV2Controller extends BaseController {
         .join("listing_items as li", "ci.item_id", "li.item_id")
         .join("item_variants as iv", "ci.variant_id", "iv.variant_id")
         .leftJoin("shops as s", "l.shop_id", "s.shop_id")
+        .leftJoin("contractors as oc", "oc.contractor_id", "s.owner_contractor_id")
         .where("ci.user_id", userId)
         .select(
           "ci.cart_item_id",
@@ -109,6 +110,7 @@ export class CartV2Controller extends BaseController {
           // Shop info
           "s.name as shop_name",
           "s.slug as shop_slug",
+          "oc.spectrum_id as shop_owner_spectrum_id",
           knex.raw(`(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = l.shop_id) AS shop_rating`),
           // Pricing info
           "li.pricing_mode",
@@ -169,6 +171,7 @@ export class CartV2Controller extends BaseController {
             shop_id: item.shop_id,
             shop_name: item.shop_name || "Unknown",
             shop_slug: item.shop_slug || "",
+            shop_owner_spectrum_id: item.shop_owner_spectrum_id ?? null,
             shop_rating: parseFloat(item.shop_rating) || 0,
             status: item.listing_status,
           }
