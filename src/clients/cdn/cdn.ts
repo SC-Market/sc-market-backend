@@ -2,6 +2,7 @@ import { database } from "../database/knex-db.js"
 import { DBImageResource } from "../database/db-models.js"
 import { BackBlazeCDN } from "../backblaze/backblaze.js"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
+import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "../../api/routes/v1/market/constants.js"
 
 export const external_resource_pattern =
   /^https:\/\/(www\.)?(((media|cdn)\.)?robertsspaceindustries\.com|(media\.)?starcitizen\.tools|i\.imgur\.com|cstone\.space)([\/?#][-a-zA-Z0-9()@:%_+.~#?&\/=]*)?$/
@@ -25,6 +26,8 @@ export const external_resource_regex = new RegExp(external_resource_pattern)
  * host let `http:` (mixed content, MITM-able) and other schemes through.
  */
 export function isAllowedExternalImageUrl(external_url: string): boolean {
+  // Our own placeholder, the one sc-market.space URL allowed here.
+  if (external_url === DEFAULT_PLACEHOLDER_PHOTO_URL) return true
   let url: URL
   try {
     url = new URL(external_url)

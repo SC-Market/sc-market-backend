@@ -12,7 +12,6 @@ import { pushRouter } from "./push/routes.js"
 import { emailRouter } from "./email/routes.js"
 import { recruitingRouter } from "./recruiting/routes.js"
 import { commentRouter } from "./comments/routes.js"
-import { wikiRouter } from "./wiki/routes.js"
 import { adminRouter } from "./admin/routes.js"
 import { offerRouter, offersRouter } from "./offers/routes.js"
 import { servicesRouter } from "./services/routes.js"
@@ -57,7 +56,6 @@ apiV1Router.use("/offer", offerRouter)
 apiV1Router.use("/services", servicesRouter)
 apiV1Router.use("/delivery", deliveryRouter)
 apiV1Router.use("/deliveries", deliveriesRouter)
-apiV1Router.use("/wiki", wikiRouter)
 apiV1Router.use("/moderation", moderationRouter)
 apiV1Router.use("/shops", shopRouter)
 apiV1Router.use("/tokens", tokensRouter)
