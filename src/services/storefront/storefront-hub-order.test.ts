@@ -93,7 +93,7 @@ describe("ordering SQL", () => {
   it("hub: showcase, then stale last, then activity score, then lifetime orders, listings, services, name, a unique id", () => {
     const { sql, bindings } = built()
     expect(items(orderBy(sql))).toEqual([
-      "(CASE cards.spectrum_id WHEN ? THEN 0 WHEN ? THEN 1 ELSE 2 END) ASC",
+      "(CASE cards.spectrum_id WHEN ? THEN 0 ELSE 1 END) ASC",
       '"stale" asc',
       '"activity_score" desc',
       '"cards"."completed_orders" desc',
@@ -102,7 +102,8 @@ describe("ordering SQL", () => {
       '"cards"."name" asc',
       '"cards"."contractor_id" asc',
     ])
-    expect(bindings.slice(-4)).toEqual([...storefront.SHOWCASE_STOREFRONTS, 24, 48])
+    expect(storefront.SHOWCASE_STOREFRONTS).toEqual(["MEDRUNNER"])
+    expect(bindings.slice(-3)).toEqual(["MEDRUNNER", 24, 48])
   })
 
   it("homepage row (featured): no showcase pin, the same order otherwise", () => {
@@ -317,12 +318,12 @@ describe("listStorefrontCards", () => {
     tracker.on.select(/from "contractor_fields"/).response([])
     tracker.on
       .select(/from "contractors" as "c"/)
-      .response([row("BWINCORP", 0), row("ALPHA", 1), row("ZETA", 500)])
+      .response([row("MEDRUNNER", 0), row("ALPHA", 1), row("ZETA", 500)])
 
     const { storefronts: cards } = await storefront.listStorefrontCards({ limit: 24, offset: 0 })
 
     expect(cards.map((c) => c.spectrum_id)).toEqual([
-      "BWINCORP",
+      "MEDRUNNER",
       "ALPHA",
       "ZETA",
     ])

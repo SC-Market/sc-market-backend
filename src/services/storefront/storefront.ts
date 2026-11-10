@@ -249,12 +249,13 @@ export async function loadOrgStorefront(
 }
 
 /**
- * The orgs the Storefronts hub pins first: the owner's org and a close
- * partner (drafts/whitelabel-overhaul-plan.md §A10), in this order. Hub
- * only: the homepage row (featured) is earned by trading, so they appear
- * there only when their activity ranks them there.
+ * The orgs the Storefronts hub pins first: a close partner
+ * (drafts/whitelabel-overhaul-plan.md §A10), in this order. BWINCORP is a
+ * test org now and isn't pinned. Hub only: the homepage row (featured) is
+ * earned by trading, so they appear there only when their activity ranks
+ * them there.
  */
-export const SHOWCASE_STOREFRONTS: readonly string[] = ["BWINCORP", "MEDRUNNER"]
+export const SHOWCASE_STOREFRONTS: readonly string[] = ["MEDRUNNER"]
 
 export interface StorefrontCard {
   spectrum_id: string
