@@ -8409,6 +8409,39 @@
 					"created_at": {
 						"type": "string",
 						"description": "Listing created timestamp"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "Listing last updated timestamp (ISO 8601)"
+					},
+					"photo": {
+						"type": "string",
+						"description": "The listing's first photo URL, as on the search card (absent if it has none)"
+					},
+					"shop_activity": {
+						"$ref": "#/components/schemas/SellerActivity",
+						"description": "Seller activity: coarse last seen, typical reply time, completed orders"
+					},
+					"has_bulk_discount": {
+						"type": "boolean",
+						"description": "Whether this listing item has bulk discount tiers defined"
+					},
+					"visibility": {
+						"type": "string",
+						"enum": [
+							"public",
+							"private",
+							"unlisted"
+						],
+						"description": "Listing visibility: public, private (org-only), or unlisted"
+					},
+					"quantity_unit": {
+						"type": "string",
+						"enum": [
+							"unit",
+							"scu"
+						],
+						"description": "Quantity unit: 'unit' or 'scu'"
 					}
 				},
 				"required": [
@@ -8423,7 +8456,11 @@
 					"shop_slug",
 					"price",
 					"quantity_available",
-					"created_at"
+					"created_at",
+					"updated_at",
+					"has_bulk_discount",
+					"visibility",
+					"quantity_unit"
 				],
 				"type": "object",
 				"additionalProperties": false

@@ -26,6 +26,7 @@ import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
+import { getShopActivity } from "../../../../services/seller-activity/seller-activity.service.js"
 import {
   sellerActiveJoinedSql,
   sellerActivityTieBreakSql,
@@ -449,6 +450,9 @@ export class GameItemsV2Controller extends BaseController {
           "s.name as shop_name",
           "s.slug as shop_slug",
           "l.created_at",
+          "l.updated_at",
+          "l.visibility",
+          "l.quantity_unit",
           "iv.display_name as variant_display_name",
           "iv.short_name as variant_short_name",
           knex.raw(
@@ -468,6 +472,13 @@ export class GameItemsV2Controller extends BaseController {
           knex.raw(
             `(SELECT COALESCE(sh.badge_ids, '{}') FROM shops sh WHERE sh.shop_id = l.shop_id) AS shop_badge_ids`,
           ),
+          // Same photo and bulk-discount rules as the search card (listing_search view)
+          knex.raw(
+            `(SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) FROM listing_photos_v2 lp JOIN image_resources ir ON lp.resource_id = ir.resource_id WHERE lp.listing_id = l.listing_id ORDER BY lp.display_order ASC LIMIT 1) AS photo`,
+          ),
+          knex.raw(
+            `BOOL_OR(li.bulk_discount_tiers IS NOT NULL AND li.bulk_discount_tiers::text != '[]') AS has_bulk_discount`,
+          ),
         )
         .where("li.game_item_id", gameItemId)
         .where("l.status", "active")
@@ -481,6 +492,9 @@ export class GameItemsV2Controller extends BaseController {
           "s.name",
           "s.slug",
           "l.created_at",
+          "l.updated_at",
+          "l.visibility",
+          "l.quantity_unit",
           "iv.display_name",
           "iv.short_name",
           "iv.attributes",
@@ -580,8 +594,27 @@ export class GameItemsV2Controller extends BaseController {
             (row.variant_display_name as string) || undefined,
           variant_short_name: (row.variant_short_name as string) || undefined,
           created_at: (row.created_at as Date).toISOString(),
+          updated_at: (
+            (row.updated_at as Date | null) ?? (row.created_at as Date)
+          ).toISOString(),
+          photo: (row.photo as string | null) || undefined,
+          has_bulk_discount: row.has_bulk_discount === true,
+          visibility:
+            (row.visibility as GameItemListingResult["visibility"] | null) ||
+            "public",
+          quantity_unit:
+            (row.quantity_unit as
+              | GameItemListingResult["quantity_unit"]
+              | null) || "unit",
         }),
       )
+
+      // Seller activity for the shops on this page (one lookup), as on search cards.
+      const activity = await getShopActivity(
+        listings.map((l) => l.shop_id),
+        knex,
+      )
+      for (const l of listings) l.shop_activity = activity.get(l.shop_id)
 
       // Return complete response
       return {

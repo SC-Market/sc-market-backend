@@ -7,6 +7,8 @@
  * Requirements: 38.1-38.12
  */
 
+import type { SellerActivity } from "./seller-activity.types.js"
+
 // ============================================================================
 // Game Item Listings Types
 // ============================================================================
@@ -116,6 +118,24 @@ export interface GameItemListingResult {
 
   /** Listing created timestamp */
   created_at: string
+
+  /** Listing last updated timestamp (ISO 8601) */
+  updated_at: string
+
+  /** The listing's first photo URL, as on the search card (absent if it has none) */
+  photo?: string
+
+  /** Seller activity: coarse last seen, typical reply time, completed orders */
+  shop_activity?: SellerActivity
+
+  /** Whether this listing item has bulk discount tiers defined */
+  has_bulk_discount: boolean
+
+  /** Listing visibility: public, private (org-only), or unlisted */
+  visibility: "public" | "private" | "unlisted"
+
+  /** Quantity unit: 'unit' or 'scu' */
+  quantity_unit: "unit" | "scu"
 }
 
 /**
