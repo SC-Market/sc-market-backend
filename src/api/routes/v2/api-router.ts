@@ -20,7 +20,11 @@ import {
   multiplePhotoUpload,
   removeUploadsWhenDone,
 } from "../v1/util/upload.js"
-import { tsoaReadRateLimit, tsoaWriteRateLimit } from "../../middleware/tsoa-ratelimit.js"
+import {
+  tsoaCriticalRateLimit,
+  tsoaReadRateLimit,
+  tsoaWriteRateLimit,
+} from "../../middleware/tsoa-ratelimit.js"
 import { requireSecurity, tokenRequestGuard } from "./middleware/tsoa-auth.js"
 
 const __filename = fileURLToPath(import.meta.url)
@@ -137,6 +141,25 @@ apiV2Router.get("/still-selling/:token", tsoaReadRateLimit)
 // services/dm-campaigns/still-selling.service.ts sendTestDm).
 apiV2Router.post("/admin/dm-campaigns/still-selling/test", tsoaWriteRateLimit)
 apiV2Router.post(["/still-selling/:token", "/still-selling/:token/feedback"], tsoaWriteRateLimit)
+// Admin endpoints moved from v1 /api/admin and /api/moderation/admin keep
+// their v1 rate limits (AdminSiteController, AdminPremiumController,
+// AdminModerationController). Alerts and the Spectrum migration had none.
+apiV2Router.get(["/admin/activity", "/admin/users", "/admin/moderation/reports"], tsoaCriticalRateLimit)
+apiV2Router.post("/admin/notifications/test", tsoaCriticalRateLimit)
+apiV2Router.put("/admin/moderation/reports/:report_id", tsoaCriticalRateLimit)
+apiV2Router.get(
+  [
+    "/admin/offers/analytics",
+    "/admin/membership/analytics",
+    "/admin/audit-logs",
+    "/admin/premium",
+    "/admin/premium/:spectrum_id",
+  ],
+  tsoaReadRateLimit,
+)
+apiV2Router.put("/admin/premium/:spectrum_id", tsoaWriteRateLimit)
+apiV2Router.patch("/admin/premium/:spectrum_id/domain", tsoaWriteRateLimit)
+apiV2Router.delete("/admin/premium/:spectrum_id", tsoaWriteRateLimit)
 // Storefront settings and branded storefront enquiries: writes, rate limited
 // like the other writes (one open enquiry per org or shop on top).
 apiV2Router.post("/storefront-enquiries", tsoaWriteRateLimit)

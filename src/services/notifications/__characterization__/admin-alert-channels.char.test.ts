@@ -10,7 +10,7 @@ import * as w from "../../../test-utils/notif-char/world.js"
 import { notificationService } from "../notification.service.js"
 import { getKnex } from "../../../clients/database/knex-db.js"
 import { getAlertAudienceCounts } from "../../../api/routes/v1/admin/database.js"
-import { parseAlertChannels } from "../../../api/routes/v1/admin/alerts.js"
+import { parseAlertChannels } from "../../admin/admin-alerts.js"
 
 async function alert(created_by: string, channels: string[], target_type = "all_users", target_contractor_id?: string) {
   const [row] = await getKnex()("admin_alerts")

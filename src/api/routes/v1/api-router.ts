@@ -11,7 +11,6 @@ import { pushRouter } from "./push/routes.js"
 import { emailRouter } from "./email/routes.js"
 import { recruitingRouter } from "./recruiting/routes.js"
 import { commentRouter } from "./comments/routes.js"
-import { adminRouter } from "./admin/routes.js"
 import { offerRouter, offersRouter } from "./offers/routes.js"
 import { servicesRouter } from "./services/routes.js"
 import { contractsRouter } from "./contracts/routes.js"
@@ -22,7 +21,7 @@ import { attributesRouter } from "./attributes/routes.js"
 
 export const apiRouter = express.Router()
 
-apiRouter.use("/admin", adminRouter)
+// /admin moved to TSOA: /api/v2/admin (routes/v2/admin).
 apiRouter.use("/starmap", starmapRouter)
 apiRouter.use("/profile", profileRouter)
 apiRouter.use("/notification", notificationRouter)
@@ -69,14 +68,24 @@ import { getKnex } from "../../../clients/database/knex-db.js"
 apiRouter.get("/domain/:hostname", async (req, res) => {
   try {
     const row = await getKnex()("org_premium_tiers")
-      .join("contractors", "contractors.contractor_id", "org_premium_tiers.contractor_id")
+      .join(
+        "contractors",
+        "contractors.contractor_id",
+        "org_premium_tiers.contractor_id",
+      )
       .where({ custom_domain: req.params.hostname })
       .whereNull("revoked_at")
-      .select("contractors.spectrum_id", "contractors.name", "contractors.contractor_id")
+      .select(
+        "contractors.spectrum_id",
+        "contractors.name",
+        "contractors.contractor_id",
+      )
       .first()
 
     if (!row) {
-      res.status(404).json({ error: { code: "NOT_FOUND", message: "Domain not found" } })
+      res
+        .status(404)
+        .json({ error: { code: "NOT_FOUND", message: "Domain not found" } })
       return
     }
 
@@ -85,16 +94,23 @@ apiRouter.get("/domain/:hostname", async (req, res) => {
       .where({ contractor_id: row.contractor_id })
       .first()
 
-    res.json(createResponse({
-      spectrum_id: row.spectrum_id,
-      contractor_id: row.contractor_id,
-      name: row.name,
-      focus_mode: wlConfig?.focus_mode || "public",
-      homepage_path: wlConfig?.homepage_path || null,
-      require_membership: wlConfig?.require_membership || false,
-    }))
+    res.json(
+      createResponse({
+        spectrum_id: row.spectrum_id,
+        contractor_id: row.contractor_id,
+        name: row.name,
+        focus_mode: wlConfig?.focus_mode || "public",
+        homepage_path: wlConfig?.homepage_path || null,
+        require_membership: wlConfig?.require_membership || false,
+      }),
+    )
   } catch {
-    res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Failed to resolve domain" } })
+    res.status(500).json({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to resolve domain",
+      },
+    })
   }
 })
 

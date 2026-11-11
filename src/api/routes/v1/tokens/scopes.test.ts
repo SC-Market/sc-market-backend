@@ -64,18 +64,21 @@ describe("API token scopes", () => {
     expect(scopes).toContain("full")
   })
 
-  it.each(LEGACY)("rejects %s as an invalid scope on creation", async (scope) => {
-    const { res, out } = mockRes()
-    await createToken(
-      {
-        user: { user_id: "a", role: "admin" },
-        body: { name: "t", scopes: [scope] },
-      } as unknown as Request,
-      res,
-    )
-    expect(out.status).toBe(400)
-    expect(JSON.stringify(out.body)).toContain("Invalid scopes")
-  })
+  it.each(LEGACY)(
+    "rejects %s as an invalid scope on creation",
+    async (scope) => {
+      const { res, out } = mockRes()
+      await createToken(
+        {
+          user: { user_id: "a", role: "admin" },
+          body: { name: "t", scopes: [scope] },
+        } as unknown as Request,
+        res,
+      )
+      expect(out.status).toBe(400)
+      expect(JSON.stringify(out.body)).toContain("Invalid scopes")
+    },
+  )
 })
 
 describe("Prometheus / Grafana support is gone", () => {
@@ -87,10 +90,11 @@ describe("Prometheus / Grafana support is gone", () => {
   })
 
   it("has no grafana/prometheus output formats on admin or market stats", () => {
-    for (const file of ["admin/controller.ts", "market/controller.ts"]) {
-      expect(readFileSync(join(v1, file), "utf8")).not.toMatch(
-        /grafana|prometheus/i,
-      )
+    for (const file of [
+      join(v1, "..", "v2", "admin", "AdminSiteController.ts"),
+      join(v1, "market", "controller.ts"),
+    ]) {
+      expect(readFileSync(file, "utf8")).not.toMatch(/grafana|prometheus/i)
     }
   })
 })

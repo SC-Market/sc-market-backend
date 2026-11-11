@@ -79,6 +79,7 @@ vi.mock("../v1/util/upload.js", async (importOriginal) => {
 // its counters in Postgres; record that it ran instead.
 vi.mock("../../middleware/tsoa-ratelimit.js", () => ({
   tsoaReadRateLimit: (_req: express.Request, _res: express.Response, next: express.NextFunction) => next(),
+  tsoaCriticalRateLimit: (_req: express.Request, _res: express.Response, next: express.NextFunction) => next(),
   tsoaWriteRateLimit: (
     _req: express.Request,
     _res: express.Response,

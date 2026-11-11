@@ -1,30 +1,15 @@
-import { requireStepUp } from "../../../util/step-up.js"
 import express from "express"
-import {
-  userAuthorized,
-  adminAuthorized,
-  requireModerationRead,
-  requireModerationWrite,
-  requireTokenScopes,
-} from "../../../middleware/auth.js"
+import { userAuthorized, requireTokenScopes } from "../../../middleware/auth.js"
 import {
   writeRateLimit,
   readRateLimit,
-  criticalRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 
-import {
-  moderation_post_report,
-  moderation_get_reports,
-  moderation_get_admin_reports,
-  moderation_put_admin_reports_report_id,
-} from "./controller.js"
+import { moderation_post_report, moderation_get_reports } from "./controller.js"
 
 import {
   moderation_post_report_spec,
   moderation_get_reports_spec,
-  moderation_get_admin_reports_spec,
-  moderation_put_admin_reports_report_id_spec,
 } from "./openapi.js"
 
 export const moderationRouter = express.Router()
@@ -49,23 +34,5 @@ moderationRouter.get(
   moderation_get_reports,
 )
 
-// Admin endpoint to get all unprocessed reports with pagination
-moderationRouter.get(
-  "/admin/reports",
-  adminAuthorized,
-  requireModerationRead,
-  moderation_get_admin_reports_spec,
-  criticalRateLimit,
-  moderation_get_admin_reports,
-)
-
-// Admin endpoint to update report status and add moderation details
-moderationRouter.put(
-  "/admin/reports/:report_id",
-  adminAuthorized,
-  requireStepUp,
-  requireModerationWrite,
-  moderation_put_admin_reports_report_id_spec,
-  criticalRateLimit,
-  moderation_put_admin_reports_report_id,
-)
+// Admin report handling moved to TSOA: /api/v2/admin/moderation/reports
+// (routes/v2/admin/AdminModerationController.ts).

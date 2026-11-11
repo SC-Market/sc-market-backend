@@ -110,9 +110,17 @@ import { AdminStorefrontEnquiriesController } from './../admin/AdminStorefrontEn
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminStillSellingCampaignController } from './../admin/AdminStillSellingCampaignController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminSpectrumMigrationController } from './../admin/AdminSpectrumMigrationController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminSiteController } from './../admin/AdminSiteController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminSellerReachabilityController } from './../admin/AdminSellerReachabilityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminPremiumController } from './../admin/AdminPremiumController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminOrdersV2Controller } from './../admin/AdminOrdersV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminModerationController } from './../admin/AdminModerationController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminIdentityController } from './../admin/AdminIdentityController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -5683,6 +5691,306 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumMigrationStatus": {
+        "dataType": "refObject",
+        "properties": {
+            "totalUsers": {"dataType":"double","required":true},
+            "verifiedUsers": {"dataType":"double","required":true},
+            "usersWithSpectrumId": {"dataType":"double","required":true},
+            "usersNeedingMigration": {"dataType":"double","required":true},
+            "usersWithoutSpectrumId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MigrationResult": {
+        "dataType": "refObject",
+        "properties": {
+            "totalUsers": {"dataType":"double","required":true},
+            "successfulMigrations": {"dataType":"double","required":true},
+            "failedMigrations": {"dataType":"double","required":true},
+            "unverifiedUsers": {"dataType":"double","required":true},
+            "errors": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true},"username":{"dataType":"string","required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumMigrationResult": {
+        "dataType": "refAlias",
+        "type": {"ref":"MigrationResult","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumMigrationSimulateRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "batchSize": {"dataType":"double"},
+            "delayBetweenRequests": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumMigrationRunRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "batchSize": {"dataType":"double"},
+            "delayBetweenRequests": {"dataType":"double"},
+            "delayBetweenBatches": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumMigrationRollbackResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "usersAffected": {"dataType":"double","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpectrumMigrationRollbackRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "confirm": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminActivityPoint": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminActivityResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "daily": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminActivityPoint"},"required":true},
+            "weekly": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminActivityPoint"},"required":true},
+            "monthly": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminActivityPoint"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SiteRole": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["admin"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminUser": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "discord_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "profile_description": {"dataType":"string","required":true},
+            "role": {"ref":"SiteRole","required":true},
+            "banned": {"dataType":"boolean","required":true},
+            "avatar": {"dataType":"string","required":true},
+            "banner": {"dataType":"string","required":true},
+            "balance": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "locale": {"dataType":"string","required":true},
+            "rsi_confirmed": {"dataType":"boolean","required":true},
+            "market_order_template": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminUsersResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminUser"},"required":true},
+            "pagination": {"dataType":"nestedObjectLiteral","nestedProperties":{"has_prev":{"dataType":"boolean","required":true},"has_next":{"dataType":"boolean","required":true},"total_pages":{"dataType":"double","required":true},"total_users":{"dataType":"double","required":true},"page_size":{"dataType":"double","required":true},"page":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminUserSortField": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["username"]},{"dataType":"enum","enums":["display_name"]},{"dataType":"enum","enums":["role"]},{"dataType":"enum","enums":["banned"]},{"dataType":"enum","enums":["rsi_confirmed"]},{"dataType":"enum","enums":["balance"]},{"dataType":"enum","enums":["locale"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MembershipAnalyticsPoint": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "new_members": {"dataType":"double","required":true},
+            "new_members_rsi_verified": {"dataType":"double","required":true},
+            "new_members_rsi_unverified": {"dataType":"double","required":true},
+            "cumulative_members": {"dataType":"double","required":true},
+            "cumulative_members_rsi_verified": {"dataType":"double","required":true},
+            "cumulative_members_rsi_unverified": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MembershipAnalyticsSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "total_members": {"dataType":"double","required":true},
+            "admin_members": {"dataType":"double","required":true},
+            "regular_members": {"dataType":"double","required":true},
+            "rsi_confirmed_members": {"dataType":"double","required":true},
+            "banned_members": {"dataType":"double","required":true},
+            "new_members_30d": {"dataType":"double","required":true},
+            "new_members_7d": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MembershipAnalyticsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "daily_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"MembershipAnalyticsPoint"},"required":true},
+            "weekly_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"MembershipAnalyticsPoint"},"required":true},
+            "monthly_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"MembershipAnalyticsPoint"},"required":true},
+            "summary": {"ref":"MembershipAnalyticsSummary","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferAnalyticsPoint": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "active": {"dataType":"double","required":true},
+            "accepted": {"dataType":"double","required":true},
+            "rejected": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferAnalyticsMonthlyPoint": {
+        "dataType": "refObject",
+        "properties": {
+            "date": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "active": {"dataType":"double","required":true},
+            "accepted": {"dataType":"double","required":true},
+            "rejected": {"dataType":"double","required":true},
+            "average_accepted_value": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferAnalyticsTopShop": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "accepted_offers": {"dataType":"double","required":true},
+            "total_offers": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferAnalyticsTopUser": {
+        "dataType": "refObject",
+        "properties": {
+            "username": {"dataType":"string","required":true},
+            "accepted_offers": {"dataType":"double","required":true},
+            "total_offers": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferAnalyticsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "daily_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferAnalyticsPoint"},"required":true},
+            "weekly_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferAnalyticsPoint"},"required":true},
+            "monthly_totals": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferAnalyticsMonthlyPoint"},"required":true},
+            "top_shops": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferAnalyticsTopShop"},"required":true},
+            "top_users": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferAnalyticsTopUser"},"required":true},
+            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"total_value":{"dataType":"double","required":true},"rejected_offers":{"dataType":"double","required":true},"accepted_offers":{"dataType":"double","required":true},"waiting_for_seller":{"dataType":"double","required":true},"waiting_for_buyer":{"dataType":"double","required":true},"active_offers":{"dataType":"double","required":true},"total_offers":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAuditLogContractor": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "spectrum_id": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAuditLogEntry": {
+        "dataType": "refObject",
+        "properties": {
+            "audit_log_id": {"dataType":"string","required":true},
+            "action": {"dataType":"string","required":true},
+            "actor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "actor": {"dataType":"union","subSchemas":[{"ref":"MinimalUser"},{"dataType":"enum","enums":[null]}],"required":true},
+            "subject_type": {"dataType":"string","required":true},
+            "subject_id": {"dataType":"string","required":true},
+            "metadata": {"ref":"Record_string.unknown_","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "contractor": {"dataType":"union","subSchemas":[{"ref":"AdminAuditLogContractor"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAuditLogsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminAuditLogEntry"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminTestNotificationData": {
+        "dataType": "refObject",
+        "properties": {
+            "order_id": {"dataType":"string"},
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "message_id": {"dataType":"string"},
+            "review_id": {"dataType":"string"},
+            "status": {"dataType":"string"},
+            "offer_id": {"dataType":"string"},
+            "listing_id": {"dataType":"string"},
+            "bid_id": {"dataType":"string"},
+            "invite_id": {"dataType":"string"},
+            "alert_id": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminTestNotificationResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+            "data": {"ref":"AdminTestNotificationData"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminTestNotificationType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["order_create"]},{"dataType":"enum","enums":["order_assigned"]},{"dataType":"enum","enums":["order_message"]},{"dataType":"enum","enums":["order_review"]},{"dataType":"enum","enums":["order_status_fulfilled"]},{"dataType":"enum","enums":["order_status_in_progress"]},{"dataType":"enum","enums":["order_status_not_started"]},{"dataType":"enum","enums":["order_status_cancelled"]},{"dataType":"enum","enums":["offer_create"]},{"dataType":"enum","enums":["counter_offer_create"]},{"dataType":"enum","enums":["offer_message"]},{"dataType":"enum","enums":["market_item_bid"]},{"dataType":"enum","enums":["market_item_offer"]},{"dataType":"enum","enums":["contractor_invite"]},{"dataType":"enum","enums":["admin_alert"]},{"dataType":"enum","enums":["order_review_revision_requested"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminTestNotificationRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "notification_type": {"ref":"AdminTestNotificationType","required":true},
+            "target_username": {"dataType":"string","required":true},
+            "contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ReachabilityBucket": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["today"]},{"dataType":"enum","enums":["this_week"]},{"dataType":"enum","enums":["this_month"]},{"dataType":"enum","enums":["over_a_month"]},{"dataType":"enum","enums":["unknown"]}],"validators":{}},
@@ -5759,6 +6067,62 @@ const models: TsoaRoute.Models = {
             "signals": {"dataType":"nestedObjectLiteral","nestedProperties":{"push_delivery_results":{"dataType":"boolean","required":true},"email_delivered_window_days":{"dataType":"double","required":true},"email_delivery_results":{"dataType":"boolean","required":true},"discord_shared_server_fresh_days":{"dataType":"double","required":true},"discord_shared_server_checked_at":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"discord_dm_refusal_codes":{"dataType":"array","array":{"dataType":"double"},"required":true},"discord_dm_result_retention_days":{"dataType":"double","required":true},"discord_dm_delivery_results":{"dataType":"boolean","required":true}},"required":true},
             "email_category": {"dataType":"enum","enums":["announcements"],"required":true},
             "install_clicks": {"dataType":"array","array":{"dataType":"refObject","ref":"DiscordInstallClickCount"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PremiumTierName": {
+        "dataType": "refAlias",
+        "type": {"dataType":"enum","enums":["white_label"],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgPremiumTier": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "spectrum_id": {"dataType":"string","required":true},
+            "contractor_name": {"dataType":"string","required":true},
+            "tier": {"ref":"PremiumTierName","required":true},
+            "custom_domain": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "granted_by": {"dataType":"string","required":true},
+            "granted_at": {"dataType":"string","required":true},
+            "revoked_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgPremiumTierPage": {
+        "dataType": "refObject",
+        "properties": {
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"OrgPremiumTier"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SetOrgPremiumRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "tier": {"ref":"PremiumTierName","required":true},
+            "custom_domain": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SetOrgPremiumDomainRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "custom_domain": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RevokeOrgPremiumResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -5923,6 +6287,55 @@ const models: TsoaRoute.Models = {
             "top_shops": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderTopShop"},"required":true},
             "top_users": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminOrderTopUser"},"required":true},
             "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"total_value":{"dataType":"double","required":true},"completed_orders":{"dataType":"double","required":true},"active_orders":{"dataType":"double","required":true},"total_orders":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ContentReportStatus": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["pending"]},{"dataType":"enum","enums":["in_progress"]},{"dataType":"enum","enums":["resolved"]},{"dataType":"enum","enums":["dismissed"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminContentReport": {
+        "dataType": "refObject",
+        "properties": {
+            "report_id": {"dataType":"string","required":true},
+            "reporter": {"ref":"MinimalUser","required":true},
+            "reported_url": {"dataType":"string","required":true},
+            "report_reason": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "report_details": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"ref":"ContentReportStatus","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "handled_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "handled_by": {"dataType":"union","subSchemas":[{"ref":"MinimalUser"},{"dataType":"enum","enums":[null]}],"required":true},
+            "notes": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminContentReportsPage": {
+        "dataType": "refObject",
+        "properties": {
+            "reports": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminContentReport"},"required":true},
+            "pagination": {"dataType":"nestedObjectLiteral","nestedProperties":{"has_prev":{"dataType":"boolean","required":true},"has_next":{"dataType":"boolean","required":true},"total_pages":{"dataType":"double","required":true},"total_reports":{"dataType":"double","required":true},"page_size":{"dataType":"double","required":true},"page":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateContentReportResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "result": {"dataType":"string","required":true},
+            "report": {"ref":"AdminContentReport","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateContentReportRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"ContentReportStatus","required":true},
+            "notes": {"dataType":"string","validators":{"maxLength":{"value":2000}}},
         },
         "additionalProperties": false,
     },
@@ -6121,6 +6534,56 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertTargetType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["org_members"]},{"dataType":"enum","enums":["all_users"]},{"dataType":"enum","enums":["org_owners"]},{"dataType":"enum","enums":["admins_only"]},{"dataType":"enum","enums":["specific_org"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertChannel": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["in_app"]},{"dataType":"enum","enums":["push"]},{"dataType":"enum","enums":["email"]},{"dataType":"enum","enums":["discord_dm"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlert": {
+        "dataType": "refObject",
+        "properties": {
+            "alert_id": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true,"validators":{"maxLength":{"value":200}}},
+            "content": {"dataType":"string","required":true},
+            "link": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "target_type": {"ref":"AdminAlertTargetType","required":true},
+            "target_spectrum_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_by": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "active": {"dataType":"boolean","required":true},
+            "channels": {"dataType":"array","array":{"dataType":"refAlias","ref":"AdminAlertChannel"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertsPage": {
+        "dataType": "refObject",
+        "properties": {
+            "alerts": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminAlert"},"required":true},
+            "pagination": {"dataType":"nestedObjectLiteral","nestedProperties":{"has_prev":{"dataType":"boolean","required":true},"has_next":{"dataType":"boolean","required":true},"total_pages":{"dataType":"double","required":true},"total":{"dataType":"double","required":true},"page_size":{"dataType":"double","required":true},"page":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertCreateRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true,"validators":{"maxLength":{"value":200}}},
+            "content": {"dataType":"string","required":true},
+            "link": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "target_type": {"ref":"AdminAlertTargetType","required":true},
+            "target_spectrum_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "channels": {"dataType":"array","array":{"dataType":"refAlias","ref":"AdminAlertChannel"}},
+            "confirm_email_all_users": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AdminAlertAudiencePreview": {
         "dataType": "refObject",
         "properties": {
@@ -6131,9 +6594,26 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "AdminAlertTargetType": {
-        "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["all_users"]},{"dataType":"enum","enums":["org_members"]},{"dataType":"enum","enums":["org_owners"]},{"dataType":"enum","enums":["admins_only"]},{"dataType":"enum","enums":["specific_org"]}],"validators":{}},
+    "AdminAlertUpdateRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","validators":{"maxLength":{"value":200}}},
+            "content": {"dataType":"string"},
+            "link": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "target_type": {"ref":"AdminAlertTargetType"},
+            "target_spectrum_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "active": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminAlertDeleteResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AccountPrivacySettings": {
@@ -13567,6 +14047,335 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSpectrumMigrationController_getSpectrumMigrationStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/spectrum-migration/status',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController.prototype.getSpectrumMigrationStatus)),
+
+            async function AdminSpectrumMigrationController_getSpectrumMigrationStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSpectrumMigrationController_getSpectrumMigrationStatus, request, response });
+
+                const controller = new AdminSpectrumMigrationController();
+
+              await templateService.apiHandler({
+                methodName: 'getSpectrumMigrationStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSpectrumMigrationController_simulateSpectrumMigration: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"SpectrumMigrationSimulateRequest"},
+        };
+        app.post('/admin/spectrum-migration/simulate',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController.prototype.simulateSpectrumMigration)),
+
+            async function AdminSpectrumMigrationController_simulateSpectrumMigration(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSpectrumMigrationController_simulateSpectrumMigration, request, response });
+
+                const controller = new AdminSpectrumMigrationController();
+
+              await templateService.apiHandler({
+                methodName: 'simulateSpectrumMigration',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSpectrumMigrationController_runSpectrumMigration: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"SpectrumMigrationRunRequest"},
+        };
+        app.post('/admin/spectrum-migration/migrate',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController.prototype.runSpectrumMigration)),
+
+            async function AdminSpectrumMigrationController_runSpectrumMigration(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSpectrumMigrationController_runSpectrumMigration, request, response });
+
+                const controller = new AdminSpectrumMigrationController();
+
+              await templateService.apiHandler({
+                methodName: 'runSpectrumMigration',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSpectrumMigrationController_rollbackSpectrumMigration: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"SpectrumMigrationRollbackRequest"},
+        };
+        app.post('/admin/spectrum-migration/rollback',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSpectrumMigrationController.prototype.rollbackSpectrumMigration)),
+
+            async function AdminSpectrumMigrationController_rollbackSpectrumMigration(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSpectrumMigrationController_rollbackSpectrumMigration, request, response });
+
+                const controller = new AdminSpectrumMigrationController();
+
+              await templateService.apiHandler({
+                methodName: 'rollbackSpectrumMigration',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSiteController_getAdminActivity: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/activity',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController.prototype.getAdminActivity)),
+
+            async function AdminSiteController_getAdminActivity(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSiteController_getAdminActivity, request, response });
+
+                const controller = new AdminSiteController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminActivity',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSiteController_getAdminUsers: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                role: {"in":"query","name":"role","ref":"SiteRole"},
+                banned: {"in":"query","name":"banned","dataType":"boolean"},
+                rsi_confirmed: {"in":"query","name":"rsi_confirmed","dataType":"boolean"},
+                sort_by: {"in":"query","name":"sort_by","ref":"AdminUserSortField"},
+                sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+        };
+        app.get('/admin/users',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController.prototype.getAdminUsers)),
+
+            async function AdminSiteController_getAdminUsers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSiteController_getAdminUsers, request, response });
+
+                const controller = new AdminSiteController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminUsers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSiteController_getAdminMembershipAnalytics: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/membership/analytics',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController.prototype.getAdminMembershipAnalytics)),
+
+            async function AdminSiteController_getAdminMembershipAnalytics(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSiteController_getAdminMembershipAnalytics, request, response });
+
+                const controller = new AdminSiteController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminMembershipAnalytics',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSiteController_getAdminOfferAnalytics: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/offers/analytics',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController.prototype.getAdminOfferAnalytics)),
+
+            async function AdminSiteController_getAdminOfferAnalytics(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSiteController_getAdminOfferAnalytics, request, response });
+
+                const controller = new AdminSiteController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminOfferAnalytics',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSiteController_getAdminAuditLogs: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                action: {"in":"query","name":"action","dataType":"string"},
+                subject_type: {"in":"query","name":"subject_type","dataType":"string"},
+                subject_id: {"in":"query","name":"subject_id","dataType":"string"},
+                actor_id: {"in":"query","name":"actor_id","dataType":"string"},
+                start_date: {"in":"query","name":"start_date","dataType":"string"},
+                end_date: {"in":"query","name":"end_date","dataType":"string"},
+        };
+        app.get('/admin/audit-logs',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController.prototype.getAdminAuditLogs)),
+
+            async function AdminSiteController_getAdminAuditLogs(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSiteController_getAdminAuditLogs, request, response });
+
+                const controller = new AdminSiteController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminAuditLogs',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSiteController_postAdminTestNotification: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"AdminTestNotificationRequest"},
+        };
+        app.post('/admin/notifications/test',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSiteController.prototype.postAdminTestNotification)),
+
+            async function AdminSiteController_postAdminTestNotification(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSiteController_postAdminTestNotification, request, response });
+
+                const controller = new AdminSiteController();
+
+              await templateService.apiHandler({
+                methodName: 'postAdminTestNotification',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminSellerReachabilityController_getSellerReachability: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
@@ -13587,6 +14396,169 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getSellerReachability',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminPremiumController_listOrgPremiumTiers: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/admin/premium',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController.prototype.listOrgPremiumTiers)),
+
+            async function AdminPremiumController_listOrgPremiumTiers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminPremiumController_listOrgPremiumTiers, request, response });
+
+                const controller = new AdminPremiumController();
+
+              await templateService.apiHandler({
+                methodName: 'listOrgPremiumTiers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminPremiumController_getOrgPremiumTier: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+        };
+        app.get('/admin/premium/:spectrum_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController.prototype.getOrgPremiumTier)),
+
+            async function AdminPremiumController_getOrgPremiumTier(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminPremiumController_getOrgPremiumTier, request, response });
+
+                const controller = new AdminPremiumController();
+
+              await templateService.apiHandler({
+                methodName: 'getOrgPremiumTier',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminPremiumController_setOrgPremiumTier: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"SetOrgPremiumRequest"},
+        };
+        app.put('/admin/premium/:spectrum_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController.prototype.setOrgPremiumTier)),
+
+            async function AdminPremiumController_setOrgPremiumTier(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminPremiumController_setOrgPremiumTier, request, response });
+
+                const controller = new AdminPremiumController();
+
+              await templateService.apiHandler({
+                methodName: 'setOrgPremiumTier',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminPremiumController_setOrgPremiumDomain: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"SetOrgPremiumDomainRequest"},
+        };
+        app.patch('/admin/premium/:spectrum_id/domain',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController.prototype.setOrgPremiumDomain)),
+
+            async function AdminPremiumController_setOrgPremiumDomain(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminPremiumController_setOrgPremiumDomain, request, response });
+
+                const controller = new AdminPremiumController();
+
+              await templateService.apiHandler({
+                methodName: 'setOrgPremiumDomain',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminPremiumController_revokeOrgPremiumTier: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/premium/:spectrum_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminPremiumController.prototype.revokeOrgPremiumTier)),
+
+            async function AdminPremiumController_revokeOrgPremiumTier(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminPremiumController_revokeOrgPremiumTier, request, response });
+
+                const controller = new AdminPremiumController();
+
+              await templateService.apiHandler({
+                methodName: 'revokeOrgPremiumTier',
                 controller,
                 response,
                 next,
@@ -13661,6 +14633,74 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getAdminOrderAnalytics',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminModerationController_listContentReports: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                status: {"in":"query","name":"status","ref":"ContentReportStatus"},
+                reporter_id: {"in":"query","name":"reporter_id","dataType":"string"},
+        };
+        app.get('/admin/moderation/reports',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminModerationController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminModerationController.prototype.listContentReports)),
+
+            async function AdminModerationController_listContentReports(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminModerationController_listContentReports, request, response });
+
+                const controller = new AdminModerationController();
+
+              await templateService.apiHandler({
+                methodName: 'listContentReports',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminModerationController_updateContentReport: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                report_id: {"in":"path","name":"report_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateContentReportRequest"},
+        };
+        app.put('/admin/moderation/reports/:report_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminModerationController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminModerationController.prototype.updateContentReport)),
+
+            async function AdminModerationController_updateContentReport(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminModerationController_updateContentReport, request, response });
+
+                const controller = new AdminModerationController();
+
+              await templateService.apiHandler({
+                methodName: 'updateContentReport',
                 controller,
                 response,
                 next,
@@ -14119,6 +15159,73 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAlertsV2Controller_listAdminAlerts: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                pageSize: {"in":"query","name":"pageSize","dataType":"double"},
+                target_type: {"in":"query","name":"target_type","ref":"AdminAlertTargetType"},
+                active: {"in":"query","name":"active","dataType":"boolean"},
+        };
+        app.get('/admin/alerts',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller.prototype.listAdminAlerts)),
+
+            async function AdminAlertsV2Controller_listAdminAlerts(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAlertsV2Controller_listAdminAlerts, request, response });
+
+                const controller = new AdminAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'listAdminAlerts',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAlertsV2Controller_createAdminAlert: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"AdminAlertCreateRequest"},
+        };
+        app.post('/admin/alerts',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller.prototype.createAdminAlert)),
+
+            async function AdminAlertsV2Controller_createAdminAlert(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAlertsV2Controller_createAdminAlert, request, response });
+
+                const controller = new AdminAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'createAdminAlert',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminAlertsV2Controller_previewAdminAlertAudience: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 target_type: {"in":"query","name":"target_type","required":true,"ref":"AdminAlertTargetType"},
@@ -14141,6 +15248,103 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'previewAdminAlertAudience',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAlertsV2Controller_getAdminAlert: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                alert_id: {"in":"path","name":"alert_id","required":true,"dataType":"string"},
+        };
+        app.get('/admin/alerts/:alert_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller.prototype.getAdminAlert)),
+
+            async function AdminAlertsV2Controller_getAdminAlert(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAlertsV2Controller_getAdminAlert, request, response });
+
+                const controller = new AdminAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminAlert',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAlertsV2Controller_updateAdminAlert: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                alert_id: {"in":"path","name":"alert_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"AdminAlertUpdateRequest"},
+        };
+        app.patch('/admin/alerts/:alert_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller.prototype.updateAdminAlert)),
+
+            async function AdminAlertsV2Controller_updateAdminAlert(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAlertsV2Controller_updateAdminAlert, request, response });
+
+                const controller = new AdminAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateAdminAlert',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAlertsV2Controller_deleteAdminAlert: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                alert_id: {"in":"path","name":"alert_id","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/alerts/:alert_id',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAlertsV2Controller.prototype.deleteAdminAlert)),
+
+            async function AdminAlertsV2Controller_deleteAdminAlert(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAlertsV2Controller_deleteAdminAlert, request, response });
+
+                const controller = new AdminAlertsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'deleteAdminAlert',
                 controller,
                 response,
                 next,

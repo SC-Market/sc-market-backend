@@ -17,6 +17,7 @@ const h = vi.hoisted(() => ({ queried: [] as string[] }))
 
 vi.mock("../../../middleware/tsoa-ratelimit.js", () => ({
   tsoaReadRateLimit: (_req: express.Request, _res: express.Response, next: express.NextFunction) => next(),
+  tsoaCriticalRateLimit: (_req: express.Request, _res: express.Response, next: express.NextFunction) => next(),
   tsoaWriteRateLimit: (_req: express.Request, _res: express.Response, next: express.NextFunction) => next(),
 }))
 vi.mock("../../../../clients/database/knex-db.js", () => {

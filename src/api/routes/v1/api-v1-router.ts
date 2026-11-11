@@ -12,7 +12,6 @@ import { pushRouter } from "./push/routes.js"
 import { emailRouter } from "./email/routes.js"
 import { recruitingRouter } from "./recruiting/routes.js"
 import { commentRouter } from "./comments/routes.js"
-import { adminRouter } from "./admin/routes.js"
 import { offerRouter, offersRouter } from "./offers/routes.js"
 import { servicesRouter } from "./services/routes.js"
 import { contractsRouter } from "./contracts/routes.js"
@@ -29,16 +28,16 @@ import { getKnex } from "../../../clients/database/knex-db.js"
 
 /**
  * v1 API Router - Alias for existing /api/* routes
- * 
+ *
  * This router mounts all existing route modules at /api/v1/* to establish
  * explicit versioning while maintaining backward compatibility at /api/*.
- * 
+ *
  * All routes, middleware, and endpoints are identical to the original apiRouter.
  */
 export const apiV1Router = express.Router()
 
 // Mount all existing route modules on v1 router
-apiV1Router.use("/admin", adminRouter)
+// /admin moved to TSOA: /api/v2/admin (routes/v2/admin).
 apiV1Router.use("/starmap", starmapRouter)
 apiV1Router.use("/profile", profileRouter)
 apiV1Router.use("/notification", notificationRouter)
@@ -70,14 +69,24 @@ apiV1Router.get("/languages", (req, res) => {
 apiV1Router.get("/domain/:hostname", async (req, res) => {
   try {
     const row = await getKnex()("org_premium_tiers")
-      .join("contractors", "contractors.contractor_id", "org_premium_tiers.contractor_id")
+      .join(
+        "contractors",
+        "contractors.contractor_id",
+        "org_premium_tiers.contractor_id",
+      )
       .where({ custom_domain: req.params.hostname })
       .whereNull("revoked_at")
-      .select("contractors.spectrum_id", "contractors.name", "contractors.contractor_id")
+      .select(
+        "contractors.spectrum_id",
+        "contractors.name",
+        "contractors.contractor_id",
+      )
       .first()
 
     if (!row) {
-      res.status(404).json({ error: { code: "NOT_FOUND", message: "Domain not found" } })
+      res
+        .status(404)
+        .json({ error: { code: "NOT_FOUND", message: "Domain not found" } })
       return
     }
 
@@ -85,16 +94,23 @@ apiV1Router.get("/domain/:hostname", async (req, res) => {
       .where({ contractor_id: row.contractor_id })
       .first()
 
-    res.json(createResponse({
-      spectrum_id: row.spectrum_id,
-      contractor_id: row.contractor_id,
-      name: row.name,
-      focus_mode: wlConfig?.focus_mode || "public",
-      homepage_path: wlConfig?.homepage_path || null,
-      require_membership: wlConfig?.require_membership || false,
-    }))
+    res.json(
+      createResponse({
+        spectrum_id: row.spectrum_id,
+        contractor_id: row.contractor_id,
+        name: row.name,
+        focus_mode: wlConfig?.focus_mode || "public",
+        homepage_path: wlConfig?.homepage_path || null,
+        require_membership: wlConfig?.require_membership || false,
+      }),
+    )
   } catch {
-    res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Failed to resolve domain" } })
+    res.status(500).json({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to resolve domain",
+      },
+    })
   }
 })
 
@@ -138,7 +154,7 @@ apiV1Router.get("/openapi.json", (req, res) => {
       },
     ],
   }
-  
+
   res.json(v1Document)
 })
 

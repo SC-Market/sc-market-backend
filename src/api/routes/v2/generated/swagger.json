@@ -17197,6 +17197,875 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SpectrumMigrationStatus": {
+				"properties": {
+					"totalUsers": {
+						"type": "number",
+						"format": "double"
+					},
+					"verifiedUsers": {
+						"type": "number",
+						"format": "double"
+					},
+					"usersWithSpectrumId": {
+						"type": "number",
+						"format": "double"
+					},
+					"usersNeedingMigration": {
+						"type": "number",
+						"format": "double"
+					},
+					"usersWithoutSpectrumId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"totalUsers",
+					"verifiedUsers",
+					"usersWithSpectrumId",
+					"usersNeedingMigration",
+					"usersWithoutSpectrumId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MigrationResult": {
+				"description": "Migration helper to fetch Spectrum user IDs for all existing verified users\nThis should be run once after deploying the spectrum_user_id column",
+				"properties": {
+					"totalUsers": {
+						"type": "number",
+						"format": "double"
+					},
+					"successfulMigrations": {
+						"type": "number",
+						"format": "double"
+					},
+					"failedMigrations": {
+						"type": "number",
+						"format": "double"
+					},
+					"unverifiedUsers": {
+						"type": "number",
+						"format": "double"
+					},
+					"errors": {
+						"items": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"user_id": {
+									"type": "string"
+								},
+								"username": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"error",
+								"user_id",
+								"username"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalUsers",
+					"successfulMigrations",
+					"failedMigrations",
+					"unverifiedUsers",
+					"errors"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SpectrumMigrationResult": {
+				"$ref": "#/components/schemas/MigrationResult"
+			},
+			"SpectrumMigrationSimulateRequest": {
+				"properties": {
+					"batchSize": {
+						"type": "number",
+						"format": "double",
+						"description": "1–100, default 10"
+					},
+					"delayBetweenRequests": {
+						"type": "number",
+						"format": "double",
+						"description": "0–5000 ms, default 500"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SpectrumMigrationRunRequest": {
+				"properties": {
+					"batchSize": {
+						"type": "number",
+						"format": "double",
+						"description": "1–100, default 10"
+					},
+					"delayBetweenRequests": {
+						"type": "number",
+						"format": "double",
+						"description": "0–5000 ms, default 500"
+					},
+					"delayBetweenBatches": {
+						"type": "number",
+						"format": "double",
+						"description": "0–10000 ms, default 1000"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SpectrumMigrationRollbackResponse": {
+				"properties": {
+					"usersAffected": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"usersAffected",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SpectrumMigrationRollbackRequest": {
+				"properties": {
+					"confirm": {
+						"type": "boolean",
+						"description": "Must be true."
+					}
+				},
+				"required": [
+					"confirm"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminActivityPoint": {
+				"description": "Distinct active users on one day, week or month.",
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "Start of the period (ISO 8601)."
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminActivityResponse": {
+				"properties": {
+					"daily": {
+						"items": {
+							"$ref": "#/components/schemas/AdminActivityPoint"
+						},
+						"type": "array"
+					},
+					"weekly": {
+						"items": {
+							"$ref": "#/components/schemas/AdminActivityPoint"
+						},
+						"type": "array"
+					},
+					"monthly": {
+						"items": {
+							"$ref": "#/components/schemas/AdminActivityPoint"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"daily",
+					"weekly",
+					"monthly"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SiteRole": {
+				"type": "string",
+				"enum": [
+					"user",
+					"admin"
+				],
+				"description": "Site-wide account role (`accounts.role`).\n\nThis is the ONLY place the role strings are spelled out. Everything else\ncompares against `SiteRole.*` or, for the admin check, calls `isSiteAdmin()`.\nKeeping a single admin predicate means the admin MFA gate (populate-user role\nmasking) and any future policy change apply to every admin bypass at once.\n\nNot to be confused with contractor (org) member roles, which are a separate\nper-org concept (\"owner\" / \"admin\" / \"member\" in contractor_roles)."
+			},
+			"AdminUser": {
+				"description": "An account row as admins see it in Admin › Users.",
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"discord_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"profile_description": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/SiteRole"
+					},
+					"banned": {
+						"type": "boolean"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"banner": {
+						"type": "string"
+					},
+					"balance": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"locale": {
+						"type": "string"
+					},
+					"rsi_confirmed": {
+						"type": "boolean"
+					},
+					"market_order_template": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"display_name",
+					"discord_id",
+					"profile_description",
+					"role",
+					"banned",
+					"avatar",
+					"banner",
+					"balance",
+					"created_at",
+					"locale",
+					"rsi_confirmed",
+					"market_order_template"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminUsersResponse": {
+				"properties": {
+					"users": {
+						"items": {
+							"$ref": "#/components/schemas/AdminUser"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"has_prev": {
+								"type": "boolean"
+							},
+							"has_next": {
+								"type": "boolean"
+							},
+							"total_pages": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_users": {
+								"type": "number",
+								"format": "double"
+							},
+							"page_size": {
+								"type": "number",
+								"format": "double"
+							},
+							"page": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"has_prev",
+							"has_next",
+							"total_pages",
+							"total_users",
+							"page_size",
+							"page"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"users",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminUserSortField": {
+				"type": "string",
+				"enum": [
+					"created_at",
+					"username",
+					"display_name",
+					"role",
+					"banned",
+					"rsi_confirmed",
+					"balance",
+					"locale"
+				]
+			},
+			"MembershipAnalyticsPoint": {
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "Start of the period (ISO 8601)."
+					},
+					"new_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"new_members_rsi_verified": {
+						"type": "number",
+						"format": "double"
+					},
+					"new_members_rsi_unverified": {
+						"type": "number",
+						"format": "double"
+					},
+					"cumulative_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"cumulative_members_rsi_verified": {
+						"type": "number",
+						"format": "double"
+					},
+					"cumulative_members_rsi_unverified": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"new_members",
+					"new_members_rsi_verified",
+					"new_members_rsi_unverified",
+					"cumulative_members",
+					"cumulative_members_rsi_verified",
+					"cumulative_members_rsi_unverified"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MembershipAnalyticsSummary": {
+				"properties": {
+					"total_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"admin_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"regular_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"rsi_confirmed_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"banned_members": {
+						"type": "number",
+						"format": "double"
+					},
+					"new_members_30d": {
+						"type": "number",
+						"format": "double"
+					},
+					"new_members_7d": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"total_members",
+					"admin_members",
+					"regular_members",
+					"rsi_confirmed_members",
+					"banned_members",
+					"new_members_30d",
+					"new_members_7d"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MembershipAnalyticsResponse": {
+				"properties": {
+					"daily_totals": {
+						"items": {
+							"$ref": "#/components/schemas/MembershipAnalyticsPoint"
+						},
+						"type": "array",
+						"description": "Last 30 days."
+					},
+					"weekly_totals": {
+						"items": {
+							"$ref": "#/components/schemas/MembershipAnalyticsPoint"
+						},
+						"type": "array",
+						"description": "Last 12 weeks."
+					},
+					"monthly_totals": {
+						"items": {
+							"$ref": "#/components/schemas/MembershipAnalyticsPoint"
+						},
+						"type": "array",
+						"description": "Last 12 months."
+					},
+					"summary": {
+						"$ref": "#/components/schemas/MembershipAnalyticsSummary"
+					}
+				},
+				"required": [
+					"daily_totals",
+					"weekly_totals",
+					"monthly_totals",
+					"summary"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAnalyticsPoint": {
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "YYYY-MM-DD"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"active": {
+						"type": "number",
+						"format": "double"
+					},
+					"accepted": {
+						"type": "number",
+						"format": "double"
+					},
+					"rejected": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"total",
+					"active",
+					"accepted",
+					"rejected"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAnalyticsMonthlyPoint": {
+				"properties": {
+					"date": {
+						"type": "string",
+						"description": "YYYY-MM-DD"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"active": {
+						"type": "number",
+						"format": "double"
+					},
+					"accepted": {
+						"type": "number",
+						"format": "double"
+					},
+					"rejected": {
+						"type": "number",
+						"format": "double"
+					},
+					"average_accepted_value": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"date",
+					"total",
+					"active",
+					"accepted",
+					"rejected",
+					"average_accepted_value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAnalyticsTopShop": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"accepted_offers": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_offers": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"slug",
+					"accepted_offers",
+					"total_offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAnalyticsTopUser": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"accepted_offers": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_offers": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"username",
+					"accepted_offers",
+					"total_offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAnalyticsResponse": {
+				"properties": {
+					"daily_totals": {
+						"items": {
+							"$ref": "#/components/schemas/OfferAnalyticsPoint"
+						},
+						"type": "array"
+					},
+					"weekly_totals": {
+						"items": {
+							"$ref": "#/components/schemas/OfferAnalyticsPoint"
+						},
+						"type": "array"
+					},
+					"monthly_totals": {
+						"items": {
+							"$ref": "#/components/schemas/OfferAnalyticsMonthlyPoint"
+						},
+						"type": "array"
+					},
+					"top_shops": {
+						"items": {
+							"$ref": "#/components/schemas/OfferAnalyticsTopShop"
+						},
+						"type": "array"
+					},
+					"top_users": {
+						"items": {
+							"$ref": "#/components/schemas/OfferAnalyticsTopUser"
+						},
+						"type": "array"
+					},
+					"summary": {
+						"properties": {
+							"total_value": {
+								"type": "number",
+								"format": "double"
+							},
+							"rejected_offers": {
+								"type": "number",
+								"format": "double"
+							},
+							"accepted_offers": {
+								"type": "number",
+								"format": "double"
+							},
+							"waiting_for_seller": {
+								"type": "number",
+								"format": "double"
+							},
+							"waiting_for_buyer": {
+								"type": "number",
+								"format": "double"
+							},
+							"active_offers": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_offers": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"total_value",
+							"rejected_offers",
+							"accepted_offers",
+							"waiting_for_seller",
+							"waiting_for_buyer",
+							"active_offers",
+							"total_offers"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"daily_totals",
+					"weekly_totals",
+					"monthly_totals",
+					"top_shops",
+					"top_users",
+					"summary"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAuditLogContractor": {
+				"properties": {
+					"contractor_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"spectrum_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"contractor_id",
+					"name",
+					"spectrum_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAuditLogEntry": {
+				"properties": {
+					"audit_log_id": {
+						"type": "string"
+					},
+					"action": {
+						"type": "string"
+					},
+					"actor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"actor": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalUser"
+							}
+						],
+						"nullable": true
+					},
+					"subject_type": {
+						"type": "string"
+					},
+					"subject_id": {
+						"type": "string"
+					},
+					"metadata": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"contractor": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/AdminAuditLogContractor"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"audit_log_id",
+					"action",
+					"actor_id",
+					"actor",
+					"subject_type",
+					"subject_id",
+					"metadata",
+					"created_at",
+					"contractor"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAuditLogsResponse": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/AdminAuditLogEntry"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminTestNotificationData": {
+				"description": "Ids of the sample rows the test notification was built from.",
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"message_id": {
+						"type": "string"
+					},
+					"review_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"offer_id": {
+						"type": "string"
+					},
+					"listing_id": {
+						"type": "string"
+					},
+					"bid_id": {
+						"type": "string"
+					},
+					"invite_id": {
+						"type": "string"
+					},
+					"alert_id": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminTestNotificationResponse": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/AdminTestNotificationData"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminTestNotificationType": {
+				"type": "string",
+				"enum": [
+					"order_create",
+					"order_assigned",
+					"order_message",
+					"order_review",
+					"order_status_fulfilled",
+					"order_status_in_progress",
+					"order_status_not_started",
+					"order_status_cancelled",
+					"offer_create",
+					"counter_offer_create",
+					"offer_message",
+					"market_item_bid",
+					"market_item_offer",
+					"contractor_invite",
+					"admin_alert",
+					"order_review_revision_requested"
+				]
+			},
+			"AdminTestNotificationRequest": {
+				"properties": {
+					"notification_type": {
+						"$ref": "#/components/schemas/AdminTestNotificationType"
+					},
+					"target_username": {
+						"type": "string",
+						"description": "Username of the account that receives the test notification."
+					},
+					"contractor_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Org to scope the notification preferences to. Defaults to the sample\norder's or offer's org."
+					}
+				},
+				"required": [
+					"notification_type",
+					"target_username"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ReachabilityBucket": {
 				"type": "string",
 				"enum": [
@@ -17503,6 +18372,126 @@
 					"signals",
 					"email_category",
 					"install_clicks"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PremiumTierName": {
+				"type": "string",
+				"enum": [
+					"white_label"
+				],
+				"nullable": false
+			},
+			"OrgPremiumTier": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"spectrum_id": {
+						"type": "string"
+					},
+					"contractor_name": {
+						"type": "string"
+					},
+					"tier": {
+						"$ref": "#/components/schemas/PremiumTierName"
+					},
+					"custom_domain": {
+						"type": "string",
+						"nullable": true
+					},
+					"granted_by": {
+						"type": "string",
+						"description": "user_id of the admin who granted it."
+					},
+					"granted_at": {
+						"type": "string"
+					},
+					"revoked_at": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"spectrum_id",
+					"contractor_name",
+					"tier",
+					"custom_domain",
+					"granted_by",
+					"granted_at",
+					"revoked_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrgPremiumTierPage": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OrgPremiumTier"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetOrgPremiumRequest": {
+				"properties": {
+					"tier": {
+						"$ref": "#/components/schemas/PremiumTierName"
+					},
+					"custom_domain": {
+						"type": "string",
+						"nullable": true,
+						"description": "Omit to keep the current domain; null or \"\" clears it."
+					}
+				},
+				"required": [
+					"tier"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetOrgPremiumDomainRequest": {
+				"properties": {
+					"custom_domain": {
+						"type": "string",
+						"nullable": true,
+						"description": "null or \"\" clears it."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RevokeOrgPremiumResponse": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -17986,6 +18975,155 @@
 					"top_shops",
 					"top_users",
 					"summary"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ContentReportStatus": {
+				"type": "string",
+				"enum": [
+					"pending",
+					"in_progress",
+					"resolved",
+					"dismissed"
+				]
+			},
+			"AdminContentReport": {
+				"properties": {
+					"report_id": {
+						"type": "string"
+					},
+					"reporter": {
+						"$ref": "#/components/schemas/MinimalUser"
+					},
+					"reported_url": {
+						"type": "string"
+					},
+					"report_reason": {
+						"type": "string",
+						"nullable": true
+					},
+					"report_details": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/ContentReportStatus"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"handled_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"handled_by": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MinimalUser"
+							}
+						],
+						"nullable": true
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"report_id",
+					"reporter",
+					"reported_url",
+					"report_reason",
+					"report_details",
+					"status",
+					"created_at",
+					"handled_at",
+					"handled_by",
+					"notes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminContentReportsPage": {
+				"properties": {
+					"reports": {
+						"items": {
+							"$ref": "#/components/schemas/AdminContentReport"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"has_prev": {
+								"type": "boolean"
+							},
+							"has_next": {
+								"type": "boolean"
+							},
+							"total_pages": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_reports": {
+								"type": "number",
+								"format": "double"
+							},
+							"page_size": {
+								"type": "number",
+								"format": "double"
+							},
+							"page": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"has_prev",
+							"has_next",
+							"total_pages",
+							"total_reports",
+							"page_size",
+							"page"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"reports",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateContentReportResponse": {
+				"properties": {
+					"result": {
+						"type": "string"
+					},
+					"report": {
+						"$ref": "#/components/schemas/AdminContentReport"
+					}
+				},
+				"required": [
+					"result",
+					"report"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateContentReportRequest": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/ContentReportStatus"
+					},
+					"notes": {
+						"type": "string",
+						"maxLength": 2000
+					}
+				},
+				"required": [
+					"status"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -18683,6 +19821,178 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AdminAlertTargetType": {
+				"type": "string",
+				"enum": [
+					"org_members",
+					"all_users",
+					"org_owners",
+					"admins_only",
+					"specific_org"
+				]
+			},
+			"AdminAlertChannel": {
+				"type": "string",
+				"enum": [
+					"in_app",
+					"push",
+					"email",
+					"discord_dm"
+				]
+			},
+			"AdminAlert": {
+				"description": "An admin alert as the admin pages see it (the org by Spectrum ID).",
+				"properties": {
+					"alert_id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string",
+						"maxLength": 200
+					},
+					"content": {
+						"type": "string",
+						"description": "Markdown."
+					},
+					"link": {
+						"type": "string",
+						"nullable": true
+					},
+					"target_type": {
+						"$ref": "#/components/schemas/AdminAlertTargetType"
+					},
+					"target_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "The org, when target_type is specific_org."
+					},
+					"created_by": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"active": {
+						"type": "boolean"
+					},
+					"channels": {
+						"items": {
+							"$ref": "#/components/schemas/AdminAlertChannel"
+						},
+						"type": "array",
+						"description": "Delivery channels; in_app is always included."
+					}
+				},
+				"required": [
+					"alert_id",
+					"title",
+					"content",
+					"link",
+					"target_type",
+					"target_spectrum_id",
+					"created_by",
+					"created_at",
+					"active",
+					"channels"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAlertsPage": {
+				"properties": {
+					"alerts": {
+						"items": {
+							"$ref": "#/components/schemas/AdminAlert"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"properties": {
+							"has_prev": {
+								"type": "boolean"
+							},
+							"has_next": {
+								"type": "boolean"
+							},
+							"total_pages": {
+								"type": "number",
+								"format": "double"
+							},
+							"total": {
+								"type": "number",
+								"format": "double"
+							},
+							"page_size": {
+								"type": "number",
+								"format": "double"
+							},
+							"page": {
+								"type": "number",
+								"format": "double",
+								"description": "0-based"
+							}
+						},
+						"required": [
+							"has_prev",
+							"has_next",
+							"total_pages",
+							"total",
+							"page_size",
+							"page"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"alerts",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAlertCreateRequest": {
+				"properties": {
+					"title": {
+						"type": "string",
+						"maxLength": 200
+					},
+					"content": {
+						"type": "string",
+						"description": "Markdown."
+					},
+					"link": {
+						"type": "string",
+						"nullable": true,
+						"description": "An absolute URL the alert links to."
+					},
+					"target_type": {
+						"$ref": "#/components/schemas/AdminAlertTargetType"
+					},
+					"target_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Required when target_type is specific_org."
+					},
+					"channels": {
+						"items": {
+							"$ref": "#/components/schemas/AdminAlertChannel"
+						},
+						"type": "array",
+						"description": "Delivery channels. in_app is always added. Default: in_app and push.\nChosen channels ignore user opt-outs except email, which respects the\nuser's email opt-outs and unsubscribes; others never send."
+					},
+					"confirm_email_all_users": {
+						"type": "boolean",
+						"description": "Required (true) to email all users."
+					}
+				},
+				"required": [
+					"title",
+					"content",
+					"target_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AdminAlertAudiencePreview": {
 				"properties": {
 					"recipients": {
@@ -18709,15 +20019,49 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"AdminAlertTargetType": {
-				"type": "string",
-				"enum": [
-					"all_users",
-					"org_members",
-					"org_owners",
-					"admins_only",
-					"specific_org"
-				]
+			"AdminAlertUpdateRequest": {
+				"properties": {
+					"title": {
+						"type": "string",
+						"maxLength": 200
+					},
+					"content": {
+						"type": "string"
+					},
+					"link": {
+						"type": "string",
+						"nullable": true
+					},
+					"target_type": {
+						"$ref": "#/components/schemas/AdminAlertTargetType"
+					},
+					"target_spectrum_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Required when target_type is specific_org; null clears the org."
+					},
+					"active": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAlertDeleteResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"AccountPrivacySettings": {
 				"properties": {
@@ -29987,6 +31331,461 @@
 				}
 			}
 		},
+		"/admin/spectrum-migration/status": {
+			"get": {
+				"operationId": "GetSpectrumMigrationStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SpectrumMigrationStatus"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Spectrum migration status",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/spectrum-migration/simulate": {
+			"post": {
+				"operationId": "SimulateSpectrumMigration",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SpectrumMigrationResult"
+								}
+							}
+						}
+					}
+				},
+				"description": "Dry run: what the migration would do, changing nothing.",
+				"summary": "Simulate the Spectrum migration",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SpectrumMigrationSimulateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/spectrum-migration/migrate": {
+			"post": {
+				"operationId": "RunSpectrumMigration",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SpectrumMigrationResult"
+								}
+							}
+						}
+					}
+				},
+				"description": "Fetch and store Spectrum user IDs. Needs an MFA step-up.",
+				"summary": "Run the Spectrum migration",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SpectrumMigrationRunRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/spectrum-migration/rollback": {
+			"post": {
+				"operationId": "RollbackSpectrumMigration",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SpectrumMigrationRollbackResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove every stored Spectrum user ID (destructive). Needs confirm: true\nand an MFA step-up.",
+				"summary": "Roll back the Spectrum migration",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SpectrumMigrationRollbackRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/activity": {
+			"get": {
+				"operationId": "GetAdminActivity",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminActivityResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Distinct active users per day, week and month.",
+				"summary": "Site activity",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/users": {
+			"get": {
+				"operationId": "GetAdminUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminUsersResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Every account, paged, filtered and sorted.",
+				"summary": "List users",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "1-based page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "1–100, default 20",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SiteRole"
+						}
+					},
+					{
+						"in": "query",
+						"name": "banned",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "rsi_confirmed",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/AdminUserSortField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
+			}
+		},
+		"/admin/membership/analytics": {
+			"get": {
+				"operationId": "GetAdminMembershipAnalytics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MembershipAnalyticsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "New and cumulative members per day (30 days), week (12 weeks) and month\n(12 months), plus totals. Test accounts are left out.",
+				"summary": "Membership analytics",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/offers/analytics": {
+			"get": {
+				"operationId": "GetAdminOfferAnalytics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OfferAnalyticsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Offers per day, week and month, top shops and buyers, and totals. Test\naccounts and test shops are left out.",
+				"summary": "Offer analytics",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/audit-logs": {
+			"get": {
+				"operationId": "GetAdminAuditLogs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAuditLogsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "The audit log, newest first, with the actor and, where the entry names\none, the org.",
+				"summary": "List audit log entries",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "1-based page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "1–100, default 20",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "action",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "subject_type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "subject_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "actor_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Inclusive lower bound on created_at",
+						"in": "query",
+						"name": "start_date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Inclusive upper bound on created_at",
+						"in": "query",
+						"name": "end_date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/notifications/test": {
+			"post": {
+				"operationId": "PostAdminTestNotification",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminTestNotificationResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Send one notification of the given type to a user, built from the first\nmatching real row (order, offer, bid…), through in-app, push, email and\nwebhooks like the real event. 404 when no such row exists.",
+				"summary": "Send a test notification",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AdminTestNotificationRequest"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/admin/seller-reachability": {
 			"get": {
 				"operationId": "GetSellerReachability",
@@ -30013,6 +31812,218 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/admin/premium": {
+			"get": {
+				"operationId": "ListOrgPremiumTiers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrgPremiumTierPage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Every org premium tier, newest grant first (revoked ones included).",
+				"summary": "List org premium tiers",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "1-based page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "1–100, default 20",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/admin/premium/{spectrum_id}": {
+			"get": {
+				"operationId": "GetOrgPremiumTier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrgPremiumTier"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Get an org's premium tier",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "SetOrgPremiumTier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrgPremiumTier"
+								}
+							}
+						}
+					}
+				},
+				"description": "Grant or update an org's premium tier (re-grants a revoked one). Test\norgs can't have one. Needs an MFA step-up.",
+				"summary": "Set an org's premium tier",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetOrgPremiumRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RevokeOrgPremiumTier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RevokeOrgPremiumResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Revoke an org's premium tier. Its custom domain is cleared too, so a\nlater re-grant can't bring an old domain back into CORS. Needs an MFA\nstep-up.",
+				"summary": "Revoke an org's premium tier",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/premium/{spectrum_id}/domain": {
+			"patch": {
+				"operationId": "SetOrgPremiumDomain",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrgPremiumTier"
+								}
+							}
+						}
+					}
+				},
+				"description": "Change only the custom domain of an org's active premium tier. Needs an\nMFA step-up.",
+				"summary": "Set an org's custom domain",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetOrgPremiumDomainRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/admin/orders": {
@@ -30176,6 +32187,118 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/moderation/reports": {
+			"get": {
+				"operationId": "ListContentReports",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminContentReportsPage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Content reports, newest first.",
+				"summary": "List content reports",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "1-based page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "1–100, default 20",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ContentReportStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "reporter_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/moderation/reports/{report_id}": {
+			"put": {
+				"operationId": "UpdateContentReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateContentReportResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Set a report's status and notes. Any status but pending records the\nadmin and time as its handler. Needs an MFA step-up.",
+				"summary": "Update a content report",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "report_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateContentReportRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/admin/identity/users": {
@@ -30765,6 +32888,107 @@
 				"parameters": []
 			}
 		},
+		"/admin/alerts": {
+			"get": {
+				"operationId": "ListAdminAlerts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlertsPage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Alerts, newest first.",
+				"summary": "List admin alerts",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "0-based page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "1–100, default 20",
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "target_type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/AdminAlertTargetType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "active",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateAdminAlert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlert"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create an alert and send it to its audience on its channels.",
+				"summary": "Create and send an admin alert",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AdminAlertCreateRequest"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/admin/alerts/preview": {
 			"get": {
 				"operationId": "PreviewAdminAlertAudience",
@@ -30804,6 +33028,122 @@
 						"in": "query",
 						"name": "target_spectrum_id",
 						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/alerts/{alert_id}": {
+			"get": {
+				"operationId": "GetAdminAlert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlert"
+								}
+							}
+						}
+					}
+				},
+				"summary": "Get an admin alert",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "alert_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateAdminAlert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlert"
+								}
+							}
+						}
+					}
+				},
+				"description": "Edit an alert's text, link, target or active flag. Editing does not\nsend it again.",
+				"summary": "Update an admin alert",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "alert_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AdminAlertUpdateRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteAdminAlert",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AdminAlertDeleteResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete an alert. Notifications already delivered stay.",
+				"summary": "Delete an admin alert",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "alert_id",
+						"required": true,
 						"schema": {
 							"type": "string"
 						}
