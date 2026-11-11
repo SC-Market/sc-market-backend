@@ -181,3 +181,17 @@ describe("v1 admin unlink", () => {
     ).toEqual([])
   })
 })
+
+describe("self RSI unlink", () => {
+  it("renames to a free placeholder even when new_user<discord id> is taken", async () => {
+    db.tables.account_providers.splice(1, 1) // no Citizen iD: self unlink is allowed
+    db.tables.accounts.push(account({ user_id: "other", username: "new_user900000000000000001", spectrum_user_id: null, discord_id: null }))
+    const { profile_post_auth_unlink } = await import("./controller.js")
+    const res = { statusCode: 200, body: undefined as unknown, status(c: number) { this.statusCode = c; return this }, json(b: unknown) { this.body = b; return this } }
+    await profile_post_auth_unlink({ user: { ...account() } } as never, res as never, (() => {}) as never)
+    const me = db.tables.accounts.find((a) => a.user_id === ME)!
+    expect(me).toMatchObject({ rsi_confirmed: false, spectrum_user_id: null })
+    expect(me.username).toMatch(/^user_[0-9a-f]{8}$/)
+    expect(me.display_name).toBe(me.username)
+  })
+})
