@@ -43,6 +43,9 @@ apiV2Router.get("/health", (req, res) => {
 
 // Serve v2 OpenAPI spec
 apiV2Router.get("/openapi.json", (req, res) => {
+  // Admins get the unfiltered spec: never let a shared cache keep that copy.
+  res.setHeader("Cache-Control", "private, no-store")
+  res.setHeader("Vary", "Cookie, Authorization")
   try {
     const specPath = join(__dirname, "generated", "swagger.json")
     const spec = JSON.parse(readFileSync(specPath, "utf-8"))
@@ -140,16 +143,33 @@ apiV2Router.get("/still-selling/:token", tsoaReadRateLimit)
 // The admin's "Send test DM to me" (also capped at 5 per hour per admin in
 // services/dm-campaigns/still-selling.service.ts sendTestDm).
 apiV2Router.post("/admin/dm-campaigns/still-selling/test", tsoaWriteRateLimit)
-apiV2Router.post(["/still-selling/:token", "/still-selling/:token/feedback"], tsoaWriteRateLimit)
+apiV2Router.post(
+  ["/still-selling/:token", "/still-selling/:token/feedback"],
+  tsoaWriteRateLimit,
+)
 // Admin endpoints moved from v1 /api/admin and /api/moderation/admin keep
 // their v1 rate limits (AdminSiteController, AdminPremiumController,
-// AdminModerationController). Alerts and the Spectrum migration had none.
-apiV2Router.get(["/admin/activity", "/admin/users", "/admin/moderation/reports"], tsoaCriticalRateLimit)
-apiV2Router.post("/admin/notifications/test", tsoaCriticalRateLimit)
+// AdminModerationController). Sending an alert and the Spectrum runs (v1 had
+// no limit) are critical too, as is the v2 order analytics read.
+apiV2Router.get(
+  ["/admin/activity", "/admin/users", "/admin/moderation/reports"],
+  tsoaCriticalRateLimit,
+)
+apiV2Router.post(
+  [
+    "/admin/notifications/test",
+    "/admin/alerts",
+    "/admin/spectrum-migration/simulate",
+    "/admin/spectrum-migration/migrate",
+    "/admin/spectrum-migration/rollback",
+  ],
+  tsoaCriticalRateLimit,
+)
 apiV2Router.put("/admin/moderation/reports/:report_id", tsoaCriticalRateLimit)
 apiV2Router.get(
   [
     "/admin/offers/analytics",
+    "/admin/orders/analytics",
     "/admin/membership/analytics",
     "/admin/audit-logs",
     "/admin/premium",
@@ -171,7 +191,10 @@ apiV2Router.post("/discord/install-clicks", tsoaWriteRateLimit)
 apiV2Router.put("/discord/linked-servers/:guildId", tsoaWriteRateLimit)
 apiV2Router.delete("/discord/linked-servers/:guildId", tsoaWriteRateLimit)
 apiV2Router.put(
-  ["/contractors/:spectrum_id/storefront/directory", "/shops/:shopId/storefront/directory"],
+  [
+    "/contractors/:spectrum_id/storefront/directory",
+    "/shops/:shopId/storefront/directory",
+  ],
   tsoaWriteRateLimit,
 )
 

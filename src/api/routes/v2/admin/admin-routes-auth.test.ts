@@ -4,12 +4,15 @@
  * - anonymous -> 401
  * - signed-in non-admin -> 403
  * - an admin's API token without the `admin` scope -> 403
- * and the step-up routes refuse an admin session that has not stepped up
- * (403 MFA_STEP_UP_REQUIRED) when admin MFA is enforced.
+ * With admin MFA enforced, the step-up routes refuse a session that has not
+ * stepped up and an admin-scoped API token (tokens can never step up), with
+ * 403 MFA_STEP_UP_REQUIRED.
+ * Positive controls: an admin gets past every gate (per route group), and a
+ * session that just stepped up gets past the step-up.
  *
- * Rejections happen before any handler runs, so nothing here touches the
- * database: the rate limiters are stubbed and the caller is picked by header
- * (a stand-in for populate-user).
+ * The rate limiters are stubbed, the caller is picked by header (a stand-in
+ * for populate-user), and the database is a stub that throws: a request that
+ * reaches a handler ends in 500, never in a real query.
  */
 import { beforeAll, describe, expect, it, vi } from "vitest"
 import express from "express"
@@ -32,6 +35,28 @@ vi.mock("../../../middleware/tsoa-ratelimit.js", () => {
 vi.mock("../../../../services/mfa/config.js", async (importOriginal) => {
   const original = await importOriginal<Record<string, unknown>>()
   return { ...original, getMfaEnforcement: () => h.enforcement }
+})
+
+vi.mock("../../../../clients/database/knex-db.js", () => {
+  const reached = (): never => {
+    throw new Error("DB_REACHED")
+  }
+  // getKnex() itself works (callers pass it around); any query throws.
+  const knex = new Proxy(function () {}, {
+    apply: reached,
+    get: (_t, prop) => (prop === "then" ? undefined : reached()),
+  })
+  return {
+    getKnex: () => knex,
+    createDedicatedKnex: reached,
+    withPoolOverride: <T>(_knex: unknown, fn: () => T): T => fn(),
+    KnexDatabase: class {},
+    database: {
+      get knex() {
+        return reached()
+      },
+    },
+  }
 })
 
 vi.mock("../../../../services/mfa/instance.js", () => ({
@@ -105,6 +130,15 @@ describe("v2 admin routes: auth", () => {
           scopes: scopes.split(","),
           contractor_ids: [],
         }
+        req.auth = {
+          method: "token",
+          tokenKind: "legacy",
+          tokenScopes: scopes.split(","),
+          tokenMfaAt: new Date(),
+        }
+      }
+      if (req.header("x-test-stepped-up")) {
+        req.auth = { method: "session", mfaAt: Date.now() / 1000 }
       }
       next()
     })
@@ -168,7 +202,38 @@ describe("v2 admin routes: auth", () => {
     })
   })
 
-  describe("step-up routes refuse an admin session without a recent MFA", () => {
+  // Positive controls: one read per moved controller (and the older admin
+  // groups), as an admin session. Reaching the handler (the DB stub makes it
+  // a 500) proves the gates let an admin through, so the 403s above are not
+  // a gate that refuses everyone.
+  it.each([
+    "/admin/activity",
+    "/admin/users",
+    "/admin/membership/analytics",
+    "/admin/offers/analytics",
+    "/admin/audit-logs",
+    "/admin/alerts",
+    "/admin/alerts/{alert_id}",
+    "/admin/premium",
+    "/admin/premium/{spectrum_id}",
+    "/admin/spectrum-migration/status",
+    "/admin/moderation/reports",
+    "/admin/orders/analytics",
+    "/admin/storefront-enquiries",
+  ])("admin session passes the gates on GET %s", async (path) => {
+    const res = await request(app).get(url(path)).set("x-test-user", "admin")
+    expect([401, 403]).not.toContain(res.status)
+  })
+
+  it("an admin token with the admin scope passes the gates on a read", async () => {
+    const res = await request(app)
+      .get(url("/admin/activity"))
+      .set("x-test-user", "admin")
+      .set("x-test-token-scopes", "admin")
+    expect([401, 403]).not.toContain(res.status)
+  })
+
+  describe("step-up routes (admin MFA enforced)", () => {
     const STEP_UP: Array<Operation & { body?: object }> = [
       {
         method: "put",
@@ -192,22 +257,67 @@ describe("v2 admin routes: auth", () => {
         path: "/admin/moderation/reports/{report_id}",
         body: { status: "resolved" },
       },
+      {
+        method: "post",
+        path: "/admin/alerts",
+        body: { title: "T", content: "C", target_type: "admins_only" },
+      },
+      {
+        method: "patch",
+        path: "/admin/alerts/{alert_id}",
+        body: { active: false },
+      },
+      { method: "delete", path: "/admin/alerts/{alert_id}" },
+      {
+        method: "post",
+        path: "/admin/notifications/test",
+        body: { notification_type: "admin_alert", target_username: "someone" },
+      },
     ]
 
+    async function call(
+      { method, path, body }: Operation & { body?: object },
+      headers: Record<string, string>,
+    ) {
+      h.enforcement = "enforce"
+      try {
+        let req = request(app)[method](url(path))
+        for (const [k, v] of Object.entries(headers)) req = req.set(k, v)
+        return await req.send(body ?? {})
+      } finally {
+        h.enforcement = "off"
+      }
+    }
+
     it.each(STEP_UP)(
-      "$method $path -> 403 MFA_STEP_UP_REQUIRED",
-      async ({ method, path, body }) => {
-        h.enforcement = "enforce"
-        try {
-          const res = await request(app)
-            [method](url(path))
-            .set("x-test-user", "admin")
-            .send(body ?? {})
-          expect(res.status).toBe(403)
-          expect(res.body?.error?.code).toBe("MFA_STEP_UP_REQUIRED")
-        } finally {
-          h.enforcement = "off"
-        }
+      "$method $path: session without a recent MFA -> 403 MFA_STEP_UP_REQUIRED",
+      async (op) => {
+        const res = await call(op, { "x-test-user": "admin" })
+        expect(res.status).toBe(403)
+        expect(res.body?.error?.code).toBe("MFA_STEP_UP_REQUIRED")
+      },
+    )
+
+    it.each(STEP_UP)(
+      "$method $path: admin-scoped API token -> 403 MFA_STEP_UP_REQUIRED",
+      async (op) => {
+        const res = await call(op, {
+          "x-test-user": "admin",
+          "x-test-token-scopes": "admin",
+        })
+        expect(res.status).toBe(403)
+        expect(res.body?.error?.code).toBe("MFA_STEP_UP_REQUIRED")
+      },
+    )
+
+    it.each(STEP_UP)(
+      "$method $path: session that just stepped up gets past the step-up",
+      async (op) => {
+        const res = await call(op, {
+          "x-test-user": "admin",
+          "x-test-stepped-up": "1",
+        })
+        expect([401, 403]).not.toContain(res.status)
       },
     )
   })

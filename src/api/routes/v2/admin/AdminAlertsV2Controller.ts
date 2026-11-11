@@ -36,6 +36,7 @@ import {
   type AdminAlertTargetType,
 } from "../../../../services/admin/admin-alerts.js"
 import logger from "../../../../logger/logger.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 export type { AdminAlertTargetType }
 
@@ -97,10 +98,14 @@ export interface AdminAlertDeleteResponse {
   message: string
 }
 
-function isValidLink(link: string): boolean {
+/**
+ * An absolute http(s) URL. Other schemes (javascript:, data:…) are refused:
+ * the link is opened from every recipient's notification and email.
+ */
+export function isValidLink(link: string): boolean {
   try {
-    new URL(link)
-    return true
+    const u = new URL(link)
+    return u.protocol === "https:" || u.protocol === "http:"
   } catch {
     return false
   }
@@ -139,7 +144,8 @@ export class AdminAlertsV2Controller extends BaseController {
   }
 
   /**
-   * Create an alert and send it to its audience on its channels.
+   * Create an alert and send it to its audience on its channels. Needs an
+   * MFA step-up.
    * @summary Create and send an admin alert
    */
   @Post("")
@@ -150,6 +156,9 @@ export class AdminAlertsV2Controller extends BaseController {
   ): Promise<AdminAlert> {
     this.request = request
     this.requireAdmin()
+    // Sends to its whole audience: needs a fresh MFA, like the other
+    // wide-reach admin writes.
+    await this.requireStepUp()
     const { title, content, link, target_type, target_spectrum_id } = body
     const channelsResult = parseAlertChannels(body.channels)
     if ("error" in channelsResult) {
@@ -191,9 +200,10 @@ export class AdminAlertsV2Controller extends BaseController {
       )
     }
     if (link && !isValidLink(link)) {
-      this.throwValidationError("Invalid link format. Must be a valid URL.", [
-        { field: "link", message: "Must be a valid URL" },
-      ])
+      this.throwValidationError(
+        "Invalid link format. Must be an http(s) URL.",
+        [{ field: "link", message: "Must be an http(s) URL" }],
+      )
     }
     const target_contractor_id = target_spectrum_id
       ? await this.contractorIdFor(target_spectrum_id)
@@ -214,6 +224,17 @@ export class AdminAlertsV2Controller extends BaseController {
       alertId: alert.alert_id,
       createdBy: alert.created_by,
       targetType: target_type,
+    })
+    await auditLogService.record({
+      action: "admin_alert_created",
+      actorId: alert.created_by,
+      subjectType: "admin_alert",
+      subjectId: alert.alert_id,
+      metadata: {
+        target_type,
+        target_contractor_id,
+        channels,
+      },
     })
     return formatAlertForApi(alert)
   }
@@ -280,7 +301,7 @@ export class AdminAlertsV2Controller extends BaseController {
 
   /**
    * Edit an alert's text, link, target or active flag. Editing does not
-   * send it again.
+   * send it again. Needs an MFA step-up.
    * @summary Update an admin alert
    */
   @Patch("{alert_id}")
@@ -292,11 +313,14 @@ export class AdminAlertsV2Controller extends BaseController {
   ): Promise<AdminAlert> {
     this.request = request
     this.requireAdmin()
+    // Changes what recipients already have (text, link): fresh MFA.
+    await this.requireStepUp()
     if (!isUuid(alert_id)) this.throwNotFound("Admin alert", alert_id)
     if (body.link && !isValidLink(body.link)) {
-      this.throwValidationError("Invalid link format. Must be a valid URL.", [
-        { field: "link", message: "Must be a valid URL" },
-      ])
+      this.throwValidationError(
+        "Invalid link format. Must be an http(s) URL.",
+        [{ field: "link", message: "Must be an http(s) URL" }],
+      )
     }
     if (body.target_type && !ALERT_TARGET_TYPES.includes(body.target_type)) {
       this.throwValidationError(
@@ -336,11 +360,19 @@ export class AdminAlertsV2Controller extends BaseController {
       alertId: alert_id,
       updatedFields: Object.keys(updates),
     })
+    await auditLogService.record({
+      action: "admin_alert_updated",
+      actorId: this.getUserId(),
+      subjectType: "admin_alert",
+      subjectId: alert_id,
+      metadata: { fields: Object.keys(updates) },
+    })
     return formatAlertForApi(updated)
   }
 
   /**
-   * Delete an alert. Notifications already delivered stay.
+   * Delete an alert. Notifications already delivered stay. Needs an MFA
+   * step-up.
    * @summary Delete an admin alert
    */
   @Delete("{alert_id}")
@@ -351,10 +383,26 @@ export class AdminAlertsV2Controller extends BaseController {
   ): Promise<AdminAlertDeleteResponse> {
     this.request = request
     this.requireAdmin()
+    await this.requireStepUp()
     if (!isUuid(alert_id)) this.throwNotFound("Admin alert", alert_id)
+    const [existing] = await adminDb.getAdminAlerts({ alert_id })
     const deleted = await adminDb.deleteAdminAlert(alert_id)
     if (!deleted) this.throwNotFound("Admin alert", alert_id)
     logger.info("Admin alert deleted successfully", { alertId: alert_id })
+    await auditLogService.record({
+      action: "admin_alert_deleted",
+      actorId: this.getUserId(),
+      subjectType: "admin_alert",
+      subjectId: alert_id,
+      metadata: existing
+        ? {
+            target_type: existing.target_type,
+            target_contractor_id: existing.target_contractor_id,
+            channels: existing.channels,
+            created_by: existing.created_by,
+          }
+        : {},
+    })
     return { success: true, message: "Admin alert deleted successfully" }
   }
 

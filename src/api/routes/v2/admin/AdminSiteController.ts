@@ -15,6 +15,8 @@ import type { MinimalUser } from "../../../../clients/database/db-models.js"
 import type { SiteRole } from "../../../util/site-role.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
 import logger from "../../../../logger/logger.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import { isUuid } from "../util/short-slug.js"
 import {
   sendAdminTestNotification,
   TestNotificationSampleMissingError,
@@ -41,7 +43,6 @@ const USER_SORT_FIELDS: readonly AdminUserSortField[] = [
   "role",
   "banned",
   "rsi_confirmed",
-  "balance",
   "locale",
 ]
 
@@ -50,17 +51,14 @@ const ADMIN_USER_COLUMNS = [
   "user_id",
   "username",
   "display_name",
-  "discord_id",
   "profile_description",
   "role",
   "banned",
   "avatar",
   "banner",
-  "balance",
   "created_at",
   "locale",
   "rsi_confirmed",
-  "market_order_template",
 ] as const
 
 function isoDate(value: unknown): string {
@@ -280,6 +278,21 @@ export class AdminSiteController extends BaseController {
     this.requireAdmin()
     const p = clampPage(page)
     const size = clampPageSize(page_size)
+    if (actor_id && !isUuid(actor_id)) {
+      this.throwValidationError("actor_id must be a user id", [
+        { field: "actor_id", message: "Not a user id" },
+      ])
+    }
+    for (const [field, value] of [
+      ["start_date", start_date],
+      ["end_date", end_date],
+    ] as const) {
+      if (value && Number.isNaN(Date.parse(value))) {
+        this.throwValidationError(`${field} must be a date`, [
+          { field, message: "Not a date" },
+        ])
+      }
+    }
 
     let query = getKnex()("audit_logs").select("audit_logs.*")
     if (action) query = query.where("audit_logs.action", action)
@@ -367,7 +380,8 @@ export class AdminSiteController extends BaseController {
   /**
    * Send one notification of the given type to a user, built from the first
    * matching real row (order, offer, bid…), through in-app, push, email and
-   * webhooks like the real event. 404 when no such row exists.
+   * webhooks like the real event. 404 when no such row exists. Needs an MFA
+   * step-up.
    * @summary Send a test notification
    */
   @Post("notifications/test")
@@ -378,6 +392,8 @@ export class AdminSiteController extends BaseController {
   ): Promise<AdminTestNotificationResponse> {
     this.request = request
     this.requireAdmin()
+    // Sends real notifications (and webhooks): fresh MFA.
+    await this.requireStepUp()
     const actorId = this.getUserId()
     const { notification_type, target_username, contractor_id } = body
     if (!target_username) {
@@ -416,6 +432,13 @@ export class AdminSiteController extends BaseController {
         data,
       },
     )
+    await auditLogService.record({
+      action: "admin_test_notification_sent",
+      actorId,
+      subjectType: "user",
+      subjectId: targetUserId,
+      metadata: { notification_type, sample: data },
+    })
     return { message: "Notification test completed", data }
   }
 }

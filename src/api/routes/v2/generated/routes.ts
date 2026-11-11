@@ -5786,17 +5786,14 @@ const models: TsoaRoute.Models = {
             "user_id": {"dataType":"string","required":true},
             "username": {"dataType":"string","required":true},
             "display_name": {"dataType":"string","required":true},
-            "discord_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "profile_description": {"dataType":"string","required":true},
             "role": {"ref":"SiteRole","required":true},
             "banned": {"dataType":"boolean","required":true},
             "avatar": {"dataType":"string","required":true},
             "banner": {"dataType":"string","required":true},
-            "balance": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
             "locale": {"dataType":"string","required":true},
             "rsi_confirmed": {"dataType":"boolean","required":true},
-            "market_order_template": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -5812,7 +5809,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AdminUserSortField": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["username"]},{"dataType":"enum","enums":["display_name"]},{"dataType":"enum","enums":["role"]},{"dataType":"enum","enums":["banned"]},{"dataType":"enum","enums":["rsi_confirmed"]},{"dataType":"enum","enums":["balance"]},{"dataType":"enum","enums":["locale"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["username"]},{"dataType":"enum","enums":["display_name"]},{"dataType":"enum","enums":["role"]},{"dataType":"enum","enums":["banned"]},{"dataType":"enum","enums":["rsi_confirmed"]},{"dataType":"enum","enums":["locale"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MembershipAnalyticsPoint": {

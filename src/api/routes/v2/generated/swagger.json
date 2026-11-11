@@ -17420,10 +17420,6 @@
 					"display_name": {
 						"type": "string"
 					},
-					"discord_id": {
-						"type": "string",
-						"nullable": true
-					},
 					"profile_description": {
 						"type": "string"
 					},
@@ -17439,9 +17435,6 @@
 					"banner": {
 						"type": "string"
 					},
-					"balance": {
-						"type": "string"
-					},
 					"created_at": {
 						"type": "string"
 					},
@@ -17450,26 +17443,20 @@
 					},
 					"rsi_confirmed": {
 						"type": "boolean"
-					},
-					"market_order_template": {
-						"type": "string"
 					}
 				},
 				"required": [
 					"user_id",
 					"username",
 					"display_name",
-					"discord_id",
 					"profile_description",
 					"role",
 					"banned",
 					"avatar",
 					"banner",
-					"balance",
 					"created_at",
 					"locale",
-					"rsi_confirmed",
-					"market_order_template"
+					"rsi_confirmed"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -17534,7 +17521,6 @@
 					"role",
 					"banned",
 					"rsi_confirmed",
-					"balance",
 					"locale"
 				]
 			},
@@ -31763,7 +31749,7 @@
 						}
 					}
 				},
-				"description": "Send one notification of the given type to a user, built from the first\nmatching real row (order, offer, bid…), through in-app, push, email and\nwebhooks like the real event. 404 when no such row exists.",
+				"description": "Send one notification of the given type to a user, built from the first\nmatching real row (order, offer, bid…), through in-app, push, email and\nwebhooks like the real event. 404 when no such row exists. Needs an MFA\nstep-up.",
 				"summary": "Send a test notification",
 				"tags": [
 					"Admin"
@@ -32966,7 +32952,7 @@
 						}
 					}
 				},
-				"description": "Create an alert and send it to its audience on its channels.",
+				"description": "Create an alert and send it to its audience on its channels. Needs an\nMFA step-up.",
 				"summary": "Create and send an admin alert",
 				"tags": [
 					"Admin"
@@ -33084,7 +33070,7 @@
 						}
 					}
 				},
-				"description": "Edit an alert's text, link, target or active flag. Editing does not\nsend it again.",
+				"description": "Edit an alert's text, link, target or active flag. Editing does not\nsend it again. Needs an MFA step-up.",
 				"summary": "Update an admin alert",
 				"tags": [
 					"Admin"
@@ -33129,7 +33115,7 @@
 						}
 					}
 				},
-				"description": "Delete an alert. Notifications already delivered stay.",
+				"description": "Delete an alert. Notifications already delivered stay. Needs an MFA\nstep-up.",
 				"summary": "Delete an admin alert",
 				"tags": [
 					"Admin"

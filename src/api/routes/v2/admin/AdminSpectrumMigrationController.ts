@@ -16,6 +16,15 @@ import {
   type MigrationResult,
 } from "../../v1/util/spectrum-migration.js"
 import logger from "../../../../logger/logger.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+
+/**
+ * One Spectrum run (simulate, migrate or rollback) at a time in this
+ * process: two concurrent runs would both hammer RSI or race each other's
+ * writes. A second request while one runs gets 409. Per process: the backend
+ * runs one task (sc-market service), so this covers it.
+ */
+let runInFlight: string | null = null
 
 export interface SpectrumMigrationStatus {
   totalUsers: number
@@ -83,7 +92,9 @@ export class AdminSpectrumMigrationController extends BaseController {
     logger.info(
       `Admin ${this.getUser().username} started Spectrum migration simulation with batch size ${batchSize}, delay between requests ${delayBetweenRequests}ms`,
     )
-    return simulateSpectrumMigration(batchSize, delayBetweenRequests)
+    return this.exclusive("simulate", () =>
+      simulateSpectrumMigration(batchSize, delayBetweenRequests),
+    )
   }
 
   /**
@@ -110,11 +121,27 @@ export class AdminSpectrumMigrationController extends BaseController {
     logger.info(
       `Admin ${this.getUser().username} started Spectrum migration with batch size ${batchSize}, delay between batches ${delayBetweenBatches}ms, delay between requests ${delayBetweenRequests}ms`,
     )
-    return migrateExistingUsersToSpectrumIds(
-      batchSize,
-      delayBetweenBatches,
-      delayBetweenRequests,
+    const result = await this.exclusive("migrate", () =>
+      migrateExistingUsersToSpectrumIds(
+        batchSize,
+        delayBetweenBatches,
+        delayBetweenRequests,
+      ),
     )
+    await auditLogService.record({
+      action: "spectrum_migration_run",
+      actorId: this.getUserId(),
+      subjectType: "spectrum_migration",
+      subjectId: "accounts",
+      metadata: {
+        batch_size: batchSize,
+        total_users: result.totalUsers,
+        successful: result.successfulMigrations,
+        failed: result.failedMigrations,
+        unverified: result.unverifiedUsers,
+      },
+    })
+    return result
   }
 
   /**
@@ -139,10 +166,34 @@ export class AdminSpectrumMigrationController extends BaseController {
     logger.warn(
       `Admin ${this.getUser().username} initiated Spectrum migration rollback`,
     )
-    const usersAffected = await rollbackSpectrumMigration()
+    const usersAffected = await this.exclusive("rollback", () =>
+      rollbackSpectrumMigration(),
+    )
+    await auditLogService.record({
+      action: "spectrum_migration_rolled_back",
+      actorId: this.getUserId(),
+      subjectType: "spectrum_migration",
+      subjectId: "accounts",
+      metadata: { users_affected: usersAffected },
+    })
     return {
       usersAffected,
       message: `Rollback completed: ${usersAffected} users affected`,
+    }
+  }
+
+  /** Run `fn` unless another Spectrum run is in flight (then 409). */
+  private async exclusive<T>(kind: string, fn: () => Promise<T>): Promise<T> {
+    if (runInFlight) {
+      this.throwConflict(
+        `A Spectrum migration ${runInFlight} is already running; try again when it finishes`,
+      )
+    }
+    runInFlight = kind
+    try {
+      return await fn()
+    } finally {
+      runInFlight = null
     }
   }
 

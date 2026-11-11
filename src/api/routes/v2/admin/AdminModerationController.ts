@@ -20,6 +20,7 @@ import { BaseController } from "../base/BaseController.js"
 import * as adminDb from "../../v1/admin/database.js"
 import * as profileDb from "../../v1/profiles/database.js"
 import { isUuid } from "../util/short-slug.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import type {
   DBContentReport,
   MinimalUser,
@@ -120,7 +121,14 @@ export class AdminModerationController extends BaseController {
     const size = Math.min(100, Math.max(1, Math.floor(Number(page_size)) || 20))
     const where: Partial<Pick<DBContentReport, "status" | "reporter_id">> = {}
     if (status) where.status = status
-    if (reporter_id) where.reporter_id = reporter_id
+    if (reporter_id) {
+      if (!isUuid(reporter_id)) {
+        this.throwValidationError("reporter_id must be a user id", [
+          { field: "reporter_id", message: "Not a user id" },
+        ])
+      }
+      where.reporter_id = reporter_id
+    }
 
     const all = await adminDb.getContentReports(where)
     const totalPages = Math.ceil(all.length / size)
@@ -180,6 +188,17 @@ export class AdminModerationController extends BaseController {
         handled_by: handled ? this.getUserId() : undefined,
       },
     )
+    await auditLogService.record({
+      action: "content_report_updated",
+      actorId: this.getUserId(),
+      subjectType: "content_report",
+      subjectId: report_id,
+      metadata: {
+        from_status: existing.status,
+        to_status: status,
+        notes_changed: (notes || null) !== (existing.notes ?? null),
+      },
+    })
     return {
       result: "Report updated successfully",
       report: await withUsers(updated),

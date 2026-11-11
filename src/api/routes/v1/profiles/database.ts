@@ -768,46 +768,6 @@ export async function getUsersWhere(where: any = {}) {
 }
 
 /**
- * Get users with pagination.
- */
-export async function getUsersPaginated(
-  page: number,
-  pageSize: number,
-  where: any = {},
-  sortBy: string = "created_at",
-  sortOrder: "asc" | "desc" = "desc",
-) {
-  const offset = (page - 1) * pageSize
-
-  // Get total count
-  const totalCount = await knex()<DBUser>("accounts")
-    .where(where)
-    .count("* as count")
-    .first()
-  const total = totalCount ? parseInt((totalCount as any).count) : 0
-
-  // Get paginated users
-  const users = await knex()<DBUser>("accounts")
-    .where(where)
-    .orderBy(sortBy, sortOrder)
-    .limit(pageSize)
-    .offset(offset)
-    .select()
-
-  return {
-    users,
-    pagination: {
-      page,
-      page_size: pageSize,
-      total_users: total,
-      total_pages: Math.ceil(total / pageSize),
-      has_next: page < Math.ceil(total / pageSize),
-      has_prev: page > 1,
-    },
-  }
-}
-
-/**
  * Get user transactions (both sent and received).
  */
 export async function getUserTransactions(user_id: string) {

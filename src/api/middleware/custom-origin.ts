@@ -43,47 +43,58 @@ interface SensitiveRoute {
 // api-v1-router.ts), hence the optional /v1.
 const V1 = "^/api(?:/v1)?"
 
+// Case-insensitive like Express routing (/api/v2/ADMIN reaches the admin
+// routes too).
 export const CUSTOM_ORIGIN_DENYLIST: readonly SensitiveRoute[] = [
   // POST returns a raw scm_ token; listing/reading exposes token metadata.
-  { pattern: new RegExp(`${V1}/tokens(?:/|$)`), why: "api tokens" },
+  { pattern: new RegExp(`${V1}/tokens(?:/|$)`, "i"), why: "api tokens" },
   // POST returns a raw scmp_ public API token.
-  { pattern: /^\/api\/v2\/public-api-tokens(?:\/|$)/, why: "public api tokens" },
-  { pattern: /^\/auth\/sessions(?:\/|$)/, why: "session management" },
-  { pattern: /^\/api\/auth\/test-login$/, why: "test-account login" },
-  { pattern: new RegExp(`${V1}/admin(?:/|$)`), why: "admin" },
-  { pattern: /^\/api\/v2\/admin(?:\/|$)/, why: "admin" },
   {
-    pattern: /^\/api\/v2\/debug(?:\/|$)/,
+    pattern: /^\/api\/v2\/public-api-tokens(?:\/|$)/i,
+    why: "public api tokens",
+  },
+  { pattern: /^\/auth\/sessions(?:\/|$)/i, why: "session management" },
+  { pattern: /^\/api\/auth\/test-login$/i, why: "test-account login" },
+  { pattern: new RegExp(`${V1}/admin(?:/|$)`, "i"), why: "admin" },
+  { pattern: /^\/api\/v2\/admin(?:\/|$)/i, why: "admin" },
+  {
+    pattern: /^\/api\/v2\/debug(?:\/|$)/i,
     methods: ["POST", "PUT", "PATCH", "DELETE"],
     why: "debug overrides",
   },
-  { pattern: /^\/api\/v2\/auth\/mfa(?:\/|$)/, why: "two-factor auth" },
-  { pattern: /^\/api\/v2\/accounts(?:\/|$)/, why: "account deletion" },
-  { pattern: /^\/api\/v2\/email(?:\/|$)/, why: "email address deliverability" },
+  { pattern: /^\/api\/v2\/auth\/mfa(?:\/|$)/i, why: "two-factor auth" },
+  { pattern: /^\/api\/v2\/accounts(?:\/|$)/i, why: "account deletion" },
+  {
+    pattern: /^\/api\/v2\/email(?:\/|$)/i,
+    why: "email address deliverability",
+  },
   {
     pattern: new RegExp(
       `${V1}/profile/(?:email|links|auth|webhook|webhooks|my_data)(?:/|$)`,
+      "i",
     ),
     why: "email, linked accounts, webhooks, data export",
   },
   {
     // Reads stay open: the notification poller lists subscriptions on load.
-    pattern: new RegExp(`${V1}/push(?:/|$)`),
+    pattern: new RegExp(`${V1}/push(?:/|$)`, "i"),
     methods: ["POST", "PUT", "PATCH", "DELETE"],
     why: "push subscriptions",
   },
   {
-    pattern: /^\/api\/v2\/shops\/[^/]+\/(?:transfer|webhooks)(?:\/|$)/,
+    pattern: /^\/api\/v2\/shops\/[^/]+\/(?:transfer|webhooks)(?:\/|$)/i,
     why: "shop transfer and webhooks",
   },
   {
     pattern: new RegExp(
       `${V1}/contractors/[^/]+/(?:roles|transfer-ownership|webhooks)(?:/|$)`,
+      "i",
     ),
     why: "org roles, ownership transfer and webhooks",
   },
   {
-    pattern: /^\/api\/v2\/integrations\/scmdb\/(?:status|connect|regenerate|disconnect)$/,
+    pattern:
+      /^\/api\/v2\/integrations\/scmdb\/(?:status|connect|regenerate|disconnect)$/i,
     why: "integration credentials",
   },
 ]

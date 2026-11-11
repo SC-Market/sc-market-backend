@@ -32,7 +32,9 @@ describe("isCustomOriginRequest", () => {
 
   it("is false for the main site and for requests naming no origin", () => {
     expect(isCustomOriginRequest(req({ origin: MAIN }))).toBe(false)
-    expect(isCustomOriginRequest(req({ origin: "http://localhost:7000" }))).toBe(false)
+    expect(
+      isCustomOriginRequest(req({ origin: "http://localhost:7000" })),
+    ).toBe(false)
     expect(isCustomOriginRequest(req({}))).toBe(false)
   })
 
@@ -56,6 +58,10 @@ describe("customOriginGuard (sensitive-route denylist)", () => {
     ["GET", "/api/admin/users"],
     ["PUT", "/api/v1/admin/premium/X"],
     ["GET", "/api/v2/admin/feature-flags/stats"],
+    ["GET", "/api/v2/admin/users"],
+    ["PUT", "/api/v2/admin/moderation/reports/abc"],
+    ["GET", "/api/v2/ADMIN/users"],
+    ["POST", "/API/V1/TOKENS"],
     ["POST", "/api/v2/debug/feature-flag"],
     ["POST", "/api/v2/accounts/delete"],
     ["GET", "/api/v2/accounts/deletion-status"],
@@ -135,8 +141,12 @@ describe("customOriginGuard (sensitive-route denylist)", () => {
 
   it("matches whole path segments only", () => {
     expect(matchCustomOriginDenylist("GET", "/api/tokensx")).toBeUndefined()
-    expect(matchCustomOriginDenylist("GET", "/api/administrators")).toBeUndefined()
-    expect(matchCustomOriginDenylist("GET", "/api/profile/emailx")).toBeUndefined()
+    expect(
+      matchCustomOriginDenylist("GET", "/api/administrators"),
+    ).toBeUndefined()
+    expect(
+      matchCustomOriginDenylist("GET", "/api/profile/emailx"),
+    ).toBeUndefined()
   })
 })
 
@@ -212,13 +222,17 @@ describe("request context", () => {
         res.json({ user: currentRequestUser()?.user_id ?? null })
       },
     )
-    const res = await request(a).post("/up").attach("f", Buffer.from("x"), "a.png")
+    const res = await request(a)
+      .post("/up")
+      .attach("f", Buffer.from("x"), "a.png")
     expect(res.body.user).toBe("u1")
   })
 
   it("withRequestContext scopes the user to the callback", async () => {
     const req = { user: { user_id: "u2" } } as unknown as Request
-    expect(withRequestContext(req, () => currentRequestUser()?.user_id)).toBe("u2")
+    expect(withRequestContext(req, () => currentRequestUser()?.user_id)).toBe(
+      "u2",
+    )
     expect(currentRequestUser()).toBeUndefined()
   })
 })
