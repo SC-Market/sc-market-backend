@@ -75,6 +75,15 @@ describe("public listing aggregates", () => {
     expect(q?.sql).toContain("l.status = 'active' AND l.visibility = 'public'")
   })
 
+  it("game-item images skip placeholder photos in the query", async () => {
+    await resolveGameItemImages([ITEM])
+    const q = all().find((x) => x.sql.includes("listing_photos_v2"))
+    expect(q?.sql).toContain("NOT (ir.external_url = ANY(")
+    expect(q?.bindings).toContainEqual(
+      expect.arrayContaining(["https://sc-market.space/missing-image.webp"]),
+    )
+  })
+
   it("the public price-history chart only reads public listings' prices", async () => {
     await new AnalyticsV2Controller().getPriceHistory(ITEM).catch(() => undefined)
     const q = all().find((x) => x.sql.includes("price_history_v2"))

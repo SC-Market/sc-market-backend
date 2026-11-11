@@ -6,9 +6,14 @@
 
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { publiclyListedSql } from "./listing-visibility.js"
+import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "../../v1/market/constants.js"
 
+/** Placeholder photos (no real photo), never a game item's image. */
 const FALLBACK_URLS = new Set([
+  DEFAULT_PLACEHOLDER_PHOTO_URL,
+  // Placeholders stored by older listings.
   "https://cdn.robertsspaceindustries.com/static/images/Temp/default-image.png",
+  "https://media.starcitizen.tools/thumb/9/93/Placeholderv2.png/399px-Placeholderv2.png.webp",
   "",
 ])
 
@@ -24,7 +29,8 @@ export async function resolveGameItemImages(
   const db = getKnex()
 
   // Find the most recent non-default photo for each game item via its listings
-  const rows = await db.raw(`
+  const rows = await db.raw(
+    `
     SELECT DISTINCT ON (li.game_item_id)
       li.game_item_id,
       COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url
@@ -33,8 +39,13 @@ export async function resolveGameItemImages(
     JOIN listing_photos_v2 lp ON lp.listing_id = l.listing_id
     JOIN image_resources ir ON lp.resource_id = ir.resource_id
     WHERE li.game_item_id = ANY(?)
+      AND (ir.external_url IS NULL OR NOT (ir.external_url = ANY(?)))
     ORDER BY li.game_item_id, lp.display_order ASC
-  `, [gameItemIds])
+  `,
+    // Skip placeholders in SQL, so an item still gets a real photo when
+    // its first listing's is a placeholder.
+    [gameItemIds, [...FALLBACK_URLS].filter(Boolean)],
+  )
 
   const result = new Map<string, string>()
   for (const row of rows.rows || []) {
