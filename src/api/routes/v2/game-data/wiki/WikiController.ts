@@ -25,13 +25,14 @@ import {
   WikiCompareResponse,
 } from "./wiki.types.js"
 import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../util/short-slug.js"
-import { listingPubliclyListed, publiclyListedSql } from "../../util/listing-visibility.js"
+import { listingPubliclyListed } from "../../util/listing-visibility.js"
 import {
   loadManufacturerNameLookup,
   lookupManufacturerName,
 } from "./manufacturer-names.js"
 import logger from "../../../../../logger/logger.js"
 import { clampPagination } from "../../util/pagination.js"
+import { firstListingPhotoByGameItem } from "../../util/resolve-game-item-images.js"
 import { getCompareDocument } from "../../../../../services/item-compare/item-compare.service.js"
 import { isCompareCategory } from "../../../../../services/item-compare/compare-categories.js"
 import {
@@ -233,15 +234,6 @@ export class WikiController extends BaseController {
           "gi.image_url",
           "gi.thumbnail_path",
           "gi.display_type",
-          knex.raw(`(
-            SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
-            FROM listing_items li
-            JOIN listings l ON l.listing_id = li.listing_id AND ${publiclyListedSql("l")}
-            JOIN listing_photos_v2 lp ON lp.listing_id = l.listing_id
-            JOIN image_resources ir ON lp.resource_id = ir.resource_id
-            WHERE li.game_item_id::text = gi.id::text
-            ORDER BY lp.display_order ASC LIMIT 1
-          ) as listing_photo`),
         )
 
       // Apply text search filter
@@ -298,6 +290,13 @@ export class WikiController extends BaseController {
 
       // Execute query
       const itemsResults = await itemsQuery
+      // Listing photo fallback, only for this page's items without an image:
+      // one batched query instead of a per-row subquery (see
+      // firstListingPhotoByGameItem).
+      const listingPhotos = await firstListingPhotoByGameItem(
+        knex,
+        itemsResults.filter((row: any) => !row.image_url).map((row: any) => row.id),
+      )
       const mfrLookup = await loadManufacturerNameLookup(
         knex,
         itemsResults.map((row: any) => row.manufacturer),
@@ -324,7 +323,7 @@ export class WikiController extends BaseController {
         manufacturer: row.manufacturer_name || row.manufacturer || undefined,
         manufacturer_name: lookupManufacturerName(mfrLookup, row.manufacturer),
         manufacturer_code: row.manufacturer || null,
-        image_url: row.image_url || row.listing_photo || undefined,
+        image_url: row.image_url || listingPhotos.get(row.id) || undefined,
         thumbnail_path: row.thumbnail_path || undefined,
         display_type: row.display_type || undefined,
       }))

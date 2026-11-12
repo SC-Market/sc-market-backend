@@ -9,7 +9,7 @@
 
 import { Controller, Get, Route, Tags, Query, Path, Request, Middlewares } from "tsoa"
 import { Request as ExpressRequest } from "express"
-import { listingVisibleTo, publiclyListedSql } from "../util/listing-visibility.js"
+import { listingVisibleTo } from "../util/listing-visibility.js"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { buildPrefixTsquery } from "../../../../util/full-text-search.js"
@@ -26,6 +26,7 @@ import logger from "../../../../logger/logger.js"
 import { isUuid } from "../util/short-slug.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
+import { firstListingPhotoByGameItem } from "../util/resolve-game-item-images.js"
 import { getShopActivity } from "../../../../services/seller-activity/seller-activity.service.js"
 import {
   sellerActiveJoinedSql,
@@ -75,7 +76,6 @@ interface GameItemAggregateRow {
   name: string | null
   type: string | null
   image_url: string | null
-  listing_photo: string | null
   min_price: string | null
   max_price: string | null
   total_quantity: string | null
@@ -663,7 +663,7 @@ export class GameItemsV2Controller extends BaseController {
 
     try {
       let query = db("listing_search as ls")
-        .leftJoin("game_items as gi", db.raw("ls.game_item_id::text = gi.id::text"))
+        .leftJoin("game_items as gi", "gi.id", "ls.game_item_id")
         // One row per shop (primary key): the seller-activity tie-breaker.
         .leftJoin("shop_activity_stats as sas", "sas.shop_id", "ls.shop_id")
         .where("ls.status", "active")
@@ -681,15 +681,6 @@ export class GameItemsV2Controller extends BaseController {
           db.raw("COALESCE(gi.name, ls.title) as name"),
           db.raw("COALESCE(gi.type, ls.game_item_type, 'Other') as type"),
           db.raw("gi.image_url"),
-          db.raw(`(
-            SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
-            FROM listing_items li2
-            JOIN listings l2 ON l2.listing_id = li2.listing_id AND ${publiclyListedSql("l2")}
-            JOIN listing_photos_v2 lp ON lp.listing_id = l2.listing_id
-            JOIN image_resources ir ON lp.resource_id = ir.resource_id
-            WHERE li2.game_item_id::text = ls.game_item_id::text
-            ORDER BY lp.display_order ASC LIMIT 1
-          ) as listing_photo`),
           db.raw("MIN(ls.price_min) as min_price"),
           db.raw("MAX(ls.price_max) as max_price"),
           db.raw("SUM(ls.quantity_available) as total_quantity"),
@@ -756,12 +747,18 @@ export class GameItemsV2Controller extends BaseController {
       const rows: GameItemAggregateRow[] = await query
         .limit(validatedPageSize)
         .offset(offset)
+      // The page's listing photos in one batched query, not a per-group
+      // subquery (see firstListingPhotoByGameItem).
+      const listingPhotos = await firstListingPhotoByGameItem(
+        db,
+        rows.map((r) => r.game_item_id),
+      )
 
       const items: GameItemAggregate[] = rows.map((r) => ({
         game_item_id: r.game_item_id,
         name: r.name || "Unknown",
         type: r.type || "Other",
-        image_url: r.listing_photo || r.image_url || undefined,
+        image_url: listingPhotos.get(r.game_item_id) || r.image_url || undefined,
         // String() is a no-op for the string values the pg driver returns and
         // matches parseInt's own ToString coercion for null aggregates.
         min_price: parseInt(String(r.min_price), 10) || 0,
