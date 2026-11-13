@@ -86,9 +86,15 @@ export async function getMostRecentOrderOffer(id: string): Promise<DBOffer> {
 
 /**
  * Create an order offer.
+ *
+ * `timestamp` is deliberately not settable: a revision's timestamp is the time
+ * it was made, and it is the clock the pending-offer reminders
+ * (services/offer-reminders) and the "waited N days" copy read. Backdating a
+ * revision made a brand-new offer look days old and fired the stale-offer
+ * reminder at once; the column default (now()) is the only correct value.
  */
 export async function createOrderOffer(
-  data: Partial<Omit<DBOffer, "timestamp"> & { timestamp: string | Date }>,
+  data: Partial<Omit<DBOffer, "timestamp">>,
   trx?: Knex.Transaction,
 ): Promise<DBOffer[]> {
   if (trx) {

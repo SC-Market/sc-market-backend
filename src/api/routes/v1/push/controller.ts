@@ -227,11 +227,18 @@ export const push_get_preferences: RequestHandler = async (req, res) => {
       allActions.map((a) => [parseInt(a.action_type_id, 10), a]),
     )
 
-    // Create a map of existing preferences by action_type_id for individual
+    // Create a map of existing preferences by action_type_id for individual.
+    // getPushPreferences orders updated_at DESC, so the FIRST row seen for an
+    // action is the user's current choice: keep it. (The unique constraint
+    // treats NULL contractor ids as distinct, so a user can have several
+    // personal rows for one action; overwriting as we went returned the
+    // oldest, i.e. a stale "on" for someone who had since turned push off.)
     const individualPrefMap = new Map<number, boolean>()
     for (const pref of groupedPreferences.individual) {
       const actionTypeId = parseInt(pref.action_type_id, 10)
-      individualPrefMap.set(actionTypeId, pref.enabled)
+      if (!individualPrefMap.has(actionTypeId)) {
+        individualPrefMap.set(actionTypeId, pref.enabled)
+      }
     }
 
     // Format individual preferences - include all actions with defaults
@@ -246,11 +253,13 @@ export const push_get_preferences: RequestHandler = async (req, res) => {
     // Format organization preferences
     const organizationPreferences = groupedPreferences.organizations.map(
       (org) => {
-        // Create a map of existing preferences for this org
+        // Create a map of existing preferences for this org (newest wins, as above)
         const orgPrefMap = new Map<number, boolean>()
         for (const pref of org.preferences) {
           const actionTypeId = parseInt(pref.action_type_id, 10)
-          orgPrefMap.set(actionTypeId, pref.enabled)
+          if (!orgPrefMap.has(actionTypeId)) {
+            orgPrefMap.set(actionTypeId, pref.enabled)
+          }
         }
 
         // Include all actions with defaults
@@ -456,22 +465,32 @@ export const push_update_preference: RequestHandler = async (req, res) => {
           contractor_id: contractorId,
         })
 
-        // Upsert preference within transaction
-        const [updated] = await trx<PushNotificationPreference>(
+        // Update first, then insert. The unique constraint treats NULL
+        // contractor ids as distinct, so ON CONFLICT never matches a personal
+        // row and an upsert added another row on every toggle; lookups that
+        // took an arbitrary one of them then reported a stale choice.
+        const scoped = trx<PushNotificationPreference>(
           "push_notification_preferences",
+        ).where({ user_id: user.user_id, action_type_id: String(actionTypeId) })
+        const rows = await (contractorId === null
+          ? scoped.whereNull("contractor_id")
+          : scoped.where({ contractor_id: contractorId })
         )
-          .insert({
-            user_id: user.user_id,
-            action_type_id: String(actionTypeId),
-            contractor_id: contractorId,
-            enabled: enabled,
-          })
-          .onConflict(["user_id", "action_type_id", "contractor_id"])
-          .merge({
-            enabled: enabled,
-            updated_at: new Date(),
-          })
+          .update({ enabled: enabled, updated_at: new Date() })
           .returning("*")
+        let updated = rows[0]
+        if (!updated) {
+          ;[updated] = await trx<PushNotificationPreference>(
+            "push_notification_preferences",
+          )
+            .insert({
+              user_id: user.user_id,
+              action_type_id: String(actionTypeId),
+              contractor_id: contractorId,
+              enabled: enabled,
+            })
+            .returning("*")
+        }
 
         if (updated) {
           results.push({

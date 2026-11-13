@@ -705,7 +705,20 @@ export async function mergeOfferSessions(
 
   // Create new merged offer using existing createOffer helper
   // This handles session creation, offer creation, chat creation, notifications, Discord threads
-  // Use the oldest offer's timestamp for the merged offer and oldest session timestamp for the merged session
+  //
+  // The merged SESSION keeps the oldest source session's timestamp, so the
+  // customer's order keeps the date they first ordered (lists, "ordered
+  // since", admin stats).
+  //
+  // The merged OFFER REVISION (order_offers.timestamp) must not be backdated.
+  // It is the time the revision was actually made, and it is the clock every
+  // "waiting for a reply" feature reads: the pending-offer reminders
+  // (services/offer-reminders) compare it with now() to decide which stage is
+  // due, and the reminder's text says how long the buyer has waited. Giving a
+  // revision created now a timestamp from days ago made a freshly merged offer
+  // instantly "72 hours unanswered", so the whole seller side got the final
+  // stale-offer reminder DM ("has waited 3 days for a reply") within one
+  // 30-minute task run of the merge.
   const { session: merged_session, offer: merged_offer } = await createOffer(
     {
       customer_id: customer_id,
@@ -724,7 +737,6 @@ export async function mergeOfferSessions(
       collateral: totalCollateral.toString(),
       payment_type: payment_type,
       service_id: undefined,
-      timestamp: oldestSessionTimestamp.toUTCString(),
     },
     [], // Market listings will be added separately since we only have listing_ids
   )

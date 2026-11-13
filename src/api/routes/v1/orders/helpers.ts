@@ -513,9 +513,8 @@ export async function createOffer(
   session_details: Partial<
     Omit<DBOfferSession, "timestamp"> & { timestamp: string | Date }
   >,
-  offer_details: Partial<
-    Omit<DBOffer, "timestamp"> & { timestamp: string | Date }
-  > & {
+  // No `timestamp`: an offer revision is always made now (offerDb.createOrderOffer).
+  offer_details: Partial<Omit<DBOffer, "timestamp">> & {
     actor_id: string
   },
   market_listings: {
