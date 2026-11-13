@@ -62,7 +62,10 @@ function world(opts: {
   remindable?: string[]
   sent?: { offer_id: string; stage: string; user_id: string }[]
   capped?: string[]
+  /** contractor_members rows for the assignee (default: a member). */
+  members?: { user_id: string }[]
 }) {
+  tracker.on.select("contractor_members").response(opts.members ?? [{ user_id: SELLER }])
   tracker.on.any((q) => q.sql.includes("WITH pending AS")).response({ rows: opts.offers })
   tracker.on.select("accounts").response((opts.remindable ?? [SELLER, MANAGER, BUYER]).map((user_id) => ({ user_id })))
   tracker.on.select((q) => q.sql.includes("offer_reminders") && q.sql.includes("having")).response(
@@ -153,11 +156,35 @@ describe("stages and recipients", () => {
     expect(svc.stagesOf(due({ first_due: false, final_due: false, buyer_due: true }))).toEqual(["buyer"])
   })
 
-  it("seller side: the assignee plus the org's manage_orders members, once each, never the customer", async () => {
+  it("seller side, assigned: the assignee only (no org lookup), never the customer", async () => {
+    world({ offers: [] })
     h.managers.mockResolvedValue([{ userId: SELLER }, { userId: MANAGER }, { userId: BUYER }])
-    expect(await svc.stageRecipients(due({ contractor_id: ORG }), "first")).toEqual([SELLER, MANAGER])
-    expect(h.managers).toHaveBeenCalledWith(ORG, "manage_orders")
+    expect(await svc.stageRecipients(due({ contractor_id: ORG }), "first")).toEqual([SELLER])
+    expect(await svc.stageRecipients(due({ contractor_id: ORG }), "final")).toEqual([SELLER])
+    expect(h.managers).not.toHaveBeenCalled()
     expect(await svc.stageRecipients(due({ contractor_id: ORG }), "buyer")).toEqual([BUYER])
+  })
+
+  it("seller side, unassigned: all manage_orders holders, once each, never the customer", async () => {
+    h.managers.mockResolvedValue([{ userId: MANAGER }, { userId: SELLER }, { userId: MANAGER }, { userId: BUYER }])
+    expect(await svc.stageRecipients(due({ assigned_id: null, contractor_id: ORG }), "first")).toEqual([MANAGER, SELLER])
+    expect(h.managers).toHaveBeenCalledWith(ORG, "manage_orders")
+    expect(await svc.stageRecipients(due({ assigned_id: null, contractor_id: null }), "first")).toEqual([])
+  })
+
+  it("non-remindable assignee: falls back to the manage_orders holders", async () => {
+    h.managers.mockResolvedValue([{ userId: MANAGER }, { userId: BUYER }])
+    // Deleted/banned/test account: not in the remindable accounts.
+    world({ offers: [], remindable: [MANAGER] })
+    expect(await svc.stageRecipients(due({ contractor_id: ORG }), "first")).toEqual([MANAGER])
+    // Left the org: remindable, but no contractor_members row.
+    tracker.reset()
+    world({ offers: [], members: [] })
+    expect(await svc.stageRecipients(due({ contractor_id: ORG }), "final")).toEqual([MANAGER])
+    // No org: nobody to fall back to.
+    tracker.reset()
+    world({ offers: [], remindable: [] })
+    expect(await svc.stageRecipients(due(), "first")).toEqual([])
   })
 
   it("one digest per user per run: the most urgent stage, then capped", () => {
@@ -210,9 +237,9 @@ describe("processOfferReminders", () => {
   })
 
   it("never twice, never test/deleted/banned accounts, and the daily cap defers", async () => {
-    h.managers.mockResolvedValue([{ userId: MANAGER }])
+    h.managers.mockResolvedValue([{ userId: SELLER }, { userId: MANAGER }])
     world({
-      offers: [due({ contractor_id: ORG })],
+      offers: [due({ assigned_id: null, contractor_id: ORG })],
       remindable: [SELLER, MANAGER],
       sent: [{ offer_id: due().offer_id, stage: "first", user_id: SELLER }],
     })

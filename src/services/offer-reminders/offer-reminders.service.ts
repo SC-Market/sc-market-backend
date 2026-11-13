@@ -26,9 +26,12 @@
  * deferred longer, e.g. by the caps, is skipped, never sent stale), and the
  * first stage only before the final one is due.
  *
- * Seller side: as for new offers (services/notify/plans.ts offerPlans): the
- * assigned member, plus the org's members with manage_orders for an org
- * offer (services/notify/recipients.ts), deduplicated, never the customer.
+ * Seller side (owner decision 2026-11-13): the assigned member ONLY when the
+ * offer has one; with no assignee, the org's members with manage_orders
+ * (services/notify/recipients.ts), deduplicated; never the customer. If the
+ * assignee cannot be reminded (deleted, tombstoned, banned or test account,
+ * or no longer a member of the org) the offer falls back to the manage_orders
+ * members, so it does not go unnoticed. The buyer stage is unchanged.
  * Preferences are Personal (category "reminders"): one digest per user spans
  * every org.
  *
@@ -206,16 +209,35 @@ export interface ReminderItem {
   offer: DueOffer
 }
 
-/** Who a stage goes to: the seller side (assigned + org managers), or the customer. */
+/**
+ * Who a stage goes to. The customer for the buyer stage. The seller side
+ * (owner decision 2026-11-13) is the assignee alone when there is one, and
+ * otherwise the org's manage_orders members; never the customer. A
+ * non-remindable assignee (deleted, tombstoned, banned or test account, or,
+ * for an org offer, no longer a member of the org) counts as unassigned, so
+ * the offer falls back to the manage_orders members instead of going
+ * unnoticed. Offers without an org have no such fallback.
+ */
 export async function stageRecipients(offer: DueOffer, stage: Stage): Promise<string[]> {
   if (stage === "buyer") return [offer.customer_id]
+  const assignee = offer.assigned_id
+  if (assignee && assignee !== offer.customer_id && (await assigneeReachable(offer, assignee))) return [assignee]
+  if (!offer.contractor_id) return []
   const ids = new Set<string>()
-  if (offer.assigned_id) ids.add(offer.assigned_id)
-  if (offer.contractor_id) {
-    for (const r of await orgMembersWithPermission(offer.contractor_id, "manage_orders")) ids.add(r.userId)
-  }
+  for (const r of await orgMembersWithPermission(offer.contractor_id, "manage_orders")) ids.add(r.userId)
   ids.delete(offer.customer_id)
   return [...ids]
+}
+
+/** The assignee may be reminded and, for an org offer, still belongs to the org. */
+async function assigneeReachable(offer: DueOffer, assignee: string): Promise<boolean> {
+  const knex = getKnex()
+  if (!(await remindable(knex, [assignee])).has(assignee)) return false
+  if (!offer.contractor_id) return true
+  const member = await knex("contractor_members")
+    .where({ contractor_id: offer.contractor_id, user_id: assignee })
+    .first("user_id")
+  return !!member
 }
 
 /** The stages due for an offer, most advanced first (final replaces first). */
