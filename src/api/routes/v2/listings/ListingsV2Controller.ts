@@ -55,6 +55,7 @@ import {
 } from "../../../../services/test-accounts/isolation.js"
 import { resolveItemTypes } from "../util/item-type-filter.js"
 import { clampPagination } from "../util/pagination.js"
+import { searchQualityValueSql, summarizeSearchItems } from "./search-item-summaries.js"
 import { ImageUploadUserError } from "../../../../clients/image-lambda/image-upload-error.js"
 import { imageUploadValidationError } from "../images/image-upload-errors.js"
 
@@ -671,26 +672,8 @@ export class ListingsV2Controller extends BaseController {
           "ls.price_max",
           "ls.quality_tier_min",
           "ls.quality_tier_max",
-          db.raw(`(
-            SELECT MIN((iv.attributes->>'quality_value')::int)
-            FROM listing_item_lots lil
-            JOIN listing_items li ON lil.item_id = li.item_id
-            JOIN item_variants iv ON lil.variant_id = iv.variant_id
-            WHERE li.listing_id = ls.listing_id
-              AND iv.attributes->>'quality_value' IS NOT NULL
-              AND lil.quantity_total > 0
-              AND lil.listed = true
-          ) as quality_value_min`),
-          db.raw(`(
-            SELECT MAX((iv.attributes->>'quality_value')::int)
-            FROM listing_item_lots lil
-            JOIN listing_items li ON lil.item_id = li.item_id
-            JOIN item_variants iv ON lil.variant_id = iv.variant_id
-            WHERE li.listing_id = ls.listing_id
-              AND iv.attributes->>'quality_value' IS NOT NULL
-              AND lil.quantity_total > 0
-              AND lil.listed = true
-          ) as quality_value_max`),
+          db.raw(searchQualityValueSql("MIN", "quality_value_min")),
+          db.raw(searchQualityValueSql("MAX", "quality_value_max")),
           "ls.shop_id",
           "ls.shop_name",
           "ls.shop_slug",
@@ -707,6 +690,7 @@ export class ListingsV2Controller extends BaseController {
           "ls.pickup_method",
           "ls.quantity_unit",
           "ls.visibility",
+          "ls.has_bulk_discount",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -890,6 +874,10 @@ export class ListingsV2Controller extends BaseController {
         ),
       )
 
+      // Every filter is applied: the item summaries below read the same set,
+      // without the ordering and paging.
+      const filtered = query.clone()
+
       // Get total count for pagination (Requirement 15.8)
       const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
       const [{ count: totalCount }] = await countQuery
@@ -968,7 +956,34 @@ export class ListingsV2Controller extends BaseController {
         pickup_method: row.pickup_method || null,
         quantity_unit: row.quantity_unit || "unit",
         visibility: row.visibility || "public",
+        has_bulk_discount: row.has_bulk_discount === true,
       }))
+
+      // Grouped market cards count sellers, prices and stock over every
+      // matching listing of an item, not only the ones on this page.
+      const pageItemIds = [
+        ...new Set(listings.map((l) => l.game_item_id).filter(Boolean)),
+      ]
+      const item_summaries = pageItemIds.length
+        ? summarizeSearchItems(
+            await filtered
+              .clearSelect()
+              .whereIn("ls.game_item_id", pageItemIds)
+              .select(
+                "ls.game_item_id",
+                "ls.listing_id",
+                "ls.shop_id",
+                "ls.price_min",
+                "ls.price_max",
+                "ls.quantity_available",
+                "ls.quality_tier_min",
+                "ls.quality_tier_max",
+                db.raw(searchQualityValueSql("MIN", "quality_value_min")),
+                db.raw(searchQualityValueSql("MAX", "quality_value_max")),
+                "ls.has_bulk_discount",
+              ),
+          )
+        : []
 
       // Seller activity for the shops on this page (one lookup).
       const activity = await getShopActivity(listings.map((l) => l.shop_id), db)
@@ -986,6 +1001,7 @@ export class ListingsV2Controller extends BaseController {
         total,
         page: validatedPage,
         page_size: validatedPageSize,
+        item_summaries,
       }
     } catch (error) {
       logger.error("Failed to search listings", {

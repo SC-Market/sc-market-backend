@@ -5971,6 +5971,75 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SearchItemSummary": {
+				"description": "A game item's search-matching listings, summed up across every result page",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item catalog UUID"
+					},
+					"listing_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Matching listings of the item, in stock or not"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Distinct shops with the item in stock (one seller per shop)"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Units in stock across the matching listings"
+					},
+					"price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Lowest price of the in-stock listings (of all of them when none has stock)"
+					},
+					"price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Highest price of the in-stock listings (of all of them when none has stock)"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Lowest quality tier (1-5) of the in-stock listings"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Highest quality tier (1-5) of the in-stock listings"
+					},
+					"quality_value_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Lowest quality value (0-1000) of the in-stock listings"
+					},
+					"quality_value_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Highest quality value (0-1000) of the in-stock listings"
+					},
+					"has_bulk_discount": {
+						"type": "boolean",
+						"description": "Whether any in-stock listing has bulk discount tiers"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"listing_count",
+					"seller_count",
+					"quantity_available",
+					"price_min",
+					"price_max",
+					"has_bulk_discount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SearchListingsResponse": {
 				"description": "Response for listing search with pagination",
 				"properties": {
@@ -5995,13 +6064,21 @@
 						"type": "number",
 						"format": "double",
 						"description": "Number of results per page"
+					},
+					"item_summaries": {
+						"items": {
+							"$ref": "#/components/schemas/SearchItemSummary"
+						},
+						"type": "array",
+						"description": "One summary per game item on this page, over ALL of that item's listings\nmatching the search (not only the ones on this page), for grouped cards."
 					}
 				},
 				"required": [
 					"listings",
 					"total",
 					"page",
-					"page_size"
+					"page_size",
+					"item_summaries"
 				],
 				"type": "object",
 				"additionalProperties": false

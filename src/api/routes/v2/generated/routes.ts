@@ -2083,6 +2083,24 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchItemSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "listing_count": {"dataType":"double","required":true},
+            "seller_count": {"dataType":"double","required":true},
+            "quantity_available": {"dataType":"double","required":true},
+            "price_min": {"dataType":"double","required":true},
+            "price_max": {"dataType":"double","required":true},
+            "quality_tier_min": {"dataType":"double"},
+            "quality_tier_max": {"dataType":"double"},
+            "quality_value_min": {"dataType":"double"},
+            "quality_value_max": {"dataType":"double"},
+            "has_bulk_discount": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "SearchListingsResponse": {
         "dataType": "refObject",
         "properties": {
@@ -2090,6 +2108,7 @@ const models: TsoaRoute.Models = {
             "total": {"dataType":"double","required":true},
             "page": {"dataType":"double","required":true},
             "page_size": {"dataType":"double","required":true},
+            "item_summaries": {"dataType":"array","array":{"dataType":"refObject","ref":"SearchItemSummary"},"required":true},
         },
         "additionalProperties": false,
     },

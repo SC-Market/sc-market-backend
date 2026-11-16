@@ -298,6 +298,50 @@ export interface SearchListingsResponse {
   
   /** Number of results per page */
   page_size: number;
+
+  /**
+   * One summary per game item on this page, over ALL of that item's listings
+   * matching the search (not only the ones on this page), for grouped cards.
+   */
+  item_summaries: SearchItemSummary[];
+}
+
+/**
+ * A game item's search-matching listings, summed up across every result page
+ */
+export interface SearchItemSummary {
+  /** Game item catalog UUID */
+  game_item_id: string;
+
+  /** Matching listings of the item, in stock or not */
+  listing_count: number;
+
+  /** Distinct shops with the item in stock (one seller per shop) */
+  seller_count: number;
+
+  /** Units in stock across the matching listings */
+  quantity_available: number;
+
+  /** Lowest price of the in-stock listings (of all of them when none has stock) */
+  price_min: number;
+
+  /** Highest price of the in-stock listings (of all of them when none has stock) */
+  price_max: number;
+
+  /** Lowest quality tier (1-5) of the in-stock listings */
+  quality_tier_min?: number;
+
+  /** Highest quality tier (1-5) of the in-stock listings */
+  quality_tier_max?: number;
+
+  /** Lowest quality value (0-1000) of the in-stock listings */
+  quality_value_min?: number;
+
+  /** Highest quality value (0-1000) of the in-stock listings */
+  quality_value_max?: number;
+
+  /** Whether any in-stock listing has bulk discount tiers */
+  has_bulk_discount: boolean;
 }
 
 // ============================================================================

@@ -142,37 +142,60 @@ interface ListingRow {
   seller_key: string
   price: string | number | null
   quantity: string | number | null
+  /** Totals over ALL the item's live listings, not only the rows read */
+  total_count: string | number
+  total_sellers: string | number
+  total_quantity: string | number | null
+  total_lowest_ask: string | number | null
 }
 
-/** Live public listings of one item, one row per listing (no seller columns leave this module). */
+/**
+ * Live public listings of one item, one row per listing (no seller columns
+ * leave this module): at most ACQUISITION_LIMITS.listingRows of them, real
+ * asks cheapest first, each carrying the totals of every live listing so the
+ * counts never stop at the row cap.
+ */
 export function liveListingsSql(): string {
+  const placeholder = Number(PRICE_ORACLE_RULES.placeholderPriceMax)
   return `
-    SELECT
-      l.listing_id,
-      l.title,
-      l.sale_type,
-      COALESCE(l.shop_id::text, l.seller_id::text) AS seller_key,
-      MIN(p.price)::bigint AS price,
-      SUM(p.qty)::bigint AS quantity
-    FROM listings l
-    JOIN listing_items li ON li.listing_id = l.listing_id
-    JOIN LATERAL (
+    WITH live AS (
       SELECT
-        MIN(COALESCE(CASE WHEN li.pricing_mode = 'per_variant' THEN vp.price END, li.base_price)) AS price,
-        SUM(lil.quantity_total) AS qty
-      FROM listing_item_lots lil
-      LEFT JOIN variant_pricing vp ON vp.item_id = li.item_id AND vp.variant_id = lil.variant_id
-      WHERE lil.item_id = li.item_id AND lil.listed = true AND lil.quantity_total > 0
-    ) p ON p.qty > 0
-    WHERE ${publiclyListedSql("l")}
-      AND (l.expires_at IS NULL OR l.expires_at > now())
-      AND li.game_item_id = ?
-    GROUP BY l.listing_id, l.title, l.sale_type, seller_key
+        l.listing_id,
+        l.title,
+        l.sale_type,
+        COALESCE(l.shop_id::text, l.seller_id::text) AS seller_key,
+        MIN(p.price)::bigint AS price,
+        SUM(p.qty)::bigint AS quantity
+      FROM listings l
+      JOIN listing_items li ON li.listing_id = l.listing_id
+      JOIN LATERAL (
+        SELECT
+          MIN(COALESCE(CASE WHEN li.pricing_mode = 'per_variant' THEN vp.price END, li.base_price)) AS price,
+          SUM(lil.quantity_total) AS qty
+        FROM listing_item_lots lil
+        LEFT JOIN variant_pricing vp ON vp.item_id = li.item_id AND vp.variant_id = lil.variant_id
+        WHERE lil.item_id = li.item_id AND lil.listed = true AND lil.quantity_total > 0
+      ) p ON p.qty > 0
+      WHERE ${publiclyListedSql("l")}
+        AND (l.expires_at IS NULL OR l.expires_at > now())
+        AND li.game_item_id = ?
+      GROUP BY l.listing_id, l.title, l.sale_type, seller_key
+    )
+    SELECT
+      live.*,
+      COUNT(*) OVER () AS total_count,
+      (SELECT COUNT(DISTINCT seller_key) FROM live) AS total_sellers,
+      SUM(live.quantity) OVER () AS total_quantity,
+      (SELECT MIN(price) FROM live WHERE sale_type = 'fixed' AND price > ${placeholder}) AS total_lowest_ask
+    FROM live
+    ORDER BY (live.price IS NOT NULL AND live.price > ${placeholder}) DESC,
+      live.price ASC NULLS LAST,
+      live.listing_id ASC
     LIMIT ${ACQUISITION_LIMITS.listingRows}
   `
 }
 
-/** Pure: the listings block from the listing rows. */
+/** Pure: the listings block from the listing rows (totals from the rows' total_* columns). */
 export function summarizeListings(
   rows: readonly ListingRow[],
   marketPage: string,
@@ -188,9 +211,6 @@ export function summarizeListings(
   }))
   const realAsk = (l: ItemAcquisitionListing) =>
     l.price !== null && l.price > placeholder
-  const asks = listings
-    .filter((l) => l.sale_type === "fixed" && realAsk(l))
-    .map((l) => l.price as number)
   const top = [...listings]
     .sort(
       (a, b) =>
@@ -199,11 +219,12 @@ export function summarizeListings(
         a.listing_id.localeCompare(b.listing_id),
     )
     .slice(0, ACQUISITION_LIMITS.listings)
+  const totals = rows[0]
   return {
-    count: listings.length,
-    seller_count: new Set(rows.map((r) => r.seller_key)).size,
-    quantity_available: listings.reduce((s, l) => s + l.quantity_available, 0),
-    lowest_ask: asks.length ? Math.min(...asks) : null,
+    count: totals ? Number(totals.total_count) : 0,
+    seller_count: totals ? Number(totals.total_sellers) : 0,
+    quantity_available: totals ? Number(totals.total_quantity ?? 0) : 0,
+    lowest_ask: totals ? num(totals.total_lowest_ask) : null,
     page: marketPage,
     top,
   }
