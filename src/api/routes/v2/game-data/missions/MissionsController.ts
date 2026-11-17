@@ -579,6 +579,7 @@ export class MissionsController extends BaseController {
       // Get all chain starter missions
       const starterMissions = await knex("missions")
         .where("version_id", effectiveVersionId)
+        .where("is_active", true)
         .where("is_chain_starter", true)
         .orderBy("mission_name", "asc")
 
@@ -598,6 +599,7 @@ export class MissionsController extends BaseController {
         // or are marked as chain missions with matching criteria
         const relatedMissions = await knex("missions")
           .where("version_id", effectiveVersionId)
+          .where("is_active", true)
           .where("is_chain_mission", true)
           .where(function () {
             // Missions that have this starter in their prerequisites
@@ -767,7 +769,10 @@ export class MissionsController extends BaseController {
     if (!hub) this.throwNotFound("Mission hub", `${kind}/${slug}`)
 
     const inHub = (query: Knex.QueryBuilder) =>
-      query.where("m.version_id", versionId).whereRaw(`${hubColumnSql(kind)} = ANY(?)`, [hub.values])
+      query
+        .where("m.version_id", versionId)
+        .where("m.is_active", true)
+        .whereRaw(`${hubColumnSql(kind)} = ANY(?)`, [hub.values])
 
     const illegal = "(m.legal_status IS NOT DISTINCT FROM 'ILLEGAL' OR m.is_illegal IS TRUE)"
     const [stats] = await inHub(knex("missions as m")).select<

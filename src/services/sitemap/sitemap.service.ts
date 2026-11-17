@@ -403,7 +403,11 @@ export async function collectSitemapSections(): Promise<SitemapSections> {
   // Each source fails (or comes back empty) on its own, reported by name.
   const wikiQueries: { name: string; run: () => Promise<number> }[] = [
     { name: "missions", run: async () => {
-      const missions = await db("missions").select("mission_code", "mission_name", "updated_at").limit(10000)
+      // Missions a patch dropped (is_active false) stay reachable but leave the sitemap.
+      const missions = await db("missions")
+        .select("mission_code", "mission_name", "updated_at")
+        .where("is_active", true)
+        .limit(10000)
       for (const m of missions) {
         wikiPages.push({ url: `/missions/${m.mission_code}`, changefreq: EnumChangefreq.MONTHLY, priority: 0.6, lastmod: lastmod(m.updated_at) })
       }

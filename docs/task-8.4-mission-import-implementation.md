@@ -1,5 +1,16 @@
 # Task 8.4: Mission Import Implementation
 
+> **Current behavior (2026-11-17):** missions keep their `mission_id` across
+> imports. The import matches by `(version_id, mission_code)`, writes only
+> changed columns/child rows (an unchanged import writes nothing, so
+> `updated_at` and the sitemap lastmod stay), and marks missions a patch drops
+> `is_active = false` with `removed_in_version`, never deleting them. The
+> previous delete-and-reinsert wiped `mission_completions` and
+> `mission_ratings` through `ON DELETE CASCADE`; those FKs are now `RESTRICT`.
+> Rules and tests: `src/services/game-data/mission-sync.ts`,
+> `mission-sync.test.ts`, `mission-import.pg.test.ts`. `upsertMission()`
+> below no longer exists.
+
 ## Overview
 
 Implemented mission data import functionality for the game data crafting system. This enables importing mission information from extracted P4K game data files into the database with proper validation, type mapping, and version linking.

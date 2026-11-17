@@ -432,6 +432,7 @@ export class WikiController extends BaseController {
         .join("blueprints as b", "mbr.blueprint_id", "b.blueprint_id")
         .where("b.output_game_item_id", resolvedItemId)
         .where("b.is_active", true)
+        .where("m.is_active", true)
         .select<ItemMissionRewardRow[]>(
           "m.mission_id",
           "m.mission_name",

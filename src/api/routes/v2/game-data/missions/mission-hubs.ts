@@ -214,10 +214,11 @@ export async function activeLiveVersionId(knex: Knex): Promise<string | null> {
   return (await activeLiveVersion(knex))?.version_id ?? null
 }
 
-/** The version's missions grouped by their four hub values. */
+/** The version's active missions grouped by their four hub values. */
 export async function loadHubRows(knex: Knex, versionId: string): Promise<HubRow[]> {
   const rows = await knex("missions as m")
     .where("m.version_id", versionId)
+    .where("m.is_active", true)
     .select<Array<Omit<HubRow, "n"> & { n: string | number }>>(
       knex.raw(`${hubColumnSql("givers")} as giver`),
       knex.raw(`${hubColumnSql("factions")} as faction`),

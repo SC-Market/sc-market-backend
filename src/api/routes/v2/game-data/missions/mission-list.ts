@@ -41,10 +41,11 @@ export interface MissionListRow {
 /**
  * `missions as m` with the list columns: blueprint reward count and names,
  * ship encounter count and hauling orders. `reward_counts.blueprint_count`
- * is available to filters.
+ * is available to filters. Only active missions (not dropped by a patch).
  */
 export function missionListQuery(knex: Knex): Knex.QueryBuilder<MissionListRow, MissionListRow[]> {
   return knex("missions as m")
+    .where("m.is_active", true)
     .leftJoin(
       knex("mission_blueprint_rewards as mbr")
         .select("mission_id")

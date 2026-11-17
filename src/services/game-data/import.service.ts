@@ -26,6 +26,33 @@ import {
 } from "./manufacturers.js"
 import { importShopInventories, type P4KShopInventory } from "./shop-inventories.js"
 import { buildShipRecords, shipGameItemInsert, wikiShipUpsert } from "./ship-records.js"
+import { serializeJsonColumns } from "./import-diff.js"
+import {
+  BLUEPRINT_INGREDIENT_COLUMNS,
+  BLUEPRINT_MODIFIER_COLUMNS,
+  blueprintCodesToDeactivate,
+  buildBlueprintRecord,
+  buildIngredientRow,
+  buildModifierRows,
+  planBlueprintWrite,
+} from "./blueprint-sync.js"
+import {
+  buildMissionChildren,
+  buildMissionRecord,
+  emptyMissionChildren,
+  MISSION_CHILD_KINDS,
+  MISSION_CHILD_TABLES,
+  MISSION_COLUMNS,
+  MISSION_REWARD_COLUMNS,
+  buildMissionRewardRows,
+  planMissionSync,
+  planRewardLinkSync,
+  type RewardLinkRow,
+  type ExistingMission,
+  type IncomingMission,
+  type MissionChildKind,
+  type MissionChildren,
+} from "./mission-sync.js"
 
 // --- P4K Type to DB Subcategory Mapping (62 types) ---
 const P4K_TYPE_MAP: Record<string, string> = {
@@ -465,12 +492,22 @@ export interface ImportStats {
   missionsProcessed: number
   missionsInserted: number
   missionsUpdated: number
+  /** Missions already up to date: no write, updated_at kept */
+  missionsUnchanged: number
+  /** Missions missing from this import, marked is_active = false (never deleted) */
+  missionsDeactivated: number
+  /** Inactive missions back in this import (same mission_id) */
+  missionsReactivated: number
   missionsSkipped: number
   missionsWithBlueprintRewards: number
   missionBlueprintLinksCreated: number
   blueprintsProcessed: number
   blueprintsInserted: number
   blueprintsUpdated: number
+  /** Blueprints already up to date: no write, updated_at kept */
+  blueprintsUnchanged: number
+  /** Blueprints missing from this import, marked is_active = false (never deleted) */
+  blueprintsDeactivated: number
   blueprintsSkipped: number
   resourcesProcessed: number
   resourcesInserted: number
@@ -661,12 +698,17 @@ export class GameDataImportService {
       missionsProcessed: 0,
       missionsInserted: 0,
       missionsUpdated: 0,
+      missionsUnchanged: 0,
+      missionsDeactivated: 0,
+      missionsReactivated: 0,
       missionsSkipped: 0,
       missionsWithBlueprintRewards: 0,
       missionBlueprintLinksCreated: 0,
       blueprintsProcessed: 0,
       blueprintsInserted: 0,
       blueprintsUpdated: 0,
+      blueprintsUnchanged: 0,
+      blueprintsDeactivated: 0,
       blueprintsSkipped: 0,
       resourcesProcessed: 0,
       resourcesInserted: 0,
@@ -737,6 +779,8 @@ export class GameDataImportService {
       }
 
       const versionId: string = version.version_id
+      // Recorded on missions/blueprints this import no longer contains.
+      const versionLabel: string = versionNumber !== "Unknown" ? versionNumber : version.version_number
 
       logger.info(`Loaded ${p4kItems.length} items from P4K data`, { channel, versionNumber, versionId })
 
@@ -1063,10 +1107,13 @@ export class GameDataImportService {
       if (gameData.missions && gameData.missions.length > 0) {
         logger.info("Importing missions")
         
-        const missionStats = await this.importMissions(knex, gameData, versionId)
+        const missionStats = await this.importMissions(knex, gameData, versionId, versionLabel)
         stats.missionsProcessed = missionStats.processed
         stats.missionsInserted = missionStats.inserted
         stats.missionsUpdated = missionStats.updated
+        stats.missionsUnchanged = missionStats.unchanged
+        stats.missionsDeactivated = missionStats.deactivated
+        stats.missionsReactivated = missionStats.reactivated
         stats.missionsSkipped = missionStats.skipped
         stats.errors.push(...missionStats.errors)
 
@@ -1074,6 +1121,9 @@ export class GameDataImportService {
           processed: missionStats.processed,
           inserted: missionStats.inserted,
           updated: missionStats.updated,
+          unchanged: missionStats.unchanged,
+          deactivated: missionStats.deactivated,
+          reactivated: missionStats.reactivated,
           skipped: missionStats.skipped,
         })
       }
@@ -1088,6 +1138,8 @@ export class GameDataImportService {
         stats.blueprintsProcessed = blueprintStats.processed
         stats.blueprintsInserted = blueprintStats.inserted
         stats.blueprintsUpdated = blueprintStats.updated
+        stats.blueprintsUnchanged = blueprintStats.unchanged
+        stats.blueprintsDeactivated = blueprintStats.deactivated
         stats.blueprintsSkipped = blueprintStats.skipped
         stats.errors.push(...blueprintStats.errors)
 
@@ -1183,52 +1235,33 @@ export class GameDataImportService {
       // ========================================================================
       // STEP 12: Import blueprint reward pools
       // ========================================================================
+      // Each of the steps below runs in its own transaction: a failure rolls
+      // that step back (the previous data stays) and is reported in
+      // stats.errors. None of these tables is referenced by user data.
       if (gameData.blueprintRewardPools && gameData.blueprintRewardPools.length > 0) {
         logger.info("Importing blueprint reward pools")
-
-        {
-          for (const pool of gameData.blueprintRewardPools) {
-            try {
-              await knex("blueprint_reward_pools")
-                .insert({
-                  version_id: version.version_id,
-                  pool_code: pool.name,
-                  updated_at: new Date(),
-                })
+        await this.reportStep(stats, "Blueprint reward pools", () =>
+          knex.transaction(async (trx) => {
+            const bpRows: Array<{ blueprint_id: string; code: string }> = await trx("blueprints")
+              .where({ version_id: versionId })
+              .select("blueprint_id", trx.raw("LOWER(blueprint_code) as code"))
+            const bpIdByCode = new Map(bpRows.map((r) => [r.code, r.blueprint_id]))
+            for (const pool of gameData.blueprintRewardPools!) {
+              const [poolRow] = await trx("blueprint_reward_pools")
+                .insert({ version_id: versionId, pool_code: pool.name, updated_at: new Date() })
                 .onConflict(["version_id", "pool_code"])
                 .merge({ updated_at: new Date() })
-
-              const [poolRow] = await knex("blueprint_reward_pools")
-                .where({ version_id: versionId, pool_code: pool.name })
-                .select("pool_id")
-
-              // Replace pool entries
-              await knex("blueprint_reward_pool_entries")
-                .where("pool_id", poolRow.pool_id)
-                .delete()
-
-              for (const reward of pool.rewards) {
-                const bp = await knex("blueprints")
-                  .where({ version_id: version.version_id })
-                  .whereRaw("LOWER(blueprint_code) = LOWER(?)", [reward.blueprint])
-                  .select("blueprint_id")
-                  .first()
-
-                if (bp) {
-                  await knex("blueprint_reward_pool_entries").insert({
-                    pool_id: poolRow.pool_id,
-                    blueprint_id: bp.blueprint_id,
-                    weight: reward.weight,
-                  })
-                }
-              }
-            } catch (err) {
-              // Tables may not exist yet - skip silently
-              logger.debug("Blueprint reward pool import skipped (table may not exist)")
-              break
+                .returning("pool_id")
+              // Pool entries are plain rows (nothing references them): replace.
+              await trx("blueprint_reward_pool_entries").where("pool_id", poolRow.pool_id).delete()
+              const entries = pool.rewards.flatMap((reward) => {
+                const blueprintId = bpIdByCode.get(reward.blueprint.toLowerCase())
+                return blueprintId ? [{ pool_id: poolRow.pool_id, blueprint_id: blueprintId, weight: reward.weight }] : []
+              })
+              if (entries.length) await trx("blueprint_reward_pool_entries").insert(entries)
             }
-          }
-        }
+          }),
+        )
       }
 
       // ========================================================================
@@ -1236,18 +1269,18 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.refiningProcesses && gameData.refiningProcesses.length > 0) {
         logger.info("Importing refining processes")
-        try {
-          await knex("refining_processes").delete()
-          await knex("refining_processes").insert(
-            gameData.refiningProcesses.map((p: P4KRefiningProcess) => ({
-              name: p.name,
-              speed: p.speed,
-              quality: p.quality,
-            })),
-          )
-        } catch {
-          logger.debug("Refining processes import skipped (table may not exist)")
-        }
+        await this.reportStep(stats, "Refining processes", () =>
+          knex.transaction(async (trx) => {
+            await trx("refining_processes").delete()
+            await trx("refining_processes").insert(
+              gameData.refiningProcesses!.map((p: P4KRefiningProcess) => ({
+                name: p.name,
+                speed: p.speed,
+                quality: p.quality,
+              })),
+            )
+          }),
+        )
       }
 
       // ========================================================================
@@ -1255,30 +1288,30 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.reputationRanks && gameData.reputationRanks.length > 0) {
         logger.info("Importing reputation ranks")
-        try {
-          await knex("reputation_ranks").delete()
-          const rows: Array<Record<string, unknown>> = []
-          for (const ladder of gameData.reputationRanks) {
-            for (const rank of ladder.ranks || []) {
-              rows.push({
-                scope_code: ladder.scope,
-                scope_display_name: ladder.displayName,
-                ceiling: ladder.ceiling,
-                standing_code: rank.code,
-                standing_display_name: rank.displayName,
-                threshold: rank.threshold,
-                rank_index: rank.index,
-              })
+        await this.reportStep(stats, "Reputation ranks", () =>
+          knex.transaction(async (trx) => {
+            await trx("reputation_ranks").delete()
+            const rows: Array<Record<string, unknown>> = []
+            for (const ladder of gameData.reputationRanks!) {
+              for (const rank of ladder.ranks || []) {
+                rows.push({
+                  scope_code: ladder.scope,
+                  scope_display_name: ladder.displayName,
+                  ceiling: ladder.ceiling,
+                  standing_code: rank.code,
+                  standing_display_name: rank.displayName,
+                  threshold: rank.threshold,
+                  rank_index: rank.index,
+                })
+              }
             }
-          }
-          const BATCH = 200
-          for (let i = 0; i < rows.length; i += BATCH) {
-            await knex("reputation_ranks").insert(rows.slice(i, i + BATCH))
-          }
-          logger.info(`Imported ${rows.length} reputation ranks across ${gameData.reputationRanks.length} scopes`)
-        } catch {
-          logger.debug("Reputation ranks import skipped (table may not exist)")
-        }
+            const BATCH = 200
+            for (let i = 0; i < rows.length; i += BATCH) {
+              await trx("reputation_ranks").insert(rows.slice(i, i + BATCH))
+            }
+            logger.info(`Imported ${rows.length} reputation ranks across ${gameData.reputationRanks!.length} scopes`)
+          }),
+        )
       }
 
       // ========================================================================
@@ -1286,21 +1319,21 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.lootTables && gameData.lootTables.length > 0) {
         logger.info("Importing loot tables")
-        try {
-          await knex("loot_tables").delete()
-          const BATCH = 100
-          for (let i = 0; i < gameData.lootTables.length; i += BATCH) {
-            await knex("loot_tables").insert(
-              gameData.lootTables.slice(i, i + BATCH).map((t) => ({
-                name: t.name,
-                entries: JSON.stringify(t.entries),
-              })),
-            )
-          }
-          logger.info(`Imported ${gameData.lootTables.length} loot tables`)
-        } catch {
-          logger.debug("Loot tables import skipped (table may not exist)")
-        }
+        await this.reportStep(stats, "Loot tables", () =>
+          knex.transaction(async (trx) => {
+            await trx("loot_tables").delete()
+            const BATCH = 100
+            for (let i = 0; i < gameData.lootTables!.length; i += BATCH) {
+              await trx("loot_tables").insert(
+                gameData.lootTables!.slice(i, i + BATCH).map((t) => ({
+                  name: t.name,
+                  entries: JSON.stringify(t.entries),
+                })),
+              )
+            }
+            logger.info(`Imported ${gameData.lootTables!.length} loot tables`)
+          }),
+        )
       }
 
       // ========================================================================
@@ -1308,23 +1341,23 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.rockCompositions && gameData.rockCompositions.length > 0) {
         logger.info("Importing rock compositions")
-        try {
-          await knex("rock_compositions").delete()
-          const BATCH = 100
-          for (let i = 0; i < gameData.rockCompositions.length; i += BATCH) {
-            await knex("rock_compositions").insert(
-              gameData.rockCompositions.slice(i, i + BATCH).map((r) => ({
-                name: r.name,
-                deposit_name: r.depositName,
-                min_distinct_elements: r.minDistinctElements,
-                elements: JSON.stringify(r.elements),
-              })),
-            )
-          }
-          logger.info(`Imported ${gameData.rockCompositions.length} rock compositions`)
-        } catch {
-          logger.debug("Rock compositions import skipped (table may not exist)")
-        }
+        await this.reportStep(stats, "Rock compositions", () =>
+          knex.transaction(async (trx) => {
+            await trx("rock_compositions").delete()
+            const BATCH = 100
+            for (let i = 0; i < gameData.rockCompositions!.length; i += BATCH) {
+              await trx("rock_compositions").insert(
+                gameData.rockCompositions!.slice(i, i + BATCH).map((r) => ({
+                  name: r.name,
+                  deposit_name: r.depositName,
+                  min_distinct_elements: r.minDistinctElements,
+                  elements: JSON.stringify(r.elements),
+                })),
+              )
+            }
+            logger.info(`Imported ${gameData.rockCompositions!.length} rock compositions`)
+          }),
+        )
       }
 
       // ========================================================================
@@ -1332,36 +1365,32 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.starmap && gameData.starmap.length > 0) {
         logger.info("Importing starmap locations")
-        try {
-          {
-            for (const loc of gameData.starmap) {
-              await knex("starmap_locations")
-                .insert({
-                  version_id: versionId,
-                  location_code: loc.file,
-                  location_name: loc.name,
-                  location_type: loc.type,
-                  parent_code: loc.parent,
-                  jurisdiction: loc.jurisdiction,
-                  description: loc.description,
-                  size: loc.size,
-                  updated_at: new Date(),
-                })
-                .onConflict(["version_id", "location_code"])
-                .merge({
-                  location_name: loc.name,
-                  location_type: loc.type,
-                  parent_code: loc.parent,
-                  jurisdiction: loc.jurisdiction,
-                  description: loc.description,
-                  updated_at: new Date(),
-                })
-            }
-            logger.info(`Imported ${gameData.starmap.length} starmap locations`)
+        await this.reportStep(stats, "Starmap locations", async () => {
+          for (const loc of gameData.starmap!) {
+            await knex("starmap_locations")
+              .insert({
+                version_id: versionId,
+                location_code: loc.file,
+                location_name: loc.name,
+                location_type: loc.type,
+                parent_code: loc.parent,
+                jurisdiction: loc.jurisdiction,
+                description: loc.description,
+                size: loc.size,
+                updated_at: new Date(),
+              })
+              .onConflict(["version_id", "location_code"])
+              .merge({
+                location_name: loc.name,
+                location_type: loc.type,
+                parent_code: loc.parent,
+                jurisdiction: loc.jurisdiction,
+                description: loc.description,
+                updated_at: new Date(),
+              })
           }
-        } catch {
-          logger.debug("Starmap import skipped (table may not exist)")
-        }
+          logger.info(`Imported ${gameData.starmap!.length} starmap locations`)
+        })
       }
 
       // ========================================================================
@@ -1467,7 +1496,9 @@ export class GameDataImportService {
       // STEP 22: Import crafted property definitions
       // ========================================================================
       if (gameData.craftedProperties?.length) {
-        stats.craftedPropertyDefsImported = await this.importCraftedPropertyDefs(knex, gameData)
+        await this.reportStep(stats, "Crafted property definitions", async () => {
+          stats.craftedPropertyDefsImported = await this.importCraftedPropertyDefs(knex, gameData)
+        })
       }
 
       // ========================================================================
@@ -1483,6 +1514,21 @@ export class GameDataImportService {
       logger.error("Import failed", { error: errorMessage })
       stats.errors.push(errorMessage)
       throw error
+    }
+  }
+
+  /**
+   * Run one import step; a failure is logged and added to stats.errors (the
+   * import result lists it) instead of failing the whole import. Steps that
+   * replace a table run in a transaction, so a failure keeps the old rows.
+   */
+  private async reportStep(stats: ImportStats, label: string, step: () => Promise<unknown>): Promise<void> {
+    try {
+      await step()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      logger.error(`${label} import failed`, { error: message })
+      stats.errors.push(`${label} not imported: ${message}`)
     }
   }
 
@@ -1601,21 +1647,33 @@ export class GameDataImportService {
   }
 
   /**
-   * Import missions from extracted game data
+   * Import missions from extracted game data.
+   *
+   * Missions keep their mission_id across imports (mission_completions and
+   * mission_ratings reference it): rows are matched by mission_code, only
+   * changed columns/child rows are written, and a mission missing from the
+   * import is deactivated, never deleted. See mission-sync.ts for the rules.
+   * One transaction: any failed write rolls the whole mission import back and
+   * fails the import (nothing is half-applied or skipped silently).
    *
    * @param knex Database connection
    * @param gameData Parsed game-data.json content
    * @param versionId Game version UUID to associate missions with
+   * @param versionNumber Game version label recorded on deactivated missions
    * @returns Mission import statistics
    */
   async importMissions(
     knex: Knex,
     gameData: { missions?: P4KMission[] },
     versionId: string,
+    versionNumber: string,
   ): Promise<{
     processed: number
     inserted: number
     updated: number
+    unchanged: number
+    deactivated: number
+    reactivated: number
     skipped: number
     errors: string[]
   }> {
@@ -1623,117 +1681,141 @@ export class GameDataImportService {
       processed: 0,
       inserted: 0,
       updated: 0,
+      unchanged: 0,
+      deactivated: 0,
+      reactivated: 0,
       skipped: 0,
       errors: [] as string[],
     }
 
-    try {
-      logger.info("Starting mission import", { versionId })
+    logger.info("Starting mission import", { versionId })
 
-      // Parse mission data from extracted JSON
-      const missions = this.parseMissionData(gameData)
-      stats.processed = missions.length
+    const missions = this.parseMissionData(gameData)
+    stats.processed = missions.length
+    if (missions.length === 0) {
+      logger.warn("No missions found in game data")
+      return stats
+    }
 
-      if (missions.length === 0) {
-        logger.warn("No missions found in game data")
-        return stats
+    const incoming: IncomingMission[] = []
+    for (const mission of missions) {
+      const validation = this.validateMissionData(mission)
+      if (!validation.valid) {
+        logger.debug("Skipped mission", { missionId: mission.id, errors: validation.errors })
+        stats.skipped++
+        stats.errors.push(`Mission ${mission.id}: ${validation.errors.join(", ")}`)
+        continue
       }
+      const category = mission.type ? MISSION_TYPE_MAP[mission.type] || mission.type : "Unknown"
+      incoming.push({
+        code: mission.name,
+        record: buildMissionRecord(mission, category),
+        children: buildMissionChildren(mission),
+      })
+    }
 
-      logger.info(`Parsed ${missions.length} missions from game data`)
+    await knex.transaction(async (trx) => {
+      const existing = await this.loadExistingMissions(trx, versionId)
+      const plan = planMissionSync(incoming, existing)
 
-      // Process missions in transaction — full replace for this version
-      await knex.transaction(async (trx) => {
-        // Delete all existing missions for this version (cascades to child tables)
-        const deleted = await trx("missions").where("version_id", versionId).delete()
-        if (deleted) logger.info(`Deleted ${deleted} old missions for version ${versionId}`)
-
-        for (const mission of missions) {
-          try {
-            // Validate mission data
-            const validation = this.validateMissionData(mission)
-            if (!validation.valid) {
-              logger.debug("Skipped mission", {
-                missionId: mission.id,
-                errors: validation.errors,
-              })
-              stats.skipped++
-              stats.errors.push(
-                `Mission ${mission.id}: ${validation.errors.join(", ")}`,
-              )
-              continue
-            }
-
-            // Store mission in database
-            const result = await this.upsertMission(trx, versionId, mission)
-            if (result.action === "inserted") {
-              stats.inserted++
-            } else if (result.action === "updated") {
-              stats.updated++
-            }
-
-            // Insert rich metadata into child tables
-            const mid = result.missionId
-            // Clear existing metadata for this mission
-            await Promise.all([
-              trx("mission_ship_encounters").where("mission_id", mid).delete(),
-              trx("mission_npc_encounters").where("mission_id", mid).delete(),
-              trx("mission_hauling_orders").where("mission_id", mid).delete(),
-              trx("mission_entity_spawns").where("mission_id", mid).delete(),
-            ])
-            // Helper to deduplicate by key
-            const dedup = <T>(arr: T[] | undefined, key: keyof T): T[] => {
-              if (!arr?.length) return []
-              const seen = new Set<unknown>()
-              return arr.filter((item) => {
-                const k = item[key]
-                if (seen.has(k)) return false
-                seen.add(k)
-                return true
-              })
-            }
-            const ships = dedup(mission.shipEncounters, "role")
-            if (ships.length) {
-              await trx("mission_ship_encounters").insert(
-                ships.map((e) => ({ mission_id: mid, role: e.role, alignment: e.alignment || "neutral", waves: JSON.stringify(e.waves), ship_pool: e.shipPool?.length ? JSON.stringify(e.shipPool) : null })),
-              ).onConflict(["mission_id", "role"]).ignore()
-            }
-            const npcs = dedup(mission.npcEncounters, "name")
-            if (npcs.length) {
-              await trx("mission_npc_encounters").insert(
-                npcs.map((e) => ({ mission_id: mid, name: e.name, count: e.count })),
-              ).onConflict(["mission_id", "name"]).ignore()
-            }
-            const hauling = dedup(mission.haulingOrders, "resource")
-            if (hauling.length) {
-              await trx("mission_hauling_orders").insert(
-                hauling.map((e) => ({ mission_id: mid, resource_name: e.resource, min_scu: e.minSCU, max_scu: e.maxSCU })),
-              ).onConflict(["mission_id", "resource_name"]).ignore()
-            }
-            const entities = dedup(mission.entitySpawns, "name")
-            if (entities.length) {
-              await trx("mission_entity_spawns").insert(
-                entities.map((e) => ({ mission_id: mid, name: e.name, count: e.count })),
-              ).onConflict(["mission_id", "name"]).ignore()
-            }
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error)
-            logger.error("Failed to import mission", {
-              missionId: mission.id,
-              error: errorMessage,
-            })
-            stats.errors.push(`Mission ${mission.id}: ${errorMessage}`)
-            stats.skipped++
-          }
-        }
+      if (plan.duplicateCodes.length) {
+        const message = `Missions with a duplicate code (last one imported): ${plan.duplicateCodes.join(", ")}`
+        logger.warn(message)
+        stats.errors.push(message)
+      }
+      logger.info("Mission sync plan", {
+        inserts: plan.inserts.length,
+        updates: plan.updates.length,
+        deactivations: plan.deactivations.length,
+        unchanged: plan.unchanged,
       })
 
-      logger.info("Mission import completed", stats)
-      return stats
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logger.error("Mission import failed", { error: errorMessage })
-      stats.errors.push(errorMessage)
-      throw error
+      const now = new Date()
+      for (const mission of plan.inserts) {
+        const [row] = await trx("missions")
+          .insert({
+            ...serializeJsonColumns(mission.record, MISSION_COLUMNS),
+            version_id: versionId,
+            is_active: true,
+            removed_in_version: null,
+            created_at: now,
+            updated_at: now,
+          })
+          .returning("mission_id")
+        await this.insertMissionChildren(trx, row.mission_id, mission.children, MISSION_CHILD_KINDS)
+        stats.inserted++
+      }
+
+      for (const update of plan.updates) {
+        await trx("missions")
+          .where({ mission_id: update.missionId })
+          .update({
+            ...serializeJsonColumns(update.changes, MISSION_COLUMNS),
+            ...(update.reactivate ? { is_active: true, removed_in_version: null } : {}),
+            updated_at: now,
+          })
+        for (const kind of update.childKinds) {
+          await trx(MISSION_CHILD_TABLES[kind].table).where({ mission_id: update.missionId }).delete()
+        }
+        await this.insertMissionChildren(trx, update.missionId, update.children, update.childKinds)
+        stats.updated++
+        if (update.reactivate) stats.reactivated++
+      }
+
+      const IDS = 1000
+      const deactivateIds = plan.deactivations.map((d) => d.missionId)
+      for (let i = 0; i < deactivateIds.length; i += IDS) {
+        await trx("missions")
+          .whereIn("mission_id", deactivateIds.slice(i, i + IDS))
+          .update({ is_active: false, removed_in_version: versionNumber })
+      }
+      stats.deactivated = deactivateIds.length
+      stats.unchanged = plan.unchanged
+    })
+
+    logger.info("Mission import completed", stats)
+    return stats
+  }
+
+  /** The version's stored missions (active or not) with their child rows, for planMissionSync. */
+  private async loadExistingMissions(trx: Knex.Transaction, versionId: string): Promise<ExistingMission[]> {
+    const rows: Array<Record<string, unknown>> = await trx("missions")
+      .where("version_id", versionId)
+      .select("mission_id", "is_active", ...Object.keys(MISSION_COLUMNS))
+    const byId = new Map<string, ExistingMission>()
+    for (const row of rows) {
+      byId.set(row.mission_id as string, {
+        mission_id: row.mission_id as string,
+        mission_code: row.mission_code as string,
+        is_active: row.is_active as boolean,
+        values: row,
+        children: emptyMissionChildren(),
+      })
+    }
+    const versionMissionIds = trx("missions").where("version_id", versionId).select("mission_id")
+    for (const kind of MISSION_CHILD_KINDS) {
+      const { table, columns } = MISSION_CHILD_TABLES[kind]
+      const childRows: Array<Record<string, unknown>> = await trx(table)
+        .whereIn("mission_id", versionMissionIds.clone())
+        .select("mission_id", ...Object.keys(columns))
+      for (const child of childRows) {
+        byId.get(child.mission_id as string)?.children[kind].push(child)
+      }
+    }
+    return [...byId.values()]
+  }
+
+  private async insertMissionChildren(
+    trx: Knex.Transaction,
+    missionId: string,
+    children: MissionChildren,
+    kinds: ReadonlyArray<MissionChildKind>,
+  ): Promise<void> {
+    for (const kind of kinds) {
+      const rows = children[kind]
+      if (!rows.length) continue
+      const { table, columns } = MISSION_CHILD_TABLES[kind]
+      await trx(table).insert(rows.map((r) => ({ mission_id: missionId, ...serializeJsonColumns(r, columns) })))
     }
   }
 
@@ -1829,95 +1911,6 @@ export class GameDataImportService {
   }
 
   /**
-   * Insert or update mission in database
-   * Subtask 8.4.3: Store mission metadata in database
-   * Subtask 8.4.4: Link missions to game versions
-   * Subtask 8.4.5: Handle mission rewards and requirements
-   */
-  private async upsertMission(
-    trx: Knex.Transaction,
-    versionId: string,
-    mission: P4KMission,
-  ): Promise<{ action: "inserted" | "updated"; missionId: string }> {
-    // Map mission type to category
-    const category = mission.type ? MISSION_TYPE_MAP[mission.type] || mission.type : "Unknown"
-
-    // Build mission record
-    const missionRecord = {
-      version_id: versionId,
-      mission_code: mission.name,
-      mission_name: mission.title || mission.name,
-      mission_description: mission.description,
-      category,
-      mission_type: mission.type,
-      career_type: mission.career,
-      template_name: mission.template,
-      title_loc_key: mission.titleKey,
-      mission_giver_org: mission.missionGiver,
-      credit_reward_min: mission.reward?.uec || null,
-      credit_reward_max: mission.reward?.max || mission.reward?.uec || null,
-      min_standing: mission.minStanding?.code || null,
-      max_standing: mission.maxStanding?.code || null,
-      min_standing_name: mission.minStanding?.displayName || null,
-      min_standing_xp: mission.minStanding?.xp ?? null,
-      max_standing_name: mission.maxStanding?.displayName || null,
-      max_standing_xp: mission.maxStanding?.xp ?? null,
-      reputation_reward_amount: mission.reputationRewards?.[0]?.amount ?? null,
-      reputation_reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
-      reputation_reward_faction: mission.reputationRewards?.[0]?.factionName || null,
-      reputation_reward: mission.reputationRewards?.[0]?.amount ?? null,
-      reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
-      is_shareable: mission.canBeShared ?? false,
-      is_unique_mission: mission.onceOnly,
-      available_in_prison: mission.availableInPrison,
-      hide_in_mobiglas: mission.hideInMobiGlas,
-      accept_locations: mission.acceptLocations?.length ? JSON.stringify(mission.acceptLocations) : null,
-      time_to_complete: mission.timeToComplete ?? null,
-      destinations: mission.destinations?.length ? JSON.stringify(mission.destinations) : null,
-      item_rewards: mission.itemRewards?.length ? JSON.stringify(mission.itemRewards) : null,
-      token_substitutions: mission.tokenSubstitutions && Object.keys(mission.tokenSubstitutions).length ? JSON.stringify(mission.tokenSubstitutions) : null,
-      max_players_per_instance: mission.maxPlayersPerInstance ?? null,
-      is_intro: mission.isIntro ?? false,
-      linked_intros: mission.linkedIntros ? JSON.stringify(mission.linkedIntros) : null,
-      buy_in: mission.buyIn ?? null,
-      can_reaccept_after_failing: mission.canReacceptAfterFailing ?? false,
-      can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning ?? false,
-      abandoned_cooldown_time: mission.abandonedCooldownTime,
-      personal_cooldown_time: mission.personalCooldownTime,
-      deadline_seconds: mission.deadline,
-      has_blueprint_rewards: (mission.blueprintRewards?.length ?? 0) > 0,
-      variant_count: mission.variantCount || null,
-      is_illegal: mission.illegal ?? null,
-      is_lawful: mission.lawful ?? null,
-      difficulty_from_broker: mission.difficulty ?? null,
-      star_system_derived: mission.starSystem || null,
-      star_system: mission.starSystem || null,
-      faction: mission.missionGiver || null,
-      max_crimestat: mission.maxCrimestat ?? null,
-      data_source: "extraction",
-      is_verified: false,
-      updated_at: new Date(),
-    }
-
-    // Check if mission already exists for this version
-    const existing = await trx("missions")
-      .where({ version_id: versionId, mission_code: mission.name })
-      .first()
-
-    if (existing) {
-      await trx("missions")
-        .where({ version_id: versionId, mission_code: mission.name })
-        .update(missionRecord)
-      return { action: "updated", missionId: existing.mission_id }
-    } else {
-      const [row] = await trx("missions").insert({
-        ...missionRecord,
-        created_at: new Date(),
-      }).returning("mission_id")
-      return { action: "inserted", missionId: row.mission_id }
-    }
-  }
-  /**
    * Import blueprints from extracted game data
    *
    * @param knex Database connection
@@ -1933,6 +1926,8 @@ export class GameDataImportService {
     processed: number
     inserted: number
     updated: number
+    unchanged: number
+    deactivated: number
     skipped: number
     errors: string[]
   }> {
@@ -1940,6 +1935,8 @@ export class GameDataImportService {
       processed: 0,
       inserted: 0,
       updated: 0,
+      unchanged: 0,
+      deactivated: 0,
       skipped: 0,
       errors: [] as string[],
     }
@@ -1958,33 +1955,23 @@ export class GameDataImportService {
 
       logger.info(`Parsed ${blueprints.length} blueprints from game data`)
 
-      // Process blueprints in transaction
+      // One transaction; each blueprint in its own savepoint, so one that
+      // fails is rolled back alone and reported, and the rest still import.
       await knex.transaction(async (trx) => {
         for (const blueprint of blueprints) {
+          const validation = this.validateBlueprintData(blueprint)
+          if (!validation.valid) {
+            logger.warn("Invalid blueprint data", {
+              blueprintId: blueprint.id,
+              errors: validation.errors,
+            })
+            stats.skipped++
+            stats.errors.push(`Blueprint ${blueprint.id}: ${validation.errors.join(", ")}`)
+            continue
+          }
           try {
-            // Validate blueprint data
-            const validation = this.validateBlueprintData(blueprint)
-            if (!validation.valid) {
-              logger.warn("Invalid blueprint data", {
-                blueprintId: blueprint.id,
-                errors: validation.errors,
-              })
-              stats.skipped++
-              stats.errors.push(
-                `Blueprint ${blueprint.id}: ${validation.errors.join(", ")}`,
-              )
-              continue
-            }
-
-            // Store blueprint in database
-            const result = await this.upsertBlueprint(trx, versionId, blueprint)
-            if (result === "inserted") {
-              stats.inserted++
-            } else if (result === "updated") {
-              stats.updated++
-            } else if (result === "skipped") {
-              stats.skipped++
-            }
+            const result = await trx.transaction((sp) => this.upsertBlueprint(sp, versionId, blueprint))
+            stats[result]++
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error)
             logger.error("Failed to import blueprint", {
@@ -1995,6 +1982,24 @@ export class GameDataImportService {
             stats.skipped++
           }
         }
+
+        // Blueprints this import no longer has: deactivated, never deleted
+        // (user inventories, crafting history and wishlists reference them).
+        const storedActive: Array<{ blueprint_code: string }> = await trx("blueprints")
+          .where({ version_id: versionId, is_active: true })
+          .select("blueprint_code")
+        const gone = blueprintCodesToDeactivate(
+          storedActive.map((r) => r.blueprint_code),
+          (gameData.blueprints || []).map((b) => b.id),
+        )
+        const CODES = 1000
+        for (let i = 0; i < gone.length; i += CODES) {
+          await trx("blueprints")
+            .where("version_id", versionId)
+            .whereIn("blueprint_code", gone.slice(i, i + CODES))
+            .update({ is_active: false })
+        }
+        stats.deactivated = gone.length
       })
 
       logger.info("Blueprint import completed", stats)
@@ -2100,16 +2105,14 @@ export class GameDataImportService {
   }
 
   /**
-   * Insert or update blueprint in database
-   * Subtask 8.5.3: Store blueprint metadata in database
-   * Subtask 8.5.4: Link blueprints to game versions
-   * Subtask 8.5.5: Handle blueprint requirements and outputs
+   * Insert a blueprint, or bring a stored one in line writing only what
+   * changed (see blueprint-sync.ts). The blueprint_id never changes.
    */
   private async upsertBlueprint(
     trx: Knex.Transaction,
     versionId: string,
     blueprint: P4KBlueprint,
-  ): Promise<"inserted" | "updated" | "skipped"> {
+  ): Promise<"inserted" | "updated" | "unchanged" | "skipped"> {
     // First, verify the output game item exists (match by p4k_file or name)
     const outputItem = await trx("game_items")
       .where("p4k_file", blueprint.outputItemId)
@@ -2122,67 +2125,17 @@ export class GameDataImportService {
       return "skipped"
     }
 
-    // Build blueprint record
-    const blueprintRecord = {
-      version_id: versionId,
-      blueprint_code: blueprint.id,
-      blueprint_name: blueprint.name,
-      blueprint_description: blueprint.description,
-      output_game_item_id: outputItem.id,
-      output_quantity: blueprint.outputQuantity,
-      item_category: blueprint.category,
-      item_subcategory: blueprint.subcategory,
-      rarity: blueprint.rarity,
-      tier: blueprint.tier,
-      crafting_station_type: blueprint.craftingStation,
-      crafting_time_seconds: blueprint.craftingTime,
-      required_skill_level: blueprint.requiredSkill,
-      icon_url: blueprint.iconUrl,
-      is_active: true,
-      source: blueprint.source || null,
-      updated_at: new Date(),
-    }
+    const record = buildBlueprintRecord(blueprint, outputItem.id)
 
-    // Check if blueprint already exists for this version
-    const existing = await trx("blueprints")
-      .where({ version_id: versionId, blueprint_code: blueprint.id })
-      .first()
-
-    let blueprintId: string
-
-    if (existing) {
-      // Update existing blueprint
-      await trx("blueprints")
-        .where({ version_id: versionId, blueprint_code: blueprint.id })
-        .update(blueprintRecord)
-      blueprintId = existing.blueprint_id
-
-      // Delete existing ingredients
-      await trx("blueprint_ingredients")
-        .where({ blueprint_id: blueprintId })
-        .delete()
-    } else {
-      // Insert new blueprint
-      const [inserted] = await trx("blueprints")
-        .insert({
-          ...blueprintRecord,
-          created_at: new Date(),
-        })
-        .returning("blueprint_id")
-      blueprintId = inserted.blueprint_id
-    }
-
-    // Insert ingredients
+    const ingredients: Array<Record<string, unknown>> = []
     for (let i = 0; i < blueprint.ingredients.length; i++) {
       const ing = blueprint.ingredients[i]
-
       // Find the ingredient game item (by name for resources, by p4k_file for items)
       const ingredientItem = await trx("game_items")
         .where("p4k_file", ing.itemId)
         .orWhere("name", ing.itemId)
         .orWhereRaw("lower(name) = ?", [ing.itemId.toLowerCase()])
         .first()
-
       if (!ingredientItem) {
         logger.warn("Ingredient item not found, skipping", {
           blueprintId: blueprint.id,
@@ -2190,47 +2143,64 @@ export class GameDataImportService {
         })
         continue
       }
+      ingredients.push(buildIngredientRow(ing, ingredientItem.id, i))
+    }
+    const modifiers = buildModifierRows(blueprint)
 
-      await trx("blueprint_ingredients").insert({
-        blueprint_id: blueprintId,
-        ingredient_game_item_id: ingredientItem.id,
-        quantity_required: ing.quantity,
-        min_quality_tier: null,
-        recommended_quality_tier: null,
-        is_alternative: false,
-        display_order: i,
-        slot_name: ing.slotName || null,
-        slot_display_name: ing.slotDisplayName || null,
-        quantity_scu: ing.quantityScu || null,
-        min_quality: ing.minQuality || null,
-        created_at: new Date(),
-      })
+    const existing = await trx("blueprints")
+      .where({ version_id: versionId, blueprint_code: blueprint.id })
+      .first()
+
+    const now = new Date()
+    if (!existing) {
+      const [inserted] = await trx("blueprints")
+        .insert({ ...record, version_id: versionId, created_at: now, updated_at: now })
+        .returning("blueprint_id")
+      await this.insertBlueprintChildren(trx, inserted.blueprint_id, ingredients, modifiers)
+      return "inserted"
     }
 
-    // Insert slot modifiers (quality curves)
-    await trx("blueprint_slot_modifiers").where({ blueprint_id: blueprintId }).delete()
-    const rawSlots = blueprint.slots
-    if (rawSlots) {
-      for (const slot of rawSlots) {
-        if (slot.type !== "slot" || !slot.modifiers?.length) continue
-        for (const mod of slot.modifiers) {
-          if (mod.modifierAtStart == null || mod.modifierAtEnd == null) continue
-          await trx("blueprint_slot_modifiers").insert({
-            blueprint_id: blueprintId,
-            slot_name: slot.name,
-            slot_display_name: slot.displayName || slot.name,
-            property: mod.property,
-            start_quality: mod.startQuality ?? 0,
-            end_quality: mod.endQuality ?? 1000,
-            modifier_at_start: mod.modifierAtStart,
-            modifier_at_end: mod.modifierAtEnd,
-            modifier_type: mod.modifierType || "linear",
-          })
-        }
-      }
-    }
+    const blueprintId: string = existing.blueprint_id
+    const [storedIngredients, storedModifiers] = await Promise.all([
+      trx("blueprint_ingredients")
+        .where({ blueprint_id: blueprintId })
+        .select(...Object.keys(BLUEPRINT_INGREDIENT_COLUMNS)),
+      trx("blueprint_slot_modifiers")
+        .where({ blueprint_id: blueprintId })
+        .select(...Object.keys(BLUEPRINT_MODIFIER_COLUMNS)),
+    ])
+    const plan = planBlueprintWrite(
+      { row: existing, ingredients: storedIngredients, modifiers: storedModifiers },
+      { record, ingredients, modifiers },
+    )
+    if (plan.unchanged) return "unchanged"
 
-    return existing ? "updated" : "inserted"
+    await trx("blueprints")
+      .where({ blueprint_id: blueprintId })
+      .update({ ...plan.changes, updated_at: now })
+    if (plan.replaceIngredients) await trx("blueprint_ingredients").where({ blueprint_id: blueprintId }).delete()
+    if (plan.replaceModifiers) await trx("blueprint_slot_modifiers").where({ blueprint_id: blueprintId }).delete()
+    await this.insertBlueprintChildren(
+      trx,
+      blueprintId,
+      plan.replaceIngredients ? ingredients : [],
+      plan.replaceModifiers ? modifiers : [],
+    )
+    return "updated"
+  }
+
+  private async insertBlueprintChildren(
+    trx: Knex.Transaction,
+    blueprintId: string,
+    ingredients: Array<Record<string, unknown>>,
+    modifiers: Array<Record<string, unknown>>,
+  ): Promise<void> {
+    if (ingredients.length) {
+      await trx("blueprint_ingredients").insert(ingredients.map((r) => ({ ...r, blueprint_id: blueprintId })))
+    }
+    if (modifiers.length) {
+      await trx("blueprint_slot_modifiers").insert(modifiers.map((r) => ({ ...r, blueprint_id: blueprintId })))
+    }
   }
 
   /**
@@ -2429,10 +2399,12 @@ export class GameDataImportService {
 
   /**
    * Link mission blueprint rewards
-   * 
-   * This method processes mission blueprint reward data from the extracted game data
-   * and creates the relationships in the mission_blueprint_rewards table.
-   * 
+   *
+   * Syncs mission_blueprint_rewards for the missions in this import (keyed by
+   * mission_id + blueprint_id, see planRewardLinkSync): only links that
+   * appear, change or disappear are written. Links of missions the import no
+   * longer has are kept with their (deactivated) mission.
+   *
    * @param knex Database connection
    * @param gameData Parsed game-data.json content
    * @param versionId Game version UUID to associate rewards with
@@ -2452,84 +2424,70 @@ export class GameDataImportService {
 
     try {
       const missions = gameData.missions || []
-      const withRewards = missions.filter((m) => m.blueprintRewards?.length)
-      stats.processed = withRewards.length
+      stats.processed = missions.filter((m) => m.blueprintRewards?.length).length
 
-      if (withRewards.length === 0) {
-        logger.info("No missions with blueprint rewards found")
-        return stats
-      }
+      await knex.transaction(async (trx) => {
+        const missionRows: Array<{ mission_id: string; mission_code: string }> = await trx("missions")
+          .where("version_id", versionId)
+          .select("mission_id", "mission_code")
+        const missionIdByCode = new Map(missionRows.map((r) => [r.mission_code, r.mission_id]))
 
-      logger.info(`Linking ${withRewards.length} missions with pre-resolved blueprint rewards`)
+        // blueprint_code (P4K UUID) -> blueprint_id (DB UUID)
+        const bpRows: Array<{ blueprint_id: string; blueprint_code: string }> = await trx("blueprints")
+          .where("version_id", versionId)
+          .select("blueprint_id", "blueprint_code")
+        const bpIdByCode = new Map(bpRows.map((r) => [r.blueprint_code, r.blueprint_id]))
 
-      // Clear existing links for this version
-      await knex("mission_blueprint_rewards")
-        .whereIn("mission_id", knex("missions").where("version_id", versionId).select("mission_id"))
-        .delete()
-
-      // Build lookup: mission_code -> mission_id
-      const missionRows = await knex("missions")
-        .where("version_id", versionId)
-        .select("mission_id", "mission_code")
-      const missionIdByCode = new Map(missionRows.map((r: { mission_id: string; mission_code: string }) => [r.mission_code, r.mission_id]))
-
-      // Build lookup: blueprint_code (P4K UUID) -> blueprint_id (DB UUID)
-      const bpRows = await knex("blueprints")
-        .where("version_id", versionId)
-        .select("blueprint_id", "blueprint_code")
-      const bpIdByCode = new Map(bpRows.map((r: { blueprint_id: string; blueprint_code: string }) => [r.blueprint_code, r.blueprint_id]))
-
-      // Batch insert all links
-      const rows: Array<Record<string, unknown>> = []
-      for (const mission of withRewards) {
-        const missionId = missionIdByCode.get(mission.name)
-        if (!missionId) { stats.skipped++; continue }
-
-        const seen = new Set<string>()
-        const poolIdMap = new Map<string, number>()
-        let nextPoolId = 1
-        for (const br of mission.blueprintRewards || []) {
-          if (br.poolName && !poolIdMap.has(br.poolName)) {
-            poolIdMap.set(br.poolName, nextPoolId++)
+        // Desired links of every mission in this import (a mission that lost
+        // all its rewards loses its links). Missions not in the import keep
+        // theirs: they are deactivated, not gone.
+        const importedIds = new Set<string>()
+        const desired: RewardLinkRow[] = []
+        for (const mission of missions) {
+          const missionId = missionIdByCode.get(mission.name)
+          if (!missionId) {
+            if (mission.blueprintRewards?.length) stats.skipped++
+            continue
           }
+          if (importedIds.has(missionId)) continue
+          importedIds.add(missionId)
+          desired.push(...buildMissionRewardRows(mission, missionId, bpIdByCode))
         }
-        for (const br of mission.blueprintRewards || []) {
-          const bpId = br.blueprintId ? bpIdByCode.get(br.blueprintId) : undefined
-          if (!bpId || seen.has(bpId)) continue
-          seen.add(bpId)
 
-          const poolChance = br.chance ?? 1
-          const weight = br.weight ?? 1
-          const totalWeight = br.totalWeight ?? 1
-          const dropProbability = poolChance * (weight / totalWeight) * 100
-
-          rows.push({
-            mission_id: missionId,
-            blueprint_id: bpId,
-            reward_pool_id: br.poolName ? poolIdMap.get(br.poolName) ?? 1 : 1,
-            reward_pool_size: 1,
-            selection_count: 1,
-            pool_name: br.poolName || null,
-            pool_chance: br.chance ?? 1,
-            drop_probability: Math.round(dropProbability * 100) / 100,
-            is_guaranteed: false,
-          })
+        const stored: RewardLinkRow[] = []
+        const ids = [...importedIds]
+        const IDS = 1000
+        for (let i = 0; i < ids.length; i += IDS) {
+          stored.push(
+            ...(await trx("mission_blueprint_rewards")
+              .whereIn("mission_id", ids.slice(i, i + IDS))
+              .select("mission_id", "blueprint_id", ...Object.keys(MISSION_REWARD_COLUMNS))),
+          )
         }
-      }
 
-      // Batch insert in chunks
-      for (let i = 0; i < rows.length; i += 500) {
-        await knex("mission_blueprint_rewards")
-          .insert(rows.slice(i, i + 500))
-          .onConflict(["mission_id", "blueprint_id"])
-          .ignore()
-      }
-      stats.linked = rows.length
-
-      logger.info(`Linked ${stats.linked} mission→blueprint rewards`)
+        const plan = planRewardLinkSync(stored, desired)
+        for (const d of plan.deletes) {
+          await trx("mission_blueprint_rewards").where(d).delete()
+        }
+        for (const u of plan.updates) {
+          await trx("mission_blueprint_rewards")
+            .where({ mission_id: u.mission_id, blueprint_id: u.blueprint_id })
+            .update(u.changes)
+        }
+        for (let i = 0; i < plan.inserts.length; i += 500) {
+          await trx("mission_blueprint_rewards").insert(plan.inserts.slice(i, i + 500))
+        }
+        stats.linked = desired.length
+        logger.info("Mission reward links synced", {
+          links: desired.length,
+          inserted: plan.inserts.length,
+          updated: plan.updates.length,
+          deleted: plan.deletes.length,
+        })
+      })
       return stats
     } catch (error) {
-      stats.errors.push(error instanceof Error ? error.message : String(error))
+      stats.errors.push(`Mission blueprint rewards not linked: ${error instanceof Error ? error.message : String(error)}`)
       return stats
     }
   }
@@ -2721,7 +2679,6 @@ export class GameDataImportService {
 
   async importMiningLocationSpawns(knex: Knex, gameData: GameDataPayload): Promise<number> {
     logger.info(`Importing ${gameData.miningLocationSpawns!.length} mining location spawns`)
-    await knex("location_mining_spawns").delete()
     const BATCH = 100
     const rows = gameData.miningLocationSpawns!.map((s) => ({
       location_name: s.locationName,
@@ -2732,16 +2689,19 @@ export class GameDataImportService {
       preset_name: s.presetName,
       relative_probability: s.relativeProbability,
     }))
-    for (let i = 0; i < rows.length; i += BATCH) {
-      await knex("location_mining_spawns").insert(rows.slice(i, i + BATCH))
-    }
+    // Replaced in one transaction: a failed insert keeps the old rows.
+    await knex.transaction(async (trx) => {
+      await trx("location_mining_spawns").delete()
+      for (let i = 0; i < rows.length; i += BATCH) {
+        await trx("location_mining_spawns").insert(rows.slice(i, i + BATCH))
+      }
+    })
     logger.info(`Imported ${rows.length} mining location spawns`)
     return rows.length
   }
 
   async importMiningQualityDistributions(knex: Knex, gameData: GameDataPayload): Promise<number> {
     logger.info(`Importing ${gameData.miningQualityDistributions!.length} mining quality distributions`)
-    await knex("mining_quality_distributions").delete()
     const BATCH = 100
     const rows = gameData.miningQualityDistributions!.map((d) => ({
       name: d.name,
@@ -2754,17 +2714,20 @@ export class GameDataImportService {
       dist_mean: d.mean,
       dist_stddev: d.stddev,
     }))
-    for (let i = 0; i < rows.length; i += BATCH) {
-      await knex("mining_quality_distributions").insert(rows.slice(i, i + BATCH))
-    }
+    // Replaced in one transaction: a failed insert keeps the old rows.
+    await knex.transaction(async (trx) => {
+      await trx("mining_quality_distributions").delete()
+      for (let i = 0; i < rows.length; i += BATCH) {
+        await trx("mining_quality_distributions").insert(rows.slice(i, i + BATCH))
+      }
+    })
     logger.info(`Imported ${rows.length} mining quality distributions`)
     return rows.length
   }
 
   async importCraftedPropertyDefs(knex: Knex, gameData: GameDataPayload): Promise<number> {
     logger.info(`Importing ${gameData.craftedProperties!.length} crafted property definitions`)
-    try {
-      const BATCH = 100
+    const BATCH = 100
       const rows = gameData.craftedProperties!.map((p) => ({
         property_key: p.propertyKey,
         display_name: p.displayName,
@@ -2787,10 +2750,6 @@ export class GameDataImportService {
       }
       logger.info(`Imported ${rows.length} crafted property definitions`)
       return rows.length
-    } catch {
-      logger.debug("Crafted property defs import skipped (table may not exist)")
-      return 0
-    }
   }
 }
 

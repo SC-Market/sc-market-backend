@@ -291,6 +291,7 @@ export async function missionsRewardingItem(
   const candidates = (await knex("missions as m")
     .select(...MISSION_COLUMNS, "m.item_rewards")
     .where("m.version_id", versionId)
+    .where("m.is_active", true)
     // An array binding goes to pg as one array parameter.
     .whereRaw("mission_item_reward_keys(m.item_rewards) && ?::text[]", [keys])
     .orderBy("m.mission_name")
@@ -337,7 +338,7 @@ async function missionsRewardingBlueprint(
     FROM blueprints b
     JOIN mission_blueprint_rewards mbr ON mbr.blueprint_id = b.blueprint_id
     JOIN missions m ON m.mission_id = mbr.mission_id
-    WHERE b.output_game_item_id = ? AND b.version_id = ? AND m.version_id = ?
+    WHERE b.output_game_item_id = ? AND b.version_id = ? AND m.version_id = ? AND m.is_active
     GROUP BY m.mission_id
     ORDER BY is_guaranteed DESC, drop_probability DESC NULLS LAST, m.mission_name, m.mission_id
     LIMIT ${ACQUISITION_LIMITS.missions}

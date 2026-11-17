@@ -1031,6 +1031,7 @@ export class BlueprintsController extends BaseController {
           "mbr.drop_probability",
         )
         .where("mbr.blueprint_id", blueprint_id)
+        .where("m.is_active", true)
         .orderBy("mbr.drop_probability", "desc")
         .orderBy("m.mission_name", "asc")
 
@@ -1233,6 +1234,7 @@ export class BlueprintsController extends BaseController {
           "mbr.drop_probability",
         )
         .where("mbr.blueprint_id", blueprint_id)
+        .where("m.is_active", true)
 
       // Apply version filter if provided
       if (version_id) {
