@@ -62,6 +62,8 @@ const emptyImportStats: ImportStats = {
   resourcesSkipped: 0,
   shipsProcessed: 0,
   shipsInserted: 0,
+  shipsImported: 0,
+  shipsFailed: 0,
   amenityTypesImported: 0,
   jurisdictionsImported: 0,
   locationsImported: 0,

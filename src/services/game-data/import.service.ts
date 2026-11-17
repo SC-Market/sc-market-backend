@@ -25,6 +25,7 @@ import {
   MANUFACTURER_NAME_MAX,
 } from "./manufacturers.js"
 import { importShopInventories, type P4KShopInventory } from "./shop-inventories.js"
+import { buildShipRecords, shipGameItemInsert, wikiShipUpsert } from "./ship-records.js"
 
 // --- P4K Type to DB Subcategory Mapping (62 types) ---
 const P4K_TYPE_MAP: Record<string, string> = {
@@ -476,7 +477,12 @@ export interface ImportStats {
   resourcesUpdated: number
   resourcesSkipped: number
   shipsProcessed: number
+  /** New game_items rows created for ships */
   shipsInserted: number
+  /** Ships written to wiki_ships */
+  shipsImported: number
+  /** Ships rejected by validation or by the database (each listed in errors) */
+  shipsFailed: number
   amenityTypesImported: number
   jurisdictionsImported: number
   locationsImported: number
@@ -668,6 +674,8 @@ export class GameDataImportService {
       resourcesSkipped: 0,
       shipsProcessed: 0,
       shipsInserted: 0,
+      shipsImported: 0,
+      shipsFailed: 0,
       amenityTypesImported: 0,
       jurisdictionsImported: 0,
       locationsImported: 0,
@@ -1374,67 +1382,43 @@ export class GameDataImportService {
       if (gameData.ships && gameData.ships.length > 0) {
         logger.info("Importing ships")
         stats.shipsProcessed = gameData.ships.length
-        try {
-          {
-            let shipsInserted = 0
-            for (const rawShip of gameData.ships) {
-              if (!rawShip.name || rawShip.name.startsWith("@") || rawShip.name.startsWith("<=")) continue
-              const ship = {
-                ...rawShip,
-                manufacturer: canonicalManufacturerCode(manufacturerCanon.aliasToCanonical, rawShip.manufacturer),
-              }
-
-              // Upsert as game_item so ships are linkable
-              const existing = await knex("game_items")
-                .where("name", ship.name)
-                .orWhere("p4k_id", ship.id)
-                .first()
-              if (!existing) {
-                await knex("game_items").insert({
-                  name: ship.name,
-                  type: "Ship for Sale/Rental",
-                  p4k_id: ship.id,
-                  manufacturer: ship.manufacturer || null,
-                }).onConflict("p4k_id").ignore()
-                shipsInserted++
-              }
-
-              await knex("wiki_ships")
-                .insert({
-                  version_id: versionId,
-                  ship_code: ship.file,
-                  name: ship.name,
-                  focus: ship.focus,
-                  manufacturer_code: ship.manufacturer,
-                  size: ship.size,
-                  description: ship.description,
-                  crew_size: ship.crewSize ?? null,
-                  career: ship.career ?? null,
-                  role: ship.role ?? null,
-                  length_m: ship.maxBoundingBoxSize?.y ?? null,
-                  width_m: ship.maxBoundingBoxSize?.x ?? null,
-                  height_m: ship.maxBoundingBoxSize?.z ?? null,
-                })
-                .onConflict(["version_id", "ship_code"])
-                .merge({
-                  name: ship.name,
-                  focus: ship.focus,
-                  manufacturer_code: ship.manufacturer,
-                  description: ship.description,
-                  crew_size: ship.crewSize ?? null,
-                  career: ship.career ?? null,
-                  role: ship.role ?? null,
-                  length_m: ship.maxBoundingBoxSize?.y ?? null,
-                  width_m: ship.maxBoundingBoxSize?.x ?? null,
-                  height_m: ship.maxBoundingBoxSize?.z ?? null,
-                })
-            }
-            logger.info(`Imported ${gameData.ships.length} ships (${shipsInserted} new game_items)`)
-            stats.shipsInserted = shipsInserted
-          }
-        } catch {
-          logger.debug("Ships import skipped (table may not exist)")
+        const built = buildShipRecords(gameData.ships, manufacturerCanon.aliasToCanonical, versionId)
+        for (const message of built.errors) {
+          logger.warn(message)
+          stats.errors.push(message)
         }
+        stats.shipsFailed += gameData.ships.length - built.unnamed - built.records.length
+
+        // One transaction per ship: a ship that fails (constraint, bad value)
+        // is rolled back and reported on its own, and the rest still import.
+        for (const record of built.records) {
+          try {
+            const createdGameItem = await knex.transaction(async (trx) => {
+              // Upsert as game_item so ships are linkable
+              const existing = await trx("game_items")
+                .where("name", record.gameItem.name)
+                .orWhere("p4k_id", record.gameItem.p4k_id)
+                .first("id")
+              if (!existing) await shipGameItemInsert(trx, record.gameItem)
+              await wikiShipUpsert(trx, record.wikiShip)
+              return !existing
+            })
+            if (createdGameItem) stats.shipsInserted++
+            stats.shipsImported++
+          } catch (error) {
+            stats.shipsFailed++
+            const message = `Ship ${record.label} not imported: ${error instanceof Error ? error.message : String(error)}`
+            logger.warn(message)
+            stats.errors.push(message)
+          }
+        }
+        logger.info("Imported ships", {
+          records: gameData.ships.length,
+          unnamed: built.unnamed,
+          imported: stats.shipsImported,
+          failed: stats.shipsFailed,
+          newGameItems: stats.shipsInserted,
+        })
       }
 
       // ========================================================================

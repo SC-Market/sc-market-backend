@@ -19634,6 +19634,26 @@
 								"format": "double",
 								"description": "In-game shops upserted from shop-inventories.json (0 unless GAME_DATA_IMPORT_SHOPS=true)"
 							},
+							"shipsFailed": {
+								"type": "number",
+								"format": "double",
+								"description": "Ships rejected by validation or the database; each one is listed in errors"
+							},
+							"shipsImported": {
+								"type": "number",
+								"format": "double",
+								"description": "Ships written to the ship wiki"
+							},
+							"shipsInserted": {
+								"type": "number",
+								"format": "double",
+								"description": "New game_items rows created for ships"
+							},
+							"shipsProcessed": {
+								"type": "number",
+								"format": "double",
+								"description": "Ship records in the game data"
+							},
 							"blueprintsUpdated": {
 								"type": "number",
 								"format": "double"
@@ -19709,6 +19729,10 @@
 							"shopItemsLinked",
 							"shopItemsImported",
 							"shopsImported",
+							"shipsFailed",
+							"shipsImported",
+							"shipsInserted",
+							"shipsProcessed",
 							"blueprintsUpdated",
 							"blueprintsInserted",
 							"blueprintsProcessed",

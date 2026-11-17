@@ -27,6 +27,14 @@ export interface ImportGameDataResponse {
     blueprintsProcessed: number
     blueprintsInserted: number
     blueprintsUpdated: number
+    /** Ship records in the game data */
+    shipsProcessed: number
+    /** New game_items rows created for ships */
+    shipsInserted: number
+    /** Ships written to the ship wiki */
+    shipsImported: number
+    /** Ships rejected by validation or the database; each one is listed in errors */
+    shipsFailed: number
     /** In-game shops upserted from shop-inventories.json (0 unless GAME_DATA_IMPORT_SHOPS=true) */
     shopsImported: number
     shopItemsImported: number
