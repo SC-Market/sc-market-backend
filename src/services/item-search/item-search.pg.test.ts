@@ -56,6 +56,8 @@ describe.skipIf(!PG_TEST_URL)("ranked item search", () => {
     clearSearchManufacturerCache()
     const db = state.db
 
+    // Only this test's items and manufacturers (the schema seeds some)
+    await db.raw("TRUNCATE game_items, wiki_manufacturers CASCADE")
     await db("wiki_manufacturers").insert([
       { code: "ksar", name: "Kastak Arms" },
       { code: "behr", name: "Behring" },
