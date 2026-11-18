@@ -27,6 +27,7 @@ import {
 import { importShopInventories, type P4KShopInventory } from "./shop-inventories.js"
 import { buildShipRecords, shipGameItemInsert, wikiShipUpsert } from "./ship-records.js"
 import { serializeJsonColumns } from "./import-diff.js"
+import { planItemRenames, type ImportedItemName } from "./item-names.js"
 import {
   BLUEPRINT_INGREDIENT_COLUMNS,
   BLUEPRINT_MODIFIER_COLUMNS,
@@ -828,13 +829,19 @@ export class GameDataImportService {
       const dbByP4kId = new Map<string, DBItem>()
       const dbByNormalized = new Map<string, DBItem>()
 
+      // A row this export matches by p4k_id is that item's row: it is never
+      // name-matched to another export item (a renamed item's old name may be
+      // another item's name now).
+      const exportedP4kIds = new Set(validItems.map((i) => i.id))
+
       for (const item of dbItems) {
+        if (item.p4k_id) {
+          dbByP4kId.set(item.p4k_id, item)
+          if (exportedP4kIds.has(item.p4k_id)) continue
+        }
         dbByName.set(normalize(item.name), item)
         if (item.cstone_uuid) {
           dbByCstoneUuid.set(item.cstone_uuid, item)
-        }
-        if (item.p4k_id) {
-          dbByP4kId.set(item.p4k_id, item)
         }
         const norm = normalizeForMatching(item.name)
         if (!dbByNormalized.has(norm)) {
@@ -851,15 +858,24 @@ export class GameDataImportService {
       const inserts: P4KItem[] = []
       const nameChanges: { dbId: string; oldName: string; newName: string }[] = []
       const manufacturerRecodes: { dbId: string; manufacturer: string }[] = []
+      const importedNames: ImportedItemName[] = []
 
       for (const p4k of validItems) {
         let dbItem: DBItem | undefined
         let matchType: "exact" | "cstone_uuid" | "fuzzy" | "normalized" | undefined
 
-        // Skip if already imported, except for its manufacturer: canonical
-        // codes can change between imports (an alias record joins its brand).
+        // Skip if already imported, except for its name and manufacturer: the
+        // game can add a real name for an item exported under its key-derived
+        // one, and canonical codes can change between imports (an alias record
+        // joins its brand). The row is updated in place, never reinserted.
         const imported = dbByP4kId.get(p4k.id)
         if (imported) {
+          importedNames.push({
+            dbId: imported.id,
+            stored: imported.name,
+            exported: p4k.name,
+            nameKey: p4k.nameKey,
+          })
           const recode = manufacturerRecode(imported.manufacturer, truncate(p4k.manufacturer, 100))
           if (recode) manufacturerRecodes.push({ dbId: imported.id, manufacturer: recode })
           continue
@@ -914,7 +930,15 @@ export class GameDataImportService {
         }
       }
 
-      stats.nameChanges = nameChanges.length
+      const renamePlan = planItemRenames(
+        importedNames,
+        new Map(dbItems.map((item) => [item.name, item.id])),
+      )
+      for (const conflict of renamePlan.conflicts) {
+        logger.warn("Item rename skipped: another item already has the name", conflict)
+      }
+
+      stats.nameChanges = nameChanges.length + renamePlan.renames.length
       stats.inserted = inserts.length
 
       logger.info("Matching complete", {
@@ -936,6 +960,13 @@ export class GameDataImportService {
       stats.manufacturersRecoded = await this.recodeItemManufacturers(trx, manufacturerRecodes)
       if (stats.manufacturersRecoded > 0) {
         logger.info(`Recoded manufacturer on ${stats.manufacturersRecoded} already-imported items`)
+      }
+
+      for (const { dbId, newName } of renamePlan.renames) {
+        await trx("game_items").where("id", dbId).update({ name: newName })
+      }
+      if (renamePlan.renames.length > 0) {
+        logger.info(`Renamed ${renamePlan.renames.length} already-imported items`)
       }
 
       if (matches.length > 0) {
