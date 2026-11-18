@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { buildPrefixTsquery } from "./full-text-search.js"
+import { buildPrefixTsquery, locKeySearchTerm } from "./full-text-search.js"
 
 describe("buildPrefixTsquery", () => {
   it("adds a prefix marker to each word", () => {
@@ -25,5 +25,23 @@ describe("buildPrefixTsquery", () => {
     expect(buildPrefixTsquery("& * !")).toBe("")
     expect(buildPrefixTsquery("   ")).toBe("")
     expect(buildPrefixTsquery("")).toBe("")
+  })
+})
+
+describe("locKeySearchTerm", () => {
+  it("takes a pasted localization key, without its @", () => {
+    expect(locKeySearchTerm("@item_Nameksar_lmg_energy_01_tint02")).toBe(
+      "item_Nameksar_lmg_energy_01_tint02",
+    )
+  })
+
+  it("takes a class name", () => {
+    expect(locKeySearchTerm(" ksar_lmg_energy_01 ")).toBe("ksar_lmg_energy_01")
+  })
+
+  it("ignores ordinary names", () => {
+    expect(locKeySearchTerm("Verdict LMG")).toBeNull()
+    expect(locKeySearchTerm("verdict")).toBeNull()
+    expect(locKeySearchTerm("a_")).toBeNull()
   })
 })

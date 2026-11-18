@@ -26,6 +26,7 @@ import {
 } from "./wiki.types.js"
 import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../util/short-slug.js"
 import { listingPubliclyListed } from "../../util/listing-visibility.js"
+import { locKeySearchTerm } from "../../../../../util/full-text-search.js"
 import {
   loadManufacturerNameLookup,
   lookupManufacturerName,
@@ -238,11 +239,14 @@ export class WikiController extends BaseController {
 
       // Apply text search filter
       if (text && text.length > 0) {
+        // A pasted localization key or class name also matches the item's key
+        const keyTerm = locKeySearchTerm(text)
         itemsQuery = itemsQuery.where(function () {
           this.whereRaw(
             "to_tsvector('english', gi.name) @@ plainto_tsquery('english', ?)",
             [text],
           ).orWhere("gi.name", "ilike", `%${text}%`)
+          if (keyTerm) this.orWhere("gi.name_key", "ilike", `%${keyTerm}%`)
         })
       }
 

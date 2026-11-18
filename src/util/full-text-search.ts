@@ -19,3 +19,19 @@ export function buildPrefixTsquery(input: string): string {
     .map((word) => `${word}:*`)
     .join(" & ")
 }
+
+/**
+ * The localization key to look for when the input is one, else null.
+ *
+ * An item with no English name in the game's localization shows its raw key
+ * in game (e.g. "@item_Nameksar_lmg_energy_01_tint02"), so that is what a
+ * player copies. Keys and class names have no spaces and use underscores;
+ * the leading "@" is dropped so a key or a fragment of one (or the class
+ * name "ksar_lmg_energy_01") matches game_items.name_key.
+ */
+export function locKeySearchTerm(input: string): string | null {
+  const term = input.trim().replace(/^@/, "")
+  return term.length >= 3 && !/\s/.test(term) && term.includes("_")
+    ? term
+    : null
+}

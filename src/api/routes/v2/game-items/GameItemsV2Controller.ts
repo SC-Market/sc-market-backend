@@ -12,7 +12,7 @@ import { Request as ExpressRequest } from "express"
 import { listingVisibleTo } from "../util/listing-visibility.js"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { buildPrefixTsquery } from "../../../../util/full-text-search.js"
+import { buildPrefixTsquery, locKeySearchTerm } from "../../../../util/full-text-search.js"
 import {
   GetGameItemListingsResponse,
   GameItemQualityDistribution,
@@ -103,7 +103,9 @@ export interface GameItemCategory {
 @Tags("Game Items V2")
 export class GameItemsV2Controller extends BaseController {
   /**
-   * Search game items by name
+   * Search game items by name. A localization key or class name
+   * ("@item_Nameksar_lmg_energy_01_tint02", "ksar_lmg_energy_01") also
+   * matches the item's localization key.
    * @summary Search game items
    * @param query Search text
    * @param limit Max results (default 50)
@@ -133,6 +135,14 @@ export class GameItemsV2Controller extends BaseController {
       ).orWhere("name", "ilike", `%${trimmed}%`)
     } else {
       q.where("name", "ilike", `%${trimmed}%`)
+    }
+
+    // A pasted localization key or class name (what game shows for items it
+    // has no name for) also matches the item's key. These rank after name
+    // matches: ts_rank is 0 for them.
+    const keyTerm = locKeySearchTerm(trimmed)
+    if (keyTerm) {
+      q.orWhere("name_key", "ilike", `%${keyTerm}%`)
     }
 
     if (prefixTsquery) {
