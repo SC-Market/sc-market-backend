@@ -27,7 +27,11 @@ import {
 import { importShopInventories, type P4KShopInventory } from "./shop-inventories.js"
 import { buildShipRecords, shipGameItemInsert, wikiShipUpsert } from "./ship-records.js"
 import { serializeJsonColumns } from "./import-diff.js"
-import { planItemRenames, type ImportedItemName } from "./item-names.js"
+import {
+  importItemName,
+  planItemRenames,
+  type ImportedItemName,
+} from "./item-names.js"
 import {
   BLUEPRINT_INGREDIENT_COLUMNS,
   BLUEPRINT_MODIFIER_COLUMNS,
@@ -745,8 +749,11 @@ export class GameDataImportService {
       // reference to its brand's canonical code so game_items, wiki_ships and
       // wiki_manufacturers all agree (see manufacturers.ts).
       const manufacturerCanon = canonicalizeManufacturers(gameData.manufacturers || [])
+      // CIG placeholder names ("PH - hdh_boots_01_01_13") are stored under
+      // the key-derived name instead (see item-names.ts).
       const p4kItems: P4KItem[] = (gameData.items || []).map((item) => ({
         ...item,
+        name: importItemName(item),
         manufacturer: canonicalManufacturerCode(manufacturerCanon.aliasToCanonical, item.manufacturer),
       }))
       stats.totalP4KItems = p4kItems.length
