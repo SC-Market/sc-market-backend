@@ -25858,7 +25858,7 @@
 						}
 					}
 				},
-				"description": "Search game items by name. A localization key or class name\n(\"@item_Nameksar_lmg_energy_01_tint02\", \"ksar_lmg_energy_01\") also\nmatches the item's localization key.",
+				"description": "Search game items, best matches first: exact name, then names starting\nwith the query, names whose words start with the query's words, names\ncontaining it, then a localization key or class name\n(\"@item_Nameksar_lmg_energy_01_tint02\", \"ksar_lmg_energy_01\"), then the\nmanufacturer (\"Kastak\", \"KSAR\", or with other words: \"kastak lmg\"), then\nnear spellings (\"verdikt\").",
 				"summary": "Search game items",
 				"tags": [
 					"Game Items V2"

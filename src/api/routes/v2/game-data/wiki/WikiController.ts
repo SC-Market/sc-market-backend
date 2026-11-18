@@ -26,7 +26,11 @@ import {
 } from "./wiki.types.js"
 import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../util/short-slug.js"
 import { listingPubliclyListed } from "../../util/listing-visibility.js"
-import { locKeySearchTerm } from "../../../../../util/full-text-search.js"
+import {
+  applyItemSearch,
+  loadSearchManufacturers,
+  planItemSearch,
+} from "../../../../../services/item-search/item-search.js"
 import {
   loadManufacturerNameLookup,
   lookupManufacturerName,
@@ -237,16 +241,17 @@ export class WikiController extends BaseController {
           "gi.display_type",
         )
 
-      // Apply text search filter
-      if (text && text.length > 0) {
-        // A pasted localization key or class name also matches the item's key
-        const keyTerm = locKeySearchTerm(text)
-        itemsQuery = itemsQuery.where(function () {
-          this.whereRaw(
-            "to_tsvector('english', gi.name) @@ plainto_tsquery('english', ?)",
-            [text],
-          ).orWhere("gi.name", "ilike", `%${text}%`)
-          if (keyTerm) this.orWhere("gi.name_key", "ilike", `%${keyTerm}%`)
+      // Text search: ranked (exact name first, then prefix, word prefix,
+      // substring, localization key, manufacturer, near spellings)
+      const searchPlan =
+        text && text.trim().length > 0
+          ? planItemSearch(text, await loadSearchManufacturers(knex))
+          : null
+      if (searchPlan) {
+        itemsQuery = applyItemSearch(itemsQuery, searchPlan, {
+          name: "gi.name",
+          nameKey: "gi.name_key",
+          manufacturer: "gi.manufacturer",
         })
       }
 
@@ -285,7 +290,7 @@ export class WikiController extends BaseController {
       const [{ count: totalCount }] = await countQuery
       const total = parseInt(String(totalCount), 10)
 
-      // Apply sorting and pagination
+      // Apply sorting (search relevance first, when searching) and pagination
       itemsQuery = itemsQuery.orderBy("gi.name", "asc")
 
       // Apply pagination

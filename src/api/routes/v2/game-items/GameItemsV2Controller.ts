@@ -12,7 +12,11 @@ import { Request as ExpressRequest } from "express"
 import { listingVisibleTo } from "../util/listing-visibility.js"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { buildPrefixTsquery, locKeySearchTerm } from "../../../../util/full-text-search.js"
+import {
+  applyItemSearch,
+  loadSearchManufacturers,
+  planItemSearch,
+} from "../../../../services/item-search/item-search.js"
 import {
   GetGameItemListingsResponse,
   GameItemQualityDistribution,
@@ -103,9 +107,12 @@ export interface GameItemCategory {
 @Tags("Game Items V2")
 export class GameItemsV2Controller extends BaseController {
   /**
-   * Search game items by name. A localization key or class name
-   * ("@item_Nameksar_lmg_energy_01_tint02", "ksar_lmg_energy_01") also
-   * matches the item's localization key.
+   * Search game items, best matches first: exact name, then names starting
+   * with the query, names whose words start with the query's words, names
+   * containing it, then a localization key or class name
+   * ("@item_Nameksar_lmg_energy_01_tint02", "ksar_lmg_energy_01"), then the
+   * manufacturer ("Kastak", "KSAR", or with other words: "kastak lmg"), then
+   * near spellings ("verdikt").
    * @summary Search game items
    * @param query Search text
    * @param limit Max results (default 50)
@@ -118,46 +125,14 @@ export class GameItemsV2Controller extends BaseController {
     if (!query || query.trim().length < 1) return []
 
     const knex = getKnex()
-    const trimmed = query.trim()
     const effectiveLimit = clampPagination(1, limit, { defaultPageSize: 50, pageSizeParam: "limit" }).page_size
+    const plan = planItemSearch(query, await loadSearchManufacturers(knex))
 
-    // Prefix-aware tsquery; empty when the input is all punctuation.
-    const prefixTsquery = buildPrefixTsquery(trimmed)
-
-    const q = knex("game_items")
-
-    // If nothing usable survived (query was all punctuation), fall back to
-    // ILIKE only — never pass an empty tsquery.
-    if (prefixTsquery) {
-      q.whereRaw(
-        "to_tsvector('english', name) @@ to_tsquery('english', ?)",
-        [prefixTsquery],
-      ).orWhere("name", "ilike", `%${trimmed}%`)
-    } else {
-      q.where("name", "ilike", `%${trimmed}%`)
-    }
-
-    // A pasted localization key or class name (what game shows for items it
-    // has no name for) also matches the item's key. These rank after name
-    // matches: ts_rank is 0 for them.
-    const keyTerm = locKeySearchTerm(trimmed)
-    if (keyTerm) {
-      q.orWhere("name_key", "ilike", `%${keyTerm}%`)
-    }
-
-    if (prefixTsquery) {
-      q.orderByRaw(
-        `ts_rank(to_tsvector('english', name), to_tsquery('english', ?)) DESC`,
-        [prefixTsquery],
-      )
-    }
-
-    return q
-      .orderByRaw(
-        `CASE WHEN name ILIKE ? THEN 0 ELSE 1 END`,
-        [`${trimmed}%`],
-      )
-      .orderBy("name")
+    return applyItemSearch(knex("game_items"), plan, {
+      name: "name",
+      nameKey: "name_key",
+      manufacturer: "manufacturer",
+    })
       .limit(effectiveLimit)
       .select("name", "type", "id")
   }
