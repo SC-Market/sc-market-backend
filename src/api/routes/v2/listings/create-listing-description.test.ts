@@ -36,6 +36,11 @@ describe("create listing validation", () => {
     expect(validate(base)).not.toThrow()
   })
 
+  it("accepts a custom listing with no game item", () => {
+    const { game_item_id: _omitted, ...custom } = base
+    expect(validate(custom)).not.toThrow()
+  })
+
   it("still requires a title", () => {
     expect(validate({ ...base, title: "" })).toThrow()
   })

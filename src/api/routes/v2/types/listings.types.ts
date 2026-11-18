@@ -76,8 +76,13 @@ export interface CreateListingRequest {
   /** Optional listing description (markdown supported); defaults to empty */
   description?: string;
   
-  /** Game item UUID being sold */
-  game_item_id: string;
+  /**
+   * Game item UUID being sold. Omit it for a custom listing: something that
+   * isn't a catalogued in-game item (services, bundles, items missing from
+   * the game data). Custom listings don't appear on item pages or in price
+   * history, and don't match buy orders.
+   */
+  game_item_id?: string;
   
   /** Pricing strategy: unified price for all variants or per-variant pricing */
   pricing_mode: 'unified' | 'per_variant';

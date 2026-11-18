@@ -5646,7 +5646,7 @@
 					},
 					"game_item_id": {
 						"type": "string",
-						"description": "Game item UUID being sold"
+						"description": "Game item UUID being sold. Omit it for a custom listing: something that\nisn't a catalogued in-game item (services, bundles, items missing from\nthe game data). Custom listings don't appear on item pages or in price\nhistory, and don't match buy orders."
 					},
 					"pricing_mode": {
 						"type": "string",
@@ -5787,7 +5787,6 @@
 				},
 				"required": [
 					"title",
-					"game_item_id",
 					"pricing_mode",
 					"lots",
 					"shop_id"

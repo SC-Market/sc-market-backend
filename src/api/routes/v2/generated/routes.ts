@@ -2025,7 +2025,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "description": {"dataType":"string"},
-            "game_item_id": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"string"},
             "pricing_mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unified"]},{"dataType":"enum","enums":["per_variant"]}],"required":true},
             "base_price": {"dataType":"double"},
             "lots": {"dataType":"array","array":{"dataType":"refObject","ref":"StockLotInput"},"required":true},

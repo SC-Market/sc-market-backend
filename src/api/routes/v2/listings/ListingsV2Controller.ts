@@ -183,7 +183,8 @@ export class ListingsV2Controller extends BaseController {
         const [listingItem] = await trx("listing_items")
           .insert({
             listing_id: listing.listing_id,
-            game_item_id: requestBody.game_item_id,
+            // Null for a custom listing (no catalogued game item)
+            game_item_id: requestBody.game_item_id ?? null,
             pricing_mode: requestBody.pricing_mode,
             base_price: requestBody.base_price || null,
             bulk_discount_tiers: requestBody.bulk_discount_tiers?.length
@@ -204,7 +205,7 @@ export class ListingsV2Controller extends BaseController {
         for (const lot of requestBody.lots) {
           // Get or create variant using deduplication logic (Requirement 14.5)
           const variantId = await getOrCreateVariant(
-            requestBody.game_item_id,
+            requestBody.game_item_id ?? null,
             lot.variant_attributes,
           )
 
@@ -332,8 +333,9 @@ export class ListingsV2Controller extends BaseController {
       // Check watchlist matches for the new listing (fire-and-forget)
       void checkWatchlistMatches(result.listing_id)
 
-      // Check buy order matches (fire-and-forget)
-      checkBuyOrderMatches({
+      // Check buy order matches (fire-and-forget). Buy orders are for a game
+      // item, so a custom listing has none to match.
+      if (requestBody.game_item_id) checkBuyOrderMatches({
         listing_id: result.listing_id,
         game_item_id: requestBody.game_item_id,
         shop_id: shopId,
@@ -370,11 +372,6 @@ export class ListingsV2Controller extends BaseController {
         field: "title",
         message: "Title must be 500 characters or less",
       })
-    }
-
-    // Validate game_item_id
-    if (!request.game_item_id) {
-      errors.push({ field: "game_item_id", message: "Game item ID is required" })
     }
 
     // Validate pricing_mode
