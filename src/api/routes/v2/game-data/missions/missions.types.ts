@@ -451,10 +451,109 @@ export interface MissionHubDetailResponse {
   factions: MissionHubSummary[]
   types: MissionHubSummary[]
   systems: MissionHubSummary[]
-  /** This page of the hub's missions, by name */
-  missions: MissionSearchResult[]
+  /** Lowest reputation one of its missions pays */
+  reputation_min?: number
+  /** Highest reputation one of its missions pays */
+  reputation_max?: number
+  /** Missions that list a reputation reward */
+  reputation_mission_count: number
+  /** Missions that list an aUEC payout */
+  reward_mission_count: number
+  /** Its missions by type, most first (types without a hub page too) */
+  type_counts: MissionHubTypeCount[]
+  /** Missions without a type in the game files */
+  untyped_count: number
+  /** Missions without a star system in the game files */
+  unlisted_system_count: number
+  /**
+   * The reputation ladders its missions' required ranks are on, most missions
+   * first. The first is the hub's main ladder (the `max_rank` filter's).
+   */
+  ladders: MissionHubLadder[]
+  /** Missions without a required rank in the game files */
+  unranked_mission_count: number
+  /** Every blueprint item its missions can reward, most missions first */
+  blueprint_rewards: MissionHubBlueprintItem[]
+  /** Missions matching the filters (the list's pages count these) */
+  filtered_count: number
+  /** The list's order */
+  sort: MissionHubSort
+  /** This page of the hub's missions (filtered, in `sort` order) */
+  missions: MissionHubMission[]
   page: number
   page_size: number
+}
+
+/** Hub list order: name; required rank; reputation or aUEC payout (highest first). */
+export type MissionHubSort = "name" | "rank" | "reputation" | "reward"
+
+/** A mission in a hub list: the search row plus its required rank and blueprint rewards. */
+export interface MissionHubMission extends MissionSearchResult {
+  /** Required standing code */
+  min_standing?: string
+  /** Required rank's name ("Jr. Contractor") */
+  min_standing_display?: string
+  /** Required rank's index on its ladder (0 = the first rank) */
+  min_standing_rank_index?: number
+  /** Reputation the required rank starts at */
+  min_standing_threshold?: number
+  /** The ladder (reputation scope) the required rank is on */
+  min_standing_scope?: string
+  /** Blueprints it can reward, by item name */
+  blueprint_rewards: MissionHubBlueprintReward[]
+}
+
+/** A blueprint a hub mission can reward. */
+export interface MissionHubBlueprintReward {
+  /** Blueprint code */
+  blueprint_code: string
+  /** Blueprint name (the /blueprints/<name> page) */
+  blueprint_name: string
+  /** Crafted item */
+  game_item_id: string
+  item_name: string
+  /** Crafted item's slug ("d1cebfc3--testudo-backpack-combustion") */
+  item_slug: string
+}
+
+/** A blueprint item a hub's missions can reward. */
+export interface MissionHubBlueprintItem extends MissionHubBlueprintReward {
+  /** The hub's missions that can reward it */
+  mission_count: number
+  /** Lowest rank (main ladder) among those missions; absent when none lists one */
+  min_rank_index?: number
+}
+
+/** A type among a hub's missions. */
+export interface MissionHubTypeCount {
+  slug: string
+  name: string
+  mission_count: number
+}
+
+/** A reputation ladder a hub's missions require ranks on. */
+export interface MissionHubLadder {
+  scope_code: string
+  /** "Standing" */
+  scope_display_name: string
+  /** The hub's missions that require a rank on this ladder */
+  mission_count: number
+  /** Every rank of the ladder, lowest first */
+  ranks: MissionHubRank[]
+}
+
+/** One rank of a hub's ladder. */
+export interface MissionHubRank {
+  rank_index: number
+  standing_code: string
+  /** "Jr. Contractor" */
+  display_name: string
+  /** Reputation the rank starts at */
+  threshold: number
+  /** The hub's missions that require exactly this rank */
+  mission_count: number
+  /** Blueprint items first rewarded at this rank (their lowest rank on the ladder) */
+  new_blueprint_count: number
 }
 
 /** Ship encounter group (e.g. "Mission Targets", "Reinforcements") */

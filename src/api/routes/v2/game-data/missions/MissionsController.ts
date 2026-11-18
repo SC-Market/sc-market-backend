@@ -33,12 +33,25 @@ import {
   MissionHubsResponse,
   MissionHubDetailResponse,
   MissionHubLinks,
+  MissionHubMission,
+  MissionHubSort,
 } from "./missions.types.js"
 import logger from "../../../../../logger/logger.js"
 import type { Knex } from "knex"
 import { clampPagination } from "../../util/pagination.js"
 import { formatShortSlug } from "../../util/short-slug.js"
 import { missionListQuery, toMissionSearchResult } from "./mission-list.js"
+import {
+  blueprintsByMission,
+  buildHubFacts,
+  loadHubBlueprintRows,
+  loadHubFactMissions,
+  loadRankRows,
+  resolveStandings,
+  selectHubMissions,
+} from "./mission-hub-facts.js"
+
+const HUB_SORTS: readonly MissionHubSort[] = ["name", "rank", "reputation", "reward"]
 import {
   activeLiveVersionId,
   findHub,
@@ -739,15 +752,22 @@ export class MissionsController extends BaseController {
 
   /**
    * One mission hub of the active LIVE version: its mission count, reward
-   * range, legal/illegal split and blueprint missions, the related hubs
-   * among its missions (a giver's systems, types and factions, and so on),
-   * and a page of its missions by name.
+   * and reputation ranges, legal/illegal split, type mix, reputation ladders
+   * (missions and newly rewarded blueprints per rank), blueprint rewards,
+   * the related hubs among its missions (a giver's systems, types and
+   * factions, and so on), and a page of its missions with each one's
+   * required rank and blueprint rewards. The hub-wide numbers cover every
+   * mission; the filters only narrow the list (`filtered_count`).
    *
    * @summary Get a mission hub
    * @param kind givers, factions, types or systems
    * @param slug The hub's slug (from GET /game-data/missions/hubs)
    * @param page Page number (default: 1)
    * @param page_size Missions per page (default: 100, max: 100)
+   * @param sort List order: name (default), rank, reputation or reward
+   * @param type Only missions of this type (its slug, "none" for missions without one)
+   * @param max_rank Only missions open at this rank index of the main ladder (`ladders[0]`)
+   * @param has_blueprints Only missions that can reward a blueprint
    */
   @Get("hubs/{kind}/{slug}")
   public async getMissionHub(
@@ -755,12 +775,17 @@ export class MissionsController extends BaseController {
     @Path() slug: string,
     @Query() page: number = 1,
     @Query() page_size: number = 100,
+    @Query() sort?: MissionHubSort,
+    @Query() type?: string,
+    @Query() max_rank?: number,
+    @Query() has_blueprints?: boolean,
   ): Promise<MissionHubDetailResponse> {
     const knex = getKnex()
     const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, {
       defaultPageSize: 100,
       maxPageSize: 100,
     })
+    const order: MissionHubSort = sort && HUB_SORTS.includes(sort) ? sort : "name"
     const versionId = await activeLiveVersionId(knex)
     if (!versionId) this.throwNotFound("Active LIVE game version", "LIVE")
     const rows = await loadHubRows(knex, versionId)
@@ -775,31 +800,71 @@ export class MissionsController extends BaseController {
         .whereRaw(`${hubColumnSql(kind)} = ANY(?)`, [hub.values])
 
     const illegal = "(m.legal_status IS NOT DISTINCT FROM 'ILLEGAL' OR m.is_illegal IS TRUE)"
-    const [stats] = await inHub(knex("missions as m")).select<
-      Array<{
-        reward_min: string | null
-        reward_max: string | null
-        illegal_count: number
-        legal_count: number
-        blueprint_mission_count: number
-      }>
-    >(
-      knex.raw("min(m.credit_reward_min) FILTER (WHERE m.credit_reward_min > 0) as reward_min"),
-      knex.raw("max(COALESCE(m.credit_reward_max, m.credit_reward_min)) FILTER (WHERE COALESCE(m.credit_reward_max, m.credit_reward_min) > 0) as reward_max"),
-      knex.raw(`count(*) FILTER (WHERE ${illegal})::integer as illegal_count`),
-      knex.raw(
-        `count(*) FILTER (WHERE NOT ${illegal} AND (m.legal_status IS NOT DISTINCT FROM 'LEGAL' OR m.is_lawful IS TRUE OR m.is_illegal IS FALSE))::integer as legal_count`,
+    const [[stats], factMissions, rankRows] = await Promise.all([
+      inHub(knex("missions as m")).select<
+        Array<{
+          reward_min: string | null
+          reward_max: string | null
+          illegal_count: number
+          legal_count: number
+          blueprint_mission_count: number
+        }>
+      >(
+        knex.raw("min(m.credit_reward_min) FILTER (WHERE m.credit_reward_min > 0) as reward_min"),
+        knex.raw("max(COALESCE(m.credit_reward_max, m.credit_reward_min)) FILTER (WHERE COALESCE(m.credit_reward_max, m.credit_reward_min) > 0) as reward_max"),
+        knex.raw(`count(*) FILTER (WHERE ${illegal})::integer as illegal_count`),
+        knex.raw(
+          `count(*) FILTER (WHERE NOT ${illegal} AND (m.legal_status IS NOT DISTINCT FROM 'LEGAL' OR m.is_lawful IS TRUE OR m.is_illegal IS FALSE))::integer as legal_count`,
+        ),
+        knex.raw(
+          "count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mission_blueprint_rewards mbr WHERE mbr.mission_id = m.mission_id))::integer as blueprint_mission_count",
+        ),
       ),
-      knex.raw(
-        "count(*) FILTER (WHERE EXISTS (SELECT 1 FROM mission_blueprint_rewards mbr WHERE mbr.mission_id = m.mission_id))::integer as blueprint_mission_count",
-      ),
+      loadHubFactMissions(knex, versionId, kind, hub.values),
+      loadRankRows(knex),
+    ])
+    const blueprintRows = await loadHubBlueprintRows(
+      knex,
+      factMissions.map((m) => m.mission_id),
     )
+    const standings = resolveStandings(factMissions, rankRows)
+    const facts = buildHubFacts(factMissions, blueprintRows, rankRows, standings)
+    const blueprints = blueprintsByMission(blueprintRows)
+    const selected = selectHubMissions(
+      factMissions,
+      standings,
+      new Set(blueprints.keys()),
+      facts.ladders[0]?.scope_code,
+      { type: type || undefined, max_rank: typeof max_rank === "number" && Number.isFinite(max_rank) ? max_rank : undefined, has_blueprints: has_blueprints === true },
+      order,
+    )
+    const pageIds = selected
+      .slice((validatedPage - 1) * validatedPageSize, validatedPage * validatedPageSize)
+      .map((m) => m.mission_id)
 
-    const missionRows = await inHub(missionListQuery(knex))
-      .orderBy("m.mission_name", "asc")
-      .orderBy("m.mission_code", "asc")
-      .limit(validatedPageSize)
-      .offset((validatedPage - 1) * validatedPageSize)
+    const missionRows = pageIds.length
+      ? await missionListQuery(knex).whereIn("m.mission_id", pageIds)
+      : []
+    const rowById = new Map(missionRows.map((row) => [row.mission_id, row]))
+    const missions: MissionHubMission[] = pageIds
+      .map((id) => rowById.get(id))
+      .filter((row): row is NonNullable<typeof row> => row !== undefined)
+      .map((row) => {
+        const standing = standings.get(row.mission_id)
+        return {
+          ...toMissionSearchResult(row),
+          ...(standing
+            ? {
+                min_standing: standing.standing_code,
+                min_standing_display: standing.display_name,
+                min_standing_rank_index: standing.rank_index,
+                min_standing_threshold: standing.threshold,
+                min_standing_scope: standing.scope_code,
+              }
+            : {}),
+          blueprint_rewards: blueprints.get(row.mission_id) ?? [],
+        }
+      })
 
     const related = relatedHubs(rows, index, kind, hub.slug)
     const number = (value: string | null) => (value === null ? undefined : Number(value))
@@ -815,7 +880,10 @@ export class MissionsController extends BaseController {
       illegal_count: stats.illegal_count,
       blueprint_mission_count: stats.blueprint_mission_count,
       ...related,
-      missions: missionRows.map(toMissionSearchResult),
+      ...facts,
+      filtered_count: selected.length,
+      sort: order,
+      missions,
       page: validatedPage,
       page_size: validatedPageSize,
     }

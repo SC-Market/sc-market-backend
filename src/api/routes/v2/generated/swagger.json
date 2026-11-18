@@ -11181,6 +11181,363 @@
 				],
 				"description": "How missions are grouped into hubs: by mission giver, by the faction whose\nreputation they pay, by mission type, by star system."
 			},
+			"MissionHubTypeCount": {
+				"description": "A type among a hub's missions.",
+				"properties": {
+					"slug": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"slug",
+					"name",
+					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubRank": {
+				"description": "One rank of a hub's ladder.",
+				"properties": {
+					"rank_index": {
+						"type": "number",
+						"format": "double"
+					},
+					"standing_code": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "\"Jr. Contractor\""
+					},
+					"threshold": {
+						"type": "number",
+						"format": "double",
+						"description": "Reputation the rank starts at"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "The hub's missions that require exactly this rank"
+					},
+					"new_blueprint_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Blueprint items first rewarded at this rank (their lowest rank on the ladder)"
+					}
+				},
+				"required": [
+					"rank_index",
+					"standing_code",
+					"display_name",
+					"threshold",
+					"mission_count",
+					"new_blueprint_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubLadder": {
+				"description": "A reputation ladder a hub's missions require ranks on.",
+				"properties": {
+					"scope_code": {
+						"type": "string"
+					},
+					"scope_display_name": {
+						"type": "string",
+						"description": "\"Standing\""
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "The hub's missions that require a rank on this ladder"
+					},
+					"ranks": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubRank"
+						},
+						"type": "array",
+						"description": "Every rank of the ladder, lowest first"
+					}
+				},
+				"required": [
+					"scope_code",
+					"scope_display_name",
+					"mission_count",
+					"ranks"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubBlueprintItem": {
+				"description": "A blueprint item a hub's missions can reward.",
+				"properties": {
+					"blueprint_code": {
+						"type": "string",
+						"description": "Blueprint code"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name (the /blueprints/<name> page)"
+					},
+					"game_item_id": {
+						"type": "string",
+						"description": "Crafted item"
+					},
+					"item_name": {
+						"type": "string"
+					},
+					"item_slug": {
+						"type": "string",
+						"description": "Crafted item's slug (\"d1cebfc3--testudo-backpack-combustion\")"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "The hub's missions that can reward it"
+					},
+					"min_rank_index": {
+						"type": "number",
+						"format": "double",
+						"description": "Lowest rank (main ladder) among those missions; absent when none lists one"
+					}
+				},
+				"required": [
+					"blueprint_code",
+					"blueprint_name",
+					"game_item_id",
+					"item_name",
+					"item_slug",
+					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubSort": {
+				"type": "string",
+				"enum": [
+					"name",
+					"rank",
+					"reputation",
+					"reward"
+				],
+				"description": "Hub list order: name; required rank; reputation or aUEC payout (highest first)."
+			},
+			"MissionHubBlueprintReward": {
+				"description": "A blueprint a hub mission can reward.",
+				"properties": {
+					"blueprint_code": {
+						"type": "string",
+						"description": "Blueprint code"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name (the /blueprints/<name> page)"
+					},
+					"game_item_id": {
+						"type": "string",
+						"description": "Crafted item"
+					},
+					"item_name": {
+						"type": "string"
+					},
+					"item_slug": {
+						"type": "string",
+						"description": "Crafted item's slug (\"d1cebfc3--testudo-backpack-combustion\")"
+					}
+				},
+				"required": [
+					"blueprint_code",
+					"blueprint_name",
+					"game_item_id",
+					"item_name",
+					"item_slug"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionHubMission": {
+				"description": "A mission in a hub list: the search row plus its required rank and blueprint rewards.",
+				"properties": {
+					"mission_id": {
+						"type": "string",
+						"description": "Mission UUID"
+					},
+					"mission_code": {
+						"type": "string",
+						"description": "Mission code (internal name for URL-friendly links)"
+					},
+					"mission_name": {
+						"type": "string",
+						"description": "Mission name"
+					},
+					"category": {
+						"type": "string",
+						"description": "Mission category"
+					},
+					"career_type": {
+						"type": "string",
+						"description": "Career type"
+					},
+					"legal_status": {
+						"type": "string",
+						"description": "Legal status"
+					},
+					"difficulty_level": {
+						"type": "number",
+						"format": "double",
+						"description": "Difficulty level (1-5)"
+					},
+					"star_system": {
+						"type": "string",
+						"description": "Star system"
+					},
+					"planet_moon": {
+						"type": "string",
+						"description": "Planet or moon"
+					},
+					"faction": {
+						"type": "string",
+						"description": "Faction"
+					},
+					"credit_reward_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum credit reward"
+					},
+					"credit_reward_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum credit reward"
+					},
+					"blueprint_reward_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of blueprint rewards"
+					},
+					"blueprint_reward_names": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Names of blueprint reward output items"
+					},
+					"community_difficulty_avg": {
+						"type": "number",
+						"format": "double",
+						"description": "Average community difficulty rating"
+					},
+					"community_satisfaction_avg": {
+						"type": "number",
+						"format": "double",
+						"description": "Average community satisfaction rating"
+					},
+					"is_chain_starter": {
+						"type": "boolean",
+						"description": "Is chain starter mission"
+					},
+					"is_chain_mission": {
+						"type": "boolean",
+						"description": "Is part of a chain"
+					},
+					"is_shareable": {
+						"type": "boolean",
+						"description": "Is shareable mission"
+					},
+					"is_unique_mission": {
+						"type": "boolean",
+						"description": "Is unique (one-time) mission"
+					},
+					"is_illegal": {
+						"type": "boolean",
+						"description": "Is illegal"
+					},
+					"reputation_reward": {
+						"type": "number",
+						"format": "double",
+						"description": "Reputation XP reward"
+					},
+					"reward_scope": {
+						"type": "string",
+						"description": "Reputation scope (e.g., headhunter, salvage)"
+					},
+					"reputation_reward_faction": {
+						"type": "string",
+						"description": "Faction whose reputation the mission pays"
+					},
+					"mission_giver_org": {
+						"type": "string",
+						"description": "Mission giver organization"
+					},
+					"associated_event": {
+						"type": "string",
+						"description": "Associated event name (e.g., \"Nyx Mission Pack\")"
+					},
+					"ship_encounter_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Total ship encounter count"
+					},
+					"hauling_orders": {
+						"items": {
+							"$ref": "#/components/schemas/HaulingOrder"
+						},
+						"type": "array",
+						"description": "Hauling order summaries for material badges"
+					},
+					"min_standing": {
+						"type": "string",
+						"description": "Required standing code"
+					},
+					"min_standing_display": {
+						"type": "string",
+						"description": "Required rank's name (\"Jr. Contractor\")"
+					},
+					"min_standing_rank_index": {
+						"type": "number",
+						"format": "double",
+						"description": "Required rank's index on its ladder (0 = the first rank)"
+					},
+					"min_standing_threshold": {
+						"type": "number",
+						"format": "double",
+						"description": "Reputation the required rank starts at"
+					},
+					"min_standing_scope": {
+						"type": "string",
+						"description": "The ladder (reputation scope) the required rank is on"
+					},
+					"blueprint_rewards": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubBlueprintReward"
+						},
+						"type": "array",
+						"description": "Blueprints it can reward, by item name"
+					}
+				},
+				"required": [
+					"mission_id",
+					"mission_code",
+					"mission_name",
+					"category",
+					"blueprint_reward_count",
+					"is_chain_starter",
+					"is_chain_mission",
+					"is_shareable",
+					"is_unique_mission",
+					"ship_encounter_count",
+					"blueprint_rewards"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MissionHubDetailResponse": {
 				"description": "One hub: what its missions have in common, related hubs, and a page of its missions.",
 				"properties": {
@@ -11251,12 +11608,77 @@
 						},
 						"type": "array"
 					},
-					"missions": {
+					"reputation_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Lowest reputation one of its missions pays"
+					},
+					"reputation_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Highest reputation one of its missions pays"
+					},
+					"reputation_mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions that list a reputation reward"
+					},
+					"reward_mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions that list an aUEC payout"
+					},
+					"type_counts": {
 						"items": {
-							"$ref": "#/components/schemas/MissionSearchResult"
+							"$ref": "#/components/schemas/MissionHubTypeCount"
 						},
 						"type": "array",
-						"description": "This page of the hub's missions, by name"
+						"description": "Its missions by type, most first (types without a hub page too)"
+					},
+					"untyped_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions without a type in the game files"
+					},
+					"unlisted_system_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions without a star system in the game files"
+					},
+					"ladders": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubLadder"
+						},
+						"type": "array",
+						"description": "The reputation ladders its missions' required ranks are on, most missions\nfirst. The first is the hub's main ladder (the `max_rank` filter's)."
+					},
+					"unranked_mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions without a required rank in the game files"
+					},
+					"blueprint_rewards": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubBlueprintItem"
+						},
+						"type": "array",
+						"description": "Every blueprint item its missions can reward, most missions first"
+					},
+					"filtered_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missions matching the filters (the list's pages count these)"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/MissionHubSort",
+						"description": "The list's order"
+					},
+					"missions": {
+						"items": {
+							"$ref": "#/components/schemas/MissionHubMission"
+						},
+						"type": "array",
+						"description": "This page of the hub's missions (filtered, in `sort` order)"
 					},
 					"page": {
 						"type": "number",
@@ -11280,6 +11702,16 @@
 					"factions",
 					"types",
 					"systems",
+					"reputation_mission_count",
+					"reward_mission_count",
+					"type_counts",
+					"untyped_count",
+					"unlisted_system_count",
+					"ladders",
+					"unranked_mission_count",
+					"blueprint_rewards",
+					"filtered_count",
+					"sort",
 					"missions",
 					"page",
 					"page_size"
@@ -27434,7 +27866,7 @@
 						}
 					}
 				},
-				"description": "One mission hub of the active LIVE version: its mission count, reward\nrange, legal/illegal split and blueprint missions, the related hubs\namong its missions (a giver's systems, types and factions, and so on),\nand a page of its missions by name.",
+				"description": "One mission hub of the active LIVE version: its mission count, reward\nand reputation ranges, legal/illegal split, type mix, reputation ladders\n(missions and newly rewarded blueprints per rank), blueprint rewards,\nthe related hubs among its missions (a giver's systems, types and\nfactions, and so on), and a page of its missions with each one's\nrequired rank and blueprint rewards. The hub-wide numbers cover every\nmission; the filters only narrow the list (`filtered_count`).",
 				"summary": "Get a mission hub",
 				"tags": [
 					"Game Data - Missions"
@@ -27479,6 +27911,43 @@
 							"default": 100,
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"description": "List order: name (default), rank, reputation or reward",
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/MissionHubSort"
+						}
+					},
+					{
+						"description": "Only missions of this type (its slug, \"none\" for missions without one)",
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Only missions open at this rank index of the main ladder (`ladders[0]`)",
+						"in": "query",
+						"name": "max_rank",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Only missions that can reward a blueprint",
+						"in": "query",
+						"name": "has_blueprints",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
