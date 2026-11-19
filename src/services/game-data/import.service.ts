@@ -888,16 +888,22 @@ export class GameDataImportService {
       // ========================================================================
       logger.info("Loading existing database items")
 
-      const dbItems: DBItem[] = await knex("game_items").select(
-        "id",
-        "name",
-        "name_source",
-        "cstone_uuid",
-        "uex_uuid",
-        "type",
-        "p4k_id",
-        "manufacturer",
-      )
+      const dbItems: DBItem[] = await knex("game_items")
+        .leftJoin(
+          "game_item_name_sources as name_sources",
+          "name_sources.game_item_id",
+          "game_items.id",
+        )
+        .select(
+          "game_items.id",
+          "game_items.name",
+          "name_sources.name_source",
+          "game_items.cstone_uuid",
+          "game_items.uex_uuid",
+          "game_items.type",
+          "game_items.p4k_id",
+          "game_items.manufacturer",
+        )
       stats.existingDBItems = dbItems.length
       logger.info(`${dbItems.length} existing items in database`)
 
@@ -1048,20 +1054,15 @@ export class GameDataImportService {
         logger.info(`Recoded manufacturer on ${stats.manufacturersRecoded} already-imported items`)
       }
 
-      for (const { dbId, newName, newSource } of renamePlan.renames) {
-        await trx("game_items").where("id", dbId).update({ name: newName, name_source: newSource })
+      for (const { dbId, newName } of renamePlan.renames) {
+        await trx("game_items").where("id", dbId).update({ name: newName })
       }
+      await this.recordNameSources(trx, [
+        ...renamePlan.renames.map(({ dbId, newSource }) => ({ dbId, source: newSource })),
+        ...renamePlan.sourceChanges,
+      ])
       if (renamePlan.renames.length > 0) {
         logger.info(`Renamed ${renamePlan.renames.length} already-imported items`, stats.itemRenamesBySource)
-      }
-      const idsBySource = new Map<ItemNameSource, string[]>()
-      for (const { dbId, source } of renamePlan.sourceChanges) {
-        idsBySource.set(source, [...(idsBySource.get(source) ?? []), dbId])
-      }
-      for (const [source, ids] of idsBySource) {
-        for (let i = 0; i < ids.length; i += 1000) {
-          await trx("game_items").whereIn("id", ids.slice(i, i + 1000)).update({ name_source: source })
-        }
       }
 
       if (matches.length > 0) {
@@ -1071,13 +1072,12 @@ export class GameDataImportService {
             const batch = matches.slice(i, i + BATCH)
             for (const { dbId, p4k } of batch) {
               await trx.raw(
-                `UPDATE game_items SET name = ?, name_source = ?, type = ?, p4k_id = ?, p4k_file = ?,
+                `UPDATE game_items SET name = ?, type = ?, p4k_id = ?, p4k_file = ?,
                  item_type = ?, sub_type = ?, size = ?, grade = ?,
                  manufacturer = ?, display_type = ?, thumbnail_path = ?, name_key = ?
                  WHERE id = ?`,
                 [
                   truncate(p4k.name, 100),
-                  p4k.nameSource,
                   truncate(P4K_TYPE_MAP[p4k.type || ""] || "Other", 50),
                   p4k.id,
                   truncate(p4k.file, 200),
@@ -1095,6 +1095,10 @@ export class GameDataImportService {
             }
             if (i % 1000 === 0 && i > 0) logger.info(`  Updated ${i}/${matches.length}`)
           }
+          await this.recordNameSources(
+            trx,
+            matches.map(({ dbId, p4k }) => ({ dbId, source: p4k.nameSource })),
+          )
 
         // Insert new items
         if (inserts.length > 0) {
@@ -1105,7 +1109,6 @@ export class GameDataImportService {
             await trx("game_items").insert(
               batch.map((p4k) => ({
                 name: truncate(p4k.name, 100)!,
-                name_source: p4k.nameSource,
                 type: truncate(P4K_TYPE_MAP[p4k.type || ""] || "Other", 50),
                 p4k_id: p4k.id,
                 p4k_file: truncate(p4k.file, 200),
@@ -1120,6 +1123,17 @@ export class GameDataImportService {
               })),
             ).onConflict("name").merge()
           }
+          const insertedIds = await trx("game_items")
+            .whereIn("p4k_id", inserts.map((p4k) => p4k.id))
+            .select("id", "p4k_id")
+          const sourceByP4kId = new Map(inserts.map((p4k) => [p4k.id, p4k.nameSource]))
+          await this.recordNameSources(
+            trx,
+            insertedIds.map((row: { id: string; p4k_id: string }) => ({
+              dbId: row.id,
+              source: sourceByP4kId.get(row.p4k_id)!,
+            })),
+          )
         }
 
         // ========================================================================
@@ -1696,6 +1710,33 @@ export class GameDataImportService {
    *
    * @returns number of rows recoded
    */
+  /**
+   * Record where game_items names come from (game_item_name_sources; see
+   * item-names.ts). A companion table rather than a game_items column: adding
+   * a column needs an ACCESS EXCLUSIVE lock on game_items, which the site's
+   * constant reads held off past the migration lock_timeout.
+   */
+  async recordNameSources(
+    trx: Knex,
+    rows: readonly { dbId: string; source: ItemNameSource }[],
+  ): Promise<void> {
+    // One row per item (an upsert can't touch a row twice); the last wins.
+    const unique = [...new Map(rows.map((row) => [row.dbId, row])).values()]
+    const BATCH = 1000
+    for (let i = 0; i < unique.length; i += BATCH) {
+      await trx("game_item_name_sources")
+        .insert(
+          unique.slice(i, i + BATCH).map(({ dbId, source }) => ({
+            game_item_id: dbId,
+            name_source: source,
+            updated_at: new Date(),
+          })),
+        )
+        .onConflict("game_item_id")
+        .merge(["name_source", "updated_at"])
+    }
+  }
+
   async recodeItemManufacturers(
     knex: Knex,
     recodes: { dbId: string; manufacturer: string }[],

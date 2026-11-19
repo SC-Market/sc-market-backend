@@ -94,7 +94,7 @@ export function importItemName(item: {
 }
 
 /**
- * Where a game_items name comes from, best first (game_items.name_source):
+ * Where a game_items name comes from, best first (game_item_name_sources):
  *
  * - `cig`: the item's English name in CIG's localization files.
  * - `override`: a curated name from game_item_name_overrides.
@@ -319,7 +319,7 @@ export interface ImportedItemName {
   dbId: string
   /** game_items.name now */
   stored: string
-  /** game_items.name_source now; null on rows from before it was recorded */
+  /** Recorded source of the stored name (game_item_name_sources); null when none is */
   storedSource: ItemNameSource | null
   /** Name this import gives the item */
   exported: string
