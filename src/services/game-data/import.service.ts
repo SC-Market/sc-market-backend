@@ -28,9 +28,13 @@ import { importShopInventories, type P4KShopInventory } from "./shop-inventories
 import { buildShipRecords, shipGameItemInsert, wikiShipUpsert } from "./ship-records.js"
 import { serializeJsonColumns } from "./import-diff.js"
 import {
+  countRenamesBySource,
   importItemName,
+  inferNameSource,
+  planDerivedNames,
   planItemRenames,
   type ImportedItemName,
+  type ItemNameSource,
 } from "./item-names.js"
 import {
   BLUEPRINT_INGREDIENT_COLUMNS,
@@ -464,9 +468,13 @@ export interface P4KResource {
   qualityBands: Array<{ start: number; end: number; mappedValue: number }> | null
 }
 
+/** An export item with the name the import stores and where it comes from */
+type SourcedP4KItem = P4KItem & { nameSource: ItemNameSource }
+
 interface DBItem {
   id: string
   name: string
+  name_source: ItemNameSource | null
   cstone_uuid: string | null
   uex_uuid: string | null
   type: string | null
@@ -476,7 +484,7 @@ interface DBItem {
 
 interface MatchResult {
   dbId: string
-  p4k: P4KItem
+  p4k: SourcedP4KItem
   matchType: "exact" | "cstone_uuid" | "fuzzy" | "normalized"
 }
 
@@ -491,6 +499,16 @@ export interface ImportStats {
   inserted: number
   updated: number
   nameChanges: number
+  /**
+   * Already-imported items renamed, by name source transition
+   * ("key_derived->derived": 26). See item-names.ts.
+   */
+  itemRenamesBySource: Record<string, number>
+  /**
+   * Item names not given because another item has the name (each listed in
+   * errors; retried by the next import)
+   */
+  itemNameConflicts: number
   /** Already-imported items whose manufacturer was rewritten to the canonical code */
   manufacturersRecoded: number
   fullSetsCreated: number
@@ -698,6 +716,8 @@ export class GameDataImportService {
       inserted: 0,
       updated: 0,
       nameChanges: 0,
+      itemRenamesBySource: {},
+      itemNameConflicts: 0,
       manufacturersRecoded: 0,
       fullSetsCreated: 0,
       missionsProcessed: 0,
@@ -749,13 +769,63 @@ export class GameDataImportService {
       // reference to its brand's canonical code so game_items, wiki_ships and
       // wiki_manufacturers all agree (see manufacturers.ts).
       const manufacturerCanon = canonicalizeManufacturers(gameData.manufacturers || [])
-      // CIG placeholder names ("PH - hdh_boots_01_01_13") are stored under
-      // the key-derived name instead (see item-names.ts).
-      const p4kItems: P4KItem[] = (gameData.items || []).map((item) => ({
+      // Item names, best source first (see item-names.ts): CIG's name; else
+      // a curated override; else one derived from a named sibling class; else
+      // the key-derived name. CIG placeholder names ("PH -
+      // hdh_boots_01_01_13") are stored under the key-derived name instead.
+      const overrides = new Map<string, string>(
+        (
+          await knex("game_item_name_overrides").select("p4k_id", "name")
+        ).map((row: { p4k_id: string; name: string }) => [row.p4k_id, row.name.trim()]),
+      )
+      const namedItems = (gameData.items || []).map((item) => ({
         ...item,
         name: importItemName(item),
-        manufacturer: canonicalManufacturerCode(manufacturerCanon.aliasToCanonical, item.manufacturer),
       }))
+      const derivedPlan = planDerivedNames(namedItems)
+      for (const conflict of derivedPlan.conflicts) {
+        stats.itemNameConflicts++
+        stats.errors.push(
+          `Item name conflict: derived name "${conflict.name}" for item ${conflict.itemId} is also another item's (${conflict.heldBy}); kept its key-derived name`,
+        )
+      }
+      // A new item's derived or curated name another row already has would
+      // name-match that row (or merge into it on insert): the item keeps its
+      // key-derived name and the clash is reported. Already-imported items
+      // (matched by p4k_id) are checked by planItemRenames.
+      const storedRows: { id: string; name: string; p4k_id: string | null }[] =
+        await knex("game_items").select("id", "name", "p4k_id")
+      const importedP4kIds = new Set(storedRows.map((row) => row.p4k_id).filter(Boolean))
+      const rowIdByName = new Map(storedRows.map((row) => [row.name.toLowerCase().trim(), row.id]))
+      const p4kItems: SourcedP4KItem[] = namedItems.map((item) => {
+        const inferred = inferNameSource(item.name, item.nameKey, item.file)
+        const override = overrides.get(item.id)
+        const derived = derivedPlan.names.get(item.id)
+        let [name, nameSource]: [string, ItemNameSource] =
+          inferred === "cig"
+            ? [item.name, "cig"]
+            : override
+              ? [override, "override"]
+              : derived
+                ? [derived, "derived"]
+                : [item.name, inferred]
+        if (nameSource !== inferred && !importedP4kIds.has(item.id)) {
+          const holder = rowIdByName.get(name.toLowerCase().trim())
+          if (holder !== undefined) {
+            stats.itemNameConflicts++
+            stats.errors.push(
+              `Item name conflict: ${nameSource} name "${name}" for new item ${item.id} is already item ${holder}'s; inserted under its key-derived name`,
+            )
+            ;[name, nameSource] = [item.name, inferred]
+          }
+        }
+        return {
+          ...item,
+          name,
+          nameSource,
+          manufacturer: canonicalManufacturerCode(manufacturerCanon.aliasToCanonical, item.manufacturer),
+        }
+      })
       stats.totalP4KItems = p4kItems.length
 
       if (p4kItems.length === 0) {
@@ -798,7 +868,7 @@ export class GameDataImportService {
       )
 
       // Deduplicate by name (keep the item with more attributes)
-      const seenNames = new Map<string, P4KItem>()
+      const seenNames = new Map<string, SourcedP4KItem>()
       for (const item of filteredItems) {
         const key = item.name.toLowerCase().trim()
         const existing = seenNames.get(key)
@@ -821,6 +891,7 @@ export class GameDataImportService {
       const dbItems: DBItem[] = await knex("game_items").select(
         "id",
         "name",
+        "name_source",
         "cstone_uuid",
         "uex_uuid",
         "type",
@@ -862,7 +933,7 @@ export class GameDataImportService {
       logger.info("Matching P4K items to database items")
 
       const matches: MatchResult[] = []
-      const inserts: P4KItem[] = []
+      const inserts: SourcedP4KItem[] = []
       const nameChanges: { dbId: string; oldName: string; newName: string }[] = []
       const manufacturerRecodes: { dbId: string; manufacturer: string }[] = []
       const importedNames: ImportedItemName[] = []
@@ -880,8 +951,11 @@ export class GameDataImportService {
           importedNames.push({
             dbId: imported.id,
             stored: imported.name,
+            storedSource: imported.name_source,
             exported: p4k.name,
+            exportedSource: p4k.nameSource,
             nameKey: p4k.nameKey,
+            file: p4k.file,
           })
           const recode = manufacturerRecode(imported.manufacturer, truncate(p4k.manufacturer, 100))
           if (recode) manufacturerRecodes.push({ dbId: imported.id, manufacturer: recode })
@@ -943,7 +1017,12 @@ export class GameDataImportService {
       )
       for (const conflict of renamePlan.conflicts) {
         logger.warn("Item rename skipped: another item already has the name", conflict)
+        stats.itemNameConflicts++
+        stats.errors.push(
+          `Item name conflict: item ${conflict.dbId} "${conflict.oldName}" not renamed to ${conflict.newSource} name "${conflict.newName}": another item has it (retried next import)`,
+        )
       }
+      stats.itemRenamesBySource = countRenamesBySource(renamePlan.renames)
 
       stats.nameChanges = nameChanges.length + renamePlan.renames.length
       stats.inserted = inserts.length
@@ -969,11 +1048,20 @@ export class GameDataImportService {
         logger.info(`Recoded manufacturer on ${stats.manufacturersRecoded} already-imported items`)
       }
 
-      for (const { dbId, newName } of renamePlan.renames) {
-        await trx("game_items").where("id", dbId).update({ name: newName })
+      for (const { dbId, newName, newSource } of renamePlan.renames) {
+        await trx("game_items").where("id", dbId).update({ name: newName, name_source: newSource })
       }
       if (renamePlan.renames.length > 0) {
-        logger.info(`Renamed ${renamePlan.renames.length} already-imported items`)
+        logger.info(`Renamed ${renamePlan.renames.length} already-imported items`, stats.itemRenamesBySource)
+      }
+      const idsBySource = new Map<ItemNameSource, string[]>()
+      for (const { dbId, source } of renamePlan.sourceChanges) {
+        idsBySource.set(source, [...(idsBySource.get(source) ?? []), dbId])
+      }
+      for (const [source, ids] of idsBySource) {
+        for (let i = 0; i < ids.length; i += 1000) {
+          await trx("game_items").whereIn("id", ids.slice(i, i + 1000)).update({ name_source: source })
+        }
       }
 
       if (matches.length > 0) {
@@ -983,12 +1071,13 @@ export class GameDataImportService {
             const batch = matches.slice(i, i + BATCH)
             for (const { dbId, p4k } of batch) {
               await trx.raw(
-                `UPDATE game_items SET name = ?, type = ?, p4k_id = ?, p4k_file = ?,
+                `UPDATE game_items SET name = ?, name_source = ?, type = ?, p4k_id = ?, p4k_file = ?,
                  item_type = ?, sub_type = ?, size = ?, grade = ?,
                  manufacturer = ?, display_type = ?, thumbnail_path = ?, name_key = ?
                  WHERE id = ?`,
                 [
                   truncate(p4k.name, 100),
+                  p4k.nameSource,
                   truncate(P4K_TYPE_MAP[p4k.type || ""] || "Other", 50),
                   p4k.id,
                   truncate(p4k.file, 200),
@@ -1016,6 +1105,7 @@ export class GameDataImportService {
             await trx("game_items").insert(
               batch.map((p4k) => ({
                 name: truncate(p4k.name, 100)!,
+                name_source: p4k.nameSource,
                 type: truncate(P4K_TYPE_MAP[p4k.type || ""] || "Other", 50),
                 p4k_id: p4k.id,
                 p4k_file: truncate(p4k.file, 200),

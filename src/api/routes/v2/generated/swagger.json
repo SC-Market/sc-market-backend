@@ -20113,6 +20113,20 @@
 								"type": "number",
 								"format": "double"
 							},
+							"itemNameConflicts": {
+								"type": "number",
+								"format": "double",
+								"description": "Item names not given because another item has the name (each listed in errors; retried next import)"
+							},
+							"itemRenamesBySource": {
+								"properties": {},
+								"additionalProperties": {
+									"type": "number",
+									"format": "double"
+								},
+								"type": "object",
+								"description": "Already-imported items renamed, by name source transition, e.g.\n{ \"key_derived->derived\": 26, \"key_derived->cig\": 38 }"
+							},
 							"nameChanges": {
 								"type": "number",
 								"format": "double"
@@ -20171,6 +20185,8 @@
 							"missionsInserted",
 							"missionsProcessed",
 							"fullSetsCreated",
+							"itemNameConflicts",
+							"itemRenamesBySource",
 							"nameChanges",
 							"updated",
 							"inserted",

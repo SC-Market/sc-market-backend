@@ -93,38 +93,279 @@ export function importItemName(item: {
   return keyDerivedName(item.nameKey, item.file) ?? item.name
 }
 
+/**
+ * Where a game_items name comes from, best first (game_items.name_source):
+ *
+ * - `cig`: the item's English name in CIG's localization files.
+ * - `override`: a curated name from game_item_name_overrides.
+ * - `derived`: built from a named sibling class by deriveVariantName.
+ * - `key_derived`: built from the localization key or record file name
+ *   ("Ksar Lmg Energy 01 Tint02").
+ * - `placeholder`: one of CIG's placeholder names ("PH - hdh_boots_01_01_13").
+ */
+export const ITEM_NAME_SOURCES = [
+  "cig",
+  "override",
+  "derived",
+  "key_derived",
+  "placeholder",
+] as const
+
+export type ItemNameSource = (typeof ITEM_NAME_SOURCES)[number]
+
+const SOURCE_RANK: Record<ItemNameSource, number> = {
+  cig: 4,
+  override: 3,
+  derived: 2,
+  key_derived: 1,
+  placeholder: 0,
+}
+
+/** True when a name from `next` may replace a name from `current`. */
+export function outranksOrEquals(
+  next: ItemNameSource,
+  current: ItemNameSource,
+): boolean {
+  return SOURCE_RANK[next] >= SOURCE_RANK[current]
+}
+
+/**
+ * The source of a name as exported or stored, read from the name itself:
+ * a placeholder, the key-derived name (from the key or the record file name,
+ * or a raw "@item_Name..." key), or else CIG's. Overrides and derived names
+ * can't be told apart from CIG's this way; the import records them.
+ */
+export function inferNameSource(
+  name: string,
+  nameKey: string | null | undefined,
+  file: string | null | undefined,
+): "cig" | "key_derived" | "placeholder" {
+  if (isPlaceholderName(name)) return "placeholder"
+  if (name.trim().startsWith("@")) return "key_derived"
+  if (isKeyDerivedName(name, nameKey)) return "key_derived"
+  const fromKey = keyDerivedName(nameKey, file)
+  if (fromKey && compact(fromKey) === compact(name)) return "key_derived"
+  if (file && compact(file) === compact(name)) return "key_derived"
+  return "cig"
+}
+
+/**
+ * The trailing variant token of a class name: "_" + letters + digits
+ * ("_tint02", "_lr01", "_var2", "_store01").
+ */
+const VARIANT_TOKEN = /^(.+)_([a-z]+)(\d+)$/
+
+/** Variant words already spelled out in class names; other codes are upper-cased. */
+const VARIANT_WORDS = new Set(["tint", "store", "collector", "var"])
+
+function variantLabel(letters: string, digits: string): string {
+  const word = VARIANT_WORDS.has(letters)
+    ? letters[0].toUpperCase() + letters.slice(1)
+    : letters.toUpperCase()
+  return `${word} ${digits}`
+}
+
+/** `X "Y" Z` → `X Z`; null unless the name has exactly that form. */
+function withoutQuotedPart(name: string): string | null {
+  const match = name.match(/^([^"]*)"([^"]+)"([^"]*)$/)
+  if (!match) return null
+  const before = match[1].trim()
+  const after = match[3].trim()
+  if (!before || !after) return null
+  return `${before} ${after}`.replace(/\s+/g, " ")
+}
+
+export interface NamedSiblings {
+  /** Class name (record file, lower case) → CIG name, for CIG-named items */
+  nameByClass: ReadonlyMap<string, string>
+  /** Base class → CIG names of its `<base>_<letters><digits>` variants */
+  variantNamesByBase: ReadonlyMap<string, readonly string[]>
+}
+
+function classOf(file: string | null | undefined): string | null {
+  const cls = file?.trim().toLowerCase()
+  return cls || null
+}
+
+/**
+ * Index the CIG-named items of one export by class, for deriveVariantName.
+ * `name` is the name the import stores (importItemName).
+ */
+export function indexNamedSiblings(
+  items: Iterable<{ name: string; nameKey: string | null; file: string | null }>,
+): NamedSiblings {
+  const nameByClass = new Map<string, string>()
+  const variantNamesByBase = new Map<string, string[]>()
+  for (const item of items) {
+    const cls = classOf(item.file)
+    if (!cls || !item.name) continue
+    if (inferNameSource(item.name, item.nameKey, item.file) !== "cig") continue
+    nameByClass.set(cls, item.name)
+    const variant = cls.match(VARIANT_TOKEN)
+    if (variant) {
+      const names = variantNamesByBase.get(variant[1]) ?? []
+      names.push(item.name)
+      variantNamesByBase.set(variant[1], names)
+    }
+  }
+  return { nameByClass, variantNamesByBase }
+}
+
+/**
+ * A readable name for an item CIG has no name for, built only from names CIG
+ * gave its sibling classes. Null when the rules give none.
+ *
+ * Strip one trailing variant token (`_<letters><digits>`) from the item's
+ * class to get the base class (an item without one is its own base), then:
+ *
+ * - R1: the base class has a CIG name → that is the base name
+ *   (behr_rifle_ballistic_01 = "P4-AR Rifle").
+ * - R2: otherwise, the base class's CIG-named variants are all `X "Y" Z` and
+ *   dropping the quoted part gives one and the same `X Z` → the base name
+ *   (ksar_lmg_energy_01_store01 = `Verdict "Derivation" LMG` → "Verdict LMG").
+ *
+ * The base class itself is named the base name; a variant is
+ * `<base name> (<Label> <NN>)`, the label being the token's own letters
+ * (tint/store/collector/var as words, other codes upper-cased: "LR 01") and
+ * digits. No words are invented.
+ *
+ * @param siblings indexNamedSiblings over the same export
+ */
+export function deriveVariantName(
+  item: { file: string | null },
+  siblings: NamedSiblings,
+): string | null {
+  const cls = classOf(item.file)
+  if (!cls) return null
+  const variant = cls.match(VARIANT_TOKEN)
+  const baseClass = variant ? variant[1] : cls
+  const label = variant ? variantLabel(variant[2], variant[3]) : null
+
+  let baseName: string | null = siblings.nameByClass.get(baseClass) ?? null
+  if (!baseName) {
+    const named = siblings.variantNamesByBase.get(baseClass) ?? []
+    const stripped = new Set(named.map(withoutQuotedPart))
+    const only = stripped.size === 1 ? [...stripped][0] : null
+    baseName = only ?? null
+  }
+  if (!baseName) return null
+
+  const name = label ? `${baseName} (${label})` : baseName
+  return name.length <= ITEM_NAME_MAX ? name : null
+}
+
+export interface DerivedNameConflict {
+  /** Export item id (p4k_id) */
+  itemId: string
+  name: string
+  /** Export item id of the other item with the name */
+  heldBy: string
+}
+
+export interface DerivedNamePlan {
+  /** Export item id → derived name */
+  names: Map<string, string>
+  /** Derived names not used: another item of the export has the name */
+  conflicts: DerivedNameConflict[]
+}
+
+/**
+ * Derived names for the items of one export that CIG has no name for (their
+ * stored name is key-derived or a placeholder). A derived name another export
+ * item already has, or that two items derive, is not used by either; both
+ * keep their key-derived name and the clash is reported.
+ *
+ * @param items The export's items, `name` being what importItemName stores
+ */
+export function planDerivedNames(
+  items: readonly { id: string; name: string; nameKey: string | null; file: string | null }[],
+): DerivedNamePlan {
+  const siblings = indexNamedSiblings(items)
+  const holderByName = new Map<string, string>()
+  for (const item of items) {
+    if (item.name) holderByName.set(item.name.toLowerCase().trim(), item.id)
+  }
+
+  const derivedBy = new Map<string, { name: string; ids: string[] }>()
+  for (const item of items) {
+    if (inferNameSource(item.name, item.nameKey, item.file) === "cig") continue
+    const name = deriveVariantName(item, siblings)
+    if (!name) continue
+    const key = name.toLowerCase()
+    const entry = derivedBy.get(key) ?? { name, ids: [] }
+    entry.ids.push(item.id)
+    derivedBy.set(key, entry)
+  }
+
+  const names = new Map<string, string>()
+  const conflicts: DerivedNameConflict[] = []
+  for (const [key, { name, ids }] of derivedBy) {
+    const holder = holderByName.get(key)
+    if (holder !== undefined && !ids.includes(holder)) {
+      for (const id of ids) conflicts.push({ itemId: id, name, heldBy: holder })
+    } else if (ids.length > 1) {
+      for (const id of ids) {
+        conflicts.push({ itemId: id, name, heldBy: ids.find((other) => other !== id)! })
+      }
+    } else {
+      names.set(ids[0], name)
+    }
+  }
+  return { names, conflicts }
+}
+
 export interface ImportedItemName {
   /** game_items.id */
   dbId: string
   /** game_items.name now */
   stored: string
-  /** Name in this export */
+  /** game_items.name_source now; null on rows from before it was recorded */
+  storedSource: ItemNameSource | null
+  /** Name this import gives the item */
   exported: string
+  /** Where `exported` comes from */
+  exportedSource: ItemNameSource
   /** Localization key in this export */
   nameKey: string | null
+  /** Record file name (class) in this export */
+  file: string | null
 }
 
 export interface ItemRename {
   dbId: string
   oldName: string
   newName: string
+  oldSource: ItemNameSource
+  newSource: ItemNameSource
+}
+
+export interface ItemNameSourceChange {
+  dbId: string
+  source: ItemNameSource
 }
 
 export interface ItemRenamePlan {
   renames: ItemRename[]
   /** Renames not done: another row already has the name */
   conflicts: ItemRename[]
+  /** Rows keeping their name whose recorded source changes (or was never recorded) */
+  sourceChanges: ItemNameSourceChange[]
 }
 
 /**
- * Which already-imported rows take their exported name.
+ * Which already-imported rows take the name this import gives them.
  *
- * - A row whose exported name differs from its stored one takes it, except
- *   that a real name is never replaced by a key-derived one, and no name is
- *   replaced by a placeholder. A placeholder takes any other name.
+ * - A row takes a different name when the new name's source ranks at least as
+ *   high as its stored one (cig > override > derived > key_derived >
+ *   placeholder): a CIG name replaces a derived, key-derived or placeholder
+ *   one; a derived name replaces a key-derived one but never a CIG or curated
+ *   one. No row is renamed to a placeholder. A row without a recorded source
+ *   is judged by its name (inferNameSource).
  * - game_items.name is unique, so a name another row already has (compared
  *   case-insensitively, as the import matches names) is not taken; the rename
- *   is reported as a conflict and retried by the next import.
+ *   is reported as a conflict and retried by the next import. Names are never
+ *   numbered to make them unique.
+ * - A row whose name stays gets its source recorded when it differs.
  *
  * @param taken Every stored game_items name with its row id
  */
@@ -137,25 +378,54 @@ export function planItemRenames(
 
   const renames: ItemRename[] = []
   const conflicts: ItemRename[] = []
+  const sourceChanges: ItemNameSourceChange[] = []
   for (const item of items) {
+    const oldSource =
+      item.storedSource ?? inferNameSource(item.stored, item.nameKey, item.file)
     const newName = item.exported.slice(0, ITEM_NAME_MAX)
-    if (!newName.trim() || newName === item.stored) continue
-    if (isPlaceholderName(newName)) continue
-    if (
-      isKeyDerivedName(newName, item.nameKey) &&
-      !isKeyDerivedName(item.stored, item.nameKey) &&
-      !isPlaceholderName(item.stored)
-    ) {
+    if (!newName.trim()) continue
+    if (newName === item.stored) {
+      if (item.storedSource !== item.exportedSource) {
+        sourceChanges.push({ dbId: item.dbId, source: item.exportedSource })
+      }
       continue
     }
-    const rename = { dbId: item.dbId, oldName: item.stored, newName }
+    if (item.exportedSource === "placeholder" || isPlaceholderName(newName)) continue
+    if (!outranksOrEquals(item.exportedSource, oldSource)) {
+      if (item.storedSource === null) {
+        sourceChanges.push({ dbId: item.dbId, source: oldSource })
+      }
+      continue
+    }
+    const rename = {
+      dbId: item.dbId,
+      oldName: item.stored,
+      newName,
+      oldSource,
+      newSource: item.exportedSource,
+    }
     const holder = holderByName.get(newName.toLowerCase().trim())
     if (holder !== undefined && holder !== item.dbId) {
       conflicts.push(rename)
+      if (item.storedSource === null) {
+        sourceChanges.push({ dbId: item.dbId, source: oldSource })
+      }
       continue
     }
     holderByName.set(newName.toLowerCase().trim(), item.dbId)
     renames.push(rename)
   }
-  return { renames, conflicts }
+  return { renames, conflicts, sourceChanges }
+}
+
+/** "key_derived->derived" → count, for the import summary. */
+export function countRenamesBySource(
+  renames: readonly ItemRename[],
+): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const { oldSource, newSource } of renames) {
+    const transition = `${oldSource}->${newSource}`
+    counts[transition] = (counts[transition] ?? 0) + 1
+  }
+  return counts
 }

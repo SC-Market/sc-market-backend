@@ -20,6 +20,13 @@ export interface ImportGameDataResponse {
     inserted: number
     updated: number
     nameChanges: number
+    /**
+     * Already-imported items renamed, by name source transition, e.g.
+     * { "key_derived->derived": 26, "key_derived->cig": 38 }
+     */
+    itemRenamesBySource: { [transition: string]: number }
+    /** Item names not given because another item has the name (each listed in errors; retried next import) */
+    itemNameConflicts: number
     fullSetsCreated: number
     missionsProcessed: number
     missionsInserted: number

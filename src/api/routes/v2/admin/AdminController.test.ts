@@ -45,6 +45,8 @@ const emptyImportStats: ImportStats = {
   inserted: 0,
   updated: 0,
   nameChanges: 0,
+  itemRenamesBySource: {},
+  itemNameConflicts: 0,
   fullSetsCreated: 0,
   missionsProcessed: 0,
   missionsInserted: 0,
