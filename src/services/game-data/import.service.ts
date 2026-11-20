@@ -33,6 +33,7 @@ import {
   inferNameSource,
   planDerivedNames,
   planItemRenames,
+  renameSteps,
   type ImportedItemName,
   type ItemNameSource,
 } from "./item-names.js"
@@ -488,6 +489,20 @@ interface MatchResult {
   matchType: "exact" | "cstone_uuid" | "fuzzy" | "normalized"
 }
 
+export interface ItemRenameDetail {
+  /** game_items.id */
+  id: string
+  oldName: string
+  newName: string
+  /** How the row was matched to the export item */
+  match: "p4k_id" | "exact" | "cstone_uuid" | "fuzzy" | "normalized"
+  /** Name source transition, for rows matched by p4k_id */
+  oldSource?: ItemNameSource
+  newSource: ItemNameSource
+  /** Export item id (p4k_id) */
+  p4kId: string
+}
+
 export interface ImportStats {
   totalP4KItems: number
   validP4KItems: number
@@ -504,6 +519,12 @@ export interface ImportStats {
    * ("key_derived->derived": 26). See item-names.ts.
    */
   itemRenamesBySource: Record<string, number>
+  /**
+   * Every rename this import made, for review: already-imported rows (matched
+   * by p4k_id, with their name sources) and rows matched by name or CStone
+   * UUID that take the export's name. Not part of the job summary.
+   */
+  itemRenames: ItemRenameDetail[]
   /**
    * Item names not given because another item has the name (each listed in
    * errors; retried by the next import)
@@ -717,6 +738,7 @@ export class GameDataImportService {
       updated: 0,
       nameChanges: 0,
       itemRenamesBySource: {},
+      itemRenames: [],
       itemNameConflicts: 0,
       manufacturersRecoded: 0,
       fullSetsCreated: 0,
@@ -940,7 +962,8 @@ export class GameDataImportService {
 
       const matches: MatchResult[] = []
       const inserts: SourcedP4KItem[] = []
-      const nameChanges: { dbId: string; oldName: string; newName: string }[] = []
+      const nameChanges: ItemRenameDetail[] = []
+      const p4kIdByDbId = new Map<string, string>()
       const manufacturerRecodes: { dbId: string; manufacturer: string }[] = []
       const importedNames: ImportedItemName[] = []
 
@@ -954,6 +977,7 @@ export class GameDataImportService {
         // joins its brand). The row is updated in place, never reinserted.
         const imported = dbByP4kId.get(p4k.id)
         if (imported) {
+          p4kIdByDbId.set(imported.id, p4k.id)
           importedNames.push({
             dbId: imported.id,
             stored: imported.name,
@@ -1001,9 +1025,12 @@ export class GameDataImportService {
           // Track name changes
           if (normalize(dbItem.name) !== normalize(p4k.name)) {
             nameChanges.push({
-              dbId: dbItem.id,
+              id: dbItem.id,
               oldName: dbItem.name,
-              newName: p4k.name,
+              newName: truncate(p4k.name, 100)!,
+              match: matchType,
+              newSource: p4k.nameSource,
+              p4kId: p4k.id,
             })
           }
 
@@ -1029,6 +1056,20 @@ export class GameDataImportService {
         )
       }
       stats.itemRenamesBySource = countRenamesBySource(renamePlan.renames)
+      stats.itemRenames = [
+        ...renamePlan.renames.map(
+          (r): ItemRenameDetail => ({
+            id: r.dbId,
+            oldName: r.oldName,
+            newName: r.newName,
+            match: "p4k_id",
+            oldSource: r.oldSource,
+            newSource: r.newSource,
+            p4kId: p4kIdByDbId.get(r.dbId)!,
+          }),
+        ),
+        ...nameChanges,
+      ]
 
       stats.nameChanges = nameChanges.length + renamePlan.renames.length
       stats.inserted = inserts.length
@@ -1054,15 +1095,22 @@ export class GameDataImportService {
         logger.info(`Recoded manufacturer on ${stats.manufacturersRecoded} already-imported items`)
       }
 
-      for (const { dbId, newName } of renamePlan.renames) {
-        await trx("game_items").where("id", dbId).update({ name: newName })
-      }
-      await this.recordNameSources(trx, [
-        ...renamePlan.renames.map(({ dbId, newSource }) => ({ dbId, source: newSource })),
-        ...renamePlan.sourceChanges,
-      ])
+      // One transaction: rows swapping names pass through a temporary name
+      // (renameSteps), which no other session may see or keep.
+      await knex.transaction(async (renameTrx) => {
+        for (const { dbId, name } of renameSteps(renamePlan.renames)) {
+          await renameTrx("game_items").where("id", dbId).update({ name })
+        }
+        await this.recordNameSources(renameTrx, [
+          ...renamePlan.renames.map(({ dbId, newSource }) => ({ dbId, source: newSource })),
+          ...renamePlan.sourceChanges,
+        ])
+      })
       if (renamePlan.renames.length > 0) {
         logger.info(`Renamed ${renamePlan.renames.length} already-imported items`, stats.itemRenamesBySource)
+      }
+      if (stats.itemRenames.length > 0) {
+        logger.info("Item renames", { itemRenames: stats.itemRenames })
       }
 
       if (matches.length > 0) {

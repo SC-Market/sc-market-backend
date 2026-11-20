@@ -6617,11 +6617,26 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ImportItemRename": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "oldName": {"dataType":"string","required":true},
+            "newName": {"dataType":"string","required":true},
+            "match": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["p4k_id"]},{"dataType":"enum","enums":["exact"]},{"dataType":"enum","enums":["cstone_uuid"]},{"dataType":"enum","enums":["fuzzy"]},{"dataType":"enum","enums":["normalized"]}],"required":true},
+            "oldSource": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["cig"]},{"dataType":"enum","enums":["override"]},{"dataType":"enum","enums":["derived"]},{"dataType":"enum","enums":["key_derived"]},{"dataType":"enum","enums":["placeholder"]}]},
+            "newSource": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["cig"]},{"dataType":"enum","enums":["override"]},{"dataType":"enum","enums":["derived"]},{"dataType":"enum","enums":["key_derived"]},{"dataType":"enum","enums":["placeholder"]}],"required":true},
+            "p4kId": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ImportGameDataResponse": {
         "dataType": "refObject",
         "properties": {
             "success": {"dataType":"boolean","required":true},
             "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"shopItemsRemoved":{"dataType":"double","required":true},"shopsRemoved":{"dataType":"double","required":true},"shopItemsLinked":{"dataType":"double","required":true},"shopItemsImported":{"dataType":"double","required":true},"shopsImported":{"dataType":"double","required":true},"shipsFailed":{"dataType":"double","required":true},"shipsImported":{"dataType":"double","required":true},"shipsInserted":{"dataType":"double","required":true},"shipsProcessed":{"dataType":"double","required":true},"blueprintsUpdated":{"dataType":"double","required":true},"blueprintsInserted":{"dataType":"double","required":true},"blueprintsProcessed":{"dataType":"double","required":true},"missionsUpdated":{"dataType":"double","required":true},"missionsInserted":{"dataType":"double","required":true},"missionsProcessed":{"dataType":"double","required":true},"fullSetsCreated":{"dataType":"double","required":true},"itemNameConflicts":{"dataType":"double","required":true},"itemRenamesBySource":{"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"double"},"required":true},"nameChanges":{"dataType":"double","required":true},"updated":{"dataType":"double","required":true},"inserted":{"dataType":"double","required":true},"matchedFuzzy":{"dataType":"double","required":true},"matchedCStoneUUID":{"dataType":"double","required":true},"matchedExact":{"dataType":"double","required":true},"matched":{"dataType":"double","required":true},"existingDBItems":{"dataType":"double","required":true},"validP4KItems":{"dataType":"double","required":true},"totalP4KItems":{"dataType":"double","required":true}},"required":true},
+            "itemRenames": {"dataType":"array","array":{"dataType":"refObject","ref":"ImportItemRename"},"required":true},
             "errors": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "timestamp": {"dataType":"string","required":true},
         },

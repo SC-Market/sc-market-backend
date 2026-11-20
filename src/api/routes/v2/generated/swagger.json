@@ -20033,6 +20033,67 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ImportItemRename": {
+				"description": "One game item renamed by an import",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "game_items.id"
+					},
+					"oldName": {
+						"type": "string"
+					},
+					"newName": {
+						"type": "string"
+					},
+					"match": {
+						"type": "string",
+						"enum": [
+							"p4k_id",
+							"exact",
+							"cstone_uuid",
+							"fuzzy",
+							"normalized"
+						],
+						"description": "How the row was matched to the export item"
+					},
+					"oldSource": {
+						"type": "string",
+						"enum": [
+							"cig",
+							"override",
+							"derived",
+							"key_derived",
+							"placeholder"
+						],
+						"description": "Source of the old name (rows matched by p4k_id)"
+					},
+					"newSource": {
+						"type": "string",
+						"enum": [
+							"cig",
+							"override",
+							"derived",
+							"key_derived",
+							"placeholder"
+						]
+					},
+					"p4kId": {
+						"type": "string",
+						"description": "Export item id (p4k_id)"
+					}
+				},
+				"required": [
+					"id",
+					"oldName",
+					"newName",
+					"match",
+					"newSource",
+					"p4kId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ImportGameDataResponse": {
 				"description": "Import summary returned by game data import endpoint",
 				"properties": {
@@ -20200,6 +20261,13 @@
 						],
 						"type": "object"
 					},
+					"itemRenames": {
+						"items": {
+							"$ref": "#/components/schemas/ImportItemRename"
+						},
+						"type": "array",
+						"description": "Every item rename the import made (old → new name), for review"
+					},
 					"errors": {
 						"items": {
 							"type": "string"
@@ -20214,6 +20282,7 @@
 				"required": [
 					"success",
 					"summary",
+					"itemRenames",
 					"errors",
 					"timestamp"
 				],

@@ -46,6 +46,7 @@ const emptyImportStats: ImportStats = {
   updated: 0,
   nameChanges: 0,
   itemRenamesBySource: {},
+  itemRenames: [],
   itemNameConflicts: 0,
   fullSetsCreated: 0,
   missionsProcessed: 0,
@@ -190,6 +191,17 @@ describe("AdminController", () => {
         matched: 1,
         matchedExact: 1,
         updated: 1,
+        itemRenames: [
+          {
+            id: "row-1",
+            oldName: "Ksar Lmg Energy 01",
+            newName: "Verdict LMG",
+            match: "p4k_id",
+            oldSource: "key_derived",
+            newSource: "derived",
+            p4kId: "p4k-1",
+          },
+        ],
       }
       vi.mocked(gameDataImportService.importGameData).mockResolvedValue(mockStats)
 
@@ -203,7 +215,10 @@ describe("AdminController", () => {
           matched: 1,
           updated: 1,
         },
+        // per-item renames sit beside the summary, not in it
+        itemRenames: mockStats.itemRenames,
       })
+      expect(result.summary).not.toHaveProperty("itemRenames")
     })
 
     it("should handle ZIP extraction errors", async () => {

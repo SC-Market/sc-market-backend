@@ -52,9 +52,26 @@ export interface ImportGameDataResponse {
     /** Shop inventory rows no longer in the game data, deleted */
     shopItemsRemoved: number
   }
+  /** Every item rename the import made (old → new name), for review */
+  itemRenames: ImportItemRename[]
   /** Warnings from the import steps (skipped records, steps not run) */
   errors: string[]
   timestamp: string
+}
+
+/** One game item renamed by an import */
+export interface ImportItemRename {
+  /** game_items.id */
+  id: string
+  oldName: string
+  newName: string
+  /** How the row was matched to the export item */
+  match: "p4k_id" | "exact" | "cstone_uuid" | "fuzzy" | "normalized"
+  /** Source of the old name (rows matched by p4k_id) */
+  oldSource?: "cig" | "override" | "derived" | "key_derived" | "placeholder"
+  newSource: "cig" | "override" | "derived" | "key_derived" | "placeholder"
+  /** Export item id (p4k_id) */
+  p4kId: string
 }
 
 /**

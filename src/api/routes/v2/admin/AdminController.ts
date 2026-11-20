@@ -228,11 +228,12 @@ export class AdminController extends BaseController {
       job.status = "completed"
       job.completedAt = new Date().toISOString()
       job.progress = null
-      const { errors, ...summary } = stats
+      const { errors, itemRenames, ...summary } = stats
       if (ignoredShopsFile) errors.push(SHOP_IMPORT_DISABLED_NOTE)
       job.result = {
         success: true,
         summary,
+        itemRenames,
         errors,
         timestamp: job.completedAt,
       }

@@ -12,6 +12,8 @@ import {
   keyDerivedName,
   planDerivedNames,
   planItemRenames,
+  renameSteps,
+  RENAME_TEMP_PREFIX,
   type ImportedItemName,
   type ItemRename,
 } from "./item-names.js"
@@ -173,8 +175,7 @@ describe("planItemRenames", () => {
     ])
   })
 
-  it("does not take a name another row is only renaming away from this import", () => {
-    // b gives up "Old B" this import; a may take it on the next one.
+  it("takes a name another row gives up in the same import (chain)", () => {
     const plan = planItemRenames(
       [
         item({ dbId: "a", stored: "Old A", exported: "Old B", nameKey: null }),
@@ -182,8 +183,87 @@ describe("planItemRenames", () => {
       ],
       taken(["Old A", "a"], ["Old B", "b"]),
     )
-    expect(plan.renames.map((r) => r.dbId)).toEqual(["b"])
+    expect(plan.renames.map((r) => r.dbId)).toEqual(["a", "b"])
+    expect(plan.conflicts).toEqual([])
+  })
+
+  it("swaps two items holding each other's names", () => {
+    // Stoneskin Helmet Desert/Tactical: CIG swapped the two names
+    const plan = planItemRenames(
+      [
+        item({ dbId: "d", stored: "Stoneskin Helmet Desert", exported: "Stoneskin Helmet Tactical", nameKey: null }),
+        item({ dbId: "t", stored: "Stoneskin Helmet Tactical", exported: "Stoneskin Helmet Desert", nameKey: null }),
+      ],
+      taken(["Stoneskin Helmet Desert", "d"], ["Stoneskin Helmet Tactical", "t"]),
+    )
+    expect(brief(plan.renames)).toEqual([
+      { dbId: "d", oldName: "Stoneskin Helmet Desert", newName: "Stoneskin Helmet Tactical" },
+      { dbId: "t", oldName: "Stoneskin Helmet Tactical", newName: "Stoneskin Helmet Desert" },
+    ])
+    expect(plan.conflicts).toEqual([])
+  })
+
+  it("resolves a three-item cycle", () => {
+    const plan = planItemRenames(
+      [
+        item({ dbId: "a", stored: "A", exported: "B", nameKey: null }),
+        item({ dbId: "b", stored: "B", exported: "C", nameKey: null }),
+        item({ dbId: "c", stored: "C", exported: "A", nameKey: null }),
+      ],
+      taken(["A", "a"], ["B", "b"], ["C", "c"]),
+    )
+    expect(plan.renames.map((r) => r.dbId)).toEqual(["a", "b", "c"])
+    expect(plan.conflicts).toEqual([])
+  })
+
+  it("keeps a chain blocked when its last link is blocked by a row the import keeps", () => {
+    // c can't take "Legacy" (a stale row holds it), so b can't take "C" and
+    // a can't take "B": all three are conflicts, retried next import.
+    const plan = planItemRenames(
+      [
+        item({ dbId: "a", stored: "A", exported: "B", nameKey: null }),
+        item({ dbId: "b", stored: "B", exported: "C", nameKey: null }),
+        item({ dbId: "c", stored: "C", exported: "Legacy", nameKey: null }),
+      ],
+      taken(["A", "a"], ["B", "b"], ["C", "c"], ["Legacy", "stale"]),
+    )
+    expect(plan.renames).toEqual([])
+    expect(plan.conflicts.map((r) => r.dbId)).toEqual(["a", "b", "c"])
+  })
+
+  it("does not take a name a row keeps because its rename is not allowed", () => {
+    // b keeps its CIG name (a key-derived one never replaces it)
+    const plan = planItemRenames(
+      [
+        item({ dbId: "a", stored: "Old A", exported: "Verdict LMG Ember", nameKey: null }),
+        item({ dbId: "b", stored: "Verdict LMG Ember", exported: KEY_NAME }),
+      ],
+      taken(["Old A", "a"], ["Verdict LMG Ember", "b"]),
+    )
+    expect(plan.renames).toEqual([])
     expect(plan.conflicts.map((r) => r.dbId)).toEqual(["a"])
+  })
+
+  it("gives a name two rows want to the row already holding it, else the first", () => {
+    const fix = planItemRenames(
+      [
+        item({ dbId: "a", stored: "Old A", exported: "P4-AR Rifle", nameKey: null }),
+        item({ dbId: "b", stored: "p4-ar rifle", exported: "P4-AR Rifle", nameKey: null }),
+      ],
+      taken(["Old A", "a"], ["p4-ar rifle", "b"]),
+    )
+    expect(fix.renames.map((r) => r.dbId)).toEqual(["b"])
+    expect(fix.conflicts.map((r) => r.dbId)).toEqual(["a"])
+
+    const first = planItemRenames(
+      [
+        item({ dbId: "a", stored: "Old A", exported: "New", nameKey: null }),
+        item({ dbId: "b", stored: "Old B", exported: "New", nameKey: null }),
+      ],
+      taken(["Old A", "a"], ["Old B", "b"]),
+    )
+    expect(first.renames.map((r) => r.dbId)).toEqual(["a"])
+    expect(first.conflicts.map((r) => r.dbId)).toEqual(["b"])
   })
 
   it("truncates to the column length, like the insert", () => {
@@ -468,5 +548,62 @@ describe("countRenamesBySource", () => {
     expect(
       countRenamesBySource([r("key_derived", "derived"), r("key_derived", "derived"), r("key_derived", "cig")]),
     ).toEqual({ "key_derived->derived": 2, "key_derived->cig": 1 })
+  })
+})
+
+describe("renameSteps", () => {
+  const rename = (dbId: string, oldName: string, newName: string): ItemRename => ({
+    dbId,
+    oldName,
+    newName,
+    oldSource: "cig",
+    newSource: "cig",
+  })
+
+  /** Apply steps to a name table, failing on a unique violation like the index. */
+  function apply(names: Map<string, string>, steps: { dbId: string; name: string }[]) {
+    for (const { dbId, name } of steps) {
+      for (const [id, held] of names) {
+        if (id !== dbId && held === name) throw new Error(`unique violation: ${name}`)
+      }
+      names.set(dbId, name)
+    }
+    return names
+  }
+
+  it("renames directly when no row takes another's old name", () => {
+    expect(renameSteps([rename("a", "A", "X")])).toEqual([{ dbId: "a", name: "X" }])
+  })
+
+  it("parks the rows of a swap on temporary names first", () => {
+    const renames = [rename("d", "Desert", "Tactical"), rename("t", "Tactical", "Desert")]
+    const steps = renameSteps(renames)
+    expect(steps.slice(0, 2)).toEqual([
+      { dbId: "d", name: `${RENAME_TEMP_PREFIX}d` },
+      { dbId: "t", name: `${RENAME_TEMP_PREFIX}t` },
+    ])
+    const names = apply(new Map([["d", "Desert"], ["t", "Tactical"]]), steps)
+    expect(Object.fromEntries(names)).toEqual({ d: "Tactical", t: "Desert" })
+  })
+
+  it("orders chains and cycles so no step hits the unique index", () => {
+    const renames = [
+      rename("a", "A", "B"),
+      rename("b", "B", "C"),
+      rename("c", "C", "A"),
+      rename("x", "X", "Y"),
+      rename("y", "Y", "Z"),
+    ]
+    const names = apply(
+      new Map([["a", "A"], ["b", "B"], ["c", "C"], ["x", "X"], ["y", "Y"]]),
+      renameSteps(renames),
+    )
+    expect(Object.fromEntries(names)).toEqual({ a: "B", b: "C", c: "A", x: "Y", y: "Z" })
+  })
+
+  it("does not park a row only fixing its own name's case", () => {
+    expect(renameSteps([rename("b", "p4-ar rifle", "P4-AR Rifle")])).toEqual([
+      { dbId: "b", name: "P4-AR Rifle" },
+    ])
   })
 })

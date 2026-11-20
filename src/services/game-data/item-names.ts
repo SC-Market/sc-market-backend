@@ -361,10 +361,16 @@ export interface ItemRenamePlan {
  *   one; a derived name replaces a key-derived one but never a CIG or curated
  *   one. No row is renamed to a placeholder. A row without a recorded source
  *   is judged by its name (inferNameSource).
- * - game_items.name is unique, so a name another row already has (compared
+ * - game_items.name is unique, so a name another row keeps (compared
  *   case-insensitively, as the import matches names) is not taken; the rename
  *   is reported as a conflict and retried by the next import. Names are never
  *   numbered to make them unique.
+ * - A name another row gives up in the same import is free: chains (a takes
+ *   b's old name, b takes a new one) and cycles (two items swapping names)
+ *   are all renamed. renameSteps orders the updates so the unique index holds
+ *   between them; they run in one transaction.
+ * - When two rows would take one name, the row already holding it (a case
+ *   fix) wins, else the first; the others are conflicts.
  * - A row whose name stays gets its source recorded when it differs.
  *
  * @param taken Every stored game_items name with its row id
@@ -373,11 +379,12 @@ export function planItemRenames(
   items: readonly ImportedItemName[],
   taken: ReadonlyMap<string, string>,
 ): ItemRenamePlan {
+  const lower = (name: string) => name.toLowerCase().trim()
   const holderByName = new Map<string, string>()
-  for (const [name, id] of taken) holderByName.set(name.toLowerCase().trim(), id)
+  for (const [name, id] of taken) holderByName.set(lower(name), id)
 
-  const renames: ItemRename[] = []
-  const conflicts: ItemRename[] = []
+  /** Renames the ranking allows, in item order, before uniqueness. */
+  const wanted: { rename: ItemRename; recordSource: ItemNameSource | null }[] = []
   const sourceChanges: ItemNameSourceChange[] = []
   for (const item of items) {
     const oldSource =
@@ -397,25 +404,82 @@ export function planItemRenames(
       }
       continue
     }
-    const rename = {
-      dbId: item.dbId,
-      oldName: item.stored,
-      newName,
-      oldSource,
-      newSource: item.exportedSource,
+    wanted.push({
+      rename: {
+        dbId: item.dbId,
+        oldName: item.stored,
+        newName,
+        oldSource,
+        newSource: item.exportedSource,
+      },
+      recordSource: item.storedSource === null ? oldSource : null,
+    })
+  }
+
+  // One row per name: the row already holding it, else the first.
+  const claimant = new Map<string, string>()
+  for (const { rename } of wanted) {
+    const name = lower(rename.newName)
+    const current = claimant.get(name)
+    if (current === undefined || holderByName.get(name) === rename.dbId) {
+      claimant.set(name, rename.dbId)
     }
-    const holder = holderByName.get(newName.toLowerCase().trim())
-    if (holder !== undefined && holder !== item.dbId) {
-      conflicts.push(rename)
-      if (item.storedSource === null) {
-        sourceChanges.push({ dbId: item.dbId, source: oldSource })
+  }
+  const accepted = new Set(
+    wanted
+      .filter(({ rename }) => claimant.get(lower(rename.newName)) === rename.dbId)
+      .map(({ rename }) => rename.dbId),
+  )
+  // A name is free when nobody holds it, its holder is the row itself, or
+  // its holder is renamed away. Dropping a rename keeps its row's old name
+  // held, which can block others: repeat until nothing changes.
+  for (let changed = true; changed; ) {
+    changed = false
+    for (const { rename } of wanted) {
+      if (!accepted.has(rename.dbId)) continue
+      const holder = holderByName.get(lower(rename.newName))
+      if (holder !== undefined && holder !== rename.dbId && !accepted.has(holder)) {
+        accepted.delete(rename.dbId)
+        changed = true
       }
-      continue
     }
-    holderByName.set(newName.toLowerCase().trim(), item.dbId)
-    renames.push(rename)
+  }
+
+  const renames: ItemRename[] = []
+  const conflicts: ItemRename[] = []
+  for (const { rename, recordSource } of wanted) {
+    if (accepted.has(rename.dbId)) {
+      renames.push(rename)
+    } else {
+      conflicts.push(rename)
+      if (recordSource) sourceChanges.push({ dbId: rename.dbId, source: recordSource })
+    }
   }
   return { renames, conflicts, sourceChanges }
+}
+
+/** Prefix of the name a row holds for a moment while renames swap names. */
+export const RENAME_TEMP_PREFIX = "~renaming~"
+
+/**
+ * The game_items name updates for a plan's renames, in order, so that no
+ * update hits the unique index: a row whose old name another rename takes
+ * first moves to a temporary name ("~renaming~<id>"); then every row gets
+ * its new name. Run them in one transaction.
+ */
+export function renameSteps(
+  renames: readonly ItemRename[],
+): { dbId: string; name: string }[] {
+  const targets = new Set(renames.map((r) => r.newName.toLowerCase().trim()))
+  const parked = renames.filter(
+    (r) =>
+      targets.has(r.oldName.toLowerCase().trim()) &&
+      r.oldName.toLowerCase().trim() !== r.newName.toLowerCase().trim(),
+  )
+  return [
+    ...parked.map((r) => ({ dbId: r.dbId, name: `${RENAME_TEMP_PREFIX}${r.dbId}` })),
+    ...renames.map((r) => ({ dbId: r.dbId, name: r.newName })),
+  ]
 }
 
 /** "key_derived->derived" → count, for the import summary. */
