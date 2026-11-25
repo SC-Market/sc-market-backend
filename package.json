@@ -104,7 +104,7 @@
     "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "^4.1.12",
     "@vitest/ui": "^4.1.12",
-    "archiver": "^7.0.1",
+    "archiver": "^8.0.0",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.5.1",
@@ -117,7 +117,7 @@
     "tsoa": "^7.0.0-alpha.0",
     "tsx": "^4.7.2",
     "typescript": "^5.2.2",
-    "typescript-eslint": "^8.41.0",
+    "typescript-eslint": "^8.74.0",
     "vitest": "^4.1.12"
   },
   "scripts": {
