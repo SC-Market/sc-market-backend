@@ -93,6 +93,9 @@ oapi.schema("ServiceBody", {
     "title",
     "rush",
     "description",
+    // The kind sets the service's icon and type filter, and becomes the kind
+    // of every order placed from it (OrderBody.kind is required).
+    "kind",
     "collateral",
     "departure",
     "destination",
