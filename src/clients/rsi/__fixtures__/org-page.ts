@@ -106,3 +106,17 @@ export const DEICOMPANY_ORG_PAGE = orgPage({
   manifesto: "",
   charter: "",
 })
+
+/** Org whose name and text carry HTML entities, as RSI serves them: the h1
+ * and title hold "Crash&rsquo;s Candy Shop" (named), the textile body uses
+ * numeric references (&#8217;), and one tab double-encodes (&amp;rsquo;). */
+export const CANDYSHOP_ORG_PAGE = orgPage({
+  sid: "CANDYSHOP",
+  displayName: "Crash&rsquo;s Candy Shop",
+  members: 2,
+  headline:
+    "<p>It&#8217;s Rock &amp; Stone &#39;round here, &quot;quoted&quot;&nbsp;&hellip; &#x1F680;</p>",
+  history: "<p>We wrote &amp;rsquo; by hand once.</p>",
+  manifesto: "<p>Already clean: Crash’s 🍬 shop</p>",
+  charter: "",
+})
