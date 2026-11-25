@@ -28,7 +28,7 @@ import {
  */
 const TARGETS = [
   { table: "contractors", key: "contractor_id" },
-  { table: "shops", key: "id" },
+  { table: "shops", key: "shop_id" },
 ] as const
 
 async function hasUniqueNameIndex(knex: Knex, table: string): Promise<boolean> {
