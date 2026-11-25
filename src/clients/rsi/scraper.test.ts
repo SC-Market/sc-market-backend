@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { fetchRSIOrgDirect } from "./scraper.js"
-import { SHIN_ORG_PAGE, DEICOMPANY_ORG_PAGE } from "./__fixtures__/org-page.js"
+import {
+  SHIN_ORG_PAGE,
+  DEICOMPANY_ORG_PAGE,
+  CANDYSHOP_ORG_PAGE,
+} from "./__fixtures__/org-page.js"
 
 /**
  * These tests used to hit robertsspaceindustries.com for real. That made them
@@ -72,6 +76,20 @@ describe("fetchRSIOrgDirect", () => {
     // Empty tabs must come back as "" — callers concatenate these.
     expect(result!.manifesto).toBe("")
     expect(result!.charter).toBe("")
+  })
+
+  it("decodes the HTML entities in the org's name and text once", async () => {
+    stubFetch(CANDYSHOP_ORG_PAGE, { ok: true, status: 200 })
+
+    const result = await fetchRSIOrgDirect("CANDYSHOP")
+
+    expect(result!.name).toBe("Crash’s Candy Shop")
+    expect(result!.headline).toBe(
+      "It’s Rock & Stone 'round here, \"quoted\"\u00a0… 🚀",
+    )
+    // Single pass: a double-encoded entity stays one level encoded.
+    expect(result!.history).toBe("We wrote &rsquo; by hand once.")
+    expect(result!.manifesto).toBe("Already clean: Crash’s 🍬 shop")
   })
 
   it("uppercases the spectrum id it reports", async () => {
