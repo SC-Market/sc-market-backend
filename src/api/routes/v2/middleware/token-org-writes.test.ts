@@ -57,13 +57,13 @@ describe("DELETE /suppliers/{id} of an org's roster", () => {
   beforeEach(() => {
     tracker.on
       .select(/from "supplier_relationships"/)
-      .response([{ relationship_id: "r1", aggregator_id: null, aggregator_contractor_id: "org-1" }])
+      .response([{ relationship_id: "5e1a0000-0000-4000-8000-000000000001", aggregator_id: null, aggregator_contractor_id: "org-1" }])
     tracker.on.select(/from "contractor_members"/).response([{ contractor_id: "org-1", user_id: "me" }])
     tracker.on.delete(/supplier_relationships/).response(1)
   })
 
   it("refuses a token not granted the org", async () => {
-    await expect(new SuppliersV2Controller().removeSupplier("r1", req("no-org"))).rejects.toMatchObject({
+    await expect(new SuppliersV2Controller().removeSupplier("5e1a0000-0000-4000-8000-000000000001", req("no-org"))).rejects.toMatchObject({
       code: "FORBIDDEN",
       message: "Token does not have access to this contractor",
     })
@@ -72,7 +72,7 @@ describe("DELETE /suppliers/{id} of an org's roster", () => {
 
   it("works for a granted token and for sessions", async () => {
     for (const who of ["org-1", "session"] as const) {
-      expect(await new SuppliersV2Controller().removeSupplier("r1", req(who))).toEqual({ success: true })
+      expect(await new SuppliersV2Controller().removeSupplier("5e1a0000-0000-4000-8000-000000000001", req(who))).toEqual({ success: true })
     }
   })
 })
