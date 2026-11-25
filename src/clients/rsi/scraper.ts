@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio"
 import winston from "winston"
 import logger from "../../logger/logger.js"
+import { rsiHtmlToText } from "./text.js"
 
 const name_selector = "strong.value:nth-child(1)"
 const handle_selector =
@@ -69,8 +70,10 @@ export async function fetchRSIOrgDirect(spectrum_id: string): Promise<RSIOrgData
     const manifesto = doc("#tab-manifesto .markitup-text").text().trim()
     const charter = doc("#tab-charter .markitup-text").text().trim()
 
+    // Cut from the raw markup, so the entities are still encoded here
+    // ("Crash&rsquo;s Candy Shop"); cheerio's .text() above decodes its own.
     const nameMatch = text.match(/<h1>\s*(.*?)\s*\/\s*<span/)
-    const name = nameMatch ? nameMatch[1].replace(/<[^>]*>/g, "").trim() : spectrum_id
+    const name = nameMatch ? rsiHtmlToText(nameMatch[1]) : spectrum_id
 
     const membersMatch = text.match(/<span class="count">(\d+)\s*members?<\/span>/)
     const members = membersMatch ? parseInt(membersMatch[1], 10) : 1
