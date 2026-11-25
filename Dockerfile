@@ -19,6 +19,12 @@ RUN npm run build
 # Create logs directory
 RUN mkdir -p /app/logs
 
+# The commit this image is built from (the deploy workflow passes it). The
+# server reports it to Bugsnag as appVersion, matching the source maps the
+# workflow uploads. Declared last so it doesn't bust the layers above.
+ARG GIT_SHA
+ENV APP_VERSION=${GIT_SHA}
+
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 EXPOSE 80:80
 EXPOSE 443:443

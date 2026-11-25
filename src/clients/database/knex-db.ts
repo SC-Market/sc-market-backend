@@ -44,6 +44,9 @@ function connectionConfig(): KnexClass.PgConnectionConfig {
  */
 function appKnexConfig(): KnexClass.Config {
   return {
+    // A failed query's error carries the stack of the code that built it
+    // (otherwise it only has knex/pg internals). Costs one `new Error()` per
+    // query; knex reads its stack only when the query fails.
     asyncStackTraces: true,
     client: "pg",
     connection: connectionConfig(),
@@ -67,6 +70,7 @@ export function createDedicatedKnex(
   acquireConnectionTimeout?: number,
 ): KnexClass {
   return Knex({
+    asyncStackTraces: true,
     client: "pg",
     connection: connectionConfig(),
     ...(acquireConnectionTimeout ? { acquireConnectionTimeout } : {}),

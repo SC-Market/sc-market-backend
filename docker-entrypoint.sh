@@ -15,4 +15,6 @@ cd /app
 # from booting. See docs/migrations.md.
 npm run migrate:latest
 
-exec node dist/src/server.js
+# --enable-source-maps: stack traces (logs and Bugsnag) point at src/**/*.ts
+# lines through the dist/**/*.js.map files tsc writes next to the output.
+exec node --enable-source-maps dist/src/server.js

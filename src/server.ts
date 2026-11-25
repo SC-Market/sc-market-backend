@@ -5,6 +5,10 @@ const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js")
 import BugsnagPluginExpress from "@bugsnag/plugin-express"
 import { scrubBugsnagEvent } from "./logger/bugsnag-scrub.js"
+import {
+  BUGSNAG_PROJECT_ROOT,
+  normaliseStackFramePaths,
+} from "./logger/bugsnag-stack.js"
 
 const isDevelopment = process.env.NODE_ENV === "development"
 
@@ -14,6 +18,12 @@ const bugsnag = isDevelopment
       apiKey: process.env.BUGSNAG_API_KEY || "",
       plugins: [BugsnagPluginExpress],
       enabledReleaseStages: ["production", "staging"],
+      // Frames under projectRoot and outside node_modules are in-project, so
+      // Bugsnag headlines and groups an error by our code, not knex's.
+      projectRoot: BUGSNAG_PROJECT_ROOT,
+      // The git SHA, baked into the image at build (Dockerfile GIT_SHA). The
+      // deploy workflow uploads the source maps under the same version.
+      appVersion: process.env.APP_VERSION || undefined,
       // Error reports are anonymous (the privacy policy says so, and the
       // cookie banner calls them "anonymous error reports"): no log
       // breadcrumbs, because log lines can carry user ids.
@@ -24,6 +34,8 @@ const bugsnag = isDevelopment
         clearMetadata: (section: string) => void
         addMetadata: (section: string, values: Record<string, unknown>) => void
       }) => {
+        // ESM frames are file:// URLs; make them paths first (bugsnag-stack.ts).
+        normaliseStackFramePaths(event)
         // plugin-express copies the client IP, headers (user agent,
         // CF-Connecting-IP, X-Forwarded-For), query, body and referer into
         // every event. Keep the method and the path only.
