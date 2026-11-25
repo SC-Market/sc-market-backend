@@ -1,4 +1,9 @@
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createNotFoundErrorResponse,
+  createResponse,
+} from "../util/response.js"
+import { NotFoundError } from "../util/errors.js"
 import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { RequestHandler } from "express"
@@ -1146,6 +1151,12 @@ export const search_listings: RequestHandler = async (req, res) => {
   try {
     query = await convertQuery(req.query)
   } catch (e) {
+    if (e instanceof NotFoundError) {
+      res
+        .status(404)
+        .json(createNotFoundErrorResponse(e.resource, e.identifier))
+      return
+    }
     res.status(400).json(createErrorResponse({ message: "Invalid query" }))
     return
   }
@@ -1212,27 +1223,38 @@ export const search_listings: RequestHandler = async (req, res) => {
 
 export const get_active_listings_by_user: RequestHandler = async (req, res) => {
   const username = req.params["username"]
-  const user = await profileDb.getUser({ username: username })
-  if (!user) {
-    res.status(400).json({ error: "Invalid user" })
-    return
+  try {
+    const user = await profileDb.findUser({ username }, { noBalance: true })
+    if (!user) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
+      return
+    }
+
+    const listings = await marketDb.getMarketUniqueListingsComplete({
+      status: "active",
+      user_seller_id: user.user_id,
+    })
+    const multiples = await marketDb.getMarketMultipleListingsComplete({
+      "market_multiples.user_seller_id": user.user_id,
+      status: "active",
+    })
+
+    res.json(
+      await Promise.all(
+        [...listings, ...multiples].map((l) => formatListingComplete(l, false)),
+      ),
+    )
+  } catch (e) {
+    logger.error("Error fetching active listings by user", { error: e })
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
-
-  const listings = await marketDb.getMarketUniqueListingsComplete({
-    status: "active",
-    user_seller_id: user.user_id,
-  })
-  const multiples = await marketDb.getMarketMultipleListingsComplete({
-    "market_multiples.user_seller_id": user.user_id,
-    status: "active",
-  })
-
-  res.json(
-    await Promise.all(
-      [...listings, ...multiples].map((l) => formatListingComplete(l, false)),
-    ),
-  )
-  return
 }
 
 export const get_active_listings_by_org: RequestHandler = async (req, res) => {

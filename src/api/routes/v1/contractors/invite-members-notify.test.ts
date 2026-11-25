@@ -34,7 +34,7 @@ vi.mock("./database.js", async (importOriginal) => {
 
 vi.mock("../profiles/database.js", async (importOriginal) => {
   const original = await importOriginal<typeof import("../profiles/database.js")>()
-  return { ...original, getUser: vi.fn() }
+  return { ...original, findUser: vi.fn() }
 })
 
 vi.mock("../../../../services/notifications/notification.service.js", () => ({
@@ -70,7 +70,7 @@ function invite(usernames: string[]) {
 describe("POST /contractors/:spectrum_id/members (direct invites)", () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(profileDb.getUser as Mock).mockImplementation(
+    ;(profileDb.findUser as Mock).mockImplementation(
       async ({ username }: { username: string }) => ({
         user_id: `id-${username}`,
         username,
@@ -110,6 +110,34 @@ describe("POST /contractors/:spectrum_id/members (direct invites)", () => {
     await post_spectrum_id_members(invite([]), res, vi.fn())
 
     expect(res.status).toHaveBeenCalledWith(400)
+    expect(contractorDb.insertContractorInvites).not.toHaveBeenCalled()
+  })
+
+  it("answers 404 NOT_FOUND for an unknown username and invites nobody", async () => {
+    ;(profileDb.findUser as Mock).mockImplementation(
+      async ({ username }: { username: string }) =>
+        username === "ghost" ? null : { user_id: `id-${username}`, username },
+    )
+    const res = mockRes()
+    await post_spectrum_id_members(invite(["alice", "ghost"]), res, vi.fn())
+
+    expect(res.status).toHaveBeenCalledWith(404)
+    expect((res.json as Mock).mock.calls[0][0].error).toMatchObject({
+      code: "NOT_FOUND",
+      details: { resource: "User", identifier: "ghost" },
+    })
+    expect(contractorDb.insertContractorInvites).not.toHaveBeenCalled()
+  })
+
+  it("keeps 400 for a user who is already a member", async () => {
+    ;(contractorDb.getContractorRoleLegacy as Mock).mockResolvedValue("member")
+    const res = mockRes()
+    await post_spectrum_id_members(invite(["alice"]), res, vi.fn())
+
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect((res.json as Mock).mock.calls[0][0].error.code).toBe(
+      "VALIDATION_ERROR",
+    )
     expect(contractorDb.insertContractorInvites).not.toHaveBeenCalled()
   })
 })

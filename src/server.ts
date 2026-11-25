@@ -87,6 +87,7 @@ import { apiV2Router } from "./api/routes/v2/api-router.js"
 import * as profileDb from "./api/routes/v1/profiles/database.js"
 import { userAuthorized } from "./api/middleware/auth.js"
 import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
+import { NotFoundError } from "./api/routes/v1/util/errors.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
 import { bodyParsers } from "./api/middleware/body-parsers.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
@@ -350,7 +351,7 @@ passport.deserializeUser(async (id: string, done) => {
     const error = e as Error
     // If user doesn't exist, gracefully invalidate the session
     // This prevents unnecessary error logging for legitimate session cleanup
-    if (error.message === "Invalid user!") {
+    if (error instanceof NotFoundError) {
       logger.warn(
         `[Auth] User ${id} not found during deserialization - invalidating session`,
       )

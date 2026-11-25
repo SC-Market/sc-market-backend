@@ -582,11 +582,12 @@ export const profile_get_user_username_reviews: RequestHandler = async (
   res,
 ) => {
   const username = req.params["username"]
-  let user
-  try {
-    user = await profileDb.getUser({ username: username }, { noBalance: true })
-  } catch (e) {
-    res.status(400).json({ error: "Invalid user" })
+  const user = await profileDb.findUser(
+    { username: username },
+    { noBalance: true },
+  )
+  if (!user) {
+    res.status(404).json(createNotFoundErrorResponse("User", username))
     return
   }
 
@@ -1058,9 +1059,9 @@ export const profile_post_blocklist_block: RequestHandler = async (
     }
 
     // Get the user to block
-    const userToBlock = await profileDb.getUser({ username })
+    const userToBlock = await profileDb.findUser({ username })
     if (!userToBlock) {
-      res.status(404).json(createErrorResponse({ message: "User not found" }))
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
@@ -1106,9 +1107,9 @@ export const profile_delete_blocklist_unblock_username: RequestHandler = async (
     const { username } = req.params
 
     // Get the user to unblock
-    const userToUnblock = await profileDb.getUser({ username })
+    const userToUnblock = await profileDb.findUser({ username })
     if (!userToUnblock) {
-      res.status(404).json(createErrorResponse({ message: "User not found" }))
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 

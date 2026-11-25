@@ -3,7 +3,10 @@ import { NextFunction, Request, Response } from "express"
 import * as contractorDb from "../contractors/database.js"
 import * as marketDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
-import { createErrorResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
 import logger from "../../../../logger/logger.js"
 import { has_permission } from "../util/permissions.js"
 import { User } from "../api-models.js"
@@ -174,10 +177,10 @@ export async function valid_market_listing_by_user(
 
   try {
     // Get user by username
-    const user = await profileDb.getUser({ username })
+    const user = await profileDb.findUser({ username })
 
     if (!user) {
-      res.status(404).json(createErrorResponse({ message: "User not found" }))
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 

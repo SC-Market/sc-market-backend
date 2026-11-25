@@ -28,6 +28,7 @@ import { has_permission, is_member } from "../util/permissions.js"
 import {
   createErrorResponse,
   createForbiddenErrorResponse,
+  createNotFoundErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
@@ -992,13 +993,9 @@ export async function handleAssignedUpdate(req: any, res: any) {
   }
 
   if (targetUser) {
-    let targetUserObj
-    try {
-      targetUserObj = await profileDb.getUser({ username: targetUser })
-    } catch {
-      res
-        .status(400)
-        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+    const targetUserObj = await profileDb.findUser({ username: targetUser })
+    if (!targetUserObj) {
+      res.status(404).json(createNotFoundErrorResponse("User", targetUser))
       return
     }
 

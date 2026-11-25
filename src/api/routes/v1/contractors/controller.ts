@@ -629,7 +629,11 @@ export const get_spectrum_id_members_username: RequestHandler = async (
 
   try {
     // Get user by username
-    const user = await profileDb.getUser({ username })
+    const user = await profileDb.findUser({ username })
+    if (!user) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
+      return
+    }
 
     // Check if user is a member using the contractor_member_roles table
     const memberRoles = await database
@@ -1097,11 +1101,9 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
     const { username, role_id } = req.params
 
     // Do checks first
-    let target
-    try {
-      target = await profileDb.getUser({ username })
-    } catch (e) {
-      res.status(404).json(createErrorResponse({ message: "Invalid user" }))
+    const target = await profileDb.findUser({ username })
+    if (!target) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
@@ -1201,11 +1203,9 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
     const { username, role_id } = req.params
 
     // Do checks first
-    let target
-    try {
-      target = await profileDb.getUser({ username })
-    } catch (e) {
-      res.status(400).json(createErrorResponse({ message: "Invalid user" }))
+    const target = await profileDb.findUser({ username })
+    if (!target) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
@@ -1338,11 +1338,9 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   }
 
   // Get the target user
-  let target
-  try {
-    target = await profileDb.getUser({ username })
-  } catch (e) {
-    res.status(404).json(createErrorResponse({ message: "User not found" }))
+  const target = await profileDb.findUser({ username })
+  if (!target) {
+    res.status(404).json(createNotFoundErrorResponse("User", username))
     return
   }
 
@@ -1472,11 +1470,9 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
     const { username } = req.params
 
     // Do checks first
-    let target
-    try {
-      target = await profileDb.getUser({ username })
-    } catch (e) {
-      res.status(400).json(createErrorResponse({ message: "Invalid user" }))
+    const target = await profileDb.findUser({ username })
+    if (!target) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
@@ -2125,12 +2121,12 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
   // Do checks first
   const users = []
   for (const username of new Set(usernames)) {
-    try {
-      users.push(await profileDb.getUser({ username }))
-    } catch {
-      res.status(400).json(createErrorResponse({ message: "Invalid user!" }))
+    const found = await profileDb.findUser({ username })
+    if (!found) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
+    users.push(found)
   }
 
   // Test orgs invite only test accounts, real orgs only real accounts.
@@ -2149,7 +2145,12 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
       contractor.contractor_id,
     )
     if (role) {
-      res.status(400).json(createErrorResponse({ message: "Invalid user!" }))
+      res.status(400).json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          `${target.username} is already a member of this organization`,
+        ),
+      )
       return
     }
   }
@@ -2451,10 +2452,8 @@ export const post_admin_express_verify: RequestHandler = async (
       owner_discord_id: string
     }
 
-    let user
-    try {
-      user = await profileDb.getUser({ username: owner_username })
-    } catch (e) {
+    let user = await profileDb.findUser({ username: owner_username })
+    if (!user) {
       user = await profileDb.insertUserRaw({
         discord_id: owner_discord_id,
         username: `user_${owner_discord_id}`,
@@ -2668,9 +2667,9 @@ export const post_spectrum_id_blocklist_block: RequestHandler = async (
     }
 
     // Get the user to block
-    const userToBlock = await profileDb.getUser({ username })
+    const userToBlock = await profileDb.findUser({ username })
     if (!userToBlock) {
-      res.status(404).json(createErrorResponse({ message: "User not found" }))
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
@@ -2720,9 +2719,9 @@ export const delete_spectrum_id_blocklist_unblock_username: RequestHandler =
       const { username } = req.params
 
       // Get the user to unblock
-      const userToUnblock = await profileDb.getUser({ username })
+      const userToUnblock = await profileDb.findUser({ username })
       if (!userToUnblock) {
-        res.status(404).json(createErrorResponse({ message: "User not found" }))
+        res.status(404).json(createNotFoundErrorResponse("User", username))
         return
       }
 

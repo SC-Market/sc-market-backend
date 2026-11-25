@@ -27,7 +27,7 @@ vi.mock("./database.js", async (importOriginal) => ({
 }))
 vi.mock("../profiles/database.js", async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
-  getUser: vi.fn(async ({ username }: { username: string }) => ({
+  findUser: vi.fn(async ({ username }: { username: string }) => ({
     user_id: username,
   })),
 }))

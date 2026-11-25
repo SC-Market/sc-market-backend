@@ -169,12 +169,11 @@ export const transaction_post_create: RequestHandler = async (
 
   let target_user: User | null | undefined
   if (user_recipient_id) {
-    try {
-      target_user = await profileDb.getUser({ username: user_recipient_id })
-    } catch {
+    target_user = await profileDb.findUser({ username: user_recipient_id })
+    if (!target_user) {
       res
-        .status(400)
-        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+        .status(404)
+        .json(createNotFoundErrorResponse("User", user_recipient_id))
       return
     }
   }
@@ -386,12 +385,11 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
 
     let target_user: User | null | undefined
     if (user_recipient_id) {
-      try {
-        target_user = await profileDb.getUser({ username: user_recipient_id })
-      } catch {
+      target_user = await profileDb.findUser({ username: user_recipient_id })
+      if (!target_user) {
         res
-          .status(400)
-          .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+          .status(404)
+          .json(createNotFoundErrorResponse("User", user_recipient_id))
         return
       }
     }

@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express"
-import { createErrorResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
 import { User } from "../api-models.js"
 import * as profileDb from "./database.js"
 
@@ -35,13 +38,9 @@ export function validate_optional_username_body(path: string) {
       return
     }
 
-    let user
-    try {
-      user = await profileDb.getUser({ username })
-    } catch {
-      res
-        .status(404)
-        .json(createErrorResponse({ error: "User not found", username }))
+    const user = await profileDb.findUser({ username })
+    if (!user) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 
@@ -63,13 +62,9 @@ export function validate_username(path: string) {
       return
     }
 
-    let user
-    try {
-      user = await profileDb.getUser({ username })
-    } catch {
-      res
-        .status(404)
-        .json(createErrorResponse({ error: "User not found", username }))
+    const user = await profileDb.findUser({ username })
+    if (!user) {
+      res.status(404).json(createNotFoundErrorResponse("User", username))
       return
     }
 

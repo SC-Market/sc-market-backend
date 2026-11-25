@@ -274,6 +274,7 @@ export const post_root_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "404": Response404,
     "429": Response429CommonWrite,
   },
   security: [],

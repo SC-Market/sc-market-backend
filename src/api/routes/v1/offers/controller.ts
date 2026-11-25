@@ -15,6 +15,7 @@ import {
   createErrorResponse,
   createResponse,
   createConflictErrorResponse,
+  createNotFoundErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import {
@@ -154,9 +155,9 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       }
     }
     if (req.body.assigned_to) {
-      const targetUser = await profileDb.getUser({ username: req.body.assigned_to })
+      const targetUser = await profileDb.findUser({ username: req.body.assigned_to })
       if (!targetUser) {
-        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+        res.status(404).json(createNotFoundErrorResponse("User", req.body.assigned_to))
         return
       }
       if (!(await is_member(session.contractor_id, targetUser.user_id))) {

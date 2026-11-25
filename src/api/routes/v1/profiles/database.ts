@@ -19,6 +19,7 @@ import {
   AvailabilitySpan,
 } from "../../../../clients/database/db-models.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
+import { NotFoundError } from "../util/errors.js"
 import { getUserRating } from "../util/formatting.js"
 
 /**
@@ -566,7 +567,10 @@ export async function getUserIntegrations(
 
 /**
  * Get user by where clause.
- * @throws Error if user not found
+ *
+ * For lookups by a client-supplied username/id use `findUser` and answer 404
+ * on null: in v1 (Express 4) an async throw never reaches the error handler.
+ * @throws NotFoundError if user not found (the error handler maps it to 404)
  */
 export async function getUser(
   where: any,
@@ -578,7 +582,7 @@ export async function getUser(
   const user = await db<DBUser>("accounts").where(where).first()
 
   if (!user) {
-    throw new Error("Invalid user!")
+    throw new NotFoundError("User")
   }
 
   return {
@@ -644,12 +648,13 @@ export async function findUser(
 
 /**
  * Get login user (without sensitive fields).
+ * @throws NotFoundError if user not found
  */
 export async function getLogin(where: any): Promise<User> {
   const user = await knex()<DBUser>("accounts").where(where).first()
 
   if (!user) {
-    throw new Error("Invalid user!")
+    throw new NotFoundError("User")
   }
 
   return {
@@ -668,6 +673,7 @@ export async function getLogin(where: any): Promise<User> {
 
 /**
  * Get minimal user information.
+ * @throws NotFoundError if user not found
  */
 export async function getMinimalUser(
   where: any,
@@ -678,7 +684,7 @@ export async function getMinimalUser(
   const user = await knex()<DBUser>("accounts").where(where).first("accounts.*")
 
   if (!user) {
-    throw new Error("Invalid user!")
+    throw new NotFoundError("User")
   }
 
   return {

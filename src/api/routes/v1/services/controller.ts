@@ -15,6 +15,7 @@ import { createServicePhotos as createServicePhotos } from "./helpers.js"
 import {
   createErrorResponse,
   createForbiddenErrorResponse,
+  createNotFoundErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import { createResponse as createResponse } from "../util/response.js"
@@ -137,16 +138,12 @@ export const services_get_user_username: RequestHandler = async (
   const user = req.user as User
   const username = req.params["username"]
 
-  let target
-  try {
-    target = await profileDb.getUser(
-      { username: username },
-      { noBalance: true },
-    )
-  } catch {
-    res
-      .status(400)
-      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+  const target = await profileDb.findUser(
+    { username: username },
+    { noBalance: true },
+  )
+  if (!target) {
+    res.status(404).json(createNotFoundErrorResponse("User", username))
     return
   }
 

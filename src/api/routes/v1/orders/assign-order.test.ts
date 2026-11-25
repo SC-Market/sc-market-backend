@@ -31,7 +31,7 @@ vi.mock("../contractors/database.js", () => ({
   getContractorRoleLegacy: vi.fn(),
 }))
 vi.mock("../profiles/database.js", () => ({
-  getUser: vi.fn(async ({ username }: { username: string }) => ({
+  findUser: vi.fn(async ({ username }: { username: string }) => ({
     user_id: `${username}-id`,
     username,
   })),

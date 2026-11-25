@@ -1,6 +1,7 @@
 import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
+import { Response404 as Response404 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import {
   Response500 as Response500,
@@ -110,6 +111,7 @@ export const transaction_post_create_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "404": Response404,
     "500": Response500,
     "429": Response429Write,
   },
@@ -176,6 +178,7 @@ export const transaction_post_contractor_spectrum_id_create_spec =
       "400": Response400,
       "401": Response401,
       "403": Response403,
+      "404": Response404,
       "500": Response500,
       "429": Response429Write,
     },

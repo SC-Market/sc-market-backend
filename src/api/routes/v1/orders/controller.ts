@@ -287,13 +287,9 @@ export const post_root: RequestHandler = async (req, res, next) => {
 
   let assigned_user
   if (assigned_to) {
-    assigned_user = await profileDb.getUser({ username: assigned_to })
+    assigned_user = await profileDb.findUser({ username: assigned_to })
     if (!assigned_user) {
-      res
-        .status(400)
-        .json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee"),
-        )
+      res.status(404).json(createNotFoundErrorResponse("User", assigned_to))
       return
     }
 

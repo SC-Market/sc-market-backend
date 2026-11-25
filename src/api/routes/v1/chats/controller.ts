@@ -158,17 +158,17 @@ export async function createChat(
   }
   const selfUser = req.user as User
 
-  const otherUsers = await Promise.all(
-    body.users.map((username) => profileDb.getUser({ username })),
+  const found = await Promise.all(
+    body.users.map((username) => profileDb.findUser({ username })),
   )
 
   // TODO: Process blocked users and user access settings
-  if (!otherUsers.every(Boolean)) {
-    res
-      .status(400)
-      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+  const missing = body.users.find((_, i) => !found[i])
+  if (missing !== undefined) {
+    res.status(404).json(createNotFoundErrorResponse("User", missing))
     return
   }
+  const otherUsers = found as User[]
 
   // Disallow creating chats if you have blocked any of them or they have blocked you
   const [blockedBy, myBlocklist] = await Promise.all([

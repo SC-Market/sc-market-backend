@@ -5,6 +5,7 @@ import {
   createForbiddenErrorResponse,
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
+import { NotFoundError } from "../util/errors.js"
 import { User } from "../api-models.js"
 import {
   DBAggregateListingComplete,
@@ -253,7 +254,11 @@ export async function convertQuery(
   let contractor_seller_id = undefined
 
   if (query.user_seller) {
-    const user = await profileDb.getUser({ username: query.user_seller })
+    const user = await profileDb.findUser(
+      { username: query.user_seller },
+      { noBalance: true },
+    )
+    if (!user) throw new NotFoundError("User", query.user_seller)
     user_seller_id = user.user_id
   }
 

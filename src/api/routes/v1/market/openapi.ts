@@ -2179,6 +2179,7 @@ export const market_get_listings_spec = oapi.validPath({
       },
     },
     "400": Response400,
+    "404": Response404,
     "429": Response429Read,
     "500": Response500,
   },
@@ -2212,22 +2213,8 @@ export const market_get_user_username_spec = oapi.validPath({
         },
       },
     },
-    "400": {
-      description: "Invalid username provided",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: {
-                type: "string",
-              },
-            },
-            required: ["error"],
-          },
-        },
-      },
-    },
+    "404": Response404,
+    "500": Response500,
   },
 })
 

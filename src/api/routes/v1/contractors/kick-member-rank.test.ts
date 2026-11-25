@@ -36,7 +36,7 @@ vi.mock("./database.js", async (importOriginal) => {
 
 vi.mock("../profiles/database.js", async (importOriginal) => {
   const original = await importOriginal<typeof import("../profiles/database.js")>()
-  return { ...original, getUser: vi.fn() }
+  return { ...original, findUser: vi.fn() }
 })
 
 vi.mock("../../../../services/audit-log/audit-log.service.js", () => ({
@@ -79,7 +79,7 @@ async function kick(actor: string, target: string) {
 describe("kick a member", () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(profileDb.getUser as Mock).mockImplementation(
+    ;(profileDb.findUser as Mock).mockImplementation(
       async ({ username }: { username: string }) => ({ user_id: username, username }),
     )
     ;(is_member as Mock).mockResolvedValue(true)

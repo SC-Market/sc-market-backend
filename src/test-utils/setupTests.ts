@@ -242,25 +242,27 @@ vi.mock("../clients/database/knex-db.js", () => {
 })
 
 // Mock profile database functions
-vi.mock("../api/routes/v1/profiles/database.js", () => {
+vi.mock("../api/routes/v1/profiles/database.js", async () => {
+  // Same typed error as the real getter (message "User not found").
+  const { NotFoundError } = await import("../api/routes/v1/util/errors.js")
   return {
     getUser: vi.fn(async (query: { user_id?: string; username?: string }) => {
       const accounts = getMockTableData("accounts")
       if (query.user_id) {
         const user = accounts.find((u) => u.user_id === query.user_id)
         if (!user) {
-          throw new Error("User not found")
+          throw new NotFoundError("User")
         }
         return user
       }
       if (query.username) {
         const user = accounts.find((u) => u.username === query.username)
         if (!user) {
-          throw new Error("User not found")
+          throw new NotFoundError("User")
         }
         return user
       }
-      throw new Error("User not found")
+      throw new NotFoundError("User")
     }),
     incrementUserBalance: vi.fn(async (userId: string, amount: number) => {
       const accounts = getMockTableData("accounts")

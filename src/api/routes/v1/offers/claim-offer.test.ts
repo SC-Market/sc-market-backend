@@ -20,7 +20,7 @@ vi.mock("../util/permissions.js", () => ({
   has_permission: vi.fn(),
   is_member: vi.fn(),
 }))
-vi.mock("../profiles/database.js", () => ({ getUser: vi.fn() }))
+vi.mock("../profiles/database.js", () => ({ findUser: vi.fn() }))
 vi.mock("../../../../clients/database/knex-db.js", () => ({ database: {} }))
 vi.mock("../../../../clients/cdn/cdn.js", () => ({ cdn: {} }))
 
@@ -33,7 +33,7 @@ import { has_permission, is_member } from "../util/permissions.js"
 const getOfferSessions = offerDb.getOfferSessions as unknown as Mock
 const getMostRecentOrderOffer = offerDb.getMostRecentOrderOffer as unknown as Mock
 const updateOfferSession = offerDb.updateOfferSession as unknown as Mock
-const getUser = profileDb.getUser as unknown as Mock
+const findUser = profileDb.findUser as unknown as Mock
 const hasPermission = has_permission as unknown as Mock
 const isMember = is_member as unknown as Mock
 
@@ -88,7 +88,7 @@ describe("claiming an org offer on the site", () => {
     getOfferSessions.mockResolvedValue([{ ...ORG_OFFER }])
     // The customer acted last, so it's the seller's turn to respond.
     getMostRecentOrderOffer.mockResolvedValue({ id: "offer-1", actor_id: "customer" })
-    getUser.mockImplementation(async ({ username }: { username: string }) => ({
+    findUser.mockImplementation(async ({ username }: { username: string }) => ({
       user_id: `${username}-id`,
       username,
     }))
