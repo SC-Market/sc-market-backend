@@ -42,7 +42,7 @@
     "graphql-request": "^7.2.0",
     "handlebars": "^4.7.10",
     "helmet": "^8.1.0",
-    "i18next": "^25.3.2",
+    "i18next": "^26.3.4",
     "i18next-http-middleware": "^3.9.7",
     "jsonschema": "^1.5.0",
     "jsonwebtoken": "^9.0.3",
