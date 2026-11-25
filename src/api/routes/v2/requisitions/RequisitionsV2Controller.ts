@@ -330,6 +330,7 @@ export class RequisitionsV2Controller extends BaseController {
     @Path() orderId: string,
     @Request() request: ExpressRequest,
   ): Promise<RequisitionDetail> {
+    this.requireUuid(orderId, "Requisition")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -438,6 +439,7 @@ export class RequisitionsV2Controller extends BaseController {
     @Path() offerId: string,
     @Request() request: ExpressRequest,
   ): Promise<{ items: OfferRequisitionItem[] }> {
+    this.requireUuid(offerId, "Offer")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

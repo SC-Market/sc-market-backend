@@ -220,6 +220,7 @@ export class InventoryV2Controller extends BaseController {
     @Body() requestBody: LinkToListingRequest,
     @Request() request: ExpressRequest,
   ): Promise<{ lot: InventoryLotDetail }> {
+    this.requireUuid(lotId, "Inventory lot")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -261,6 +262,7 @@ export class InventoryV2Controller extends BaseController {
     @Path() lotId: string,
     @Request() request: ExpressRequest,
   ): Promise<{ lot: InventoryLotDetail }> {
+    this.requireUuid(lotId, "Inventory lot")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -291,6 +293,7 @@ export class InventoryV2Controller extends BaseController {
     @Path() lotId: string,
     @Request() request: ExpressRequest,
   ): Promise<void> {
+    this.requireUuid(lotId, "Inventory lot")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

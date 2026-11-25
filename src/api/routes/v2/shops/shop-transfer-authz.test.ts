@@ -57,7 +57,7 @@ const { getShopById } =
   await import("../../../../services/shops/shop-permissions.service.js")
 
 const orgShop = {
-  shop_id: "s1",
+  shop_id: "5a1e0000-0000-4000-8000-000000000001",
   slug: "org-shop",
   owner_user_id: null,
   owner_contractor_id: "org1",
@@ -81,7 +81,7 @@ describe("transferShop", () => {
     ;(isContractorOwner as Mock).mockResolvedValue(false)
 
     await expect(
-      new ShopsV2Controller().transferShop(asUser("member"), "s1", {
+      new ShopsV2Controller().transferShop(asUser("member"), "5a1e0000-0000-4000-8000-000000000001", {
         target_type: "user",
         target_id: "member",
       }),
@@ -97,7 +97,7 @@ describe("transferShop", () => {
       owner_contractor_id: null,
     })
     await expect(
-      new ShopsV2Controller().transferShop(asUser("mallory"), "s1", {
+      new ShopsV2Controller().transferShop(asUser("mallory"), "5a1e0000-0000-4000-8000-000000000001", {
         target_type: "user",
         target_id: "mallory",
       }),

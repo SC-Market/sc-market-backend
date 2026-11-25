@@ -20,6 +20,7 @@ import { isSiteAdmin } from "../../../util/site-role.js"
 import { adminLockError } from "../../../util/site-admin-policy.js"
 import { assertStepUp, stepUpError } from "../../../util/step-up.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { isUuid } from "../util/short-slug.js"
 import {
   assertTokenMayUseOrg,
   tokenAllowsOrg,
@@ -182,6 +183,15 @@ export abstract class BaseController extends Controller {
    */
   protected throwNotFound(resource: string, identifier?: string): never {
     throw new NotFoundError(resource, identifier)
+  }
+
+  /**
+   * Guard a client-supplied id that is bound to a uuid column: a malformed id
+   * cannot name an existing row, so answer 404 NOT_FOUND without querying
+   * (Postgres would otherwise reject the cast with 22P02).
+   */
+  protected requireUuid(value: unknown, resource: string): void {
+    if (!isUuid(value)) this.throwNotFound(resource)
   }
 
   /**

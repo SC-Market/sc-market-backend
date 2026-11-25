@@ -112,7 +112,15 @@ import {
   put_spectrum_id_spec,
 } from "./openapi.js"
 
+import { requireUuidParams, requireUuidQuery } from "../util/uuid-params.js"
+
 export const contractorsRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(contractorsRouter, {
+  invite_id: "Invite",
+  role_id: "Role",
+  webhook_id: "Webhook",
+})
 
 contractorsRouter.post(
   "/auth/link",
@@ -195,6 +203,7 @@ contractorsRouter.get(
   requireContractorsRead,
   get_spectrum_id_audit_logs_spec,
   readRateLimit,
+  requireUuidQuery("actor_id"),
   valid_contractor,
   requireContractorAccessFromSpectrumId(),
   get_spectrum_id_audit_logs,

@@ -81,8 +81,16 @@ import {
   market_get_item_name_spec,
   market_get_seller_analytics_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const marketRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(marketRouter, {
+  listing_id: "Market listing",
+  game_item_id: "Game item",
+  multiple_id: "Market multiple",
+  buy_order_id: "Buy order",
+})
 
 // Test accounts use the v2 market only: nothing they do may land in the v1
 // tables, whose search and aggregates are not test-aware

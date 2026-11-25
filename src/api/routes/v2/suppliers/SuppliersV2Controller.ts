@@ -185,6 +185,7 @@ export class SuppliersV2Controller extends BaseController {
     @Body() body: UpdateSupplierRequest,
     @Request() request: ExpressRequest,
   ): Promise<UpdateSupplierResponse> {
+    this.requireUuid(relationshipId, "Supplier relationship")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -219,6 +220,7 @@ export class SuppliersV2Controller extends BaseController {
     @Path() relationshipId: string,
     @Request() request: ExpressRequest,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(relationshipId, "Supplier relationship")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

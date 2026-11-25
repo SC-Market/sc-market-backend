@@ -670,6 +670,7 @@ export class BuyOrdersV2Controller extends BaseController {
     @Path() id: string,
     @Body() body: UpdateStandingBuyOrderRequest,
   ): Promise<StandingBuyOrder> {
+    this.requireUuid(id, "Buy order")
     this.request = request
     this.requireAuth()
     const db = getKnex();
@@ -720,6 +721,7 @@ export class BuyOrdersV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Path() id: string,
   ): Promise<{ message: string }> {
+    this.requireUuid(id, "Buy order")
     this.request = request
     this.requireAuth()
     const db = getKnex();

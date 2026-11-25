@@ -294,6 +294,7 @@ export class WishlistsController extends BaseController {
     @Query() share_token?: string,
     @Request() request?: ExpressRequest,
   ): Promise<GetWishlistResponse> {
+    this.requireUuid(wishlist_id, "Wishlist")
     if (request) this.request = request
     const knex = getKnex()
 
@@ -437,6 +438,7 @@ export class WishlistsController extends BaseController {
     @Body() body: UpdateWishlistRequest,
     @Request() request: ExpressRequest,
   ): Promise<Wishlist> {
+    this.requireUuid(wishlist_id, "Wishlist")
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -541,6 +543,7 @@ export class WishlistsController extends BaseController {
     @Path() wishlist_id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(wishlist_id, "Wishlist")
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -606,6 +609,7 @@ export class WishlistsController extends BaseController {
     @Body() body: AddWishlistItemRequest,
     @Request() request: ExpressRequest,
   ): Promise<WishlistItemWithDetails> {
+    this.requireUuid(wishlist_id, "Wishlist")
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -748,6 +752,8 @@ export class WishlistsController extends BaseController {
     @Path() item_id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(wishlist_id, "Wishlist")
+    this.requireUuid(item_id, "Wishlist item")
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -834,6 +840,8 @@ export class WishlistsController extends BaseController {
     @Body() body: UpdateWishlistItemRequest,
     @Request() request: ExpressRequest,
   ): Promise<WishlistItemWithDetails> {
+    this.requireUuid(wishlist_id, "Wishlist")
+    this.requireUuid(item_id, "Wishlist item")
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -1006,6 +1014,7 @@ export class WishlistsController extends BaseController {
     @Path() wishlist_id: string,
     @Request() request: ExpressRequest,
   ): Promise<ShoppingListResponse> {
+    this.requireUuid(wishlist_id, "Wishlist")
     this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()

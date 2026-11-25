@@ -11,6 +11,7 @@ import logger from "../../../../logger/logger.js"
 import { has_permission } from "../util/permissions.js"
 import { User } from "../api-models.js"
 import { isSiteAdmin } from "../../../util/site-role.js"
+import { isUuid } from "../util/uuid-params.js"
 
 
 export async function valid_market_listing(
@@ -24,6 +25,16 @@ export async function valid_market_listing(
     res
       .status(400)
       .json(createErrorResponse({ message: "Missing listing_id parameter" }))
+    return
+  }
+
+  // listing_id is a uuid column: a malformed id (scanners send the OpenAPI
+  // template "{listing_id}" literally) names no listing, and binding it would
+  // make Postgres reject the cast (22P02).
+  if (!isUuid(listing_id)) {
+    res
+      .status(404)
+      .json(createErrorResponse({ message: "Market listing not found" }))
     return
   }
 
@@ -88,6 +99,16 @@ export async function can_manage_market_listing(
     res
       .status(400)
       .json(createErrorResponse({ message: "Missing listing_id parameter" }))
+    return
+  }
+
+  // listing_id is a uuid column: a malformed id (scanners send the OpenAPI
+  // template "{listing_id}" literally) names no listing, and binding it would
+  // make Postgres reject the cast (22P02).
+  if (!isUuid(listing_id)) {
+    res
+      .status(404)
+      .json(createErrorResponse({ message: "Market listing not found" }))
     return
   }
 

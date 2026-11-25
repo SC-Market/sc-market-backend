@@ -26,11 +26,11 @@ vi.mock("../../../../clients/database/knex-db.js", () => {
       select: () => b,
       then(resolve: (v: unknown) => void, reject: (e: unknown) => void) {
         // SUM of active allocations per lot
-        const rows = table === "order_stock_allocations_v2" && h.openAllocation ? [{ lot_id: "lot-1", allocated: 2 }] : []
+        const rows = table === "order_stock_allocations_v2" && h.openAllocation ? [{ lot_id: "10700000-0000-4000-8000-000000000001", allocated: 2 }] : []
         return Promise.resolve(rows).then(resolve, reject)
       },
       first: async () => {
-        if (table.startsWith("listing_item_lots")) return { lot_id: "lot-1", shop_id: "shop-1" }
+        if (table.startsWith("listing_item_lots")) return { lot_id: "10700000-0000-4000-8000-000000000001", shop_id: "shop-1" }
         return undefined
       },
       delete: async () => {
@@ -60,7 +60,7 @@ describe("DELETE /stock-lots/{id}", () => {
   })
 
   it("deletes a lot with no open allocations", async () => {
-    await expect(new StockLotsV2Controller().deleteStockLot("lot-1", req)).resolves.toEqual({
+    await expect(new StockLotsV2Controller().deleteStockLot("10700000-0000-4000-8000-000000000001", req)).resolves.toEqual({
       message: "Stock lot deleted",
     })
     expect(h.deleted).toEqual(["listing_item_lots"])
@@ -68,7 +68,7 @@ describe("DELETE /stock-lots/{id}", () => {
 
   it("refuses to delete a lot allocated to an open order", async () => {
     h.openAllocation = true
-    await expect(new StockLotsV2Controller().deleteStockLot("lot-1", req)).rejects.toBeInstanceOf(
+    await expect(new StockLotsV2Controller().deleteStockLot("10700000-0000-4000-8000-000000000001", req)).rejects.toBeInstanceOf(
       ValidationError,
     )
     expect(h.deleted).toEqual([])

@@ -924,6 +924,9 @@ export class MissionsController extends BaseController {
       if (!row) this.throwNotFound("Mission", mission_id)
       mission_id = row.mission_id
     }
+    // The prefix test above lets "xxxxxxxx-xxxx-<junk>" through; it must be a
+    // full UUID before it reaches the uuid column.
+    if (mission_id) this.requireUuid(mission_id, "Mission")
 
     if (!mission_id) {
       this.throwValidationError("mission_id is required", [
@@ -1275,6 +1278,7 @@ export class MissionsController extends BaseController {
   public async getMissionBlueprints(
     @Path() mission_id: string,
   ): Promise<BlueprintDetail[]> {
+    this.requireUuid(mission_id, "Mission")
     const knex = getKnex()
 
     if (!mission_id) {
@@ -1402,6 +1406,7 @@ export class MissionsController extends BaseController {
       completion_notes?: string
     },
   ): Promise<{ success: boolean; completion_id: string }> {
+    this.requireUuid(mission_id, "Mission")
     const knex = getKnex()
 
     if (!mission_id) {
@@ -1539,6 +1544,7 @@ export class MissionsController extends BaseController {
       rating_comment?: string
     },
   ): Promise<{ success: boolean; rating_id: string }> {
+    this.requireUuid(mission_id, "Mission")
     const knex = getKnex()
 
     if (!mission_id) {

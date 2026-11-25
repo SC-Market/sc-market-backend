@@ -20,8 +20,13 @@ import {
   post_comment_id_upvote_spec,
   post_comment_id_downvote_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const commentRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(commentRouter, {
+  comment_id: "Comment",
+})
 
 // TODO: Use verifiedUser everywhere
 

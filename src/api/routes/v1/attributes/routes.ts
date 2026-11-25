@@ -16,8 +16,14 @@ import {
   attributes_post_import_game_item,
   attributes_get_values_search,
 } from "./controller.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const attributesRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(attributesRouter, {
+  id: "Game item",
+  gameItemId: "Game item",
+})
 
 // GET /api/v1/attributes/definitions - Get all attribute definitions
 attributesRouter.get("/definitions", readRateLimit, attributes_get_definitions)

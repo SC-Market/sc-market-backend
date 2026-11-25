@@ -1588,6 +1588,7 @@ export class ListingsV2Controller extends BaseController {
     @Body() requestBody: UpdateListingRequest,
     @Request() request: ExpressRequest,
   ): Promise<GetListingDetailResponse> {
+    this.requireUuid(id, "Listing")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -2062,6 +2063,7 @@ export class ListingsV2Controller extends BaseController {
     @Path() id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ message: string; next_refresh_at: string }> {
+    this.requireUuid(id, "Listing")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -2170,6 +2172,7 @@ export class ListingsV2Controller extends BaseController {
     @Path() id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ message: string }> {
+    this.requireUuid(id, "Listing")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -2241,6 +2244,7 @@ export class ListingsV2Controller extends BaseController {
     @Path() id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ photos: Array<{ resource_id: string; url: string }> }> {
+    this.requireUuid(id, "Listing")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

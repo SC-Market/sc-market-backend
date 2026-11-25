@@ -25,8 +25,13 @@ import {
   notification_delete_root_spec,
   notification_get_page_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const notificationRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(notificationRouter, {
+  notification_id: "Notification",
+})
 
 /*
  * RESTful Notifications API

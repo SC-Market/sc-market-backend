@@ -46,8 +46,14 @@ import {
   get_order_id_spec,
   post_order_id_thread_spec,
 } from "./openapi.js"
+import { requireUuidParams, requireUuidQuery } from "../util/uuid-params.js"
 
 export const ordersRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(ordersRouter, {
+  order_id: "Order",
+  review_id: "Review",
+})
 
 // Mount order settings routes
 ordersRouter.use("/", orderSettingsRouter)
@@ -70,6 +76,7 @@ ordersRouter.get(
   requireOrdersRead,
   readRateLimit,
   get_search_spec,
+  requireUuidQuery("shop_id"),
   validate_optional_username("customer"),
   validate_optional_username("assigned"),
   validate_optional_spectrum_id("contractor"),
@@ -82,6 +89,7 @@ ordersRouter.get(
   requireOrdersRead,
   readRateLimit,
   get_contractor_spectrum_id_metrics_spec,
+  requireUuidQuery("shop_id"),
   get_order_metrics,
 )
 
@@ -91,6 +99,7 @@ ordersRouter.get(
   requireOrdersRead,
   readRateLimit,
   get_contractor_spectrum_id_data_spec,
+  requireUuidQuery("shop_id"),
   org_authorized,
   get_contractor_order_data,
 )
