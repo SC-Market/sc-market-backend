@@ -68,7 +68,7 @@ const { verifyDiscordThreadTarget } =
   await import("../../../../services/discord/verify-discord-target.js")
 
 const orgShop = {
-  shop_id: "s1",
+  shop_id: "5a1e0000-0000-4000-8000-000000000001",
   slug: "org-shop",
   owner_user_id: null,
   owner_contractor_id: "org1",
@@ -100,7 +100,7 @@ describe("updateShop Discord target", () => {
     )
 
     await expect(
-      new ShopsV2Controller().updateShop(asUser("member"), "s1", {
+      new ShopsV2Controller().updateShop(asUser("member"), "5a1e0000-0000-4000-8000-000000000001", {
         official_server_id: "222222222222222222",
         discord_thread_channel_id: "333333333333333333",
       }),
@@ -121,7 +121,7 @@ describe("updateShop Discord target", () => {
     ;(discordService.fetchGuildMember as Mock).mockResolvedValue({ roles: [] })
 
     await expect(
-      new ShopsV2Controller().updateShop(asUser("member"), "s1", {
+      new ShopsV2Controller().updateShop(asUser("member"), "5a1e0000-0000-4000-8000-000000000001", {
         official_server_id: "222222222222222222",
         discord_thread_channel_id: "333333333333333333",
       }),

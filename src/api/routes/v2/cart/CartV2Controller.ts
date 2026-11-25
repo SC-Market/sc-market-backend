@@ -517,6 +517,7 @@ export class CartV2Controller extends BaseController {
     @Body() requestBody: UpdateCartItemRequest,
     @Request() request: ExpressRequest,
   ): Promise<{ message: string }> {
+    this.requireUuid(id, "Cart item")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -706,6 +707,7 @@ export class CartV2Controller extends BaseController {
     @Path() id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ message: string }> {
+    this.requireUuid(id, "Cart item")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

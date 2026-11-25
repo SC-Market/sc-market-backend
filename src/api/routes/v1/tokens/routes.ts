@@ -17,8 +17,13 @@ import {
   tokens_get_tokenId_stats_spec,
   tokens_get_scopes_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const tokensRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(tokensRouter, {
+  tokenId: "Token",
+})
 
 // Token management endpoints require session/JWT auth only (no token self-management)
 const sessionOnly: express.RequestHandler = (req, res, next) => {

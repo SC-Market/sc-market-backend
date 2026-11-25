@@ -35,8 +35,13 @@ import {
   services_post_service_id_view_spec,
   services_get_seller_analytics_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const servicesRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(servicesRouter, {
+  service_id: "Service",
+})
 
 servicesRouter.post(
   "",

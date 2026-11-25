@@ -1,9 +1,13 @@
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const SHORT_SLUG_REGEX = /^([0-9a-f]{8})--.+$/i
 
-/** True if `value` is a canonical UUID string (safe to bind to a uuid column). */
-export function isUuid(value: string): boolean {
-  return UUID_REGEX.test(value)
+/**
+ * True if `value` is a canonical UUID string (safe to bind to a uuid column).
+ * Accepts `unknown` so query/body values (arrays, numbers, undefined) can be
+ * checked directly: anything that is not a UUID string is false.
+ */
+export function isUuid(value: unknown): boolean {
+  return typeof value === "string" && UUID_REGEX.test(value)
 }
 
 export function formatShortSlug(id: string, name: string): string {

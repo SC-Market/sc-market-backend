@@ -71,7 +71,7 @@ function seed(shop: "user" | "org") {
     ],
     orders: [
       {
-        order_id: "o1",
+        order_id: "0d0e0000-0000-4000-8000-000000000001",
         customer_id: "buyer",
         assigned_id: "assignee",
         shop_id: "shop-1",
@@ -86,7 +86,7 @@ function seed(shop: "user" | "org") {
 async function canOpen(userId: string, role = "user"): Promise<string> {
   const req = { user: { user_id: userId, role } } as unknown as ExpressRequest
   try {
-    await new OrdersV2Controller(req).getOrderDetail("o1", req)
+    await new OrdersV2Controller(req).getOrderDetail("0d0e0000-0000-4000-8000-000000000001", req)
     return "ok"
   } catch (e) {
     return (e as Error).message

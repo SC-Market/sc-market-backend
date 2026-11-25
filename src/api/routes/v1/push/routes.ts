@@ -18,8 +18,13 @@ import {
   push_get_preferences_spec,
   push_update_preference_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const pushRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(pushRouter, {
+  subscription_id: "Push subscription",
+})
 
 /*
  * Push Notification API

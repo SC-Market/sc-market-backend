@@ -104,6 +104,7 @@ export class OrdersV2Controller extends BaseController {
     @Path() orderId: string,
     @Request() request: ExpressRequest,
   ): Promise<GetOrderDetailResponse> {
+    this.requireUuid(orderId, "Order")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -512,6 +513,7 @@ export class OrdersV2Controller extends BaseController {
     @Path() listingId: string,
     @Request() request?: ExpressRequest,
   ): Promise<OrdersByListingResponse> {
+    this.requireUuid(listingId, "Listing")
     // TSOA builds controllers without the request: set it, or getUserId()
     // finds no user and every call is a 401.
     if (request) this.request = request

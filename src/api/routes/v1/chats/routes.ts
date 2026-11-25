@@ -30,8 +30,15 @@ import {
   get_chat_id_spec,
   get_root_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const chatsRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(chatsRouter, {
+  order_id: "Order",
+  session_id: "Offer",
+  chat_id: "Chat",
+})
 
 // Get a chat by order ID
 chatsRouter.get(

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { parseShortSlug, buildUuidRangeQuery } from "../../v2/util/short-slug.js"
+import { parseShortSlug, buildUuidRangeQuery, isUuid } from "../../v2/util/short-slug.js"
 import logger from "../../../../logger/logger.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
@@ -147,6 +147,14 @@ export const game_shops_for_item: RequestHandler = async function (req, res, nex
   try {
     const { itemId } = req.params
     const { prefix, isFullUuid } = parseShortSlug(itemId)
+    // parseShortSlug passes non-slug junk through as "full UUID"; it would
+    // fail the uuid cast below, and it can name no item.
+    if (isFullUuid && !isUuid(prefix)) {
+      res.status(404).json(
+        createErrorResponse(ErrorCode.NOT_FOUND, "Item not found"),
+      )
+      return
+    }
 
     // Resolve the game item (supports full UUID and short-slug format)
     let gameItem

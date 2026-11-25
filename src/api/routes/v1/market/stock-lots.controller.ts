@@ -7,6 +7,7 @@ import { tokenMayUseOrg } from "../../../middleware/auth.js"
 
 import { RequestHandler } from "express"
 import { createErrorResponse, createResponse } from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { StockLotService } from "../../../../services/stock-lot/stock-lot.service.js"
 import { LocationService } from "../../../../services/location/location.service.js"
@@ -16,6 +17,7 @@ import {
   CharacterLimitError,
 } from "../../../../services/stock-lot/errors.js"
 import logger from "../../../../logger/logger.js"
+import { isUuid } from "../util/uuid-params.js"
 import * as marketDb from "./database.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { formatUniqueListingComplete } from "../util/formatting.js"
@@ -56,6 +58,21 @@ export const getListingLots: RequestHandler = async (req, res) => {
   try {
     const { listing_id } = req.params
     const { location_id, owner_id, listed } = req.query
+    // Both filter uuid columns; a malformed value would fail the cast (22P02).
+    if (
+      (location_id && !isUuid(location_id)) ||
+      (owner_id && !isUuid(owner_id))
+    ) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "location_id and owner_id must be UUIDs",
+          ),
+        )
+      return
+    }
     const db = getKnex()
 
     // Try V1 stock_lots first

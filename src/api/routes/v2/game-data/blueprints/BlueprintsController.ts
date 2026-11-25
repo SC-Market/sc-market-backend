@@ -895,6 +895,9 @@ export class BlueprintsController extends BaseController {
       if (!row) this.throwNotFound("Blueprint", blueprint_id)
       blueprint_id = row.blueprint_id
     }
+    // The prefix test above lets "xxxxxxxx-xxxx-<junk>" through; it must be a
+    // full UUID before it reaches the uuid column.
+    if (blueprint_id) this.requireUuid(blueprint_id, "Blueprint")
 
     if (!blueprint_id) {
       this.throwValidationError("Invalid blueprint_id", [
@@ -1204,6 +1207,7 @@ export class BlueprintsController extends BaseController {
     @Path() blueprint_id: string,
     @Query() version_id?: string,
   ): Promise<MissionRewardingBlueprint[]> {
+    this.requireUuid(blueprint_id, "Blueprint")
     const knex = getKnex()
 
     if (!blueprint_id) {
@@ -1302,6 +1306,7 @@ export class BlueprintsController extends BaseController {
     },
     @Request() request: ExpressRequest,
   ): Promise<{ success: boolean; inventory_id: string }> {
+    this.requireUuid(blueprint_id, "Blueprint")
     this.request = request
     this.requireAuth()
     const knex = getKnex()
@@ -1417,6 +1422,7 @@ export class BlueprintsController extends BaseController {
     @Path() blueprint_id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(blueprint_id, "Blueprint")
     this.request = request
     this.requireAuth()
     const knex = getKnex()
@@ -1517,6 +1523,7 @@ export class BlueprintsController extends BaseController {
       if (!row) throw this.throwNotFound("Blueprint", blueprint_id)
       resolvedId = row.blueprint_id
     }
+    this.requireUuid(resolvedId, "Blueprint")
 
     const rows = await knex("user_blueprint_inventory as ubi")
       .join("contractor_members as cm", "ubi.user_id", "cm.user_id")

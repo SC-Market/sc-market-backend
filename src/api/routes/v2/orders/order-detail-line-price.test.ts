@@ -48,7 +48,7 @@ function seed(lines: Array<{ variant_id: string; price_per_unit: string }>) {
     ],
     orders: [
       {
-        order_id: "o1",
+        order_id: "0d0e0000-0000-4000-8000-000000000001",
         customer_id: "buyer",
         assigned_id: "owner",
         shop_id: "shop-1",
@@ -75,7 +75,7 @@ function seed(lines: Array<{ variant_id: string; price_per_unit: string }>) {
     ],
     order_market_items_v2: lines.map((l, i) => ({
       order_item_id: `oi${i}`,
-      order_id: "o1",
+      order_id: "0d0e0000-0000-4000-8000-000000000001",
       listing_id: "L1",
       item_id: "I1",
       quantity: 2,
@@ -101,7 +101,7 @@ async function listingPrice(): Promise<number> {
   const req = {
     user: { user_id: "buyer", role: "user" },
   } as unknown as ExpressRequest
-  const detail = await new OrdersV2Controller(req).getOrderDetail("o1", req)
+  const detail = await new OrdersV2Controller(req).getOrderDetail("0d0e0000-0000-4000-8000-000000000001", req)
   expect(detail.market_listings_v2).toHaveLength(1)
   return detail.market_listings_v2[0].price
 }

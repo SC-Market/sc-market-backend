@@ -33,8 +33,13 @@ import {
   get_posts_spec,
   post_posts_spec,
 } from "./openapi.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const recruitingRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(recruitingRouter, {
+  post_id: "Recruiting post",
+})
 
 recruitingRouter.get("/posts", get_posts_spec, readRateLimit, get_posts)
 

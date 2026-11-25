@@ -43,6 +43,7 @@ import {
 import { isKnownSiteRole } from "../util/site-role.js"
 import { issueLoginCookies } from "../util/login-session.js"
 import { testLoginHandler } from "../../services/test-accounts/test-login.js"
+import { isUuid } from "./v2/util/short-slug.js"
 
 /**
  * Errors surfaced through the passport `authenticate` callbacks. The verify
@@ -821,6 +822,10 @@ export function setupAuthRoutes(app: Application, frontendUrl: URL): void {
   app.delete("/auth/sessions/:tokenId", authSessionsLimit, async (req: Request, res: Response) => {
     const userId = req.user?.user_id
     if (!userId) return res.status(401).json({ error: "Unauthenticated" })
+    // refresh_tokens.token_id is a uuid: a malformed id names no session.
+    if (!isUuid(req.params.tokenId)) {
+      return res.status(404).json({ error: "Session not found" })
+    }
     const revoked = await revokeSessionById(userId, req.params.tokenId)
     if (!revoked) return res.status(404).json({ error: "Session not found" })
     return res.json({ success: true })

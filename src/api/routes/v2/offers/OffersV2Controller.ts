@@ -139,6 +139,7 @@ export class OffersV2Controller extends BaseController {
     @Path() sessionId: string,
     @Request() request: ExpressRequest,
   ): Promise<GetOfferSessionV2Response> {
+    this.requireUuid(sessionId, "Offer session")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

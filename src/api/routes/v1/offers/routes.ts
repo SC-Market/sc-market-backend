@@ -35,9 +35,18 @@ import {
   get_search_spec,
   post_merge_spec,
 } from "./openapi.js"
+import { requireUuidParams, requireUuidQuery } from "../util/uuid-params.js"
 
 export const offersRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(offersRouter, {
+  session_id: "Offer",
+})
 export const offerRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(offerRouter, {
+  session_id: "Offer",
+})
 
 offerRouter.get(
   "/:session_id",
@@ -78,6 +87,7 @@ offersRouter.get(
   requireOffersRead,
   get_search_spec,
   readRateLimit,
+  requireUuidQuery("shop_id"),
   validate_optional_username("customer"),
   validate_optional_username("assigned"),
   validate_optional_spectrum_id("contractor"),

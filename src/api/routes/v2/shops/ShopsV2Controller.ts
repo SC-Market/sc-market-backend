@@ -804,6 +804,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Body() body: UpdateShopRequest,
   ): Promise<ShopResponse> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -898,6 +899,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Path() shopId: string,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -924,6 +926,7 @@ export class ShopsV2Controller extends BaseController {
     @Query() page?: number,
     @Query() page_size?: number,
   ): Promise<{ reviews: ShopReviewResponse[]; total: number; page: number; page_size: number }> {
+    this.requireUuid(shopId, "Shop")
     const db = getKnex()
     const { page: validatedPage, page_size: validatedPageSize } = clampPagination(page, page_size, { defaultPageSize: 20, maxPageSize: 50 })
     const offset = (validatedPage - 1) * validatedPageSize
@@ -981,6 +984,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Path() shopId: string,
   ): Promise<ShopWebhookResponse[]> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
 
@@ -1013,6 +1017,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Body() body: CreateShopWebhookRequest,
   ): Promise<ShopWebhookResponse> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
 
@@ -1063,6 +1068,8 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Path() webhookId: string,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(shopId, "Shop")
+    this.requireUuid(webhookId, "Webhook")
     this.request = request
     const userId = this.getUserId()
 
@@ -1105,6 +1112,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Body() body: TransferShopRequest,
   ): Promise<ShopResponse> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -1234,6 +1242,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Path() shopId: string,
   ): Promise<ShopBlocklistEntry[]> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -1280,6 +1289,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Body() body: BlockUserRequest,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -1316,6 +1326,8 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Path() blockedUserId: string,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(shopId, "Shop")
+    this.requireUuid(blockedUserId, "User")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -1347,6 +1359,7 @@ export class ShopsV2Controller extends BaseController {
     @Query() page?: number,
     @Query() page_size?: number,
   ): Promise<ShopCustomersResponse> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
     const db = getKnex()
@@ -1421,6 +1434,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Path() shopId: string,
   ): Promise<ShopOrderSettingResponse[]> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
 
@@ -1456,6 +1470,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() settingType: string,
     @Body() body: UpsertShopOrderSettingRequest,
   ): Promise<ShopOrderSettingResponse> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
 
@@ -1527,6 +1542,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Path() settingType: string,
   ): Promise<{ success: boolean }> {
+    this.requireUuid(shopId, "Shop")
     this.request = request
     const userId = this.getUserId()
 

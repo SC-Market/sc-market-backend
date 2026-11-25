@@ -28,8 +28,13 @@ import {
   getOrderAllocations,
   manualAllocateOrder,
 } from "./stock-lots.controller.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const stockLotsRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(stockLotsRouter, {
+  listing_id: "Market listing",
+})
 
 // Lot listing and management
 stockLotsRouter.get(
@@ -60,6 +65,10 @@ stockLotsRouter.post(
 
 // Order allocation management (these will be mounted under /orders)
 export const allocationRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(allocationRouter, {
+  order_id: "Order",
+})
 
 allocationRouter.get(
   "/:order_id/allocations",

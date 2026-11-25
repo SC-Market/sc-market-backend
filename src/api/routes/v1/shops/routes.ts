@@ -6,8 +6,13 @@ import {
   game_shops_for_item,
   game_shops_locations,
 } from "./game-shops-controller.js"
+import { requireUuidParams } from "../util/uuid-params.js"
 
 export const shopRouter = express.Router()
+// Malformed ids -> 404 before any uuid-column lookup (see util/uuid-params).
+requireUuidParams(shopRouter, {
+  id: "Shop",
+})
 
 // =============================================================================
 // In-Game NPC Shop Routes (Data.p4k extracted shop inventories)

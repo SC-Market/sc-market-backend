@@ -469,6 +469,7 @@ export class StockLotsV2Controller extends BaseController {
     @Body() requestBody: UpdateStockLotRequest,
     @Request() request: ExpressRequest,
   ): Promise<UpdateStockLotResponse> {
+    this.requireUuid(id, "Stock lot")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()
@@ -884,6 +885,7 @@ export class StockLotsV2Controller extends BaseController {
     @Path() id: string,
     @Request() request: ExpressRequest,
   ): Promise<{ message: string }> {
+    this.requireUuid(id, "Stock lot")
     this.request = request
     this.requireAuth()
     const userId = this.getUserId()

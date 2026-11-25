@@ -293,6 +293,7 @@ export class MfaController extends BaseController {
     @Path() factorId: string,
     @Body() body: MfaReauthRequest,
   ): Promise<{ removed: boolean }> {
+    this.requireUuid(factorId, "Factor")
     this.request = request
     assertElevatableSession(request)
     await assertStepUp(request)
